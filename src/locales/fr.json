@@ -1,0 +1,103 @@
+{
+  "common": {
+    "language": "Langue",
+    "darkMode": "Mode sombre",
+    "lightMode": "Mode clair",
+    "logout": "Déconnexion",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "messages": "Messages",
+    "appointments": "Rendez-vous",
+    "notifications": "Notifications",
+    "seeMore": "Voir plus",
+    "seeAll": "Voir tous",
+    "register": "S'inscrire",
+    "consult": "Consulter",
+    "discover": "Découvrir",
+    "learnMore": "En savoir plus",
+    "hours": "heures",
+    "participants": "participants",
+    "graduates": "diplômés",
+    "certified": "Certifiante",
+    "online": "En ligne"
+  },
+  "nav": {
+    "programming": "Programmation",
+    "networking": "Réseautage",
+    "negotiations": "Négociations",
+    "community": "Communauté",
+    "organizations": "Organisations",
+    "climate": "Climat",
+    "biodiversity": "Biodiversité",
+    "desertification": "Désertification"
+  },
+  "user": {
+    "email": "utilisateur@ifdd.org",
+    "username": "Utilisateur"
+  },
+  "sidebar": {
+    "userMenu": "Menu utilisateur",
+    "myActivities": "Mes activités"
+  },
+  "hero": {
+    "welcome": "Bienvenue sur la plateforme epavillon",
+    "subtitle": "Institut de la Francophonie pour le Développement Durable"
+  },
+  "events": {
+    "title": "Événements à venir et passés",
+    "subtitle": "Participez aux grands événements internationaux sur le climat, la biodiversité et le développement durable.",
+    "status": {
+      "ongoing": "EN COURS",
+      "upcoming": "À VENIR",
+      "completed": "TERMINÉ"
+    },
+    "cop29": {
+      "title": "COP29 - Bakou",
+      "description": "Conférence des Parties sur les changements climatiques"
+    },
+    "cop16bio": {
+      "title": "COP16 Biodiversité",
+      "description": "Convention sur la diversité biologique"
+    },
+    "unccd": {
+      "title": "UNCCD COP16",
+      "description": "Convention sur la lutte contre la désertification"
+    },
+    "seeAllEvents": "Voir tous les événements"
+  },
+  "trainings": {
+    "title": "Formations disponibles",
+    "subtitle": "Développez vos compétences en développement durable avec nos formations certifiantes en ligne et en présentiel.",
+    "status": {
+      "ongoing": "EN COURS",
+      "upcoming": "PROCHAINEMENT",
+      "completed": "TERMINÉE"
+    },
+    "climate": {
+      "title": "Négociations climatiques internationales",
+      "description": "Maîtrisez les enjeux et mécanismes des COP climat"
+    },
+    "finance": {
+      "title": "Finance climat et adaptation",
+      "description": "Comprendre les mécanismes de financement climatique"
+    },
+    "biodiversity": {
+      "title": "Biodiversité et services écosystémiques",
+      "description": "Les fondamentaux de la conservation de la biodiversité"
+    },
+    "seeAllTrainings": "Voir toutes les formations"
+  },
+  "footer": {
+    "description": "Plateforme e-pavillon de l'Institut de la Francophonie pour le Développement Durable",
+    "quickLinks": "Liens rapides",
+    "legalNotice": "Mentions légales",
+    "privacyPolicy": "Politique de confidentialité",
+    "contact": "Contact",
+    "technicalSupport": "Support technique",
+    "followUs": "Suivez-nous",
+    "copyright": "© 2024 IFDD. Tous droits réservés."
+  },
+  "about": {
+    "pageDescription": "This is an about page"
+  }
+}

@@ -10,32 +10,32 @@
             class="h-12 w-auto mb-4"
           >
           <p class="text-gray-400 dark:text-gray-500 text-sm">
-            Plateforme e-pavillon de l'Institut de la Francophonie pour le Développement Durable
+            {{ t('footer.description') }}
           </p>
         </div>
 
         <!-- Liens rapides -->
         <div>
-          <h3 class="text-lg font-semibold mb-4 text-white">Liens rapides</h3>
+          <h3 class="text-lg font-semibold mb-4 text-white">{{ t('footer.quickLinks') }}</h3>
           <ul class="space-y-2">
             <li>
-              <a href="#" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">Mentions légales</a>
+              <a href="#" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">{{ t('footer.legalNotice') }}</a>
             </li>
             <li>
-              <a href="#" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">Politique de confidentialité</a>
+              <a href="#" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">{{ t('footer.privacyPolicy') }}</a>
             </li>
             <li>
-              <a href="#" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">Contact</a>
+              <a href="#" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">{{ t('footer.contact') }}</a>
             </li>
             <li>
-              <a href="#" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">Support technique</a>
+              <a href="#" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">{{ t('footer.technicalSupport') }}</a>
             </li>
           </ul>
         </div>
 
         <!-- Réseaux sociaux -->
         <div>
-          <h3 class="text-lg font-semibold mb-4 text-white">Suivez-nous</h3>
+          <h3 class="text-lg font-semibold mb-4 text-white">{{ t('footer.followUs') }}</h3>
           <div class="flex space-x-4">
             <a href="#" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">
               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -59,7 +59,7 @@
       <!-- Copyright -->
       <div class="mt-8 pt-8 border-t border-gray-800 dark:border-gray-900">
         <p class="text-center text-gray-400 dark:text-gray-500 text-sm">
-          &copy; 2024 IFDD. Tous droits réservés.
+          {{ t('footer.copyright') }}
         </p>
       </div>
     </div>
@@ -67,7 +67,13 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n'
+
 export default {
-  name: 'FooterSection'
+  name: 'FooterSection',
+  setup() {
+    const { t } = useI18n()
+    return { t }
+  }
 }
 </script>

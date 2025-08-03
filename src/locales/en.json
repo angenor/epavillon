@@ -1,0 +1,103 @@
+{
+  "common": {
+    "language": "Language",
+    "darkMode": "Dark mode",
+    "lightMode": "Light mode",
+    "logout": "Logout",
+    "profile": "Profile",
+    "settings": "Settings",
+    "messages": "Messages",
+    "appointments": "Appointments",
+    "notifications": "Notifications",
+    "seeMore": "See more",
+    "seeAll": "See all",
+    "register": "Register",
+    "consult": "Consult",
+    "discover": "Discover",
+    "learnMore": "Learn more",
+    "hours": "hours",
+    "participants": "participants",
+    "graduates": "graduates",
+    "certified": "Certified",
+    "online": "Online"
+  },
+  "nav": {
+    "programming": "Programming",
+    "networking": "Networking",
+    "negotiations": "Negotiations",
+    "community": "Community",
+    "organizations": "Organizations",
+    "climate": "Climate",
+    "biodiversity": "Biodiversity",
+    "desertification": "Desertification"
+  },
+  "user": {
+    "email": "user@ifdd.org",
+    "username": "User"
+  },
+  "sidebar": {
+    "userMenu": "User menu",
+    "myActivities": "My activities"
+  },
+  "hero": {
+    "welcome": "Welcome to the epavillon platform",
+    "subtitle": "Institute of La Francophonie for Sustainable Development"
+  },
+  "events": {
+    "title": "Upcoming and past events",
+    "subtitle": "Participate in major international events on climate, biodiversity and sustainable development.",
+    "status": {
+      "ongoing": "ONGOING",
+      "upcoming": "UPCOMING",
+      "completed": "COMPLETED"
+    },
+    "cop29": {
+      "title": "COP29 - Baku",
+      "description": "Conference of the Parties on Climate Change"
+    },
+    "cop16bio": {
+      "title": "COP16 Biodiversity",
+      "description": "Convention on Biological Diversity"
+    },
+    "unccd": {
+      "title": "UNCCD COP16",
+      "description": "Convention to Combat Desertification"
+    },
+    "seeAllEvents": "See all events"
+  },
+  "trainings": {
+    "title": "Available training",
+    "subtitle": "Develop your sustainable development skills with our certified online and in-person training.",
+    "status": {
+      "ongoing": "ONGOING",
+      "upcoming": "COMING SOON",
+      "completed": "COMPLETED"
+    },
+    "climate": {
+      "title": "International climate negotiations",
+      "description": "Master the issues and mechanisms of climate COPs"
+    },
+    "finance": {
+      "title": "Climate finance and adaptation",
+      "description": "Understanding climate financing mechanisms"
+    },
+    "biodiversity": {
+      "title": "Biodiversity and ecosystem services",
+      "description": "Fundamentals of biodiversity conservation"
+    },
+    "seeAllTrainings": "See all trainings"
+  },
+  "footer": {
+    "description": "E-pavilion platform of the Institute of La Francophonie for Sustainable Development",
+    "quickLinks": "Quick links",
+    "legalNotice": "Legal notice",
+    "privacyPolicy": "Privacy policy",
+    "contact": "Contact",
+    "technicalSupport": "Technical support",
+    "followUs": "Follow us",
+    "copyright": "© 2024 IFDD. All rights reserved."
+  },
+  "about": {
+    "pageDescription": "This is an about page"
+  }
+}

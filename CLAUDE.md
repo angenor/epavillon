@@ -89,6 +89,24 @@ VITE_SUPABASE_ANON_KEY=votre_clé_anon_supabase
 - Stocker la préférence de thème de l'utilisateur dans localStorage ou les préférences utilisateur Supabase
 - Utiliser `class="dark"` sur l'élément racine pour activer le mode sombre
 
+### Internationalisation (i18n)
+**IMPORTANT** : L'application doit supporter le français et l'anglais
+- **Vue i18n** est configuré pour la gestion des traductions
+- Langues supportées : `fr` (français - par défaut) et `en` (anglais)
+- Fichiers de traduction : `src/locales/fr.json` et `src/locales/en.json`
+- **OBLIGATOIRE** : Utiliser `{{ t('clé.de.traduction') }}` pour TOUS les textes affichés
+- La préférence de langue est stockée dans localStorage
+- Sélecteur de langue disponible dans la navbar
+- **Pour chaque nouveau texte** : 
+  1. Ajouter la clé de traduction dans les deux fichiers JSON
+  2. Utiliser la fonction `t()` ou `$t()` pour afficher le texte
+  3. Ne JAMAIS hardcoder du texte directement dans les templates
+- Structure des fichiers de traduction :
+  - `common` : termes communs (boutons, labels généraux)
+  - `nav` : navigation et menus
+  - `user` : informations utilisateur
+  - Ajouter de nouvelles sections selon les besoins
+
 ### Système de design
 - **IMPORTANT** : Utiliser uniquement TailwindCSS pour toutes les interfaces
   - Créer des composants UI personnalisés et réutilisables avec TailwindCSS

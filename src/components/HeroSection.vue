@@ -16,17 +16,17 @@
     <!-- Contenu -->
     <div class="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
       <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 animate-fade-in font-maverick">
-        Bienvenue sur la plateforme epavillon
+        {{ t('hero.welcome') }}
       </h1>
       <p class="text-lg sm:text-xl md:text-2xl text-gray-200 mb-8 animate-fade-in-delay">
-        Institut de la Francophonie pour le Développement Durable
+        {{ t('hero.subtitle') }}
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-delay-2">
         <button class="px-8 py-3 bg-ifdd-bleu hover:bg-ifdd-bleu-dark text-white font-medium font-helvetica rounded-lg transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-          Découvrir
+          {{ t('common.discover') }}
         </button>
         <button class="px-8 py-3 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white font-medium font-helvetica rounded-lg transition-colors border border-white/30">
-          En savoir plus
+          {{ t('common.learnMore') }}
         </button>
       </div>
     </div>
@@ -41,8 +41,14 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n'
+
 export default {
-  name: 'HeroSection'
+  name: 'HeroSection',
+  setup() {
+    const { t } = useI18n()
+    return { t }
+  }
 }
 </script>
 
