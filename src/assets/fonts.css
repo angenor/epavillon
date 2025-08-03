@@ -1,0 +1,29 @@
+/* Helvetica Neue est généralement disponible sur les systèmes */
+/* Pour Maverick, nous devons l'importer ou utiliser une alternative */
+
+@font-face {
+  font-family: 'Maverick';
+  src: url('/fonts/maverick-regular.woff2') format('woff2'),
+       url('/fonts/maverick-regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Maverick';
+  src: url('/fonts/maverick-bold.woff2') format('woff2'),
+       url('/fonts/maverick-bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Fallback si les polices ne sont pas disponibles */
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+.font-maverick {
+  font-family: 'Maverick', 'Helvetica Neue', Arial, sans-serif;
+}
