@@ -19,7 +19,9 @@
     "participants": "participants",
     "graduates": "diplômés",
     "certified": "Certifiante",
-    "online": "En ligne"
+    "online": "En ligne",
+    "logoAlt": "Logo IFDD",
+    "locale": "fr-FR"
   },
   "nav": {
     "programming": "Programmation",
@@ -32,7 +34,7 @@
     "desertification": "Désertification"
   },
   "user": {
-    "email": "utilisateur@ifdd.org",
+    "email": "utilisateur{'@'}ifdd.org",
     "username": "Utilisateur"
   },
   "sidebar": {
@@ -106,5 +108,124 @@
     "trainings": "Formations",
     "upcoming": "À venir",
     "viewAll": "Voir tout"
+  },
+  "event": {
+    "description": "Description",
+    "dateTime": "Date et heure",
+    "location": "Lieu",
+    "format": "Format",
+    "formats": {
+      "online": "En ligne",
+      "inPerson": "En présentiel", 
+      "hybrid": "Hybride"
+    },
+    "submissionDeadline": "Date limite de soumission",
+    "daysRemaining": "jours restants",
+    "viewActivities": "Voir les activités",
+    "submitActivity": "Soumettre une activité",
+    "upcomingActivities": "Activités à venir",
+    "organizedBy": "Organisé par",
+    "viewAllActivities": "Voir toutes les activités",
+    "status": {
+      "upcoming": "À venir",
+      "ongoing": "En cours",
+      "completed": "Terminé"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "subtitle": "Vous n'avez pas de compte ?",
+      "createAccount": "Créer un compte",
+      "submit": "Se connecter",
+      "loggingIn": "Connexion...",
+      "rememberMe": "Se souvenir de moi",
+      "forgotPassword": "Mot de passe oublié ?",
+      "orContinueWith": "Ou continuer avec"
+    },
+    "register": {
+      "title": "Créer un compte",
+      "subtitle": "Vous avez déjà un compte ?",
+      "haveAccount": "Se connecter",
+      "submit": "S'inscrire",
+      "registering": "Inscription...",
+      "personalInfo": "Informations personnelles",
+      "security": "Sécurité",
+      "passwordStrength": "Force du mot de passe",
+      "weak": "Faible",
+      "fair": "Moyen",
+      "good": "Bon",
+      "strong": "Fort",
+      "acceptTerms": "J'accepte les",
+      "termsOfService": "conditions d'utilisation",
+      "and": "et la",
+      "privacyPolicy": "politique de confidentialité",
+      "profilePhoto": "Photo de profil (optionnel)"
+    },
+    "fields": {
+      "email": "Adresse e-mail",
+      "password": "Mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "phone": "Téléphone",
+      "country": "Pays",
+      "organization": "Organisation",
+      "profilePhoto": "Photo de profil",
+      "addPhoto": "Ajouter une photo",
+      "changePhoto": "Changer la photo"
+    },
+    "placeholders": {
+      "email": "vous{'@'}exemple.com",
+      "password": "••••••••",
+      "confirmPassword": "••••••••",
+      "firstName": "Jean",
+      "lastName": "Dupont",
+      "phone": "+33 6 12 34 56 78",
+      "selectCountry": "Sélectionner un pays",
+      "organization": "Nom de votre organisation"
+    },
+    "errors": {
+      "invalidCredentials": "Email ou mot de passe incorrect",
+      "emailAlreadyUsed": "Cette adresse email est déjà utilisée",
+      "registrationFailed": "Une erreur est survenue lors de l'inscription",
+      "socialLoginFailed": "Échec de la connexion sociale",
+      "tooManyRequests": "Trop de tentatives. Veuillez attendre 16 secondes avant de réessayer.",
+      "imageProcessingFailed": "Erreur lors du traitement de l'image",
+      "passwordsDontMatch": "Les mots de passe ne correspondent pas"
+    },
+    "helpers": {
+      "photoRequirements": "JPG, PNG ou WebP. Max 5MB.",
+      "originalSize": "Taille originale",
+      "compressedSize": "Taille compressée",
+      "compressionRatio": "Réduction"
+    },
+    "forgotPassword": {
+      "title": "Mot de passe oublié",
+      "subtitle": "Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+      "submit": "Envoyer le lien",
+      "sending": "Envoi...",
+      "backToLogin": "Retour à la connexion",
+      "successMessage": "Un email de réinitialisation a été envoyé à votre adresse.",
+      "errorMessage": "Une erreur est survenue. Veuillez réessayer."
+    },
+    "verifyEmail": {
+      "title": "Vérifiez votre email",
+      "message": "Nous avons envoyé un email de vérification à :",
+      "instructions": "Prochaines étapes :",
+      "step1": "Ouvrez votre boîte de réception",
+      "step2": "Cliquez sur le lien de vérification dans l'email",
+      "step3": "Revenez ici et connectez-vous",
+      "resendEmail": "Renvoyer l'email",
+      "resending": "Envoi...",
+      "resendIn": "Renvoyer dans {seconds} secondes",
+      "backToLogin": "Retour à la connexion",
+      "emailSent": "Email envoyé avec succès",
+      "resendError": "Erreur lors de l'envoi de l'email"
+    },
+    "callback": {
+      "processing": "Authentification en cours...",
+      "pleaseWait": "Veuillez patienter quelques instants"
+    }
   }
 }

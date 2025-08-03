@@ -34,9 +34,7 @@
               </p>
               <button class="text-ifdd-bleu dark:text-ifdd-bleu-light hover:text-ifdd-bleu-dark dark:hover:text-ifdd-bleu font-medium flex items-center space-x-2 transition-colors">
                 <span class="text-gray-900 dark:text-gray-100">{{ t('common.seeMore') }}</span>
-                <svg class="w-4 h-4 text-gray-900 dark:text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
+                <font-awesome-icon :icon="['fas', 'chevron-right']" class="w-4 h-4 text-gray-900 dark:text-gray-100" />
               </button>
             </div>
 
@@ -52,9 +50,7 @@
               </p>
               <button class="text-ifdd-bleu dark:text-ifdd-bleu-light hover:text-ifdd-bleu-dark dark:hover:text-ifdd-bleu font-medium flex items-center space-x-2 transition-colors">
                 <span class="text-gray-900 dark:text-gray-100">{{ t('common.seeMore') }}</span>
-                <svg class="w-4 h-4 text-gray-900 dark:text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
+                <font-awesome-icon :icon="['fas', 'chevron-right']" class="w-4 h-4 text-gray-900 dark:text-gray-100" />
               </button>
             </div>
 
@@ -70,9 +66,7 @@
               </p>
               <button class="text-ifdd-bleu dark:text-ifdd-bleu-light hover:text-ifdd-bleu-dark dark:hover:text-ifdd-bleu font-medium flex items-center space-x-2 transition-colors">
                 <span class="text-gray-900 dark:text-gray-100">{{ t('common.seeMore') }}</span>
-                <svg class="w-4 h-4 text-gray-900 dark:text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
+                <font-awesome-icon :icon="['fas', 'chevron-right']" class="w-4 h-4 text-gray-900 dark:text-gray-100" />
               </button>
             </div>
           </div>

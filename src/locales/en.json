@@ -19,7 +19,9 @@
     "participants": "participants",
     "graduates": "graduates",
     "certified": "Certified",
-    "online": "Online"
+    "online": "Online",
+    "logoAlt": "IFDD Logo",
+    "locale": "en-US"
   },
   "nav": {
     "programming": "Programming",
@@ -32,7 +34,7 @@
     "desertification": "Desertification"
   },
   "user": {
-    "email": "user@ifdd.org",
+    "email": "user{'@'}ifdd.org",
     "username": "User"
   },
   "sidebar": {
@@ -106,5 +108,124 @@
     "trainings": "Trainings",
     "upcoming": "Upcoming",
     "viewAll": "View All"
+  },
+  "event": {
+    "description": "Description",
+    "dateTime": "Date and Time",
+    "location": "Location",
+    "format": "Format",
+    "formats": {
+      "online": "Online",
+      "inPerson": "In Person",
+      "hybrid": "Hybrid"
+    },
+    "submissionDeadline": "Submission Deadline",
+    "daysRemaining": "days remaining",
+    "viewActivities": "View Activities",
+    "submitActivity": "Submit Activity",
+    "upcomingActivities": "Upcoming Activities",
+    "organizedBy": "Organized by",
+    "viewAllActivities": "View All Activities",
+    "status": {
+      "upcoming": "Upcoming",
+      "ongoing": "Ongoing", 
+      "completed": "Completed"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "subtitle": "Don't have an account?",
+      "createAccount": "Create account",
+      "submit": "Sign In",
+      "loggingIn": "Signing in...",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "orContinueWith": "Or continue with"
+    },
+    "register": {
+      "title": "Create an account",
+      "subtitle": "Already have an account?",
+      "haveAccount": "Sign in",
+      "submit": "Sign Up",
+      "registering": "Creating account...",
+      "personalInfo": "Personal Information",
+      "security": "Security",
+      "passwordStrength": "Password strength",
+      "weak": "Weak",
+      "fair": "Fair",
+      "good": "Good",
+      "strong": "Strong",
+      "acceptTerms": "I accept the",
+      "termsOfService": "terms of service",
+      "and": "and",
+      "privacyPolicy": "privacy policy",
+      "profilePhoto": "Profile photo (optional)"
+    },
+    "fields": {
+      "email": "Email address",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "phone": "Phone",
+      "country": "Country",
+      "organization": "Organization",
+      "profilePhoto": "Profile photo",
+      "addPhoto": "Add photo",
+      "changePhoto": "Change photo"
+    },
+    "placeholders": {
+      "email": "you{'@'}example.com",
+      "password": "••••••••",
+      "confirmPassword": "••••••••",
+      "firstName": "John",
+      "lastName": "Doe",
+      "phone": "+1 234 567 8900",
+      "selectCountry": "Select a country",
+      "organization": "Your organization name"
+    },
+    "errors": {
+      "invalidCredentials": "Invalid email or password",
+      "emailAlreadyUsed": "This email is already registered",
+      "registrationFailed": "An error occurred during registration",
+      "socialLoginFailed": "Social login failed",
+      "tooManyRequests": "Too many attempts. Please wait 16 seconds before trying again.",
+      "imageProcessingFailed": "Error processing image",
+      "passwordsDontMatch": "Passwords do not match"
+    },
+    "helpers": {
+      "photoRequirements": "JPG, PNG or WebP. Max 5MB.",
+      "originalSize": "Original size",
+      "compressedSize": "Compressed size",
+      "compressionRatio": "Reduction"
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "subtitle": "Enter your email address and we'll send you a link to reset your password.",
+      "submit": "Send Reset Link",
+      "sending": "Sending...",
+      "backToLogin": "Back to Sign In",
+      "successMessage": "A password reset email has been sent to your address.",
+      "errorMessage": "An error occurred. Please try again."
+    },
+    "verifyEmail": {
+      "title": "Verify Your Email",
+      "message": "We've sent a verification email to:",
+      "instructions": "Next steps:",
+      "step1": "Open your email inbox",
+      "step2": "Click the verification link in the email",
+      "step3": "Come back here and sign in",
+      "resendEmail": "Resend Email",
+      "resending": "Sending...",
+      "resendIn": "Resend in {seconds} seconds",
+      "backToLogin": "Back to Sign In",
+      "emailSent": "Email sent successfully",
+      "resendError": "Error sending email"
+    },
+    "callback": {
+      "processing": "Authenticating...",
+      "pleaseWait": "Please wait a moment"
+    }
   }
 }

@@ -115,6 +115,10 @@ VITE_SUPABASE_ANON_KEY=votre_clé_anon_supabase
 - Les couleurs de la **charte graphique IFDD** et polices sont définies dans `tailwind.config.js`
 - Documentation TailwindCSS : https://tailwindcss.com/docs
 
+### Composants UI recommandés
+- **Skeleton loaders** : Utiliser des skeleton loaders pour améliorer l'expérience utilisateur pendant le chargement des données
+- **Font Awesome** : Utiliser `font-awesome-icon` pour les icônes dans l'interface utilisateur lorsque approprié
+
 ## Notes de développement
 - Application Vue 3 avec Vite comme outil de build
 - Rendu côté client (SPA) par défaut

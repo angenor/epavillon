@@ -6,6 +6,7 @@
 -- Activation des extensions nécessaires
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+CREATE EXTENSION IF NOT EXISTS "pg_trgm"; -- Pour la recherche floue
 
 -- =============================================
 -- 1. GESTION DES PAYS
@@ -30,6 +31,7 @@ CREATE TABLE public.countries (
 CREATE TABLE public.users (
     id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     email TEXT UNIQUE NOT NULL,
+    email_pro TEXT,
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     phone TEXT,
@@ -121,7 +123,8 @@ CREATE TYPE organization_type AS ENUM (
 CREATE TABLE public.organizations (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT NOT NULL,
-    name_normalized TEXT GENERATED ALWAYS AS (LOWER(UNACCENT(name))) STORED, -- Pour détecter les doublons
+    name_normalized TEXT GENERATED ALWAYS AS (LOWER(TRIM(name))) STORED, -- Nom normalisé pour comparaison
+    name_search_tokens TEXT[], -- Tokens de recherche pour améliorer la détection
     email TEXT UNIQUE NOT NULL,
     email_verified BOOLEAN DEFAULT FALSE,
     organization_type organization_type NOT NULL,
@@ -132,6 +135,9 @@ CREATE TABLE public.organizations (
     is_active BOOLEAN DEFAULT TRUE,
     is_duplicate BOOLEAN DEFAULT FALSE,
     duplicate_of UUID REFERENCES public.organizations(id),
+    is_verified BOOLEAN DEFAULT FALSE, -- Organisation vérifiée par admin
+    verified_by UUID REFERENCES public.users(id),
+    verified_at TIMESTAMPTZ,
     created_by UUID REFERENCES public.users(id),
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -139,6 +145,8 @@ CREATE TABLE public.organizations (
 
 -- Index pour détecter les doublons potentiels
 CREATE INDEX idx_organizations_name_normalized ON public.organizations(name_normalized);
+CREATE INDEX idx_organizations_name_trgm ON public.organizations USING gin(name gin_trgm_ops);
+CREATE INDEX idx_organizations_search_tokens ON public.organizations USING gin(name_search_tokens);
 
 -- Validation des organisations par les utilisateurs
 CREATE TABLE public.organization_validations (
@@ -148,6 +156,22 @@ CREATE TABLE public.organization_validations (
     validated_at TIMESTAMPTZ DEFAULT NOW(),
     UNIQUE(organization_id, validated_by)
 );
+
+-- Table des alias/variantes de noms d'organisations
+CREATE TABLE public.organization_aliases (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id UUID NOT NULL REFERENCES public.organizations(id) ON DELETE CASCADE,
+    alias_name TEXT NOT NULL,
+    alias_normalized TEXT GENERATED ALWAYS AS (LOWER(TRIM(alias_name))) STORED,
+    is_acronym BOOLEAN DEFAULT FALSE,
+    created_by UUID REFERENCES public.users(id),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(organization_id, alias_normalized)
+);
+
+-- Index pour recherche rapide des alias
+CREATE INDEX idx_org_aliases_normalized ON public.organization_aliases(alias_normalized);
+CREATE INDEX idx_org_aliases_org ON public.organization_aliases(organization_id);
 
 -- =============================================
 -- 4. GESTION DES ÉVÉNEMENTS ET ACTIVITÉS
@@ -1148,25 +1172,70 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+-- Fonction pour générer les tokens de recherche
+CREATE OR REPLACE FUNCTION generate_search_tokens(input_text TEXT)
+RETURNS TEXT[] AS $$
+DECLARE
+    tokens TEXT[];
+    cleaned_text TEXT;
+BEGIN
+    -- Nettoyer le texte
+    cleaned_text := LOWER(TRIM(input_text));
+    
+    -- Remplacer les caractères spéciaux par des espaces
+    cleaned_text := REGEXP_REPLACE(cleaned_text, '[^a-z0-9à-ÿ]+', ' ', 'g');
+    
+    -- Diviser en mots
+    tokens := STRING_TO_ARRAY(cleaned_text, ' ');
+    
+    -- Supprimer les mots vides et les doublons
+    tokens := ARRAY(
+        SELECT DISTINCT unnest(tokens) 
+        WHERE LENGTH(unnest(tokens)) > 2
+    );
+    
+    RETURN tokens;
+END;
+$$ LANGUAGE plpgsql IMMUTABLE;
+
 -- Fonction pour détecter les organisations en doublon
 CREATE OR REPLACE FUNCTION check_organization_duplicate()
 RETURNS TRIGGER AS $$
 DECLARE
     similar_org RECORD;
+    similarity_threshold FLOAT := 0.6;
 BEGIN
-    -- Recherche d'organisations similaires
-    SELECT id, name INTO similar_org
+    -- Générer les tokens de recherche
+    NEW.name_search_tokens := generate_search_tokens(NEW.name);
+    
+    -- Recherche exacte d'abord (nom normalisé)
+    SELECT id, name, 1.0 as score INTO similar_org
     FROM public.organizations
     WHERE id != COALESCE(NEW.id, '00000000-0000-0000-0000-000000000000'::uuid)
-    AND name_normalized = LOWER(UNACCENT(NEW.name))
+    AND name_normalized = NEW.name_normalized
     AND is_active = TRUE
     AND is_duplicate = FALSE
     LIMIT 1;
     
-    IF FOUND THEN
-        -- Marquer comme potentiel doublon
-        NEW.is_duplicate = TRUE;
-        NEW.duplicate_of = similar_org.id;
+    -- Si pas de correspondance exacte, recherche floue
+    IF NOT FOUND THEN
+        SELECT id, name, similarity(name, NEW.name) as score INTO similar_org
+        FROM public.organizations
+        WHERE id != COALESCE(NEW.id, '00000000-0000-0000-0000-000000000000'::uuid)
+        AND is_active = TRUE
+        AND is_duplicate = FALSE
+        AND similarity(name, NEW.name) > similarity_threshold
+        ORDER BY similarity(name, NEW.name) DESC
+        LIMIT 1;
+    END IF;
+    
+    -- Si une organisation similaire est trouvée
+    IF FOUND AND similar_org.score > similarity_threshold THEN
+        -- Ne marquer comme doublon que si ce n'est pas vérifié
+        IF NEW.is_verified = FALSE THEN
+            NEW.is_duplicate = TRUE;
+            NEW.duplicate_of = similar_org.id;
+        END IF;
     END IF;
     
     RETURN NEW;
@@ -1176,6 +1245,124 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER check_org_duplicate_trigger
 BEFORE INSERT OR UPDATE ON public.organizations
 FOR EACH ROW EXECUTE FUNCTION check_organization_duplicate();
+
+-- Fonction de recherche d'organisations avec gestion des alias
+CREATE OR REPLACE FUNCTION search_organizations(search_query TEXT)
+RETURNS TABLE (
+    organization_id UUID,
+    name TEXT,
+    matched_name TEXT,
+    match_type TEXT,
+    similarity_score FLOAT,
+    is_verified BOOLEAN,
+    is_duplicate BOOLEAN
+) AS $$
+BEGIN
+    -- Normaliser la requête
+    search_query := LOWER(TRIM(search_query));
+    
+    RETURN QUERY
+    -- Correspondance exacte sur le nom principal
+    SELECT DISTINCT
+        o.id,
+        o.name,
+        o.name as matched_name,
+        'exact_name'::TEXT as match_type,
+        1.0::FLOAT as similarity_score,
+        o.is_verified,
+        o.is_duplicate
+    FROM public.organizations o
+    WHERE o.name_normalized = search_query
+        AND o.is_active = TRUE
+    
+    UNION
+    
+    -- Correspondance exacte sur les alias
+    SELECT DISTINCT
+        o.id,
+        o.name,
+        oa.alias_name as matched_name,
+        'exact_alias'::TEXT as match_type,
+        1.0::FLOAT as similarity_score,
+        o.is_verified,
+        o.is_duplicate
+    FROM public.organizations o
+    JOIN public.organization_aliases oa ON o.id = oa.organization_id
+    WHERE oa.alias_normalized = search_query
+        AND o.is_active = TRUE
+    
+    UNION
+    
+    -- Recherche floue sur le nom principal
+    SELECT DISTINCT
+        o.id,
+        o.name,
+        o.name as matched_name,
+        'fuzzy_name'::TEXT as match_type,
+        similarity(o.name, search_query) as similarity_score,
+        o.is_verified,
+        o.is_duplicate
+    FROM public.organizations o
+    WHERE similarity(o.name, search_query) > 0.3
+        AND o.is_active = TRUE
+    
+    UNION
+    
+    -- Recherche floue sur les alias
+    SELECT DISTINCT
+        o.id,
+        o.name,
+        oa.alias_name as matched_name,
+        'fuzzy_alias'::TEXT as match_type,
+        similarity(oa.alias_name, search_query) as similarity_score,
+        o.is_verified,
+        o.is_duplicate
+    FROM public.organizations o
+    JOIN public.organization_aliases oa ON o.id = oa.organization_id
+    WHERE similarity(oa.alias_name, search_query) > 0.3
+        AND o.is_active = TRUE
+    
+    ORDER BY 
+        CASE 
+            WHEN match_type IN ('exact_name', 'exact_alias') THEN 0
+            ELSE 1
+        END,
+        is_verified DESC,
+        is_duplicate ASC,
+        similarity_score DESC;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Vue consolidée des organisations pour faciliter les requêtes
+CREATE OR REPLACE VIEW public.v_organizations_consolidated AS
+SELECT 
+    o.id,
+    o.name,
+    o.name_normalized,
+    o.email,
+    o.organization_type,
+    o.country_id,
+    c.name_fr as country_name_fr,
+    c.name_en as country_name_en,
+    o.is_active,
+    o.is_verified,
+    o.is_duplicate,
+    o.duplicate_of,
+    parent_org.name as duplicate_of_name,
+    COUNT(DISTINCT ov.validated_by) as validation_count,
+    COUNT(DISTINCT oa.id) as alias_count,
+    ARRAY_AGG(DISTINCT oa.alias_name) FILTER (WHERE oa.alias_name IS NOT NULL) as aliases,
+    o.created_at,
+    o.updated_at
+FROM public.organizations o
+LEFT JOIN public.countries c ON o.country_id = c.id
+LEFT JOIN public.organizations parent_org ON o.duplicate_of = parent_org.id
+LEFT JOIN public.organization_validations ov ON o.id = ov.organization_id
+LEFT JOIN public.organization_aliases oa ON o.id = oa.organization_id
+GROUP BY 
+    o.id, o.name, o.name_normalized, o.email, o.organization_type, 
+    o.country_id, c.name_fr, c.name_en, o.is_active, o.is_verified, 
+    o.is_duplicate, o.duplicate_of, parent_org.name, o.created_at, o.updated_at;
 
 -- Fonction pour obtenir le nombre total de désignations d'un négociateur
 CREATE OR REPLACE FUNCTION update_negotiator_designation_count()
@@ -1198,27 +1385,6 @@ FOR EACH ROW EXECUTE FUNCTION update_negotiator_designation_count();
 -- DONNÉES INITIALES
 -- =============================================
 
--- Insertion de quelques pays francophones
-INSERT INTO public.countries (code, name_fr, name_en, continent, is_francophone) VALUES
-('FR', 'France', 'France', 'Europe', true),
-('CA', 'Canada', 'Canada', 'North America', true),
-('BE', 'Belgique', 'Belgium', 'Europe', true),
-('CH', 'Suisse', 'Switzerland', 'Europe', true),
-('SN', 'Sénégal', 'Senegal', 'Africa', true),
-('CI', 'Côte d''Ivoire', 'Ivory Coast', 'Africa', true),
-('BF', 'Burkina Faso', 'Burkina Faso', 'Africa', true),
-('ML', 'Mali', 'Mali', 'Africa', true),
-('NE', 'Niger', 'Niger', 'Africa', true),
-('CM', 'Cameroun', 'Cameroon', 'Africa', true),
-('CD', 'République démocratique du Congo', 'Democratic Republic of Congo', 'Africa', true),
-('MG', 'Madagascar', 'Madagascar', 'Africa', true),
-('HT', 'Haïti', 'Haiti', 'North America', true),
-('LB', 'Liban', 'Lebanon', 'Asia', true),
-('VN', 'Vietnam', 'Vietnam', 'Asia', true),
-('KH', 'Cambodge', 'Cambodia', 'Asia', true),
-('LA', 'Laos', 'Laos', 'Asia', true)
-ON CONFLICT (code) DO NOTHING;
-
 -- Insertion des templates de messages par défaut
 INSERT INTO public.message_templates (name, subject, body, variables) VALUES
 ('activity_approved', 'Votre activité a été approuvée', 'Bonjour {first_name},\n\nNous avons le plaisir de vous informer que votre activité "{activity_title}" a été approuvée.\n\nCordialement,\nL''équipe ePavilion', ARRAY['first_name', 'activity_title']),
@@ -1234,7 +1400,10 @@ ON CONFLICT (name) DO NOTHING;
 
 COMMENT ON TABLE public.users IS 'Table principale des utilisateurs étendant auth.users de Supabase avec gestion de blocage/suspension';
 COMMENT ON TABLE public.countries IS 'Table de référence des pays pour éviter les redondances';
-COMMENT ON TABLE public.organizations IS 'Organisations partenaires avec détection de doublons';
+COMMENT ON TABLE public.organizations IS 'Organisations partenaires avec détection de doublons et gestion des alias';
+COMMENT ON TABLE public.organization_aliases IS 'Alias et variantes de noms pour les organisations (acronymes, noms alternatifs)';
+COMMENT ON FUNCTION search_organizations IS 'Recherche intelligente d''organisations avec gestion des alias et recherche floue';
+COMMENT ON VIEW public.v_organizations_consolidated IS 'Vue consolidée des organisations avec toutes leurs informations et relations';
 COMMENT ON TABLE public.events IS 'Événements annuels organisés par l''IFDD';
 COMMENT ON TABLE public.activities IS 'Activités soumises avec support de soft delete et tags';
 COMMENT ON TABLE public.negotiators IS 'Informations spécifiques aux négociateurs climatiques';
