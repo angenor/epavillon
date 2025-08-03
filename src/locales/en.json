@@ -99,5 +99,12 @@
   },
   "about": {
     "pageDescription": "This is an about page"
+  },
+  "activities": {
+    "title": "Activities",
+    "events": "Events",
+    "trainings": "Trainings",
+    "upcoming": "Upcoming",
+    "viewAll": "View All"
   }
 }
