@@ -41,17 +41,35 @@ export const useAuthStore = defineStore('auth', () => {
   
   const fetchProfile = async (userId) => {
     try {
-      const { data, error } = await from('users')
+      // Récupérer le profil utilisateur
+      const { data: userData, error: userError } = await from('users')
         .select(`
           *, 
-          country:countries(*),
-          user_roles(role, is_active, valid_until)
+          country:countries(*)
         `)
         .eq('id', userId)
         .single()
       
-      if (error) throw error
-      profile.value = data
+      if (userError) throw userError
+      
+      // Récupérer les rôles utilisateur séparément
+      const { data: rolesData, error: rolesError } = await from('user_roles')
+        .select('role, is_active, valid_until')
+        .eq('user_id', userId)
+        .eq('is_active', true)
+      
+      if (rolesError) {
+        console.error('Error fetching user roles:', rolesError)
+        // Continue même si les rôles ne peuvent pas être récupérés
+        profile.value = userData
+      } else {
+        // Combiner les données
+        profile.value = {
+          ...userData,
+          user_roles: rolesData || []
+        }
+      }
+      
     } catch (error) {
       console.error('Error fetching profile:', error)
     }

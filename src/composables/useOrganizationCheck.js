@@ -8,8 +8,12 @@ export function useOrganizationCheck() {
 
   // Check if user has required admin role
   const hasAdminRole = computed(() => {
-    return authStore.profile?.user_roles?.some(role => 
-      ['admin', 'super_admin'].includes(role.role) && role.is_active
+    if (!authStore.profile?.user_roles) return false
+    
+    return authStore.profile.user_roles.some(role => 
+      ['admin', 'super_admin'].includes(role.role) && 
+      role.is_active && 
+      (role.valid_until === null || new Date(role.valid_until) > new Date())
     )
   })
 

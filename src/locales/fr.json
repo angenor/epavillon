@@ -39,6 +39,11 @@
     "email": "utilisateur{'@'}ifdd.org",
     "username": "Utilisateur"
   },
+  "auth": {
+    "login": "Se connecter",
+    "logout": "Se déconnecter",
+    "register": "S'inscrire"
+  },
   "sidebar": {
     "userMenu": "Menu utilisateur",
     "myActivities": "Mes activités"
@@ -247,12 +252,64 @@
   },
   "events": {
     "create": {
+      "title": "Créer un événement",
+      "subtitle": "Organisez un nouvel événement pour la communauté",
+      "submit": "Créer l'événement",
+      "submitting": "Création en cours...",
+      "uploaded": "Téléchargé",
+      "lowQualityGenerated": "Version basse qualité générée automatiquement",
+      "mediaDescription": "Téléchargez des bannières dans différents formats pour optimiser l'affichage sur tous les supports",
       "requirements": {
         "title": "Prérequis pour créer un événement",
         "description": "Pour créer un événement, vous devez remplir les conditions suivantes :",
         "contactAdmin": "Contacter un administrateur"
+      },
+      "sections": {
+        "basicInfo": "Informations générales",
+        "format": "Format de l'événement",
+        "media": "Médias et bannières"
+      },
+      "fields": {
+        "year": "Année",
+        "title": "Titre de l'événement",
+        "description": "Description",
+        "submissionDeadline": "Date limite de soumission",
+        "participationMode": "Mode de participation",
+        "onlineDetails": "Détails événement en ligne",
+        "onlineStartDate": "Date et heure de début en ligne",
+        "onlineEndDate": "Date et heure de fin en ligne",
+        "inPersonDetails": "Détails événement présentiel",
+        "country": "Pays",
+        "city": "Ville",
+        "address": "Adresse",
+        "inPersonStartDate": "Date de début présentiel",
+        "inPersonEndDate": "Date de fin présentiel",
+        "banner32_9": "Bannière 32:9",
+        "banner16_9": "Bannière 16:9",
+        "banner1_1": "Bannière 1:1"
+      },
+      "placeholders": {
+        "title": "Ex: Forum International sur le Développement Durable 2025",
+        "description": "Décrivez l'objectif et le contenu de votre événement...",
+        "selectCountry": "Sélectionnez un pays",
+        "city": "Ex: Paris",
+        "address": "Adresse complète du lieu"
       }
     }
+  },
+  "event": {
+    "formats": {
+      "online": "En ligne",
+      "hybrid": "Hybride",
+      "in_person": "Présentiel"
+    },
+    "status": {
+      "upcoming": "À venir",
+      "ongoing": "En cours",
+      "completed": "Terminé",
+      "suspended": "Suspendu"
+    },
+    "description": "Description"
   },
   "organization": {
     "setup": {

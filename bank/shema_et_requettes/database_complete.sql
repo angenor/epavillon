@@ -1061,6 +1061,10 @@ ALTER TABLE public.newsletter_subscriptions ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Countries are viewable by all" ON public.countries
     FOR SELECT USING (true);
 
+-- Politiques pour les rôles utilisateurs
+CREATE POLICY "Users can view their own roles" ON public.user_roles
+FOR SELECT USING (user_id = auth.uid());
+
 -- Politiques pour les utilisateurs
 -- Politique spéciale pour l'inscription
 CREATE POLICY "Allow users to insert their own profile during signup" 

@@ -493,6 +493,7 @@ const loadCountries = async () => {
 // Load countries when component mounts
 loadCountries()
 
+
 // Utility function to generate low quality version of an image
 const generateLowQualityImage = (file, quality = 0.6) => {
   return new Promise((resolve) => {
