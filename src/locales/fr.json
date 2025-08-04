@@ -21,7 +21,8 @@
     "certified": "Certifiante",
     "online": "En ligne",
     "logoAlt": "Logo IFDD",
-    "locale": "fr-FR"
+    "locale": "fr-FR",
+    "cancel": "Annuler"
   },
   "nav": {
     "programming": "Programmation",
@@ -44,28 +45,6 @@
   "hero": {
     "welcome": "Bienvenue sur la plateforme epavillon",
     "subtitle": "Institut de la Francophonie pour le Développement Durable"
-  },
-  "events": {
-    "title": "Événements à venir et passés",
-    "subtitle": "Participez aux grands événements internationaux sur le climat, la biodiversité et le développement durable.",
-    "status": {
-      "ongoing": "EN COURS",
-      "upcoming": "À VENIR",
-      "completed": "TERMINÉ"
-    },
-    "cop29": {
-      "title": "COP29 - Bakou",
-      "description": "Conférence des Parties sur les changements climatiques"
-    },
-    "cop16bio": {
-      "title": "COP16 Biodiversité",
-      "description": "Convention sur la diversité biologique"
-    },
-    "unccd": {
-      "title": "UNCCD COP16",
-      "description": "Convention sur la lutte contre la désertification"
-    },
-    "seeAllEvents": "Voir tous les événements"
   },
   "trainings": {
     "title": "Formations disponibles",
@@ -130,6 +109,41 @@
       "upcoming": "À venir",
       "ongoing": "En cours",
       "completed": "Terminé"
+    },
+    "create": {
+      "title": "Créer un nouvel événement",
+      "subtitle": "Remplissez les informations ci-dessous pour créer un nouvel événement",
+      "sections": {
+        "basicInfo": "Informations générales",
+        "format": "Format de l'événement",
+        "media": "Médias et bannières"
+      },
+      "fields": {
+        "year": "Année",
+        "title": "Titre de l'événement",
+        "description": "Description",
+        "submissionDeadline": "Date limite de soumission",
+        "participationMode": "Mode de participation",
+        "onlineDetails": "Détails de l'événement en ligne",
+        "onlineStartDate": "Date et heure de début",
+        "onlineEndDate": "Date et heure de fin",
+        "inPersonDetails": "Détails de l'événement en présentiel",
+        "location": "Lieu",
+        "inPersonStartDate": "Date de début",
+        "inPersonEndDate": "Date de fin",
+        "banner32_9": "Bannière 32:9",
+        "banner16_9": "Bannière 16:9",
+        "banner1_1": "Bannière 1:1"
+      },
+      "placeholders": {
+        "title": "Ex: COP29 - Conférence des Parties",
+        "description": "Décrivez l'événement, ses objectifs et son importance...",
+        "location": "Ex: Paris, France"
+      },
+      "mediaDescription": "Téléchargez des bannières dans différents formats pour optimiser l'affichage sur tous les appareils",
+      "uploaded": "Téléchargé",
+      "submit": "Créer l'événement",
+      "submitting": "Création en cours..."
     }
   },
   "auth": {

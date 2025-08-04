@@ -21,7 +21,8 @@
     "certified": "Certified",
     "online": "Online",
     "logoAlt": "IFDD Logo",
-    "locale": "en-US"
+    "locale": "en-US",
+    "cancel": "Cancel"
   },
   "nav": {
     "programming": "Programming",
@@ -65,7 +66,42 @@
       "title": "UNCCD COP16",
       "description": "Convention to Combat Desertification"
     },
-    "seeAllEvents": "See all events"
+    "seeAllEvents": "See all events",
+    "create": {
+      "title": "Create a new event",
+      "subtitle": "Fill in the information below to create a new event",
+      "sections": {
+        "basicInfo": "Basic Information",
+        "format": "Event Format",
+        "media": "Media and Banners"
+      },
+      "fields": {
+        "year": "Year",
+        "title": "Event Title",
+        "description": "Description",
+        "submissionDeadline": "Submission Deadline",
+        "participationMode": "Participation Mode",
+        "onlineDetails": "Online Event Details",
+        "onlineStartDate": "Start Date and Time",
+        "onlineEndDate": "End Date and Time",
+        "inPersonDetails": "In-Person Event Details",
+        "location": "Location",
+        "inPersonStartDate": "Start Date",
+        "inPersonEndDate": "End Date",
+        "banner32_9": "Banner 32:9",
+        "banner16_9": "Banner 16:9",
+        "banner1_1": "Banner 1:1"
+      },
+      "placeholders": {
+        "title": "E.g: COP29 - Conference of the Parties",
+        "description": "Describe the event, its objectives and importance...",
+        "location": "E.g: Paris, France"
+      },
+      "mediaDescription": "Upload banners in different formats to optimize display on all devices",
+      "uploaded": "Uploaded",
+      "submit": "Create Event",
+      "submitting": "Creating..."
+    }
   },
   "trainings": {
     "title": "Available training",

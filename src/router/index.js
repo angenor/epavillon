@@ -43,6 +43,12 @@ const router = createRouter({
       component: () => import('../views/AuthCallbackView.vue'),
     },
     {
+      path: '/events/create',
+      name: 'create-event',
+      component: () => import('../views/CreateEventView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/events/:id',
       name: 'event-detail',
       component: () => import('../views/EventDetailView.vue'),
