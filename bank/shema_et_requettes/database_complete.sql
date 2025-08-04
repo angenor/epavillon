@@ -200,12 +200,20 @@ CREATE TABLE public.events (
     participation_mode participation_mode NOT NULL,
     online_start_datetime TIMESTAMPTZ,
     online_end_datetime TIMESTAMPTZ,
-    in_person_location TEXT,
+    country_id UUID REFERENCES public.countries(id),
+    city TEXT,
+    address TEXT,
     in_person_start_date DATE,
     in_person_end_date DATE,
     created_by UUID REFERENCES public.users(id),
     created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    -- Contrainte pour s'assurer que les informations de localisation sont fournies pour les événements physiques
+    CONSTRAINT check_location_for_physical_events CHECK (
+        (participation_mode = 'online') 
+        OR 
+        (country_id IS NOT NULL AND city IS NOT NULL AND address IS NOT NULL)
+    )
 );
 
 -- Types et catégories d'activités
@@ -977,6 +985,7 @@ CREATE INDEX idx_negotiators_user ON public.negotiators(user_id);
 CREATE INDEX idx_training_participants ON public.training_participants(training_id, user_id);
 CREATE INDEX idx_comments_context ON public.comments(context_type, context_id);
 CREATE INDEX idx_testimonials_context ON public.user_testimonials(context_type, context_id);
+CREATE INDEX idx_events_country ON public.events(country_id);
 
 -- Triggers pour mise à jour automatique des timestamps
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -1053,21 +1062,44 @@ CREATE POLICY "Countries are viewable by all" ON public.countries
     FOR SELECT USING (true);
 
 -- Politiques pour les utilisateurs
-CREATE POLICY "Users can view their own profile" ON public.users
-    FOR SELECT USING (auth.uid() = id);
+-- Politique spéciale pour l'inscription
+CREATE POLICY "Allow users to insert their own profile during signup" 
+ON public.users 
+FOR INSERT 
+WITH CHECK (
+  -- Permettre l'insertion si l'ID correspond à l'utilisateur qui vient de s'authentifier
+  auth.uid() = id
+);
 
-CREATE POLICY "Users can update their own profile" ON public.users
-    FOR UPDATE USING (auth.uid() = id AND NOT is_blocked AND NOT is_suspended);
+-- Politique pour la lecture du profil
+CREATE POLICY "Users can read own profile" 
+ON public.users 
+FOR SELECT 
+USING (
+  auth.uid() = id OR
+  -- Optionnel : permettre la lecture des profils publics
+  (networking_visibility = true AND auth.role() = 'authenticated')
+);
 
-CREATE POLICY "Public profiles are viewable by connected users" ON public.users
-    FOR SELECT USING (
-        networking_visibility = TRUE 
-        AND EXISTS (
-            SELECT 1 FROM public.connections 
-            WHERE (requester_id = auth.uid() AND recipient_id = users.id AND status = 'accepted')
-            OR (recipient_id = auth.uid() AND requester_id = users.id AND status = 'accepted')
-        )
-    );
+-- Politique pour la mise à jour
+CREATE POLICY "Users can update own profile" 
+ON public.users 
+FOR UPDATE 
+USING (auth.uid() = id)
+WITH CHECK (auth.uid() = id);
+
+-- Politique pour les administrateurs
+CREATE POLICY "Admins can do everything" 
+ON public.users 
+FOR ALL 
+USING (
+  EXISTS (
+    SELECT 1 FROM public.user_roles 
+    WHERE user_id = auth.uid() 
+    AND role IN ('admin', 'super_admin')
+    AND is_active = true
+  )
+);
 
 -- Politiques pour les messages
 CREATE POLICY "Users can view their own messages" ON public.messages
@@ -1381,6 +1413,38 @@ CREATE TRIGGER update_designation_count_trigger
 AFTER INSERT ON public.negotiators
 FOR EACH ROW EXECUTE FUNCTION update_negotiator_designation_count();
 
+-- Fonction pour gérer l'inscription automatique des nouveaux utilisateurs
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger AS $$
+BEGIN
+  INSERT INTO public.users (
+    id,
+    email,
+    first_name,
+    last_name,
+    country_id,
+    created_at,
+    updated_at
+  )
+  VALUES (
+    new.id,
+    new.email,
+    new.raw_user_meta_data->>'first_name',
+    new.raw_user_meta_data->>'last_name',
+    null, -- country_id sera mis à jour plus tard
+    now(),
+    now()
+  );
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger sur auth.users pour l'inscription automatique
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
 -- =============================================
 -- DONNÉES INITIALES
 -- =============================================
@@ -1415,3 +1479,6 @@ COMMENT ON TABLE public.activity_registrations IS 'Inscriptions des utilisateurs
 COMMENT ON TABLE public.activity_questions IS 'Questions en temps réel pendant les activités';
 COMMENT ON TABLE public.newsletter_lists IS 'Listes de diffusion pour newsletters ciblées';
 COMMENT ON TABLE public.poll_responses IS 'Réponses aux sondages avec support anonyme';
+COMMENT ON COLUMN public.events.country_id IS 'Pays où se déroule l''événement (référence vers la table countries)';
+COMMENT ON COLUMN public.events.city IS 'Ville où se déroule l''événement';
+COMMENT ON COLUMN public.events.address IS 'Adresse complète de l''événement';
