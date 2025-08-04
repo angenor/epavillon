@@ -22,7 +22,8 @@
     "online": "En ligne",
     "logoAlt": "Logo IFDD",
     "locale": "fr-FR",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "back": "Retour"
   },
   "nav": {
     "programming": "Programmation",
@@ -242,6 +243,63 @@
     "callback": {
       "processing": "Authentification en cours...",
       "pleaseWait": "Veuillez patienter quelques instants"
+    }
+  },
+  "events": {
+    "create": {
+      "requirements": {
+        "title": "Prérequis pour créer un événement",
+        "description": "Pour créer un événement, vous devez remplir les conditions suivantes :",
+        "contactAdmin": "Contacter un administrateur"
+      }
+    }
+  },
+  "organization": {
+    "setup": {
+      "title": "Configuration de l'organisation",
+      "subtitle": "Recherchez ou enregistrez votre organisation pour continuer",
+      "step1": "Rechercher",
+      "step2": "Créer",
+      "searchTitle": "Rechercher votre organisation",
+      "searchLabel": "Nom de l'organisation",
+      "searchPlaceholder": "Tapez le nom de votre organisation...",
+      "searching": "Recherche en cours...",
+      "resultsTitle": "Organisations trouvées",
+      "noResults": "Aucune organisation trouvée avec ce nom",
+      "matchedAs": "Trouvé comme",
+      "createNew": "Créer une nouvelle organisation",
+      "createTitle": "Créer une nouvelle organisation",
+      "create": "Créer l'organisation",
+      "creating": "Création en cours..."
+    },
+    "fields": {
+      "name": "Nom de l'organisation",
+      "email": "Email officiel",
+      "type": "Type d'organisation",
+      "country": "Pays",
+      "website": "Site web",
+      "description": "Description"
+    },
+    "placeholders": {
+      "name": "Ex: Institut de la Francophonie pour le Développement Durable",
+      "email": "contact@organisation.org",
+      "selectType": "Sélectionnez le type",
+      "selectCountry": "Sélectionnez le pays",
+      "website": "https://www.organisation.org",
+      "description": "Description de l'organisation..."
+    },
+    "types": {
+      "public_national_institution": "Institution publique nationale",
+      "international_organization": "Organisation internationale",
+      "regional_organization": "Organisation régionale",
+      "ngo_association": "ONG/Association",
+      "private_sector": "Secteur privé"
+    },
+    "verified": "Vérifiée",
+    "requirements": {
+      "authenticated": "Être connecté",
+      "adminRole": "Avoir un rôle administrateur",
+      "organization": "Organisation renseignée"
     }
   }
 }

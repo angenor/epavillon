@@ -335,7 +335,7 @@ const loadActivities = async () => {
   try {
     const { data, error } = await supabase
       .from('activities')
-      .select('*, organizations(id, name, logo)')
+      .select('*, organizations(id, name, logo_url)')
       .eq('event_id', route.params.id)
       .order('date', { ascending: true })
       .limit(6)

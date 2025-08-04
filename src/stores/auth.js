@@ -42,7 +42,11 @@ export const useAuthStore = defineStore('auth', () => {
   const fetchProfile = async (userId) => {
     try {
       const { data, error } = await from('users')
-        .select('*, country:countries(*)')
+        .select(`
+          *, 
+          country:countries(*),
+          user_roles(role, is_active, valid_until)
+        `)
         .eq('id', userId)
         .single()
       

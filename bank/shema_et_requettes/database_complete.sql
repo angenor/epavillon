@@ -1132,6 +1132,37 @@ CREATE POLICY "Users can create organizations" ON public.organizations
 CREATE POLICY "Published events are viewable by all" ON public.events
     FOR SELECT USING (event_status != 'suspended');
 
+CREATE POLICY "Only admins can create events" ON public.events
+    FOR INSERT WITH CHECK (
+        auth.uid() IS NOT NULL 
+        AND created_by = auth.uid()
+        AND EXISTS (
+            SELECT 1 FROM public.user_roles 
+            WHERE user_id = auth.uid() 
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
+        )
+    );
+
+CREATE POLICY "Users can update their own events" ON public.events
+    FOR UPDATE USING (
+        created_by = auth.uid() OR
+        EXISTS (
+            SELECT 1 FROM public.user_roles 
+            WHERE user_id = auth.uid() 
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
+        )
+    ) WITH CHECK (
+        created_by = auth.uid() OR
+        EXISTS (
+            SELECT 1 FROM public.user_roles 
+            WHERE user_id = auth.uid() 
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
+        )
+    );
+
 -- Politiques pour les activités
 CREATE POLICY "Approved activities are viewable by all" ON public.activities
     FOR SELECT USING (validation_status = 'approved' AND is_deleted = FALSE);

@@ -1,6 +1,61 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Requirements Check -->
+      <div v-if="!canCreateEvents" class="mb-8">
+        <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
+          <div class="flex">
+            <svg class="w-5 h-5 text-yellow-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+                {{ t('events.create.requirements.title') }}
+              </h3>
+              <div class="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
+                <p class="mb-3">{{ t('events.create.requirements.description') }}</p>
+                <ul class="space-y-2">
+                  <li v-for="(requirement, key) in requirementsStatus" :key="key" class="flex items-center">
+                    <svg v-if="requirement.met" class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    <svg v-else class="w-4 h-4 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                    <span :class="requirement.met ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'">
+                      {{ t(requirement.label) }}
+                    </span>
+                  </li>
+                </ul>
+              </div>
+              <div class="mt-4 flex space-x-3">
+                <button
+                  v-if="!authStore.isAuthenticated"
+                  @click="goToLogin"
+                  class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-yellow-800 dark:text-yellow-200 bg-yellow-100 dark:bg-yellow-800 hover:bg-yellow-200 dark:hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                >
+                  {{ t('auth.login') }}
+                </button>
+                <button
+                  v-if="authStore.isAuthenticated && !hasOrganization"
+                  @click="goToOrganizationSetup"
+                  class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-yellow-800 dark:text-yellow-200 bg-yellow-100 dark:bg-yellow-800 hover:bg-yellow-200 dark:hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                >
+                  {{ t('organization.setup.title') }}
+                </button>
+                <button
+                  v-if="authStore.isAuthenticated && !hasAdminRole"
+                  @click="contactAdmin"
+                  class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-yellow-800 dark:text-yellow-200 bg-yellow-100 dark:bg-yellow-800 hover:bg-yellow-200 dark:hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                >
+                  {{ t('events.create.requirements.contactAdmin') }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- Header -->
       <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
@@ -152,16 +207,48 @@
                 {{ t('events.create.fields.inPersonDetails') }}
               </h3>
               
+              <!-- Country Selection -->
               <div>
                 <label class="block text-sm text-gray-600 dark:text-gray-400 mb-2">
-                  {{ t('events.create.fields.location') }}
+                  {{ t('events.create.fields.country') }}
+                </label>
+                <select
+                  v-model="formData.countryId"
+                  :required="['in_person', 'hybrid'].includes(formData.participationMode)"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
+                >
+                  <option value="">{{ t('events.create.placeholders.selectCountry') }}</option>
+                  <option v-for="country in countries" :key="country.id" :value="country.id">
+                    {{ country.name_fr }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- City -->
+              <div>
+                <label class="block text-sm text-gray-600 dark:text-gray-400 mb-2">
+                  {{ t('events.create.fields.city') }}
                 </label>
                 <input
-                  v-model="formData.inPersonLocation"
+                  v-model="formData.city"
                   type="text"
                   :required="['in_person', 'hybrid'].includes(formData.participationMode)"
                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
-                  :placeholder="t('events.create.placeholders.location')"
+                  :placeholder="t('events.create.placeholders.city')"
+                />
+              </div>
+
+              <!-- Address -->
+              <div>
+                <label class="block text-sm text-gray-600 dark:text-gray-400 mb-2">
+                  {{ t('events.create.fields.address') }}
+                </label>
+                <textarea
+                  v-model="formData.address"
+                  rows="3"
+                  :required="['in_person', 'hybrid'].includes(formData.participationMode)"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors resize-none"
+                  :placeholder="t('events.create.placeholders.address')"
                 />
               </div>
               
@@ -231,6 +318,9 @@
                   </label>
                   <div v-if="uploadedBanners.banner_32_9" class="mt-2 text-sm text-green-600 dark:text-green-400">
                     ✓ {{ t('events.create.uploaded') }}
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      {{ t('events.create.lowQualityGenerated') }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -259,6 +349,9 @@
                   </label>
                   <div v-if="uploadedBanners.banner_16_9" class="mt-2 text-sm text-green-600 dark:text-green-400">
                     ✓ {{ t('events.create.uploaded') }}
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      {{ t('events.create.lowQualityGenerated') }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -287,6 +380,9 @@
                   </label>
                   <div v-if="uploadedBanners.banner_1_1" class="mt-2 text-sm text-green-600 dark:text-green-400">
                     ✓ {{ t('events.create.uploaded') }}
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      {{ t('events.create.lowQualityGenerated') }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -324,16 +420,18 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAuthStore } from '@/stores/auth'
+import { useOrganizationCheck } from '@/composables/useOrganizationCheck'
 
 const { t } = useI18n()
 const router = useRouter()
 const { supabase } = useSupabase()
 const authStore = useAuthStore()
+const { hasAdminRole, hasOrganization, canCreateEvents, getRequirementsStatus } = useOrganizationCheck()
 
 // Unique ID for form elements
 const uniqueId = Date.now()
@@ -347,7 +445,9 @@ const formData = reactive({
   participationMode: '',
   onlineStartDatetime: '',
   onlineEndDatetime: '',
-  inPersonLocation: '',
+  countryId: '',
+  city: '',
+  address: '',
   inPersonStartDate: '',
   inPersonEndDate: ''
 })
@@ -359,8 +459,62 @@ const uploadedBanners = reactive({
   banner_1_1: null
 })
 
+// Generated banners (low quality versions)
+const generatedBanners = reactive({
+  banner_low_quality_32_9: null,
+  banner_low_quality_16_9: null,
+  banner_low_quality_1_1: null
+})
+
+// Countries data
+const countries = ref([])
+
 const isSubmitting = ref(false)
 const participationModes = ['online', 'hybrid', 'in_person']
+
+// Requirements check
+const requirementsStatus = computed(() => getRequirementsStatus())
+
+// Load countries on mount
+const loadCountries = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('countries')
+      .select('id, name_fr, name_en')
+      .order('name_fr')
+    
+    if (error) throw error
+    countries.value = data || []
+  } catch (error) {
+    console.error('Error loading countries:', error)
+  }
+}
+
+// Load countries when component mounts
+loadCountries()
+
+// Utility function to generate low quality version of an image
+const generateLowQualityImage = (file, quality = 0.6) => {
+  return new Promise((resolve) => {
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    const img = new Image()
+    
+    img.onload = () => {
+      // Set canvas dimensions to original image size
+      canvas.width = img.width
+      canvas.height = img.height
+      
+      // Draw image on canvas
+      ctx.drawImage(img, 0, 0)
+      
+      // Convert to blob with reduced quality
+      canvas.toBlob(resolve, 'image/jpeg', quality)
+    }
+    
+    img.src = URL.createObjectURL(file)
+  })
+}
 
 // Handle file upload
 const handleFileUpload = async (event, bannerType) => {
@@ -368,9 +522,14 @@ const handleFileUpload = async (event, bannerType) => {
   if (!file) return
 
   try {
-    // TODO: Implement file upload to Supabase Storage
-    // For now, just mark as uploaded
+    // Store the high quality original file
     uploadedBanners[bannerType] = file
+    
+    // Generate low quality version
+    const lowQualityFile = await generateLowQualityImage(file, 0.4)
+    generatedBanners[`banner_low_quality_${bannerType.split('_')[1]}_${bannerType.split('_')[2]}`] = lowQualityFile
+    
+    // TODO: Upload both versions to Supabase Storage
   } catch (error) {
     console.error('Upload error:', error)
   }
@@ -403,12 +562,26 @@ const handleSubmit = async () => {
 
     // Add in-person event details if applicable
     if (['in_person', 'hybrid'].includes(formData.participationMode)) {
-      eventData.in_person_location = formData.inPersonLocation
+      eventData.country_id = formData.countryId
+      eventData.city = formData.city
+      eventData.address = formData.address
       eventData.in_person_start_date = formData.inPersonStartDate
       eventData.in_person_end_date = formData.inPersonEndDate
     }
 
-    // TODO: Upload banners and add URLs to eventData
+    // Upload banners and add URLs to eventData
+    if (uploadedBanners.banner_32_9) {
+      // TODO: Upload high quality banner and set eventData.banner_high_quality_32_9_url
+      // TODO: Upload generated low quality banner and set eventData.banner_low_quality_32_9_url
+    }
+    if (uploadedBanners.banner_16_9) {
+      // TODO: Upload high quality banner and set eventData.banner_high_quality_16_9_url
+      // TODO: Upload generated low quality banner and set eventData.banner_low_quality_16_9_url
+    }
+    if (uploadedBanners.banner_1_1) {
+      // TODO: Upload high quality banner and set eventData.banner_high_quality_1_1_url
+      // TODO: Upload generated low quality banner and set eventData.banner_low_quality_1_1_url
+    }
 
     // Insert event into database
     const { data, error } = await supabase
@@ -432,5 +605,20 @@ const handleSubmit = async () => {
 // Handle cancel
 const handleCancel = () => {
   router.back()
+}
+
+// Navigation methods for requirements
+const goToLogin = () => {
+  router.push('/auth/login?redirect=/events/create')
+}
+
+const goToOrganizationSetup = () => {
+  router.push('/organization/setup?redirect=/events/create')
+}
+
+const contactAdmin = () => {
+  // TODO: Implement contact admin functionality
+  // Could open a modal, navigate to contact page, or show admin contacts
+  console.log('Contact admin functionality to be implemented')
 }
 </script>
