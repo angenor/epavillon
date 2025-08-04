@@ -11,9 +11,34 @@ Il s'agit d'une application web **Vue 3** utilisant Vite comme outil de build, J
 - **Composables** : Organiser la logique métier dans des composables spécialisés dans `src/composables/`
 - **Utils** : Fonctions utilitaires pures dans `src/utils/`
 - **Stores** : Gestion d'état avec Pinia dans `src/stores/`
-- **Views** : Pages de l'application dans `src/views/`
+- **Views** : Pages de l'application organisées par domaine dans `src/views/`
+  - `src/views/auth/` : Toutes les vues liées à l'authentification (Login, Register, VerifyEmail, ForgotPassword, AuthCallback)
+  - `src/views/events/` : Toutes les vues liées aux événements (Create, Detail, etc.)
+  - Chaque nouveau domaine fonctionnel doit avoir son propre dossier
 - **Router** : Configuration du routage dans `src/router/`
 - **Séparation des responsabilités** : Chaque composant, composable ou utility doit avoir une responsabilité unique et bien définie
+
+### Conventions de nommage
+- **Views** : Nommer les fichiers de vues simplement sans le suffixe "View" (ex: `Login.vue` au lieu de `LoginView.vue`)
+- **Organisation** : Grouper les vues par domaine fonctionnel dans des sous-dossiers de `src/views/`
+- **Imports** : Mettre à jour les imports dans le router pour refléter la structure modulaire
+
+### Principes de Clean Code
+**IMPORTANT** : Suivre les principes de Clean Code pour garantir la qualité et la maintenabilité :
+
+1. **DRY (Don't Repeat Yourself)**
+   - Éviter la duplication de code
+   - Créer des composants/fonctions réutilisables
+   - Centraliser la logique commune dans des composables
+
+2. **KISS (Keep It Simple, Stupid)**
+   - Privilégier des solutions simples et claires
+   - Éviter la sur-ingénierie
+   - Un composant = une responsabilité
+
+3. **YAGNI (You Aren't Gonna Need It)**
+   - Ne pas implémenter de fonctionnalités "au cas où"
+   - Développer uniquement ce qui est nécessaire maintenant
 
 ### Documentation importante
 - **Cahier des charges complet** : Consulter `bank/cahier.md` pour comprendre les fonctionnalités et exigences du projet

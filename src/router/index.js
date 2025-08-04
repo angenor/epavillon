@@ -20,38 +20,38 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/LoginView.vue'),
+      component: () => import('../views/auth/Login.vue'),
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import('../views/RegisterView.vue'),
+      component: () => import('../views/auth/Register.vue'),
     },
     {
       path: '/verify-email',
       name: 'verify-email',
-      component: () => import('../views/VerifyEmailView.vue'),
+      component: () => import('../views/auth/VerifyEmail.vue'),
     },
     {
       path: '/forgot-password',
       name: 'forgot-password',
-      component: () => import('../views/ForgotPasswordView.vue'),
+      component: () => import('../views/auth/ForgotPassword.vue'),
     },
     {
       path: '/auth/callback',
       name: 'auth-callback',
-      component: () => import('../views/AuthCallbackView.vue'),
+      component: () => import('../views/auth/AuthCallback.vue'),
     },
     {
       path: '/events/create',
       name: 'create-event',
-      component: () => import('../views/CreateEventView.vue'),
+      component: () => import('../views/events/Create.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/events/:id',
       name: 'event-detail',
-      component: () => import('../views/EventDetailView.vue'),
+      component: () => import('../views/events/Detail.vue'),
     },
   ],
 })

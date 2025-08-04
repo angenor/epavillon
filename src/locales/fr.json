@@ -88,28 +88,7 @@
     "upcoming": "À venir",
     "viewAll": "Voir tout"
   },
-  "event": {
-    "description": "Description",
-    "dateTime": "Date et heure",
-    "location": "Lieu",
-    "format": "Format",
-    "formats": {
-      "online": "En ligne",
-      "inPerson": "En présentiel", 
-      "hybrid": "Hybride"
-    },
-    "submissionDeadline": "Date limite de soumission",
-    "daysRemaining": "jours restants",
-    "viewActivities": "Voir les activités",
-    "submitActivity": "Soumettre une activité",
-    "upcomingActivities": "Activités à venir",
-    "organizedBy": "Organisé par",
-    "viewAllActivities": "Voir toutes les activités",
-    "status": {
-      "upcoming": "À venir",
-      "ongoing": "En cours",
-      "completed": "Terminé"
-    },
+  "events": {
     "create": {
       "title": "Créer un nouvel événement",
       "subtitle": "Remplissez les informations ci-dessous pour créer un nouvel événement",
@@ -144,6 +123,29 @@
       "uploaded": "Téléchargé",
       "submit": "Créer l'événement",
       "submitting": "Création en cours..."
+    }
+  },
+  "event": {
+    "description": "Description",
+    "dateTime": "Date et heure",
+    "location": "Lieu",
+    "format": "Format",
+    "formats": {
+      "online": "En ligne",
+      "in_person": "En présentiel", 
+      "hybrid": "Hybride"
+    },
+    "submissionDeadline": "Date limite de soumission",
+    "daysRemaining": "jours restants",
+    "viewActivities": "Voir les activités",
+    "submitActivity": "Soumettre une activité",
+    "upcomingActivities": "Activités à venir",
+    "organizedBy": "Organisé par",
+    "viewAllActivities": "Voir toutes les activités",
+    "status": {
+      "upcoming": "À venir",
+      "ongoing": "En cours",
+      "completed": "Terminé"
     }
   },
   "auth": {

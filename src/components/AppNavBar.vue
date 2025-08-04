@@ -229,7 +229,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 
 export default {
-  name: 'NavBar',
+  name: 'AppNavBar',
   setup() {
     const { theme, toggleTheme } = useTheme()
     const { t, locale } = useI18n()

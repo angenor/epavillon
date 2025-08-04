@@ -152,7 +152,7 @@
     "format": "Format",
     "formats": {
       "online": "Online",
-      "inPerson": "In Person",
+      "in_person": "In Person",
       "hybrid": "Hybrid"
     },
     "submissionDeadline": "Submission Deadline",
