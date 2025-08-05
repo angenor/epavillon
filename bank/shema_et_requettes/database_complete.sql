@@ -123,8 +123,6 @@ CREATE TYPE organization_type AS ENUM (
 CREATE TABLE public.organizations (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT NOT NULL,
-    name_normalized TEXT GENERATED ALWAYS AS (LOWER(TRIM(name))) STORED, -- Nom normalisé pour comparaison
-    name_search_tokens TEXT[], -- Tokens de recherche pour améliorer la détection
     email TEXT UNIQUE NOT NULL,
     email_verified BOOLEAN DEFAULT FALSE,
     organization_type organization_type NOT NULL,
@@ -143,10 +141,10 @@ CREATE TABLE public.organizations (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Index pour détecter les doublons potentiels
-CREATE INDEX idx_organizations_name_normalized ON public.organizations(name_normalized);
-CREATE INDEX idx_organizations_name_trgm ON public.organizations USING gin(name gin_trgm_ops);
-CREATE INDEX idx_organizations_search_tokens ON public.organizations USING gin(name_search_tokens);
+-- Index simples pour les recherches
+CREATE INDEX idx_organizations_name_lower ON public.organizations(LOWER(name));
+CREATE INDEX idx_organizations_email ON public.organizations(email);
+CREATE INDEX idx_organizations_is_active ON public.organizations(is_active);
 
 -- Validation des organisations par les utilisateurs
 CREATE TABLE public.organization_validations (
@@ -1126,11 +1124,19 @@ CREATE POLICY "Users can send messages to connections" ON public.messages
     );
 
 -- Politiques pour les organisations
-CREATE POLICY "Organizations are viewable by all authenticated users" ON public.organizations
+CREATE POLICY "public_view_organizations" ON public.organizations
     FOR SELECT USING (is_active = TRUE);
 
-CREATE POLICY "Users can create organizations" ON public.organizations
-    FOR INSERT WITH CHECK (created_by = auth.uid());
+CREATE POLICY "authenticated_create_organizations" ON public.organizations
+    FOR INSERT WITH CHECK (
+        auth.uid() IS NOT NULL 
+        AND created_by = auth.uid()
+    );
+
+CREATE POLICY "creator_update_organizations" ON public.organizations
+    FOR UPDATE 
+    USING (created_by = auth.uid())
+    WITH CHECK (created_by = auth.uid());
 
 -- Politiques pour les événements publics
 CREATE POLICY "Published events are viewable by all" ON public.events
@@ -1314,89 +1320,34 @@ BEFORE INSERT OR UPDATE ON public.organizations
 FOR EACH ROW EXECUTE FUNCTION check_organization_duplicate();
 
 -- Fonction de recherche d'organisations avec gestion des alias
-CREATE OR REPLACE FUNCTION search_organizations(search_query TEXT)
+-- Fonction de recherche simplifiée pour éviter les erreurs RLS
+CREATE OR REPLACE FUNCTION search_organizations_simple(search_text TEXT)
 RETURNS TABLE (
     organization_id UUID,
     name TEXT,
-    matched_name TEXT,
-    match_type TEXT,
-    similarity_score FLOAT,
-    is_verified BOOLEAN,
-    is_duplicate BOOLEAN
-) AS $$
+    organization_type organization_type,
+    is_verified BOOLEAN
+) 
+SECURITY DEFINER
+SET search_path = public
+AS $$
 BEGIN
-    -- Normaliser la requête
-    search_query := LOWER(TRIM(search_query));
-    
+    -- Retourner directement les résultats sans logique complexe
     RETURN QUERY
-    -- Correspondance exacte sur le nom principal
-    SELECT DISTINCT
+    SELECT 
         o.id,
         o.name,
-        o.name as matched_name,
-        'exact_name'::TEXT as match_type,
-        1.0::FLOAT as similarity_score,
-        o.is_verified,
-        o.is_duplicate
-    FROM public.organizations o
-    WHERE o.name_normalized = search_query
-        AND o.is_active = TRUE
-    
-    UNION
-    
-    -- Correspondance exacte sur les alias
-    SELECT DISTINCT
-        o.id,
-        o.name,
-        oa.alias_name as matched_name,
-        'exact_alias'::TEXT as match_type,
-        1.0::FLOAT as similarity_score,
-        o.is_verified,
-        o.is_duplicate
-    FROM public.organizations o
-    JOIN public.organization_aliases oa ON o.id = oa.organization_id
-    WHERE oa.alias_normalized = search_query
-        AND o.is_active = TRUE
-    
-    UNION
-    
-    -- Recherche floue sur le nom principal
-    SELECT DISTINCT
-        o.id,
-        o.name,
-        o.name as matched_name,
-        'fuzzy_name'::TEXT as match_type,
-        similarity(o.name, search_query) as similarity_score,
-        o.is_verified,
-        o.is_duplicate
-    FROM public.organizations o
-    WHERE similarity(o.name, search_query) > 0.3
-        AND o.is_active = TRUE
-    
-    UNION
-    
-    -- Recherche floue sur les alias
-    SELECT DISTINCT
-        o.id,
-        o.name,
-        oa.alias_name as matched_name,
-        'fuzzy_alias'::TEXT as match_type,
-        similarity(oa.alias_name, search_query) as similarity_score,
-        o.is_verified,
-        o.is_duplicate
-    FROM public.organizations o
-    JOIN public.organization_aliases oa ON o.id = oa.organization_id
-    WHERE similarity(oa.alias_name, search_query) > 0.3
-        AND o.is_active = TRUE
-    
-    ORDER BY 
-        CASE 
-            WHEN match_type IN ('exact_name', 'exact_alias') THEN 0
-            ELSE 1
-        END,
-        is_verified DESC,
-        is_duplicate ASC,
-        similarity_score DESC;
+        o.organization_type,
+        o.is_verified
+    FROM organizations o
+    WHERE 
+        o.is_active = TRUE
+        AND (
+            o.name ILIKE '%' || search_text || '%'
+            OR o.email ILIKE '%' || search_text || '%'
+        )
+    ORDER BY o.name
+    LIMIT 50;
 END;
 $$ LANGUAGE plpgsql;
 

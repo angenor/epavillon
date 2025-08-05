@@ -23,7 +23,8 @@
     "logoAlt": "Logo IFDD",
     "locale": "fr-FR",
     "cancel": "Annuler",
-    "back": "Retour"
+    "back": "Retour",
+    "error": "Erreur"
   },
   "nav": {
     "programming": "Programmation",
@@ -51,6 +52,74 @@
   "hero": {
     "welcome": "Bienvenue sur la plateforme epavillon",
     "subtitle": "Institut de la Francophonie pour le Développement Durable"
+  },
+  "events": {
+    "title": "Événements à venir et passés",
+    "subtitle": "Participez aux grands événements internationaux sur le climat, la biodiversité et le développement durable.",
+    "status": {
+      "ongoing": "EN COURS",
+      "upcoming": "À VENIR",
+      "completed": "TERMINÉ"
+    },
+    "cop29": {
+      "title": "COP29 - Bakou",
+      "description": "Conférence des Parties sur le changement climatique"
+    },
+    "cop16bio": {
+      "title": "COP16 Biodiversité",
+      "description": "Convention sur la diversité biologique"
+    },
+    "unccd": {
+      "title": "UNCCD COP16",
+      "description": "Convention sur la lutte contre la désertification"
+    },
+    "seeAllEvents": "Voir tous les événements",
+    "noEvents": "Aucun événement disponible pour le moment",
+    "create": {
+      "title": "Créer un événement",
+      "subtitle": "Organisez un nouvel événement pour la communauté",
+      "submit": "Créer l'événement",
+      "submitting": "Création en cours...",
+      "uploaded": "Téléchargé",
+      "lowQualityGenerated": "Version basse qualité générée automatiquement",
+      "mediaDescription": "Téléchargez des bannières dans différents formats pour optimiser l'affichage sur tous les supports",
+      "requirements": {
+        "title": "Prérequis pour créer un événement",
+        "description": "Pour créer un événement, vous devez remplir les conditions suivantes :",
+        "contactAdmin": "Contacter un administrateur"
+      },
+      "sections": {
+        "basicInfo": "Informations générales",
+        "format": "Format de l'événement",
+        "media": "Médias et bannières"
+      },
+      "fields": {
+        "year": "Année",
+        "title": "Titre de l'événement",
+        "description": "Description",
+        "submissionDeadline": "Date limite de soumission",
+        "participationMode": "Mode de participation",
+        "onlineDetails": "Détails événement en ligne",
+        "onlineStartDate": "Date et heure de début en ligne",
+        "onlineEndDate": "Date et heure de fin en ligne",
+        "inPersonDetails": "Détails événement présentiel",
+        "country": "Pays",
+        "city": "Ville",
+        "address": "Adresse",
+        "inPersonStartDate": "Date de début présentiel",
+        "inPersonEndDate": "Date de fin présentiel",
+        "banner32_9": "Bannière 32:9",
+        "banner16_9": "Bannière 16:9",
+        "banner1_1": "Bannière 1:1"
+      },
+      "placeholders": {
+        "title": "Ex: Forum International sur le Développement Durable 2025",
+        "description": "Décrivez l'objectif et le contenu de votre événement...",
+        "selectCountry": "Sélectionnez un pays",
+        "city": "Ex: Paris",
+        "address": "Adresse complète du lieu"
+      }
+    }
   },
   "trainings": {
     "title": "Formations disponibles",
@@ -88,13 +157,54 @@
     "pageDescription": "This is an about page"
   },
   "activities": {
-    "title": "Activités",
+    "title": "Activités à venir",
     "events": "Événements",
     "trainings": "Formations",
     "upcoming": "À venir",
-    "viewAll": "Voir tout"
+    "viewAll": "Voir toutes les activités",
+    "start": "Début",
+    "online": "En ligne",
+    "availableSpots": "Places disponibles",
+    "noUpcoming": "Aucune activité à venir",
+    "status": {
+      "upcoming": "À venir",
+      "ongoing": "En cours",
+      "past": "Passé",
+      "unknown": "Inconnu"
+    },
+    "categories": {
+      "climate": "Climat",
+      "biodiversity": "Biodiversité",
+      "desertification": "Désertification"
+    },
+    "duration": {
+      "days": "{{count}} jours",
+      "weeks": "{{count}} semaines",
+      "months": "{{count}} mois"
+    }
   },
-  "events": {
+  "event": {
+    "description": "Description",
+    "dateTime": "Date et heure",
+    "location": "Lieu",
+    "format": "Format",
+    "formats": {
+      "online": "En ligne",
+      "in_person": "En présentiel",
+      "hybrid": "Hybride"
+    },
+    "submissionDeadline": "Date limite de soumission",
+    "daysRemaining": "jours restants",
+    "viewActivities": "Voir les activités",
+    "submitActivity": "Soumettre une activité",
+    "upcomingActivities": "Activités à venir",
+    "organizedBy": "Organisé par",
+    "viewAllActivities": "Voir toutes les activités",
+    "status": {
+      "upcoming": "À venir",
+      "ongoing": "En cours",
+      "completed": "Terminé"
+    },
     "create": {
       "title": "Créer un nouvel événement",
       "subtitle": "Remplissez les informations ci-dessous pour créer un nouvel événement",
@@ -250,7 +360,7 @@
       "pleaseWait": "Veuillez patienter quelques instants"
     }
   },
-  "events": {
+  "eventsPage": {
     "create": {
       "title": "Créer un événement",
       "subtitle": "Organisez un nouvel événement pour la communauté",
@@ -297,20 +407,6 @@
       }
     }
   },
-  "event": {
-    "formats": {
-      "online": "En ligne",
-      "hybrid": "Hybride",
-      "in_person": "Présentiel"
-    },
-    "status": {
-      "upcoming": "À venir",
-      "ongoing": "En cours",
-      "completed": "Terminé",
-      "suspended": "Suspendu"
-    },
-    "description": "Description"
-  },
   "organization": {
     "setup": {
       "title": "Configuration de l'organisation",
@@ -325,6 +421,10 @@
       "noResults": "Aucune organisation trouvée avec ce nom",
       "matchedAs": "Trouvé comme",
       "createNew": "Créer une nouvelle organisation",
+      "createNewAfterSearch": "Créer une nouvelle organisation",
+      "canCreateAfterSearch": "Vous pouvez maintenant créer une nouvelle organisation",
+      "searchInstructions": "Tapez au moins 3 caractères pour commencer la recherche",
+      "startSearching": "Commencez par taper le nom de votre organisation",
       "createTitle": "Créer une nouvelle organisation",
       "create": "Créer l'organisation",
       "creating": "Création en cours..."
@@ -339,7 +439,7 @@
     },
     "placeholders": {
       "name": "Ex: Institut de la Francophonie pour le Développement Durable",
-      "email": "contact@organisation.org",
+      "email": "contact{'@'}organisation.org",
       "selectType": "Sélectionnez le type",
       "selectCountry": "Sélectionnez le pays",
       "website": "https://www.organisation.org",

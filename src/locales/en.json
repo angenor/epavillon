@@ -22,7 +22,9 @@
     "online": "Online",
     "logoAlt": "IFDD Logo",
     "locale": "en-US",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "back": "Back",
+    "error": "Error"
   },
   "nav": {
     "programming": "Programming",
@@ -67,6 +69,7 @@
       "description": "Convention to Combat Desertification"
     },
     "seeAllEvents": "See all events",
+    "noEvents": "No events available at the moment",
     "create": {
       "title": "Create a new event",
       "subtitle": "Fill in the information below to create a new event",
@@ -139,11 +142,31 @@
     "pageDescription": "This is an about page"
   },
   "activities": {
-    "title": "Activities",
+    "title": "Upcoming Activities",
     "events": "Events",
     "trainings": "Trainings",
     "upcoming": "Upcoming",
-    "viewAll": "View All"
+    "viewAll": "View All Activities",
+    "start": "Start",
+    "online": "Online",
+    "availableSpots": "Available spots",
+    "noUpcoming": "No upcoming activities",
+    "status": {
+      "upcoming": "Upcoming",
+      "ongoing": "Ongoing",
+      "past": "Past",
+      "unknown": "Unknown"
+    },
+    "categories": {
+      "climate": "Climate",
+      "biodiversity": "Biodiversity",
+      "desertification": "Desertification"
+    },
+    "duration": {
+      "days": "{{count}} days",
+      "weeks": "{{count}} weeks",
+      "months": "{{count}} months"
+    }
   },
   "event": {
     "description": "Description",
@@ -262,6 +285,108 @@
     "callback": {
       "processing": "Authenticating...",
       "pleaseWait": "Please wait a moment"
+    },
+    "login": "Sign In",
+    "logout": "Sign Out",
+    "register": "Sign Up"
+  },
+  "organization": {
+    "setup": {
+      "title": "Organization Setup",
+      "subtitle": "Search for or register your organization to continue",
+      "step1": "Search",
+      "step2": "Create",
+      "searchTitle": "Search for your organization",
+      "searchLabel": "Organization name",
+      "searchPlaceholder": "Type your organization name...",
+      "searching": "Searching...",
+      "resultsTitle": "Organizations found",
+      "noResults": "No organization found with this name",
+      "matchedAs": "Matched as",
+      "createNew": "Create new organization",
+      "createNewAfterSearch": "Create new organization",
+      "canCreateAfterSearch": "You can now create a new organization",
+      "searchInstructions": "Type at least 3 characters to start searching",
+      "startSearching": "Start by typing your organization name",
+      "createTitle": "Create new organization",
+      "create": "Create organization",
+      "creating": "Creating..."
+    },
+    "fields": {
+      "name": "Organization name",
+      "email": "Official email",
+      "type": "Organization type",
+      "country": "Country",
+      "website": "Website",
+      "description": "Description"
+    },
+    "placeholders": {
+      "name": "E.g: Institute of La Francophonie for Sustainable Development",
+      "email": "contact{'@'}organization.org",
+      "selectType": "Select type",
+      "selectCountry": "Select country",
+      "website": "https://www.organization.org",
+      "description": "Organization description..."
+    },
+    "types": {
+      "public_national_institution": "Public National Institution",
+      "international_organization": "International Organization",
+      "regional_organization": "Regional Organization",
+      "ngo_association": "NGO/Association",
+      "private_sector": "Private Sector"
+    },
+    "verified": "Verified",
+    "requirements": {
+      "authenticated": "Be authenticated",
+      "adminRole": "Have administrator role",
+      "organization": "Organization information provided"
+    }
+  },
+  "events": {
+    "create": {
+      "title": "Create Event",
+      "subtitle": "Organize a new event for the community",
+      "submit": "Create Event",
+      "submitting": "Creating...",
+      "uploaded": "Uploaded",
+      "lowQualityGenerated": "Low quality version generated automatically",
+      "mediaDescription": "Upload banners in different formats to optimize display on all media",
+      "requirements": {
+        "title": "Prerequisites to create an event",
+        "description": "To create an event, you must meet the following conditions:",
+        "contactAdmin": "Contact an administrator"
+      },
+      "sections": {
+        "basicInfo": "General Information",
+        "format": "Event Format",
+        "media": "Media and Banners"
+      },
+      "fields": {
+        "year": "Year",
+        "title": "Event Title",
+        "description": "Description",
+        "submissionDeadline": "Submission Deadline",
+        "participationMode": "Participation Mode",
+        "onlineDetails": "Online Event Details",
+        "onlineStartDate": "Online Start Date and Time",
+        "onlineEndDate": "Online End Date and Time",
+        "inPersonDetails": "In-Person Event Details",
+        "country": "Country",
+        "city": "City",
+        "address": "Address",
+        "inPersonStartDate": "In-Person Start Date",
+        "inPersonEndDate": "In-Person End Date",
+        "banner32_9": "Banner 32:9",
+        "banner16_9": "Banner 16:9",
+        "banner1_1": "Banner 1:1"
+      },
+      "placeholders": {
+        "title": "E.g: International Forum on Sustainable Development 2025",
+        "description": "Describe the objective and content of your event...",
+        "selectCountry": "Select a country",
+        "city": "E.g: Paris",
+        "address": "Complete venue address"
+      }
     }
   }
 }

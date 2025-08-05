@@ -90,9 +90,6 @@
                       {{ t('organization.verified') }}
                     </span>
                   </p>
-                  <p v-if="org.match_type !== 'exact_name'" class="text-xs text-blue-600 dark:text-blue-400">
-                    {{ t('organization.setup.matchedAs') }}: "{{ org.matched_name }}"
-                  </p>
                 </div>
                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -110,6 +107,26 @@
           <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
             {{ t('organization.setup.noResults') }}
           </p>
+          <p class="mt-2 text-xs text-blue-600 dark:text-blue-400">
+            {{ t('organization.setup.canCreateAfterSearch') }}
+          </p>
+        </div>
+
+        <!-- Search Instructions -->
+        <div v-else-if="searchQuery.length <= 2 && searchQuery.length > 0" class="text-center py-4">
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            {{ t('organization.setup.searchInstructions') }}
+          </p>
+        </div>
+
+        <!-- Initial State -->
+        <div v-else-if="searchQuery.length === 0" class="text-center py-8">
+          <svg class="mx-auto h-12 w-12 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            {{ t('organization.setup.startSearching') }}
+          </p>
         </div>
 
         <!-- Action Buttons -->
@@ -122,9 +139,15 @@
           </button>
           <button
             @click="goToCreateNew"
-            class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            :disabled="!hasSearched || searchQuery.length < 3"
+            :class="[
+              'px-6 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors',
+              hasSearched && searchQuery.length >= 3
+                ? 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed dark:bg-gray-600 dark:text-gray-400'
+            ]"
           >
-            {{ t('organization.setup.createNew') }}
+            {{ t('organization.setup.createNewAfterSearch') }}
           </button>
         </div>
       </div>
@@ -274,6 +297,7 @@ const searchResults = ref([])
 const searchLoading = ref(false)
 const isSubmitting = ref(false)
 const countries = ref([])
+const hasSearched = ref(false)
 
 // Form data for new organization  
 const newOrganization = reactive({
@@ -313,6 +337,7 @@ let searchTimeout = null
 const searchOrganizations = async () => {
   if (searchQuery.value.length < 3) {
     searchResults.value = []
+    hasSearched.value = false
     return
   }
 
@@ -321,15 +346,17 @@ const searchOrganizations = async () => {
     try {
       searchLoading.value = true
       
-      // Use the search function from the database
+      // Use the simplified search function from the database
       const { data, error } = await supabase
-        .rpc('search_organizations', { search_query: searchQuery.value })
+        .rpc('search_organizations_simple', { search_text: searchQuery.value })
       
       if (error) throw error
       searchResults.value = data || []
+      hasSearched.value = true // Marquer qu'une recherche a été effectuée
     } catch (error) {
       console.error('Error searching organizations:', error)
       searchResults.value = []
+      hasSearched.value = true // Même si erreur, considérer comme une tentative de recherche
     } finally {
       searchLoading.value = false
     }
