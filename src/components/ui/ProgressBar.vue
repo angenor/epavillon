@@ -1,20 +1,21 @@
 <template>
   <div class="w-full mb-8">
-    <div class="flex items-center justify-between mb-4">
-      <div
-        v-for="(step, index) in steps"
-        :key="index"
-        class="flex flex-col items-center flex-1"
-      >
-        <div class="flex items-center w-full">
-          <!-- Circle pour l'étape -->
+    <!-- Étapes avec cercles et lignes -->
+    <div class="relative mb-6">
+      <div class="flex items-center justify-between">
+        <!-- Cercles des étapes -->
+        <div
+          v-for="(_step, index) in steps"
+          :key="index"
+          class="relative z-10 flex items-center justify-center"
+        >
           <div
             :class="[
-              'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors',
+              'w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300',
               index < currentStep
-                ? 'bg-green-600 text-white'
+                ? 'bg-green-600 text-white shadow-lg'
                 : index === currentStep
-                ? 'bg-green-600 text-white ring-4 ring-green-100 dark:ring-green-900'
+                ? 'bg-green-600 text-white ring-4 ring-green-100 dark:ring-green-900 shadow-lg'
                 : 'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
             ]"
           >
@@ -27,43 +28,46 @@
               {{ index + 1 }}
             </template>
           </div>
-          
-          <!-- Ligne de connexion -->
-          <div
-            v-if="index < steps.length - 1"
-            :class="[
-              'flex-1 h-0.5 mx-2 transition-colors',
-              index < currentStep
-                ? 'bg-green-600'
-                : 'bg-gray-200 dark:bg-gray-700'
-            ]"
-          />
         </div>
-        
-        <!-- Label de l'étape -->
-        <div class="mt-2 text-center">
-          <div
-            :class="[
-              'text-sm font-medium transition-colors',
-              index <= currentStep
-                ? 'text-green-600 dark:text-green-400'
-                : 'text-gray-500 dark:text-gray-400'
-            ]"
-          >
-            {{ step.title }}
-          </div>
-          <div
-            v-if="step.subtitle"
-            class="text-xs text-gray-400 dark:text-gray-500 mt-1"
-          >
-            {{ step.subtitle }}
-          </div>
+      </div>
+      
+      <!-- Ligne de connexion continue -->
+      <div class="absolute top-5 left-5 right-5 h-0.5 bg-gray-200 dark:bg-gray-700">
+        <div
+          class="h-full bg-green-600 transition-all duration-300 ease-in-out"
+          :style="{ width: `${progressPercentage}%` }"
+        />
+      </div>
+    </div>
+    
+    <!-- Labels des étapes -->
+    <div class="flex justify-between">
+      <div
+        v-for="(step, index) in steps"
+        :key="index"
+        class="flex-1 text-center px-2"
+      >
+        <div
+          :class="[
+            'text-sm font-medium transition-colors mb-1',
+            index <= currentStep
+              ? 'text-green-600 dark:text-green-400'
+              : 'text-gray-500 dark:text-gray-400'
+          ]"
+        >
+          {{ step.title }}
+        </div>
+        <div
+          v-if="step.subtitle"
+          class="text-xs text-gray-400 dark:text-gray-500"
+        >
+          {{ step.subtitle }}
         </div>
       </div>
     </div>
     
-    <!-- Barre de progression -->
-    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+    <!-- Barre de progression globale -->
+    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-6">
       <div
         class="bg-green-600 h-2 rounded-full transition-all duration-300 ease-in-out"
         :style="{ width: `${progressPercentage}%` }"
