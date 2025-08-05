@@ -195,9 +195,10 @@
   },
   "auth": {
     "login": {
-      "title": "Sign In",
-      "subtitle": "Don't have an account?",
+      "title": "Welcome",
+      "subtitle": "Sign in to your account",
       "createAccount": "Create account",
+      "noAccount": "Don't have an account?",
       "submit": "Sign In",
       "loggingIn": "Signing in...",
       "rememberMe": "Remember me",
@@ -206,9 +207,10 @@
     },
     "register": {
       "title": "Create an account",
-      "subtitle": "Already have an account?",
+      "subtitle": "Join the IFDD community",
       "haveAccount": "Sign in",
-      "submit": "Sign Up",
+      "haveAccountText": "Already have an account?",
+      "submit": "Create Account",
       "registering": "Creating account...",
       "personalInfo": "Personal Information",
       "security": "Security",
@@ -337,7 +339,8 @@
         "email": "Email",
         "position": "Position",
         "speakerOrganization": "Organization",
-        "availableForQuestions": "Available to answer questions"
+        "availableForQuestions": "Available to answer questions",
+        "speakers": "Speakers"
       },
       "placeholders": {
         "title": "E.g: Workshop on Climate Adaptation in Africa",

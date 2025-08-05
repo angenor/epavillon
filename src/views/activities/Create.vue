@@ -405,11 +405,11 @@
                 </div>
                 <div>
                   <h3 class="font-medium text-gray-900 dark:text-white">{{ t('activity.submit.fields.activityType') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-300">{{ t(`activity.submit.types.${form.activity_type}`) }}</p>
+                  <p class="text-gray-600 dark:text-gray-300">{{ form.activity_type ? t(`activity.submit.types.${form.activity_type}`) : '-' }}</p>
                 </div>
                 <div>
                   <h3 class="font-medium text-gray-900 dark:text-white">{{ t('activity.submit.fields.format') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-300">{{ t(`activity.submit.formats.${form.format}`) }}</p>
+                  <p class="text-gray-600 dark:text-gray-300">{{ form.format ? t(`activity.submit.formats.${form.format}`) : '-' }}</p>
                 </div>
                 <div>
                   <h3 class="font-medium text-gray-900 dark:text-white">{{ t('activity.submit.fields.themes') }}</h3>

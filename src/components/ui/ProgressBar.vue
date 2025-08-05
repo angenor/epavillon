@@ -1,7 +1,7 @@
 <template>
   <div class="w-full mb-8">
     <!-- Étapes avec cercles et lignes -->
-    <div class="relative mb-6">
+    <div class="relative mb-2 mx-10">
       <div class="flex items-center justify-between">
         <!-- Cercles des étapes -->
         <div
@@ -41,25 +41,28 @@
     </div>
     
     <!-- Labels des étapes -->
-    <div class="flex justify-between">
+    <div class="flex items-start justify-between mx-10">
       <div
         v-for="(step, index) in steps"
         :key="index"
-        class="flex-1 text-center px-2"
+        class="flex flex-col items-center text-center"
+        :style="{ width: '40px', minWidth: '40px' }"
       >
         <div
           :class="[
-            'text-sm font-medium transition-colors mb-1',
+            'text-sm font-medium transition-colors mb-1 text-center',
             index <= currentStep
               ? 'text-green-600 dark:text-green-400'
               : 'text-gray-500 dark:text-gray-400'
           ]"
+          style="width: 120px; margin-left: -40px; margin-right: -40px;"
         >
           {{ step.title }}
         </div>
         <div
           v-if="step.subtitle"
-          class="text-xs text-gray-400 dark:text-gray-500"
+          class="text-xs text-gray-400 dark:text-gray-500 text-center"
+          style="width: 120px; margin-left: -40px; margin-right: -40px;"
         >
           {{ step.subtitle }}
         </div>

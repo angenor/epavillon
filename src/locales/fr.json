@@ -268,21 +268,23 @@
   },
   "auth": {
     "login": {
-      "title": "Connexion",
-      "subtitle": "Vous n'avez pas de compte ?",
+      "title": "Bienvenue",
+      "subtitle": "Connectez-vous à votre compte",
       "createAccount": "Créer un compte",
+      "noAccount": "Pas encore de compte ?",
       "submit": "Se connecter",
-      "loggingIn": "Connexion...",
+      "loggingIn": "Connexion en cours...",
       "rememberMe": "Se souvenir de moi",
       "forgotPassword": "Mot de passe oublié ?",
       "orContinueWith": "Ou continuer avec"
     },
     "register": {
       "title": "Créer un compte",
-      "subtitle": "Vous avez déjà un compte ?",
+      "subtitle": "Rejoignez la communauté IFDD",
       "haveAccount": "Se connecter",
-      "submit": "S'inscrire",
-      "registering": "Inscription...",
+      "haveAccountText": "Vous avez déjà un compte ?",
+      "submit": "Créer le compte",
+      "registering": "Création en cours...",
       "personalInfo": "Informations personnelles",
       "security": "Sécurité",
       "passwordStrength": "Force du mot de passe",
@@ -454,7 +456,8 @@
         "email": "Email",
         "position": "Poste",
         "speakerOrganization": "Organisation",
-        "availableForQuestions": "Disponible pour répondre aux questions"
+        "availableForQuestions": "Disponible pour répondre aux questions",
+        "speakers": "Intervenants"
       },
       "placeholders": {
         "title": "Ex: Atelier sur l'adaptation climatique en Afrique",

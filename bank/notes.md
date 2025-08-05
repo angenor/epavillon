@@ -1,108 +1,11 @@
-[intlify] Not found 'activity.submit.types.side_event' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.types.country_day' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.types.other' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.capacity_building' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.results_sharing' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.technological_innovation' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.field_project' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.best_practices' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.awareness' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.consultation' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-router.js?v=4b711431:204 [Vue Router warn]: No match found for location with path "/messages"
-warn @ vue-router.js?v=4b711431:204Understand this warning
-vue-router.js?v=4b711431:204 [Vue Router warn]: No match found for location with path "/appointments"
-warn @ vue-router.js?v=4b711431:204Understand this warning
-vue-router.js?v=4b711431:204 [Vue Router warn]: No match found for location with path "/profile"
-warn @ vue-router.js?v=4b711431:204Understand this warning
-vue-router.js?v=4b711431:204 [Vue Router warn]: No match found for location with path "/settings"
-warn @ vue-router.js?v=4b711431:204Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.types.side_event' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.types.country_day' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.types.other' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.capacity_building' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.results_sharing' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.technological_innovation' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.field_project' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.best_practices' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.awareness' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.consultation' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.types.side_event' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.types.country_day' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.types.other' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.capacity_building' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.results_sharing' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.technological_innovation' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.field_project' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.best_practices' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.awareness' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.consultation' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-general.js:205 [LaunchDarkly] LaunchDarkly client initialized
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.types.side_event' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.types.country_day' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.types.other' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.capacity_building' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.results_sharing' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.technological_innovation' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.field_project' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.best_practices' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.awareness' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.consultation' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.types.side_event' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.types.country_day' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.types.other' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.capacity_building' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.results_sharing' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.technological_innovation' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.field_project' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.best_practices' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.awareness' key in 'fr' locale messages.
-warn @ vue-i18n.js?v=4b711431:23Understand this warning
-vue-i18n.js?v=4b711431:23 [intlify] Not found 'activity.submit.categories.consultation' key in 'fr' locale messages.
+# Erreurs i18n corrigées ✅
+
+## Erreurs i18n résolues (2025-08-05):
+- ✅ 'activity.submit.fields.speakers' ajouté dans fr.json et en.json
+- ✅ Conditions ajoutées pour éviter les clés vides (activity.submit.types., activity.submit.formats.)
+
+## Erreurs Router restantes (non critiques):
+- ⚠️ Vue Router warn: No match found for "/messages" (route à implémenter)
+- ⚠️ Vue Router warn: No match found for "/appointments" (route à implémenter)  
+- ⚠️ Vue Router warn: No match found for "/profile" (route à implémenter)
+- ⚠️ Vue Router warn: No match found for "/settings" (route à implémenter)
