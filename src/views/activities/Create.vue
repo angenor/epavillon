@@ -1,27 +1,29 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      <!-- Draft Alert -->
-      <div v-if="hasDraft" class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div class="max-w-5xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <!-- Draft Alert with improved design -->
+      <div v-if="hasDraft" class="mb-6 p-4 bg-white dark:bg-gray-800 border border-blue-200 dark:border-blue-700 rounded-xl shadow-sm">
         <div class="flex items-center justify-between">
           <div class="flex items-center">
-            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span class="text-blue-800 dark:text-blue-200 font-medium">
+            <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg mr-3">
+              <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <span class="text-gray-800 dark:text-gray-200 font-medium">
               {{ t('activity.draft.found') }}
             </span>
           </div>
           <div class="flex space-x-2">
             <button
               @click="loadDraft"
-              class="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+              class="px-4 py-2 text-sm bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-200 font-medium"
             >
               {{ t('activity.draft.load') }}
             </button>
             <button
               @click="deleteDraft"
-              class="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700"
+              class="px-4 py-2 text-sm border border-red-300 dark:border-red-600 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200"
             >
               {{ t('activity.draft.delete') }}
             </button>
@@ -29,426 +31,578 @@
         </div>
       </div>
 
-      <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
-        <div class="px-4 py-5 sm:p-6">
-          <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            {{ t('activity.submit.title') }}
-          </h1>
-          <p class="text-gray-600 dark:text-gray-400 mb-8">
-            {{ t('activity.submit.subtitle') }}
-          </p>
+      <div class="bg-white dark:bg-gray-800 shadow-xl rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
+        <!-- Modern Header -->
+        <div class="bg-green-600 dark:bg-green-700 text-white px-6 py-8">
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 class="text-3xl font-bold mb-2">
+                {{ t('activity.submit.title') }}
+              </h1>
+              <p class="text-green-100 dark:text-green-200 text-lg">
+                {{ t('activity.submit.subtitle') }}
+              </p>
+            </div>
+            <div class="hidden sm:block">
+              <svg class="w-16 h-16 text-green-400 dark:text-green-500 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+          </div>
+        </div>
 
-          <!-- Progress Bar -->
-          <ProgressBar
-            :steps="steps"
-            :current-step="currentStep"
-          />
+        <div class="px-6 py-6">
+          <!-- Enhanced Progress Bar -->
+          <div class="mb-8">
+            <ProgressBar
+              :steps="steps"
+              :current-step="currentStep"
+            />
+          </div>
 
           <form @submit.prevent="handleSubmit" class="space-y-8">
             <!-- Step 1: Basic Information -->
             <div v-show="currentStep === 0" class="space-y-6">
-              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-                {{ t('activity.submit.sections.basicInfo') }}
-              </h2>
+              <div class="bg-gray-50 dark:bg-gray-700/30 rounded-xl p-6 border border-gray-200 dark:border-gray-600">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+                  <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg mr-3">
+                    <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  {{ t('activity.submit.sections.basicInfo') }}
+                </h2>
 
-              <div>
-                <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {{ t('activity.submit.fields.title') }} *
-                </label>
-                <input
-                  id="title"
-                  v-model="form.title"
-                  type="text"
-                  required
-                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  :placeholder="t('activity.submit.placeholders.title')"
-                />
-              </div>
+                <div class="space-y-5">
+                  <div class="group">
+                    <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-green-600 dark:group-focus-within:text-green-400">
+                      {{ t('activity.submit.fields.title') }} *
+                    </label>
+                    <div class="relative">
+                      <input
+                        id="title"
+                        v-model="form.title"
+                        type="text"
+                        required
+                        class="w-full px-4 py-3 pl-11 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
+                        :placeholder="t('activity.submit.placeholders.title')"
+                      />
+                      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
 
-              <div>
-                <label for="organization" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {{ t('activity.submit.fields.organization') }} *
-                </label>
-                <input
-                  id="organization"
-                  :value="organizationName"
-                  type="text"
-                  disabled
-                  class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm dark:bg-gray-600 dark:border-gray-600 dark:text-gray-300"
-                />
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                  {{ t('activity.submit.helpers.organizationInfo') }}
-                </p>
-              </div>
+                  <div class="group">
+                    <label for="organization" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      {{ t('activity.submit.fields.organization') }} *
+                    </label>
+                    <div class="relative">
+                      <input
+                        id="organization"
+                        :value="organizationName"
+                        type="text"
+                        disabled
+                        class="w-full px-4 py-3 pl-11 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 cursor-not-allowed"
+                      />
+                      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                      </div>
+                    </div>
+                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400 flex items-center">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      {{ t('activity.submit.helpers.organizationInfo') }}
+                    </p>
+                  </div>
 
-              <div>
-                <label for="activity_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {{ t('activity.submit.fields.activityType') }} *
-                </label>
-                <select
-                  id="activity_type"
-                  v-model="form.activity_type"
-                  required
-                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                >
-                  <option value="">{{ t('activity.submit.placeholders.selectType') }}</option>
-                  <option value="side_event">{{ t('activity.submit.types.side_event') + ' (1 H 00 max)'}}</option>
-                  <option value="country_day">{{ t('activity.submit.types.country_day') + ' (2 H 30 max)' }}</option>
-                  <option value="other">{{ t('activity.submit.types.other') }}</option>
-                </select>
-              </div>
+                  <div class="group">
+                    <label for="activity_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-green-600 dark:group-focus-within:text-green-400">
+                      {{ t('activity.submit.fields.activityType') }} *
+                    </label>
+                    <div class="relative">
+                      <select
+                        id="activity_type"
+                        v-model="form.activity_type"
+                        required
+                        class="w-full px-4 py-3 pl-11 pr-10 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 appearance-none cursor-pointer"
+                      >
+                        <option value="">{{ t('activity.submit.placeholders.selectType') }}</option>
+                        <option value="side_event">{{ t('activity.submit.types.side_event') + ' (1 H 00 max)'}}</option>
+                        <option value="country_day">{{ t('activity.submit.types.country_day') + ' (2 H 30 max)' }}</option>
+                        <option value="other">{{ t('activity.submit.types.other') }}</option>
+                      </select>
+                      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
 
-              <div>
-                <label for="objectives" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {{ t('activity.submit.fields.objectives') }} *
-                </label>
-                <textarea
-                  id="objectives"
-                  v-model="form.objectives"
-                  rows="3"
-                  required
-                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  :placeholder="t('activity.submit.placeholders.objectives')"
-                ></textarea>
-              </div>
+                  <div class="group">
+                    <label for="objectives" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-green-600 dark:group-focus-within:text-green-400">
+                      {{ t('activity.submit.fields.objectives') }} *
+                    </label>
+                    <div class="relative">
+                      <textarea
+                        id="objectives"
+                        v-model="form.objectives"
+                        rows="3"
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 resize-none"
+                        :placeholder="t('activity.submit.placeholders.objectives')"
+                      ></textarea>
+                    </div>
+                  </div>
 
-              <div>
-                <label for="detailed_presentation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {{ t('activity.submit.fields.detailedPresentation') }} *
-                </label>
-                <textarea
-                  id="detailed_presentation"
-                  v-model="form.detailed_presentation"
-                  rows="5"
-                  required
-                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  :placeholder="t('activity.submit.placeholders.detailedPresentation')"
-                ></textarea>
+                  <div class="group">
+                    <label for="detailed_presentation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-green-600 dark:group-focus-within:text-green-400">
+                      {{ t('activity.submit.fields.detailedPresentation') }} *
+                    </label>
+                    <div class="relative">
+                      <textarea
+                        id="detailed_presentation"
+                        v-model="form.detailed_presentation"
+                        rows="5"
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 resize-none"
+                        :placeholder="t('activity.submit.placeholders.detailedPresentation')"
+                      ></textarea>
+                      <div class="absolute bottom-3 right-3">
+                        <span class="text-xs text-gray-400">
+                          {{ form.detailed_presentation?.length || 0 }} caractères
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
             <!-- Step 2: Format and Themes -->
             <div v-show="currentStep === 1" class="space-y-6">
-              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-                {{ t('activity.submit.sections.formatAndThemes') }}
-              </h2>
+              <div class="bg-gray-50 dark:bg-gray-700/30 rounded-xl p-6 border border-gray-200 dark:border-gray-600">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+                  <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg mr-3">
+                    <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                  </div>
+                  {{ t('activity.submit.sections.formatAndThemes') }}
+                </h2>
 
-              <div>
-                <label for="format" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {{ t('activity.submit.fields.format') }} *
-                </label>
-                <select
-                  id="format"
-                  v-model="form.format"
-                  required
-                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                >
-                  <option value="">{{ t('activity.submit.placeholders.selectFormat') }}</option>
-                  <option value="online">{{ t('activity.submit.formats.online') }}</option>
-                  <option value="in_person">{{ t('activity.submit.formats.in_person') }}</option>
-                  <option value="hybrid">{{ t('activity.submit.formats.hybrid') }}</option>
-                </select>
-              </div>
+                <div class="space-y-5">
+                  <div class="group">
+                    <label for="format" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-green-600 dark:group-focus-within:text-green-400">
+                      {{ t('activity.submit.fields.format') }} *
+                    </label>
+                    <div class="relative">
+                      <select
+                        id="format"
+                        v-model="form.format"
+                        required
+                        class="w-full px-4 py-3 pl-11 pr-10 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 appearance-none cursor-pointer"
+                      >
+                        <option value="">{{ t('activity.submit.placeholders.selectFormat') }}</option>
+                        <option value="online">{{ t('activity.submit.formats.online') }}</option>
+                        <option value="in_person">{{ t('activity.submit.formats.in_person') }}</option>
+                        <option value="hybrid">{{ t('activity.submit.formats.hybrid') }}</option>
+                      </select>
+                      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                      <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {{ t('activity.submit.fields.themes') }} *
-                </label>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <label
-                    v-for="theme in availableThemes"
-                    :key="theme"
-                    class="flex items-center space-x-2 cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      :value="theme"
-                      v-model="form.main_themes"
-                      class="rounded border-gray-300 text-green-600 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600"
-                    />
-                    <span class="text-sm text-gray-700 dark:text-gray-300">
-                      {{ t(`activity.submit.themes.${theme}`) }}
-                    </span>
-                  </label>
-                </div>
-              </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                      {{ t('activity.submit.fields.themes') }} *
+                    </label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <label
+                        v-for="theme in availableThemes"
+                        :key="theme"
+                        class="flex items-center p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                      >
+                        <input
+                          type="checkbox"
+                          :value="theme"
+                          v-model="form.main_themes"
+                          class="rounded border-gray-300 dark:border-gray-600 text-green-600 dark:text-green-400 focus:ring-green-500 dark:focus:ring-green-400 dark:bg-gray-700"
+                        />
+                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                          {{ t(`activity.submit.themes.${theme}`) }}
+                        </span>
+                      </label>
+                    </div>
+                  </div>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {{ t('activity.submit.fields.categories') }} *
-                </label>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <label
-                    v-for="category in availableCategories"
-                    :key="category"
-                    class="flex items-center space-x-2 cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      :value="category"
-                      v-model="form.categories"
-                      class="rounded border-gray-300 text-green-600 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600"
-                    />
-                    <span class="text-sm text-gray-700 dark:text-gray-300">
-                      {{ t(`activity.submit.categories.${category}`) }}
-                    </span>
-                  </label>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                      {{ t('activity.submit.fields.categories') }} *
+                    </label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <label
+                        v-for="category in availableCategories"
+                        :key="category"
+                        class="flex items-center p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                      >
+                        <input
+                          type="checkbox"
+                          :value="category"
+                          v-model="form.categories"
+                          class="rounded border-gray-300 dark:border-gray-600 text-green-600 dark:text-green-400 focus:ring-green-500 dark:focus:ring-green-400 dark:bg-gray-700"
+                        />
+                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                          {{ t(`activity.submit.categories.${category}`) }}
+                        </span>
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
             <!-- Step 3: Schedule and Location -->
             <div v-show="currentStep === 2" class="space-y-6">
-              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-                {{ t('activity.submit.sections.schedule') }}
-              </h2>
+              <div class="bg-gray-50 dark:bg-gray-700/30 rounded-xl p-6 border border-gray-200 dark:border-gray-600">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+                  <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg mr-3">
+                    <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  {{ t('activity.submit.sections.schedule') }}
+                </h2>
 
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label for="proposed_start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {{ t('activity.submit.fields.proposedStartDate') }} *
-                  </label>
-                  <input
-                    id="proposed_start_date"
-                    v-model="form.proposed_start_date"
-                    type="datetime-local"
-                    required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  />
-                </div>
+                <div class="space-y-5">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="group">
+                      <label for="proposed_start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-green-600 dark:group-focus-within:text-green-400">
+                        {{ t('activity.submit.fields.proposedStartDate') }} *
+                      </label>
+                      <div class="relative">
+                        <input
+                          id="proposed_start_date"
+                          v-model="form.proposed_start_date"
+                          type="datetime-local"
+                          required
+                          class="w-full px-4 py-3 pl-11 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
+                        />
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
 
-                <div>
-                  <label for="proposed_end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {{ t('activity.submit.fields.proposedEndDate') }} *
-                  </label>
-                  <input
-                    id="proposed_end_date"
-                    v-model="form.proposed_end_date"
-                    type="datetime-local"
-                    required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  />
-                </div>
-              </div>
+                    <div class="group">
+                      <label for="proposed_end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-green-600 dark:group-focus-within:text-green-400">
+                        {{ t('activity.submit.fields.proposedEndDate') }} *
+                      </label>
+                      <div class="relative">
+                        <input
+                          id="proposed_end_date"
+                          v-model="form.proposed_end_date"
+                          type="datetime-local"
+                          required
+                          class="w-full px-4 py-3 pl-11 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
+                        />
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-              <div>
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                  {{ t('activity.submit.sections.location') }}
-                </h3>
-                <div>
-                  <label for="country" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {{ t('activity.submit.fields.country') }}
-                  </label>
-                  <select
-                    id="country"
-                    v-model="form.country_id"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  >
-                    <option value="">{{ t('activity.submit.placeholders.selectCountry') }}</option>
-                    <option v-for="country in countries" :key="country.id" :value="country.id">
-                      {{ locale === 'fr' ? country.name_fr : country.name_en }}
-                    </option>
-                  </select>
+                  <div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                      <svg class="w-5 h-5 text-gray-600 dark:text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      {{ t('activity.submit.sections.location') }}
+                    </h3>
+                    <div class="group">
+                      <label for="country" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-green-600 dark:group-focus-within:text-green-400">
+                        {{ t('activity.submit.fields.country') }}
+                      </label>
+                      <div class="relative">
+                        <select
+                          id="country"
+                          v-model="form.country_id"
+                          class="w-full px-4 py-3 pl-11 pr-10 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 appearance-none cursor-pointer"
+                        >
+                          <option value="">{{ t('activity.submit.placeholders.selectCountry') }}</option>
+                          <option v-for="country in countries" :key="country.id" :value="country.id">
+                            {{ locale === 'fr' ? country.name_fr : country.name_en }}
+                          </option>
+                        </select>
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
             <!-- Step 4: Speakers -->
             <div v-show="currentStep === 3" class="space-y-6">
-              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-                {{ t('activity.submit.sections.speakers') }}
-              </h2>
-
-              <div class="space-y-4">
-                <div v-for="(speaker, index) in form.speakers" :key="index" class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <div class="flex justify-between items-start mb-4">
-                    <h3 class="text-sm font-medium text-gray-900 dark:text-white">
-                      {{ t('activity.submit.fields.speaker') }} {{ index + 1 }}
-                    </h3>
-                    <button
-                      v-if="form.speakers.length > 1"
-                      @click="removeSpeaker(index)"
-                      type="button"
-                      class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-                    >
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    </button>
+              <div class="bg-gray-50 dark:bg-gray-700/30 rounded-xl p-6 border border-gray-200 dark:border-gray-600">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+                  <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg mr-3">
+                    <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
                   </div>
+                  {{ t('activity.submit.sections.speakers') }}
+                </h2>
 
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label :for="`civility-${index}`" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        {{ t('activity.submit.fields.civility') }}
-                      </label>
-                      <select
-                        :id="`civility-${index}`"
-                        v-model="speaker.civility"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+                <div class="space-y-4">
+                  <div v-for="(speaker, index) in form.speakers" :key="index" class="p-5 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-600">
+                    <div class="flex justify-between items-start mb-4">
+                      <h3 class="text-base font-medium text-gray-900 dark:text-white flex items-center">
+                        <span class="flex items-center justify-center w-7 h-7 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full text-sm font-semibold mr-2">
+                          {{ index + 1 }}
+                        </span>
+                        {{ t('activity.submit.fields.speaker') }}
+                      </h3>
+                      <button
+                        v-if="form.speakers.length > 1"
+                        @click="removeSpeaker(index)"
+                        type="button"
+                        class="p-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200"
                       >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div class="group">
+                        <label :for="`civility-${index}`" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          {{ t('activity.submit.fields.civility') }}
+                        </label>
+                        <select
+                          :id="`civility-${index}`"
+                          v-model="speaker.civility"
+                          class="w-full px-4 py-3 pr-10 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 appearance-none cursor-pointer"
+                        >
                         <option value="">{{ t('activity.submit.placeholders.selectCivility') }}</option>
                         <option value="mr">{{ t('activity.submit.civilities.mr') }}</option>
                         <option value="mrs">{{ t('activity.submit.civilities.mrs') }}</option>
                         <option value="ms">{{ t('activity.submit.civilities.ms') }}</option>
                         <option value="dr">{{ t('activity.submit.civilities.dr') }}</option>
                         <option value="prof">{{ t('activity.submit.civilities.prof') }}</option>
-                      </select>
+                        </select>
+                      </div>
+
+                      <div class="group">
+                        <label :for="`firstName-${index}`" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          {{ t('activity.submit.fields.firstName') }} *
+                        </label>
+                        <input
+                          :id="`firstName-${index}`"
+                          v-model="speaker.first_name"
+                          type="text"
+                          required
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
+                          :placeholder="t('activity.submit.placeholders.speakerFirstName')"
+                        />
+                      </div>
+
+                      <div class="group">
+                        <label :for="`lastName-${index}`" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          {{ t('activity.submit.fields.lastName') }} *
+                        </label>
+                        <input
+                          :id="`lastName-${index}`"
+                          v-model="speaker.last_name"
+                          type="text"
+                          required
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
+                          :placeholder="t('activity.submit.placeholders.speakerLastName')"
+                        />
+                      </div>
+
+                      <div class="group">
+                        <label :for="`email-${index}`" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          {{ t('activity.submit.fields.email') }} *
+                        </label>
+                        <input
+                          :id="`email-${index}`"
+                          v-model="speaker.email"
+                          type="email"
+                          required
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
+                          :placeholder="t('activity.submit.placeholders.speakerEmail')"
+                        />
+                      </div>
+
+                      <div class="group">
+                        <label :for="`position-${index}`" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          {{ t('activity.submit.fields.position') }}
+                        </label>
+                        <input
+                          :id="`position-${index}`"
+                          v-model="speaker.position"
+                          type="text"
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
+                          :placeholder="t('activity.submit.placeholders.position')"
+                        />
+                      </div>
+
+                      <div class="group">
+                        <label :for="`speakerOrganization-${index}`" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          {{ t('activity.submit.fields.speakerOrganization') }}
+                        </label>
+                        <input
+                          :id="`speakerOrganization-${index}`"
+                          v-model="speaker.organization"
+                          type="text"
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
+                          :placeholder="t('activity.submit.placeholders.speakerOrganization')"
+                        />
+                      </div>
                     </div>
 
-                    <div>
-                      <label :for="`firstName-${index}`" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        {{ t('activity.submit.fields.firstName') }} *
+                    <div class="mt-4">
+                      <label class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                        <input
+                          v-model="speaker.is_available_for_questions"
+                          type="checkbox"
+                          class="rounded border-gray-300 dark:border-gray-600 text-green-600 dark:text-green-400 focus:ring-green-500 dark:focus:ring-green-400 dark:bg-gray-700"
+                        />
+                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                          {{ t('activity.submit.fields.availableForQuestions') }}
+                        </span>
                       </label>
-                      <input
-                        :id="`firstName-${index}`"
-                        v-model="speaker.first_name"
-                        type="text"
-                        required
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
-                        :placeholder="t('activity.submit.placeholders.speakerFirstName')"
-                      />
-                    </div>
-
-                    <div>
-                      <label :for="`lastName-${index}`" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        {{ t('activity.submit.fields.lastName') }} *
-                      </label>
-                      <input
-                        :id="`lastName-${index}`"
-                        v-model="speaker.last_name"
-                        type="text"
-                        required
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
-                        :placeholder="t('activity.submit.placeholders.speakerLastName')"
-                      />
-                    </div>
-
-                    <div>
-                      <label :for="`email-${index}`" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        {{ t('activity.submit.fields.email') }} *
-                      </label>
-                      <input
-                        :id="`email-${index}`"
-                        v-model="speaker.email"
-                        type="email"
-                        required
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
-                        :placeholder="t('activity.submit.placeholders.speakerEmail')"
-                      />
-                    </div>
-
-                    <div>
-                      <label :for="`position-${index}`" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        {{ t('activity.submit.fields.position') }}
-                      </label>
-                      <input
-                        :id="`position-${index}`"
-                        v-model="speaker.position"
-                        type="text"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
-                        :placeholder="t('activity.submit.placeholders.position')"
-                      />
-                    </div>
-
-                    <div>
-                      <label :for="`speakerOrganization-${index}`" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        {{ t('activity.submit.fields.speakerOrganization') }}
-                      </label>
-                      <input
-                        :id="`speakerOrganization-${index}`"
-                        v-model="speaker.organization"
-                        type="text"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
-                        :placeholder="t('activity.submit.placeholders.speakerOrganization')"
-                      />
                     </div>
                   </div>
 
-                  <div class="mt-4">
-                    <label class="flex items-center">
-                      <input
-                        v-model="speaker.is_available_for_questions"
-                        type="checkbox"
-                        class="rounded border-gray-300 text-green-600 focus:ring-green-500 dark:bg-gray-600 dark:border-gray-500"
-                      />
-                      <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                        {{ t('activity.submit.fields.availableForQuestions') }}
-                      </span>
-                    </label>
-                  </div>
+                  <button
+                    @click="addSpeaker"
+                    type="button"
+                    class="w-full py-3 px-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-400 hover:border-green-400 dark:hover:border-green-600 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/10 transition-all duration-200"
+                  >
+                    <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    {{ t('activity.submit.addSpeaker') }}
+                  </button>
                 </div>
-
-                <button
-                  @click="addSpeaker"
-                  type="button"
-                  class="w-full py-2 px-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-600 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-                >
-                  <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                  </svg>
-                  {{ t('activity.submit.addSpeaker') }}
-                </button>
               </div>
             </div>
 
             <!-- Step 5: Summary -->
             <div v-show="currentStep === 4" class="space-y-6">
-              <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">
-                {{ t('activity.submit.sections.summary') }}
-              </h2>
-              
-              <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 space-y-4">
-                <div>
-                  <h3 class="font-medium text-gray-900 dark:text-white">{{ t('activity.submit.fields.title') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-300">{{ form.title }}</p>
-                </div>
-                <div>
-                  <h3 class="font-medium text-gray-900 dark:text-white">{{ t('activity.submit.fields.activityType') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-300">{{ form.activity_type ? t(`activity.submit.types.${form.activity_type}`) : '-' }}</p>
-                </div>
-                <div>
-                  <h3 class="font-medium text-gray-900 dark:text-white">{{ t('activity.submit.fields.format') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-300">{{ form.format ? t(`activity.submit.formats.${form.format}`) : '-' }}</p>
-                </div>
-                <div>
-                  <h3 class="font-medium text-gray-900 dark:text-white">{{ t('activity.submit.fields.themes') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-300">{{ form.main_themes.map(theme => t(`activity.submit.themes.${theme}`)).join(', ') }}</p>
-                </div>
-                <div>
-                  <h3 class="font-medium text-gray-900 dark:text-white">{{ t('activity.submit.fields.speakers') }}</h3>
-                  <p class="text-gray-600 dark:text-gray-300">{{ form.speakers.length }} {{ form.speakers.length === 1 ? t('activity.submit.speaker') : t('activity.submit.speakers') }}</p>
+              <div class="bg-gray-50 dark:bg-gray-700/30 rounded-xl p-6 border border-gray-200 dark:border-gray-600">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+                  <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg mr-3">
+                    <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  {{ t('activity.submit.sections.summary') }}
+                </h2>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 space-y-4 border border-gray-200 dark:border-gray-600">
+                  <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                    <h3 class="font-medium text-gray-900 dark:text-white mb-1">{{ t('activity.submit.fields.title') }}</h3>
+                    <p class="text-gray-600 dark:text-gray-400">{{ form.title || '-' }}</p>
+                  </div>
+                  <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                    <h3 class="font-medium text-gray-900 dark:text-white mb-1">{{ t('activity.submit.fields.activityType') }}</h3>
+                    <p class="text-gray-600 dark:text-gray-400">{{ form.activity_type ? t(`activity.submit.types.${form.activity_type}`) : '-' }}</p>
+                  </div>
+                  <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                    <h3 class="font-medium text-gray-900 dark:text-white mb-1">{{ t('activity.submit.fields.format') }}</h3>
+                    <p class="text-gray-600 dark:text-gray-400">{{ form.format ? t(`activity.submit.formats.${form.format}`) : '-' }}</p>
+                  </div>
+                  <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                    <h3 class="font-medium text-gray-900 dark:text-white mb-1">{{ t('activity.submit.fields.themes') }}</h3>
+                    <div class="flex flex-wrap gap-2 mt-2">
+                      <span v-for="theme in form.main_themes" :key="theme" class="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-sm">
+                        {{ t(`activity.submit.themes.${theme}`) }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                    <h3 class="font-medium text-gray-900 dark:text-white mb-1">{{ t('activity.submit.fields.speakers') }}</h3>
+                    <p class="text-gray-600 dark:text-gray-400">{{ form.speakers.length }} {{ form.speakers.length === 1 ? t('activity.submit.speaker') : t('activity.submit.speakers') }}</p>
+                  </div>
                 </div>
               </div>
             </div>
 
             <!-- Navigation Buttons -->
-            <div class="flex justify-between items-center pt-6 border-t border-gray-200 dark:border-gray-700">
-              <div class="flex space-x-3">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                 <button
                   v-if="currentStep > 0"
                   type="button"
                   @click="previousStep"
-                  class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+                  class="px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-green-400 transition-all duration-200 flex items-center justify-center"
                 >
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                  </svg>
                   {{ t('common.previous') }}
                 </button>
                 <button
                   type="button"
                   @click="router.back()"
-                  class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+                  class="px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-green-400 transition-all duration-200"
                 >
                   {{ t('common.cancel') }}
                 </button>
               </div>
               
-              <div class="flex space-x-3">
+              <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                 <button
                   type="button"
                   @click="saveDraft"
                   :disabled="isSavingDraft"
-                  class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+                  class="px-5 py-2.5 text-sm font-medium text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20 border border-blue-300 dark:border-blue-700 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center"
                 >
+                  <svg v-if="isSavingDraft" class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <svg v-else class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V2" />
+                  </svg>
                   {{ isSavingDraft ? t('activity.draft.saving') : t('activity.draft.save') }}
                 </button>
                 
@@ -457,17 +611,27 @@
                   type="button"
                   @click="nextStep"
                   :disabled="!canProceedToNextStep"
-                  class="px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  class="px-6 py-2.5 text-sm font-medium text-white bg-green-600 dark:bg-green-500 rounded-xl hover:bg-green-700 dark:hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-green-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 flex items-center justify-center"
                 >
                   {{ t('common.next') }}
+                  <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
                 </button>
                 
                 <button
                   v-else
                   type="submit"
                   :disabled="isSubmitting || !canSubmit"
-                  class="px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  class="px-6 py-2.5 text-sm font-medium text-white bg-green-600 dark:bg-green-500 rounded-xl hover:bg-green-700 dark:hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-green-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 flex items-center justify-center"
                 >
+                  <svg v-if="isSubmitting" class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <svg v-else class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
                   {{ isSubmitting ? t('activity.submit.submitting') : t('activity.submit.submit') }}
                 </button>
               </div>
@@ -814,3 +978,62 @@ watch(() => authStore.profile?.organization_id, async (organizationId, oldOrgani
   }
 })
 </script>
+
+<style scoped>
+/* Custom focus styles for enhanced form interactions */
+.group:focus-within label {
+  @apply text-green-600 dark:text-green-400;
+}
+
+/* Custom scrollbar for textareas */
+textarea::-webkit-scrollbar {
+  width: 6px;
+}
+
+textarea::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-700 rounded-full;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-600 rounded-full hover:bg-gray-400 dark:hover:bg-gray-500;
+}
+
+/* Custom select styling to remove default arrow */
+select {
+  background-image: none;
+}
+
+/* Smooth transitions for all interactive elements */
+input, select, textarea, button {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Enhanced hover effects for cards */
+.bg-gray-50:hover {
+  @apply bg-gray-100 dark:bg-gray-600/50;
+}
+
+/* Improved focus ring visibility */
+input:focus, select:focus, textarea:focus {
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+/* Animation for step transitions */
+.step-transition {
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+/* Loading animation enhancement */
+@keyframes pulse-green {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-green {
+  animation: pulse-green 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+</style>

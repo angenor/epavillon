@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        ifdd: {
+          ifdd: {
           // Couleurs principales extraites du logo
           vert: {
             DEFAULT: '#85c441',
