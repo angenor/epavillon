@@ -24,7 +24,9 @@
     "locale": "fr-FR",
     "cancel": "Annuler",
     "back": "Retour",
-    "error": "Erreur"
+    "error": "Erreur",
+    "next": "Suivant",
+    "previous": "Précédent"
   },
   "nav": {
     "programming": "Programmation",
@@ -405,6 +407,136 @@
         "city": "Ex: Paris",
         "address": "Adresse complète du lieu"
       }
+    }
+  },
+  "activity": {
+    "submit": {
+      "title": "Soumettre une activité",
+      "subtitle": "Proposez une activité pour cet événement",
+      "submit": "Soumettre l'activité",
+      "submitting": "Soumission en cours...",
+      "sections": {
+        "basicInfo": "Informations générales",
+        "formatAndThemes": "Format et thématiques",
+        "schedule": "Planification",
+        "location": "Localisation",
+        "speakers": "Intervenants",
+        "summary": "Récapitulatif"
+      },
+      "steps": {
+        "basicInfo": "Informations générales",
+        "basicInfoDesc": "Titre, type et objectifs",
+        "formatThemes": "Format et thématiques",
+        "formatThemesDesc": "Format, thèmes et catégories",
+        "schedule": "Planification",
+        "scheduleDesc": "Dates et localisation",
+        "speakers": "Intervenants",
+        "speakersDesc": "Informations des intervenants",
+        "summary": "Récapitulatif",
+        "summaryDesc": "Vérification avant soumission"
+      },
+      "fields": {
+        "title": "Titre de l'activité",
+        "organization": "Organisation",
+        "activityType": "Type d'activité",
+        "objectives": "Objectifs",
+        "detailedPresentation": "Présentation détaillée",
+        "format": "Format",
+        "themes": "Thématiques principales",
+        "categories": "Catégories",
+        "proposedStartDate": "Date et heure de début proposées",
+        "proposedEndDate": "Date et heure de fin proposées",
+        "country": "Pays",
+        "speaker": "Intervenant",
+        "civility": "Civilité",
+        "firstName": "Prénom",
+        "lastName": "Nom",
+        "email": "Email",
+        "position": "Poste",
+        "speakerOrganization": "Organisation",
+        "availableForQuestions": "Disponible pour répondre aux questions"
+      },
+      "placeholders": {
+        "title": "Ex: Atelier sur l'adaptation climatique en Afrique",
+        "selectType": "Sélectionnez le type d'activité",
+        "objectives": "Décrivez les objectifs principaux de votre activité...",
+        "detailedPresentation": "Présentez en détail le contenu, la méthodologie et les résultats attendus...",
+        "selectFormat": "Sélectionnez le format",
+        "selectCountry": "Sélectionnez un pays",
+        "selectCivility": "Sélectionnez la civilité",
+        "speakerFirstName": "Ex: Jean",
+        "speakerLastName": "Ex: Dupont",
+        "speakerEmail": "Ex: jean.dupont{'@'}exemple.com",
+        "position": "Ex: Directeur du développement durable",
+        "speakerOrganization": "Ex: Organisation Internationale"
+      },
+      "types": {
+        "side_event": "Événement parallèle",
+        "country_day": "Journée pays",
+        "other": "Autre"
+      },
+      "categories": {
+        "capacity_building": "Renforcement des capacités",
+        "results_sharing": "Partage de résultats",
+        "technological_innovation": "Innovation technologique",
+        "field_project": "Projet de terrain",
+        "best_practices": "Bonnes pratiques",
+        "awareness": "Sensibilisation",
+        "consultation": "Consultation"
+      },
+      "formats": {
+        "online": "En ligne",
+        "in_person": "En présentiel",
+        "hybrid": "Hybride"
+      },
+      "themes": {
+        "mitigation": "Atténuation",
+        "adaptation": "Adaptation",
+        "climate_resilience": "Résilience climatique",
+        "loss_and_damage": "Pertes et dommages",
+        "clean_tech_innovations": "Innovations technologiques propres",
+        "renewable_energy_land": "Énergies renouvelables terrestres",
+        "health_solidarity": "Santé et solidarité",
+        "industry_transition": "Transition industrielle",
+        "transport_urbanization": "Transport et urbanisation",
+        "nature_oceans": "Nature et océans",
+        "agriculture_food": "Agriculture et alimentation",
+        "sustainable_livestock": "Élevage durable",
+        "gender": "Genre",
+        "youth": "Jeunesse",
+        "technology": "Technologie",
+        "finance": "Finance",
+        "other": "Autre"
+      },
+      "civilities": {
+        "mr": "M.",
+        "mrs": "Mme",
+        "ms": "Mlle",
+        "dr": "Dr",
+        "prof": "Prof."
+      },
+      "addSpeaker": "Ajouter un intervenant",
+      "speaker": "intervenant",
+      "speakers": "intervenants",
+      "requirements": {
+        "title": "Organisation requise",
+        "description": "Vous devez avoir renseigné votre organisation avant de pouvoir soumettre une activité."
+      },
+      "errors": {
+        "noOrganization": "Vous devez d'abord renseigner votre organisation",
+        "submitFailed": "Une erreur est survenue lors de la soumission. Veuillez réessayer."
+      },
+      "helpers": {
+        "organizationInfo": "L'activité sera soumise au nom de votre organisation"
+      },
+      "loadingOrganization": "Chargement de l'organisation..."
+    },
+    "draft": {
+      "found": "Un brouillon a été trouvé pour cette activité",
+      "load": "Charger le brouillon",
+      "delete": "Supprimer le brouillon",
+      "save": "Sauvegarder en brouillon",
+      "saving": "Sauvegarde en cours..."
     }
   },
   "organization": {

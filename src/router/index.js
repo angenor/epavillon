@@ -59,6 +59,12 @@ const router = createRouter({
       name: 'event-detail',
       component: () => import('../views/events/Detail.vue'),
     },
+    {
+      path: '/events/:eventId/activities/create',
+      name: 'create-activity',
+      component: () => import('../views/activities/Create.vue'),
+      meta: { requiresAuth: true },
+    },
   ],
 })
 

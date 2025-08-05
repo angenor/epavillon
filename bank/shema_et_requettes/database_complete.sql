@@ -215,7 +215,7 @@ CREATE TABLE public.events (
 );
 
 -- Types et catégories d'activités
-CREATE TYPE activity_type AS ENUM (
+CREATE TYPE activity_categories AS ENUM (
     'capacity_building',
     'results_sharing',
     'technological_innovation',
@@ -224,6 +224,7 @@ CREATE TYPE activity_type AS ENUM (
     'awareness',
     'consultation'
 );
+
 
 CREATE TYPE activity_theme AS ENUM (
     'mitigation',
@@ -245,6 +246,13 @@ CREATE TYPE activity_theme AS ENUM (
     'other'
 );
 
+-- Types d'activités
+CREATE TYPE activity_type AS ENUM (
+    'side_event',
+    'country_day',
+    'other'
+);
+
 CREATE TYPE activity_format AS ENUM ('online', 'in_person', 'hybrid');
 CREATE TYPE validation_status AS ENUM ('draft', 'submitted', 'under_review', 'approved', 'rejected', 'cancelled');
 
@@ -261,7 +269,7 @@ CREATE TABLE public.activities (
     detailed_presentation TEXT NOT NULL,
     format activity_format NOT NULL,
     main_themes activity_theme[] NOT NULL, -- Changé en tableau
-    categories activity_type[] NOT NULL, -- Changé en tableau
+    categories activity_categories[] NOT NULL, -- Changé en tableau
     proposed_start_date TIMESTAMPTZ NOT NULL,
     proposed_end_date TIMESTAMPTZ NOT NULL,
     final_start_date TIMESTAMPTZ,
