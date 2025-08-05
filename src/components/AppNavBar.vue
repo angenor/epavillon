@@ -2,20 +2,27 @@
   <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50 transition-all duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
-        <!-- Logo -->
-        <div class="flex-shrink-0 group cursor-pointer">
-          <!-- Logo pour le mode clair -->
-          <img 
-            src="/logos/logo-ifdd-court.svg" 
-            alt="Logo IFDD" 
-            class="h-10 w-auto dark:hidden transition-transform duration-300 group-hover:scale-105"
-          >
-          <!-- Logo pour le mode sombre -->
-          <img 
-            src="/logos/logo-ifdd-blanc.png" 
-            alt="Logo IFDD" 
-            class="h-10 w-auto hidden dark:block transition-transform duration-300 group-hover:scale-105"
-          >
+        <!-- Logo et bouton sidebar -->
+        <div class="flex items-center space-x-3">
+          <!-- Bouton menu sidebar (toujours visible) -->
+          <button @click="toggleSidebar" class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
+            <font-awesome-icon :icon="['fas', 'bars']" class="w-6 h-6" />
+          </button>
+          
+          <div class="flex-shrink-0 group cursor-pointer">
+            <!-- Logo pour le mode clair -->
+            <img 
+              src="/logos/logo-ifdd-court.svg" 
+              alt="Logo IFDD" 
+              class="h-10 w-auto dark:hidden transition-transform duration-300 group-hover:scale-105"
+            >
+            <!-- Logo pour le mode sombre -->
+            <img 
+              src="/logos/logo-ifdd-blanc.png" 
+              alt="Logo IFDD" 
+              class="h-10 w-auto hidden dark:block transition-transform duration-300 group-hover:scale-105"
+            >
+          </div>
         </div>
 
         <!-- Navigation principale -->
@@ -210,11 +217,6 @@
               {{ t('common.register') }}
             </router-link>
           </div>
-
-          <!-- Bouton menu mobile -->
-          <button @click="toggleSidebar" class="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
-            <font-awesome-icon :icon="['fas', 'bars']" class="w-6 h-6" />
-          </button>
         </div>
       </div>
     </div>
