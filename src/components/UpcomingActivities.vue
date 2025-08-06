@@ -19,9 +19,11 @@
       </div>
     </div>
 
-    <!-- Activités (4/5 de la hauteur) -->
-    <div v-else class="flex-1 flex flex-col" style="flex: 0 0 60%;">
-      <div class="flex-1 overflow-y-auto px-3 py-2 space-y-2">
+    <!-- Container principal avec justify-between -->
+    <div v-else class="flex-1 flex flex-col justify-between">
+      <!-- Activités (4/5 de la hauteur) -->
+      <div class="flex flex-col" style="flex: 0 0 80%;">
+        <div class="flex-1 overflow-y-auto px-3 py-2 space-y-2">
         <!-- Activité 1 -->
         <RouterLink to="/events/1" class="block">
           <div class="text-white bg-gradient-to-r from-white/30 to-white/20 backdrop-blur-sm rounded-xl px-4 py-2 hover:from-white/40 hover:to-white/30 transition-all duration-300 shadow-lg">
@@ -87,6 +89,7 @@
             </div>
           </div>
         </RouterLink>
+        
       </div>
 
       <!-- Voir toutes les activités -->
@@ -97,30 +100,31 @@
           </button>
         </RouterLink>
       </div>
-    </div>
+      </div>
 
-    <!-- Formations (1/5 de la hauteur) -->
-    <div class="border-t border-gray-200 dark:border-gray-700" style="flex: 0 0 20%;">
-      <div class="px-3 py-2">
-        <h3 class="text-lg font-semibold text-white mb-2">{{ t('trainings.upcoming') || 'Formations' }}</h3>
-        <RouterLink to="/trainings/1" class="block mb-2">
-          <div class="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1 hover:bg-white/30 transition-all duration-200">
-            <div class="font-medium text-white mb-1 truncate">{{ trainings[0]?.title || 'Formation en gestion durable' }}</div>
-            <div class="flex items-center gap-2 text-sm text-gray-100">
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <span>{{ trainings && trainings[0]?.start_date ? formatDate(trainings[0].start_date) : '15 Jan' }} - {{ trainings && trainings[0]?.end_date ? formatDate(trainings[0].end_date) : '30 Jan' }}</span>
+      <!-- Formations (1/5 de la hauteur) -->
+      <div class="border-t border-gray-200 dark:border-gray-700" style="flex: 0 0 20%;">
+        <div class="px-3 py-2">
+          <h3 class="text-lg font-semibold text-white mb-2">{{ t('trainings.upcoming') || 'Formations' }}</h3>
+          <RouterLink to="/trainings/1" class="block mb-2">
+            <div class="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1 hover:bg-white/30 transition-all duration-200">
+              <div class="font-medium text-white mb-1 truncate">{{ trainings[0]?.title || 'Formation en gestion durable' }}</div>
+              <div class="flex items-center gap-2 text-sm text-gray-100">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>{{ trainings && trainings[0]?.start_date ? formatDate(trainings[0].start_date) : '15 Jan' }} - {{ trainings && trainings[0]?.end_date ? formatDate(trainings[0].end_date) : '30 Jan' }}</span>
+              </div>
             </div>
-          </div>
-        </RouterLink>
-        
-        <!-- Voir toutes les formations -->
-        <RouterLink to="/trainings" class="block">
-          <button class="w-full py-1.5 px-3 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-lg transition-colors duration-200">
-            {{ t('trainings.viewAll') || 'Voir toutes les formations' }}
-          </button>
-        </RouterLink>
+          </RouterLink>
+          
+          <!-- Voir toutes les formations -->
+          <RouterLink to="/trainings" class="block">
+            <button class="w-full py-1.5 px-3 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+              {{ t('trainings.viewAll') || 'Voir toutes les formations' }}
+            </button>
+          </RouterLink>
+        </div>
       </div>
     </div>
   </div>
