@@ -144,7 +144,8 @@
           <div 
             v-for="activity in activities.slice(0, 6)" 
             :key="activity.id"
-            class="bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
+            @click="goToActivityDetail(activity.id)"
+            class="bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
           >
             <!-- Bannière de l'activité -->
             <div class="h-48 bg-gradient-to-br from-primary-500 to-primary-600 relative">
@@ -314,6 +315,10 @@ const goToActivities = () => {
 
 const goToSubmission = () => {
   router.push({ name: 'create-activity', params: { eventId: event.value.id } })
+}
+
+const goToActivityDetail = (activityId) => {
+  router.push(`/activities/${activityId}`)
 }
 
 const loadEvent = async () => {

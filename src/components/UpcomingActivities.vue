@@ -1,9 +1,9 @@
 <template>
-  <div class="h-full bg-opacity-50 w-80 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-2xl flex flex-col">
+  <div class="h-full w-80 backdrop-blur-sm shadow-2xl flex flex-col">
     <!-- Header -->
-    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-      <h2 class="text-xl font-bold text-gray-900 dark:text-white font-maverick">
-        {{ t('activities.title') }}
+    <div class="px-6 py-3 border-b border-gray-200 dark:border-gray-700">
+      <h2 class="text-xl font-bold text-white font-maverick">
+        {{ "Cop 29" }}
       </h2>
     </div>
 
@@ -20,95 +20,31 @@
     </div>
 
     <!-- Activités -->
-    <div v-else class="flex-1 overflow-y-auto">
-      <!-- Section Événements -->
-      <div v-if="events.length > 0" class="p-6 space-y-4">
-        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-          {{ t('activities.events') }}
-        </h3>
-        
-        <!-- Événement principal -->
-        <div v-if="events[0]" class="bg-ifdd-bleu/10 dark:bg-ifdd-bleu/20 rounded-lg p-4 border-l-4 border-ifdd-bleu transform hover:scale-105 transition-transform cursor-pointer">
-          <div class="flex items-start justify-between">
-            <div class="flex-1">
-              <h4 class="font-semibold text-gray-900 dark:text-white">
-                {{ events[0].title }}
-              </h4>
-              <p class="text-sm text-gray-600 dark:text-gray-300 mt-1 line-clamp-2">
-                {{ events[0].description }}
-              </p>
-              <div class="flex items-center mt-2 text-sm text-gray-500 dark:text-gray-400">
-                <font-awesome-icon :icon="['fas', 'calendar']" class="w-4 h-4 mr-1" />
-                <span>{{ formatEventDate(events[0]) }}</span>
-              </div>
-              <div v-if="events[0].city" class="flex items-center mt-1 text-sm text-gray-500 dark:text-gray-400">
-                <font-awesome-icon :icon="['fas', 'location-dot']" class="w-4 h-4 mr-1" />
-                <span>{{ events[0].city }}{{ events[0].country ? ', ' + getCountryName(events[0].country) : '' }}</span>
-              </div>
-            </div>
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" :class="getEventStatusClass(events[0])">
-              {{ t(`activities.status.${getEventStatus(events[0])}`) }}
-            </span>
-          </div>
-        </div>
-
-        <!-- Autres événements -->
-        <div v-if="events.length > 1" class="space-y-3">
-          <div v-for="event in events.slice(1, 3)" :key="event.id" class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer">
-            <h4 class="font-medium text-gray-900 dark:text-white text-sm">
-              {{ event.title }}
-            </h4>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              {{ formatEventDate(event) }}{{ event.participation_mode === 'online' ? ' • ' + t('activities.online') : '' }}
-            </p>
-          </div>
+    <RouterLink to="#" v-else class="flex-1 overflow-y-auto">
+      <div class="max-h-1/4 text-white bg-white/40 rounded-xl mx-1 mt-1 py-2 px-3 overflow-hidden">
+        <div class=" font-bold text-xl">Titre de l'activité</div>
+        <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum, eum fuga.</div>
+        <div class="flex mt-2 text-gray-100 justify-between">
+          <div class=" rounded-full border border-green-500 font-bold px-2 text-sm">Demain à 15h30</div>
+          <!-- Nom de l'organisation qui organise l'activité -->
+          <div class="text-sm">Organisation</div>
+          <!-- logo de l'organisation qui organise l'activité -->
+          <img src="#" alt="">
         </div>
       </div>
+    </RouterLink>
+    <!-- Voir toutes les activités -->
+    <button></button>
 
-      <!-- Section Formations -->
-      <div v-if="trainings.length > 0" class="p-6 pt-2 space-y-4">
-        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-          {{ t('activities.trainings') }}
-        </h3>
-        
-        <div v-for="training in trainings.slice(0, 2)" :key="training.id" class="bg-gradient-to-r from-ifdd-vert/10 to-ifdd-bleu/10 dark:from-ifdd-vert/20 dark:to-ifdd-bleu/20 rounded-lg p-4 border border-ifdd-vert/20">
-          <div class="flex items-center justify-between">
-            <div>
-              <h4 class="font-semibold text-gray-900 dark:text-white">
-                {{ training.title }}
-              </h4>
-              <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                {{ getCategoryLabel(training.category) }} • {{ getTrainingDuration(training) }}
-              </p>
-              <div class="flex items-center mt-2 gap-4">
-                <span class="text-sm text-gray-500 dark:text-gray-400">
-                  {{ t('activities.start') }}: {{ formatDate(training.start_date) }}
-                </span>
-                <span v-if="training.is_active" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800/20 dark:text-green-400">
-                  {{ t('activities.availableSpots') }}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Empty State -->
-      <div v-if="!loading && events.length === 0 && trainings.length === 0" class="flex-1 p-6 flex items-center justify-center">
-        <div class="text-center">
-          <font-awesome-icon :icon="['fas', 'calendar-xmark']" class="w-12 h-12 text-gray-400 dark:text-gray-600 mb-3" />
-          <p class="text-gray-500 dark:text-gray-400">{{ t('activities.noUpcoming') }}</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="p-6 border-t border-gray-200 dark:border-gray-700">
-      <button class="w-full px-4 py-2 bg-ifdd-bleu hover:bg-ifdd-bleu-dark text-white font-medium rounded-lg transition-colors flex items-center justify-center group">
-        <span>{{ t('activities.viewAll') }}</span>
-        <font-awesome-icon :icon="['fas', 'chevron-right']" class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-      </button>
-    </div>
+    <!-- Formations 1/5 max -->
+     <RouterLink to="/formations">
+      <!-- Titre de la formation -->
+       <div></div>
+       <!-- Date de debut & date de fin -->
+        <div></div>
+     </RouterLink>
+     <!-- Voir toutes les Formations -->
+    <button></button>
   </div>
 </template>
 
@@ -116,6 +52,7 @@
 import { useI18n } from 'vue-i18n'
 import { onMounted } from 'vue'
 import { useActivities } from '@/composables/useActivities'
+import { RouterLink } from 'vue-router'
 
 export default {
   name: 'UpcomingActivities',

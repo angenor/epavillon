@@ -57,13 +57,13 @@
 
       <div v-else-if="event" class="bg-white dark:bg-gray-800 shadow-xl rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
         <!-- Modern Header -->
-        <div class="bg-primary-600 dark:bg-primary-700 text-white px-6 py-8">
+        <div class="bg-orange-600 dark:bg-orange-700 text-white px-6 py-8">
           <div class="flex items-center justify-between">
             <div>
               <h1 class="text-2xl md:text-3xl font-bold mb-2">
                 {{ t('events.edit.title') }}
               </h1>
-              <p class="text-primary-100 dark:text-primary-200 text-sm md:text-base">
+              <p class="text-green-100 dark:text-green-200 text-sm md:text-base">
                 {{ t('events.edit.subtitle') }}
               </p>
             </div>
