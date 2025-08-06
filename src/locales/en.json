@@ -285,7 +285,36 @@
     "status": {
       "upcoming": "Upcoming",
       "ongoing": "Ongoing", 
-      "completed": "Completed"
+      "completed": "Completed",
+      "suspended": "Suspended"
+    },
+    "submission": {
+      "open": "Open",
+      "closed": "Closed"
+    },
+    "edit": {
+      "title": "Edit Event",
+      "subtitle": "Modify event information",
+      "update": "Update",
+      "updating": "Updating...",
+      "sections": {
+        "basicInfo": "Basic Information",
+        "schedule": "Schedule",
+        "status": "Status"
+      },
+      "fields": {
+        "eventStatus": "Event Status",
+        "submissionStatus": "Submission Status"
+      },
+      "error": {
+        "title": "Edit Error",
+        "loadFailed": "Unable to load event",
+        "updateFailed": "Error during update"
+      },
+      "noPermission": {
+        "title": "Insufficient Permission",
+        "description": "You don't have permission to edit this event."
+      }
     }
   },
   "auth": {
@@ -600,10 +629,13 @@
         "onlineDetails": "Online Event Details",
         "onlineStartDate": "Online Start Date and Time",
         "onlineEndDate": "Online End Date and Time",
+        "startDate": "Start Date",
+        "endDate": "End Date",
         "inPersonDetails": "In-Person Event Details",
         "country": "Country",
         "city": "City",
         "address": "Address",
+        "logo": "Logo",
         "inPersonStartDate": "In-Person Start Date",
         "inPersonEndDate": "In-Person End Date",
         "banner32_9": "Banner 32:9",
@@ -614,8 +646,15 @@
         "title": "E.g: International Forum on Sustainable Development 2025",
         "description": "Describe the objective and content of your event...",
         "selectCountry": "Select a country",
+        "selectMode": "Select participation mode",
         "city": "E.g: Paris",
-        "address": "Complete venue address"
+        "address": "Complete venue address",
+        "logo": "https://example.com/logo.png"
+      },
+      "modes": {
+        "online": "Online",
+        "in_person": "In Person",
+        "hybrid": "Hybrid"
       }
     }
   }

@@ -60,6 +60,12 @@ const router = createRouter({
       component: () => import('../views/events/Detail.vue'),
     },
     {
+      path: '/events/:id/edit',
+      name: 'event-edit',
+      component: () => import('../views/events/Edit.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/events/:eventId/activities/create',
       name: 'create-activity',
       component: () => import('../views/activities/Create.vue'),

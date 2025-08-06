@@ -61,7 +61,36 @@
     "status": {
       "ongoing": "EN COURS",
       "upcoming": "À VENIR",
-      "completed": "TERMINÉ"
+      "completed": "TERMINÉ",
+      "suspended": "SUSPENDU"
+    },
+    "submission": {
+      "open": "Ouvertes",
+      "closed": "Fermées"
+    },
+    "edit": {
+      "title": "Modifier l'événement",
+      "subtitle": "Modifiez les informations de l'événement",
+      "update": "Mettre à jour",
+      "updating": "Mise à jour...",
+      "sections": {
+        "basicInfo": "Informations générales",
+        "schedule": "Planification",
+        "status": "Statut"
+      },
+      "fields": {
+        "eventStatus": "Statut de l'événement",
+        "submissionStatus": "Statut des soumissions"
+      },
+      "error": {
+        "title": "Erreur de modification",
+        "loadFailed": "Impossible de charger l'événement",
+        "updateFailed": "Erreur lors de la mise à jour"
+      },
+      "noPermission": {
+        "title": "Permission insuffisante",
+        "description": "Vous n'avez pas l'autorisation de modifier cet événement."
+      }
     },
     "cop29": {
       "title": "COP29 - Bakou",
@@ -112,14 +141,22 @@
         "inPersonEndDate": "Date de fin présentiel",
         "banner32_9": "Bannière 32:9",
         "banner16_9": "Bannière 16:9",
-        "banner1_1": "Bannière 1:1"
+        "banner1_1": "Bannière 1:1",
+        "startDate": "Date de début",
+        "endDate": "Date de fin"
       },
       "placeholders": {
         "title": "Ex: Forum International sur le Développement Durable 2025",
         "description": "Décrivez l'objectif et le contenu de votre événement...",
         "selectCountry": "Sélectionnez un pays",
+        "selectMode": "Sélectionnez le mode de participation",
         "city": "Ex: Paris",
         "address": "Adresse complète du lieu"
+      },
+      "modes": {
+        "online": "En ligne",
+        "in_person": "En présentiel",
+        "hybrid": "Hybride"
       }
     }
   },
@@ -300,7 +337,46 @@
     "status": {
       "upcoming": "À venir",
       "ongoing": "En cours",
-      "completed": "Terminé"
+      "completed": "Terminé",
+      "suspended": "Suspendu"
+    },
+    "submission": {
+      "open": "Ouvertes",
+      "closed": "Fermées"
+    },
+    "edit": {
+      "title": "Modifier l'événement",
+      "subtitle": "Modifiez les informations de l'événement",
+      "update": "Mettre à jour",
+      "updating": "Mise à jour...",
+      "sections": {
+        "basicInfo": "Informations générales",
+        "schedule": "Planification",
+        "status": "Statut"
+      },
+      "fields": {
+        "eventStatus": "Statut de l'événement",
+        "submissionStatus": "Statut des soumissions"
+      },
+      "error": {
+        "title": "Erreur de modification",
+        "loadFailed": "Impossible de charger l'événement",
+        "updateFailed": "Erreur lors de la mise à jour"
+      },
+      "noPermission": {
+        "title": "Permission insuffisante",
+        "description": "Vous n'avez pas l'autorisation de modifier cet événement."
+      }
+    },
+    "status": {
+      "upcoming": "À venir",
+      "ongoing": "En cours",
+      "completed": "Terminé",
+      "suspended": "Suspendu"
+    },
+    "submission": {
+      "open": "Ouvertes",
+      "closed": "Fermées"
     },
     "create": {
       "title": "Créer un nouvel événement",
@@ -319,8 +395,14 @@
         "onlineDetails": "Détails de l'événement en ligne",
         "onlineStartDate": "Date et heure de début",
         "onlineEndDate": "Date et heure de fin",
+        "startDate": "Date de début",
+        "endDate": "Date de fin",
         "inPersonDetails": "Détails de l'événement en présentiel",
         "location": "Lieu",
+        "country": "Pays",
+        "city": "Ville",
+        "address": "Adresse",
+        "logo": "Logo",
         "inPersonStartDate": "Date de début",
         "inPersonEndDate": "Date de fin",
         "banner32_9": "Bannière 32:9",
@@ -330,35 +412,27 @@
       "placeholders": {
         "title": "Ex: COP29 - Conférence des Parties",
         "description": "Décrivez l'événement, ses objectifs et son importance...",
-        "location": "Ex: Paris, France"
+        "location": "Ex: Paris, France",
+        "selectMode": "Sélectionnez le mode de participation",
+        "selectCountry": "Sélectionnez un pays",
+        "selectCountry": "Sélectionnez un pays",
+        "city": "Ex: Paris",
+        "address": "Adresse complète du lieu",
+        "logo": "https://exemple.com/logo.png"
+      },
+      "modes": {
+        "online": "En ligne",
+        "in_person": "En présentiel",
+        "hybrid": "Hybride"
+      },
+      "fields": {
+        "startDate": "Date de début",
+        "endDate": "Date de fin"
       },
       "mediaDescription": "Téléchargez des bannières dans différents formats pour optimiser l'affichage sur tous les appareils",
       "uploaded": "Téléchargé",
       "submit": "Créer l'événement",
       "submitting": "Création en cours..."
-    }
-  },
-  "event": {
-    "description": "Description",
-    "dateTime": "Date et heure",
-    "location": "Lieu",
-    "format": "Format",
-    "formats": {
-      "online": "En ligne",
-      "in_person": "En présentiel", 
-      "hybrid": "Hybride"
-    },
-    "submissionDeadline": "Date limite de soumission",
-    "daysRemaining": "jours restants",
-    "viewActivities": "Voir les activités",
-    "submitActivity": "Soumettre une activité",
-    "upcomingActivities": "Activités à venir",
-    "organizedBy": "Organisé par",
-    "viewAllActivities": "Voir toutes les activités",
-    "status": {
-      "upcoming": "À venir",
-      "ongoing": "En cours",
-      "completed": "Terminé"
     }
   },
   "auth": {
@@ -457,53 +531,6 @@
     "callback": {
       "processing": "Authentification en cours...",
       "pleaseWait": "Veuillez patienter quelques instants"
-    }
-  },
-  "eventsPage": {
-    "create": {
-      "title": "Créer un événement",
-      "subtitle": "Organisez un nouvel événement pour la communauté",
-      "submit": "Créer l'événement",
-      "submitting": "Création en cours...",
-      "uploaded": "Téléchargé",
-      "lowQualityGenerated": "Version basse qualité générée automatiquement",
-      "mediaDescription": "Téléchargez des bannières dans différents formats pour optimiser l'affichage sur tous les supports",
-      "requirements": {
-        "title": "Prérequis pour créer un événement",
-        "description": "Pour créer un événement, vous devez remplir les conditions suivantes :",
-        "contactAdmin": "Contacter un administrateur"
-      },
-      "sections": {
-        "basicInfo": "Informations générales",
-        "format": "Format de l'événement",
-        "media": "Médias et bannières"
-      },
-      "fields": {
-        "year": "Année",
-        "title": "Titre de l'événement",
-        "description": "Description",
-        "submissionDeadline": "Date limite de soumission",
-        "participationMode": "Mode de participation",
-        "onlineDetails": "Détails événement en ligne",
-        "onlineStartDate": "Date et heure de début en ligne",
-        "onlineEndDate": "Date et heure de fin en ligne",
-        "inPersonDetails": "Détails événement présentiel",
-        "country": "Pays",
-        "city": "Ville",
-        "address": "Adresse",
-        "inPersonStartDate": "Date de début présentiel",
-        "inPersonEndDate": "Date de fin présentiel",
-        "banner32_9": "Bannière 32:9",
-        "banner16_9": "Bannière 16:9",
-        "banner1_1": "Bannière 1:1"
-      },
-      "placeholders": {
-        "title": "Ex: Forum International sur le Développement Durable 2025",
-        "description": "Décrivez l'objectif et le contenu de votre événement...",
-        "selectCountry": "Sélectionnez un pays",
-        "city": "Ex: Paris",
-        "address": "Adresse complète du lieu"
-      }
     }
   },
   "activity": {
@@ -687,6 +714,109 @@
       "authenticated": "Être connecté",
       "adminRole": "Avoir un rôle administrateur",
       "organization": "Organisation renseignée"
+    }
+  },
+  "event": {
+    "description": "Description",
+    "dateTime": "Date et heure",
+    "location": "Lieu",
+    "format": "Format",
+    "formats": {
+      "online": "En ligne",
+      "in_person": "En présentiel",
+      "hybrid": "Hybride"
+    },
+    "submissionDeadline": "Date limite de soumission",
+    "daysRemaining": "jours restants",
+    "viewActivities": "Voir les activités",
+    "submitActivity": "Soumettre une activité",
+    "upcomingActivities": "Activités à venir",
+    "organizedBy": "Organisé par",
+    "viewAllActivities": "Voir toutes les activités",
+    "status": {
+      "upcoming": "À venir",
+      "ongoing": "En cours",
+      "completed": "Terminé",
+      "suspended": "Suspendu"
+    },
+    "submission": {
+      "open": "Ouvertes",
+      "closed": "Fermées"
+    },
+    "edit": {
+      "title": "Modifier l'événement",
+      "subtitle": "Modifiez les informations de l'événement",
+      "update": "Mettre à jour",
+      "updating": "Mise à jour...",
+      "sections": {
+        "basicInfo": "Informations générales",
+        "schedule": "Planification",
+        "status": "Statut"
+      },
+      "fields": {
+        "eventStatus": "Statut de l'événement",
+        "submissionStatus": "Statut des soumissions"
+      },
+      "error": {
+        "title": "Erreur de modification",
+        "loadFailed": "Impossible de charger l'événement",
+        "updateFailed": "Erreur lors de la mise à jour"
+      },
+      "noPermission": {
+        "title": "Permission insuffisante",
+        "description": "Vous n'avez pas l'autorisation de modifier cet événement."
+      }
+    },
+    "create": {
+      "title": "Créer un nouvel événement",
+      "subtitle": "Remplissez les informations ci-dessous pour créer un nouvel événement",
+      "sections": {
+        "basicInfo": "Informations générales",
+        "format": "Format de l'événement",
+        "media": "Médias et bannières"
+      },
+      "fields": {
+        "year": "Année",
+        "title": "Titre de l'événement",
+        "description": "Description",
+        "submissionDeadline": "Date limite de soumission",
+        "participationMode": "Mode de participation",
+        "onlineDetails": "Détails de l'événement en ligne",
+        "onlineStartDate": "Date et heure de début",
+        "onlineEndDate": "Date et heure de fin",
+        "startDate": "Date de début",
+        "endDate": "Date de fin",
+        "inPersonDetails": "Détails de l'événement en présentiel",
+        "location": "Lieu",
+        "country": "Pays",
+        "city": "Ville",
+        "address": "Adresse",
+        "logo": "Logo",
+        "inPersonStartDate": "Date de début",
+        "inPersonEndDate": "Date de fin",
+        "banner32_9": "Bannière 32:9",
+        "banner16_9": "Bannière 16:9",
+        "banner1_1": "Bannière 1:1"
+      },
+      "placeholders": {
+        "title": "Ex: COP29 - Conférence des Parties",
+        "description": "Décrivez l'événement, ses objectifs et son importance...",
+        "location": "Ex: Paris, France",
+        "selectMode": "Sélectionnez le mode de participation",
+        "selectCountry": "Sélectionnez un pays",
+        "city": "Ex: Paris",
+        "address": "Adresse complète du lieu",
+        "logo": "https://exemple.com/logo.png"
+      },
+      "modes": {
+        "online": "En ligne",
+        "in_person": "En présentiel",
+        "hybrid": "Hybride"
+      },
+      "mediaDescription": "Téléchargez des bannières dans différents formats pour optimiser l'affichage sur tous les appareils",
+      "uploaded": "Téléchargé",
+      "submit": "Créer l'événement",
+      "submitting": "Création en cours..."
     }
   }
 }

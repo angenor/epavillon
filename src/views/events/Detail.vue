@@ -313,7 +313,7 @@ const goToActivities = () => {
 }
 
 const goToSubmission = () => {
-  router.push({ name: 'submit-activity', params: { eventId: event.value.id } })
+  router.push({ name: 'create-activity', params: { eventId: event.value.id } })
 }
 
 const loadEvent = async () => {

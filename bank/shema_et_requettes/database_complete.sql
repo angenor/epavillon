@@ -200,6 +200,7 @@ CREATE TABLE public.events (
     online_end_datetime TIMESTAMPTZ,
     country_id UUID REFERENCES public.countries(id),
     city TEXT,
+    logo_url TEXT,
     address TEXT,
     in_person_start_date DATE,
     in_person_end_date DATE,
