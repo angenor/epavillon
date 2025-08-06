@@ -168,6 +168,101 @@
       "days": "{{count}} days",
       "weeks": "{{count}} weeks",
       "months": "{{count}} months"
+    },
+    "detail": {
+      "error": {
+        "title": "Loading Error",
+        "loadFailed": "Unable to load activity details",
+        "registrationFailed": "Error during registration",
+        "unregistrationFailed": "Error during unregistration"
+      },
+      "register": "Register",
+      "unregister": "Unregister",
+      "registering": "Registering...",
+      "unregistering": "Unregistering...",
+      "share": "Share",
+      "edit": "Edit",
+      "organizedBy": "Organized by",
+      "sections": {
+        "objectives": "Objectives",
+        "detailedPresentation": "Detailed Presentation",
+        "speakers": "Speakers",
+        "documents": "Documents",
+        "information": "Information",
+        "event": "Event"
+      },
+      "activityType": "Activity Type",
+      "mainThemes": "Main Themes",
+      "categories": "Categories",
+      "tags": "Tags",
+      "registrations": "Registrations",
+      "participants": "participants",
+      "eventTitle": "Event Title",
+      "eventYear": "Year",
+      "viewEvent": "View Event"
+    },
+    "types": {
+      "side_event": "Side Event",
+      "country_day": "Country Day",
+      "other": "Other"
+    },
+    "categories": {
+      "capacity_building": "Capacity building",
+      "results_sharing": "Results sharing",
+      "technological_innovation": "Technological innovation",
+      "field_project": "Field project",
+      "best_practices": "Best practices",
+      "awareness": "Awareness",
+      "consultation": "Consultation"
+    },
+    "themes": {
+      "mitigation": "Mitigation",
+      "adaptation": "Adaptation",
+      "climate_resilience": "Climate resilience",
+      "loss_and_damage": "Loss and damage",
+      "clean_tech_innovations": "Clean tech innovations",
+      "renewable_energy_land": "Land-based renewable energy",
+      "health_solidarity": "Health and solidarity",
+      "industry_transition": "Industry transition",
+      "transport_urbanization": "Transport and urbanization",  
+      "nature_oceans": "Nature and oceans",
+      "agriculture_food": "Agriculture and food",
+      "sustainable_livestock": "Sustainable livestock",
+      "gender": "Gender",
+      "youth": "Youth",
+      "technology": "Technology",
+      "finance": "Finance",
+      "other": "Other"
+    },
+    "status": {
+      "draft": "Draft",
+      "submitted": "Submitted",
+      "under_review": "Under Review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    },
+    "edit": {
+      "title": "Edit Activity",
+      "subtitle": "Modify your activity information",
+      "update": "Update",
+      "updating": "Updating...",
+      "sections": {
+        "basicInfo": "Basic Information",
+        "themesAndCategories": "Themes and Categories",
+        "schedule": "Schedule"
+      },
+      "error": {
+        "title": "Edit Error",
+        "loadFailed": "Unable to load activity",
+        "updateFailed": "Error during update",
+        "saveFailed": "Error during save"
+      },
+      "noPermission": {
+        "title": "Insufficient Permission",
+        "description": "You don't have permission to edit this activity."
+      },
+      "draftSaved": "Draft saved successfully"
     }
   },
   "event": {

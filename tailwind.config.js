@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      backgroundImage: theme => ({
+                'people-bg-1': "url('/images/people-bg/people-bg-1.jpg')",
+                'people-bg-2': "url('/images/people-bg/people-bg-2.jpg')",
+               }),
       colors: {
           ifdd: {
           // Couleurs principales extraites du logo

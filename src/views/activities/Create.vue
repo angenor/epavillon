@@ -1,6 +1,19 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-    <div class="max-w-5xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen relative transition-colors duration-200">
+    <!-- Image de fond avec repeat -->
+    <div 
+      class="absolute inset-0 z-0 "
+      :style="{
+        backgroundImage: 'url(/images/people-bg/people-bg-2.jpg)',
+        backgroundSize: 'auto',
+        backgroundRepeat: 'repeat',
+        backgroundPosition: 'top left'
+      }"
+    >
+      <!-- Overlay pour améliorer la lisibilité -->
+      <div class="absolute inset-0  dark:bg-gray-900/80"></div>
+    </div>
+    <div class="relative z-10 max-w-5xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
       <!-- Draft Alert with improved design -->
       <div v-if="hasDraft" class="mb-6 p-4 bg-white dark:bg-gray-800 border border-blue-200 dark:border-blue-700 rounded-xl shadow-sm">
         <div class="flex items-center justify-between">
@@ -170,21 +183,12 @@
                     <label for="detailed_presentation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-green-600 dark:group-focus-within:text-green-400">
                       {{ t('activity.submit.fields.detailedPresentation') }} *
                     </label>
-                    <div class="relative">
-                      <textarea
-                        id="detailed_presentation"
-                        v-model="form.detailed_presentation"
-                        rows="5"
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 resize-none"
-                        :placeholder="t('activity.submit.placeholders.detailedPresentation')"
-                      ></textarea>
-                      <div class="absolute bottom-3 right-3">
-                        <span class="text-xs text-gray-400">
-                          {{ form.detailed_presentation?.length || 0 }} caractères
-                        </span>
-                      </div>
-                    </div>
+                    <RichTextEditor
+                      v-model="form.detailed_presentation"
+                      :placeholder="t('activity.submit.placeholders.detailedPresentation')"
+                      :show-character-count="true"
+                      :max-length="5000"
+                    />
                   </div>
                 </div>
               </div>
@@ -651,6 +655,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useCountries } from '@/composables/useCountries'
 import { useSupabase } from '@/composables/useSupabase'
 import ProgressBar from '@/components/ui/ProgressBar.vue'
+import RichTextEditor from '@/components/ui/RichTextEditor.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -982,7 +987,11 @@ watch(() => authStore.profile?.organization_id, async (organizationId, oldOrgani
 <style scoped>
 /* Custom focus styles for enhanced form interactions */
 .group:focus-within label {
-  @apply text-green-600 dark:text-green-400;
+  color: #16a34a;
+}
+
+.dark .group:focus-within label {
+  color: #4ade80;
 }
 
 /* Custom scrollbar for textareas */
@@ -991,11 +1000,29 @@ textarea::-webkit-scrollbar {
 }
 
 textarea::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-700 rounded-full;
+  background-color: #f3f4f6;
+  border-radius: 9999px;
+}
+
+.dark textarea::-webkit-scrollbar-track {
+  background-color: #374151;
 }
 
 textarea::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full hover:bg-gray-400 dark:hover:bg-gray-500;
+  background-color: #d1d5db;
+  border-radius: 9999px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+
+.dark textarea::-webkit-scrollbar-thumb {
+  background-color: #4b5563;
+}
+
+.dark textarea::-webkit-scrollbar-thumb:hover {
+  background-color: #6b7280;
 }
 
 /* Custom select styling to remove default arrow */
@@ -1010,7 +1037,11 @@ input, select, textarea, button {
 
 /* Enhanced hover effects for cards */
 .bg-gray-50:hover {
-  @apply bg-gray-100 dark:bg-gray-600/50;
+  background-color: #f9fafb;
+}
+
+.dark .bg-gray-50:hover {
+  background-color: rgba(75, 85, 99, 0.5);
 }
 
 /* Improved focus ring visibility */

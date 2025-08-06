@@ -183,6 +183,101 @@
       "days": "{{count}} jours",
       "weeks": "{{count}} semaines",
       "months": "{{count}} mois"
+    },
+    "detail": {
+      "error": {
+        "title": "Erreur de chargement",
+        "loadFailed": "Impossible de charger les détails de l'activité",
+        "registrationFailed": "Erreur lors de l'inscription",
+        "unregistrationFailed": "Erreur lors de la désinscription"
+      },
+      "register": "S'inscrire",
+      "unregister": "Se désinscrire",
+      "registering": "Inscription...",
+      "unregistering": "Désinscription...",
+      "share": "Partager",
+      "edit": "Modifier",
+      "organizedBy": "Organisé par",
+      "sections": {
+        "objectives": "Objectifs",
+        "detailedPresentation": "Présentation détaillée",
+        "speakers": "Intervenants",
+        "documents": "Documents",
+        "information": "Informations",
+        "event": "Événement"
+      },
+      "activityType": "Type d'activité",
+      "mainThemes": "Thèmes principaux",
+      "categories": "Catégories",
+      "tags": "Tags",
+      "registrations": "Inscriptions",
+      "participants": "participants",
+      "eventTitle": "Titre de l'événement",
+      "eventYear": "Année",
+      "viewEvent": "Voir l'événement"
+    },
+    "types": {
+      "side_event": "Événement parallèle",
+      "country_day": "Journée pays",
+      "other": "Autre"
+    },
+    "categories": {
+      "capacity_building": "Renforcement des capacités",
+      "results_sharing": "Partage de résultats",
+      "technological_innovation": "Innovation technologique",
+      "field_project": "Projet de terrain",
+      "best_practices": "Bonnes pratiques",
+      "awareness": "Sensibilisation",
+      "consultation": "Consultation"
+    },
+    "themes": {
+      "mitigation": "Atténuation",
+      "adaptation": "Adaptation",
+      "climate_resilience": "Résilience climatique",
+      "loss_and_damage": "Pertes et dommages",
+      "clean_tech_innovations": "Innovations technologiques propres",
+      "renewable_energy_land": "Énergies renouvelables terrestres",
+      "health_solidarity": "Santé et solidarité",
+      "industry_transition": "Transition industrielle",
+      "transport_urbanization": "Transport et urbanisation",
+      "nature_oceans": "Nature et océans",
+      "agriculture_food": "Agriculture et alimentation",
+      "sustainable_livestock": "Élevage durable",
+      "gender": "Genre",
+      "youth": "Jeunesse",
+      "technology": "Technologie",
+      "finance": "Finance",
+      "other": "Autre"
+    },
+    "status": {
+      "draft": "Brouillon",
+      "submitted": "Soumise",
+      "under_review": "En révision",
+      "approved": "Approuvée",
+      "rejected": "Rejetée",
+      "cancelled": "Annulée"
+    },
+    "edit": {
+      "title": "Modifier l'activité",
+      "subtitle": "Modifiez les informations de votre activité",
+      "update": "Mettre à jour",
+      "updating": "Mise à jour...",
+      "sections": {
+        "basicInfo": "Informations générales",
+        "themesAndCategories": "Thèmes et catégories",
+        "schedule": "Planification"
+      },
+      "error": {
+        "title": "Erreur de modification",
+        "loadFailed": "Impossible de charger l'activité",
+        "updateFailed": "Erreur lors de la mise à jour",
+        "saveFailed": "Erreur lors de la sauvegarde"
+      },
+      "noPermission": {
+        "title": "Permission insuffisante",
+        "description": "Vous n'avez pas l'autorisation de modifier cette activité."
+      },
+      "draftSaved": "Brouillon sauvegardé avec succès"
     }
   },
   "event": {

@@ -1181,18 +1181,46 @@ CREATE POLICY "Users can update their own events" ON public.events
         )
     );
 
--- Politiques pour les activités
-CREATE POLICY "Approved activities are viewable by all" ON public.activities
-    FOR SELECT USING (validation_status = 'approved' AND is_deleted = FALSE);
+-- Politiques pour les activités (mises à jour avec les corrections de fix_activities_update_policies.sql)
+-- Politique SELECT (lecture)
+CREATE POLICY "activities_select_policy" ON public.activities
+    FOR SELECT USING (true); -- Tout le monde peut lire les activités
 
-CREATE POLICY "Users can view their own activities" ON public.activities
-    FOR SELECT USING (submitted_by = auth.uid());
+-- Politique INSERT (création)
+CREATE POLICY "activities_insert_policy" ON public.activities
+    FOR INSERT WITH CHECK (submitted_by = auth.uid());
 
-CREATE POLICY "Users can submit activities for their organization" ON public.activities
-    FOR INSERT WITH CHECK (
+-- Politique UPDATE (modification) - Corrigée pour résoudre les problèmes de permissions
+CREATE POLICY "activities_update_policy" ON public.activities
+    FOR UPDATE 
+    USING (
         submitted_by = auth.uid() 
-        AND organization_id IN (
-            SELECT organization_id FROM public.users WHERE id = auth.uid()
+        OR EXISTS (
+            SELECT 1 FROM public.user_roles 
+            WHERE user_id = auth.uid() 
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
+        )
+    )
+    WITH CHECK (
+        submitted_by = auth.uid() 
+        OR EXISTS (
+            SELECT 1 FROM public.user_roles 
+            WHERE user_id = auth.uid() 
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
+        )
+    );
+
+-- Politique DELETE (suppression)
+CREATE POLICY "activities_delete_policy" ON public.activities
+    FOR DELETE USING (
+        submitted_by = auth.uid() 
+        OR EXISTS (
+            SELECT 1 FROM public.user_roles 
+            WHERE user_id = auth.uid() 
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
         )
     );
 

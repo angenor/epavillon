@@ -65,6 +65,17 @@ const router = createRouter({
       component: () => import('../views/activities/Create.vue'),
       meta: { requiresAuth: true },
     },
+    {
+      path: '/activities/:id',
+      name: 'activity-detail',
+      component: () => import('../views/activities/Detail.vue'),
+    },
+    {
+      path: '/activities/:id/edit',
+      name: 'activity-edit',
+      component: () => import('../views/activities/Edit.vue'),
+      meta: { requiresAuth: true },
+    },
   ],
 })
 
