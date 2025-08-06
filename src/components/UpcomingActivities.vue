@@ -19,32 +19,110 @@
       </div>
     </div>
 
-    <!-- Activités -->
-    <RouterLink to="#" v-else class="flex-1 overflow-y-auto">
-      <div class="max-h-1/4 text-white bg-white/40 rounded-xl mx-1 mt-1 py-2 px-3 overflow-hidden">
-        <div class=" font-bold text-xl">Titre de l'activité</div>
-        <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum, eum fuga.</div>
-        <div class="flex mt-2 text-gray-100 justify-between">
-          <div class=" rounded-full border border-green-500 font-bold px-2 text-sm">Demain à 15h30</div>
-          <!-- Nom de l'organisation qui organise l'activité -->
-          <div class="text-sm">Organisation</div>
-          <!-- logo de l'organisation qui organise l'activité -->
-          <img src="#" alt="">
-        </div>
-      </div>
-    </RouterLink>
-    <!-- Voir toutes les activités -->
-    <button></button>
+    <!-- Activités (4/5 de la hauteur) -->
+    <div v-else class="flex-1 flex flex-col" style="flex: 0 0 60%;">
+      <div class="flex-1 overflow-y-auto px-3 py-2 space-y-2">
+        <!-- Activité 1 -->
+        <RouterLink to="/events/1" class="block">
+          <div class="text-white bg-gradient-to-r from-white/30 to-white/20 backdrop-blur-sm rounded-xl px-4 py-2 hover:from-white/40 hover:to-white/30 transition-all duration-300 shadow-lg">
+            <div class="font-bold text-xl mb-2">{{ events[0]?.title || 'Atelier sur les changements climatiques' }}</div>
+            <div class="text-sm opacity-90 line-clamp-2 mb-3">{{ events[0]?.description || 'Discussion approfondie sur les impacts et solutions aux défis climatiques actuels.' }}</div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <span class="text-sm font-medium">{{ events && events[0] ? formatEventDate(events[0]) : 'Demain à 15h30' }}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs opacity-75">{{ events[0]?.organization?.name || 'IFDD' }}</span>
+                <div class="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center">
+                  <span class="text-xs font-bold">{{ events[0]?.organization?.name?.charAt(0) || 'I' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </RouterLink>
 
-    <!-- Formations 1/5 max -->
-     <RouterLink to="/formations">
-      <!-- Titre de la formation -->
-       <div></div>
-       <!-- Date de debut & date de fin -->
-        <div></div>
-     </RouterLink>
-     <!-- Voir toutes les Formations -->
-    <button></button>
+        <!-- Activité 2 -->
+        <RouterLink to="/events/2" class="block">
+          <div class="text-white bg-gradient-to-r from-white/30 to-white/20 backdrop-blur-sm rounded-xl px-4 py-2 hover:from-white/40 hover:to-white/30 transition-all duration-300 shadow-lg">
+            <div class="font-bold text-xl mb-2">{{ events[1]?.title || 'Conférence sur l\'énergie renouvelable' }}</div>
+            <div class="text-sm opacity-90 line-clamp-2 mb-3">{{ events[1]?.description || 'Explorer les innovations et opportunités dans le secteur des énergies vertes.' }}</div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <span class="text-sm font-medium">{{ events && events[1] ? formatEventDate(events[1]) : 'Lundi 14h00' }}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs opacity-75">{{ events[1]?.organization?.name || 'OIF' }}</span>
+                <div class="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center">
+                  <span class="text-xs font-bold">{{ events[1]?.organization?.name?.charAt(0) || 'O' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </RouterLink>
+
+        <!-- Activité 3 -->
+        <RouterLink to="/events/3" class="block">
+          <div class="text-white bg-gradient-to-r from-white/30 to-white/20 backdrop-blur-sm rounded-xl px-4 py-2 hover:from-white/40 hover:to-white/30 transition-all duration-300 shadow-lg">
+            <div class="font-bold text-xl mb-2">{{ events[2]?.title || 'Forum jeunesse et environnement' }}</div>
+            <div class="text-sm opacity-90 line-clamp-2 mb-3">{{ events[2]?.description || 'Mobiliser la jeunesse francophone pour l\'action climatique.' }}</div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <span class="text-sm font-medium">{{ events && events[2] ? formatEventDate(events[2]) : 'Mercredi 10h00' }}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs opacity-75">{{ events[2]?.organization?.name || 'IFDD' }}</span>
+                <div class="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center">
+                  <span class="text-xs font-bold">{{ events[2]?.organization?.name?.charAt(0) || 'I' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </RouterLink>
+      </div>
+
+      <!-- Voir toutes les activités -->
+      <div class="px-3 py-1">
+        <RouterLink to="/events" class="block w-full">
+          <button class="w-full py-2 px-4 bg-ifdd-bleu hover:bg-ifdd-bleu/90 text-white font-medium rounded-lg transition-colors duration-200 shadow-md">
+            {{ t('activities.viewAll') || 'Voir toutes les activités' }}
+          </button>
+        </RouterLink>
+      </div>
+    </div>
+
+    <!-- Formations (1/5 de la hauteur) -->
+    <div class="border-t border-gray-200 dark:border-gray-700" style="flex: 0 0 20%;">
+      <div class="px-3 py-2">
+        <h3 class="text-lg font-semibold text-white mb-2">{{ t('trainings.upcoming') || 'Formations' }}</h3>
+        <RouterLink to="/trainings/1" class="block mb-2">
+          <div class="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1 hover:bg-white/30 transition-all duration-200">
+            <div class="font-medium text-white mb-1 truncate">{{ trainings[0]?.title || 'Formation en gestion durable' }}</div>
+            <div class="flex items-center gap-2 text-sm text-gray-100">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span>{{ trainings && trainings[0]?.start_date ? formatDate(trainings[0].start_date) : '15 Jan' }} - {{ trainings && trainings[0]?.end_date ? formatDate(trainings[0].end_date) : '30 Jan' }}</span>
+            </div>
+          </div>
+        </RouterLink>
+        
+        <!-- Voir toutes les formations -->
+        <RouterLink to="/trainings" class="block">
+          <button class="w-full py-1.5 px-3 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+            {{ t('trainings.viewAll') || 'Voir toutes les formations' }}
+          </button>
+        </RouterLink>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -76,6 +154,7 @@ export default {
 
     // Formater la date d'un événement
     const formatEventDate = (event) => {
+      if (!event) return ''
       if (event.online_start_datetime) {
         const date = formatDate(event.online_start_datetime)
         const time = formatTime(event.online_start_datetime)
