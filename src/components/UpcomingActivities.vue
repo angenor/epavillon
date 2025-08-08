@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full w-80 backdrop-blur-sm shadow-2xl flex flex-col">
+  <div class="h-full max-h-full w-80 backdrop-blur-sm shadow-2xl flex flex-col">
     <!-- Header -->
     <div class="px-6 py-3 border-b border-gray-200 dark:border-gray-700">
       <h2 class="text-xl font-bold text-white font-maverick">
@@ -87,10 +87,32 @@
             </div>
           </div>
         </RouterLink>
+
+        <!-- Activité 3 -->
+        <RouterLink to="/events/3" class="block">
+          <div class="text-white bg-gradient-to-r from-white/30 to-white/20 backdrop-blur-sm rounded-xl px-4 py-2 hover:from-white/40 hover:to-white/30 transition-all duration-300 shadow-lg">
+            <div class="font-bold text-xl mb-2">{{ events[2]?.title || 'Forum jeunesse et environnement' }}</div>
+            <div class="text-sm opacity-90 line-clamp-2 mb-3">{{ events[2]?.description || 'Mobiliser la jeunesse francophone pour l\'action climatique.' }}</div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <span class="text-sm font-medium">{{ events && events[2] ? formatEventDate(events[2]) : 'Mercredi 10h00' }}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs opacity-75">{{ events[2]?.organization?.name || 'IFDD' }}</span>
+                <div class="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center">
+                  <span class="text-xs font-bold">{{ events[2]?.organization?.name?.charAt(0) || 'I' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </RouterLink>
       </div>
 
       <!-- Voir toutes les activités -->
-      <div class="px-3 py-1">
+      <div class="px-3 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 py-5">
         <RouterLink to="/events" class="block w-full">
           <button class="w-full py-2 px-4 bg-ifdd-bleu hover:bg-ifdd-bleu/90 text-white font-medium rounded-lg transition-colors duration-200 shadow-md">
             {{ t('activities.viewAll') || 'Voir toutes les activités' }}

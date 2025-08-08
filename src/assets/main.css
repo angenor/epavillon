@@ -3,3 +3,96 @@
 
 /* Configuration du dark mode pour TailwindCSS 4 */
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Couleurs personnalisées IFDD pour TailwindCSS v4 */
+@layer theme {
+  :root {
+    /* Couleurs IFDD */
+    --color-ifdd-vert: 133 196 65;
+    --color-ifdd-vert-light: 173 212 118;
+    --color-ifdd-vert-dark: 111 44 145;
+    
+    --color-ifdd-bleu: 0 174 239;
+    --color-ifdd-bleu-light: 140 213 242;
+    --color-ifdd-bleu-dark: 60 196 241;
+    
+    --color-ifdd-rouge: 238 52 51;
+    --color-ifdd-rouge-light: 242 131 133;
+    
+    --color-ifdd-violet: 144 108 173;
+    --color-ifdd-violet-dark: 111 44 145;
+    
+    --color-ifdd-jaune: 255 212 0;
+    --color-ifdd-jaune-light: 255 240 140;
+    
+    --color-ifdd-gris: 78 76 77;
+    --color-ifdd-gris-light: 110 111 113;
+    --color-ifdd-gris-dark: 53 54 53;
+  }
+}
+
+/* Utilitaires de couleurs IFDD */
+@layer utilities {
+  .bg-ifdd-vert { background-color: rgb(var(--color-ifdd-vert)); }
+  .bg-ifdd-vert-light { background-color: rgb(var(--color-ifdd-vert-light)); }
+  .bg-ifdd-vert-dark { background-color: rgb(var(--color-ifdd-vert-dark)); }
+  
+  .bg-ifdd-bleu { background-color: rgb(var(--color-ifdd-bleu)); }
+  .bg-ifdd-bleu-light { background-color: rgb(var(--color-ifdd-bleu-light)); }
+  .bg-ifdd-bleu-dark { background-color: rgb(var(--color-ifdd-bleu-dark)); }
+  
+  .bg-ifdd-rouge { background-color: rgb(var(--color-ifdd-rouge)); }
+  .bg-ifdd-rouge-light { background-color: rgb(var(--color-ifdd-rouge-light)); }
+  
+  .bg-ifdd-violet { background-color: rgb(var(--color-ifdd-violet)); }
+  .bg-ifdd-violet-dark { background-color: rgb(var(--color-ifdd-violet-dark)); }
+  
+  .bg-ifdd-jaune { background-color: rgb(var(--color-ifdd-jaune)); }
+  .bg-ifdd-jaune-light { background-color: rgb(var(--color-ifdd-jaune-light)); }
+  
+  .bg-ifdd-gris { background-color: rgb(var(--color-ifdd-gris)); }
+  .bg-ifdd-gris-light { background-color: rgb(var(--color-ifdd-gris-light)); }
+  .bg-ifdd-gris-dark { background-color: rgb(var(--color-ifdd-gris-dark)); }
+  
+  .text-ifdd-vert { color: rgb(var(--color-ifdd-vert)); }
+  .text-ifdd-vert-light { color: rgb(var(--color-ifdd-vert-light)); }
+  .text-ifdd-vert-dark { color: rgb(var(--color-ifdd-vert-dark)); }
+  
+  .text-ifdd-bleu { color: rgb(var(--color-ifdd-bleu)); }
+  .text-ifdd-bleu-light { color: rgb(var(--color-ifdd-bleu-light)); }
+  .text-ifdd-bleu-dark { color: rgb(var(--color-ifdd-bleu-dark)); }
+  
+  .text-ifdd-rouge { color: rgb(var(--color-ifdd-rouge)); }
+  .text-ifdd-rouge-light { color: rgb(var(--color-ifdd-rouge-light)); }
+  
+  .text-ifdd-violet { color: rgb(var(--color-ifdd-violet)); }
+  .text-ifdd-violet-dark { color: rgb(var(--color-ifdd-violet-dark)); }
+  
+  .text-ifdd-jaune { color: rgb(var(--color-ifdd-jaune)); }
+  .text-ifdd-jaune-light { color: rgb(var(--color-ifdd-jaune-light)); }
+  
+  .text-ifdd-gris { color: rgb(var(--color-ifdd-gris)); }
+  .text-ifdd-gris-light { color: rgb(var(--color-ifdd-gris-light)); }
+  .text-ifdd-gris-dark { color: rgb(var(--color-ifdd-gris-dark)); }
+  
+  .border-ifdd-vert { border-color: rgb(var(--color-ifdd-vert)); }
+  .border-ifdd-vert-light { border-color: rgb(var(--color-ifdd-vert-light)); }
+  .border-ifdd-vert-dark { border-color: rgb(var(--color-ifdd-vert-dark)); }
+  
+  .border-ifdd-bleu { border-color: rgb(var(--color-ifdd-bleu)); }
+  .border-ifdd-bleu-light { border-color: rgb(var(--color-ifdd-bleu-light)); }
+  .border-ifdd-bleu-dark { border-color: rgb(var(--color-ifdd-bleu-dark)); }
+  
+  .border-ifdd-rouge { border-color: rgb(var(--color-ifdd-rouge)); }
+  .border-ifdd-rouge-light { border-color: rgb(var(--color-ifdd-rouge-light)); }
+  
+  .border-ifdd-violet { border-color: rgb(var(--color-ifdd-violet)); }
+  .border-ifdd-violet-dark { border-color: rgb(var(--color-ifdd-violet-dark)); }
+  
+  .border-ifdd-jaune { border-color: rgb(var(--color-ifdd-jaune)); }
+  .border-ifdd-jaune-light { border-color: rgb(var(--color-ifdd-jaune-light)); }
+  
+  .border-ifdd-gris { border-color: rgb(var(--color-ifdd-gris)); }
+  .border-ifdd-gris-light { border-color: rgb(var(--color-ifdd-gris-light)); }
+  .border-ifdd-gris-dark { border-color: rgb(var(--color-ifdd-gris-dark)); }
+}
