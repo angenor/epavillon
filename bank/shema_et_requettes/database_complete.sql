@@ -264,6 +264,7 @@ CREATE TABLE public.activities (
     organization_id UUID NOT NULL REFERENCES public.organizations(id),
     submitted_by UUID NOT NULL REFERENCES public.users(id),
     title TEXT NOT NULL,
+    acronym TEXT,
     country_id UUID REFERENCES public.countries(id),
     activity_type activity_type NOT NULL,
     objectives TEXT NOT NULL,
@@ -756,14 +757,18 @@ CREATE TABLE public.innovations_practices (
 );
 
 -- Types de contexte pour témoignages et commentaires
-CREATE TYPE testimonial_context_type AS ENUM ('innovation_practice', 'training', 'event', 'platform');
+-- CREATE TYPE testimonial_context_type AS ENUM ('innovation_practice', 'training', 'event', 'platform');
+CREATE TYPE testimonial_context_type_v2 AS ENUM ('innovation, practice', 'training', 'event', 'platform');
 
 -- Témoignages utilisateurs (multi-contexte)
 CREATE TABLE public.user_testimonials (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES public.users(id),
+    photo_url TEXT,
+    background_color TEXT,
+    featured BOOLEAN DEFAULT FALSE,
     testimonial_text TEXT NOT NULL,
-    context_type testimonial_context_type NOT NULL,
+    context_type testimonial_context_type_v2 NOT NULL,
     context_id UUID, -- NULL si c'est pour la plateforme
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -845,6 +850,7 @@ CREATE TABLE public.video_testimonials (
     context_type media_context NOT NULL,
     context_id UUID NOT NULL,
     video_url TEXT NOT NULL,
+    featured BOOLEAN DEFAULT FALSE,
     duration_seconds INTEGER CHECK (duration_seconds <= 10),
     user_id UUID NOT NULL REFERENCES public.users(id),
     is_approved BOOLEAN DEFAULT FALSE,

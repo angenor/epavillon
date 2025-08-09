@@ -1,9 +1,12 @@
 <script setup>
-import { RouterView } from 'vue-router'
+import { RouterView, useRoute } from 'vue-router'
 import AppNavBar from './components/AppNavBar.vue'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const sidebarOpen = ref(false)
+const route = useRoute()
+
+const isHomePage = computed(() => route.path === '/')
 
 const handleToggleSidebar = () => {
   sidebarOpen.value = true
@@ -13,7 +16,7 @@ const handleToggleSidebar = () => {
 <template>
   <div id="app" class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
     <AppNavBar @toggle-sidebar="handleToggleSidebar" />
-    <main class="pt-16">
+    <main :class="{ 'pt-16': !isHomePage }">
       <RouterView :sidebar-open="sidebarOpen" @update:sidebar-open="sidebarOpen = $event" />
     </main>
   </div>

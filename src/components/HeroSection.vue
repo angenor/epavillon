@@ -1,17 +1,17 @@
 <template>
   <section class="relative h-screen flex items-center justify-center overflow-hidden">
-    <!-- Image de fond -->
-    <div 
-      class="absolute inset-0 z-0 dark:sepia"
-      :style="{
-        backgroundImage: 'url(/images/image_de_fond_page_accueil.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
-      }"
-    >
-      <!-- Overlay gradient -->
-      <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50 dark:from-black/70 dark:via-black/50 dark:to-black/70"></div>
-    </div>
+    <!-- Vidéo de fond -->
+    <video 
+      class="absolute inset-0 z-0 w-full h-full object-cover dark:sepia"
+      src="/videos/IFDD_Roumanie.mp4"
+      autoplay
+      muted
+      loop
+      playsinline
+    ></video>
+    
+    <!-- Overlay gradient -->
+    <div class="absolute inset-0 z-[1] bg-gradient-to-b from-black/50 via-black/30 to-black/50 dark:from-black/70 dark:via-black/50 dark:to-black/70"></div>
 
     <!-- Contenu -->
     <div class="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
@@ -32,8 +32,23 @@
     </div>
 
     <!-- Scroll indicator -->
-    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+    <div class="absolute z-20 bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
       <font-awesome-icon :icon="['fas', 'chevron-down']" class="text-2xl text-white" />
+    </div>
+
+    <!-- galerie video -->
+    <div class="z-0 absolute bottom-0 left-0 w-full h-56 bg-gradient-to-t from-black to-transparent">
+      <div class="flex mt-16 ml-10">
+        <div class="p-1 bg-white/70 rounded-md backdrop-blur-sm border border-white">
+          <div class="h-14 w-20 bg-amber-200 rounded-md flex">
+            <button class="flex items-center justify-center h-full w-full cursor-pointer">
+              <div class="p-1 bg-white/70 rounded-full backdrop-blur-sm border border-white">
+                <font-awesome-icon :icon="['fas', 'play']" class=" text-ifdd-violet-dark" />
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Panneau des activités -->
