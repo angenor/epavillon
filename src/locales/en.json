@@ -1,6 +1,7 @@
 {
   "common": {
     "language": "Language",
+    "long": "long",
     "darkMode": "Dark mode",
     "lightMode": "Light mode",
     "logout": "Logout",
@@ -26,7 +27,17 @@
     "back": "Back",
     "error": "Error",
     "next": "Next",
-    "previous": "Previous"
+    "previous": "Previous",
+    "submit": "Submit",
+    "upload": "Upload",
+    "uploading": "Uploading...",
+    "loading": "Loading...",
+    "today": "Today",
+    "daysAgo": "{{days}} days ago",
+    "weeksAgo": "{{weeks}} weeks ago",
+    "monthsAgo": "{{months}} months ago",
+    "hoursAgo": "{{hours}} hours ago",
+    "justNow": "Just now"
   },
   "nav": {
     "programming": "Programming",
@@ -547,6 +558,127 @@
       "delete": "Delete draft",
       "save": "Save as draft",
       "saving": "Saving..."
+    }
+  },
+  "community": {
+    "title": "Community",
+    "subtitle": "Share your innovations, best practices and testimonials with the community",
+    "hero": {
+      "title": "Community",
+      "subtitle": "Share your innovations, best practices and testimonials with the community"
+    },
+    "filters": {
+      "all": "All",
+      "innovations": "Innovations",
+      "practices": "Best Practices",
+      "testimonials": "Testimonials",
+      "videos": "Videos"
+    },
+    "createPost": {
+      "placeholder": "Share an innovation, best practice or testimonial...",
+      "testimonial": "Testimonial",
+      "innovation": "Innovation",
+      "practice": "Best Practice",
+      "video": "Video",
+      "createTestimonial": "Create a testimonial",
+      "shareInnovation": "Share an innovation",
+      "sharePractice": "Share a best practice",
+      "shareVideo": "Share a video",
+      "postingAs": "Posting as",
+      "testimonialPlaceholder": "Share your experience...",
+      "innovationPlaceholder": "Describe your innovation...",
+      "practicePlaceholder": "Describe your best practice...",
+      "relatedTo": "Related to",
+      "selectContext": "Select context",
+      "backgroundColor": "Background color",
+      "videoUpload": "Upload video",
+      "maxDuration": "Maximum duration",
+      "publish": "Publish"
+    },
+    "modal": {
+      "title": "Create a Post",
+      "postType": "Post Type",
+      "types": {
+        "testimonial": "Written Testimonial",
+        "innovation": "Innovation",
+        "practice": "Best Practice",
+        "video": "Video Testimonial"
+      },
+      "fields": {
+        "title": "Title",
+        "content": "Content",
+        "backgroundColor": "Background Color",
+        "videoFile": "Video File",
+        "videoTitle": "Video Title",
+        "context": "Context"
+      },
+      "placeholders": {
+        "title": "Give your post a title...",
+        "content": "Share your experience, innovation or best practice...",
+        "videoTitle": "Give your video a title..."
+      },
+      "helpers": {
+        "video": "MP4, WebM or MOV. Max 10 seconds.",
+        "innovation": "Share a proven innovation",
+        "practice": "Describe a best practice to share"
+      },
+      "contexts": {
+        "innovation": "Innovation",
+        "practice": "Practice"
+      },
+      "actions": {
+        "publish": "Publish",
+        "publishing": "Publishing...",
+        "cancel": "Cancel"
+      }
+    },
+    "testimonial": {
+      "postedBy": "Posted by",
+      "readMore": "Read more",
+      "readLess": "Read less",
+      "play": "Play video",
+      "innovation": "Innovation",
+      "practice": "Best Practice",
+      "testimonial": "Testimonial",
+      "video": "Video"
+    },
+    "stats": {
+      "testimonials": "Testimonials",
+      "innovations": "Innovations",
+      "practices": "Best Practices",
+      "videos": "Videos"
+    },
+    "empty": {
+      "title": "No posts",
+      "description": "Be the first to share your experience with the community"
+    },
+    "errors": {
+      "loadFailed": "Unable to load posts",
+      "submitFailed": "Error publishing post",
+      "videoTooLong": "Video must not exceed 10 seconds",
+      "videoProcessingFailed": "Error processing video",
+      "uploadFailed": "Upload error"
+    },
+    "success": {
+      "published": "Post created successfully"
+    },
+    "videoUpload": {
+      "title": "Upload Video",
+      "uploading": "Uploading...",
+      "processing": "Processing video...",
+      "duration": "Duration",
+      "seconds": "seconds",
+      "maxDuration": "Max 10 seconds"
+    },
+    "noContent": "No content available",
+    "loadingMore": "Loading...",
+    "loadMore": "Load more",
+    "testimonialDetail": {
+      "testimonial": "Testimonial",
+      "share": "Share",
+      "contact": "Contact",
+      "context": "Context",
+      "viewProject": "View project"
     }
   },
   "organization": {

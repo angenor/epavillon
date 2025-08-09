@@ -82,6 +82,11 @@ const router = createRouter({
       component: () => import('../views/activities/Edit.vue'),
       meta: { requiresAuth: true },
     },
+    {
+      path: '/community',
+      name: 'community',
+      component: () => import('../views/community/Community.vue'),
+    },
   ],
 })
 

@@ -757,8 +757,7 @@ CREATE TABLE public.innovations_practices (
 );
 
 -- Types de contexte pour témoignages et commentaires
--- CREATE TYPE testimonial_context_type AS ENUM ('innovation_practice', 'training', 'event', 'platform');
-CREATE TYPE testimonial_context_type_v2 AS ENUM ('innovation, practice', 'training', 'event', 'platform');
+CREATE TYPE testimonial_context_type AS ENUM ('innovation_practice', 'training', 'event', 'platform');
 
 -- Témoignages utilisateurs (multi-contexte)
 CREATE TABLE public.user_testimonials (
@@ -768,7 +767,7 @@ CREATE TABLE public.user_testimonials (
     background_color TEXT,
     featured BOOLEAN DEFAULT FALSE,
     testimonial_text TEXT NOT NULL,
-    context_type testimonial_context_type_v2 NOT NULL,
+    context_type testimonial_context_type NOT NULL,
     context_id UUID, -- NULL si c'est pour la plateforme
     created_at TIMESTAMPTZ DEFAULT NOW()
 );

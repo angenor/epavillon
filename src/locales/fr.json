@@ -1,6 +1,7 @@
 {
   "common": {
     "language": "Langue",
+    "long": "long",
     "darkMode": "Mode sombre",
     "lightMode": "Mode clair",
     "logout": "Déconnexion",
@@ -26,7 +27,17 @@
     "back": "Retour",
     "error": "Erreur",
     "next": "Suivant",
-    "previous": "Précédent"
+    "previous": "Précédent",
+    "submit": "Envoyer",
+    "upload": "Télécharger",
+    "uploading": "Téléchargement...",
+    "loading": "Chargement...",
+    "today": "Aujourd'hui",
+    "daysAgo": "Il y a {{days}} jours",
+    "weeksAgo": "Il y a {{weeks}} semaines",
+    "monthsAgo": "Il y a {{months}} mois",
+    "hoursAgo": "Il y a {{hours}} heures",
+    "justNow": "À l'instant"
   },
   "nav": {
     "programming": "Programmation",
@@ -662,6 +673,127 @@
       "delete": "Supprimer le brouillon",
       "save": "Sauvegarder en brouillon",
       "saving": "Sauvegarde en cours..."
+    }
+  },
+  "community": {
+    "title": "Communauté",
+    "subtitle": "Partagez vos innovations, bonnes pratiques et témoignages avec la communauté",
+    "hero": {
+      "title": "Communauté",
+      "subtitle": "Partagez vos innovations, bonnes pratiques et témoignages avec la communauté"
+    },
+    "filters": {
+      "all": "Tout",
+      "innovations": "Innovations",
+      "practices": "Bonnes pratiques",
+      "testimonials": "Témoignages",
+      "videos": "Vidéos"
+    },
+    "createPost": {
+      "placeholder": "Partagez une innovation, une bonne pratique ou un témoignage...",
+      "testimonial": "Témoignage",
+      "innovation": "Innovation",
+      "practice": "Bonne pratique",
+      "video": "Vidéo",
+      "createTestimonial": "Créer un témoignage",
+      "shareInnovation": "Partager une innovation",
+      "sharePractice": "Partager une bonne pratique",
+      "shareVideo": "Partager une vidéo",
+      "postingAs": "Publier en tant que",
+      "testimonialPlaceholder": "Partagez votre expérience...",
+      "innovationPlaceholder": "Décrivez votre innovation...",
+      "practicePlaceholder": "Décrivez votre bonne pratique...",
+      "relatedTo": "Lié à",
+      "selectContext": "Sélectionner le contexte",
+      "backgroundColor": "Couleur de fond",
+      "videoUpload": "Télécharger une vidéo",
+      "maxDuration": "Durée maximale",
+      "publish": "Publier"
+    },
+    "modal": {
+      "title": "Créer une publication",
+      "postType": "Type de publication",
+      "types": {
+        "testimonial": "Témoignage écrit",
+        "innovation": "Innovation",
+        "practice": "Bonne pratique",
+        "video": "Témoignage vidéo"
+      },
+      "fields": {
+        "title": "Titre",
+        "content": "Contenu",
+        "backgroundColor": "Couleur de fond",
+        "videoFile": "Fichier vidéo",
+        "videoTitle": "Titre de la vidéo",
+        "context": "Contexte"
+      },
+      "placeholders": {
+        "title": "Donnez un titre à votre publication...",
+        "content": "Partagez votre expérience, innovation ou bonne pratique...",
+        "videoTitle": "Donnez un titre à votre vidéo..."
+      },
+      "helpers": {
+        "video": "MP4, WebM ou MOV. Max 10 secondes.",
+        "innovation": "Partagez une innovation qui a fait ses preuves",
+        "practice": "Décrivez une bonne pratique à partager"
+      },
+      "contexts": {
+        "innovation": "Innovation",
+        "practice": "Pratique"
+      },
+      "actions": {
+        "publish": "Publier",
+        "publishing": "Publication...",
+        "cancel": "Annuler"
+      }
+    },
+    "testimonial": {
+      "postedBy": "Publié par",
+      "readMore": "Lire plus",
+      "readLess": "Lire moins",
+      "play": "Lire la vidéo",
+      "innovation": "Innovation",
+      "practice": "Bonne pratique",
+      "testimonial": "Témoignage",
+      "video": "Vidéo"
+    },
+    "stats": {
+      "testimonials": "Témoignages",
+      "innovations": "Innovations",
+      "practices": "Bonnes pratiques",
+      "videos": "Vidéos"
+    },
+    "empty": {
+      "title": "Aucune publication",
+      "description": "Soyez le premier à partager votre expérience avec la communauté"
+    },
+    "errors": {
+      "loadFailed": "Impossible de charger les publications",
+      "submitFailed": "Erreur lors de la publication",
+      "videoTooLong": "La vidéo ne doit pas dépasser 10 secondes",
+      "videoProcessingFailed": "Erreur lors du traitement de la vidéo",
+      "uploadFailed": "Erreur lors du téléchargement"
+    },
+    "success": {
+      "published": "Publication créée avec succès"
+    },
+    "videoUpload": {
+      "title": "Télécharger une vidéo",
+      "uploading": "Téléchargement en cours...",
+      "processing": "Traitement de la vidéo...",
+      "duration": "Durée",
+      "seconds": "secondes",
+      "maxDuration": "Max 10 secondes"
+    },
+    "noContent": "Aucun contenu disponible",
+    "loadingMore": "Chargement...",
+    "loadMore": "Charger plus",
+    "testimonialDetail": {
+      "testimonial": "Témoignage",
+      "share": "Partager",
+      "contact": "Contacter",
+      "context": "Contexte",
+      "viewProject": "Voir le projet"
     }
   },
   "organization": {
