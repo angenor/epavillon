@@ -80,6 +80,8 @@ import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
+import { useTestimonials } from '@/composables/useTestimonials'
+import { checkVideoTestimonials, createTestVideoTestimonial } from '@/utils/testVideoData'
 import VideoTestimonialCard from './VideoTestimonialCard.vue'
 import VideoPlayerModal from './VideoPlayerModal.vue'
 import VideoUploadModal from './VideoUploadModal.vue'
@@ -87,67 +89,27 @@ import VideoUploadModal from './VideoUploadModal.vue'
 const { t } = useI18n()
 const authStore = useAuthStore()
 const { user } = storeToRefs(authStore)
+const { 
+  loading,
+  fetchVideoTestimonials
+} = useTestimonials()
 
-const loading = ref(false)
 const videos = ref([])
 const selectedVideo = ref(null)
 const showUploadModal = ref(false)
 
-// Mock data for demonstration
-const mockVideos = [
-  {
-    id: '1',
-    video_url: '/videos/testimonial1.mp4',
-    thumbnail_url: null,
-    duration_seconds: 8,
-    featured: true,
-    user: {
-      first_name: 'Sophie',
-      last_name: 'Leblanc',
-      profile_photo_url: null
-    },
-    created_at: new Date().toISOString()
-  },
-  {
-    id: '2',
-    video_url: '/videos/testimonial2.mp4',
-    thumbnail_url: null,
-    duration_seconds: 10,
-    featured: false,
-    user: {
-      first_name: 'Omar',
-      last_name: 'Hassan',
-      profile_photo_url: null
-    },
-    created_at: new Date(Date.now() - 86400000).toISOString()
-  },
-  {
-    id: '3',
-    video_url: '/videos/testimonial3.mp4',
-    thumbnail_url: null,
-    duration_seconds: 7,
-    featured: true,
-    user: {
-      first_name: 'Emma',
-      last_name: 'Johnson',
-      profile_photo_url: null
-    },
-    created_at: new Date(Date.now() - 172800000).toISOString()
-  },
-  {
-    id: '4',
-    video_url: '/videos/testimonial4.mp4',
-    thumbnail_url: null,
-    duration_seconds: 9,
-    featured: false,
-    user: {
-      first_name: 'Pierre',
-      last_name: 'Dubois',
-      profile_photo_url: null
-    },
-    created_at: new Date(Date.now() - 259200000).toISOString()
+// Charger les vidéos depuis la base de données
+const loadVideos = async () => {
+  console.log('Loading videos...')
+  const data = await fetchVideoTestimonials(null) // null = toutes les vidéos (approuvées ou non)
+  console.log('Videos loaded:', data)
+  videos.value = data || []
+  
+  // Si aucune vidéo, afficher un message dans la console
+  if (!data || data.length === 0) {
+    console.log('Aucune vidéo trouvée dans la base de données')
   }
-]
+}
 
 const playVideo = (video) => {
   selectedVideo.value = video
@@ -155,23 +117,36 @@ const playVideo = (video) => {
 
 const handleUploadSuccess = async () => {
   showUploadModal.value = false
-  // Reload videos
+  // Recharger les vidéos après l'upload
   await loadVideos()
 }
 
-const loadVideos = async () => {
-  loading.value = true
-  // In production, load from store
-  // await testimonialsStore.fetchVideoTestimonials()
+onMounted(async () => {
+  // Vérifier d'abord les données dans la base
+  await checkVideoTestimonials()
   
-  // For demo, use mock data
-  setTimeout(() => {
-    videos.value = mockVideos
-    loading.value = false
-  }, 500)
-}
-
-onMounted(() => {
-  loadVideos()
+  // Charger les vidéos
+  await loadVideos()
+  
+  // Si aucune vidéo, proposer de créer une vidéo de test
+  if (videos.value.length === 0) {
+    console.log('Aucune vidéo trouvée. Pour créer une vidéo de test, exécutez createTestVideoTestimonial() dans la console.')
+    // Optionnel : créer automatiquement une vidéo de test
+    // const testVideo = await createTestVideoTestimonial()
+    // if (testVideo) {
+    //   await loadVideos()
+    // }
+  }
 })
+
+// Exposer la fonction pour les tests (temporaire)
+if (import.meta.env.DEV) {
+  window.createTestVideo = async () => {
+    const video = await createTestVideoTestimonial()
+    if (video) {
+      await loadVideos()
+    }
+    return video
+  }
+}
 </script>

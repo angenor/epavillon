@@ -1,15 +1,31 @@
-import { ref, computed } from 'vue'
-import { supabase } from '@/composables/useSupabase'
+import { ref } from 'vue'
+import { useSupabase } from './useSupabase'
 
 export function useTestimonials() {
+  const { supabase } = useSupabase()
   const loading = ref(false)
   const error = ref(null)
-  const userTestimonials = ref([])
-  const videoTestimonials = ref([])
-  const filter = ref('all') // 'all', 'innovation', 'practice'
 
-  // Fetch user testimonials for innovations/practices
-  const fetchUserTestimonials = async (options = {}) => {
+  // Fonction helper pour récupérer l'organisation d'un utilisateur
+  const fetchUserOrganization = async (organizationId) => {
+    if (!organizationId) return null
+    
+    try {
+      const { data, error } = await supabase
+        .from('organizations')
+        .select('name')
+        .eq('id', organizationId)
+        .single()
+      
+      if (error) return null
+      return data
+    } catch (err) {
+      return null
+    }
+  }
+
+  // Récupérer tous les témoignages avec les informations utilisateur
+  const fetchTestimonials = async (filter = 'all') => {
     loading.value = true
     error.value = null
     
@@ -26,74 +42,31 @@ export function useTestimonials() {
             organization_id
           )
         `)
-        .eq('context_type', 'innovation, practice')
-        
-      // Apply filters
-      if (options.featured) {
+        .order('created_at', { ascending: false })
+
+      // Appliquer les filtres
+      if (filter === 'featured') {
         query = query.eq('featured', true)
+      } else if (filter && filter !== 'all') {
+        query = query.eq('context_type', filter)
       }
-      
-      if (options.contextId) {
-        query = query.eq('context_id', options.contextId)
-      }
-      
-      // Order by creation date
-      query = query.order('created_at', { ascending: false })
-      
-      // Limit if specified
-      if (options.limit) {
-        query = query.limit(options.limit)
-      }
-      
+
       const { data, error: fetchError } = await query
-      
+
       if (fetchError) throw fetchError
       
-      // Fetch organization details separately
-      const testimonialsWithOrgs = await Promise.all(
-        data.map(async (testimonial) => {
+      // Enrichir avec les données d'organisation
+      if (data && data.length > 0) {
+        for (let testimonial of data) {
           if (testimonial.user?.organization_id) {
-            const { data: orgData } = await supabase
-              .from('organizations')
-              .select('name')
-              .eq('id', testimonial.user.organization_id)
-              .single()
-            
-            return {
-              ...testimonial,
-              user: {
-                ...testimonial.user,
-                organization: orgData
-              }
-            }
+            testimonial.user.organization = await fetchUserOrganization(testimonial.user.organization_id)
           }
-          return testimonial
-        })
-      )
+        }
+      }
       
-      // Fetch innovation/practice details
-      const testimonialsWithContext = await Promise.all(
-        testimonialsWithOrgs.map(async (testimonial) => {
-          if (testimonial.context_id) {
-            const { data: contextData } = await supabase
-              .from('innovations_practices')
-              .select('title, category')
-              .eq('id', testimonial.context_id)
-              .single()
-            
-            return {
-              ...testimonial,
-              innovation_practice: contextData
-            }
-          }
-          return testimonial
-        })
-      )
-      
-      userTestimonials.value = testimonialsWithContext
-      return testimonialsWithContext
+      return data || []
     } catch (err) {
-      console.error('Error fetching user testimonials:', err)
+      console.error('Error fetching testimonials:', err)
       error.value = err.message
       return []
     } finally {
@@ -101,48 +74,52 @@ export function useTestimonials() {
     }
   }
 
-  // Fetch video testimonials for innovations/practices
-  const fetchVideoTestimonials = async (options = {}) => {
+  // Récupérer les témoignages vidéo
+  const fetchVideoTestimonials = async (isApproved = true) => {
     loading.value = true
     error.value = null
     
     try {
+      console.log('Fetching video testimonials, isApproved:', isApproved)
+      
+      // Simplifier la requête pour éviter les erreurs de jointure
       let query = supabase
         .from('video_testimonials')
-        .select(`
-          *,
-          user:users!user_id (
-            id,
-            first_name,
-            last_name,
-            profile_photo_url
-          )
-        `)
-        .eq('context_type', 'innovation, practice')
-        .eq('is_approved', true)
-        
-      // Apply filters
-      if (options.featured) {
-        query = query.eq('featured', true)
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (isApproved !== null) {
+        query = query.eq('is_approved', isApproved)
       }
-      
-      if (options.contextId) {
-        query = query.eq('context_id', options.contextId)
-      }
-      
-      // Order by creation date
-      query = query.order('created_at', { ascending: false })
-      
-      // Limit if specified
-      if (options.limit) {
-        query = query.limit(options.limit)
-      }
-      
+
       const { data, error: fetchError } = await query
       
+      console.log('Video testimonials query result:', { data, error: fetchError })
+
       if (fetchError) throw fetchError
       
-      videoTestimonials.value = data || []
+      // Enrichir avec les données utilisateur et organisation
+      if (data && data.length > 0) {
+        for (let video of data) {
+          // Récupérer les infos utilisateur
+          if (video.user_id) {
+            const { data: userData } = await supabase
+              .from('users')
+              .select('id, first_name, last_name, profile_photo_url, organization_id')
+              .eq('id', video.user_id)
+              .single()
+            
+            if (userData) {
+              video.user = userData
+              // Récupérer l'organisation si elle existe
+              if (userData.organization_id) {
+                video.user.organization = await fetchUserOrganization(userData.organization_id)
+              }
+            }
+          }
+        }
+      }
+      
       return data || []
     } catch (err) {
       console.error('Error fetching video testimonials:', err)
@@ -153,195 +130,280 @@ export function useTestimonials() {
     }
   }
 
-  // Create a new user testimonial
+  // Récupérer les innovations et pratiques pour les témoignages
+  const fetchInnovationsPractices = async () => {
+    loading.value = true
+    error.value = null
+    
+    try {
+      const { data, error: fetchError } = await supabase
+        .from('innovations_practices')
+        .select(`
+          id,
+          title,
+          category,
+          cover_image_hd_16_9_url,
+          application_sector,
+          view_count,
+          organization_id,
+          submitted_by,
+          created_at
+        `)
+        .order('created_at', { ascending: false })
+
+      if (fetchError) throw fetchError
+      
+      // Enrichir avec les données d'organisation et d'utilisateur
+      if (data && data.length > 0) {
+        for (let item of data) {
+          // Récupérer l'organisation
+          if (item.organization_id) {
+            const { data: orgData } = await supabase
+              .from('organizations')
+              .select('name, country_id')
+              .eq('id', item.organization_id)
+              .single()
+            
+            if (orgData) {
+              item.organization = orgData
+              // Récupérer le pays
+              if (orgData.country_id) {
+                const { data: countryData } = await supabase
+                  .from('countries')
+                  .select('name_fr')
+                  .eq('id', orgData.country_id)
+                  .single()
+                
+                if (countryData) {
+                  item.organization.country = countryData
+                }
+              }
+            }
+          }
+          
+          // Récupérer les infos de l'utilisateur qui a soumis
+          if (item.submitted_by) {
+            const { data: userData } = await supabase
+              .from('users')
+              .select('first_name, last_name, profile_photo_url')
+              .eq('id', item.submitted_by)
+              .single()
+            
+            if (userData) {
+              item.submitted_by = userData
+            }
+          }
+        }
+      }
+      
+      return data || []
+    } catch (err) {
+      console.error('Error fetching innovations/practices:', err)
+      error.value = err.message
+      return []
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // Récupérer les formations pour les témoignages
+  const fetchTrainings = async () => {
+    loading.value = true
+    error.value = null
+    
+    try {
+      const { data, error: fetchError } = await supabase
+        .from('trainings')
+        .select(`
+          id,
+          title,
+          category,
+          start_date,
+          end_date
+        `)
+        .order('start_date', { ascending: false })
+
+      if (fetchError) throw fetchError
+      
+      return data || []
+    } catch (err) {
+      console.error('Error fetching trainings:', err)
+      error.value = err.message
+      return []
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // Combiner tous les posts pour le feed communautaire
+  const fetchCommunityFeed = async (filter = 'all', page = 1, limit = 10) => {
+    loading.value = true
+    error.value = null
+    
+    try {
+      const allPosts = []
+      const offset = (page - 1) * limit
+
+      // Récupérer les témoignages textuels
+      if (filter === 'all' || filter === 'testimonials') {
+        const testimonials = await fetchTestimonials(filter === 'testimonials' ? 'all' : filter)
+        
+        // Enrichir avec les données de contexte si nécessaire
+        for (const testimonial of testimonials) {
+          const enrichedTestimonial = {
+            ...testimonial,
+            type: 'testimonial'
+          }
+
+          // Si le témoignage est lié à une innovation/pratique
+          if (testimonial.context_type === 'innovation_practice' && testimonial.context_id) {
+            const { data: innovationData } = await supabase
+              .from('innovations_practices')
+              .select('title, category, cover_image_hd_16_9_url')
+              .eq('id', testimonial.context_id)
+              .single()
+            
+            if (innovationData) {
+              enrichedTestimonial.innovation_practice = innovationData
+            }
+          }
+
+          // Si le témoignage est lié à une formation
+          if (testimonial.context_type === 'training' && testimonial.context_id) {
+            const { data: trainingData } = await supabase
+              .from('trainings')
+              .select('title, category')
+              .eq('id', testimonial.context_id)
+              .single()
+            
+            if (trainingData) {
+              enrichedTestimonial.training = trainingData
+            }
+          }
+
+          allPosts.push(enrichedTestimonial)
+        }
+      }
+
+      // Récupérer les témoignages vidéo
+      if (filter === 'all' || filter === 'videos') {
+        console.log('Fetching videos for community feed')
+        const videos = await fetchVideoTestimonials(null) // null pour voir toutes les vidéos
+        console.log('Videos fetched for feed:', videos)
+        
+        if (videos && videos.length > 0) {
+          videos.forEach(video => {
+            allPosts.push({
+              ...video,
+              type: 'video_testimonial'
+            })
+          })
+        } else {
+          console.log('No videos found in database')
+        }
+      }
+
+      // Récupérer les innovations et pratiques
+      if (filter === 'all' || filter === 'innovation' || filter === 'practice') {
+        const innovationsPractices = await fetchInnovationsPractices()
+        
+        innovationsPractices.forEach(item => {
+          if (filter === 'all' || 
+              (filter === 'innovation' && item.category === 'innovation') ||
+              (filter === 'practice' && item.category === 'best_practice')) {
+            
+            // Créer une description à partir du titre si elle n'existe pas
+            allPosts.push({
+              ...item,
+              description: item.title, // Utiliser le titre comme description temporaire
+              type: item.category === 'innovation' ? 'innovation' : 'practice'
+            })
+          }
+        })
+      }
+
+      // Trier par date de création
+      allPosts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+
+      // Pagination
+      const paginatedPosts = allPosts.slice(offset, offset + limit)
+      const hasMore = allPosts.length > offset + limit
+
+      return {
+        posts: paginatedPosts,
+        total: allPosts.length,
+        hasMore
+      }
+    } catch (err) {
+      console.error('Error fetching community feed:', err)
+      error.value = err.message
+      return {
+        posts: [],
+        total: 0,
+        hasMore: false
+      }
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // Créer un témoignage
   const createTestimonial = async (testimonialData) => {
     loading.value = true
     error.value = null
     
     try {
-      const { data: userData } = await supabase.auth.getUser()
-      if (!userData?.user) throw new Error('User not authenticated')
-      
-      const { data, error: insertError } = await supabase
+      const { data, error: createError } = await supabase
         .from('user_testimonials')
-        .insert({
-          user_id: userData.user.id,
-          testimonial_text: testimonialData.text,
-          context_type: 'innovation, practice',
-          context_id: testimonialData.contextId,
-          photo_url: testimonialData.photoUrl || null,
-          background_color: testimonialData.backgroundColor || '#10B981',
-          featured: false
-        })
+        .insert(testimonialData)
         .select()
         .single()
-      
-      if (insertError) throw insertError
+
+      if (createError) throw createError
       
       return data
     } catch (err) {
       console.error('Error creating testimonial:', err)
       error.value = err.message
-      throw err
+      return null
     } finally {
       loading.value = false
     }
   }
 
-  // Upload video testimonial
-  const uploadVideoTestimonial = async (videoFile, contextId) => {
+  // Créer un témoignage vidéo
+  const createVideoTestimonial = async (videoData) => {
     loading.value = true
     error.value = null
     
     try {
-      const { data: userData } = await supabase.auth.getUser()
-      if (!userData?.user) throw new Error('User not authenticated')
-      
-      // Check video duration (must be <= 10 seconds)
-      const video = document.createElement('video')
-      video.preload = 'metadata'
-      
-      const checkDuration = new Promise((resolve, reject) => {
-        video.onloadedmetadata = () => {
-          if (video.duration > 10) {
-            reject(new Error('Video must be 10 seconds or less'))
-          } else {
-            resolve(video.duration)
-          }
-        }
-        video.onerror = () => reject(new Error('Invalid video file'))
-      })
-      
-      video.src = URL.createObjectURL(videoFile)
-      const duration = await checkDuration
-      
-      // Upload video to Supabase Storage
-      const fileName = `${userData.user.id}_${Date.now()}.${videoFile.name.split('.').pop()}`
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('video-testimonials')
-        .upload(fileName, videoFile)
-      
-      if (uploadError) throw uploadError
-      
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('video-testimonials')
-        .getPublicUrl(fileName)
-      
-      // Create testimonial record
-      const { data, error: insertError } = await supabase
+      const { data, error: createError } = await supabase
         .from('video_testimonials')
-        .insert({
-          user_id: userData.user.id,
-          context_type: 'innovation, practice',
-          context_id: contextId,
-          video_url: publicUrl,
-          duration_seconds: Math.floor(duration),
-          featured: false,
-          is_approved: false // Requires admin approval
-        })
+        .insert(videoData)
         .select()
         .single()
-      
-      if (insertError) throw insertError
+
+      if (createError) throw createError
       
       return data
     } catch (err) {
-      console.error('Error uploading video testimonial:', err)
+      console.error('Error creating video testimonial:', err)
       error.value = err.message
-      throw err
+      return null
     } finally {
       loading.value = false
     }
   }
-
-  // Toggle featured status (admin only)
-  const toggleFeatured = async (testimonialId, type = 'user') => {
-    loading.value = true
-    error.value = null
-    
-    try {
-      const table = type === 'user' ? 'user_testimonials' : 'video_testimonials'
-      
-      // Get current featured status
-      const { data: currentData, error: fetchError } = await supabase
-        .from(table)
-        .select('featured')
-        .eq('id', testimonialId)
-        .single()
-      
-      if (fetchError) throw fetchError
-      
-      // Update featured status
-      const { data, error: updateError } = await supabase
-        .from(table)
-        .update({ featured: !currentData.featured })
-        .eq('id', testimonialId)
-        .select()
-        .single()
-      
-      if (updateError) throw updateError
-      
-      return data
-    } catch (err) {
-      console.error('Error toggling featured status:', err)
-      error.value = err.message
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  // Filtered testimonials
-  const filteredUserTestimonials = computed(() => {
-    if (filter.value === 'all') {
-      return userTestimonials.value
-    }
-    
-    return userTestimonials.value.filter(t => {
-      if (!t.innovation_practice) return false
-      if (filter.value === 'innovation') {
-        return t.innovation_practice.category === 'innovation'
-      }
-      if (filter.value === 'practice') {
-        return t.innovation_practice.category === 'best_practice'
-      }
-      return true
-    })
-  })
-
-  const filteredVideoTestimonials = computed(() => {
-    // Video testimonials don't have category filter in this implementation
-    // Could be extended if needed
-    return videoTestimonials.value
-  })
-
-  // Statistics
-  const statistics = computed(() => {
-    return {
-      totalTestimonials: userTestimonials.value.length + videoTestimonials.value.length,
-      textTestimonials: userTestimonials.value.length,
-      videoTestimonials: videoTestimonials.value.length,
-      featuredCount: [
-        ...userTestimonials.value.filter(t => t.featured),
-        ...videoTestimonials.value.filter(t => t.featured)
-      ].length
-    }
-  })
 
   return {
     loading,
     error,
-    userTestimonials,
-    videoTestimonials,
-    filter,
-    filteredUserTestimonials,
-    filteredVideoTestimonials,
-    statistics,
-    fetchUserTestimonials,
+    fetchTestimonials,
     fetchVideoTestimonials,
+    fetchInnovationsPractices,
+    fetchTrainings,
+    fetchCommunityFeed,
     createTestimonial,
-    uploadVideoTestimonial,
-    toggleFeatured
+    createVideoTestimonial
   }
 }

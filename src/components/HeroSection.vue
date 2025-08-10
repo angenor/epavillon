@@ -38,8 +38,21 @@
 
     <!-- galerie video -->
     <div class="z-0 absolute bottom-0 left-0 w-full h-56 bg-gradient-to-t from-black to-transparent">
-      <div class="flex mt-16 ml-10">
+      <div class="flex space-x-2 mt-16 ml-10">
+        
+        <!-- Maquette vidéo témoignage sélectionnée -->
         <div class="p-1 bg-white/70 rounded-md backdrop-blur-sm border border-white">
+          <div class="h-14 w-20 bg-amber-200 rounded-md flex">
+            <button class="flex items-center justify-center h-full w-full cursor-pointer">
+              <div class="p-1 bg-white/70 rounded-full backdrop-blur-sm border border-white">
+                <font-awesome-icon :icon="['fas', 'pause']" class=" text-ifdd-violet-dark" />
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Maquette vidéo témoignage non sélectionnée -->
+        <div class="">
           <div class="h-14 w-20 bg-amber-200 rounded-md flex">
             <button class="flex items-center justify-center h-full w-full cursor-pointer">
               <div class="p-1 bg-white/70 rounded-full backdrop-blur-sm border border-white">
@@ -48,6 +61,7 @@
             </button>
           </div>
         </div>
+
       </div>
     </div>
 
