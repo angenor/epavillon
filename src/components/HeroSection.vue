@@ -178,11 +178,8 @@ export default {
       // En développement, récupérer toutes les vidéos, sinon seulement les approuvées
       const videos = await fetchVideoTestimonials(import.meta.env.DEV ? null : true)
       
-      console.log('Vidéos récupérées:', videos)
-      
       // Utiliser les données mockées si aucune vidéo dans la base de données (développement)
       if (videos.length === 0 && import.meta.env.DEV) {
-        console.log('Aucune vidéo dans la base de données, utilisation des données mockées')
         videoTestimonials.value = mockVideoTestimonials.slice(0, 10)
       } else {
         // Générer les miniatures manquantes (localement uniquement, pas de sauvegarde en DB)
@@ -199,14 +196,9 @@ export default {
     
     // Basculer entre les vidéos
     const toggleVideo = (video) => {
-      console.log('Clic sur vidéo:', video)
-      
       // Toujours changer vers la vidéo cliquée
       currentVideo.value = video
       currentVideoIndex.value = videoTestimonials.value.findIndex(v => v.id === video.id)
-      
-      console.log('Vidéo sélectionnée:', currentVideo.value)
-      console.log('Index:', currentVideoIndex.value)
       
       // Redémarrer le timer d'autoplay depuis cette vidéo
       restartAutoPlay()
@@ -214,7 +206,6 @@ export default {
     
     // Gestion de l'erreur de chargement vidéo
     const handleVideoError = () => {
-      console.error('Erreur de chargement de la vidéo')
       // Passer à la vidéo suivante en cas d'erreur
       nextVideo()
     }

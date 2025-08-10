@@ -93,8 +93,6 @@ export function useTestimonials() {
       }
 
       const { data, error: fetchError } = await query
-      
-      console.log('Video testimonials query result:', { data, error: fetchError })
 
       if (fetchError) throw fetchError
       
