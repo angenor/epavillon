@@ -190,11 +190,10 @@
                 <!-- Context Selection -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {{ t('community.createPost.contextType') }}
+                    {{ t('community.createPost.contextType') }} ({{ t('common.optional') || 'Optionnel' }})
                   </label>
                   <select
                     v-model="formData.context_type"
-                    required
                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-ifdd-green-500"
                   >
                     <option value="">{{ t('community.createPost.selectContext') }}</option>
@@ -233,8 +232,8 @@
                         {{ t('community.createPost.uploadVideoText') }}
                       </p>
                       <div class="text-xs text-gray-500 dark:text-gray-500 mt-1 space-y-1">
-                        <p>{{ t('community.createPost.videoMaxDuration') }}</p>
-                        <p>{{ t('community.createPost.videoMaxSize') || 'Taille maximale : 10 MB' }}</p>
+                        <p>{{ t('community.createPost.videoMaxDuration') || 'Durée maximale : 60 secondes' }}</p>
+                        <p>{{ t('community.createPost.videoMaxSize') || 'Taille maximale : 10 MB (compression automatique)' }}</p>
                       </div>
                     </div>
                   </div>
@@ -367,8 +366,7 @@ const isFormValid = computed(() => {
     return formData.value.testimonial_text.trim().length > 0 && 
            formData.value.context_type !== ''
   } else if (selectedType.value === 'video') {
-    return videoFile.value !== null && 
-           formData.value.context_type !== ''
+    return videoFile.value !== null
   }
   return false
 })
@@ -420,33 +418,108 @@ const removePhoto = () => {
   }
 }
 
-const handleVideoUpload = (event) => {
-  const file = event.target.files[0]
-  if (file && file.type.startsWith('video/')) {
-    // Check file size (max 10 MB)
-    const maxSizeInBytes = 10 * 1024 * 1024 // 10 MB
-    if (file.size > maxSizeInBytes) {
-      alert(t('community.createPost.videoTooLarge') || 'La vidéo ne doit pas dépasser 10 MB')
-      event.target.value = '' // Reset input
-      return
+const compressVideo = async (file, quality = 0.8) => {
+  return new Promise((resolve) => {
+    const video = document.createElement('video')
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    
+    video.onloadedmetadata = () => {
+      // Réduire la résolution si nécessaire
+      const scale = Math.min(1, Math.sqrt((10 * 1024 * 1024) / file.size))
+      canvas.width = video.videoWidth * scale
+      canvas.height = video.videoHeight * scale
+      
+      // Créer un MediaRecorder pour compresser
+      const stream = canvas.captureStream(30)
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: 'video/webm;codecs=vp9',
+        videoBitsPerSecond: quality * 1000000
+      })
+      
+      const chunks = []
+      mediaRecorder.ondataavailable = (e) => chunks.push(e.data)
+      mediaRecorder.onstop = () => {
+        const compressedBlob = new Blob(chunks, { type: 'video/webm' })
+        const compressedFile = new File([compressedBlob], file.name.replace(/\.[^/.]+$/, '.webm'), {
+          type: 'video/webm',
+          lastModified: Date.now()
+        })
+        resolve(compressedFile)
+      }
+      
+      // Enregistrer la vidéo
+      mediaRecorder.start()
+      video.currentTime = 0
+      
+      const renderFrame = () => {
+        if (video.ended || video.currentTime >= Math.min(video.duration, 60)) {
+          mediaRecorder.stop()
+          return
+        }
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+        video.currentTime += 1/30
+        setTimeout(renderFrame, 33)
+      }
+      
+      video.ontimeupdate = renderFrame
+      video.play()
     }
     
-    // Check video duration (max 60 seconds)
+    video.src = URL.createObjectURL(file)
+  })
+}
+
+const handleVideoUpload = async (event) => {
+  const file = event.target.files[0]
+  if (file && file.type.startsWith('video/')) {
+    const maxSizeInBytes = 10 * 1024 * 1024 // 10 MB
+    
+    // Check video duration first (max 60 seconds)
     const video = document.createElement('video')
     video.preload = 'metadata'
-    video.onloadedmetadata = () => {
-      if (video.duration <= 60) {
-        videoFile.value = file
-        formData.value.duration_seconds = Math.round(video.duration)
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          videoPreview.value = e.target.result
-        }
-        reader.readAsDataURL(file)
-      } else {
-        alert(t('community.createPost.videoTooLong'))
+    video.onloadedmetadata = async () => {
+      if (video.duration > 60) {
+        alert(t('community.createPost.videoTooLong') || 'La vidéo ne doit pas dépasser 60 secondes')
         event.target.value = '' // Reset input
+        return
       }
+      
+      let processedFile = file
+      
+      // Compress if file is too large
+      if (file.size > maxSizeInBytes) {
+        try {
+          // Show loading state
+          const uploadArea = document.querySelector('.border-dashed')
+          if (uploadArea) {
+            uploadArea.innerHTML = '<div class="text-center"><div class="animate-spin mx-auto h-8 w-8 border-2 border-ifdd-green-500 border-t-transparent rounded-full mb-2"></div><p class="text-sm text-gray-600">Compression en cours...</p></div>'
+          }
+          
+          processedFile = await compressVideo(file, 0.6)
+          
+          // If still too large after compression
+          if (processedFile.size > maxSizeInBytes) {
+            alert(t('community.createPost.videoTooLarge') || 'La vidéo ne peut pas être suffisamment compressée. Veuillez utiliser une vidéo plus courte.')
+            event.target.value = '' // Reset input
+            return
+          }
+        } catch (error) {
+          console.error('Compression failed:', error)
+          alert('Erreur lors de la compression. Veuillez essayer avec une vidéo plus petite.')
+          event.target.value = '' // Reset input
+          return
+        }
+      }
+      
+      videoFile.value = processedFile
+      formData.value.duration_seconds = Math.round(video.duration)
+      
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        videoPreview.value = e.target.result
+      }
+      reader.readAsDataURL(processedFile)
     }
     video.src = URL.createObjectURL(file)
   }
@@ -556,7 +629,7 @@ const handleSubmit = async () => {
         video_url: uploadedVideoUrl,
         duration_seconds: formData.value.duration_seconds,
         featured: false,
-        context_type: formData.value.context_type,
+        context_type: formData.value.context_type || 'event',
         context_id: null,
         is_approved: false, // Videos need approval
         user_id: userId // Utiliser l'ID de la session active

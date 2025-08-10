@@ -847,10 +847,10 @@ CREATE TABLE public.media_gallery (
 CREATE TABLE public.video_testimonials (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     context_type media_context NOT NULL,
-    context_id UUID NOT NULL,
+    context_id UUID NULL,
     video_url TEXT NOT NULL,
     featured BOOLEAN DEFAULT FALSE,
-    duration_seconds INTEGER CHECK (duration_seconds <= 10),
+    duration_seconds INTEGER CHECK (duration_seconds <= 60),
     user_id UUID NOT NULL REFERENCES public.users(id),
     is_approved BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMPTZ DEFAULT NOW()

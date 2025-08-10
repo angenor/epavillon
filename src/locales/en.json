@@ -655,7 +655,7 @@
     "errors": {
       "loadFailed": "Unable to load posts",
       "submitFailed": "Error publishing post",
-      "videoTooLong": "Video must not exceed 10 seconds",
+      "videoTooLong": "Video must not exceed 60 seconds",
       "videoProcessingFailed": "Error processing video",
       "uploadFailed": "Upload error"
     },
@@ -668,7 +668,7 @@
       "processing": "Processing video...",
       "duration": "Duration",
       "seconds": "seconds",
-      "maxDuration": "Max 10 seconds"
+      "maxDuration": "Max 60 seconds"
     },
     "noContent": "No content available",
     "loadingMore": "Loading...",
