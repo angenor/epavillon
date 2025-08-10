@@ -1,6 +1,16 @@
-[intlify] Not found 'community.hero.title' key in 'en' locale messages. shared.mjs:8:17
-[intlify] Fall back to translate 'community.hero.title' key with 'fr' locale. shared.mjs:8:17
-[intlify] Not found 'community.hero.title' key in 'fr' locale messages. shared.mjs:8:17
-[intlify] Not found 'community.hero.subtitle' key in 'en' locale messages. shared.mjs:8:17
-[intlify] Fall back to translate 'community.hero.subtitle' key with 'fr' locale. shared.mjs:8:17
-[intlify] Not found 'community.hero.subtitle' key in 'fr' locale messages.
+connection authorized: user=supabase_admin database=postgres application_name=postgres_exporter
+connection authenticated: user="supabase_admin" method=trust (/etc/postgresql/pg_hba.conf:85)
+connection received: host=::1 port=19913
+connection authorized: user=supabase_admin database=postgres application_name=undefined SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+connection authenticated: identity="supabase_admin" method=scram-sha-256 (/etc/postgresql/pg_hba.conf:94)
+connection authenticated: identity="supabase_admin" method=scram-sha-256 (/etc/postgresql/pg_hba.conf:94)
+connection authorized: user=supabase_admin database=postgres application_name=undefined SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+connection authenticated: identity="postgres" method=scram-sha-256 (/etc/postgresql/pg_hba.conf:94)
+connection authorized: user=postgres database=postgres application_name=supabase/dashboard SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+connection authenticated: identity="postgres" method=scram-sha-256 (/etc/postgresql/pg_hba.conf:94)
+connection authorized: user=postgres database=postgres application_name=supabase/dashboard SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+connection authenticated: identity="postgres" method=scram-sha-256 (/etc/postgresql/pg_hba.conf:94)
+connection authorized: user=postgres database=postgres application_name=supabase/dashboard SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+connection authenticated: identity="postgres" method=scram-sha-256 (/etc/postgresql/pg_hba.conf:94)
+connection authorized: user=postgres database=postgres application_name=supabase/dashboard SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+connection authenticated: identity="postgres" method=scram-sha-256 (/etc/postgresql/pg_hba.conf:94)
