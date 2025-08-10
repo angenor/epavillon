@@ -25,7 +25,7 @@
     ></video>
     
     <!-- Overlay gradient -->
-    <div class="absolute inset-0 z-[1] bg-gradient-to-b from-black/50 via-black/30 to-black/50 dark:from-black/70 dark:via-black/50 dark:to-black/70"></div>
+    <div class="absolute z-0 inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50 dark:from-black/70 dark:via-black/50 dark:to-black/70"></div>
 
     <!-- Contenu -->
     <div class="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
@@ -71,14 +71,15 @@
             ]"
           >
             <button 
-              @click="toggleVideo(video)"
+              @click.stop="toggleVideo(video)"
               class="flex items-center justify-center h-full w-full cursor-pointer group relative"
+              type="button"
             >
               <!-- Overlay sombre au survol -->
-              <div class="absolute inset-0 bg-black/30 rounded-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div class="absolute inset-0 bg-black/30 rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
               
               <!-- Bouton play/pause -->
-              <div class="p-2 bg-white/80 rounded-full backdrop-blur-sm border border-white z-10 transform group-hover:scale-110 transition-transform">
+              <div class="p-2 bg-white/80 rounded-full backdrop-blur-sm border border-white z-10 transform group-hover:scale-110 transition-transform pointer-events-none">
                 <font-awesome-icon 
                   :icon="['fas', currentVideo?.id === video.id ? 'pause' : 'play']" 
                   class="text-ifdd-violet-dark text-sm" 
@@ -86,7 +87,7 @@
               </div>
               
               <!-- Info sur la vidéo au survol -->
-              <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-1 rounded-b-md opacity-0 group-hover:opacity-100 transition-opacity">
+              <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-1 rounded-b-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                 <p class="text-white text-xs truncate">
                   {{ video.user?.first_name }} {{ video.user?.last_name }}
                 </p>
@@ -198,15 +199,17 @@ export default {
     
     // Basculer entre les vidéos
     const toggleVideo = (video) => {
-      if (currentVideo.value?.id === video.id) {
-        // Si c'est la même vidéo, revenir à la vidéo par défaut
-        currentVideo.value = null
-        stopAutoPlay()
-      } else {
-        currentVideo.value = video
-        currentVideoIndex.value = videoTestimonials.value.findIndex(v => v.id === video.id)
-        restartAutoPlay()
-      }
+      console.log('Clic sur vidéo:', video)
+      
+      // Toujours changer vers la vidéo cliquée
+      currentVideo.value = video
+      currentVideoIndex.value = videoTestimonials.value.findIndex(v => v.id === video.id)
+      
+      console.log('Vidéo sélectionnée:', currentVideo.value)
+      console.log('Index:', currentVideoIndex.value)
+      
+      // Redémarrer le timer d'autoplay depuis cette vidéo
+      restartAutoPlay()
     }
     
     // Gestion de l'erreur de chargement vidéo
@@ -221,8 +224,10 @@ export default {
       if (videoTestimonials.value.length > 0) {
         currentVideoIndex.value = (currentVideoIndex.value + 1) % videoTestimonials.value.length
         currentVideo.value = videoTestimonials.value[currentVideoIndex.value]
+        restartAutoPlay() // Redémarrer le timer après navigation manuelle
       }
     }
+    
     
     // Démarrer la lecture automatique
     const startAutoPlay = () => {
