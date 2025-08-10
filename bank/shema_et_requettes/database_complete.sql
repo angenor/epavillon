@@ -849,6 +849,7 @@ CREATE TABLE public.video_testimonials (
     context_type media_context NOT NULL,
     context_id UUID NULL,
     video_url TEXT NOT NULL,
+    thumbnail_url TEXT,
     featured BOOLEAN DEFAULT FALSE,
     duration_seconds INTEGER CHECK (duration_seconds <= 60),
     user_id UUID NOT NULL REFERENCES public.users(id),

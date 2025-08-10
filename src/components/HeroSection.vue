@@ -2,6 +2,20 @@
   <section class="relative h-screen flex items-center justify-center overflow-hidden">
     <!-- Vidéo de fond -->
     <video 
+      v-if="currentVideo"
+      :key="currentVideo.id"
+      class="absolute inset-0 z-0 w-full h-full object-cover dark:sepia"
+      :src="currentVideo.video_url || '/videos/IFDD_Roumanie.mp4'"
+      autoplay
+      muted
+      loop
+      playsinline
+      @error="handleVideoError"
+    ></video>
+    
+    <!-- Vidéo par défaut si aucune vidéo de témoignage -->
+    <video 
+      v-else
       class="absolute inset-0 z-0 w-full h-full object-cover dark:sepia"
       src="/videos/IFDD_Roumanie.mp4"
       autoplay
@@ -37,31 +51,55 @@
     </div>
 
     <!-- galerie video -->
-    <div class="z-0 absolute bottom-0 left-0 w-full h-56 bg-gradient-to-t from-black to-transparent">
-      <div class="flex space-x-2 mt-16 ml-10">
+    <div v-if="videoTestimonials.length > 0" class="z-0 absolute bottom-0 left-0 w-full h-56 bg-gradient-to-t from-black to-transparent">
+      <div class="flex space-x-3 mt-16 ml-10 overflow-x-auto pb-4">
         
-        <!-- Maquette vidéo témoignage sélectionnée -->
-        <div class="p-1 bg-white/70 rounded-md backdrop-blur-sm border border-white">
-          <div class="h-14 w-20 bg-amber-200 rounded-md flex">
-            <button class="flex items-center justify-center h-full w-full cursor-pointer">
-              <div class="p-1 bg-white/70 rounded-full backdrop-blur-sm border border-white">
-                <font-awesome-icon :icon="['fas', 'pause']" class=" text-ifdd-violet-dark" />
+        <!-- Vidéo témoignage -->
+        <div 
+          v-for="video in videoTestimonials" 
+          :key="video.id"
+          :class="[
+            'flex-shrink-0 transition-all duration-300',
+            currentVideo?.id === video.id ? 'p-1 bg-white/70 rounded-md backdrop-blur-sm border border-white' : ''
+          ]"
+        >
+          <div 
+            :style="{ backgroundImage: video.thumbnail_url ? `url(${video.thumbnail_url})` : '' }"
+            :class="[
+              'h-16 w-24 rounded-md flex bg-cover bg-center',
+              !video.thumbnail_url ? 'bg-gradient-to-br from-ifdd-bleu to-ifdd-violet' : ''
+            ]"
+          >
+            <button 
+              @click="toggleVideo(video)"
+              class="flex items-center justify-center h-full w-full cursor-pointer group relative"
+            >
+              <!-- Overlay sombre au survol -->
+              <div class="absolute inset-0 bg-black/30 rounded-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              
+              <!-- Bouton play/pause -->
+              <div class="p-2 bg-white/80 rounded-full backdrop-blur-sm border border-white z-10 transform group-hover:scale-110 transition-transform">
+                <font-awesome-icon 
+                  :icon="['fas', currentVideo?.id === video.id ? 'pause' : 'play']" 
+                  class="text-ifdd-violet-dark text-sm" 
+                />
+              </div>
+              
+              <!-- Info sur la vidéo au survol -->
+              <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-1 rounded-b-md opacity-0 group-hover:opacity-100 transition-opacity">
+                <p class="text-white text-xs truncate">
+                  {{ video.user?.first_name }} {{ video.user?.last_name }}
+                </p>
               </div>
             </button>
           </div>
         </div>
 
-        <!-- Maquette vidéo témoignage non sélectionnée -->
-        <div class="">
-          <div class="h-14 w-20 bg-amber-200 rounded-md flex">
-            <button class="flex items-center justify-center h-full w-full cursor-pointer">
-              <div class="p-1 bg-white/70 rounded-full backdrop-blur-sm border border-white">
-                <font-awesome-icon :icon="['fas', 'play']" class=" text-ifdd-violet-dark" />
-              </div>
-            </button>
-          </div>
-        </div>
-
+      </div>
+      
+      <!-- Indicateur de navigation si plus de vidéos -->
+      <div v-if="videoTestimonials.length > 6" class="absolute right-4 top-1/2 -translate-y-1/2">
+        <font-awesome-icon :icon="['fas', 'chevron-right']" class="text-white/60 animate-pulse" />
       </div>
     </div>
 
@@ -73,7 +111,9 @@
 </template>
 
 <script>
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useTestimonials } from '@/composables/useTestimonials'
 import UpcomingActivities from './UpcomingActivities.vue'
 
 export default {
@@ -83,7 +123,140 @@ export default {
   },
   setup() {
     const { t } = useI18n()
-    return { t }
+    const { fetchVideoTestimonials } = useTestimonials()
+    
+    const videoTestimonials = ref([])
+    const currentVideo = ref(null)
+    const currentVideoIndex = ref(0)
+    let autoPlayInterval = null
+    
+    // Données mockées pour le développement/test
+    const mockVideoTestimonials = [
+      {
+        id: 'mock-1',
+        video_url: '/videos/IFDD_Roumanie.mp4',
+        thumbnail_url: null,
+        user: {
+          first_name: 'Jean',
+          last_name: 'Dupont',
+          profile_photo_url: null
+        },
+        featured: true,
+        duration_seconds: 30
+      },
+      {
+        id: 'mock-2',
+        video_url: '/videos/IFDD_Roumanie.mp4',
+        thumbnail_url: null,
+        user: {
+          first_name: 'Marie',
+          last_name: 'Martin',
+          profile_photo_url: null
+        },
+        featured: false,
+        duration_seconds: 45
+      },
+      {
+        id: 'mock-3',
+        video_url: '/videos/IFDD_Roumanie.mp4',
+        thumbnail_url: null,
+        user: {
+          first_name: 'Pierre',
+          last_name: 'Bernard',
+          profile_photo_url: null
+        },
+        featured: false,
+        duration_seconds: 25
+      }
+    ]
+    
+    // Charger les vidéos de témoignage
+    const loadVideoTestimonials = async () => {
+      // En développement, récupérer toutes les vidéos, sinon seulement les approuvées
+      const videos = await fetchVideoTestimonials(import.meta.env.DEV ? null : true)
+      
+      console.log('Vidéos récupérées:', videos)
+      
+      // Utiliser les données mockées si aucune vidéo dans la base de données (développement)
+      if (videos.length === 0 && import.meta.env.DEV) {
+        console.log('Aucune vidéo dans la base de données, utilisation des données mockées')
+        videoTestimonials.value = mockVideoTestimonials.slice(0, 10)
+      } else {
+        videoTestimonials.value = videos.slice(0, 10) // Limiter à 10 vidéos pour la performance
+      }
+      
+      // Sélectionner la première vidéo par défaut
+      if (videoTestimonials.value.length > 0) {
+        currentVideo.value = videoTestimonials.value[0]
+        startAutoPlay()
+      }
+    }
+    
+    // Basculer entre les vidéos
+    const toggleVideo = (video) => {
+      if (currentVideo.value?.id === video.id) {
+        // Si c'est la même vidéo, revenir à la vidéo par défaut
+        currentVideo.value = null
+        stopAutoPlay()
+      } else {
+        currentVideo.value = video
+        currentVideoIndex.value = videoTestimonials.value.findIndex(v => v.id === video.id)
+        restartAutoPlay()
+      }
+    }
+    
+    // Gestion de l'erreur de chargement vidéo
+    const handleVideoError = () => {
+      console.error('Erreur de chargement de la vidéo')
+      // Passer à la vidéo suivante en cas d'erreur
+      nextVideo()
+    }
+    
+    // Passer à la vidéo suivante
+    const nextVideo = () => {
+      if (videoTestimonials.value.length > 0) {
+        currentVideoIndex.value = (currentVideoIndex.value + 1) % videoTestimonials.value.length
+        currentVideo.value = videoTestimonials.value[currentVideoIndex.value]
+      }
+    }
+    
+    // Démarrer la lecture automatique
+    const startAutoPlay = () => {
+      if (autoPlayInterval) clearInterval(autoPlayInterval)
+      autoPlayInterval = setInterval(() => {
+        nextVideo()
+      }, 15000) // Changer de vidéo toutes les 15 secondes
+    }
+    
+    // Arrêter la lecture automatique
+    const stopAutoPlay = () => {
+      if (autoPlayInterval) {
+        clearInterval(autoPlayInterval)
+        autoPlayInterval = null
+      }
+    }
+    
+    // Redémarrer la lecture automatique
+    const restartAutoPlay = () => {
+      stopAutoPlay()
+      startAutoPlay()
+    }
+    
+    onMounted(() => {
+      loadVideoTestimonials()
+    })
+    
+    onUnmounted(() => {
+      stopAutoPlay()
+    })
+    
+    return { 
+      t,
+      videoTestimonials,
+      currentVideo,
+      toggleVideo,
+      handleVideoError
+    }
   }
 }
 </script>
