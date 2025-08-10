@@ -21,7 +21,7 @@
       <!-- Header with gradient background -->
       <div 
         class="relative h-32 rounded-t-3xl"
-        :style="{ background: `linear-gradient(135deg, ${testimonial.background_color}88, ${testimonial.background_color})` }"
+        :style="{ background: getBackgroundStyle() }"
       >
         <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-t-3xl"></div>
       </div>
@@ -46,7 +46,7 @@
               <div 
                 v-else
                 class="w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-xl ring-4 ring-white dark:ring-gray-700"
-                :style="{ backgroundColor: testimonial.background_color || '#10B981' }"
+                :style="{ backgroundColor: testimonial.background_color || getRandomColor() }"
               >
                 {{ getInitials(testimonial.user) }}
               </div>
@@ -78,34 +78,104 @@
           </div>
         </div>
 
-        <!-- Testimonial Text -->
+        <!-- Content based on type -->
         <div class="mb-6">
-          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-            {{ t('community.testimonialDetail.testimonial') }}
-          </h4>
-          <blockquote class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed italic">
-            "{{ testimonial.testimonial_text }}"
-          </blockquote>
+          <!-- Video Testimonial -->
+          <div v-if="testimonial.type === 'video_testimonial' && testimonial.video_url" class="mb-6">
+            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+              {{ t('community.testimonialDetail.video') }}
+            </h4>
+            <video 
+              :src="testimonial.video_url" 
+              class="w-full rounded-xl shadow-lg"
+              controls
+              :poster="testimonial.thumbnail_url || testimonial.user?.profile_photo_url"
+            >
+              Votre navigateur ne supporte pas la lecture de vidéos.
+            </video>
+            <p v-if="testimonial.duration_seconds" class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+              Durée: {{ testimonial.duration_seconds }} secondes
+            </p>
+          </div>
+
+          <!-- Testimonial Text -->
+          <div v-if="testimonial.testimonial_text">
+            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+              {{ t('community.testimonialDetail.testimonial') }}
+            </h4>
+            <blockquote class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed italic mb-4">
+              "{{ testimonial.testimonial_text }}"
+            </blockquote>
+            
+            <!-- Image pour témoignage simple -->
+            <div v-if="testimonial.photo_url" class="mb-4">
+              <img 
+                :src="testimonial.photo_url" 
+                :alt="'Photo témoignage'"
+                class="w-full rounded-xl shadow-lg"
+              >
+            </div>
+          </div>
+
+          <!-- Innovation/Practice Content -->
+          <div v-if="testimonial.type === 'innovation' || testimonial.type === 'practice'">
+            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+              {{ testimonial.title }}
+            </h4>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+              {{ testimonial.description }}
+            </p>
+            
+            <!-- Image avec tous les champs possibles -->
+            <div v-if="getMainImage()" class="mb-4">
+              <img 
+                :src="getMainImage()" 
+                :alt="testimonial.title"
+                class="w-full rounded-xl shadow-lg"
+              >
+            </div>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span v-if="testimonial.category" class="px-3 py-1 bg-ifdd-green-100 dark:bg-ifdd-green-900/30 text-ifdd-green-700 dark:text-ifdd-green-400 rounded-full text-sm">
+                {{ testimonial.category === 'innovation' ? 'Innovation' : 'Bonne Pratique' }}
+              </span>
+              <span v-if="testimonial.application_sector" class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm">
+                {{ testimonial.application_sector }}
+              </span>
+              <span v-if="testimonial.view_count" class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm">
+                {{ testimonial.view_count }} vues
+              </span>
+            </div>
+          </div>
         </div>
 
         <!-- Context Info -->
-        <div v-if="testimonial.innovation_practice" class="mb-6">
+        <div v-if="testimonial.innovation_practice || testimonial.training" class="mb-6">
           <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
             {{ t('community.testimonialDetail.context') }}
           </h4>
-          <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">
-                  {{ testimonial.innovation_practice.title }}
-                </p>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  {{ testimonial.innovation_practice.category === 'innovation' ? 'Innovation' : 'Bonne Pratique' }}
-                </p>
+          <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl overflow-hidden">
+            <!-- Image de contexte -->
+            <div v-if="getContextImage()" class="h-32 w-full">
+              <img 
+                :src="getContextImage()" 
+                :alt="getContextTitle()"
+                class="w-full h-full object-cover"
+              >
+            </div>
+            <div class="p-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="font-medium text-gray-900 dark:text-white">
+                    {{ getContextTitle() }}
+                  </p>
+                  <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    {{ getContextType() }}
+                  </p>
+                </div>
+                <button class="px-4 py-2 bg-ifdd-green-600 hover:bg-ifdd-green-700 text-white rounded-lg font-medium transition-colors">
+                  {{ t('community.testimonialDetail.viewProject') }}
+                </button>
               </div>
-              <button class="px-4 py-2 bg-ifdd-green-600 hover:bg-ifdd-green-700 text-white rounded-lg font-medium transition-colors">
-                {{ t('community.testimonialDetail.viewProject') }}
-              </button>
             </div>
           </div>
         </div>
@@ -155,5 +225,75 @@ const getInitials = (user) => {
 const formatDate = (dateString) => {
   if (!dateString) return ''
   return d(new Date(dateString), 'long')
+}
+
+const getBackgroundStyle = () => {
+  const color = props.testimonial.background_color || '#10B981'
+  return `linear-gradient(135deg, ${color}88, ${color})`
+}
+
+const getRandomColor = () => {
+  const colors = [
+    '#10B981', // green
+    '#3B82F6', // blue  
+    '#8B5CF6', // purple
+    '#F59E0B', // amber
+    '#EF4444', // red
+    '#EC4899', // pink
+  ]
+  return colors[Math.floor(Math.random() * colors.length)]
+}
+
+const getMainImage = () => {
+  // Pour un témoignage simple : utiliser photo_url
+  if (props.testimonial.type === 'testimonial' && props.testimonial.photo_url) {
+    return props.testimonial.photo_url
+  }
+  
+  // Pour une innovation ou pratique : chercher dans tous les champs possibles
+  if (props.testimonial.type === 'innovation' || props.testimonial.type === 'practice') {
+    return props.testimonial.cover_image_hd_16_9_url ||
+           props.testimonial.innovation?.cover_image_hd_16_9_url || 
+           props.testimonial.practice?.cover_image_hd_16_9_url ||
+           props.testimonial.innovation_practice?.cover_image_hd_16_9_url ||
+           null
+  }
+  
+  // Pour une vidéo témoignage : utiliser la miniature
+  if (props.testimonial.type === 'video_testimonial' && props.testimonial.thumbnail_url) {
+    return props.testimonial.thumbnail_url
+  }
+  
+  return null
+}
+
+const getContextImage = () => {
+  if (props.testimonial.innovation_practice?.cover_image_hd_16_9_url) {
+    return props.testimonial.innovation_practice.cover_image_hd_16_9_url
+  }
+  if (props.testimonial.training?.cover_image_url) {
+    return props.testimonial.training.cover_image_url
+  }
+  return null
+}
+
+const getContextTitle = () => {
+  if (props.testimonial.innovation_practice) {
+    return props.testimonial.innovation_practice.title
+  }
+  if (props.testimonial.training) {
+    return props.testimonial.training.title
+  }
+  return ''
+}
+
+const getContextType = () => {
+  if (props.testimonial.innovation_practice) {
+    return props.testimonial.innovation_practice.category === 'innovation' ? 'Innovation' : 'Bonne Pratique'
+  }
+  if (props.testimonial.training) {
+    return 'Formation'
+  }
+  return ''
 }
 </script>

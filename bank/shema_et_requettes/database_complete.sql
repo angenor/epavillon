@@ -843,9 +843,11 @@ CREATE TABLE public.media_gallery (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Témoignages vidéo courts
+-- Témoignages vidéo courts: nouvel element: detail_url et title
 CREATE TABLE public.video_testimonials (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    detail_url TEXT NULL,
+    title TEXT NULL, 
     context_type media_context NOT NULL,
     context_id UUID NULL,
     video_url TEXT NOT NULL,
