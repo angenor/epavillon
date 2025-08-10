@@ -114,6 +114,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useTestimonials } from '@/composables/useTestimonials'
+import { useVideoThumbnails } from '@/composables/useVideoThumbnails'
 import UpcomingActivities from './UpcomingActivities.vue'
 
 export default {
@@ -124,6 +125,7 @@ export default {
   setup() {
     const { t } = useI18n()
     const { fetchVideoTestimonials } = useTestimonials()
+    const { generateThumbnailsForVideos } = useVideoThumbnails()
     
     const videoTestimonials = ref([])
     const currentVideo = ref(null)
@@ -182,7 +184,9 @@ export default {
         console.log('Aucune vidéo dans la base de données, utilisation des données mockées')
         videoTestimonials.value = mockVideoTestimonials.slice(0, 10)
       } else {
-        videoTestimonials.value = videos.slice(0, 10) // Limiter à 10 vidéos pour la performance
+        // Générer les miniatures manquantes (localement uniquement, pas de sauvegarde en DB)
+        const videosWithThumbnails = await generateThumbnailsForVideos(videos.slice(0, 10), false)
+        videoTestimonials.value = videosWithThumbnails
       }
       
       // Sélectionner la première vidéo par défaut
