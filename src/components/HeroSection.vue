@@ -27,24 +27,6 @@
     <!-- Overlay gradient -->
     <div class="absolute z-0 inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50 dark:from-black/70 dark:via-black/50 dark:to-black/70"></div>
 
-    <!-- Contenu -->
-    <div class="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-      <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 animate-fade-in font-maverick">
-        {{ t('hero.welcome') }}
-      </h1>
-      <p class="text-lg sm:text-xl md:text-2xl text-gray-200 mb-8 animate-fade-in-delay">
-        {{ t('hero.subtitle') }}
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-delay-2">
-        <button class="px-8 py-3 bg-ifdd-bleu hover:bg-ifdd-bleu-dark text-white font-medium font-helvetica rounded-lg transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-          {{ t('common.discover') }}
-        </button>
-        <button class="px-8 py-3 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white font-medium font-helvetica rounded-lg transition-colors border border-white/30">
-          {{ t('common.learnMore') }}
-        </button>
-      </div>
-    </div>
-
     <!-- Scroll indicator -->
     <div class="absolute z-20 bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
       <font-awesome-icon :icon="['fas', 'chevron-down']" class="text-2xl text-white" />
@@ -52,8 +34,17 @@
 
     <!-- galerie video -->
     <div v-if="videoTestimonials.length > 0" class="z-0 absolute bottom-0 left-0 w-full h-56 bg-gradient-to-t from-black to-transparent">
+      
+      <!-- Etiquette -->
+      <div class="ml-5 absolute top-7 flex justify-center items-center">
+        <div class="h-2 w-2 rounded-full bg-green-600"></div>
+        <!-- Etiquette pour Vidéo -->
+        <div class="ml-2 text-white font-bold">Innovation/Bonne pratique</div>
+        <!-- Etiquette pour écrits -->
+        <!-- <div class="ml-2 text-white font-bold">Récit</div> -->
+      </div>
+
       <div class="flex space-x-3 mt-16 ml-10 overflow-x-auto pb-4">
-        
         <!-- Vidéo témoignage -->
         <div 
           v-for="video in videoTestimonials" 
@@ -62,7 +53,7 @@
             'flex-shrink-0 transition-all duration-300',
             currentVideo?.id === video.id ? 'p-1 bg-white/70 rounded-md backdrop-blur-sm border border-white' : ''
           ]"
-        >
+          >
           <div 
             :style="{ backgroundImage: video.thumbnail_url ? `url(${video.thumbnail_url})` : '' }"
             :class="[
@@ -85,17 +76,14 @@
                   class="text-ifdd-violet-dark text-sm" 
                 />
               </div>
-              
-              <!-- Info sur la vidéo au survol -->
-              <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-1 rounded-b-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                <p class="text-white text-xs truncate">
-                  {{ video.user?.first_name }} {{ video.user?.last_name }}
-                </p>
-              </div>
             </button>
           </div>
         </div>
+      </div>
 
+      <!-- titre de la vidéo en cours -->
+      <div class="ml-5 max-w-1/2 text-white absolute bottom-5 bg-white/20 p-2 rounded-md text-xl font-bold">
+        <a class="hover:underline" :href="currentVideo?.detail_url" target="_blank">{{ currentVideo?.title }}</a>
       </div>
       
       <!-- Indicateur de navigation si plus de vidéos -->

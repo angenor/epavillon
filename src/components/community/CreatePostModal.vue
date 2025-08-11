@@ -187,6 +187,32 @@
 
               <!-- Video Testimonial Form -->
               <div v-else-if="selectedType === 'video'" class="space-y-4">
+                <!-- Title -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ t('community.createPost.videoTitle') }}
+                  </label>
+                  <input
+                    v-model="formData.title"
+                    type="text"
+                    :placeholder="t('community.createPost.videoTitlePlaceholder')"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-ifdd-green-500"
+                  >
+                </div>
+
+                <!-- Detail URL -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ t('community.createPost.detailUrl') }} ({{ t('common.optional') || 'Optionnel' }})
+                  </label>
+                  <input
+                    v-model="formData.detail_url"
+                    type="url"
+                    :placeholder="t('community.createPost.detailUrlPlaceholder')"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-ifdd-green-500"
+                  >
+                </div>
+
                 <!-- Context Selection -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -345,7 +371,9 @@ const formData = ref({
   featured: false,
   photo_url: null,
   video_url: null,
-  duration_seconds: null
+  duration_seconds: null,
+  title: '',
+  detail_url: ''
 })
 
 // Background color options
@@ -366,7 +394,7 @@ const isFormValid = computed(() => {
     return formData.value.testimonial_text.trim().length > 0 && 
            formData.value.context_type !== ''
   } else if (selectedType.value === 'video') {
-    return videoFile.value !== null
+    return videoFile.value !== null && formData.value.title.trim().length > 0
   }
   return false
 })
@@ -386,7 +414,9 @@ const closeModal = () => {
     featured: false,
     photo_url: null,
     video_url: null,
-    duration_seconds: null
+    duration_seconds: null,
+    title: '',
+    detail_url: ''
   }
   photoPreview.value = null
   videoPreview.value = null
@@ -632,7 +662,9 @@ const handleSubmit = async () => {
         context_type: formData.value.context_type || 'event',
         context_id: null,
         is_approved: false, // Videos need approval
-        user_id: userId // Utiliser l'ID de la session active
+        user_id: userId, // Utiliser l'ID de la session active
+        title: formData.value.title.trim(),
+        detail_url: formData.value.detail_url.trim() || null
       }
       
       console.log('Inserting video testimonial with data:', videoData)
