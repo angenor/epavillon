@@ -48,15 +48,62 @@
         <!-- Modern Header -->
         <div class="bg-green-600 dark:bg-green-700 text-white px-6 py-8">
           <div class="flex items-center justify-between">
-            <div>
+            <div class="flex-1">
               <h1 class="text-3xl font-bold mb-2">
                 {{ t('activity.submit.title') }}
               </h1>
-              <p class="text-green-100 dark:text-green-200 text-lg">
+              <p class="text-green-100 dark:text-green-200 text-lg mb-4">
                 {{ t('activity.submit.subtitle') }}
               </p>
+              
+              <!-- Informations de l'événement -->
+              <div v-if="eventData" class="mt-4 p-4 bg-green-700 dark:bg-green-800 rounded-xl bg-opacity-50">
+                <h2 class="text-xl font-semibold mb-2">{{ eventData.title }}</h2>
+                <div class="flex flex-wrap items-center gap-3 text-sm">
+                  <!-- Date de début -->
+                  <div class="flex items-center text-green-100">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>{{ formatEventDate(eventData) }}</span>
+                  </div>
+                  
+                  <!-- Statut de soumission -->
+                  <span :class="[
+                    'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+                    eventData.submission_status === 'open' 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-red-100 text-red-800'
+                  ]">
+                    <svg class="w-2 h-2 mr-1" fill="currentColor" viewBox="0 0 8 8">
+                      <circle cx="4" cy="4" r="3" />
+                    </svg>
+                    {{ t(`event.submissionStatus.${eventData.submission_status}`) }}
+                  </span>
+                  
+                  <!-- Date limite -->
+                  <div v-if="eventData.submission_deadline" class="flex items-center text-green-100">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>{{ t('event.submissionDeadline') }}: {{ formatDate(eventData.submission_deadline) }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="hidden sm:block">
+            
+            <!-- Logo de l'événement -->
+            <div v-if="eventData?.logo_url" class="hidden sm:block ml-6 flex-shrink-0">
+              <div class="bg-white dark:bg-gray-100 p-2 rounded-xl shadow-lg">
+                <img 
+                  :src="eventData.logo_url" 
+                  :alt="eventData.title"
+                  class="h-20 w-20 object-contain"
+                >
+              </div>
+            </div>
+            <!-- Icône par défaut si pas de logo -->
+            <div v-else class="hidden sm:block">
               <svg class="w-16 h-16 text-green-400 dark:text-green-500 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
@@ -665,6 +712,10 @@ const { countries, fetchCountries } = useCountries()
 
 const eventId = route.params.eventId
 
+// État pour les données de l'événement
+const eventData = ref(null)
+const loadingEvent = ref(true)
+
 const form = ref({
   title: '',
   activity_type: '',
@@ -962,7 +1013,60 @@ const loadOrganizationData = async () => {
   }
 }
 
+// Charger les données de l'événement
+const loadEventData = async () => {
+  try {
+    const { supabase } = useSupabase()
+    const { data, error } = await supabase
+      .from('events')
+      .select('id, title, logo_url, submission_status, submission_deadline, online_start_datetime, in_person_start_date, participation_mode')
+      .eq('id', eventId)
+      .single()
+    
+    if (error) {
+      console.error('Erreur lors du chargement de l\'événement:', error)
+      return
+    }
+    
+    eventData.value = data
+  } catch (error) {
+    console.error('Erreur lors du chargement de l\'événement:', error)
+  } finally {
+    loadingEvent.value = false
+  }
+}
+
+// Formater la date de l'événement
+const formatEventDate = (event) => {
+  if (!event) return ''
+  
+  // Priorité aux dates en ligne puis en présentiel
+  const dateString = event.online_start_datetime || event.in_person_start_date
+  if (!dateString) return ''
+  
+  const date = new Date(dateString)
+  return date.toLocaleDateString(locale.value === 'fr' ? 'fr-FR' : 'en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+}
+
+// Formater une date simple
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleDateString(locale.value === 'fr' ? 'fr-FR' : 'en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  })
+}
+
 onMounted(async () => {
+  // Charger les données de l'événement
+  await loadEventData()
+  
   // Charger les pays une seule fois
   await fetchCountries()
   
