@@ -63,7 +63,7 @@
         <div class="h-2 w-2 rounded-full bg-green-600"></div>
         <!-- Etiquette dynamique selon le type -->
         <div v-if="currentTestimonial?.type === 'video'" class="ml-2 text-white font-bold">Innovation/Bonne pratique</div>
-        <div v-else-if="currentTestimonial?.type === 'written'" class="ml-2 text-white font-bold">Récit</div>
+        <div v-else-if="currentTestimonial?.type === 'written'" class="ml-2 text-white font-bold">Témoignage négociatrice Francophone</div>
       </div>
 
       <div class="flex space-x-3 mt-16 ml-10 overflow-x-auto pb-4">
@@ -298,7 +298,7 @@ export default {
       if (photoDisplayTimeout) clearTimeout(photoDisplayTimeout)
       
       // Durée différente selon le type de témoignage
-      const duration = currentTestimonial.value?.type === 'written' ? 3000 : 15000
+      const duration = currentTestimonial.value?.type === 'written' ? 5000 : 15000
       
       if (currentTestimonial.value?.type === 'written') {
         // Pour les témoignages écrits, utiliser un timeout
