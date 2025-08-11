@@ -87,6 +87,16 @@ const router = createRouter({
       name: 'community',
       component: () => import('../views/community/Community.vue'),
     },
+    {
+      path: '/programmations',
+      name: 'programmations',
+      component: () => import('../views/Programmations.vue'),
+    },
+    {
+      path: '/programmations/:year/:eventId',
+      name: 'programmation-detail',
+      component: () => import('../views/ProgrammationDetail.vue'),
+    },
   ],
 })
 

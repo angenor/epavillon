@@ -61,9 +61,41 @@
     "welcome": "Welcome to the epavillon platform",
     "subtitle": "Institute of La Francophonie for Sustainable Development"
   },
+  "programmations": {
+    "title": "Programmings",
+    "loading": "Loading...",
+    "noEvents": "No events",
+    "noEventsDescription": "No events found for year {{year}}",
+    "noEventsAll": "No events found",
+    "viewDetails": "View details",
+    "viewCall": "View call",
+    "viewProgramming": "View this programming",
+    "submissionDeadline": "Deadline",
+    "dateTBA": "To be determined",
+    "fullDetails": "Full details",
+    "allProgrammings": "All programmings",
+    "error": {
+      "title": "Error",
+      "notFound": "The requested event was not found."
+    }
+  },
   "events": {
     "title": "Upcoming and past events",
     "subtitle": "Participate in major international events on climate, biodiversity and sustainable development.",
+    "description": "Description",
+    "dateTime": "Date and time",
+    "location": "Location",
+    "participationMode": "Participation mode",
+    "submissionDeadline": "Submission deadline",
+    "daysRemaining": "days remaining",
+    "viewActivities": "View activities",
+    "viewAllActivities": "View all activities",
+    "upcomingActivities": "Upcoming activities",
+    "modes": {
+      "online": "Online",
+      "in_person": "In-person",
+      "hybrid": "Hybrid"
+    },
     "status": {
       "ongoing": "ONGOING",
       "upcoming": "UPCOMING",

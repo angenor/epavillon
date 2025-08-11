@@ -74,9 +74,41 @@
     "welcome": "Bienvenue sur la plateforme epavillon",
     "subtitle": "Institut de la Francophonie pour le Développement Durable"
   },
+  "programmations": {
+    "title": "Programmations",
+    "loading": "Chargement...",
+    "noEvents": "Aucun événement",
+    "noEventsDescription": "Aucun événement trouvé pour l'année {{year}}",
+    "noEventsAll": "Aucun événement trouvé",
+    "viewDetails": "Voir les détails",
+    "viewCall": "Voir l'appel",
+    "viewProgramming": "Voir cette programmation",
+    "submissionDeadline": "Date limite",
+    "dateTBA": "À déterminer",
+    "fullDetails": "Détails complets",
+    "allProgrammings": "Toutes les programmations",
+    "error": {
+      "title": "Erreur",
+      "notFound": "L'événement demandé n'a pas été trouvé."
+    }
+  },
   "events": {
     "title": "Événements à venir et passés",
     "subtitle": "Participez aux grands événements internationaux sur le climat, la biodiversité et le développement durable.",
+    "description": "Description",
+    "dateTime": "Date et heure",
+    "location": "Lieu",
+    "participationMode": "Mode de participation",
+    "submissionDeadline": "Date limite de soumission",
+    "daysRemaining": "jours restants",
+    "viewActivities": "Voir les activités",
+    "viewAllActivities": "Voir toutes les activités",
+    "upcomingActivities": "Activités à venir",
+    "modes": {
+      "online": "En ligne",
+      "in_person": "En présentiel",
+      "hybrid": "Hybride"
+    },
     "status": {
       "ongoing": "EN COURS",
       "upcoming": "À VENIR",

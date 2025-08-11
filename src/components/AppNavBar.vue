@@ -29,16 +29,20 @@
         <div class="hidden md:flex items-center space-x-1">
           <!-- Menu Programmation -->
           <div class="relative group">
-            <button class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:text-ifdd-bleu dark:hover:text-ifdd-bleu-clair font-medium flex items-center space-x-2 transition-all duration-300 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50">
+            <router-link to="/programmations" class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:text-ifdd-bleu dark:hover:text-ifdd-bleu-clair font-medium flex items-center space-x-2 transition-all duration-300 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50">
               <span>{{ t('nav.programmings') }}</span>
               <font-awesome-icon :icon="['fas', 'chevron-down']" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" />
-            </button>
+            </router-link>
             <div class="absolute left-0 mt-2 w-56 rounded-xl shadow-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transform scale-95 group-hover:scale-100 transition-all duration-300 origin-top-left">
               <div class="p-2">
-                <a href="#" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:translate-x-1">2024</a>
-                <a href="#" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:translate-x-1">2023</a>
-                <a href="#" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:translate-x-1">2022</a>
-                <a href="#" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:translate-x-1">2021</a>
+                <router-link 
+                  v-for="year in availableYears"
+                  :key="year"
+                  :to="`/programmations?year=${year}`"
+                  class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:translate-x-1"
+                >
+                  {{ year }}
+                </router-link>
               </div>
             </div>
           </div>
@@ -226,9 +230,10 @@
 <script>
 import { useTheme } from '@/composables/useTheme'
 import { useI18n } from 'vue-i18n'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
+import { useSupabase } from '@/composables/useSupabase'
 
 export default {
   name: 'AppNavBar',
@@ -237,7 +242,9 @@ export default {
     const { t, locale } = useI18n()
     const authStore = useAuthStore()
     const router = useRouter()
+    const { supabase } = useSupabase()
     const showLanguageMenu = ref(false)
+    const availableYears = ref([])
     
     const changeLanguage = (lang) => {
       locale.value = lang
@@ -259,6 +266,26 @@ export default {
       event.target.style.display = 'none'
     }
     
+    const loadAvailableYears = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('events')
+          .select('year')
+          .order('year', { ascending: false })
+        
+        if (!error && data) {
+          const years = [...new Set(data.map(event => event.year))].sort((a, b) => b - a)
+          availableYears.value = years.slice(0, 5) // Limiter à 5 années les plus récentes
+        }
+      } catch (error) {
+        console.error('Error loading years:', error)
+      }
+    }
+    
+    onMounted(() => {
+      loadAvailableYears()
+    })
+    
     return {
       theme,
       toggleTheme,
@@ -268,7 +295,8 @@ export default {
       changeLanguage,
       authStore,
       handleLogout,
-      handlePhotoError
+      handlePhotoError,
+      availableYears
     }
   },
   methods: {
