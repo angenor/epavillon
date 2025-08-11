@@ -75,6 +75,33 @@
 
               <!-- Testimonial Form -->
               <div v-if="selectedType === 'testimonial'" class="space-y-4">
+                <!-- Title -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ t('community.createPost.testimonialTitle') }}
+                  </label>
+                  <input
+                    v-model="formData.testimonial_title"
+                    type="text"
+                    required
+                    :placeholder="t('community.createPost.testimonialTitlePlaceholder')"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-ifdd-green-500"
+                  >
+                </div>
+
+                <!-- Detail URL -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ t('community.createPost.detailUrl') }} ({{ t('common.optional') || 'Optionnel' }})
+                  </label>
+                  <input
+                    v-model="formData.testimonial_detail_url"
+                    type="url"
+                    :placeholder="t('community.createPost.detailUrlPlaceholder')"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-ifdd-green-500"
+                  >
+                </div>
+
                 <!-- Context Selection -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -110,10 +137,10 @@
                   </p>
                 </div>
 
-                <!-- Photo Upload -->
+                <!-- Photo Upload (will be used as thumbnail) -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {{ t('community.createPost.addPhoto') }}
+                    {{ t('community.createPost.addPhoto') }} ({{ t('community.createPost.willBeUsedAsThumbnail') }})
                   </label>
                   <div 
                     @click="$refs.photoInput.click()"
@@ -366,6 +393,8 @@ const videoFile = ref(null)
 
 const formData = ref({
   testimonial_text: '',
+  testimonial_title: '',
+  testimonial_detail_url: '',
   context_type: '',
   background_color: '#10B981',
   featured: false,
@@ -392,6 +421,7 @@ const backgroundColors = [
 const isFormValid = computed(() => {
   if (selectedType.value === 'testimonial') {
     return formData.value.testimonial_text.trim().length > 0 && 
+           formData.value.testimonial_title.trim().length > 0 &&
            formData.value.context_type !== ''
   } else if (selectedType.value === 'video') {
     return videoFile.value !== null && formData.value.title.trim().length > 0
@@ -409,6 +439,8 @@ const closeModal = () => {
   // Reset form
   formData.value = {
     testimonial_text: '',
+    testimonial_title: '',
+    testimonial_detail_url: '',
     context_type: '',
     background_color: '#10B981',
     featured: false,

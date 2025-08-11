@@ -74,6 +74,57 @@ export function useTestimonials() {
     }
   }
 
+  // Récupérer les témoignages écrits avec photo
+  const fetchWrittenTestimonials = async (featured = null) => {
+    loading.value = true
+    error.value = null
+    
+    try {
+      console.log('Fetching written testimonials, featured:', featured)
+      
+      let query = supabase
+        .from('user_testimonials')
+        .select(`
+          *,
+          user:users!user_id (
+            id,
+            first_name,
+            last_name,
+            profile_photo_url,
+            organization_id
+          )
+        `)
+        .order('created_at', { ascending: false })
+
+      if (featured !== null) {
+        query = query.eq('featured', featured)
+      }
+
+      const { data, error: fetchError } = await query
+
+      if (fetchError) throw fetchError
+      
+      console.log('Written testimonials fetched:', data)
+      
+      // Enrichir avec les données d'organisation
+      if (data && data.length > 0) {
+        for (let testimonial of data) {
+          if (testimonial.user?.organization_id) {
+            testimonial.user.organization = await fetchUserOrganization(testimonial.user.organization_id)
+          }
+        }
+      }
+      
+      return data || []
+    } catch (err) {
+      console.error('Error fetching written testimonials:', err)
+      error.value = err.message
+      return []
+    } finally {
+      loading.value = false
+    }
+  }
+
   // Récupérer les témoignages vidéo
   const fetchVideoTestimonials = async (isApproved = true) => {
     loading.value = true
@@ -397,6 +448,7 @@ export function useTestimonials() {
     loading,
     error,
     fetchTestimonials,
+    fetchWrittenTestimonials,
     fetchVideoTestimonials,
     fetchInnovationsPractices,
     fetchTrainings,

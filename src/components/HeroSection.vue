@@ -2,10 +2,10 @@
   <section class="relative h-screen flex items-center justify-center overflow-hidden">
     <!-- Vidéo de fond -->
     <video 
-      v-if="currentVideo"
-      :key="currentVideo.id"
+      v-if="currentTestimonial?.type === 'video' && currentTestimonial.video_url"
+      :key="currentTestimonial.id"
       class="absolute inset-0 z-0 w-full h-full object-cover dark:sepia"
-      :src="currentVideo.video_url || '/videos/IFDD_Roumanie.mp4'"
+      :src="currentTestimonial.video_url || '/videos/IFDD_Roumanie.mp4'"
       autoplay
       muted
       loop
@@ -13,7 +13,30 @@
       @error="handleVideoError"
     ></video>
     
-    <!-- Vidéo par défaut si aucune vidéo de témoignage -->
+    <!-- Photo de fond pour témoignage écrit -->
+    <div 
+      v-else-if="currentTestimonial?.type === 'written' && currentTestimonial.photo_url"
+      :key="currentTestimonial.id"
+      class="absolute inset-0 z-0 w-full h-full"
+    >
+      <img 
+        :src="currentTestimonial.photo_url"
+        class="w-full h-full object-cover dark:sepia"
+        :alt="`Témoignage de ${currentTestimonial.user?.first_name} ${currentTestimonial.user?.last_name}`"
+      />
+      <!-- Texte du témoignage -->
+      <div class="absolute left-10 bottom-32 max-w-2xl p-6 bg-black/60 backdrop-blur-sm rounded-lg">
+        <p class="text-white text-lg italic mb-4">"{{ currentTestimonial.testimonial_text }}"</p>
+        <p class="text-white font-semibold">
+          — {{ currentTestimonial.user?.first_name }} {{ currentTestimonial.user?.last_name }}
+          <span v-if="currentTestimonial.user?.organization?.name" class="text-sm font-normal">
+            , {{ currentTestimonial.user.organization.name }}
+          </span>
+        </p>
+      </div>
+    </div>
+    
+    <!-- Vidéo par défaut si aucun témoignage -->
     <video 
       v-else
       class="absolute inset-0 z-0 w-full h-full object-cover dark:sepia"
@@ -32,47 +55,57 @@
       <font-awesome-icon :icon="['fas', 'chevron-down']" class="text-2xl text-white" />
     </div>
 
-    <!-- galerie video -->
-    <div v-if="videoTestimonials.length > 0" class="z-0 absolute bottom-0 left-0 w-full h-56 bg-gradient-to-t from-black to-transparent">
+    <!-- galerie témoignages -->
+    <div v-if="allTestimonials.length > 0" class="z-0 absolute bottom-0 left-0 w-full h-56 bg-gradient-to-t from-black to-transparent">
       
       <!-- Etiquette -->
       <div class="ml-5 absolute top-7 flex justify-center items-center">
         <div class="h-2 w-2 rounded-full bg-green-600"></div>
-        <!-- Etiquette pour Vidéo -->
-        <div class="ml-2 text-white font-bold">Innovation/Bonne pratique</div>
-        <!-- Etiquette pour écrits -->
-        <!-- <div class="ml-2 text-white font-bold">Récit</div> -->
+        <!-- Etiquette dynamique selon le type -->
+        <div v-if="currentTestimonial?.type === 'video'" class="ml-2 text-white font-bold">Innovation/Bonne pratique</div>
+        <div v-else-if="currentTestimonial?.type === 'written'" class="ml-2 text-white font-bold">Récit</div>
       </div>
 
       <div class="flex space-x-3 mt-16 ml-10 overflow-x-auto pb-4">
-        <!-- Vidéo témoignage -->
+        <!-- Témoignages (vidéo et écrits) -->
         <div 
-          v-for="video in videoTestimonials" 
-          :key="video.id"
+          v-for="testimonial in allTestimonials" 
+          :key="testimonial.id"
           :class="[
             'flex-shrink-0 transition-all duration-300',
-            currentVideo?.id === video.id ? 'p-1 bg-white/70 rounded-md backdrop-blur-sm border border-white' : ''
+            currentTestimonial?.id === testimonial.id ? 'p-1 bg-white/70 rounded-md backdrop-blur-sm border border-white' : ''
           ]"
           >
           <div 
-            :style="{ backgroundImage: video.thumbnail_url ? `url(${video.thumbnail_url})` : '' }"
+            :style="{ 
+              backgroundImage: testimonial.type === 'video' 
+                ? (testimonial.thumbnail_url ? `url(${testimonial.thumbnail_url})` : '') 
+                : (testimonial.photo_url ? `url(${testimonial.photo_url})` : '')
+            }"
             :class="[
               'h-16 w-24 rounded-md flex bg-cover bg-center',
-              !video.thumbnail_url ? 'bg-gradient-to-br from-ifdd-bleu to-ifdd-violet' : ''
+              (!testimonial.thumbnail_url && testimonial.type === 'video') || (!testimonial.photo_url && testimonial.type === 'written') 
+                ? 'bg-gradient-to-br from-ifdd-bleu to-ifdd-violet' : ''
             ]"
           >
             <button 
-              @click.stop="toggleVideo(video)"
+              @click.stop="toggleTestimonial(testimonial)"
               class="flex items-center justify-center h-full w-full cursor-pointer group relative"
               type="button"
             >
               <!-- Overlay sombre au survol -->
               <div class="absolute inset-0 bg-black/30 rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
               
-              <!-- Bouton play/pause -->
+              <!-- Icône selon le type -->
               <div class="p-2 bg-white/80 rounded-full backdrop-blur-sm border border-white z-10 transform group-hover:scale-110 transition-transform pointer-events-none">
                 <font-awesome-icon 
-                  :icon="['fas', currentVideo?.id === video.id ? 'pause' : 'play']" 
+                  v-if="testimonial.type === 'video'"
+                  :icon="['fas', currentTestimonial?.id === testimonial.id ? 'pause' : 'play']" 
+                  class="text-ifdd-violet-dark text-sm" 
+                />
+                <font-awesome-icon 
+                  v-else
+                  :icon="['fas', 'quote-left']" 
                   class="text-ifdd-violet-dark text-sm" 
                 />
               </div>
@@ -81,13 +114,13 @@
         </div>
       </div>
 
-      <!-- titre de la vidéo en cours -->
-      <div class="ml-5 max-w-1/2 text-white absolute bottom-5 bg-white/20 p-2 rounded-md text-xl font-bold">
-        <a class="hover:underline" :href="currentVideo?.detail_url" target="_blank">{{ currentVideo?.title }}</a>
+      <!-- titre du témoignage en cours -->
+      <div v-if="currentTestimonial?.type === 'video' && currentTestimonial?.title" class="ml-5 max-w-1/2 text-white absolute bottom-5 bg-white/20 p-2 rounded-md text-xl font-bold">
+        <a class="hover:underline" :href="currentTestimonial?.detail_url" target="_blank">{{ currentTestimonial?.title }}</a>
       </div>
       
-      <!-- Indicateur de navigation si plus de vidéos -->
-      <div v-if="videoTestimonials.length > 6" class="absolute right-4 top-1/2 -translate-y-1/2">
+      <!-- Indicateur de navigation si plus de témoignages -->
+      <div v-if="allTestimonials.length > 6" class="absolute right-4 top-1/2 -translate-y-1/2">
         <font-awesome-icon :icon="['fas', 'chevron-right']" class="text-white/60 animate-pulse" />
       </div>
     </div>
@@ -113,18 +146,22 @@ export default {
   },
   setup() {
     const { t } = useI18n()
-    const { fetchVideoTestimonials } = useTestimonials()
+    const { fetchVideoTestimonials, fetchWrittenTestimonials } = useTestimonials()
     const { generateThumbnailsForVideos } = useVideoThumbnails()
     
     const videoTestimonials = ref([])
-    const currentVideo = ref(null)
-    const currentVideoIndex = ref(0)
+    const writtenTestimonials = ref([])
+    const allTestimonials = ref([])
+    const currentTestimonial = ref(null)
+    const currentTestimonialIndex = ref(0)
     let autoPlayInterval = null
+    let photoDisplayTimeout = null
     
     // Données mockées pour le développement/test
     const mockVideoTestimonials = [
       {
-        id: 'mock-1',
+        id: 'mock-video-1',
+        type: 'video',
         video_url: '/videos/IFDD_Roumanie.mp4',
         thumbnail_url: null,
         user: {
@@ -136,7 +173,8 @@ export default {
         duration_seconds: 30
       },
       {
-        id: 'mock-2',
+        id: 'mock-video-2',
+        type: 'video',
         video_url: '/videos/IFDD_Roumanie.mp4',
         thumbnail_url: null,
         user: {
@@ -146,64 +184,108 @@ export default {
         },
         featured: false,
         duration_seconds: 45
-      },
-      {
-        id: 'mock-3',
-        video_url: '/videos/IFDD_Roumanie.mp4',
-        thumbnail_url: null,
-        user: {
-          first_name: 'Pierre',
-          last_name: 'Bernard',
-          profile_photo_url: null
-        },
-        featured: false,
-        duration_seconds: 25
       }
     ]
     
-    // Charger les vidéos de témoignage
-    const loadVideoTestimonials = async () => {
-      // En développement, récupérer toutes les vidéos, sinon seulement les approuvées
+    const mockWrittenTestimonials = [
+      {
+        id: 'mock-written-1',
+        type: 'written',
+        photo_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800',
+        testimonial_text: 'Cette plateforme est un outil essentiel pour la collaboration climatique en Afrique francophone.',
+        user: {
+          first_name: 'Amadou',
+          last_name: 'Diallo',
+          organization: {
+            name: 'CEDEAO'
+          }
+        },
+        featured: true
+      },
+      {
+        id: 'mock-written-2',
+        type: 'written',
+        photo_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800',
+        testimonial_text: 'Les formations ePavillon nous ont permis de renforcer nos capacités en négociation climatique.',
+        user: {
+          first_name: 'Fatou',
+          last_name: 'Ndiaye',
+          organization: {
+            name: 'Ministère de l\'Environnement du Sénégal'
+          }
+        },
+        featured: false
+      }
+    ]
+    
+    // Charger tous les témoignages
+    const loadTestimonials = async () => {
+      // Charger les vidéos
       const videos = await fetchVideoTestimonials(import.meta.env.DEV ? null : true)
+      console.log('Videos loaded:', videos)
       
-      // Utiliser les données mockées si aucune vidéo dans la base de données (développement)
-      if (videos.length === 0 && import.meta.env.DEV) {
-        videoTestimonials.value = mockVideoTestimonials.slice(0, 10)
+      // Charger les témoignages écrits
+      const written = await fetchWrittenTestimonials(import.meta.env.DEV ? null : true)
+      console.log('Written testimonials loaded:', written)
+      
+      // En développement, utiliser les données mockées si l'un ou l'autre manque
+      if (import.meta.env.DEV) {
+        if (videos.length === 0) {
+          console.log('No videos in DB, using mock video data')
+          videoTestimonials.value = mockVideoTestimonials
+        } else {
+          // Générer les miniatures pour les vidéos
+          const videosWithThumbnails = await generateThumbnailsForVideos(videos.slice(0, 10), false)
+          videoTestimonials.value = videosWithThumbnails.map(v => ({ ...v, type: 'video' }))
+        }
+        
+        if (written.length === 0) {
+          console.log('No written testimonials in DB, using mock written data')
+          writtenTestimonials.value = mockWrittenTestimonials
+        } else {
+          writtenTestimonials.value = written.slice(0, 10).map(w => ({ ...w, type: 'written' }))
+        }
       } else {
-        // Générer les miniatures manquantes (localement uniquement, pas de sauvegarde en DB)
+        // En production, utiliser seulement les données de la DB
         const videosWithThumbnails = await generateThumbnailsForVideos(videos.slice(0, 10), false)
-        videoTestimonials.value = videosWithThumbnails
+        videoTestimonials.value = videosWithThumbnails.map(v => ({ ...v, type: 'video' }))
+        writtenTestimonials.value = written.slice(0, 10).map(w => ({ ...w, type: 'written' }))
       }
       
-      // Sélectionner la première vidéo par défaut
-      if (videoTestimonials.value.length > 0) {
-        currentVideo.value = videoTestimonials.value[0]
+      // Combiner tous les témoignages
+      allTestimonials.value = [...videoTestimonials.value, ...writtenTestimonials.value]
+      console.log('All testimonials combined:', allTestimonials.value)
+      
+      // Sélectionner le premier témoignage par défaut
+      if (allTestimonials.value.length > 0) {
+        currentTestimonial.value = allTestimonials.value[0]
+        console.log('Current testimonial set to:', currentTestimonial.value)
         startAutoPlay()
       }
     }
     
-    // Basculer entre les vidéos
-    const toggleVideo = (video) => {
-      // Toujours changer vers la vidéo cliquée
-      currentVideo.value = video
-      currentVideoIndex.value = videoTestimonials.value.findIndex(v => v.id === video.id)
+    // Basculer entre les témoignages
+    const toggleTestimonial = (testimonial) => {
+      // Toujours changer vers le témoignage cliqué
+      currentTestimonial.value = testimonial
+      currentTestimonialIndex.value = allTestimonials.value.findIndex(t => t.id === testimonial.id)
       
-      // Redémarrer le timer d'autoplay depuis cette vidéo
+      // Redémarrer le timer approprié
       restartAutoPlay()
     }
     
     // Gestion de l'erreur de chargement vidéo
     const handleVideoError = () => {
-      // Passer à la vidéo suivante en cas d'erreur
-      nextVideo()
+      // Passer au témoignage suivant en cas d'erreur
+      nextTestimonial()
     }
     
-    // Passer à la vidéo suivante
-    const nextVideo = () => {
-      if (videoTestimonials.value.length > 0) {
-        currentVideoIndex.value = (currentVideoIndex.value + 1) % videoTestimonials.value.length
-        currentVideo.value = videoTestimonials.value[currentVideoIndex.value]
-        restartAutoPlay() // Redémarrer le timer après navigation manuelle
+    // Passer au témoignage suivant
+    const nextTestimonial = () => {
+      if (allTestimonials.value.length > 0) {
+        currentTestimonialIndex.value = (currentTestimonialIndex.value + 1) % allTestimonials.value.length
+        currentTestimonial.value = allTestimonials.value[currentTestimonialIndex.value]
+        restartAutoPlay()
       }
     }
     
@@ -211,9 +293,22 @@ export default {
     // Démarrer la lecture automatique
     const startAutoPlay = () => {
       if (autoPlayInterval) clearInterval(autoPlayInterval)
-      autoPlayInterval = setInterval(() => {
-        nextVideo()
-      }, 15000) // Changer de vidéo toutes les 15 secondes
+      if (photoDisplayTimeout) clearTimeout(photoDisplayTimeout)
+      
+      // Durée différente selon le type de témoignage
+      const duration = currentTestimonial.value?.type === 'written' ? 3000 : 15000
+      
+      if (currentTestimonial.value?.type === 'written') {
+        // Pour les témoignages écrits, utiliser un timeout
+        photoDisplayTimeout = setTimeout(() => {
+          nextTestimonial()
+        }, duration)
+      } else {
+        // Pour les vidéos, utiliser un interval
+        autoPlayInterval = setInterval(() => {
+          nextTestimonial()
+        }, duration)
+      }
     }
     
     // Arrêter la lecture automatique
@@ -221,6 +316,10 @@ export default {
       if (autoPlayInterval) {
         clearInterval(autoPlayInterval)
         autoPlayInterval = null
+      }
+      if (photoDisplayTimeout) {
+        clearTimeout(photoDisplayTimeout)
+        photoDisplayTimeout = null
       }
     }
     
@@ -231,7 +330,7 @@ export default {
     }
     
     onMounted(() => {
-      loadVideoTestimonials()
+      loadTestimonials()
     })
     
     onUnmounted(() => {
@@ -240,9 +339,9 @@ export default {
     
     return { 
       t,
-      videoTestimonials,
-      currentVideo,
-      toggleVideo,
+      allTestimonials,
+      currentTestimonial,
+      toggleTestimonial,
       handleVideoError
     }
   }
