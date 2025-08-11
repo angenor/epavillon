@@ -244,11 +244,9 @@
                     {{ t('events.create.fields.description') }}
                   </span>
                 </label>
-                <textarea
+                <RichTextEditor
                   v-model="formData.description"
-                  rows="4"
-                  required
-                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200 resize-none"
+                  :max-length="5000"
                   :placeholder="t('events.create.placeholders.description')"
                 />
               </div>
@@ -593,6 +591,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAuthStore } from '@/stores/auth'
+import RichTextEditor from '@/components/ui/RichTextEditor.vue'
 
 const { t } = useI18n()
 const route = useRoute()

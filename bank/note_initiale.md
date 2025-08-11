@@ -1,1 +1,2 @@
-Je veux que le logo, le titre, la date de début et le submission_status s'affiche dans la page de création d'activité concernant l'évènement en question @src/views/activities/Create.vue
+Développe la page "Programmations"
+- Cette page affichera la liste des événements

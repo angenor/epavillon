@@ -30,7 +30,7 @@
           <!-- Menu Programmation -->
           <div class="relative group">
             <button class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:text-ifdd-bleu dark:hover:text-ifdd-bleu-clair font-medium flex items-center space-x-2 transition-all duration-300 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50">
-              <span>{{ t('nav.programming') }}</span>
+              <span>{{ t('nav.programmings') }}</span>
               <font-awesome-icon :icon="['fas', 'chevron-down']" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" />
             </button>
             <div class="absolute left-0 mt-2 w-56 rounded-xl shadow-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transform scale-95 group-hover:scale-100 transition-all duration-300 origin-top-left">

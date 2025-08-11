@@ -54,9 +54,10 @@
             <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
               {{ t('event.description') }}
             </h2>
-            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-              {{ event.description }}
-            </p>
+            <div 
+              v-html="event.description"
+              class="text-gray-700 dark:text-gray-300 leading-relaxed prose prose-gray dark:prose-invert max-w-none"
+            />
           </div>
 
           <!-- Actions -->
