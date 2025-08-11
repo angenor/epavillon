@@ -24,16 +24,18 @@
         class="w-full h-full object-cover dark:sepia"
         :alt="`Témoignage de ${currentTestimonial.user?.first_name} ${currentTestimonial.user?.last_name}`"
       />
-      <!-- Texte du témoignage -->
-      <div class="absolute z-50 left-0 top-32 max-w-md p-6 bg-blue-800/30 font-bold backdrop-blur-xl rounded-r-lg">
-        <p class="text-white text-xl italic mb-4">"{{ currentTestimonial.testimonial_text }}"</p>
-        <p class="text-white font-semibold">
-          — {{ currentTestimonial.user?.first_name }} {{ currentTestimonial.user?.last_name }}
-          <span v-if="currentTestimonial.user?.organization?.name" class="text-sm font-normal">
-            , {{ currentTestimonial.user.organization.name }}
-          </span>
-        </p>
-      </div>
+      <!-- Texte du témoignage avec animation -->
+      <transition name="fade-slide" appear>
+        <div :key="`text-${currentTestimonial.id}`" class="absolute z-50 left-0 top-32 max-w-md p-6 bg-blue-800/30 font-bold backdrop-blur-xl rounded-r-lg">
+          <p class="text-white text-xl italic mb-4 animate-fade-in">"{{ currentTestimonial.testimonial_text }}"</p>
+          <p class="text-white font-semibold animate-fade-in-delay">
+            — {{ currentTestimonial.user?.first_name }} {{ currentTestimonial.user?.last_name }}
+            <span v-if="currentTestimonial.user?.organization?.name" class="text-sm font-normal">
+              , {{ currentTestimonial.user.organization.name }}
+            </span>
+          </p>
+        </div>
+      </transition>
     </div>
     
     <!-- Vidéo par défaut si aucun témoignage -->
@@ -298,7 +300,7 @@ export default {
       if (photoDisplayTimeout) clearTimeout(photoDisplayTimeout)
       
       // Durée différente selon le type de témoignage
-      const duration = currentTestimonial.value?.type === 'written' ? 5000 : 15000
+      const duration = currentTestimonial.value?.type === 'written' ? 7000 : 15000
       
       if (currentTestimonial.value?.type === 'written') {
         // Pour les témoignages écrits, utiliser un timeout
@@ -362,6 +364,17 @@ export default {
   }
 }
 
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .animate-fade-in {
   animation: fade-in 1s ease-out;
 }
@@ -372,5 +385,24 @@ export default {
 
 .animate-fade-in-delay-2 {
   animation: fade-in 1s ease-out 0.6s both;
+}
+
+/* Animation pour la transition Vue */
+.fade-slide-enter-active {
+  transition: all 0.8s ease-out;
+}
+
+.fade-slide-leave-active {
+  transition: all 0.5s ease-in;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
 }
 </style>
