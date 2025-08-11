@@ -25,7 +25,7 @@
         :alt="`Témoignage de ${currentTestimonial.user?.first_name} ${currentTestimonial.user?.last_name}`"
       />
       <!-- Texte du témoignage -->
-      <div class="absolute left-10 bottom-32 max-w-2xl p-6 bg-black/60 backdrop-blur-sm rounded-lg">
+      <div class="absolute left-10 top-32 max-w-2xl p-6 bg-black/60 backdrop-blur-sm rounded-lg">
         <p class="text-white text-lg italic mb-4">"{{ currentTestimonial.testimonial_text }}"</p>
         <p class="text-white font-semibold">
           — {{ currentTestimonial.user?.first_name }} {{ currentTestimonial.user?.last_name }}
@@ -146,7 +146,7 @@ export default {
   },
   setup() {
     const { t } = useI18n()
-    const { fetchVideoTestimonials, fetchWrittenTestimonials } = useTestimonials()
+    const { fetchFeaturedVideoTestimonials, fetchWrittenTestimonials } = useTestimonials()
     const { generateThumbnailsForVideos } = useVideoThumbnails()
     
     const videoTestimonials = ref([])
@@ -220,19 +220,20 @@ export default {
     
     // Charger tous les témoignages
     const loadTestimonials = async () => {
-      // Charger les vidéos
-      const videos = await fetchVideoTestimonials(import.meta.env.DEV ? null : true)
-      console.log('Videos loaded:', videos)
+      // Charger les vidéos featured uniquement
+      const videos = await fetchFeaturedVideoTestimonials()
+      console.log('Featured videos loaded:', videos)
       
-      // Charger les témoignages écrits
-      const written = await fetchWrittenTestimonials(import.meta.env.DEV ? null : true)
-      console.log('Written testimonials loaded:', written)
+      // Charger les témoignages écrits featured uniquement
+      const written = await fetchWrittenTestimonials(true) // true pour featured uniquement
+      console.log('Featured written testimonials loaded:', written)
       
       // En développement, utiliser les données mockées si l'un ou l'autre manque
       if (import.meta.env.DEV) {
         if (videos.length === 0) {
-          console.log('No videos in DB, using mock video data')
-          videoTestimonials.value = mockVideoTestimonials
+          console.log('No featured videos in DB, using mock video data')
+          // Filtrer seulement les vidéos mockées featured
+          videoTestimonials.value = mockVideoTestimonials.filter(v => v.featured)
         } else {
           // Générer les miniatures pour les vidéos
           const videosWithThumbnails = await generateThumbnailsForVideos(videos.slice(0, 10), false)
@@ -240,8 +241,9 @@ export default {
         }
         
         if (written.length === 0) {
-          console.log('No written testimonials in DB, using mock written data')
-          writtenTestimonials.value = mockWrittenTestimonials
+          console.log('No featured written testimonials in DB, using mock written data')
+          // Filtrer seulement les témoignages écrits mockés featured
+          writtenTestimonials.value = mockWrittenTestimonials.filter(w => w.featured)
         } else {
           writtenTestimonials.value = written.slice(0, 10).map(w => ({ ...w, type: 'written' }))
         }

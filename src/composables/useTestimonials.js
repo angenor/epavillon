@@ -125,6 +125,59 @@ export function useTestimonials() {
     }
   }
 
+  // Récupérer uniquement les témoignages vidéo featured
+  const fetchFeaturedVideoTestimonials = async () => {
+    loading.value = true
+    error.value = null
+    
+    try {
+      console.log('Fetching featured video testimonials')
+      
+      let query = supabase
+        .from('video_testimonials')
+        .select('*')
+        .eq('featured', true)
+        .eq('is_approved', true)
+        .order('created_at', { ascending: false })
+
+      const { data, error: fetchError } = await query
+
+      if (fetchError) throw fetchError
+      
+      console.log('Featured videos fetched:', data)
+      
+      // Enrichir avec les données utilisateur et organisation
+      if (data && data.length > 0) {
+        for (let video of data) {
+          // Récupérer les infos utilisateur
+          if (video.user_id) {
+            const { data: userData } = await supabase
+              .from('users')
+              .select('id, first_name, last_name, profile_photo_url, organization_id')
+              .eq('id', video.user_id)
+              .single()
+            
+            if (userData) {
+              video.user = userData
+              // Récupérer l'organisation si elle existe
+              if (userData.organization_id) {
+                video.user.organization = await fetchUserOrganization(userData.organization_id)
+              }
+            }
+          }
+        }
+      }
+      
+      return data || []
+    } catch (err) {
+      console.error('Error fetching featured video testimonials:', err)
+      error.value = err.message
+      return []
+    } finally {
+      loading.value = false
+    }
+  }
+
   // Récupérer les témoignages vidéo
   const fetchVideoTestimonials = async (isApproved = true) => {
     loading.value = true
@@ -450,6 +503,7 @@ export function useTestimonials() {
     fetchTestimonials,
     fetchWrittenTestimonials,
     fetchVideoTestimonials,
+    fetchFeaturedVideoTestimonials,
     fetchInnovationsPractices,
     fetchTrainings,
     fetchCommunityFeed,
