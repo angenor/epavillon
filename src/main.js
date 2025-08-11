@@ -33,6 +33,29 @@ const i18n = createI18n({
   }
 })
 
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAleH8LqX9NHxe8m3dkzV6C2LW8aAprISk",
+  authDomain: "epavillon-9b399.firebaseapp.com",
+  projectId: "epavillon-9b399",
+  storageBucket: "epavillon-9b399.firebasestorage.app",
+  messagingSenderId: "806310673586",
+  appId: "1:806310673586:web:9481da2e8a2edecbb49dab",
+  measurementId: "G-4ETN92F3RM"
+};
+
+// Initialize Firebase
+const firebaseApp = initializeApp(firebaseConfig);
+const analytics = getAnalytics(firebaseApp);
+
 const app = createApp(App)
 
 // Enregistrement global du composant Font Awesome
