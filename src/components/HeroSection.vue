@@ -25,8 +25,8 @@
         :alt="`Témoignage de ${currentTestimonial.user?.first_name} ${currentTestimonial.user?.last_name}`"
       />
       <!-- Texte du témoignage -->
-      <div class="absolute left-10 top-32 max-w-2xl p-6 bg-black/60 backdrop-blur-sm rounded-lg">
-        <p class="text-white text-lg italic mb-4">"{{ currentTestimonial.testimonial_text }}"</p>
+      <div class="absolute z-50 left-0 top-32 max-w-md p-6 bg-blue-800/30 font-bold backdrop-blur-xl rounded-r-lg">
+        <p class="text-white text-xl italic mb-4">"{{ currentTestimonial.testimonial_text }}"</p>
         <p class="text-white font-semibold">
           — {{ currentTestimonial.user?.first_name }} {{ currentTestimonial.user?.last_name }}
           <span v-if="currentTestimonial.user?.organization?.name" class="text-sm font-normal">
@@ -48,7 +48,7 @@
     ></video>
     
     <!-- Overlay gradient -->
-    <div class="absolute z-0 inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50 dark:from-black/70 dark:via-black/50 dark:to-black/70"></div>
+    <!-- <div class="absolute z-0 inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50 dark:from-black/70 dark:via-black/50 dark:to-black/70"></div> -->
 
     <!-- Scroll indicator -->
     <div class="absolute z-20 bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
