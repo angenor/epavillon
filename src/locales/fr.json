@@ -95,11 +95,26 @@
       "sections": {
         "basicInfo": "Informations générales",
         "schedule": "Planification",
-        "status": "Statut"
+        "status": "Statut",
+        "media": "Médias et bannières"
       },
       "fields": {
+        "acronym": "Acronyme",
+        "banner": "Bannière",
+        "logo": "Logo",
+        "onlineDates": "Dates en ligne",
+        "inPersonDates": "Dates en présentiel",
         "eventStatus": "Statut de l'événement",
         "submissionStatus": "Statut des soumissions"
+      },
+      "placeholders": {
+        "acronym": "Ex: COP29, FIDEC2025",
+        "cityOnline": "Ville (pour référence administrative)",
+        "city": "Ex: Paris",
+        "addressOnline": "Adresse (pour référence administrative)",
+        "address": "Adresse complète du lieu",
+        "bannerUrl": "URL de la bannière haute qualité (32:9)",
+        "logo": "URL du logo de l'événement"
       },
       "error": {
         "title": "Erreur de modification",
@@ -341,6 +356,14 @@
     "dateTime": "Date et heure",
     "location": "Lieu",
     "format": "Format",
+    "online": "En ligne",
+    "inPerson": "En présentiel",
+    "participationMode": "Mode de participation",
+    "participationModes": {
+      "online": "En ligne",
+      "in_person": "En présentiel",
+      "hybrid": "Hybride"
+    },
     "formats": {
       "online": "En ligne",
       "in_person": "En présentiel",
@@ -358,6 +381,10 @@
       "ongoing": "En cours",
       "completed": "Terminé",
       "suspended": "Suspendu"
+    },
+    "submissionStatus": {
+      "open": "Ouvertes",
+      "closed": "Fermées"
     },
     "submission": {
       "open": "Ouvertes",
@@ -890,6 +917,14 @@
     "dateTime": "Date et heure",
     "location": "Lieu",
     "format": "Format",
+    "online": "En ligne",
+    "inPerson": "En présentiel",
+    "participationMode": "Mode de participation",
+    "participationModes": {
+      "online": "En ligne",
+      "in_person": "En présentiel",
+      "hybrid": "Hybride"
+    },
     "formats": {
       "online": "En ligne",
       "in_person": "En présentiel",
@@ -907,6 +942,10 @@
       "ongoing": "En cours",
       "completed": "Terminé",
       "suspended": "Suspendu"
+    },
+    "submissionStatus": {
+      "open": "Ouvertes",
+      "closed": "Fermées"
     },
     "submission": {
       "open": "Ouvertes",

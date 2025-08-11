@@ -67,7 +67,51 @@
     "status": {
       "ongoing": "ONGOING",
       "upcoming": "UPCOMING",
-      "completed": "COMPLETED"
+      "completed": "COMPLETED",
+      "suspended": "SUSPENDED"
+    },
+    "submission": {
+      "open": "Open",
+      "closed": "Closed"
+    },
+    "edit": {
+      "title": "Edit Event",
+      "subtitle": "Modify the event information",
+      "update": "Update",
+      "updating": "Updating...",
+      "sections": {
+        "basicInfo": "Basic Information",
+        "schedule": "Schedule",
+        "status": "Status",
+        "media": "Media and Banners"
+      },
+      "fields": {
+        "acronym": "Acronym",
+        "banner": "Banner",
+        "logo": "Logo",
+        "onlineDates": "Online Dates",
+        "inPersonDates": "In-Person Dates",
+        "eventStatus": "Event Status",
+        "submissionStatus": "Submission Status"
+      },
+      "placeholders": {
+        "acronym": "E.g: COP29, FIDEC2025",
+        "cityOnline": "City (for administrative reference)",
+        "city": "E.g: Paris",
+        "addressOnline": "Address (for administrative reference)",
+        "address": "Full venue address",
+        "bannerUrl": "High quality banner URL (32:9)",
+        "logo": "Event logo URL"
+      },
+      "error": {
+        "title": "Edit Error",
+        "loadFailed": "Could not load event",
+        "updateFailed": "Error during update"
+      },
+      "noPermission": {
+        "title": "Insufficient Permission",
+        "description": "You don't have permission to edit this event."
+      }
     },
     "cop29": {
       "title": "COP29 - Baku",
@@ -278,26 +322,38 @@
   },
   "event": {
     "description": "Description",
-    "dateTime": "Date and Time",
+    "dateTime": "Date and time",
     "location": "Location",
     "format": "Format",
-    "formats": {
+    "online": "Online",
+    "inPerson": "In-Person",
+    "participationMode": "Participation Mode",
+    "participationModes": {
       "online": "Online",
-      "in_person": "In Person",
+      "in_person": "In-Person",
       "hybrid": "Hybrid"
     },
-    "submissionDeadline": "Submission Deadline",
+    "formats": {
+      "online": "Online",
+      "in_person": "In-Person",
+      "hybrid": "Hybrid"
+    },
+    "submissionDeadline": "Submission deadline",
     "daysRemaining": "days remaining",
-    "viewActivities": "View Activities",
-    "submitActivity": "Submit Activity",
-    "upcomingActivities": "Upcoming Activities",
+    "viewActivities": "View activities",
+    "submitActivity": "Submit an activity",
+    "upcomingActivities": "Upcoming activities",
     "organizedBy": "Organized by",
-    "viewAllActivities": "View All Activities",
+    "viewAllActivities": "View all activities",
     "status": {
       "upcoming": "Upcoming",
-      "ongoing": "Ongoing", 
+      "ongoing": "Ongoing",
       "completed": "Completed",
       "suspended": "Suspended"
+    },
+    "submissionStatus": {
+      "open": "Open",
+      "closed": "Closed"
     },
     "submission": {
       "open": "Open",

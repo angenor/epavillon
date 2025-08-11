@@ -140,7 +140,7 @@
                 {{ t('event.location') }}
               </div>
               <p v-if="event.city" class="text-gray-900 dark:text-white font-medium">
-                {{ event.city }}<span v-if="country">, {{ country.name }}</span>
+                {{ event.city }}<span v-if="country">, {{ country.name_fr }}</span>
               </p>
               <p v-if="event.address" class="text-gray-700 dark:text-gray-300 text-sm mt-1">
                 {{ event.address }}
@@ -437,7 +437,7 @@ const loadEvent = async () => {
   try {
     const { data, error } = await supabase
       .from('events')
-      .select('*, countries(id, name, flag_emoji)')
+      .select('*, countries(id, name_fr, name_en)')
       .eq('id', route.params.id)
       .single()
 

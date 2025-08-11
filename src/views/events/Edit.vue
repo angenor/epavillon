@@ -57,13 +57,13 @@
 
       <div v-else-if="event" class="bg-white dark:bg-gray-800 shadow-xl rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
         <!-- Modern Header -->
-        <div class="bg-orange-600 dark:bg-orange-700 text-white px-6 py-8">
+        <div class="bg-orange-600 dark:bg-orange-800 text-white px-6 py-8">
           <div class="flex items-center justify-between">
             <div>
               <h1 class="text-2xl md:text-3xl font-bold mb-2">
                 {{ t('events.edit.title') }}
               </h1>
-              <p class="text-green-100 dark:text-green-200 text-sm md:text-base">
+              <p class="text-orange-100 dark:text-orange-200 text-sm md:text-base">
                 {{ t('events.edit.subtitle') }}
               </p>
             </div>
@@ -91,13 +91,14 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <!-- Title -->
-              <div class="md:col-span-2">
+              <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   <span class="flex items-center">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a4 4 0 014-4z"/>
                     </svg>
                     {{ t('events.create.fields.title') }}
+                    <span class="text-red-500">*</span>
                   </span>
                 </label>
                 <input
@@ -106,6 +107,24 @@
                   required
                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
                   :placeholder="t('events.create.placeholders.title')"
+                />
+              </div>
+              
+              <!-- Acronym -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <span class="flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/>
+                    </svg>
+                    {{ t('events.edit.fields.acronym') }}
+                  </span>
+                </label>
+                <input
+                  v-model="formData.acronym"
+                  type="text"
+                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
+                  :placeholder="t('events.edit.placeholders.acronym')"
                 />
               </div>
 
@@ -151,8 +170,8 @@
                 </select>
               </div>
 
-              <!-- Country (if in_person or hybrid) -->
-              <div v-if="formData.participation_mode === 'in_person' || formData.participation_mode === 'hybrid'">
+              <!-- Country -->
+              <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   <span class="flex items-center">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,11 +179,12 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                     </svg>
                     {{ t('events.create.fields.country') }}
+                    <span class="text-red-500">*</span>
                   </span>
                 </label>
                 <select
                   v-model="formData.country_id"
-                  :required="formData.participation_mode !== 'online'"
+                  required
                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
                 >
                   <option value="">{{ t('events.create.placeholders.selectCountry') }}</option>
@@ -174,40 +194,43 @@
                 </select>
               </div>
 
-              <!-- City (if in_person or hybrid) -->
-              <div v-if="formData.participation_mode === 'in_person' || formData.participation_mode === 'hybrid'">
+              <!-- City -->
+              <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   <span class="flex items-center">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                     </svg>
                     {{ t('events.create.fields.city') }}
+                    <span class="text-red-500">*</span>
                   </span>
                 </label>
                 <input
                   v-model="formData.city"
                   type="text"
-                  :required="formData.participation_mode !== 'online'"
+                  required
                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
-                  :placeholder="t('events.create.placeholders.city')"
+                  :placeholder="formData.participation_mode === 'online' ? t('events.edit.placeholders.cityOnline') : t('events.edit.placeholders.city')"
                 />
               </div>
 
-              <!-- Address (if in_person or hybrid) -->
-              <div v-if="formData.participation_mode === 'in_person' || formData.participation_mode === 'hybrid'" class="md:col-span-2">
+              <!-- Address -->
+              <div class="md:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   <span class="flex items-center">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                     </svg>
                     {{ t('events.create.fields.address') }}
+                    <span class="text-red-500">*</span>
                   </span>
                 </label>
                 <input
                   v-model="formData.address"
                   type="text"
+                  required
                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
-                  :placeholder="t('events.create.placeholders.address')"
+                  :placeholder="formData.participation_mode === 'online' ? t('events.edit.placeholders.addressOnline') : t('events.edit.placeholders.address')"
                 />
               </div>
 
@@ -232,7 +255,7 @@
             </div>
           </div>
 
-          <!-- Logo -->
+          <!-- Images et Logo -->
           <div class="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6">
             <div class="flex items-center mb-6">
               <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg mr-3">
@@ -241,18 +264,87 @@
                 </svg>
               </div>
               <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
-                {{ t('event.create.fields.logo') }}
+                {{ t('events.edit.sections.media') }}
               </h2>
             </div>
 
-            <!-- Logo -->
-            <div>
+            <!-- Bannière principale -->
+            <div class="mb-6">
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 <span class="flex items-center">
                   <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                   </svg>
-                  {{ t('event.create.fields.logo') }}
+                  {{ t('events.edit.fields.banner') }}
+                </span>
+              </label>
+              
+              <!-- Bannière preview -->
+              <div v-if="formData.banner_high_quality_32_9_url" class="flex items-center space-x-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg mb-3">
+                <img :src="formData.banner_high_quality_32_9_url" alt="Bannière" class="w-32 h-20 object-cover rounded-lg">
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Bannière actuelle</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ formData.banner_high_quality_32_9_url }}</p>
+                </div>
+                <button
+                  type="button"
+                  @click="formData.banner_high_quality_32_9_url = ''"
+                  class="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </button>
+              </div>
+              
+              <!-- Banner upload input -->
+              <div class="flex flex-col space-y-2">
+                <input
+                  ref="bannerFileInput"
+                  type="file"
+                  @change="handleBannerFileChange"
+                  accept="image/*"
+                  class="hidden"
+                />
+                <button
+                  type="button"
+                  @click="$refs.bannerFileInput.click()"
+                  :disabled="isUploading"
+                  class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 transition-colors"
+                >
+                  <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                  </svg>
+                  {{ isUploading ? 'Téléchargement...' : 'Télécharger une bannière (32:9)' }}
+                </button>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Format recommandé : 32:9 (ex: 1920x540px). PNG, JPG jusqu'à 10MB</p>
+              </div>
+              
+              <!-- URL input option -->
+              <div class="relative my-4">
+                <div class="absolute inset-0 flex items-center">
+                  <div class="w-full border-t border-gray-300 dark:border-gray-600" />
+                </div>
+                <div class="relative flex justify-center text-xs uppercase">
+                  <span class="bg-gray-50 dark:bg-gray-900/50 px-2 text-gray-500">ou</span>
+                </div>
+              </div>
+              <input
+                v-model="formData.banner_high_quality_32_9_url"
+                type="url"
+                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
+                :placeholder="t('events.edit.placeholders.bannerUrl')"
+              />
+            </div>
+            
+            <!-- Logo -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <span class="flex items-center">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                  {{ t('events.edit.fields.logo') }}
                 </span>
               </label>
               <!-- Logo upload/preview area -->
@@ -313,7 +405,7 @@
                   v-model="formData.logo_url"
                   type="url"
                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
-                  :placeholder="t('event.create.placeholders.logo')"
+                  :placeholder="t('events.edit.placeholders.logo')"
                 />
               </div>
             </div>
@@ -328,35 +420,77 @@
                 </svg>
               </div>
               <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
-                {{ t('event.edit.sections.schedule') }}
+                {{ t('events.edit.sections.schedule') }}
               </h2>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <!-- Start Date -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {{ t('events.create.fields.startDate') }}
-                </label>
-                <input
-                  v-model="formData.online_start_datetime"
-                  type="datetime-local"
-                  required
-                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
-                />
+            <div class="space-y-6">
+              <!-- Dates en ligne (si online ou hybrid) -->
+              <div v-if="formData.participation_mode === 'online' || formData.participation_mode === 'hybrid'" class="space-y-4">
+                <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+                  </svg>
+                  {{ t('events.edit.fields.onlineDates') }}
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      {{ t('events.create.fields.startDate') }}
+                    </label>
+                    <input
+                      v-model="formData.online_start_datetime"
+                      type="datetime-local"
+                      :required="formData.participation_mode === 'online' || formData.participation_mode === 'hybrid'"
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      {{ t('events.create.fields.endDate') }}
+                    </label>
+                    <input
+                      v-model="formData.online_end_datetime"
+                      type="datetime-local"
+                      :required="formData.participation_mode === 'online' || formData.participation_mode === 'hybrid'"
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
+                    />
+                  </div>
+                </div>
               </div>
-
-              <!-- End Date -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {{ t('events.create.fields.endDate') }}
-                </label>
-                <input
-                  v-model="formData.online_end_datetime"
-                  type="datetime-local"
-                  required
-                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
-                />
+              
+              <!-- Dates en présentiel (si in_person ou hybrid) -->
+              <div v-if="formData.participation_mode === 'in_person' || formData.participation_mode === 'hybrid'" class="space-y-4">
+                <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                  </svg>
+                  {{ t('events.edit.fields.inPersonDates') }}
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      {{ t('events.create.fields.startDate') }}
+                    </label>
+                    <input
+                      v-model="formData.in_person_start_date"
+                      type="date"
+                      :required="formData.participation_mode === 'in_person' || formData.participation_mode === 'hybrid'"
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      {{ t('events.create.fields.endDate') }}
+                    </label>
+                    <input
+                      v-model="formData.in_person_end_date"
+                      type="date"
+                      :required="formData.participation_mode === 'in_person' || formData.participation_mode === 'hybrid'"
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
+                    />
+                  </div>
+                </div>
               </div>
 
               <!-- Submission Deadline -->
@@ -477,6 +611,7 @@ const countries = ref([])
 // Form data
 const formData = ref({
   title: '',
+  acronym: '',
   description: '',
   year: new Date().getFullYear(),
   participation_mode: '',
@@ -484,8 +619,20 @@ const formData = ref({
   city: '',
   address: '',
   logo_url: '',
+  // Bannières
+  banner_high_quality_32_9_url: '',
+  banner_high_quality_16_9_url: '',
+  banner_high_quality_1_1_url: '',
+  banner_low_quality_32_9_url: '',
+  banner_low_quality_16_9_url: '',
+  banner_low_quality_1_1_url: '',
+  // Dates en ligne
   online_start_datetime: '',
   online_end_datetime: '',
+  // Dates en présentiel
+  in_person_start_date: '',
+  in_person_end_date: '',
+  // Statuts et deadline
   submission_deadline: '',
   event_status: 'upcoming',
   submission_status: 'open'
@@ -526,6 +673,7 @@ const loadEvent = async () => {
     // Populate form data
     formData.value = {
       title: eventData.title || '',
+      acronym: eventData.acronym || '',
       description: eventData.description || '',
       year: eventData.year || new Date().getFullYear(),
       participation_mode: eventData.participation_mode || '',
@@ -533,10 +681,24 @@ const loadEvent = async () => {
       city: eventData.city || '',
       address: eventData.address || '',
       logo_url: eventData.logo_url || '',
+      // Bannières
+      banner_high_quality_32_9_url: eventData.banner_high_quality_32_9_url || '',
+      banner_high_quality_16_9_url: eventData.banner_high_quality_16_9_url || '',
+      banner_high_quality_1_1_url: eventData.banner_high_quality_1_1_url || '',
+      banner_low_quality_32_9_url: eventData.banner_low_quality_32_9_url || '',
+      banner_low_quality_16_9_url: eventData.banner_low_quality_16_9_url || '',
+      banner_low_quality_1_1_url: eventData.banner_low_quality_1_1_url || '',
+      // Dates en ligne
       online_start_datetime: eventData.online_start_datetime ? 
         new Date(eventData.online_start_datetime).toISOString().slice(0, 16) : '',
       online_end_datetime: eventData.online_end_datetime ? 
         new Date(eventData.online_end_datetime).toISOString().slice(0, 16) : '',
+      // Dates en présentiel
+      in_person_start_date: eventData.in_person_start_date ? 
+        new Date(eventData.in_person_start_date).toISOString().slice(0, 10) : '',
+      in_person_end_date: eventData.in_person_end_date ? 
+        new Date(eventData.in_person_end_date).toISOString().slice(0, 10) : '',
+      // Statuts et deadline
       submission_deadline: eventData.submission_deadline ? 
         new Date(eventData.submission_deadline).toISOString().slice(0, 16) : '',
       event_status: eventData.event_status || 'upcoming',
@@ -572,29 +734,55 @@ const handleSubmit = async () => {
     isSubmitting.value = true
     error.value = null
 
-    // Ensure datetime values are properly formatted
-    const startDate = formData.value.online_start_datetime ? 
-      new Date(formData.value.online_start_datetime).toISOString() : null
-    const endDate = formData.value.online_end_datetime ? 
-      new Date(formData.value.online_end_datetime).toISOString() : null
-    const submissionDeadline = formData.value.submission_deadline ? 
-      new Date(formData.value.submission_deadline).toISOString() : null
-
+    // Préparer les données selon le mode de participation
     const updateData = {
       title: formData.value.title,
+      acronym: formData.value.acronym || null,
       description: formData.value.description,
       year: formData.value.year,
       participation_mode: formData.value.participation_mode,
-      country_id: formData.value.country_id || null,
-      city: formData.value.city || null,
-      address: formData.value.address || null,
       logo_url: formData.value.logo_url || null,
-      online_start_datetime: startDate,
-      online_end_datetime: endDate,
-      submission_deadline: submissionDeadline,
+      // Bannières
+      banner_high_quality_32_9_url: formData.value.banner_high_quality_32_9_url || null,
+      banner_high_quality_16_9_url: formData.value.banner_high_quality_16_9_url || null,
+      banner_high_quality_1_1_url: formData.value.banner_high_quality_1_1_url || null,
+      banner_low_quality_32_9_url: formData.value.banner_low_quality_32_9_url || null,
+      banner_low_quality_16_9_url: formData.value.banner_low_quality_16_9_url || null,
+      banner_low_quality_1_1_url: formData.value.banner_low_quality_1_1_url || null,
+      // Statuts
       event_status: formData.value.event_status,
       submission_status: formData.value.submission_status,
+      submission_deadline: formData.value.submission_deadline ? 
+        new Date(formData.value.submission_deadline).toISOString() : null,
       updated_at: new Date().toISOString()
+    }
+    
+    // Gérer les données de localisation
+    // Tous les champs de localisation sont requis selon le schéma de la BD
+    updateData.country_id = formData.value.country_id // Obligatoire
+    updateData.city = formData.value.city // Obligatoire
+    updateData.address = formData.value.address // Obligatoire
+    
+    // Gérer les dates en présentiel selon le mode de participation
+    if (formData.value.participation_mode === 'in_person' || formData.value.participation_mode === 'hybrid') {
+      updateData.in_person_start_date = formData.value.in_person_start_date || null
+      updateData.in_person_end_date = formData.value.in_person_end_date || null
+    } else {
+      // Pour les événements en ligne uniquement, pas de dates physiques
+      updateData.in_person_start_date = null
+      updateData.in_person_end_date = null
+    }
+    
+    // Gérer les dates en ligne
+    if (formData.value.participation_mode === 'online' || formData.value.participation_mode === 'hybrid') {
+      updateData.online_start_datetime = formData.value.online_start_datetime ? 
+        new Date(formData.value.online_start_datetime).toISOString() : null
+      updateData.online_end_datetime = formData.value.online_end_datetime ? 
+        new Date(formData.value.online_end_datetime).toISOString() : null
+    } else {
+      // Pour les événements en présentiel uniquement, mettre à null les dates en ligne
+      updateData.online_start_datetime = null
+      updateData.online_end_datetime = null
     }
 
     const { data: updateResult, error: updateError } = await supabase
@@ -618,6 +806,72 @@ const handleSubmit = async () => {
     error.value = t('events.edit.error.updateFailed') + ': ' + err.message
   } finally {
     isSubmitting.value = false
+  }
+}
+
+const handleBannerFileChange = async (fileEvent) => {
+  const file = fileEvent.target.files[0]
+  if (!file) return
+
+  // Check authentication
+  if (!authStore.isAuthenticated) {
+    error.value = 'Vous devez être connecté pour télécharger une bannière'
+    return
+  }
+
+  // Validation du fichier
+  const maxSize = 10 * 1024 * 1024 // 10MB
+  if (file.size > maxSize) {
+    error.value = 'Le fichier est trop volumineux. Taille maximum : 10MB'
+    return
+  }
+
+  const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp']
+  if (!allowedTypes.includes(file.type)) {
+    error.value = 'Type de fichier non supporté. Utilisez PNG, JPG ou WebP'
+    return
+  }
+
+  try {
+    isUploading.value = true
+    error.value = null
+
+    const eventId = route.params.id || event.value?.id || 'temp'
+    // Generate unique filename for banner
+    const fileExtension = file.name.split('.').pop().toLowerCase()
+    const fileName = `banner/event-${eventId}-${Date.now()}.${fileExtension}`
+    
+    // Upload to Supabase storage
+    const { error: uploadError } = await supabase.storage
+      .from('epavillonp')
+      .upload(fileName, file, {
+        cacheControl: '3600',
+        upsert: true,
+        contentType: file.type
+      })
+
+    if (uploadError) {
+      throw new Error(`Upload failed: ${uploadError.message}`)
+    }
+
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('epavillonp')
+      .getPublicUrl(fileName)
+
+    if (!publicUrl) {
+      throw new Error('Failed to get public URL')
+    }
+
+    // Update form data with main banner
+    formData.value.banner_high_quality_32_9_url = publicUrl
+
+  } catch (err) {
+    console.error('Error uploading banner:', err)
+    error.value = 'Erreur lors du téléchargement de la bannière : ' + err.message
+  } finally {
+    isUploading.value = false
+    fileEvent.target.value = ''
   }
 }
 
@@ -659,7 +913,7 @@ const handleLogoFileChange = async (fileEvent) => {
     console.log('Uploading file:', fileName, 'User:', userId)
     
     // Upload to Supabase storage with explicit options
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from('epavillonp')
       .upload(fileName, file, {
         cacheControl: '3600',
@@ -672,7 +926,7 @@ const handleLogoFileChange = async (fileEvent) => {
       throw new Error(`Upload failed: ${uploadError.message || uploadError.error || 'Unknown error'}`)
     }
 
-    console.log('Upload successful:', uploadData)
+    console.log('Upload successful')
 
     // Get public URL
     const { data: { publicUrl } } = supabase.storage
