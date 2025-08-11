@@ -3,9 +3,10 @@
     <!-- Section 1: Bannière de l'événement -->
     <div class="relative h-64 md:h-80 lg:h-96 overflow-hidden">
       <img 
-        :src="event.banner || '/images/example/event_banniere_par_defaut_32_9.jpg'" 
+        :src="getBannerUrl()" 
         :alt="event.title"
         class="w-full h-full object-cover"
+        loading="lazy"
       >
       <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
       
@@ -17,12 +18,28 @@
           </h1>
           
           <!-- Badge de statut -->
-          <span :class="statusClasses" class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium">
-            <svg class="w-2 h-2 mr-2" fill="currentColor" viewBox="0 0 8 8">
-              <circle cx="4" cy="4" r="3" />
-            </svg>
-            {{ t(`event.status.${event.status}`) }}
-          </span>
+          <div class="flex flex-wrap gap-3">
+            <!-- Badge de statut de l'événement -->
+            <span :class="statusClasses" class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium">
+              <svg class="w-2 h-2 mr-2" fill="currentColor" viewBox="0 0 8 8">
+                <circle cx="4" cy="4" r="3" />
+              </svg>
+              {{ t(`event.status.${event.event_status || event.status}`) }}
+            </span>
+            
+            <!-- Badge de statut de soumission -->
+            <span v-if="event.submission_status" :class="submissionStatusClasses" class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium">
+              <svg class="w-2 h-2 mr-2" fill="currentColor" viewBox="0 0 8 8">
+                <circle cx="4" cy="4" r="3" />
+              </svg>
+              {{ t(`event.submissionStatus.${event.submission_status}`) }}
+            </span>
+            
+            <!-- Badge de l'année -->
+            <span v-if="event.year" class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+              {{ event.year }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -78,16 +95,43 @@
                 </svg>
                 {{ t('event.dateTime') }}
               </div>
-              <p class="text-gray-900 dark:text-white font-medium">
-                {{ formatDate(event.start_date) }}
-              </p>
-              <p class="text-gray-700 dark:text-gray-300">
-                {{ formatTime(event.start_date) }} - {{ formatTime(event.end_date) }}
-              </p>
+              
+              <!-- Dates en ligne -->
+              <div v-if="event.participation_mode === 'online' || event.participation_mode === 'hybrid'">
+                <p v-if="event.online_start_datetime" class="text-gray-900 dark:text-white font-medium">
+                  <span class="text-sm text-gray-500 dark:text-gray-400">{{ t('event.online') }}:</span><br>
+                  {{ formatDate(event.online_start_datetime) }}
+                </p>
+                <p v-if="event.online_start_datetime" class="text-gray-700 dark:text-gray-300">
+                  {{ formatTime(event.online_start_datetime) }} - {{ formatTime(event.online_end_datetime) }}
+                </p>
+              </div>
+              
+              <!-- Dates en présentiel -->
+              <div v-if="event.participation_mode === 'in_person' || event.participation_mode === 'hybrid'" 
+                   :class="{ 'mt-3 pt-3 border-t border-gray-200 dark:border-gray-700': event.participation_mode === 'hybrid' }">
+                <p v-if="event.in_person_start_date" class="text-gray-900 dark:text-white font-medium">
+                  <span class="text-sm text-gray-500 dark:text-gray-400">{{ t('event.inPerson') }}:</span><br>
+                  {{ formatDate(event.in_person_start_date) }}
+                  <span v-if="event.in_person_end_date && event.in_person_start_date !== event.in_person_end_date">
+                    - {{ formatDate(event.in_person_end_date) }}
+                  </span>
+                </p>
+              </div>
+              
+              <!-- Fallback pour anciennes propriétés -->
+              <div v-if="!event.online_start_datetime && !event.in_person_start_date && event.start_date">
+                <p class="text-gray-900 dark:text-white font-medium">
+                  {{ formatDate(event.start_date) }}
+                </p>
+                <p class="text-gray-700 dark:text-gray-300">
+                  {{ formatTime(event.start_date) }} - {{ formatTime(event.end_date) }}
+                </p>
+              </div>
             </div>
 
             <!-- Lieu -->
-            <div>
+            <div v-if="event.participation_mode !== 'online'">
               <div class="flex items-center text-gray-500 dark:text-gray-400 mb-2">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -95,21 +139,28 @@
                 </svg>
                 {{ t('event.location') }}
               </div>
-              <p class="text-gray-900 dark:text-white font-medium">
+              <p v-if="event.city" class="text-gray-900 dark:text-white font-medium">
+                {{ event.city }}<span v-if="country">, {{ country.name }}</span>
+              </p>
+              <p v-if="event.address" class="text-gray-700 dark:text-gray-300 text-sm mt-1">
+                {{ event.address }}
+              </p>
+              <!-- Fallback pour ancienne propriété location -->
+              <p v-else-if="event.location" class="text-gray-900 dark:text-white font-medium">
                 {{ event.location }}
               </p>
             </div>
 
-            <!-- Format -->
+            <!-- Mode de participation -->
             <div>
               <div class="flex items-center text-gray-500 dark:text-gray-400 mb-2">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                {{ t('event.format') }}
+                {{ t('event.participationMode') }}
               </div>
               <p class="text-gray-900 dark:text-white font-medium">
-                {{ t(`event.formats.${event.format}`) }}
+                {{ t(`event.participationModes.${event.participation_mode || event.format}`) }}
               </p>
             </div>
 
@@ -127,6 +178,15 @@
               <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
                 {{ remainingDays }} {{ t('event.daysRemaining') }}
               </p>
+            </div>
+            
+            <!-- Logo de l'événement -->
+            <div v-if="event.logo_url" class="pt-6 border-t border-gray-200 dark:border-gray-700">
+              <img 
+                :src="event.logo_url" 
+                :alt="`${event.title} logo`"
+                class="max-h-24 w-auto mx-auto"
+              >
             </div>
           </div>
         </div>
@@ -250,18 +310,46 @@ const supabase = useSupabase()
 // État
 const event = ref({
   id: '',
+  year: new Date().getFullYear(),
   title: '',
   description: '',
+  // Anciennes propriétés pour compatibilité
   banner: '',
   status: 'upcoming',
   start_date: '',
   end_date: '',
   location: '',
   format: 'hybrid',
-  submission_deadline: ''
+  // Nouvelles propriétés de la base de données
+  event_status: 'upcoming',
+  submission_status: 'open',
+  submission_deadline: '',
+  // Bannières multi-formats
+  banner_high_quality_32_9_url: '',
+  banner_high_quality_16_9_url: '',
+  banner_high_quality_1_1_url: '',
+  banner_low_quality_32_9_url: '',
+  banner_low_quality_16_9_url: '',
+  banner_low_quality_1_1_url: '',
+  // Mode de participation et dates
+  participation_mode: 'hybrid',
+  online_start_datetime: '',
+  online_end_datetime: '',
+  in_person_start_date: '',
+  in_person_end_date: '',
+  // Localisation
+  country_id: '',
+  city: '',
+  address: '',
+  logo_url: '',
+  // Métadonnées
+  created_by: '',
+  created_at: '',
+  updated_at: ''
 })
 
 const activities = ref([])
+const country = ref(null)
 
 // Computed
 const statusClasses = computed(() => {
@@ -269,12 +357,27 @@ const statusClasses = computed(() => {
   const statusColors = {
     upcoming: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
     ongoing: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-    completed: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+    completed: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
+    cancelled: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
   }
-  return `${baseClasses} ${statusColors[event.value.status] || statusColors.upcoming}`
+  const status = event.value.event_status || event.value.status || 'upcoming'
+  return `${baseClasses} ${statusColors[status] || statusColors.upcoming}`
+})
+
+const submissionStatusClasses = computed(() => {
+  const baseClasses = 'inline-flex items-center px-4 py-2 rounded-full text-sm font-medium'
+  const statusColors = {
+    open: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+    closed: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+  }
+  return `${baseClasses} ${statusColors[event.value.submission_status] || statusColors.open}`
 })
 
 const canSubmitActivity = computed(() => {
+  // Vérifier le statut de soumission
+  if (event.value.submission_status === 'closed') return false
+  
+  // Vérifier la date limite de soumission
   if (!event.value.submission_deadline) return false
   return new Date(event.value.submission_deadline) > new Date()
 })
@@ -287,6 +390,7 @@ const remainingDays = computed(() => {
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
   return diffDays > 0 ? diffDays : 0
 })
+
 
 // Méthodes
 const formatDate = (dateString) => {
@@ -321,22 +425,37 @@ const goToActivityDetail = (activityId) => {
   router.push(`/activities/${activityId}`)
 }
 
+// Méthode pour obtenir l'URL de la bannière
+const getBannerUrl = () => {
+  // Priorité : banner_high_quality_32_9_url > ancienne propriété banner > image par défaut
+  return event.value.banner_high_quality_32_9_url || 
+         event.value.banner || 
+         '/images/example/event_banniere_par_defaut_32_9.jpg'
+}
+
 const loadEvent = async () => {
   try {
     const { data, error } = await supabase
       .from('events')
-      .select('*')
+      .select('*, countries(id, name, flag_emoji)')
       .eq('id', route.params.id)
       .single()
 
     if (error) throw error
     
+    // Extraire les informations du pays si disponible
+    if (data.countries) {
+      country.value = data.countries
+      delete data.countries
+    }
+    
     // Merge avec les valeurs par défaut pour éviter les undefined
     event.value = {
       ...event.value,
       ...data,
-      status: data.status || 'upcoming',
-      format: data.format || 'hybrid'
+      // Assurer la compatibilité avec les anciennes propriétés
+      status: data.event_status || data.status || 'upcoming',
+      format: data.participation_mode || data.format || 'hybrid'
     }
   } catch (error) {
     console.error('Error loading event:', error)
