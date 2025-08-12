@@ -87,6 +87,12 @@
     "dateTBA": "À déterminer",
     "fullDetails": "Détails complets",
     "allProgrammings": "Toutes les programmations",
+    "activities": "Activités de l'événement",
+    "noActivities": "Aucune activité",
+    "noActivitiesDescription": "Aucune activité n'est encore programmée pour cet événement",
+    "viewGrid": "Grille",
+    "viewList": "Liste",
+    "viewCalendar": "Calendrier",
     "error": {
       "title": "Erreur",
       "notFound": "L'événement demandé n'a pas été trouvé."

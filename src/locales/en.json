@@ -74,6 +74,12 @@
     "dateTBA": "To be determined",
     "fullDetails": "Full details",
     "allProgrammings": "All programmings",
+    "activities": "Event activities",
+    "noActivities": "No activities",
+    "noActivitiesDescription": "No activities are scheduled yet for this event",
+    "viewGrid": "Grid",
+    "viewList": "List",
+    "viewCalendar": "Calendar",
     "error": {
       "title": "Error",
       "notFound": "The requested event was not found."
