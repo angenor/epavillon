@@ -90,12 +90,12 @@ const router = createRouter({
     {
       path: '/programmations',
       name: 'programmations',
-      component: () => import('../views/Programmations.vue'),
+      component: () => import('../views/programmations/Programmations.vue'),
     },
     {
       path: '/programmations/:year/:eventId',
       name: 'programmation-detail',
-      component: () => import('../views/ProgrammationDetail.vue'),
+      component: () => import('../views/programmations/ProgrammationDetail.vue'),
     },
   ],
 })
