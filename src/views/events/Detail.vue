@@ -91,7 +91,7 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
-                {{ t('event.viewActivities') }}
+                {{ t('event.viewProgramming') }}
               </span>
               <div class="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
@@ -141,68 +141,6 @@
               class="prose prose-lg prose-gray dark:prose-invert max-w-none text-gray-700 dark:text-gray-300"
             />
           </div>
-
-          <!-- Informations détaillées en grille -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Dates -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-shadow">
-              <div class="flex items-center gap-3 mb-4">
-                <div class="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-xl">
-                  <svg class="w-6 h-6 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <h3 class="font-semibold text-gray-900 dark:text-white">{{ t('event.dateTime') }}</h3>
-              </div>
-              
-              <div class="space-y-3">
-                <!-- Dates en ligne -->
-                <div v-if="event.participation_mode === 'online' || event.participation_mode === 'hybrid'">
-                  <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">{{ t('event.online') }}</p>
-                  <p v-if="event.online_start_datetime" class="font-medium text-gray-900 dark:text-white">
-                    {{ formatDate(event.online_start_datetime) }}
-                  </p>
-                  <p v-if="event.online_start_datetime" class="text-sm text-gray-600 dark:text-gray-400">
-                    {{ formatTime(event.online_start_datetime) }} - {{ formatTime(event.online_end_datetime) }}
-                  </p>
-                </div>
-                
-                <!-- Dates en présentiel -->
-                <div v-if="event.participation_mode === 'in_person' || event.participation_mode === 'hybrid'" 
-                     :class="{ 'pt-3 border-t border-gray-200 dark:border-gray-700': event.participation_mode === 'hybrid' }">
-                  <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">{{ t('event.inPerson') }}</p>
-                  <p v-if="event.in_person_start_date" class="font-medium text-gray-900 dark:text-white">
-                    {{ formatDate(event.in_person_start_date) }}
-                    <span v-if="event.in_person_end_date && event.in_person_start_date !== event.in_person_end_date">
-                      - {{ formatDate(event.in_person_end_date) }}
-                    </span>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Lieu -->
-            <div v-if="event.participation_mode !== 'online'" class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-shadow">
-              <div class="flex items-center gap-3 mb-4">
-                <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
-                  <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </div>
-                <h3 class="font-semibold text-gray-900 dark:text-white">{{ t('event.location') }}</h3>
-              </div>
-              
-              <div class="space-y-2">
-                <p v-if="event.city" class="font-medium text-gray-900 dark:text-white">
-                  {{ event.city }}<span v-if="country">, {{ country.name_fr }}</span>
-                </p>
-                <p v-if="event.address" class="text-sm text-gray-600 dark:text-gray-400">
-                  {{ event.address }}
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- Sidebar avec informations complémentaires -->
@@ -243,10 +181,10 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            {{ t('event.upcomingActivities') }}
+            {{ t('event.upcomingProgramming') }}
           </h2>
           <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            {{ t('event.activitiesDescription') }}
+            {{ t('event.programmingDescription') }}
           </p>
         </div>
 
@@ -326,7 +264,7 @@
             @click="goToActivities"
             class="group inline-flex items-center gap-3 px-8 py-4 bg-white dark:bg-gray-800 text-orange-600 dark:text-orange-400 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-200 dark:border-gray-700"
           >
-            {{ t('event.viewAllActivities') }}
+            {{ t('event.viewAllProgramming') }}
             <svg class="w-5 h-5 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
@@ -442,7 +380,7 @@ const getEventDate = () => {
 }
 
 const goToActivities = () => {
-  router.push({ name: 'event-activities', params: { id: event.value.id } })
+  router.push(`/programmations/${event.value.year}/${event.value.id}`)
 }
 
 const goToSubmission = () => {

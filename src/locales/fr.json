@@ -109,7 +109,9 @@
     "submissionDeadline": "Date limite de soumission",
     "daysRemaining": "jours restants",
     "viewActivities": "Voir les activités",
+    "viewProgramming": "Voir programmation",
     "viewAllActivities": "Voir toutes les activités",
+    "viewAllProgramming": "Voir toute la programmation",
     "upcomingActivities": "Activités à venir",
     "modes": {
       "online": "En ligne",
@@ -484,140 +486,6 @@
         "description": "Vous n'avez pas l'autorisation de modifier cette activité."
       },
       "draftSaved": "Brouillon sauvegardé avec succès"
-    }
-  },
-  "event": {
-    "description": "Description",
-    "dateTime": "Date et heure",
-    "location": "Lieu",
-    "format": "Format",
-    "online": "En ligne",
-    "inPerson": "En présentiel",
-    "participationMode": "Mode de participation",
-    "participationModes": {
-      "online": "En ligne",
-      "in_person": "En présentiel",
-      "hybrid": "Hybride"
-    },
-    "formats": {
-      "online": "En ligne",
-      "in_person": "En présentiel",
-      "hybrid": "Hybride"
-    },
-    "submissionDeadline": "Date limite de soumission",
-    "daysRemaining": "jours restants",
-    "viewActivities": "Voir les activités",
-    "submitActivity": "Soumettre une activité",
-    "upcomingActivities": "Activités à venir",
-    "organizedBy": "Organisé par",
-    "viewAllActivities": "Voir toutes les activités",
-    "quickStats": "Statistiques rapides",
-    "totalActivities": "Activités totales",
-    "submissions": "Soumissions",
-    "activitiesDescription": "Découvrez les activités planifiées pour cet événement",
-    "status": {
-      "upcoming": "À venir",
-      "ongoing": "En cours",
-      "completed": "Terminé",
-      "suspended": "Suspendu"
-    },
-    "submissionStatus": {
-      "open": "Ouvertes",
-      "closed": "Fermées"
-    },
-    "submission": {
-      "open": "Ouvertes",
-      "closed": "Fermées"
-    },
-    "edit": {
-      "title": "Modifier l'événement",
-      "subtitle": "Modifiez les informations de l'événement",
-      "update": "Mettre à jour",
-      "updating": "Mise à jour...",
-      "sections": {
-        "basicInfo": "Informations générales",
-        "schedule": "Planification",
-        "status": "Statut"
-      },
-      "fields": {
-        "eventStatus": "Statut de l'événement",
-        "submissionStatus": "Statut des soumissions"
-      },
-      "error": {
-        "title": "Erreur de modification",
-        "loadFailed": "Impossible de charger l'événement",
-        "updateFailed": "Erreur lors de la mise à jour"
-      },
-      "noPermission": {
-        "title": "Permission insuffisante",
-        "description": "Vous n'avez pas l'autorisation de modifier cet événement."
-      }
-    },
-    "status": {
-      "upcoming": "À venir",
-      "ongoing": "En cours",
-      "completed": "Terminé",
-      "suspended": "Suspendu"
-    },
-    "submission": {
-      "open": "Ouvertes",
-      "closed": "Fermées"
-    },
-    "create": {
-      "title": "Créer un nouvel événement",
-      "subtitle": "Remplissez les informations ci-dessous pour créer un nouvel événement",
-      "sections": {
-        "basicInfo": "Informations générales",
-        "format": "Format de l'événement",
-        "media": "Médias et bannières"
-      },
-      "fields": {
-        "year": "Année",
-        "title": "Titre de l'événement",
-        "description": "Description",
-        "submissionDeadline": "Date limite de soumission",
-        "participationMode": "Mode de participation",
-        "onlineDetails": "Détails de l'événement en ligne",
-        "onlineStartDate": "Date et heure de début",
-        "onlineEndDate": "Date et heure de fin",
-        "startDate": "Date de début",
-        "endDate": "Date de fin",
-        "inPersonDetails": "Détails de l'événement en présentiel",
-        "location": "Lieu",
-        "country": "Pays",
-        "city": "Ville",
-        "address": "Adresse",
-        "logo": "Logo",
-        "inPersonStartDate": "Date de début",
-        "inPersonEndDate": "Date de fin",
-        "banner32_9": "Bannière 32:9",
-        "banner16_9": "Bannière 16:9",
-        "banner1_1": "Bannière 1:1"
-      },
-      "placeholders": {
-        "title": "Ex: COP29 - Conférence des Parties",
-        "description": "Décrivez l'événement, ses objectifs et son importance...",
-        "location": "Ex: Paris, France",
-        "selectMode": "Sélectionnez le mode de participation",
-        "selectCountry": "Sélectionnez un pays",
-        "selectCountry": "Sélectionnez un pays",
-        "city": "Ex: Paris",
-        "address": "Adresse complète du lieu",
-        "logo": "https://exemple.com/logo.png"
-      },
-      "modes": {
-        "online": "En ligne",
-        "in_person": "En présentiel",
-        "hybrid": "Hybride"
-      },
-      "fields": {
-        "startDate": "Date de début",
-        "endDate": "Date de fin"
-      },
-      "mediaDescription": "Téléchargez des bannières dans différents formats pour optimiser l'affichage sur tous les appareils",
-      "uploaded": "Téléchargé",
-      "submit": "Créer l'événement",
-      "submitting": "Création en cours..."
     }
   },
   "auth": {
@@ -1119,6 +987,10 @@
     "upcomingActivities": "Activités à venir",
     "organizedBy": "Organisé par",
     "viewAllActivities": "Voir toutes les activités",
+    "viewProgramming": "Voir la programmation",
+    "viewAllProgramming": "Voir toute la programmation",
+    "upcomingProgramming": "Programmation à venir",
+    "programmingDescription": "Découvrez la programmation complète pour cet événement",
     "quickStats": "Statistiques rapides",
     "totalActivities": "Activités totales",
     "submissions": "Soumissions",
