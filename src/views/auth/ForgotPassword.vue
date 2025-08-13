@@ -1,6 +1,19 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center px-4 py-12">
-    <div class="w-full max-w-md space-y-8">
+  <div class="min-h-screen relative flex items-center justify-center px-4 py-12">
+    <!-- Image de fond avec repeat -->
+    <div 
+      class="absolute inset-0 z-0 dark:opacity-20"
+      :style="{
+        backgroundImage: 'url(/images/people-bg/people-bg-1.jpg)',
+        backgroundSize: 'auto',
+        backgroundRepeat: 'repeat',
+        backgroundPosition: 'top left'
+      }"
+    >
+    </div>
+    
+    <!-- Contenu principal avec z-index élevé -->
+    <div class="relative z-10 w-full max-w-md space-y-8">
       <!-- Logo -->
       <div class="text-center">
         <img class="mx-auto h-24 w-auto" src="/logo-ifdd.png" :alt="t('common.logoAlt')">

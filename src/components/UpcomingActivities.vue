@@ -61,13 +61,13 @@
       </div>
 
       <!-- Voir toutes les activités -->
-      <div class="px-3 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 py-5">
+      <!-- <div class="px-3 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 py-5">
         <RouterLink to="/events" class="block w-full">
           <button class="w-full py-2 px-4 bg-ifdd-bleu hover:bg-ifdd-bleu/90 text-white font-medium rounded-lg transition-colors duration-200 shadow-md">
             {{ t('activities.viewAll') || 'Voir toutes les activités' }}
           </button>
         </RouterLink>
-      </div>
+      </div> -->
 
     </div>
   </div>

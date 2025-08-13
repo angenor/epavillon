@@ -142,7 +142,7 @@
           </div>
         </div>
       </div>
-      <div class="w-full lg:w-96 h-min bg-white/0 dark:bg-gray-800/10 backdrop-blur-xl shadow-xl rounded-xl overflow-hidden">
+      <div class="w-full lg:w-96 h-min bg-white/0 dark:bg-gray-800/10 backdrop-blur-xl shadow-xl rounded-b-xl overflow-hidden">
         <div class="w-full h-2 bg-gradient-to-r from-blue-700 to-blue-800"></div>
           <div class="p-4 sm:p-6">
             <!-- Thèmes -->

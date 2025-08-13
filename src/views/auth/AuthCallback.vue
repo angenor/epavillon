@@ -1,6 +1,19 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center px-4 py-12">
-    <div class="text-center">
+  <div class="min-h-screen relative flex items-center justify-center px-4 py-12">
+    <!-- Image de fond avec repeat -->
+    <div 
+      class="absolute inset-0 z-0 dark:opacity-20"
+      :style="{
+        backgroundImage: 'url(/images/people-bg/people-bg-1.jpg)',
+        backgroundSize: 'auto',
+        backgroundRepeat: 'repeat',
+        backgroundPosition: 'top left'
+      }"
+    >
+    </div>
+    
+    <!-- Contenu principal avec z-index élevé -->
+    <div class="relative z-10 text-center">
       <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 dark:bg-green-900 animate-pulse">
         <font-awesome-icon icon="spinner" class="h-8 w-8 text-green-600 dark:text-green-400 animate-spin" />
       </div>
