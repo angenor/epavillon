@@ -2,6 +2,7 @@
   <div class="h-full max-h-full w-80 bg-black/30 backdrop-blur-md shadow-2xl flex flex-col pt-16">
     <!-- Header -->
     <div class="px-6 py-3 border-b border-gray-200 dark:border-gray-700">
+      
       <h2 class="text-xl font-bold text-white font-maverick">
         {{ "Cop 29" }}
       </h2>

@@ -116,6 +116,102 @@
       <!-- Divider -->
       <div class="border-l border-gray-300 dark:border-gray-600 mx-1"></div>
 
+      <!-- Text Colors -->
+      <div class="flex gap-1">
+        <!-- Noir -->
+        <button
+          @click="editor.chain().focus().setColor('#000000').run()"
+          :class="{ 'is-active': editor.isActive('textStyle', { color: '#000000' }) }"
+          class="color-button"
+          type="button"
+          title="Noir"
+        >
+          <div class="w-4 h-4 rounded-full bg-black"></div>
+        </button>
+
+        <!-- Vert IFDD -->
+        <button
+          @click="editor.chain().focus().setColor('#85c441').run()"
+          :class="{ 'is-active': editor.isActive('textStyle', { color: '#85c441' }) }"
+          class="color-button"
+          type="button"
+          title="Vert IFDD"
+        >
+          <div class="w-4 h-4 rounded-full bg-ifdd-vert"></div>
+        </button>
+
+        <!-- Bleu IFDD -->
+        <button
+          @click="editor.chain().focus().setColor('#00aeef').run()"
+          :class="{ 'is-active': editor.isActive('textStyle', { color: '#00aeef' }) }"
+          class="color-button"
+          type="button"
+          title="Bleu IFDD"
+        >
+          <div class="w-4 h-4 rounded-full bg-ifdd-bleu"></div>
+        </button>
+
+        <!-- Rouge IFDD -->
+        <button
+          @click="editor.chain().focus().setColor('#ee3433').run()"
+          :class="{ 'is-active': editor.isActive('textStyle', { color: '#ee3433' }) }"
+          class="color-button"
+          type="button"
+          title="Rouge IFDD"
+        >
+          <div class="w-4 h-4 rounded-full bg-ifdd-rouge"></div>
+        </button>
+
+        <!-- Violet IFDD -->
+        <button
+          @click="editor.chain().focus().setColor('#906cad').run()"
+          :class="{ 'is-active': editor.isActive('textStyle', { color: '#906cad' }) }"
+          class="color-button"
+          type="button"
+          title="Violet IFDD"
+        >
+          <div class="w-4 h-4 rounded-full bg-ifdd-violet"></div>
+        </button>
+
+        <!-- Jaune IFDD -->
+        <button
+          @click="editor.chain().focus().setColor('#ffd400').run()"
+          :class="{ 'is-active': editor.isActive('textStyle', { color: '#ffd400' }) }"
+          class="color-button"
+          type="button"
+          title="Jaune IFDD"
+        >
+          <div class="w-4 h-4 rounded-full bg-ifdd-jaune"></div>
+        </button>
+
+        <!-- Gris IFDD -->
+        <button
+          @click="editor.chain().focus().setColor('#4e4c4d').run()"
+          :class="{ 'is-active': editor.isActive('textStyle', { color: '#4e4c4d' }) }"
+          class="color-button"
+          type="button"
+          title="Gris IFDD"
+        >
+          <div class="w-4 h-4 rounded-full bg-ifdd-gris"></div>
+        </button>
+
+        <!-- Reset Color -->
+        <button
+          @click="editor.chain().focus().unsetColor().run()"
+          class="color-button"
+          type="button"
+          title="Couleur par défaut"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM7 21h16a2 2 0 002-2v-4a2 2 0 00-2-2h-4l-6 6z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Divider -->
+      <div class="border-l border-gray-300 dark:border-gray-600 mx-1"></div>
+
       <!-- Add/Edit Link -->
       <button
         @click="openLinkDialog"
@@ -258,6 +354,8 @@ import TextAlign from '@tiptap/extension-text-align'
 import Link from '@tiptap/extension-link'
 import Highlight from '@tiptap/extension-highlight'
 import CharacterCount from '@tiptap/extension-character-count'
+import { TextStyle } from '@tiptap/extension-text-style'
+import { Color } from '@tiptap/extension-color'
 import { watch, computed, ref } from 'vue'
 
 const props = defineProps({
@@ -308,6 +406,10 @@ const editor = useEditor({
     }),
     CharacterCount.configure({
       limit: props.maxLength,
+    }),
+    TextStyle,
+    Color.configure({
+      types: ['textStyle'],
     }),
   ],
   editorProps: {
@@ -411,6 +513,37 @@ onBeforeUnmount(() => {
 .dark .toolbar-button.is-active {
   background-color: rgba(20, 83, 45, 0.3);
   color: #4ade80;
+  border-color: #15803d;
+}
+
+.color-button {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.color-button:hover {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.dark .color-button:hover {
+  background-color: #4b5563;
+  border-color: #4b5563;
+}
+
+.color-button.is-active {
+  background-color: #dcfce7;
+  border-color: #bbf7d0;
+  transform: scale(1.1);
+}
+
+.dark .color-button.is-active {
+  background-color: rgba(20, 83, 45, 0.3);
   border-color: #15803d;
 }
 
