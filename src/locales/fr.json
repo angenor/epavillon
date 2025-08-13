@@ -45,7 +45,8 @@
     "weeksAgo": "Il y a {{weeks}} semaines",
     "monthsAgo": "Il y a {{months}} mois",
     "hoursAgo": "Il y a {{hours}} heures",
-    "justNow": "À l'instant"
+    "justNow": "À l'instant",
+    "noData": "Aucune donnée"
   },
   "nav": {
     "programmings": "Programmations",
@@ -457,7 +458,10 @@
       "under_review": "En révision",
       "approved": "Approuvée",
       "rejected": "Rejetée",
-      "cancelled": "Annulée"
+      "cancelled": "Annulée",
+      "live": "En direct",
+      "completed": "Terminée",
+      "postponed": "Reportée"
     },
     "edit": {
       "title": "Modifier l'activité",
@@ -715,6 +719,49 @@
     }
   },
   "activity": {
+    "details": "Détails",
+    "themes": "Thèmes", 
+    "categories": "Catégories",
+    "speakers": "Intervenants",
+    "noSpeakers": "Aucun intervenant pour le moment",
+    "objectives": "Objectifs",
+    "presentation": "Présentation",
+    "documents": "Documents",
+    "register": "S'inscrire",
+    "askQuestion": "Poser une question",
+    "format": {
+      "online": "En ligne",
+      "in_person": "En présentiel", 
+      "hybrid": "Hybride"
+    },
+    "theme": {
+      "mitigation": "Atténuation",
+      "adaptation": "Adaptation",
+      "climate_resilience": "Résilience climatique",
+      "loss_and_damage": "Pertes et dommages",
+      "clean_tech_innovations": "Innovations technologiques propres",
+      "renewable_energy_land": "Énergies renouvelables terrestres",
+      "health_solidarity": "Santé et solidarité",
+      "industry_transition": "Transition industrielle",
+      "transport_urbanization": "Transport et urbanisation",
+      "nature_oceans": "Nature et océans",
+      "agriculture_food": "Agriculture et alimentation",
+      "sustainable_livestock": "Élevage durable",
+      "gender": "Genre",
+      "youth": "Jeunesse",
+      "technology": "Technologie",
+      "finance": "Finance",
+      "other": "Autre"
+    },
+    "category": {
+      "capacity_building": "Renforcement des capacités",
+      "results_sharing": "Partage de résultats",
+      "technological_innovation": "Innovation technologique",
+      "field_project": "Projet de terrain",
+      "best_practices": "Bonnes pratiques",
+      "awareness": "Sensibilisation",
+      "consultation": "Consultation"
+    },
     "submit": {
       "title": "Soumettre une activité",
       "subtitle": "Proposez une activité pour cet événement",
