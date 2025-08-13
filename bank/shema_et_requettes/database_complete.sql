@@ -256,7 +256,8 @@ CREATE TYPE activity_type AS ENUM (
 );
 
 CREATE TYPE activity_format AS ENUM ('online', 'in_person', 'hybrid');
-CREATE TYPE validation_status AS ENUM ('draft', 'submitted', 'under_review', 'approved', 'rejected', 'cancelled');
+CREATE TYPE validation_status AS ENUM ('draft', 'submitted', 'under_review', 'approved', 'rejected', 'cancelled', 'live', 'completed');
+CREATE TYPE activity_status AS ENUM ('live', 'completed', 'postponed');
 
 -- Table des activités
 CREATE TABLE public.activities (
@@ -264,8 +265,9 @@ CREATE TABLE public.activities (
     event_id UUID NOT NULL REFERENCES public.events(id) ON DELETE CASCADE,
     organization_id UUID NOT NULL REFERENCES public.organizations(id),
     submitted_by UUID NOT NULL REFERENCES public.users(id),
+    activity_status activity_status DEFAULT NULL,
     title TEXT NOT NULL,
-    acronym TEXT,
+    -- acronym TEXT,
     country_id UUID REFERENCES public.countries(id),
     activity_type activity_type NOT NULL,
     objectives TEXT NOT NULL,
