@@ -99,8 +99,8 @@
       <div class="w-96 h-min bg-white/50 backdrop-blur-xl shadow-sm rounded-b-md">
         <div class="w-full h-2 bg-blue-800"></div>
           <div class="p-4">
-            <h2 class="text-lg font-semibold">Thèmes </h2>
-            <div class="flex flex-wrap space-x-1 space-y-1">
+            <h2 class="text-lg font-semibold text-center mb-2">Thèmes </h2>
+            <div class="flex flex-wrap justify-center space-x-1 space-y-1">
               <div class=" border border-green-700 px-2 rounded-full">santé</div>
               <div class=" border border-green-700 px-2 rounded-full">Femme/jeunesse</div>
               <div class=" border border-green-700 px-2 rounded-full">santé</div>
@@ -109,8 +109,8 @@
               <div class=" border border-green-700 px-2 rounded-full">Femme/jeunesse</div>
             </div>
 
-            <h2 class="text-lg font-semibold mt-2">Categories </h2>
-            <div class="flex flex-wrap space-x-1 space-y-1">
+            <h2 class="text-lg font-semibold mt-2 text-center  mb-2">Categories </h2>
+            <div class="flex flex-wrap space-x-1 space-y-1 justify-center">
               <div class=" border border-green-700 px-2 rounded-full">Categories 1</div>
               <div class=" border border-green-700 px-2 rounded-full">cat 2</div>
               <div class=" border border-green-700 px-2 rounded-full">Categories 3</div>
@@ -119,7 +119,7 @@
               <div class=" border border-green-700 px-2 rounded-full">Categories 3</div>
             </div>
 
-            <h2 class="text-lg font-semibold mt-2">Panéliste </h2>
+            <h2 class="text-lg font-semibold mt-4 text-center">Panéliste </h2>
             <div class="flex flex-wrap space-x-2 justify-center font-extrabold">
               
               <div class="flex flex-col justify-center mt-2 items-center">
@@ -157,6 +157,8 @@
                 </div>
                 <div class="text-sm italic font-normal">Fonction Panéliste</div>
               </div>
+
+              <button class="mt-4 bg-green-800 text-white py-2 px-4 rounded-full shadow-md">Poser une question à un panéliste</button>
             </div>
           </div>
       </div>
