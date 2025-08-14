@@ -791,6 +791,8 @@
     "register": "Sign Up"
   },
   "activity": {
+    "showMore": "Show more",
+    "showLess": "Show less",
     "status": {
       "completed": "Completed"
     },

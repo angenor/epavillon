@@ -854,6 +854,8 @@
     "documents": "Documents",
     "register": "S'inscrire",
     "askQuestion": "Poser une question",
+    "showMore": "Voir plus",
+    "showLess": "Voir moins",
     "status": {
       "completed": "Terminée"
     },

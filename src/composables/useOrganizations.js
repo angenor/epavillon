@@ -71,7 +71,7 @@ export function useOrganizations() {
 
       // Recherche textuelle
       if (searchQuery.value.trim()) {
-        query = query.or(`name.ilike.%${searchQuery.value}%,organization_aliases.alias_name.ilike.%${searchQuery.value}%`)
+        query = query.ilike('name', `%${searchQuery.value}%`)
       }
 
       // Filtres

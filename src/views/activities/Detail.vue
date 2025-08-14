@@ -118,7 +118,32 @@
               <font-awesome-icon :icon="['fas', 'file-alt']" class="mr-2 text-orange-600" />
               {{ t('activity.presentation') }}
             </h3>
-            <div class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap" v-html="activity.detailed_presentation"></div>
+            <div>
+              <div class="relative">
+                <div 
+                  ref="descriptionContainer"
+                  class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap"
+                  :class="{
+                    'max-h-[300px] overflow-hidden': !isDescriptionExpanded && shouldShowToggleButton,
+                    'description-fade': !isDescriptionExpanded && shouldShowToggleButton
+                  }"
+                  v-html="activity.detailed_presentation"
+                ></div>
+              </div>
+              <!-- Bouton Voir plus/moins si la description est trop longue -->
+              <div v-if="shouldShowToggleButton" class="mt-3 relative z-10 cursor-pointer">
+                <button 
+                  @click="toggleDescription"
+                  class="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm transition-colors"
+                >
+                  <font-awesome-icon 
+                    :icon="['fas', isDescriptionExpanded ? 'chevron-up' : 'chevron-down']" 
+                    class="mr-2 text-xs" 
+                  />
+                  {{ isDescriptionExpanded ? t('activity.showLess') : t('activity.showMore') }}
+                </button>
+              </div>
+            </div>
           </div>
           
           <!-- Documents si disponibles -->
@@ -226,7 +251,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
@@ -246,6 +271,9 @@ const documents = ref([])
 const activityCountry = ref(null)
 const isRegistered = ref(false)
 const loading = ref(true)
+const isDescriptionExpanded = ref(false)
+const descriptionContainer = ref(null)
+const shouldShowToggleButton = ref(false)
 
 // Computed
 const canRegister = computed(() => {
@@ -269,6 +297,40 @@ const canAskQuestions = computed(() => {
   // Vérifier si au moins un intervenant accepte les questions
   return speakers.value.some(s => s.is_available_for_questions)
 })
+
+// Fonction pour vérifier si le contenu dépasse 300px de hauteur
+const checkContentHeight = async () => {
+  if (!descriptionContainer.value || !activity.value?.detailed_presentation) {
+    shouldShowToggleButton.value = false
+    return
+  }
+  
+  await nextTick()
+  
+  // Créer un élément temporaire pour mesurer la hauteur complète
+  const tempElement = document.createElement('div')
+  tempElement.innerHTML = activity.value.detailed_presentation
+  tempElement.style.cssText = `
+    position: absolute;
+    visibility: hidden;
+    width: ${descriptionContainer.value.offsetWidth}px;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    white-space: pre-wrap;
+  `
+  
+  document.body.appendChild(tempElement)
+  const fullHeight = tempElement.offsetHeight
+  document.body.removeChild(tempElement)
+  
+  shouldShowToggleButton.value = fullHeight > 300
+}
+
+// Fonction pour basculer l'affichage de la description
+const toggleDescription = () => {
+  isDescriptionExpanded.value = !isDescriptionExpanded.value
+}
 
 // Méthodes
 const formatDate = (dateString) => {
@@ -384,6 +446,9 @@ const loadActivity = async () => {
       isRegistered.value = !!regData
     }
     
+    // Vérifier la hauteur du contenu après le chargement
+    await checkContentHeight()
+    
   } catch (error) {
     console.error('Error loading activity:', error)
   } finally {
@@ -466,5 +531,21 @@ onMounted(() => {
 
 .animation-delay-500 {
   animation-delay: 500ms;
+}
+
+/* Style pour l'effet de fade sur la description tronquée */
+.description-fade::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, rgb(255 255 255 / 1));
+  pointer-events: none;
+}
+
+.dark .description-fade::after {
+  background: linear-gradient(to bottom, transparent, rgb(31 41 55 / 1));
 }
 </style>
