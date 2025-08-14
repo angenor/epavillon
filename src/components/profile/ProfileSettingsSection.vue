@@ -94,7 +94,7 @@
               </label>
 
               <!-- Mode Auto -->
-              <label
+              <!-- <label
                 class="relative flex cursor-pointer rounded-lg border p-4 shadow-sm focus:outline-none"
                 :class="[
                   displayMode === 'auto'
@@ -127,7 +127,7 @@
                   v-if="displayMode === 'auto'"
                   class="absolute -inset-px rounded-lg border-2 border-blue-500 pointer-events-none"
                 />
-              </label>
+              </label> -->
             </div>
           </div>
 

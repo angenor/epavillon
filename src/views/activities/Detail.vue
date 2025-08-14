@@ -98,15 +98,11 @@
           >
         </div>
         <div class="p-4 sm:p-6 md:p-8">
-          <div class="border-l-4 border-blue-700 pl-3 sm:pl-4 text-lg sm:text-xl font-bold my-3 sm:my-4 flex items-center">
-            <font-awesome-icon :icon="['fas', 'info-circle']" class="mr-2 text-blue-700" />
-            {{ t('activity.details') }}
-          </div>
           
           <!-- Objectifs -->
           <div v-if="activity?.objectives" class="mb-6">
-            <h3 class="font-semibold text-gray-900 dark:text-white mb-2 flex items-center">
-              <font-awesome-icon :icon="['fas', 'bullseye']" class="mr-2 text-orange-600" />
+            <h3 class="font-semibold text-gray-900 dark:text-white mb-2 flex items-center text-xl uppercase">
+              <font-awesome-icon :icon="['fas', 'bullseye']" class="mr-2 text-blue-800" />
               {{ t('activity.objectives') }}
             </h3>
             <p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{{ activity.objectives }}</p>
@@ -114,8 +110,8 @@
           
           <!-- Présentation détaillée -->
           <div v-if="activity?.detailed_presentation" class="mb-6">
-            <h3 class="font-semibold text-gray-900 dark:text-white mb-2 flex items-center">
-              <font-awesome-icon :icon="['fas', 'file-alt']" class="mr-2 text-orange-600" />
+            <h3 class="font-semibold text-gray-900 dark:text-white mb-2 flex items-center  text-xl uppercase">
+              <font-awesome-icon :icon="['fas', 'file-alt']" class="mr-2 text-blue-800" />
               {{ t('activity.presentation') }}
             </h3>
             <div>

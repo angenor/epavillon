@@ -125,7 +125,7 @@
             class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
             :title="theme === 'light' ? t('common.darkMode') : t('common.lightMode')"
           >
-            <font-awesome-icon v-if="theme === 'light'" :icon="['fas', 'moon']" class="w-5 h-5 transition-transform duration-300 hover:rotate-180" />
+            <font-awesome-icon v-if="theme === 'light'" :icon="['fas', 'moon']" class="w-5 h-5 transition-transform duration-300 hover:rotate-45" />
             <font-awesome-icon v-else :icon="['fas', 'sun']" class="w-5 h-5 transition-transform duration-300 hover:rotate-12" />
           </button>
 

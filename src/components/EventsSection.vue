@@ -13,7 +13,7 @@
 
         <!-- Contenu -->
         <div class="order-1 lg:order-2">
-          <h2 class="text-4xl font-bold text-ifdd-gris-dark dark:text-gray-100 mb-4 font-maverick">
+          <h2 class="text-4xl font-bold dark:text-gray-400 mb-4 font-maverick">
             {{ t('events.title') }}
           </h2>
           <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">

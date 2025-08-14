@@ -4,7 +4,7 @@
       <div class="grid lg:grid-cols-2 gap-12 items-center">
         <!-- Contenu -->
         <div>
-          <h2 class="text-4xl font-bold text-ifdd-gris-dark dark:text-gray-100 mb-4 font-maverick">
+          <h2 class="text-4xl font-bold dark:text-gray-100 mb-4 font-maverick">
             {{ t('trainings.title') }}
           </h2>
           <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">
@@ -106,7 +106,7 @@
           </div>
 
           <!-- Bouton voir toutes -->
-          <button class="w-full sm:w-auto px-6 py-3 bg-ifdd-bleu hover:bg-ifdd-bleu-dark dark:text-gray-100 dark:hover:bg-ifdd-bleu text-ifdd-bleu font-medium font-helvetica rounded-lg transition-colors shadow-lg hover:shadow-xl">
+          <button class="w-full sm:w-auto px-6 py-3 bg-ifdd-bleu hover:bg-ifdd-bleu-dark text-white dark:hover:bg-ifdd-bleu font-medium font-helvetica rounded-lg transition-colors shadow-lg hover:shadow-xl">
             {{ t('trainings.seeAllTrainings') }}
           </button>
         </div>
