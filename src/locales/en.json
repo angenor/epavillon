@@ -40,6 +40,8 @@
     "justNow": "Just now",
     "save": "Save",
     "saving": "Saving...",
+    "saveSuccess": "Successfully saved",
+    "saveError": "Error while saving",
     "submitting": "Submitting..."
   },
   "profile": {

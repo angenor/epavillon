@@ -48,6 +48,8 @@
     "noData": "Aucune donnée",
     "save": "Enregistrer",
     "saving": "Enregistrement...",
+    "saveSuccess": "Enregistrement effectué avec succès",
+    "saveError": "Erreur lors de l'enregistrement",
     "submitting": "Envoi..."
   },
   "profile": {

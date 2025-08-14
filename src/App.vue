@@ -1,6 +1,7 @@
 <script setup>
 import { RouterView, useRoute } from 'vue-router'
 import AppNavBar from './components/AppNavBar.vue'
+import ToastContainer from './components/ui/ToastContainer.vue'
 import { ref, computed } from 'vue'
 
 const sidebarOpen = ref(false)
@@ -19,6 +20,7 @@ const handleToggleSidebar = () => {
     <main :class="{ 'pt-16': !isHomePage }">
       <RouterView :sidebar-open="sidebarOpen" @update:sidebar-open="sidebarOpen = $event" />
     </main>
+    <ToastContainer />
   </div>
 </template>
 

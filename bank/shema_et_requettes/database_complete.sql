@@ -42,7 +42,7 @@ CREATE TABLE public.users (
     organization_id UUID,
     address TEXT, -- Remplace "position"
     is_organization_verified BOOLEAN DEFAULT FALSE,
-    display_mode TEXT DEFAULT 'light' CHECK (display_mode IN ('light', 'dark')),
+    display_mode TEXT DEFAULT 'light' CHECK (display_mode IN ('light', 'dark', 'auto')),
     notification_preferences JSONB DEFAULT '{"email": true, "push": true, "live_events": true}'::jsonb,
     networking_visibility BOOLEAN DEFAULT TRUE,
     -- Statut de blocage/suspension

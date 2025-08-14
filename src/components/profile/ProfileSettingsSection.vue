@@ -416,11 +416,13 @@
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useTheme } from '@/composables/useTheme'
+import { useToast } from '@/composables/useToast'
 import { useAuthStore } from '@/stores/auth'
 import { useUserStore } from '@/stores/user'
 
 const { t } = useI18n()
-const { theme, setTheme } = useTheme()
+const { theme, applyTheme } = useTheme()
+const { success, error } = useToast()
 const authStore = useAuthStore()
 const userStore = useUserStore()
 
@@ -503,7 +505,7 @@ const notificationTypes = [
 
 // Méthodes
 const updateDisplayMode = () => {
-  setTheme(displayMode.value)
+  applyTheme(displayMode.value)
 }
 
 const toggleNotification = (key) => {
@@ -525,20 +527,24 @@ const saveSettings = async () => {
     const updateData = {
       id: authStore.user?.id,
       display_mode: displayMode.value,
-      notification_preferences: notificationPreferences,
+      notification_preferences: JSON.parse(JSON.stringify(notificationPreferences)), // Copie profonde pour JSONB
       networking_visibility: privacySettings.networking_visibility
     }
+
+    console.log('Saving settings:', updateData) // Debug
 
     await userStore.updateProfile(updateData)
     
     // Recharger le profil pour refléter les changements
     await authStore.fetchProfile(authStore.user?.id)
     
-    // Notifier le succès (vous pouvez ajouter un toast ici)
+    // Afficher le message de succès
+    success(t('common.saveSuccess'))
     console.log('Settings saved successfully')
-  } catch (error) {
-    console.error('Error saving settings:', error)
-    // Notifier l'erreur (vous pouvez ajouter un toast ici)
+  } catch (err) {
+    console.error('Error saving settings:', err)
+    // Afficher le message d'erreur
+    error(t('common.saveError'))
   } finally {
     saving.value = false
   }
@@ -549,13 +555,36 @@ const initializeSettings = () => {
   if (authStore.profile) {
     displayMode.value = authStore.profile.display_mode || 'light'
     
-    // Initialiser les préférences de notifications
+    // Initialiser les préférences de notifications avec les valeurs par défaut
+    const defaultNotifications = {
+      email: true,
+      push: true,
+      live_events: true,
+      activity_validation: true,
+      connection_requests: true,
+      messages_received: true,
+      appointment_requests: true,
+      training_reminders: true,
+      event_reminders: true,
+      system_announcements: true,
+      newsletters: true
+    }
+    
+    // Fusionner les préférences existantes avec les valeurs par défaut
     if (authStore.profile.notification_preferences) {
-      Object.assign(notificationPreferences, authStore.profile.notification_preferences)
+      Object.assign(notificationPreferences, defaultNotifications, authStore.profile.notification_preferences)
+    } else {
+      Object.assign(notificationPreferences, defaultNotifications)
     }
     
     // Initialiser les paramètres de confidentialité
     privacySettings.networking_visibility = authStore.profile.networking_visibility ?? true
+    
+    console.log('Settings initialized:', {
+      displayMode: displayMode.value,
+      notifications: notificationPreferences,
+      privacy: privacySettings
+    }) // Debug
   }
 }
 
