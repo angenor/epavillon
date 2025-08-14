@@ -1122,6 +1122,91 @@
       "organization": "Organization information provided"
     }
   },
+  "organizations": {
+    "title": "Organizations",
+    "subtitle": "{count} active and verified organizations",
+    "search": {
+      "placeholder": "Search by organization name..."
+    },
+    "filters": {
+      "country": "Country",
+      "type": "Organization type",
+      "verification": "Verification status",
+      "sortBy": "Sort by",
+      "allCountries": "All countries",
+      "allTypes": "All types",
+      "allStatuses": "All statuses",
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "reset": "Reset filters"
+    },
+    "verified": "Verified",
+    "unknownCountry": "Country not specified",
+    "activitiesCount": "{count} activity | {count} activities",
+    "website": "Website",
+    "validate": "Validate",
+    "validations": "{count} validation | {count} validations",
+    "viewDetails": "View details",
+    "viewAs": "Display as",
+    "results": "{count} result | {count} results",
+    "pagination": {
+      "showing": "Showing {start} to {end} of {total} results"
+    },
+    "empty": {
+      "title": "No organizations found",
+      "description": "No organizations match the selected search criteria."
+    },
+    "types": {
+      "public_national_institution": "Public National Institution",
+      "international_organization": "International Organization",
+      "regional_organization": "Regional Organization",
+      "ngo_association": "NGO/Association",
+      "private_sector": "Private Sector"
+    }
+  },
+  "organizationDetail": {
+    "breadcrumbs": {
+      "organizations": "Organizations"
+    },
+    "error": {
+      "title": "Organization not found",
+      "notFound": "The requested organization does not exist or is no longer active."
+    },
+    "verified": "Verified",
+    "unknownCountry": "Country not specified",
+    "createdOn": "Created on",
+    "website": "Website",
+    "description": "Description",
+    "aliases": "Aliases and acronyms",
+    "acronym": "(acronym)",
+    "validate": "Validate this organization",
+    "statistics": "Statistics",
+    "totalActivities": "Total activities",
+    "liveActivities": "Live",
+    "upcomingActivities": "Upcoming",
+    "completedActivities": "Completed",
+    "validations": "Validations",
+    "andMore": "and {count} others",
+    "activities": {
+      "title": "Related activities",
+      "all": "All",
+      "upcoming": "Upcoming",
+      "live": "Live",
+      "completed": "Completed",
+      "filterByEvent": "Filter by event",
+      "allEvents": "All events",
+      "filterByTheme": "Filter by theme",
+      "allThemes": "All themes",
+      "sortBy": "Sort by",
+      "empty": {
+        "title": "No activities found",
+        "description": "This organization has no activities matching the selected criteria."
+      },
+      "pagination": {
+        "showing": "Showing {start} to {end} of {total} activities"
+      }
+    }
+  },
   "events": {
     "create": {
       "title": "Create Event",

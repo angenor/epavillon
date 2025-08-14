@@ -1218,6 +1218,91 @@
       "organization": "Organisation renseignée"
     }
   },
+  "organizations": {
+    "title": "Organisations",
+    "subtitle": "{count} organisations actives et vérifiées",
+    "search": {
+      "placeholder": "Rechercher par nom d'organisation..."
+    },
+    "filters": {
+      "country": "Pays",
+      "type": "Type d'organisation",
+      "verification": "Statut de vérification",
+      "sortBy": "Trier par",
+      "allCountries": "Tous les pays",
+      "allTypes": "Tous les types",
+      "allStatuses": "Tous les statuts",
+      "verified": "Vérifiées",
+      "unverified": "Non vérifiées",
+      "reset": "Réinitialiser les filtres"
+    },
+    "verified": "Vérifiée",
+    "unknownCountry": "Pays non renseigné",
+    "activitiesCount": "{count} activité | {count} activités",
+    "website": "Site web",
+    "validate": "Valider",
+    "validations": "{count} validation | {count} validations",
+    "viewDetails": "Voir détails",
+    "viewAs": "Afficher comme",
+    "results": "{count} résultat | {count} résultats",
+    "pagination": {
+      "showing": "Affichage de {start} à {end} sur {total} résultats"
+    },
+    "empty": {
+      "title": "Aucune organisation trouvée",
+      "description": "Aucune organisation ne correspond aux critères de recherche sélectionnés."
+    },
+    "types": {
+      "public_national_institution": "Institution publique nationale",
+      "international_organization": "Organisation internationale",
+      "regional_organization": "Organisation régionale",
+      "ngo_association": "ONG/Association",
+      "private_sector": "Secteur privé"
+    }
+  },
+  "organizationDetail": {
+    "breadcrumbs": {
+      "organizations": "Organisations"
+    },
+    "error": {
+      "title": "Organisation introuvable",
+      "notFound": "L'organisation demandée n'existe pas ou n'est plus active."
+    },
+    "verified": "Vérifiée",
+    "unknownCountry": "Pays non renseigné",
+    "createdOn": "Créée le",
+    "website": "Site web",
+    "description": "Description",
+    "aliases": "Alias et acronymes",
+    "acronym": "(acronyme)",
+    "validate": "Valider cette organisation",
+    "statistics": "Statistiques",
+    "totalActivities": "Total activités",
+    "liveActivities": "En direct",
+    "upcomingActivities": "À venir",
+    "completedActivities": "Terminées",
+    "validations": "Validations",
+    "andMore": "et {count} autres",
+    "activities": {
+      "title": "Activités liées",
+      "all": "Tout",
+      "upcoming": "À venir",
+      "live": "En direct",
+      "completed": "Terminées",
+      "filterByEvent": "Filtrer par événement",
+      "allEvents": "Tous les événements",
+      "filterByTheme": "Filtrer par thème",
+      "allThemes": "Tous les thèmes",
+      "sortBy": "Trier par",
+      "empty": {
+        "title": "Aucune activité trouvée",
+        "description": "Cette organisation n'a pas d'activités correspondant aux critères sélectionnés."
+      },
+      "pagination": {
+        "showing": "Affichage de {start} à {end} sur {total} activités"
+      }
+    }
+  },
   "event": {
     "description": "Description",
     "dateTime": "Date et heure",
