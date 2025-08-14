@@ -1,24 +1,77 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <!-- Header -->
-    <div class="bg-white dark:bg-gray-800 shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div class="md:flex md:items-center md:justify-between">
-          <div class="flex-1 min-w-0">
-            <h1 class="text-2xl font-bold leading-7 text-gray-900 dark:text-white sm:text-3xl sm:truncate">
-              {{ $t('organizations.title') }}
-            </h1>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              {{ $t('organizations.subtitle', { count: totalItems }) }}
-            </p>
+    <!-- Header avec bannière héroïque -->
+    <div class="relative h-64 md:h-80 lg:h-96 overflow-hidden bg-gradient-to-br from-blue-600 to-purple-700">
+      <!-- Image de fond avec overlay -->
+      <div class="absolute inset-0">
+        <img 
+          src="/images/example/event_banniere_par_defaut_32_9.jpg"
+          alt="Organizations banner"
+          class="w-full h-full object-cover opacity-30"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+      </div>
+      
+      <!-- Motif décoratif -->
+      <div class="absolute inset-0 opacity-10">
+        <svg class="absolute right-0 top-0 h-full" viewBox="0 0 400 400" fill="none">
+          <circle cx="300" cy="100" r="150" stroke="white" stroke-width="2"/>
+          <circle cx="350" cy="150" r="200" stroke="white" stroke-width="1"/>
+        </svg>
+      </div>
+      
+      <!-- Contenu du header -->
+      <div class="relative h-full flex items-end">
+        <div class="w-full p-6 md:p-8 lg:p-12">
+          <div class="max-w-7xl mx-auto">
+            <div class="flex items-center space-x-4 mb-4">
+              <!-- Icône principale -->
+              <div class="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+              </div>
+              <!-- Titre et sous-titre -->
+              <div>
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
+                  {{ $t('organizations.title') }}
+                </h1>
+                <p class="mt-2 text-lg text-white/90">
+                  {{ $t('organizations.subtitle', { count: totalItems }) }}
+                </p>
+              </div>
+            </div>
+            
+            <!-- Statistiques rapides -->
+            <div class="flex flex-wrap gap-6 text-white/90">
+              <div class="flex items-center space-x-2">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <span>{{ organizations.filter(o => o.is_verified).length }} {{ $t('organizations.filters.verified') }}</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                </svg>
+                <span>{{ organizationTypes.length }} {{ $t('organizations.categoriesCount') }}</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zM9.954 4.569c-1.01 1.265-1.654 2.92-1.769 4.43h3.63c-.115-1.51-.759-3.165-1.769-4.43-.015-.02-.03-.04-.045-.06A6.95 6.95 0 0010 4c0 .017-.001.033-.002.05a.521.521 0 00-.044.02zm.002 7.862c1.01-1.265 1.654-2.92 1.769-4.43h-3.63c.115 1.51.759 3.165 1.769 4.43.015.02.03.04.045.06 0 .169.001.338.002.507a.512.512 0 00.044-.02c.002-.017.002-.033.002-.05a6.95 6.95 0 00-.001-.497zm3.178-2.43h1.946a6.004 6.004 0 01-2.783 4.118c.454-1.147.748-2.572.837-4.118zm-.111-1h-1.946c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0113.023 9z" clip-rule="evenodd"/>
+                </svg>
+                <span>{{ countries.length }} {{ $t('organizations.countriesCount') }}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Barre de recherche et filtres -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Carte de recherche avec design moderne -->
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-6 mb-8">
         <!-- Recherche -->
         <div class="mb-6">
           <div class="relative">

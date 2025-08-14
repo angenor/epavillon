@@ -461,6 +461,7 @@
       "upcoming": "À venir",
       "ongoing": "En cours",
       "past": "Passé",
+      "completed": "Terminé",
       "unknown": "Inconnu",
       "draft": "Brouillon",
       "pending": "En attente",
@@ -1221,6 +1222,8 @@
   "organizations": {
     "title": "Organisations",
     "subtitle": "{count} organisations actives et vérifiées",
+    "categoriesCount": "Catégories",
+    "countriesCount": "Pays représentés",
     "search": {
       "placeholder": "Rechercher par nom d'organisation..."
     },
