@@ -14,9 +14,6 @@
       <!-- Formations Section -->
       <FormationsSection />
     </main>
-    
-    <!-- Footer -->
-    <FooterSection />
   </div>
 </template>
 
@@ -25,7 +22,6 @@ import SideBar from '../components/SideBar.vue'
 import HeroSection from '../components/HeroSection.vue'
 import EventsSection from '../components/EventsSection.vue'
 import FormationsSection from '../components/FormationsSection.vue'
-import FooterSection from '../components/FooterSection.vue'
 
 export default {
   name: 'HomeView',
@@ -34,7 +30,6 @@ export default {
     HeroSection,
     EventsSection,
     FormationsSection,
-    FooterSection
   },
   props: {
     sidebarOpen: {

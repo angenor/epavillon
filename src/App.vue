@@ -1,6 +1,8 @@
 <script setup>
 import { RouterView, useRoute } from 'vue-router'
 import AppNavBar from './components/AppNavBar.vue'
+import SideBar from './components/SideBar.vue'
+import FooterSection from './components/FooterSection.vue'
 import ToastContainer from './components/ui/ToastContainer.vue'
 import { ref, computed } from 'vue'
 
@@ -12,14 +14,20 @@ const isHomePage = computed(() => route.path === '/')
 const handleToggleSidebar = () => {
   sidebarOpen.value = true
 }
+
+const handleCloseSidebar = () => {
+  sidebarOpen.value = false
+}
 </script>
 
 <template>
-  <div id="app" class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+  <div id="app" class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 flex flex-col">
     <AppNavBar @toggle-sidebar="handleToggleSidebar" />
-    <main :class="{ 'pt-16': !isHomePage }">
+    <main :class="{ 'pt-16': !isHomePage }" class="flex-grow">
       <RouterView :sidebar-open="sidebarOpen" @update:sidebar-open="sidebarOpen = $event" />
     </main>
+    <FooterSection />
+    <SideBar :is-open="sidebarOpen" @close="handleCloseSidebar" />
     <ToastContainer />
   </div>
 </template>

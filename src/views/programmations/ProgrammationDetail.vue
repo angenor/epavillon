@@ -107,6 +107,7 @@
           
           <button
             @click="viewMode = 'calendar'"
+            disabled
             :class="[
               'px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2',
               viewMode === 'calendar'

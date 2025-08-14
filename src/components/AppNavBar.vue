@@ -9,7 +9,7 @@
             <font-awesome-icon :icon="['fas', 'bars']" class="w-6 h-6" />
           </button>
           
-          <div class="flex-shrink-0 group cursor-pointer">
+          <router-link to="/" class="flex-shrink-0 group cursor-pointer">
             <!-- Logo pour le mode clair -->
             <img 
               src="/logos/logo-ifdd-court.svg" 
@@ -22,7 +22,7 @@
               alt="Logo IFDD" 
               class="h-10 w-auto hidden dark:block transition-transform duration-300 group-hover:scale-105"
             >
-          </div>
+          </router-link>
         </div>
 
         <!-- Navigation principale -->
