@@ -854,6 +854,9 @@
     "documents": "Documents",
     "register": "S'inscrire",
     "askQuestion": "Poser une question",
+    "status": {
+      "completed": "Terminée"
+    },
     "format": {
       "online": "En ligne",
       "in_person": "En présentiel", 

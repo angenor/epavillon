@@ -432,6 +432,7 @@
       "upcoming": "Upcoming",
       "ongoing": "Ongoing",
       "past": "Past",
+      "completed": "Completed",
       "unknown": "Unknown",
       "draft": "Draft",
       "pending": "Pending",
@@ -790,6 +791,9 @@
     "register": "Sign Up"
   },
   "activity": {
+    "status": {
+      "completed": "Completed"
+    },
     "submit": {
       "title": "Submit an activity",
       "subtitle": "Propose an activity for this event",
