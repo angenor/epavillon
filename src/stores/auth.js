@@ -112,6 +112,7 @@ export const useAuthStore = defineStore('auth', () => {
     userInitials,
     // Actions
     fetchUser,
+    fetchProfile,
     signOut
   }
 })

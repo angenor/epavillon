@@ -39,14 +39,152 @@
     "submit": "Envoyer",
     "upload": "Télécharger",
     "uploading": "Téléchargement...",
-    "loading": "Chargement...",
     "today": "Aujourd'hui",
     "daysAgo": "Il y a {{days}} jours",
     "weeksAgo": "Il y a {{weeks}} semaines",
     "monthsAgo": "Il y a {{months}} mois",
     "hoursAgo": "Il y a {{hours}} heures",
     "justNow": "À l'instant",
-    "noData": "Aucune donnée"
+    "noData": "Aucune donnée",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "submitting": "Envoi..."
+  },
+  "profile": {
+    "tabs": {
+      "information": "Informations",
+      "settings": "Paramètres"
+    },
+    "sections": {
+      "profileInfo": "Informations du Profil",
+      "quickStats": "Statistiques Rapides",
+      "quickActions": "Actions Rapides"
+    },
+    "personalInfo": {
+      "title": "Informations Personnelles",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "biography": "Biographie professionnelle",
+      "noBiography": "Aucune biographie renseignée",
+      "biographyPlaceholder": "Décrivez votre parcours professionnel...",
+      "phone": "Téléphone",
+      "country": "Pays de résidence",
+      "selectCountry": "Sélectionner un pays",
+      "address": "Adresse physique",
+      "addressPlaceholder": "Votre adresse complète",
+      "profilePhoto": "Photo de profil"
+    },
+    "professionalInfo": {
+      "title": "Informations Professionnelles",
+      "primaryEmail": "Email principal",
+      "emailNotModifiable": "Non modifiable après inscription",
+      "professionalEmail": "Email professionnel",
+      "organization": "Organisation",
+      "noOrganization": "Aucune organisation",
+      "verified": "Vérifiée"
+    },
+    "statusBadges": {
+      "title": "Statut et Badges",
+      "accountVerified": "Compte vérifié",
+      "organizationVerified": "Organisation vérifiée",
+      "verified": "Vérifié",
+      "pending": "En attente"
+    },
+    "organization": {
+      "current": "Organisation actuelle",
+      "verified": "Vérifiée",
+      "change": "Modifier",
+      "noOrganization": "Aucune organisation sélectionnée",
+      "select": "Sélectionner une organisation",
+      "searchPlaceholder": "Rechercher une organisation...",
+      "noResults": "Aucune organisation trouvée",
+      "requestNew": "Demander une nouvelle organisation",
+      "requestNewTitle": "Demande de nouvelle organisation",
+      "remove": "Retirer l'organisation",
+      "orgName": "Nom de l'organisation",
+      "orgEmail": "Email de l'organisation",
+      "orgType": "Type d'organisation",
+      "selectType": "Sélectionner un type",
+      "orgWebsite": "Site web",
+      "types": {
+        "government": "Gouvernemental",
+        "ngo": "ONG",
+        "private": "Privé",
+        "academic": "Académique",
+        "international": "International"
+      }
+    },
+    "actions": {
+      "editProfile": "Modifier le profil"
+    },
+    "roles": {
+      "standard": "Utilisateur",
+      "unfccc_focal_point": "Point focal UNFCCC",
+      "negotiator": "Négociateur",
+      "trainer": "Formateur",
+      "admin": "Administrateur",
+      "super_admin": "Super administrateur"
+    },
+    "stats": {
+      "activitiesSubmitted": "Activités soumises",
+      "activitiesParticipated": "Activités participées",
+      "trainingsCompleted": "Formations terminées",
+      "connections": "Connexions"
+    },
+    "quickActions": {
+      "submitActivity": "Soumettre une activité",
+      "enrollTraining": "S'inscrire à une formation",
+      "sendMessage": "Envoyer un message",
+      "scheduleAppointment": "Planifier un rendez-vous"
+    },
+    "settings": {
+      "displayPreferences": {
+        "title": "Préférences d'Affichage",
+        "displayMode": "Mode d'affichage",
+        "light": "Clair",
+        "lightDesc": "Interface lumineuse",
+        "dark": "Sombre",
+        "darkDesc": "Interface sombre",
+        "auto": "Auto",
+        "autoDesc": "Suit le système",
+        "preview": "Prévisualisation",
+        "previewDesc": "Les changements sont appliqués instantanément"
+      },
+      "notifications": {
+        "title": "Préférences de Notifications",
+        "generalConfig": "Configuration générale",
+        "email": "Notifications par email",
+        "emailDesc": "Recevoir les notifications par email",
+        "push": "Notifications push",
+        "pushDesc": "Recevoir les notifications push dans le navigateur",
+        "liveEvents": "Alertes événements en direct",
+        "liveEventsDesc": "Recevoir des alertes pour les événements en cours",
+        "types": "Types de notifications",
+        "activity_validation": "Validation d'activités",
+        "activity_validationDesc": "Notifications lors de la validation de vos activités",
+        "connection_requests": "Demandes de connexion",
+        "connection_requestsDesc": "Notifications pour les nouvelles demandes de connexion",
+        "messages_received": "Messages reçus",
+        "messages_receivedDesc": "Notifications pour les nouveaux messages",
+        "appointment_requests": "Demandes de rendez-vous",
+        "appointment_requestsDesc": "Notifications pour les demandes de rendez-vous",
+        "training_reminders": "Rappels de formation",
+        "training_remindersDesc": "Rappels pour vos formations programmées",
+        "event_reminders": "Rappels d'événements",
+        "event_remindersDesc": "Rappels pour les événements auxquels vous participez",
+        "system_announcements": "Annonces système",
+        "system_announcementsDesc": "Notifications importantes du système",
+        "newsletters": "Newsletters",
+        "newslettersDesc": "Recevoir les newsletters et communications"
+      },
+      "privacy": {
+        "title": "Paramètres de Confidentialité",
+        "profileVisibility": "Visibilité du profil",
+        "profileVisibilityDesc": "Autoriser la découverte de votre profil pour le réseautage",
+        "blockedUsers": "Utilisateurs bloqués",
+        "blockedUsersDesc": "Gérer votre liste d'utilisateurs bloqués"
+      }
+    }
   },
   "nav": {
     "programmings": "Programmations",

@@ -37,7 +37,146 @@
     "weeksAgo": "{{weeks}} weeks ago",
     "monthsAgo": "{{months}} months ago",
     "hoursAgo": "{{hours}} hours ago",
-    "justNow": "Just now"
+    "justNow": "Just now",
+    "save": "Save",
+    "saving": "Saving...",
+    "submitting": "Submitting..."
+  },
+  "profile": {
+    "tabs": {
+      "information": "Information",
+      "settings": "Settings"
+    },
+    "sections": {
+      "profileInfo": "Profile Information",
+      "quickStats": "Quick Stats",
+      "quickActions": "Quick Actions"
+    },
+    "personalInfo": {
+      "title": "Personal Information",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "biography": "Professional Biography",
+      "noBiography": "No biography provided",
+      "biographyPlaceholder": "Describe your professional background...",
+      "phone": "Phone",
+      "country": "Country of residence",
+      "selectCountry": "Select a country",
+      "address": "Physical address",
+      "addressPlaceholder": "Your complete address",
+      "profilePhoto": "Profile photo"
+    },
+    "professionalInfo": {
+      "title": "Professional Information",
+      "primaryEmail": "Primary email",
+      "emailNotModifiable": "Not modifiable after registration",
+      "professionalEmail": "Professional email",
+      "organization": "Organization",
+      "noOrganization": "No organization",
+      "verified": "Verified"
+    },
+    "statusBadges": {
+      "title": "Status and Badges",
+      "accountVerified": "Account verified",
+      "organizationVerified": "Organization verified",
+      "verified": "Verified",
+      "pending": "Pending"
+    },
+    "organization": {
+      "current": "Current organization",
+      "verified": "Verified",
+      "change": "Change",
+      "noOrganization": "No organization selected",
+      "select": "Select an organization",
+      "searchPlaceholder": "Search for an organization...",
+      "noResults": "No organization found",
+      "requestNew": "Request new organization",
+      "requestNewTitle": "New organization request",
+      "remove": "Remove organization",
+      "orgName": "Organization name",
+      "orgEmail": "Organization email",
+      "orgType": "Organization type",
+      "selectType": "Select a type",
+      "orgWebsite": "Website",
+      "types": {
+        "government": "Government",
+        "ngo": "NGO",
+        "private": "Private",
+        "academic": "Academic",
+        "international": "International"
+      }
+    },
+    "actions": {
+      "editProfile": "Edit profile"
+    },
+    "roles": {
+      "standard": "User",
+      "unfccc_focal_point": "UNFCCC Focal Point",
+      "negotiator": "Negotiator",
+      "trainer": "Trainer",
+      "admin": "Administrator",
+      "super_admin": "Super Administrator"
+    },
+    "stats": {
+      "activitiesSubmitted": "Activities submitted",
+      "activitiesParticipated": "Activities participated",
+      "trainingsCompleted": "Trainings completed",
+      "connections": "Connections"
+    },
+    "quickActions": {
+      "submitActivity": "Submit an activity",
+      "enrollTraining": "Enroll in training",
+      "sendMessage": "Send a message",
+      "scheduleAppointment": "Schedule an appointment"
+    },
+    "settings": {
+      "displayPreferences": {
+        "title": "Display Preferences",
+        "displayMode": "Display mode",
+        "light": "Light",
+        "lightDesc": "Light interface",
+        "dark": "Dark",
+        "darkDesc": "Dark interface",
+        "auto": "Auto",
+        "autoDesc": "Follow system",
+        "preview": "Preview",
+        "previewDesc": "Changes are applied instantly"
+      },
+      "notifications": {
+        "title": "Notification Preferences",
+        "generalConfig": "General configuration",
+        "email": "Email notifications",
+        "emailDesc": "Receive notifications by email",
+        "push": "Push notifications",
+        "pushDesc": "Receive push notifications in browser",
+        "liveEvents": "Live event alerts",
+        "liveEventsDesc": "Receive alerts for ongoing events",
+        "types": "Notification types",
+        "activity_validation": "Activity validation",
+        "activity_validationDesc": "Notifications when your activities are validated",
+        "connection_requests": "Connection requests",
+        "connection_requestsDesc": "Notifications for new connection requests",
+        "messages_received": "Messages received",
+        "messages_receivedDesc": "Notifications for new messages",
+        "appointment_requests": "Appointment requests",
+        "appointment_requestsDesc": "Notifications for appointment requests",
+        "training_reminders": "Training reminders",
+        "training_remindersDesc": "Reminders for your scheduled trainings",
+        "event_reminders": "Event reminders",
+        "event_remindersDesc": "Reminders for events you're participating in",
+        "system_announcements": "System announcements",
+        "system_announcementsDesc": "Important system notifications",
+        "newsletters": "Newsletters",
+        "newslettersDesc": "Receive newsletters and communications"
+      },
+      "privacy": {
+        "title": "Privacy Settings",
+        "profileVisibility": "Profile visibility",
+        "profileVisibilityDesc": "Allow discovery of your profile for networking",
+        "blockedUsers": "Blocked users",
+        "blockedUsersDesc": "Manage your list of blocked users"
+      }
+    }
   },
   "nav": {
     "programmings": "Programmings",

@@ -50,7 +50,7 @@ La page profil est l'espace personnel de chaque utilisateur sur la plateforme eP
 - **Configuration détaillée** :
   - Notifications par email (activé/désactivé)
   - Notifications push (activé/désactivé)
-  - Alertes pour événements en direct (activé/désactivé par défaut)
+  - Alertes pour événements en direct (désactivé/activé par défaut)
   - Choix des types de notifications :
     - Validation d'activités
     - Demandes de connexion

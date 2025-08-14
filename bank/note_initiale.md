@@ -1,14 +1,10 @@
-[intlify] Not found 'event.viewProgramming' key in 'fr' locale messages. shared.mjs:8:17
-[intlify] Not found 'event.upcomingProgramming' key in 'fr' locale messages. shared.mjs:8:17
-[intlify] Not found 'event.programmingDescription' key in 'fr' locale messages. shared.mjs:8:17
-[intlify] Not found 'event.viewAllProgramming' key in 'fr' locale messages. shared.mjs:8:17
-[intlify] Not found 'event.viewProgramming' key in 'fr' locale messages. shared.mjs:8:17
-[intlify] Not found 'event.upcomingProgramming' key in 'fr' locale messages. shared.mjs:8:17
-[intlify] Not found 'event.programmingDescription' key in 'fr' locale messages. shared.mjs:8:17
-[intlify] Not found 'event.viewAllProgramming' key in 'fr' locale messages. shared.mjs:8:17
-[Vue warn]: Unhandled error during execution of native event handler 
-  at <Detail sidebar-open=false onUpdate:sidebarOpen=fn onVnodeUnmounted=fn<onVnodeUnmounted>  ... > 
-  at <RouterView sidebar-open=false onUpdate:sidebarOpen=fn > 
-  at <App> runtime-core.esm-bundler.js:51:13
-Uncaught Error: No match for
- {"name":"event-activities","params":{"id":"e818a72a-a770-4fe9-adca-2252dbef23dd"}}
+user.js:129 
+ POST https://jzkuvulxfhtcelpvrxgf.supabase.co/storage/v1/object/profile-photos/9a9ec732-7daf-4bec-8c4a-17d8109e06a8/profile.jpg 400 (Bad Request)
+
+user.js:165 Error uploading profile photo: StorageApiError: Bucket not found
+    at @supabase_supabase-j…?v=aaf60bc5:3082:14
+user.js:115 Error updating profile: StorageApiError: Bucket not found
+    at @supabase_supabase-j…?v=aaf60bc5:3082:14
+Profile.vue:276 Error updating profile: StorageApiError: Bucket not found
+    at @supabase_supabase-j…?v=aaf60bc5:3082:14
+﻿
