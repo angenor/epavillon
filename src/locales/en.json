@@ -47,7 +47,27 @@
   "profile": {
     "tabs": {
       "information": "Information",
-      "settings": "Settings"
+      "settings": "Settings",
+      "roleSpecific": "My Role"
+    },
+    "roleSpecific": {
+      "standard": {
+        "title": "Standard Profile",
+        "noSpecificRole": "No specialized role",
+        "description": "You currently have no specialized role. You can request to become a negotiator, trainer, or UNFCCC focal point.",
+        "becomeNegotiator": "Become Negotiator",
+        "becomeTrainer": "Become Trainer",
+        "becomeFocalPoint": "Become Focal Point"
+      },
+      "actions": {
+        "designateNegotiator": "Negotiator designation feature to be implemented",
+        "manageNegotiators": "Negotiator management to be implemented",
+        "viewReports": "Reports viewing to be implemented",
+        "createFormation": "Training creation to be implemented",
+        "manageFormations": "Training management to be implemented",
+        "viewAnalytics": "Analytics to be implemented",
+        "requestRole": "Role request for {role} sent"
+      }
     },
     "sections": {
       "profileInfo": "Profile Information",
@@ -1156,6 +1176,101 @@
         "online": "Online",
         "in_person": "In Person",
         "hybrid": "Hybrid"
+      }
+    },
+    "negotiator": {
+      "designationHistory": {
+        "title": "Designation History",
+        "noDesignations": "No designations found",
+        "totalDesignations": "Total designations",
+        "currentYear": "Current year",
+        "latestDesignation": "Latest designation",
+        "designationsList": "Designations list",
+        "designationFor": "Designation for",
+        "designatedBy": "Designated by",
+        "system": "System"
+      },
+      "expertise": {
+        "title": "Expertise and Participations",
+        "specializationThemes": "Specialization themes",
+        "copParticipations": "COP participations",
+        "noThemes": "No specialized themes",
+        "noCops": "No COP participations"
+      },
+      "consultations": {
+        "title": "Consultation History",
+        "noConsultations": "No consultations recorded"
+      },
+      "quickAccess": {
+        "title": "Quick Access",
+        "negotiationSpace": "Negotiation Space",
+        "negotiationSpaceDesc": "Access negotiation tools",
+        "specializedTraining": "Specialized Training",
+        "specializedTrainingDesc": "Training for negotiators"
+      }
+    },
+    "focalPoint": {
+      "negotiators": {
+        "title": "Negotiator Management",
+        "designateNew": "Designate new negotiator",
+        "noNegotiators": "No negotiators designated",
+        "designateDesc": "You can designate negotiators for your country",
+        "totalDesignated": "Total designated",
+        "currentlyActive": "Currently active",
+        "currentYear": "Current year",
+        "negotiatorsList": "Negotiators list",
+        "designatedFor": "Designated for",
+        "designations": "designations",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "history": {
+        "title": "Designation History Made",
+        "noHistory": "No designations made",
+        "designatedFor": "Designated for"
+      },
+      "quickActions": {
+        "title": "Quick Actions",
+        "manageNegotiators": "Manage Negotiators",
+        "manageNegotiatorsDesc": "Designate and manage your negotiators",
+        "viewReports": "View Reports",
+        "viewReportsDesc": "Negotiator activity reports"
+      }
+    },
+    "trainer": {
+      "formations": {
+        "title": "Training Activities",
+        "createNew": "Create new training",
+        "noFormations": "No trainings created",
+        "createDesc": "Start by creating your first training",
+        "totalFormations": "Total trainings",
+        "totalParticipants": "Total participants",
+        "averageRating": "Average rating",
+        "completed": "Completed",
+        "formationsList": "Trainings list",
+        "participants": "participants",
+        "status": {
+          "draft": "Draft",
+          "published": "Published",
+          "ongoing": "Ongoing",
+          "completed": "Completed",
+          "cancelled": "Cancelled"
+        },
+        "viewDetails": "View details",
+        "edit": "Edit"
+      },
+      "evaluations": {
+        "title": "Received Evaluations",
+        "noEvaluations": "No evaluations received",
+        "evaluations": "evaluations",
+        "recentComments": "Recent comments"
+      },
+      "quickActions": {
+        "title": "Quick Actions",
+        "manageFormations": "Manage Trainings",
+        "manageFormationsDesc": "Create and manage your trainings",
+        "viewAnalytics": "View Analytics",
+        "viewAnalyticsDesc": "Your training statistics"
       }
     }
   }

@@ -143,6 +143,17 @@
             >
               {{ t('profile.tabs.settings') }}
             </button>
+            <button
+              @click="activeTab = 'role-specific'"
+              :class="[
+                activeTab === 'role-specific'
+                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600',
+                'whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors'
+              ]"
+            >
+              {{ t('profile.tabs.roleSpecific') }}
+            </button>
           </nav>
         </div>
       </div>
@@ -174,6 +185,13 @@
           <div v-if="activeTab === 'settings'">
             <ProfileSettingsSection
               @manage-blocked-users="handleManageBlockedUsers"
+            />
+          </div>
+
+          <!-- Section Spécifique par Rôle -->
+          <div v-if="activeTab === 'role-specific'">
+            <RoleSpecificSection
+              :user-id="authStore.user?.id"
             />
           </div>
         </div>
@@ -260,10 +278,13 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { useUserStore } from '@/stores/user'
+import { useToast } from '@/composables/useToast'
 import ProfileInfoSection from '@/components/profile/ProfileInfoSection.vue'
 import ProfileSettingsSection from '@/components/profile/ProfileSettingsSection.vue'
+import RoleSpecificSection from '@/components/profile/RoleSpecificSection.vue'
 
 const { t } = useI18n()
+const { success, error } = useToast()
 const authStore = useAuthStore()
 const userStore = useUserStore()
 
@@ -302,6 +323,8 @@ const handleUserUpdate = (updatedUser) => {
 
 const handleSaveProfile = async (updatedData) => {
   try {
+    console.log('Profile.vue - Sauvegarde avec données:', updatedData) // Debug
+    
     await userStore.updateProfile({
       ...updatedData,
       id: authStore.user?.id
@@ -310,10 +333,13 @@ const handleSaveProfile = async (updatedData) => {
     // Recharger le profil
     await authStore.fetchProfile(authStore.user?.id)
     isEditing.value = false
+    
     // Afficher un message de succès
-  } catch (error) {
-    console.error('Error updating profile:', error)
+    success(t('common.saveSuccess'))
+  } catch (err) {
+    console.error('Error updating profile:', err)
     // Afficher un message d'erreur
+    error(t('common.saveError'))
   }
 }
 

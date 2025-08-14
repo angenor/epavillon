@@ -53,9 +53,29 @@
     "submitting": "Envoi..."
   },
   "profile": {
+    "roleSpecific": {
+      "standard": {
+        "title": "Profil Standard",
+        "noSpecificRole": "Aucun rôle spécialisé",
+        "description": "Vous n'avez actuellement aucun rôle spécialisé. Vous pouvez demander à devenir négociateur, formateur ou point focal UNFCCC.",
+        "becomeNegotiator": "Devenir Négociateur",
+        "becomeTrainer": "Devenir Formateur",
+        "becomeFocalPoint": "Devenir Point Focal"
+      },
+      "actions": {
+        "designateNegotiator": "Fonction de désignation de négociateur à implémenter",
+        "manageNegotiators": "Gestion des négociateurs à implémenter",
+        "viewReports": "Affichage des rapports à implémenter",
+        "createFormation": "Création de formation à implémenter",
+        "manageFormations": "Gestion des formations à implémenter",
+        "viewAnalytics": "Analytiques à implémenter",
+        "requestRole": "Demande de rôle {role} envoyée"
+      }
+    },
     "tabs": {
       "information": "Informations",
-      "settings": "Paramètres"
+      "settings": "Paramètres",
+      "roleSpecific": "Mon Rôle"
     },
     "sections": {
       "profileInfo": "Informations du Profil",
@@ -626,6 +646,102 @@
         "description": "Vous n'avez pas l'autorisation de modifier cette activité."
       },
       "draftSaved": "Brouillon sauvegardé avec succès"
+    },
+    
+    "negotiator": {
+      "designationHistory": {
+        "title": "Historique des Désignations",
+        "noDesignations": "Aucune désignation trouvée",
+        "totalDesignations": "Total des désignations",
+        "currentYear": "Année actuelle",
+        "latestDesignation": "Dernière désignation",
+        "designationsList": "Liste des désignations",
+        "designationFor": "Désignation pour",
+        "designatedBy": "Désigné par",
+        "system": "Système"
+      },
+      "expertise": {
+        "title": "Expertise et Participations",
+        "specializationThemes": "Thématiques de spécialisation",
+        "copParticipations": "COP participées",
+        "noThemes": "Aucune thématique spécialisée",
+        "noCops": "Aucune COP participée"
+      },
+      "consultations": {
+        "title": "Historique des Concertations",
+        "noConsultations": "Aucune concertation enregistrée"
+      },
+      "quickAccess": {
+        "title": "Accès Rapide",
+        "negotiationSpace": "Espace de Négociation",
+        "negotiationSpaceDesc": "Accéder aux outils de négociation",
+        "specializedTraining": "Formations Spécialisées",
+        "specializedTrainingDesc": "Formations pour négociateurs"
+      }
+    },
+    "focalPoint": {
+      "negotiators": {
+        "title": "Gestion des Négociateurs",
+        "designateNew": "Désigner un nouveau négociateur",
+        "noNegotiators": "Aucun négociateur désigné",
+        "designateDesc": "Vous pouvez désigner des négociateurs pour votre pays",
+        "totalDesignated": "Total désignés",
+        "currentlyActive": "Actuellement actifs",
+        "currentYear": "Année actuelle",
+        "negotiatorsList": "Liste des négociateurs",
+        "designatedFor": "Désigné pour",
+        "designations": "désignations",
+        "active": "Actif",
+        "inactive": "Inactif"
+      },
+      "history": {
+        "title": "Historique des Désignations Effectuées",
+        "noHistory": "Aucune désignation effectuée",
+        "designatedFor": "Désigné pour"
+      },
+      "quickActions": {
+        "title": "Actions Rapides",
+        "manageNegotiators": "Gérer les Négociateurs",
+        "manageNegotiatorsDesc": "Désigner et gérer vos négociateurs",
+        "viewReports": "Voir les Rapports",
+        "viewReportsDesc": "Rapports d'activité des négociateurs"
+      }
+    },
+    "trainer": {
+      "formations": {
+        "title": "Activités de Formation",
+        "createNew": "Créer une nouvelle formation",
+        "noFormations": "Aucune formation créée",
+        "createDesc": "Commencez par créer votre première formation",
+        "totalFormations": "Total des formations",
+        "totalParticipants": "Total des participants",
+        "averageRating": "Note moyenne",
+        "completed": "Terminées",
+        "formationsList": "Liste des formations",
+        "participants": "participants",
+        "status": {
+          "draft": "Brouillon",
+          "published": "Publiée",
+          "ongoing": "En cours",
+          "completed": "Terminée",
+          "cancelled": "Annulée"
+        },
+        "viewDetails": "Voir les détails",
+        "edit": "Modifier"
+      },
+      "evaluations": {
+        "title": "Évaluations Reçues",
+        "noEvaluations": "Aucune évaluation reçue",
+        "evaluations": "évaluations",
+        "recentComments": "Commentaires récents"
+      },
+      "quickActions": {
+        "title": "Actions Rapides",
+        "manageFormations": "Gérer les Formations",
+        "manageFormationsDesc": "Créer et gérer vos formations",
+        "viewAnalytics": "Voir les Analytiques",
+        "viewAnalyticsDesc": "Statistiques de vos formations"
+      }
     }
   },
   "auth": {

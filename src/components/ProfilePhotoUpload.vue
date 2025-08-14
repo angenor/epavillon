@@ -6,8 +6,8 @@
         class="w-32 h-32 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-700 border-4 border-gray-300 dark:border-gray-600"
       >
         <img
-          v-if="previewUrl"
-          :src="previewUrl"
+          v-if="displayUrl"
+          :src="displayUrl"
           :alt="t('auth.fields.profilePhoto')"
           class="w-full h-full object-cover"
         >
@@ -44,7 +44,7 @@
           icon="camera"
           class="mr-2"
         />
-        {{ previewUrl ? t('auth.fields.changePhoto') : t('auth.fields.addPhoto') }}
+        {{ displayUrl ? t('auth.fields.changePhoto') : t('auth.fields.addPhoto') }}
       </label>
       <input
         id="photo-upload"
@@ -109,6 +109,10 @@ const props = defineProps({
   required: {
     type: Boolean,
     default: false
+  },
+  currentPhotoUrl: {
+    type: String,
+    default: null
   }
 })
 
@@ -119,6 +123,11 @@ const processing = ref(false)
 const error = ref('')
 const previewUrl = ref('')
 const fileInfo = ref(null)
+
+// Computed pour l'URL d'aperçu - utilise soit la nouvelle photo soit la photo actuelle
+const displayUrl = computed(() => {
+  return previewUrl.value || props.currentPhotoUrl
+})
 
 const handleFileSelect = async (event) => {
   const file = event.target.files[0]
@@ -159,19 +168,26 @@ const handleFileSelect = async (event) => {
     }
 
     // Émettre les fichiers traités
-    emit('update:modelValue', {
+    const photoData = {
       original: file,
       processed: processedFile,
       thumbnail: thumbnailFile,
       previewUrl: dataUrl,
       thumbnailUrl: thumbnailDataUrl
-    })
+    }
+    
+    console.log('ProfilePhotoUpload émet les données photo:', photoData) // Debug
+    emit('update:modelValue', photoData)
 
   } catch (err) {
     console.error('Error processing image:', err)
     error.value = t('auth.errors.imageProcessingFailed')
   } finally {
     processing.value = false
+    // Réinitialiser l'input pour permettre de sélectionner le même fichier à nouveau
+    if (fileInput.value) {
+      fileInput.value.value = ''
+    }
   }
 }
 

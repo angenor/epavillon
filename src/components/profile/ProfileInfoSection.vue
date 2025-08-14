@@ -146,6 +146,7 @@
           </label>
           <ProfilePhotoUpload
             v-model="formData.profilePhoto"
+            :current-photo-url="user?.profile_photo_url"
             class="max-w-sm"
           />
         </div>
@@ -375,6 +376,7 @@ const formData = reactive({
 
 // Initialiser les données du formulaire
 const initFormData = () => {
+  console.log('initFormData appelé, profilePhoto actuel:', formData.profilePhoto) // Debug
   if (props.user) {
     Object.assign(formData, {
       first_name: props.user.first_name || '',
@@ -385,8 +387,10 @@ const initFormData = () => {
       country_id: props.user.country_id || '',
       email_pro: props.user.email_pro || '',
       organization_id: props.user.organization_id || '',
-      profilePhoto: null
+      // Ne pas réinitialiser profilePhoto si elle a déjà une valeur
+      profilePhoto: formData.profilePhoto || null
     })
+    console.log('FormData après init:', formData) // Debug
   }
 }
 
@@ -413,11 +417,17 @@ const handleSave = async () => {
     // Préparer les données à sauvegarder
     const updateData = { ...formData }
     
+    console.log('FormData avant sauvegarde:', formData) // Debug
+    
     // Si une nouvelle photo a été sélectionnée, l'inclure
     if (formData.profilePhoto) {
       updateData.profilePhoto = formData.profilePhoto
+      console.log('Photo détectée dans formData:', formData.profilePhoto) // Debug
+    } else {
+      console.log('Aucune nouvelle photo détectée') // Debug
     }
     
+    console.log('UpdateData envoyé:', updateData) // Debug
     emit('save', updateData)
   } catch (error) {
     console.error('Error saving profile:', error)
@@ -433,8 +443,18 @@ const handleCancel = () => {
 
 // Watchers
 watch(() => props.user, () => {
-  initFormData()
+  // Ne réinitialiser que si on n'est pas en mode édition pour préserver les changements en cours
+  if (!props.isEditing) {
+    initFormData()
+  }
 }, { immediate: true })
+
+// Watcher pour initialiser quand on commence l'édition
+watch(() => props.isEditing, (newIsEditing) => {
+  if (newIsEditing) {
+    initFormData()
+  }
+})
 
 // Lifecycle
 onMounted(() => {

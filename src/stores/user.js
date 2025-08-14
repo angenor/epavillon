@@ -104,7 +104,10 @@ export const useUserStore = defineStore('user', () => {
 
       // Gérer l'upload de la photo si nécessaire
       if (profilePhoto) {
+        console.log('Upload de photo détecté, données photo:', profilePhoto) // Debug
         await uploadProfilePhoto(cleanedData.id, profilePhoto)
+      } else {
+        console.log('Aucune photo à uploader') // Debug
       }
 
       // Recharger les données
@@ -122,25 +125,45 @@ export const useUserStore = defineStore('user', () => {
 
   const uploadProfilePhoto = async (userId, photoData) => {
     try {
+      console.log('uploadProfilePhoto appelé avec userId:', userId, 'photoData:', photoData) // Debug
+      
       // Upload de la photo principale dans le bucket 'epavillonp' dossier 'profil'
       const photoFileName = `profil/${userId}/profile.jpg`
-      const { error: uploadError } = await supabase.storage
+      console.log('Upload vers:', photoFileName) // Debug
+      
+      console.log('Tentative d\'upload, type de fichier:', photoData.processed?.type, 'taille:', photoData.processed?.size) // Debug
+      
+      const { data: uploadData, error: uploadError } = await supabase.storage
         .from('epavillonp')
         .upload(photoFileName, photoData.processed, {
-          upsert: true
+          upsert: true,
+          contentType: photoData.processed?.type || 'image/jpeg'
         })
 
-      if (uploadError) throw uploadError
+      console.log('Résultat upload principal:', { uploadData, uploadError }) // Debug
+      
+      if (uploadError) {
+        console.error('Erreur détaillée lors de l\'upload de la photo principale:', uploadError)
+        throw uploadError
+      }
 
       // Upload de la vignette
       const thumbnailFileName = `profil/${userId}/thumbnail.jpg`
-      const { error: thumbnailError } = await supabase.storage
+      console.log('Upload de la vignette vers:', thumbnailFileName) // Debug
+      
+      const { data: thumbnailData, error: thumbnailError } = await supabase.storage
         .from('epavillonp')
         .upload(thumbnailFileName, photoData.thumbnail, {
-          upsert: true
+          upsert: true,
+          contentType: photoData.thumbnail?.type || 'image/jpeg'
         })
 
-      if (thumbnailError) throw thumbnailError
+      console.log('Résultat upload vignette:', { thumbnailData, thumbnailError }) // Debug
+      
+      if (thumbnailError) {
+        console.error('Erreur détaillée lors de l\'upload de la vignette:', thumbnailError)
+        throw thumbnailError
+      }
 
       // Mettre à jour les URLs dans la base de données
       const { data: photoUrl } = supabase.storage
@@ -151,15 +174,29 @@ export const useUserStore = defineStore('user', () => {
         .from('epavillonp')
         .getPublicUrl(thumbnailFileName)
 
-      const { error: updateError } = await supabase
+      console.log('URLs générées:', { 
+        photoUrl: photoUrl.publicUrl, 
+        thumbnailUrl: thumbnailUrl.publicUrl 
+      }) // Debug
+
+      const { data: updateData, error: updateError } = await supabase
         .from('users')
         .update({
           profile_photo_url: photoUrl.publicUrl,
           profile_photo_thumbnail_url: thumbnailUrl.publicUrl
         })
         .eq('id', userId)
+        .select()
+        .single()
 
-      if (updateError) throw updateError
+      console.log('Résultat mise à jour DB:', { updateData, updateError }) // Debug
+
+      if (updateError) {
+        console.error('Erreur détaillée lors de la mise à jour de la DB:', updateError)
+        throw updateError
+      }
+      
+      console.log('Upload de photo terminé avec succès') // Debug
 
     } catch (err) {
       console.error('Error uploading profile photo:', err)
