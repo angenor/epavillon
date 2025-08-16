@@ -1,6 +1,7 @@
 {
   "common": {
     "language": "Language",
+    "home": "Home",
     "long": "long",
     "darkMode": "Dark mode",
     "lightMode": "Light mode",
@@ -387,6 +388,216 @@
       "description": "Fundamentals of biodiversity conservation"
     },
     "seeAllTrainings": "See all trainings"
+  },
+  "formations": {
+    "title": "Trainings",
+    "subtitle": "Develop your sustainable development skills with our certified trainings",
+    "results": "{count} training | {count} trainings",
+    "stats": {
+      "totalParticipants": "Active participants"
+    },
+    "search": {
+      "placeholder": "Search trainings..."
+    },
+    "filters": {
+      "category": "Category",
+      "format": "Format",
+      "status": "Status",
+      "price": "Price",
+      "sortBy": "Sort by",
+      "allCategories": "All categories",
+      "allFormats": "All formats",
+      "allStatuses": "All statuses",
+      "allPrices": "All prices",
+      "upcoming": "Upcoming",
+      "ongoing": "Ongoing",
+      "completed": "Completed",
+      "free": "Free",
+      "paid": "Paid",
+      "reset": "Reset filters"
+    },
+    "sort": {
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "startDate": "Start date",
+      "popularity": "Popularity"
+    },
+    "view": {
+      "label": "View",
+      "grid": "Grid",
+      "list": "List"
+    },
+    "status": {
+      "upcoming": "Upcoming",
+      "ongoing": "Ongoing",
+      "completed": "Completed"
+    },
+    "enrolled": "Enrolled",
+    "free": "Free",
+    "objectives": "Objectives",
+    "methodology": "Methodology",
+    "dates": "Dates",
+    "participants": "Participants",
+    "duration": "Duration",
+    "targetAudience": "Target audience",
+    "progress": "Progress",
+    "chapters": "{count} chapter | {count} chapters",
+    "createdBy": "Created by",
+    "viewDetails": "View details",
+    "enroll": "Enroll",
+    "continue": "Continue",
+    "andMore": "and {count} more",
+    "unknownCreator": "Unknown",
+    "duration": {
+      "oneDay": "1 day",
+      "days": "{count} days",
+      "weeks": "{count} weeks",
+      "months": "{count} months"
+    },
+    "detail": {
+      "error": {
+        "title": "Training not found",
+        "notFound": "The training you are looking for does not exist or has been deleted"
+      },
+      "tabs": {
+        "overview": "Overview",
+        "program": "Program",
+        "participants": "Participants",
+        "resources": "Resources"
+      },
+      "enrollButton": "Enroll in this training",
+      "continueButton": "Continue training",
+      "viewCertificate": "View my certificate",
+      "editButton": "Edit",
+      "manageParticipants": "Manage participants",
+      "description": "Description",
+      "objectives": "Learning objectives",
+      "targetAudience": "Target audience",
+      "methodology": "Methodology",
+      "prerequisites": "Prerequisites",
+      "noChapters": "No chapters available yet",
+      "lessons": "lessons",
+      "totalParticipants": "Total participants",
+      "averageProgress": "Average progress",
+      "completionRate": "Completion rate",
+      "participantsList": "Participants list",
+      "enrolledOn": "Enrolled on",
+      "certified": "Certified",
+      "noResources": "No resources available",
+      "download": "Download",
+      "yourProgress": "Your progress",
+      "chaptersCompleted": "Chapters completed",
+      "totalTime": "Total time",
+      "nextLesson": "Next lesson",
+      "instructor": "Instructor",
+      "trainer": "Trainer",
+      "createdOn": "Created on",
+      "quickActions": "Quick actions",
+      "downloadProgram": "Download program",
+      "share": "Share",
+      "reportIssue": "Report issue"
+    },
+    "empty": {
+      "noFormations": "No trainings available",
+      "noResults": "No results found",
+      "tryDifferentFilters": "Try adjusting your search filters",
+      "firstFormation": "Create the first training for the community"
+    },
+    "create": {
+      "title": "Create Training",
+      "subtitle": "Create a new training for the community",
+      "autoSaved": "Draft saved",
+      "permissions": {
+        "title": "Restricted Access",
+        "description": "You must have one of the following roles to create a training:",
+        "trainer": "Trainer",
+        "admin": "Administrator",
+        "superAdmin": "Super Administrator"
+      },
+      "steps": {
+        "basicInfo": {
+          "title": "Basic Information",
+          "description": "Title, description and category"
+        },
+        "pedagogicalDetails": {
+          "title": "Pedagogical Details",
+          "description": "Target audience and objectives"
+        }
+      },
+      "fields": {
+        "title": "Training Title",
+        "description": "Description",
+        "category": "Category",
+        "format": "Format",
+        "estimatedPrice": "Estimated Price",
+        "targetAudience": "Target Audience",
+        "objectives": "Learning Objectives",
+        "methodology": "Methodology",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "banner": "Training Banner"
+      },
+      "placeholders": {
+        "title": "Ex: International Climate Negotiations",
+        "description": "Detailed description of the training, its objectives and content...",
+        "selectCategory": "Select a category",
+        "targetAudience": "Describe the target audience for this training...",
+        "objective": "Learning objective",
+        "methodology": "Describe the teaching methodology used...",
+        "estimatedPrice": "0.00"
+      },
+      "helpers": {
+        "minimumObjectives": "Minimum 1 objective required",
+        "estimatedPrice": "Leave empty if the training is free"
+      },
+      "suggestions": {
+        "label": "Suggestions"
+      },
+      "buttons": {
+        "addObjective": "Add Objective",
+        "createFormation": "Create Training"
+      },
+      "uploadBanner": "Upload a banner",
+      "orDragDrop": "or drag and drop",
+      "maxFileSize": "up to 5MB",
+      "uploading": "Uploading...",
+      "helpers": {
+        "minimumObjectives": "Minimum 1 objective required"
+      },
+      "errors": {
+        "titleRequired": "Title is required",
+        "descriptionRequired": "Description is required",
+        "categoryRequired": "Category is required",
+        "formatRequired": "Format is required",
+        "targetAudienceRequired": "Target audience is required",
+        "minimumObjectives": "At least 1 objective is required",
+        "methodologyRequired": "Methodology is required",
+        "startDateRequired": "Start date is required",
+        "endDateRequired": "End date is required",
+        "endDateAfterStart": "End date must be after start date",
+        "fileTooLarge": "File is too large (max 5MB)",
+        "invalidFileType": "Invalid file type (PNG, JPG, WebP only)",
+        "uploadFailed": "Upload failed",
+        "submitFailed": "Error creating training"
+      }
+    },
+    "categories": {
+      "climate": "Climate",
+      "desertification": "Desertification",
+      "biodiversity": "Biodiversity",
+      "other": "Other"
+    },
+    "formats": {
+      "online": "Online",
+      "hybrid": "Hybrid"
+    },
+    "targetAudience": {
+      "negotiators": "Climate Negotiators",
+      "focalPoints": "UNFCCC Focal Points",
+      "professionals": "Sustainable Development Professionals",
+      "students": "Students and Researchers",
+      "general": "General Public"
+    }
   },
   "footer": {
     "description": "E-pavilion platform of the Institute of La Francophonie for Sustainable Development",

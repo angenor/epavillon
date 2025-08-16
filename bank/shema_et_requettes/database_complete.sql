@@ -532,7 +532,7 @@ CREATE TABLE public.appointments (
 
 -- Table des formations
 CREATE TYPE training_format AS ENUM ('online', 'hybrid');
-CREATE TYPE training_category AS ENUM ('climate', 'desertification', 'biodiversity');
+CREATE TYPE training_category AS ENUM ('climate', 'desertification', 'biodiversity', 'other');
 
 CREATE TABLE public.trainings (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -542,7 +542,7 @@ CREATE TABLE public.trainings (
     format training_format NOT NULL,
     estimated_price DECIMAL(10, 2),
     target_audience TEXT NOT NULL,
-    objectives TEXT NOT NULL,
+    objectives TEXT[] NOT NULL, -- Objectifs de la formation
     methodology TEXT NOT NULL,
     banner_hd_url TEXT,
     banner_thumbnail_url TEXT,

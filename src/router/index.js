@@ -113,6 +113,22 @@ const router = createRouter({
       name: 'organization-detail',
       component: () => import('../views/organization/OrganizationDetail.vue'),
     },
+    {
+      path: '/formations',
+      name: 'formations',
+      component: () => import('../views/formation/Index.vue'),
+    },
+    {
+      path: '/formations/create',
+      name: 'create-formation',
+      component: () => import('../views/formation/Create.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/formations/:id',
+      name: 'formation-detail',
+      component: () => import('../views/formation/Detail.vue'),
+    },
   ],
 })
 

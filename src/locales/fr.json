@@ -1,6 +1,7 @@
 {
   "common": {
     "language": "Langue",
+    "home": "Accueil",
     "long": "long",
     "darkMode": "Mode sombre",
     "lightMode": "Mode clair",
@@ -416,6 +417,218 @@
       "description": "Les fondamentaux de la conservation de la biodiversité"
     },
     "seeAllTrainings": "Voir toutes les formations"
+  },
+  "formations": {
+    "title": "Formations",
+    "subtitle": "Développez vos compétences en développement durable avec nos formations certifiées",
+    "results": "{count} résultat | {count} résultats",
+    "participants": "participants",
+    "enrolled": "Inscrit",
+    "enroll": "S'inscrire",
+    "continue": "Continuer",
+    "free": "Gratuit",
+    "viewDetails": "Voir détails",
+    "objectives": "Objectifs",
+    "methodology": "Méthodologie",
+    "stats": {
+      "totalParticipants": "Participants actifs"
+    },
+    "view": {
+      "grid": "Grille",
+      "list": "Liste"
+    },
+    "dates": "Dates",
+    "duration": "Durée",
+    "targetAudience": "Public cible",
+    "progress": "Progression",
+    "chapters": "{count} chapitre | {count} chapitres",
+    "createdBy": "Créé par",
+    "unknownCreator": "Créateur inconnu",
+    "andMore": "et {count} de plus",
+    "create": {
+      "title": "Créer une formation",
+      "subtitle": "Créez une nouvelle formation pour la communauté",
+      "autoSaved": "Brouillon sauvegardé",
+      "permissions": {
+        "title": "Accès restreint",
+        "description": "Vous devez avoir l'un des rôles suivants pour créer une formation :",
+        "trainer": "Formateur",
+        "admin": "Administrateur",
+        "superAdmin": "Super administrateur"
+      },
+      "steps": {
+        "basicInfo": {
+          "title": "Informations de base",
+          "description": "Titre, description et catégorie"
+        },
+        "pedagogicalDetails": {
+          "title": "Détails pédagogiques",
+          "description": "Public cible et objectifs"
+        }
+      },
+      "fields": {
+        "title": "Titre de la formation",
+        "description": "Description",
+        "category": "Catégorie",
+        "format": "Format",
+        "estimatedPrice": "Prix estimé",
+        "targetAudience": "Public cible",
+        "objectives": "Objectifs pédagogiques",
+        "methodology": "Méthodologie",
+        "startDate": "Date de début",
+        "endDate": "Date de fin",
+        "banner": "Bannière de formation"
+      },
+      "placeholders": {
+        "title": "Ex: Négociations climatiques internationales",
+        "description": "Description détaillée de la formation, ses objectifs et son contenu...",
+        "selectCategory": "Sélectionnez une catégorie",
+        "targetAudience": "Décrivez le public cible de cette formation...",
+        "objective": "Objectif pédagogique",
+        "methodology": "Décrivez la méthodologie d'enseignement utilisée...",
+        "estimatedPrice": "0.00"
+      },
+      "helpers": {
+        "minimumObjectives": "Minimum 1 objectif requis",
+        "estimatedPrice": "Laissez vide si la formation est gratuite"
+      },
+      "suggestions": {
+        "label": "Suggestions"
+      },
+      "buttons": {
+        "addObjective": "Ajouter un objectif",
+        "createFormation": "Créer la formation"
+      },
+      "uploadBanner": "Télécharger une bannière",
+      "orDragDrop": "ou glisser-déposer",
+      "maxFileSize": "jusqu'à 5MB",
+      "uploading": "Téléchargement...",
+      "helpers": {
+        "minimumObjectives": "Minimum 1 objectif requis"
+      },
+      "errors": {
+        "titleRequired": "Le titre est requis",
+        "descriptionRequired": "La description est requise",
+        "categoryRequired": "La catégorie est requise",
+        "formatRequired": "Le format est requis",
+        "targetAudienceRequired": "Le public cible est requis",
+        "minimumObjectives": "Au moins 1 objectif est requis",
+        "methodologyRequired": "La méthodologie est requise",
+        "startDateRequired": "La date de début est requise",
+        "endDateRequired": "La date de fin est requise",
+        "endDateAfterStart": "La date de fin doit être après la date de début",
+        "fileTooLarge": "Le fichier est trop volumineux (max 5MB)",
+        "invalidFileType": "Type de fichier non valide (PNG, JPG, WebP uniquement)",
+        "uploadFailed": "Erreur lors du téléchargement",
+        "submitFailed": "Erreur lors de la création de la formation"
+      }
+    },
+    "categories": {
+      "climate": "Climat",
+      "desertification": "Désertification",
+      "biodiversity": "Biodiversité",
+      "other": "Autre"
+    },
+    "formats": {
+      "online": "En ligne",
+      "hybrid": "Hybride"
+    },
+    "targetAudience": {
+      "negotiators": "Négociateurs climatiques",
+      "focalPoints": "Points focaux UNFCCC",
+      "professionals": "Professionnels du développement durable",
+      "students": "Étudiants et chercheurs",
+      "general": "Grand public"
+    },
+    "search": {
+      "placeholder": "Rechercher par titre, description, objectifs..."
+    },
+    "filters": {
+      "category": "Catégorie",
+      "format": "Format",
+      "status": "Statut",
+      "price": "Prix",
+      "sortBy": "Trier par",
+      "allCategories": "Toutes catégories",
+      "allFormats": "Tous formats",
+      "allStatuses": "Tous statuts",
+      "allPrices": "Tous prix",
+      "upcoming": "À venir",
+      "ongoing": "En cours",
+      "completed": "Terminées",
+      "free": "Gratuit",
+      "paid": "Payant",
+      "reset": "Réinitialiser les filtres"
+    },
+    "sort": {
+      "newest": "Plus récentes",
+      "oldest": "Plus anciennes",
+      "startDate": "Date de début",
+      "popularity": "Popularité"
+    },
+    "view": {
+      "label": "Affichage"
+    },
+    "status": {
+      "upcoming": "À venir",
+      "ongoing": "En cours",
+      "completed": "Terminée"
+    },
+    "duration": {
+      "oneDay": "1 jour",
+      "days": "{count} jours",
+      "weeks": "{count} semaines",
+      "months": "{count} mois"
+    },
+    "detail": {
+      "error": {
+        "title": "Formation introuvable",
+        "notFound": "La formation que vous recherchez n'existe pas ou a été supprimée"
+      },
+      "tabs": {
+        "overview": "Vue d'ensemble",
+        "program": "Programme",
+        "participants": "Participants",
+        "resources": "Ressources"
+      },
+      "enrollButton": "S'inscrire à cette formation",
+      "continueButton": "Continuer la formation",
+      "viewCertificate": "Voir mon certificat",
+      "editButton": "Modifier",
+      "manageParticipants": "Gérer les participants",
+      "description": "Description",
+      "objectives": "Objectifs pédagogiques",
+      "targetAudience": "Public cible",
+      "methodology": "Méthodologie",
+      "prerequisites": "Prérequis",
+      "noChapters": "Aucun chapitre disponible pour le moment",
+      "lessons": "leçons",
+      "totalParticipants": "Total des participants",
+      "averageProgress": "Progression moyenne",
+      "completionRate": "Taux de complétion",
+      "participantsList": "Liste des participants",
+      "enrolledOn": "Inscrit le",
+      "certified": "Certifié",
+      "noResources": "Aucune ressource disponible",
+      "download": "Télécharger",
+      "yourProgress": "Votre progression",
+      "chaptersCompleted": "Chapitres complétés",
+      "totalTime": "Temps total",
+      "nextLesson": "Prochaine leçon",
+      "instructor": "Formateur",
+      "trainer": "Formateur",
+      "createdOn": "Créé le",
+      "quickActions": "Actions rapides",
+      "downloadProgram": "Télécharger le programme",
+      "share": "Partager",
+      "reportIssue": "Signaler un problème"
+    },
+    "empty": {
+      "noFormations": "Aucune formation disponible",
+      "noResults": "Aucun résultat trouvé",
+      "firstFormation": "Soyez le premier à créer une formation.",
+      "tryDifferentFilters": "Essayez avec des filtres différents."
+    }
   },
   "footer": {
     "description": "Plateforme e-pavillon de l'Institut de la Francophonie pour le Développement Durable",
