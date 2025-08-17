@@ -74,20 +74,15 @@
 
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-8">
-      <div class="grid lg:grid-cols-3 gap-8">
+      <div class="space-y-8">
         <!-- Sessions Section -->
-        <div class="lg:col-span-2">
-          <SessionSection :category="currentCategory" />
-        </div>
-
-        <!-- Right Sidebar -->
-        <div class="space-y-8">
-          <!-- Documents Section -->
-          <DocumentsSection :category="currentCategory" />
-          
-          <!-- Francophonie Meetings -->
-          <FrancophonieMeetingsSection :category="currentCategory" />
-        </div>
+        <SessionSection :category="currentCategory" />
+        
+        <!-- Documents Section -->
+        <DocumentsSection :category="currentCategory" />
+        
+        <!-- Francophonie Meetings -->
+        <FrancophonieMeetingsSection :category="currentCategory" />
       </div>
     </div>
   </div>
@@ -100,11 +95,9 @@ import { useI18n } from 'vue-i18n'
 import SessionSection from '@/components/negotiations/SessionSection.vue'
 import DocumentsSection from '@/components/negotiations/DocumentsSection.vue'
 import FrancophonieMeetingsSection from '@/components/negotiations/FrancophonieMeetingsSection.vue'
-
-// Icons for categories
-const ClimateIcon = () => import('@/components/icons/ClimateIcon.vue')
-const BiodiversityIcon = () => import('@/components/icons/BiodiversityIcon.vue')
-const DesertificationIcon = () => import('@/components/icons/DesertificationIcon.vue')
+import ClimateIcon from '@/components/icons/ClimateIcon.vue'
+import BiodiversityIcon from '@/components/icons/BiodiversityIcon.vue'
+import DesertificationIcon from '@/components/icons/DesertificationIcon.vue'
 
 const { t } = useI18n()
 const route = useRoute()

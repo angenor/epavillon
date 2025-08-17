@@ -208,7 +208,9 @@
     "community": "Community",
     "organizations": "Organizations",
     "climate": "Climate",
+    "climat": "Climate",
     "biodiversity": "Biodiversity",
+    "biodiversite": "Biodiversity",
     "desertification": "Desertification"
   },
   "user": {
@@ -826,6 +828,215 @@
         "description": "You don't have permission to edit this activity."
       },
       "draftSaved": "Draft saved successfully"
+    },
+    "negotiator": {
+      "designationHistory": {
+        "title": "Designation History",
+        "noDesignations": "No designations found",
+        "totalDesignations": "Total designations",
+        "currentYear": "Current year",
+        "latestDesignation": "Latest designation",
+        "designationsList": "Designations list",
+        "designationFor": "Designation for",
+        "designatedBy": "Designated by",
+        "system": "System"
+      },
+      "expertise": {
+        "title": "Expertise and Participations",
+        "specializationThemes": "Specialization themes",
+        "copParticipations": "COP participations",
+        "noThemes": "No specialized themes",
+        "noCops": "No COP participations"
+      },
+      "consultations": {
+        "title": "Consultation History",
+        "noConsultations": "No consultations recorded"
+      },
+      "quickAccess": {
+        "title": "Quick Access",
+        "negotiationSpace": "Negotiation Space",
+        "negotiationSpaceDesc": "Access negotiation tools",
+        "specializedTraining": "Specialized Training",
+        "specializedTrainingDesc": "Training for negotiators"
+      }
+    },
+    "focalPoint": {
+      "negotiators": {
+        "title": "Negotiator Management",
+        "designateNew": "Designate new negotiator",
+        "noNegotiators": "No negotiators designated",
+        "designateDesc": "You can designate negotiators for your country",
+        "totalDesignated": "Total designated",
+        "currentlyActive": "Currently active",
+        "currentYear": "Current year",
+        "negotiatorsList": "Negotiators list",
+        "designatedFor": "Designated for",
+        "designations": "designations",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "history": {
+        "title": "Designation History Made",
+        "noHistory": "No designations made",
+        "designatedFor": "Designated for"
+      },
+      "quickActions": {
+        "title": "Quick Actions",
+        "manageNegotiators": "Manage Negotiators",
+        "manageNegotiatorsDesc": "Designate and manage your negotiators",
+        "viewReports": "View Reports",
+        "viewReportsDesc": "Negotiator activity reports"
+      }
+    },
+    "trainer": {
+      "formations": {
+        "title": "Training Activities",
+        "createNew": "Create new training",
+        "noFormations": "No trainings created",
+        "createDesc": "Start by creating your first training",
+        "totalFormations": "Total trainings",
+        "totalParticipants": "Total participants",
+        "averageRating": "Average rating",
+        "completed": "Completed",
+        "formationsList": "Trainings list",
+        "participants": "participants",
+        "status": {
+          "draft": "Draft",
+          "published": "Published",
+          "ongoing": "Ongoing",
+          "completed": "Completed",
+          "cancelled": "Cancelled"
+        },
+        "viewDetails": "View details",
+        "edit": "Edit"
+      },
+      "evaluations": {
+        "title": "Received Evaluations",
+        "noEvaluations": "No evaluations received",
+        "evaluations": "evaluations",
+        "recentComments": "Recent comments"
+      },
+      "quickActions": {
+        "title": "Quick Actions",
+        "manageFormations": "Manage Trainings",
+        "manageFormationsDesc": "Create and manage your trainings",
+        "viewAnalytics": "View Analytics",
+        "viewAnalyticsDesc": "Your training statistics"
+      }
+    }
+  },
+  "negotiations": {
+    "title": "Negotiations",
+    "subtitle": "Dedicated space for Francophone climate negotiators to access negotiation sessions, support documents and coordination meetings",
+    "accessLevel": {
+      "negotiatorsOnly": "Access reserved for negotiators"
+    },
+    "categories": {
+      "climate": "Climate",
+      "biodiversity": "Biodiversity",
+      "desertification": "Desertification"
+    },
+    "sessions": {
+      "title": "Negotiation sessions",
+      "subtitle": "Sessions organized by IFDD and external sessions",
+      "ifddOrganized": "Sessions organized by IFDD",
+      "external": "External sessions",
+      "noSessions": "No sessions available",
+      "noSessionsDesc": "No negotiation sessions are scheduled for this category",
+      "filters": {
+        "all": "All",
+        "upcoming": "Upcoming",
+        "ongoing": "Ongoing",
+        "past": "Past"
+      },
+      "status": {
+        "upcoming": "Upcoming",
+        "ongoing": "Ongoing",
+        "past": "Past"
+      },
+      "register": "Register",
+      "registered": "Registered",
+      "unregister": "Unregister",
+      "participants": "participants",
+      "onlineLocation": "Online",
+      "visitWebsite": "Visit official website",
+      "joinZoom": "Join on Zoom",
+      "addToCalendar": "Add to calendar",
+      "documents": "Documents",
+      "registerSuccess": "Registration successful",
+      "registerError": "Registration error",
+      "unregisterSuccess": "Unregistration successful",
+      "unregisterError": "Unregistration error"
+    },
+    "documents": {
+      "title": "Negotiation support documents",
+      "subtitle": "Document library to help you in your negotiations",
+      "searchPlaceholder": "Search documents...",
+      "noDocuments": "No documents available",
+      "noDocumentsDesc": "No support documents are available for this category",
+      "types": {
+        "negotiationGuide": "Negotiation guide",
+        "technicalNote": "Technical note",
+        "relevantDocument": "Relevant document",
+        "other": "Other"
+      },
+      "filters": {
+        "allTypes": "All types"
+      },
+      "sort": {
+        "recent": "Most recent",
+        "alphabetical": "Alphabetical",
+        "relevance": "Relevance"
+      },
+      "view": "View",
+      "download": "Download",
+      "share": "Share",
+      "favorite": "Favorite",
+      "viewMore": "View more",
+      "viewError": "Error opening document",
+      "downloadSuccess": "Document downloaded",
+      "downloadError": "Download error",
+      "favoriteToggled": "Favorite updated",
+      "favoriteError": "Error updating favorites",
+      "loadMoreError": "Loading error"
+    },
+    "francophonieMeetings": {
+      "title": "Francophonie meetings",
+      "subtitle": "Meeting calendar and francophone coordination",
+      "noMeetings": "No meetings scheduled",
+      "noMeetingsDesc": "No Francophonie meetings are scheduled for this category",
+      "views": {
+        "list": "List",
+        "calendar": "Calendar"
+      },
+      "filters": {
+        "allTypes": "All types",
+        "allStatuses": "All statuses",
+        "upcoming": "Upcoming",
+        "ongoing": "Ongoing",
+        "past": "Past"
+      },
+      "register": "Register",
+      "registered": "Registered",
+      "unregister": "Unregister",
+      "participants": "participants",
+      "joinZoom": "Join on Zoom",
+      "viewDetails": "View details",
+      "registerSuccess": "Registration successful",
+      "registerError": "Registration error",
+      "unregisterSuccess": "Unregistration successful",
+      "unregisterError": "Unregistration error"
+    },
+    "meetingTypes": {
+      "Preparatory_Workshop": "Preparatory workshop",
+      "Francophone_Consultation": "Francophone consultation",
+      "Innovation": "Innovation",
+      "Field_Training_Workshop": "Field training workshop"
+    },
+    "meetingStatus": {
+      "upcoming": "Upcoming",
+      "ongoing": "Ongoing",
+      "past": "Past"
     }
   },
   "event": {
@@ -996,10 +1207,7 @@
     "callback": {
       "processing": "Authenticating...",
       "pleaseWait": "Please wait a moment"
-    },
-    "login": "Sign In",
-    "logout": "Sign Out",
-    "register": "Sign Up"
+    }
   },
   "activity": {
     "showMore": "Show more",
@@ -1423,158 +1631,6 @@
       },
       "pagination": {
         "showing": "Showing {start} to {end} of {total} activities"
-      }
-    }
-  },
-  "events": {
-    "create": {
-      "title": "Create Event",
-      "subtitle": "Organize a new event for the community",
-      "submit": "Create Event",
-      "submitting": "Creating...",
-      "uploaded": "Uploaded",
-      "lowQualityGenerated": "Low quality version generated automatically",
-      "mediaDescription": "Upload banners in different formats to optimize display on all media",
-      "requirements": {
-        "title": "Prerequisites to create an event",
-        "description": "To create an event, you must meet the following conditions:",
-        "contactAdmin": "Contact an administrator"
-      },
-      "sections": {
-        "basicInfo": "General Information",
-        "format": "Event Format",
-        "media": "Media and Banners"
-      },
-      "fields": {
-        "year": "Year",
-        "title": "Event Title",
-        "description": "Description",
-        "submissionDeadline": "Submission Deadline",
-        "participationMode": "Participation Mode",
-        "onlineDetails": "Online Event Details",
-        "onlineStartDate": "Online Start Date and Time",
-        "onlineEndDate": "Online End Date and Time",
-        "startDate": "Start Date",
-        "endDate": "End Date",
-        "inPersonDetails": "In-Person Event Details",
-        "country": "Country",
-        "city": "City",
-        "address": "Address",
-        "logo": "Logo",
-        "inPersonStartDate": "In-Person Start Date",
-        "inPersonEndDate": "In-Person End Date",
-        "banner32_9": "Banner 32:9",
-        "banner16_9": "Banner 16:9",
-        "banner1_1": "Banner 1:1"
-      },
-      "placeholders": {
-        "title": "E.g: International Forum on Sustainable Development 2025",
-        "description": "Describe the objective and content of your event...",
-        "selectCountry": "Select a country",
-        "selectMode": "Select participation mode",
-        "city": "E.g: Paris",
-        "address": "Complete venue address",
-        "logo": "https://example.com/logo.png"
-      },
-      "modes": {
-        "online": "Online",
-        "in_person": "In Person",
-        "hybrid": "Hybrid"
-      }
-    },
-    "negotiator": {
-      "designationHistory": {
-        "title": "Designation History",
-        "noDesignations": "No designations found",
-        "totalDesignations": "Total designations",
-        "currentYear": "Current year",
-        "latestDesignation": "Latest designation",
-        "designationsList": "Designations list",
-        "designationFor": "Designation for",
-        "designatedBy": "Designated by",
-        "system": "System"
-      },
-      "expertise": {
-        "title": "Expertise and Participations",
-        "specializationThemes": "Specialization themes",
-        "copParticipations": "COP participations",
-        "noThemes": "No specialized themes",
-        "noCops": "No COP participations"
-      },
-      "consultations": {
-        "title": "Consultation History",
-        "noConsultations": "No consultations recorded"
-      },
-      "quickAccess": {
-        "title": "Quick Access",
-        "negotiationSpace": "Negotiation Space",
-        "negotiationSpaceDesc": "Access negotiation tools",
-        "specializedTraining": "Specialized Training",
-        "specializedTrainingDesc": "Training for negotiators"
-      }
-    },
-    "focalPoint": {
-      "negotiators": {
-        "title": "Negotiator Management",
-        "designateNew": "Designate new negotiator",
-        "noNegotiators": "No negotiators designated",
-        "designateDesc": "You can designate negotiators for your country",
-        "totalDesignated": "Total designated",
-        "currentlyActive": "Currently active",
-        "currentYear": "Current year",
-        "negotiatorsList": "Negotiators list",
-        "designatedFor": "Designated for",
-        "designations": "designations",
-        "active": "Active",
-        "inactive": "Inactive"
-      },
-      "history": {
-        "title": "Designation History Made",
-        "noHistory": "No designations made",
-        "designatedFor": "Designated for"
-      },
-      "quickActions": {
-        "title": "Quick Actions",
-        "manageNegotiators": "Manage Negotiators",
-        "manageNegotiatorsDesc": "Designate and manage your negotiators",
-        "viewReports": "View Reports",
-        "viewReportsDesc": "Negotiator activity reports"
-      }
-    },
-    "trainer": {
-      "formations": {
-        "title": "Training Activities",
-        "createNew": "Create new training",
-        "noFormations": "No trainings created",
-        "createDesc": "Start by creating your first training",
-        "totalFormations": "Total trainings",
-        "totalParticipants": "Total participants",
-        "averageRating": "Average rating",
-        "completed": "Completed",
-        "formationsList": "Trainings list",
-        "participants": "participants",
-        "status": {
-          "draft": "Draft",
-          "published": "Published",
-          "ongoing": "Ongoing",
-          "completed": "Completed",
-          "cancelled": "Cancelled"
-        },
-        "viewDetails": "View details",
-        "edit": "Edit"
-      },
-      "evaluations": {
-        "title": "Received Evaluations",
-        "noEvaluations": "No evaluations received",
-        "evaluations": "evaluations",
-        "recentComments": "Recent comments"
-      },
-      "quickActions": {
-        "title": "Quick Actions",
-        "manageFormations": "Manage Trainings",
-        "manageFormationsDesc": "Create and manage your trainings",
-        "viewAnalytics": "View Analytics",
-        "viewAnalyticsDesc": "Your training statistics"
       }
     }
   }

@@ -129,6 +129,25 @@ const router = createRouter({
       name: 'formation-detail',
       component: () => import('../views/formation/Detail.vue'),
     },
+    // Négociations routes
+    {
+      path: '/nego',
+      redirect: '/nego/climat',
+    },
+    {
+      path: '/nego/:category',
+      name: 'negotiations',
+      component: () => import('../views/negociation/Negociation.vue'),
+      meta: { requiresAuth: true, requiresRole: ['negotiator', 'admin', 'super_admin'] },
+      beforeEnter: (to, from, next) => {
+        const validCategories = ['climat', 'biodiversite', 'desertification']
+        if (validCategories.includes(to.params.category)) {
+          next()
+        } else {
+          next('/nego/climat')
+        }
+      }
+    },
   ],
 })
 

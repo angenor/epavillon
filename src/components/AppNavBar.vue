@@ -57,21 +57,25 @@
               <div class="p-2">
                 <router-link to="/community" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:translate-x-1">{{ t('nav.community') }}</router-link>
                 <router-link to="/organizations" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:translate-x-1">{{ t('nav.organizations') }}</router-link>
+                <!-- TODO:Trouver profil -->
+                 <div>
+
+                 </div>
               </div>
             </div>
           </div>
 
           <!-- Menu Négociations -->
           <div class="relative group">
-            <button class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:text-ifdd-bleu dark:hover:text-ifdd-bleu-clair font-medium flex items-center space-x-2 transition-all duration-300 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50">
+            <router-link to="/nego" class="px-4 py-2 text-gray-700 dark:text-gray-200 hover:text-ifdd-bleu dark:hover:text-ifdd-bleu-clair font-medium flex items-center space-x-2 transition-all duration-300 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50">
               <span>{{ t('nav.negotiations') }}</span>
               <font-awesome-icon :icon="['fas', 'chevron-down']" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" />
-            </button>
+            </router-link>
             <div class="absolute left-0 mt-2 w-56 rounded-xl shadow-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transform scale-95 group-hover:scale-100 transition-all duration-300 origin-top-left">
               <div class="p-2">
-                <a href="#" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:translate-x-1">{{ t('nav.climate') }}</a>
-                <a href="#" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:translate-x-1">{{ t('nav.biodiversity') }}</a>
-                <a href="#" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:translate-x-1">{{ t('nav.desertification') }}</a>
+                <router-link to="/nego/climat" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:translate-x-1">{{ t('nav.climate') }}</router-link>
+                <router-link to="/nego/biodiversite" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:translate-x-1">{{ t('nav.biodiversity') }}</router-link>
+                <router-link to="/nego/desertification" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:translate-x-1">{{ t('nav.desertification') }}</router-link>
               </div>
             </div>
           </div>
