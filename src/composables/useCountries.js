@@ -30,10 +30,42 @@ export function useCountries() {
     }
   }
 
+  const loadCountries = async (options = {}) => {
+    loading.value = true
+    error.value = null
+
+    try {
+      let query = supabase
+        .from('countries')
+        .select('*')
+        .order('name_fr')
+
+      if (options.francophone_only) {
+        query = query.eq('is_francophone', true)
+      }
+
+      const { data, error: queryError } = await query
+
+      if (queryError) {
+        throw queryError
+      }
+
+      countries.value = data || []
+
+    } catch (err) {
+      console.error('Erreur lors du chargement des pays:', err)
+      error.value = err.message
+      countries.value = []
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     countries,
     loading,
     error,
-    fetchCountries
+    fetchCountries,
+    loadCountries
   }
 }

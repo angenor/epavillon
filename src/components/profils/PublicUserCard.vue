@@ -32,8 +32,8 @@
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white line-clamp-1">
               {{ profile.first_name }} {{ profile.last_name }}
             </h3>
-            <p v-if="profile.position" class="text-sm text-gray-600 dark:text-gray-400 line-clamp-1">
-              {{ profile.position }}
+            <p v-if="profile.address" class="text-sm text-gray-600 dark:text-gray-400 line-clamp-1">
+              {{ profile.address }}
             </p>
           </div>
           
@@ -121,13 +121,13 @@
       ]">
         <router-link
           :to="{ name: 'public-profile', params: { id: profile.id } }"
-          class="flex-1 bg-ifdd-green-600 hover:bg-ifdd-green-700 text-white text-sm font-medium py-2 px-4 rounded-md text-center transition-colors duration-200"
+          class="flex-1 bg-ifdd-green-600 hover:bg-ifdd-green-700 text-blue-900 dark:text-white text-sm font-medium py-2 px-4 rounded-md text-center transition-colors duration-200"
         >
           {{ $t('directory.view_profile') }}
         </router-link>
         
         <button
-          v-if="$auth.user"
+          v-if="isAuthenticated"
           @click="$emit('connection-request', profile.id)"
           class="flex-shrink-0 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm font-medium py-2 px-3 rounded-md transition-colors duration-200"
         >
@@ -142,6 +142,9 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
 
 const props = defineProps({
   profile: {
@@ -165,6 +168,8 @@ const isNegotiator = computed(() => {
 const isTrainer = computed(() => {
   return props.profile.roles?.includes('trainer') || false
 })
+
+const isAuthenticated = computed(() => authStore.isAuthenticated)
 </script>
 
 <style scoped>

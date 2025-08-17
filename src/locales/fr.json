@@ -51,7 +51,8 @@
     "saving": "Enregistrement...",
     "saveSuccess": "Enregistrement effectué avec succès",
     "saveError": "Erreur lors de l'enregistrement",
-    "submitting": "Envoi..."
+    "submitting": "Envoi...",
+    "per_page": "par page"
   },
   "profile": {
     "roleSpecific": {
@@ -214,6 +215,7 @@
     "networking": "Réseautage",
     "negotiations": "Négociations",
     "community": "Communauté",
+    "directory": "Trouver profil",
     "organizations": "Organisations",
     "climate": "Climat",
     "climat": "Climat",
@@ -1638,6 +1640,39 @@
       "upcoming": "À venir",
       "ongoing": "En cours",
       "past": "Passée"
+    }
+  },
+  "directory": {
+    "title": "Annuaire Public des Professionnels",
+    "subtitle": "Découvrez les professionnels de la communauté francophone du développement durable",
+    "results_count": "{count} professionnel trouvé | {count} professionnels trouvés",
+    "no_results": "Aucun profil trouvé",
+    "no_results_message": "Essayez de modifier vos critères de recherche ou d'affiner vos filtres.",
+    "view_profile": "Voir le profil",
+    "verified": "Vérifiée",
+    "not_verified": "Non vérifiée",
+    "activities": "activités",
+    "member_since": "Membre depuis",
+    "filters": {
+      "title": "Filtres de recherche",
+      "search_name": "Recherche par nom",
+      "search_placeholder": "Nom ou prénom...",
+      "organization": "Organisation",
+      "all_organizations": "Toutes les organisations",
+      "country": "Pays",
+      "all_countries": "Tous les pays",
+      "expertise": "Domaine d'expertise",
+      "reset": "Réinitialiser",
+      "visible_profiles": "profils visibles"
+    },
+    "expertise": {
+      "negotiator": "Négociateur climatique",
+      "sustainable_development": "Expert en développement durable",
+      "trainer": "Formateur"
+    },
+    "badges": {
+      "negotiator": "Négociateur",
+      "trainer": "Formateur"
     }
   },
   "event": {

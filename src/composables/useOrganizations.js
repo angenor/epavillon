@@ -185,6 +185,40 @@ export function useOrganizations() {
     fetchOrganizations()
   }
 
+  // Nouvelle méthode pour charger les organisations avec options
+  async function loadOrganizations(options = {}) {
+    try {
+      loading.value = true
+      error.value = null
+
+      let query = from('organizations')
+        .select('id, name, is_verified, organization_type')
+        .eq('is_active', true)
+        .eq('is_duplicate', false)
+
+      if (options.verified_only) {
+        query = query.eq('is_verified', true)
+      }
+
+      query = query.order('name')
+
+      const { data, error: queryError } = await query
+
+      if (queryError) throw queryError
+
+      organizations.value = data || []
+      return data || []
+
+    } catch (err) {
+      console.error('Erreur lors du chargement des organisations:', err)
+      error.value = err.message
+      organizations.value = []
+      return []
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     // State
     organizations,
@@ -219,6 +253,7 @@ export function useOrganizations() {
     nextPage,
     prevPage,
     resetFilters,
-    applyFilters
+    applyFilters,
+    loadOrganizations
   }
 }

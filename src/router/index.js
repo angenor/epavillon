@@ -113,6 +113,25 @@ const router = createRouter({
       name: 'organization-detail',
       component: () => import('../views/organization/OrganizationDetail.vue'),
     },
+    // Routes pour l'annuaire public des profils
+    {
+      path: '/directory',
+      name: 'public-directory',
+      component: () => import('../views/profils/PublicDirectory.vue'),
+      meta: { public: true }
+    },
+    {
+      path: '/directory/:id',
+      name: 'public-profile',
+      component: () => import('../views/profils/PublicProfile.vue'),
+      meta: { public: true }
+    },
+    {
+      path: '/debug-profile',
+      name: 'debug-profile',
+      component: () => import('../views/profils/PublicProfileDebug.vue'),
+      meta: { public: true }
+    },
     {
       path: '/formations',
       name: 'formations',
