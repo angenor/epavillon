@@ -402,6 +402,8 @@ CREATE TABLE public.activity_question_answers (
 -- Types de sessions
 CREATE TYPE session_category AS ENUM ('climate', 'biodiversity', 'desertification');
 
+CREATE TYPE meeting_type AS ENUM ('Preparatory_Workshop', 'Francophone_Consultation', 'Innovation','Field_Training_Workshop');
+
 -- Sessions de négociation
 CREATE TABLE public.negotiation_sessions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -425,6 +427,32 @@ CREATE TABLE public.session_registrations (
     user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
     registered_at TIMESTAMPTZ DEFAULT NOW(),
     UNIQUE(session_id, user_id)
+);
+
+-- Réunions de la Francophonie
+CREATE TABLE public.francophonie_meetings (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    title TEXT NOT NULL,
+    description TEXT,
+    start_datetime TIMESTAMPTZ NOT NULL,
+    end_datetime TIMESTAMPTZ NOT NULL,
+    location TEXT,
+    country_id UUID REFERENCES public.countries(id) NOT NULL,
+    category session_category NOT NULL,
+    meeting_type meeting_type NOT NULL,
+    zoom_meeting_id UUID REFERENCES public.zoom_meetings(id),
+    created_by UUID REFERENCES public.users(id),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Inscriptions aux réunions de la Francophonie
+CREATE TABLE public.francophonie_meeting_registrations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    meeting_id UUID NOT NULL REFERENCES public.francophonie_meetings(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+    registered_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(meeting_id, user_id)
 );
 
 -- Documents d'aide à la négociation
@@ -1004,6 +1032,11 @@ CREATE INDEX idx_training_participants ON public.training_participants(training_
 CREATE INDEX idx_comments_context ON public.comments(context_type, context_id);
 CREATE INDEX idx_testimonials_context ON public.user_testimonials(context_type, context_id);
 CREATE INDEX idx_events_country ON public.events(country_id);
+CREATE INDEX idx_francophonie_meetings_country ON public.francophonie_meetings(country_id);
+CREATE INDEX idx_francophonie_meetings_category ON public.francophonie_meetings(category);
+CREATE INDEX idx_francophonie_meetings_dates ON public.francophonie_meetings(start_datetime, end_datetime);
+CREATE INDEX idx_francophonie_meeting_registrations_meeting ON public.francophonie_meeting_registrations(meeting_id);
+CREATE INDEX idx_francophonie_meeting_registrations_user ON public.francophonie_meeting_registrations(user_id);
 
 -- Triggers pour mise à jour automatique des timestamps
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -1041,6 +1074,9 @@ CREATE TRIGGER update_appointments_updated_at BEFORE UPDATE ON public.appointmen
 CREATE TRIGGER update_message_groups_updated_at BEFORE UPDATE ON public.message_groups
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+CREATE TRIGGER update_francophonie_meetings_updated_at BEFORE UPDATE ON public.francophonie_meetings
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
 -- Trigger pour incrémenter le compteur de vues
 CREATE OR REPLACE FUNCTION increment_view_count()
 RETURNS TRIGGER AS $$
@@ -1074,6 +1110,8 @@ ALTER TABLE public.training_participants ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.comments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_testimonials ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.newsletter_subscriptions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.francophonie_meetings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.francophonie_meeting_registrations ENABLE ROW LEVEL SECURITY;
 
 -- Politiques pour les pays (lecture pour tous)
 CREATE POLICY "Countries are viewable by all" ON public.countries
@@ -1274,6 +1312,72 @@ CREATE POLICY "Users can create testimonials" ON public.user_testimonials
 -- Politiques pour les newsletters
 CREATE POLICY "Users can manage their own subscriptions" ON public.newsletter_subscriptions
     FOR ALL USING (user_id = auth.uid());
+
+-- Politiques pour les réunions de la Francophonie
+CREATE POLICY "Francophonie meetings are viewable by all authenticated users" ON public.francophonie_meetings
+    FOR SELECT USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Only admins can create francophonie meetings" ON public.francophonie_meetings
+    FOR INSERT WITH CHECK (
+        auth.uid() IS NOT NULL 
+        AND created_by = auth.uid()
+        AND EXISTS (
+            SELECT 1 FROM public.user_roles 
+            WHERE user_id = auth.uid() 
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
+        )
+    );
+
+CREATE POLICY "Users can update their own francophonie meetings" ON public.francophonie_meetings
+    FOR UPDATE USING (
+        created_by = auth.uid() OR
+        EXISTS (
+            SELECT 1 FROM public.user_roles 
+            WHERE user_id = auth.uid() 
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
+        )
+    ) WITH CHECK (
+        created_by = auth.uid() OR
+        EXISTS (
+            SELECT 1 FROM public.user_roles 
+            WHERE user_id = auth.uid() 
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
+        )
+    );
+
+CREATE POLICY "Users can delete their own francophonie meetings" ON public.francophonie_meetings
+    FOR DELETE USING (
+        created_by = auth.uid() OR
+        EXISTS (
+            SELECT 1 FROM public.user_roles 
+            WHERE user_id = auth.uid() 
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
+        )
+    );
+
+-- Politiques pour les inscriptions aux réunions de la Francophonie
+CREATE POLICY "Users can view their own francophonie meeting registrations" ON public.francophonie_meeting_registrations
+    FOR SELECT USING (user_id = auth.uid());
+
+CREATE POLICY "Admins can view all francophonie meeting registrations" ON public.francophonie_meeting_registrations
+    FOR SELECT USING (
+        EXISTS (
+            SELECT 1 FROM public.user_roles 
+            WHERE user_id = auth.uid() 
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
+        )
+    );
+
+CREATE POLICY "Users can register to francophonie meetings" ON public.francophonie_meeting_registrations
+    FOR INSERT WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Users can delete their own francophonie meeting registrations" ON public.francophonie_meeting_registrations
+    FOR DELETE USING (user_id = auth.uid());
 
 -- =============================================
 -- FONCTIONS UTILITAIRES
@@ -1516,3 +1620,8 @@ COMMENT ON TABLE public.poll_responses IS 'Réponses aux sondages avec support a
 COMMENT ON COLUMN public.events.country_id IS 'Pays où se déroule l''événement (référence vers la table countries)';
 COMMENT ON COLUMN public.events.city IS 'Ville où se déroule l''événement';
 COMMENT ON COLUMN public.events.address IS 'Adresse complète de l''événement';
+COMMENT ON TABLE public.francophonie_meetings IS 'Réunions de la Francophonie avec localisation et support Zoom';
+COMMENT ON TABLE public.francophonie_meeting_registrations IS 'Inscriptions des utilisateurs aux réunions de la Francophonie';
+COMMENT ON COLUMN public.francophonie_meetings.country_id IS 'Pays où se déroule la réunion (référence obligatoire vers la table countries)';
+COMMENT ON COLUMN public.francophonie_meetings.category IS 'Catégorie de la réunion (climate, biodiversity, desertification)';
+COMMENT ON COLUMN public.francophonie_meetings.zoom_meeting_id IS 'Référence optionnelle vers les informations Zoom si la réunion est en ligne';
