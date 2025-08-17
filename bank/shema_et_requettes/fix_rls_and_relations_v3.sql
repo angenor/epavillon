@@ -137,6 +137,25 @@ CREATE POLICY "Negotiators are publicly viewable" ON negotiators
     FOR SELECT
     USING (true);
 
+-- 8. POLITIQUES POUR ACTIVITY_SPEAKERS
+DO $$ 
+DECLARE
+    pol RECORD;
+BEGIN
+    FOR pol IN 
+        SELECT policyname 
+        FROM pg_policies 
+        WHERE tablename = 'activity_speakers' 
+        AND schemaname = 'public'
+    LOOP
+        EXECUTE format('DROP POLICY IF EXISTS %I ON public.activity_speakers', pol.policyname);
+    END LOOP;
+END $$;
+
+CREATE POLICY "Activity speakers are publicly viewable" ON activity_speakers
+    FOR SELECT
+    USING (true);
+
 -- 8. POLITIQUES POUR ACTIVITIES (si la table existe)
 DO $$ 
 DECLARE
