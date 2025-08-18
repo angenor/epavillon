@@ -7,15 +7,15 @@
   >
     <!-- Photo de profil -->
     <div :class="[
-      'flex-shrink-0',
-      viewMode === 'list' ? 'w-24 h-24' : 'w-full h-48'
+      'flex-shrink-0 flex justify-center',
+      viewMode === 'list' ? 'w-20 h-20 items-center' : 'w-full pt-6 pb-4'
     ]">
       <img
         :src="profile.profile_photo_thumbnail_url || '/images/default-avatar.png'"
         :alt="`Photo de ${profile.first_name} ${profile.last_name}`"
         :class="[
-          'object-cover',
-          viewMode === 'list' ? 'w-full h-full' : 'w-full h-full'
+          'object-cover rounded-full border-2 border-gray-200 dark:border-gray-600 shadow-sm',
+          viewMode === 'list' ? 'w-16 h-16' : 'w-20 h-20'
         ]"
       />
     </div>
@@ -176,6 +176,7 @@ const isAuthenticated = computed(() => authStore.isAuthenticated)
 .line-clamp-1 {
   display: -webkit-box;
   -webkit-line-clamp: 1;
+  line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

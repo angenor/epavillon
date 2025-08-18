@@ -75,8 +75,8 @@
               />
             </div>
             <div class="ml-6 flex-1">
-              <div class="flex items-center justify-between">
-                <div>
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div class="flex-1">
                   <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
                     {{ profile.first_name }} {{ profile.last_name }}
                   </h1>
@@ -85,18 +85,32 @@
                   </p>
                 </div>
                 <!-- Actions -->
-                <div v-if="isAuthenticated && currentUserId !== profile.id" class="flex space-x-3">
+                <div class="flex-shrink-0">
+                  <!-- Bouton pour utilisateurs authentifiés -->
                   <button
+                    v-if="isAuthenticated && currentUserId !== profile.id"
                     @click="sendConnectionRequest"
                     :disabled="sending"
-                    class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-ifdd-green-600 hover:bg-ifdd-green-700 disabled:opacity-50"
+                    class="inline-flex items-center justify-center px-6 py-3 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-ifdd-green-600 hover:bg-ifdd-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ifdd-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                   >
                     <svg v-if="!sending" class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
                     <div v-else class="w-4 h-4 mr-2 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                    Se connecter
+                    {{ $t('directory.connect') || 'Se connecter' }}
                   </button>
+                  
+                  <!-- Bouton pour utilisateurs non authentifiés -->
+                  <router-link
+                    v-else-if="!isAuthenticated"
+                    :to="{ name: 'login' }"
+                    class="inline-flex items-center justify-center px-6 py-3 border border-ifdd-green-600 shadow-sm text-sm font-medium rounded-md text-ifdd-green-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ifdd-green-500 transition-colors duration-200"
+                  >
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    </svg>
+                    {{ $t('auth.login_to_connect') || 'Se connecter pour établir le contact' }}
+                  </router-link>
                 </div>
               </div>
             </div>
@@ -320,11 +334,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 import { usePublicProfiles } from '@/composables/usePublicProfiles'
 import { useAuthStore } from '@/stores/auth'
 
-const { t } = useI18n()
 const route = useRoute()
 const authStore = useAuthStore()
 
