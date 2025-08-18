@@ -50,7 +50,8 @@
     "tabs": {
       "information": "Information",
       "settings": "Settings",
-      "roleSpecific": "My Role"
+      "roleSpecific": "My Role",
+      "connections": "Connections"
     },
     "roleSpecific": {
       "standard": {
@@ -74,7 +75,8 @@
     "sections": {
       "profileInfo": "Profile Information",
       "quickStats": "Quick Stats",
-      "quickActions": "Quick Actions"
+      "quickActions": "Quick Actions",
+      "connections": "My Connections"
     },
     "personalInfo": {
       "title": "Personal Information",
@@ -226,7 +228,13 @@
         "rejected": "Rejected",
         "blocked": "Blocked",
         "cancelled": "Cancelled"
-      }
+      },
+      "subtitle": "{count} established connection(s)",
+      "noConnections": "No connections",
+      "noConnectionsDescription": "You don't have any established connections yet. Search for other users to expand your professional network.",
+      "connectedSince": "Connected since",
+      "sendMessage": "Message",
+      "messageFeatureComingSoon": "Messaging will be available soon!"
     }
   },
   "notifications": {

@@ -77,12 +77,14 @@
     "tabs": {
       "information": "Informations",
       "settings": "Paramètres",
-      "roleSpecific": "Mon Rôle"
+      "roleSpecific": "Mon Rôle",
+      "connections": "Connexions"
     },
     "sections": {
       "profileInfo": "Informations du Profil",
       "quickStats": "Statistiques Rapides",
-      "quickActions": "Actions Rapides"
+      "quickActions": "Actions Rapides",
+      "connections": "Mes Connexions"
     },
     "personalInfo": {
       "title": "Informations Personnelles",
@@ -234,7 +236,13 @@
         "rejected": "Rejetée",
         "blocked": "Bloquée",
         "cancelled": "Annulée"
-      }
+      },
+      "subtitle": "{count} connexion(s) établie(s)",
+      "noConnections": "Aucune connexion",
+      "noConnectionsDescription": "Vous n'avez encore aucune connexion établie. Recherchez d'autres utilisateurs pour élargir votre réseau professionnel.",
+      "connectedSince": "Connecté depuis",
+      "sendMessage": "Message",
+      "messageFeatureComingSoon": "La messagerie sera bientôt disponible !"
     }
   },
   "notifications": {

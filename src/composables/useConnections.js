@@ -4,6 +4,7 @@ import { supabase } from '@/composables/useSupabase'
 export function useConnections() {
   const connectionRequests = ref([])
   const sentRequests = ref([])
+  const acceptedConnections = ref([])
   const loading = ref(false)
   const error = ref(null)
 
@@ -222,6 +223,100 @@ export function useConnections() {
   }
 
   /**
+   * Récupère les connexions acceptées depuis la table connections
+   */
+  const getAcceptedConnections = async () => {
+    loading.value = true
+    error.value = null
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (!user) {
+        throw new Error('Utilisateur non connecté')
+      }
+
+      const { data, error: queryError } = await supabase
+        .from('connections')
+        .select(`
+          id,
+          status,
+          updated_at,
+          requester:requester_id(
+            id,
+            first_name,
+            last_name,
+            email,
+            profile_photo_url,
+            profile_photo_thumbnail_url,
+            biography,
+            country_id,
+            organization_id,
+            countries!country_id(
+              id,
+              name_fr,
+              name_en
+            ),
+            organizations!organization_id(
+              id,
+              name,
+              is_verified
+            )
+          ),
+          recipient:recipient_id(
+            id,
+            first_name,
+            last_name,
+            email,
+            profile_photo_url,
+            profile_photo_thumbnail_url,
+            biography,
+            country_id,
+            organization_id,
+            countries!country_id(
+              id,
+              name_fr,
+              name_en
+            ),
+            organizations!organization_id(
+              id,
+              name,
+              is_verified
+            )
+          )
+        `)
+        .or(`requester_id.eq.${user.id},recipient_id.eq.${user.id}`)
+        .eq('status', 'accepted')
+        .order('updated_at', { ascending: false })
+
+      if (queryError) {
+        throw queryError
+      }
+
+      // Transformer les données pour avoir toujours l'autre utilisateur comme "contact"
+      const transformedConnections = (data || []).map(connection => {
+        const isRequester = connection.requester.id === user.id
+        const contact = isRequester ? connection.recipient : connection.requester
+        
+        return {
+          id: connection.id,
+          contact,
+          connected_at: connection.updated_at,
+          connection_status: connection.status
+        }
+      })
+
+      acceptedConnections.value = transformedConnections
+    } catch (err) {
+      console.error('Erreur lors du chargement des connexions acceptées:', err)
+      error.value = err.message
+      acceptedConnections.value = []
+    } finally {
+      loading.value = false
+    }
+  }
+
+  /**
    * Récupère les demandes de connexion envoyées
    */
   const getSentConnectionRequests = async () => {
@@ -284,10 +379,13 @@ export function useConnections() {
   return {
     connectionRequests: computed(() => connectionRequests.value),
     sentRequests: computed(() => sentRequests.value),
+    acceptedConnections: computed(() => acceptedConnections.value),
+    connectionsCount: computed(() => acceptedConnections.value.length),
     loading: computed(() => loading.value),
     error: computed(() => error.value),
     getConnectionRequests,
     getSentConnectionRequests,
+    getAcceptedConnections,
     getConnectionStatus,
     acceptConnectionRequest,
     rejectConnectionRequest,

@@ -154,6 +154,17 @@
             >
               {{ t('profile.tabs.roleSpecific') }}
             </button>
+            <button
+              @click="activeTab = 'connections'"
+              :class="[
+                activeTab === 'connections'
+                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600',
+                'whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors'
+              ]"
+            >
+              {{ t('profile.tabs.connections') }}
+            </button>
           </nav>
         </div>
       </div>
@@ -194,6 +205,11 @@
               :user-id="authStore.user?.id"
             />
           </div>
+
+          <!-- Section Connexions -->
+          <div v-if="activeTab === 'connections'">
+            <ConnectionsList />
+          </div>
         </div>
 
         <!-- Colonne latérale -->
@@ -229,7 +245,7 @@
                 <span class="text-sm text-gray-600 dark:text-gray-300">
                   {{ t('profile.stats.connections') }}
                 </span>
-                <span class="font-semibold text-gray-900 dark:text-white">-</span>
+                <span class="font-semibold text-gray-900 dark:text-white">{{ connectionsCount }}</span>
               </div>
             </div>
           </div>
@@ -286,11 +302,16 @@ import ProfileInfoSection from '@/components/profile/ProfileInfoSection.vue'
 import ProfileSettingsSection from '@/components/profile/ProfileSettingsSection.vue'
 import RoleSpecificSection from '@/components/profile/RoleSpecificSection.vue'
 import ConnectionRequestsSection from '@/components/profils/ConnectionRequestsSection.vue'
+import ConnectionsList from '@/components/profils/ConnectionsList.vue'
+import { useConnections } from '@/composables/useConnections'
 
 const { t } = useI18n()
 const { success, error } = useToast()
 const authStore = useAuthStore()
 const userStore = useUserStore()
+
+// Composable pour les connexions
+const { connectionsCount, getAcceptedConnections } = useConnections()
 
 const isEditing = ref(false)
 const activeTab = ref('profile')
@@ -361,6 +382,8 @@ onMounted(async () => {
     if (authStore.profile?.organization_id) {
       await loadOrganizationData()
     }
+    // Charger le nombre de connexions pour les statistiques
+    await getAcceptedConnections()
   }
 })
 
