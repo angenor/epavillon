@@ -133,6 +133,12 @@ const router = createRouter({
       meta: { public: true }
     },
     {
+      path: '/notifications',
+      name: 'notifications',
+      component: () => import('../views/notifications/Notifications.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/formations',
       name: 'formations',
       component: () => import('../views/formation/Index.vue'),

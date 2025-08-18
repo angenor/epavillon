@@ -86,18 +86,24 @@
                 </div>
                 <!-- Actions -->
                 <div class="flex-shrink-0">
-                  <!-- Bouton pour utilisateurs authentifiés -->
+                  <!-- Bouton de connexion dynamique -->
                   <button
-                    v-if="isAuthenticated && currentUserId !== profile.id"
-                    @click="sendConnectionRequest"
+                    v-if="connectionButtonInfo"
+                    @click="handleConnectionAction"
                     :disabled="sending"
-                    class="inline-flex items-center justify-center px-6 py-3 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-ifdd-green-600 hover:bg-ifdd-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ifdd-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                    :class="connectionButtonInfo.class"
                   >
-                    <svg v-if="!sending" class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg v-if="!sending && connectionButtonInfo.action === 'connect'" class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
-                    <div v-else class="w-4 h-4 mr-2 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                    {{ $t('directory.connect') || 'Se connecter' }}
+                    <svg v-else-if="!sending && connectionButtonInfo.action === 'cancel'" class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    <svg v-else-if="!sending && connectionButtonInfo.action === 'none'" class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <div v-if="sending" class="w-4 h-4 mr-2 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
+                    {{ connectionButtonInfo.text }}
                   </button>
                   
                   <!-- Bouton pour utilisateurs non authentifiés -->
@@ -245,6 +251,39 @@
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ formatDate(activity.created_at) }}
                 </p>
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 mt-2">
+                  Organisateur
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activités d'intervention -->
+          <div v-if="profile.speaker_activities?.length" class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+            <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
+              Activités d'intervention
+            </h2>
+            <div class="space-y-4">
+              <div 
+                v-for="activity in profile.speaker_activities" 
+                :key="`speaker-${activity.id}`"
+                class="border-l-4 border-blue-500 pl-4"
+              >
+                <h3 class="font-medium text-gray-900 dark:text-white">{{ activity.title }}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  {{ formatDate(activity.created_at) }}
+                </p>
+                <div class="mt-2 flex flex-wrap gap-2">
+                  <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                    Intervenant
+                  </span>
+                  <span v-if="activity.speaker_info?.position" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                    {{ activity.speaker_info.position }}
+                  </span>
+                  <span v-if="activity.speaker_info?.organization" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                    {{ activity.speaker_info.organization }}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -285,8 +324,14 @@
               </div>
               <div v-if="profile.stats?.activities_count">
                 <div class="flex items-center justify-between">
-                  <span class="text-sm text-gray-600 dark:text-gray-400">{{ $t('directory.activities') }}</span>
+                  <span class="text-sm text-gray-600 dark:text-gray-400">Activités organisées</span>
                   <span class="font-medium text-gray-900 dark:text-white">{{ profile.stats.activities_count }}</span>
+                </div>
+              </div>
+              <div v-if="profile.stats?.speaker_activities_count">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-gray-600 dark:text-gray-400">Interventions</span>
+                  <span class="font-medium text-gray-900 dark:text-white">{{ profile.stats.speaker_activities_count }}</span>
                 </div>
               </div>
               <div v-if="profile.stats?.trainings_count">
@@ -334,10 +379,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { usePublicProfiles } from '@/composables/usePublicProfiles'
+import { useConnections } from '@/composables/useConnections'
 import { useAuthStore } from '@/stores/auth'
 
 const route = useRoute()
+const { t } = useI18n()
 const authStore = useAuthStore()
 
 // État local
@@ -345,9 +393,13 @@ const profile = ref(null)
 const loading = ref(true)
 const error = ref(null)
 const sending = ref(false)
+const connectionStatus = ref(null)
+const connectionId = ref(null)
+const isSentByCurrentUser = ref(false)
 
-// Composable
+// Composables
 const { getPublicProfile, sendConnectionRequest: sendConnection } = usePublicProfiles()
+const { getConnectionStatus, cancelConnectionRequest } = useConnections()
 
 // Computed
 const isAuthenticated = computed(() => authStore.isAuthenticated)
@@ -361,7 +413,48 @@ const isTrainer = computed(() => {
   return profile.value?.roles?.includes('trainer') || false
 })
 
+const connectionButtonInfo = computed(() => {
+  if (!isAuthenticated.value || currentUserId.value === profile.value?.id) {
+    return null // Pas de bouton si non connecté ou même utilisateur
+  }
+
+  if (connectionStatus.value === 'pending' && isSentByCurrentUser.value) {
+    return {
+      text: t('profile.connections.status.pending') || 'Demande envoyée',
+      action: 'cancel',
+      class: 'inline-flex items-center justify-center px-6 py-3 border border-yellow-600 shadow-sm text-sm font-medium rounded-md text-yellow-600 bg-white dark:bg-gray-800 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-colors duration-200'
+    }
+  }
+
+  if (connectionStatus.value === 'accepted') {
+    return {
+      text: t('profile.connections.status.accepted') || 'Connecté',
+      action: 'none',
+      class: 'inline-flex items-center justify-center px-6 py-3 border border-green-600 shadow-sm text-sm font-medium rounded-md text-green-600 bg-green-50 dark:bg-green-900/20 cursor-default'
+    }
+  }
+
+  return {
+    text: t('directory.connect') || 'Se connecter',
+    action: 'connect',
+    class: 'inline-flex items-center justify-center px-6 py-3 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-900 hover:bg-ifdd-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ifdd-green-500 transition-colors duration-200'
+  }
+})
+
 // Méthodes
+const checkConnectionStatus = async () => {
+  if (!isAuthenticated.value || !profile.value?.id) return
+  
+  try {
+    const result = await getConnectionStatus(profile.value.id)
+    connectionStatus.value = result.status
+    connectionId.value = result.connectionId
+    isSentByCurrentUser.value = result.isSentByCurrentUser || false
+  } catch (err) {
+    console.error('Erreur lors de la vérification du statut de connexion:', err)
+  }
+}
+
 const loadProfile = async () => {
   loading.value = true
   error.value = null
@@ -370,6 +463,8 @@ const loadProfile = async () => {
     const data = await getPublicProfile(route.params.id)
     if (data) {
       profile.value = data
+      // Vérifier le statut de connexion après avoir chargé le profil
+      await checkConnectionStatus()
     } else {
       error.value = 'Profil non trouvé'
     }
@@ -381,16 +476,31 @@ const loadProfile = async () => {
   }
 }
 
-const sendConnectionRequest = async () => {
+const handleConnectionAction = async () => {
   if (!profile.value || sending.value) return
+  
+  const buttonInfo = connectionButtonInfo.value
+  if (!buttonInfo || buttonInfo.action === 'none') return
   
   sending.value = true
   try {
-    await sendConnection(profile.value.id)
-    // Notifier l'utilisateur du succès
-    console.log('Demande de connexion envoyée avec succès')
+    if (buttonInfo.action === 'connect') {
+      await sendConnection(profile.value.id)
+      console.log('Demande de connexion envoyée avec succès')
+      // Recharger le statut de connexion
+      await checkConnectionStatus()
+    } else if (buttonInfo.action === 'cancel' && connectionId.value) {
+      const result = await cancelConnectionRequest(connectionId.value)
+      if (result.success) {
+        console.log('Demande de connexion annulée avec succès')
+        // Réinitialiser le statut
+        connectionStatus.value = null
+        connectionId.value = null
+        isSentByCurrentUser.value = false
+      }
+    }
   } catch (err) {
-    console.error('Erreur lors de l\'envoi de la demande de connexion:', err)
+    console.error('Erreur lors de l\'action de connexion:', err)
     // Notifier l'utilisateur de l'erreur
   } finally {
     sending.value = false

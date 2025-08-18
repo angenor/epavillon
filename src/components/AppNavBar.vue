@@ -115,10 +115,7 @@
           </div>
 
           <!-- Notifications -->
-          <button class="relative p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
-            <font-awesome-icon :icon="['fas', 'bell']" class="w-5 h-5" />
-            <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-          </button>
+          <NotificationDropdown v-if="authStore.isAuthenticated" />
 
           <!-- Bouton de changement de thème -->
           <button 
@@ -228,82 +225,72 @@
   </nav>
 </template>
 
-<script>
+<script setup>
 import { useTheme } from '@/composables/useTheme'
 import { useI18n } from 'vue-i18n'
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
+import NotificationDropdown from '@/components/notifications/NotificationDropdown.vue'
 
-export default {
-  name: 'AppNavBar',
-  setup() {
-    const { theme, toggleTheme } = useTheme()
-    const { t, locale } = useI18n()
-    const authStore = useAuthStore()
-    const router = useRouter()
-    const { supabase } = useSupabase()
-    const showLanguageMenu = ref(false)
-    const availableYears = ref([])
-    
-    const changeLanguage = (lang) => {
-      locale.value = lang
-      localStorage.setItem('locale', lang)
-      showLanguageMenu.value = false
-    }
-    
-    const handleLogout = async () => {
-      try {
-        await authStore.signOut()
-        router.push('/login')
-      } catch (error) {
-        console.error('Logout error:', error)
-      }
-    }
-    
-    const handlePhotoError = (event) => {
-      // Masquer l'image en cas d'erreur de chargement
-      event.target.style.display = 'none'
-    }
-    
-    const loadAvailableYears = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('events')
-          .select('year')
-          .order('year', { ascending: false })
-        
-        if (!error && data) {
-          const years = [...new Set(data.map(event => event.year))].sort((a, b) => b - a)
-          availableYears.value = years.slice(0, 5) // Limiter à 5 années les plus récentes
-        }
-      } catch (error) {
-        console.error('Error loading years:', error)
-      }
-    }
-    
-    onMounted(() => {
-      loadAvailableYears()
-    })
-    
-    return {
-      theme,
-      toggleTheme,
-      t,
-      locale,
-      showLanguageMenu,
-      changeLanguage,
-      authStore,
-      handleLogout,
-      handlePhotoError,
-      availableYears
-    }
-  },
-  methods: {
-    toggleSidebar() {
-      this.$emit('toggle-sidebar')
-    }
+// Émission d'événements
+const emit = defineEmits(['toggle-sidebar'])
+
+// Composables
+const { theme, toggleTheme } = useTheme()
+const { t, locale } = useI18n()
+const authStore = useAuthStore()
+const router = useRouter()
+const { supabase } = useSupabase()
+
+// Refs
+const showLanguageMenu = ref(false)
+const availableYears = ref([])
+
+// Méthodes
+const changeLanguage = (lang) => {
+  locale.value = lang
+  localStorage.setItem('locale', lang)
+  showLanguageMenu.value = false
+}
+
+const handleLogout = async () => {
+  try {
+    await authStore.signOut()
+    router.push('/login')
+  } catch (error) {
+    console.error('Logout error:', error)
   }
 }
+
+const handlePhotoError = (event) => {
+  // Masquer l'image en cas d'erreur de chargement
+  event.target.style.display = 'none'
+}
+
+const loadAvailableYears = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('events')
+      .select('year')
+      .order('year', { ascending: false })
+    
+    if (!error && data) {
+      const years = [...new Set(data.map(event => event.year))].sort((a, b) => b - a)
+      availableYears.value = years.slice(0, 5) // Limiter à 5 années les plus récentes
+    }
+  } catch (error) {
+    console.error('Error loading years:', error)
+  }
+}
+
+const toggleSidebar = () => {
+  emit('toggle-sidebar')
+}
+
+// Lifecycle
+onMounted(() => {
+  loadAvailableYears()
+})
 </script>

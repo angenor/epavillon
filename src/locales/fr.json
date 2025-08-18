@@ -208,6 +208,76 @@
         "blockedUsers": "Utilisateurs bloqués",
         "blockedUsersDesc": "Gérer votre liste d'utilisateurs bloqués"
       }
+    },
+    "connections": {
+      "title": "Connexions",
+      "requests": "Demandes de connexion",
+      "received": "Reçues",
+      "sent": "Envoyées",
+      "noRequests": "Aucune demande en attente",
+      "noRequestsMessage": "Vous n'avez aucune demande de connexion en attente.",
+      "noSentRequests": "Aucune demande envoyée",
+      "noSentRequestsMessage": "Vous n'avez envoyé aucune demande de connexion.",
+      "requestedOn": "Demandé le",
+      "sentOn": "Envoyé le",
+      "lastUpdate": "Dernière mise à jour le",
+      "viewProfile": "Voir le profil",
+      "accept": "Accepter",
+      "reject": "Rejeter",
+      "cancel": "Annuler",
+      "blockUser": "Bloquer cet utilisateur",
+      "confirmBlock": "Êtes-vous sûr de vouloir bloquer cet utilisateur ? Cette action est irréversible.",
+      "confirmCancel": "Êtes-vous sûr de vouloir annuler cette demande de connexion ?",
+      "status": {
+        "pending": "En attente",
+        "accepted": "Acceptée",
+        "rejected": "Rejetée",
+        "blocked": "Bloquée",
+        "cancelled": "Annulée"
+      }
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "Gérez toutes vos notifications en un seul endroit",
+    "empty": "Aucune notification",
+    "noResults": "Aucun résultat pour vos filtres",
+    "tryDifferentFilters": "Essayez des filtres différents pour voir plus de notifications",
+    "markAllRead": "Tout marquer comme lu",
+    "markAsRead": "Marquer comme lu",
+    "markAsUnread": "Marquer comme non lu",
+    "viewAll": "Voir toutes les notifications",
+    "loadMore": "Charger plus de notifications",
+    "total": "Total",
+    "unread": "Non lues",
+    "read": "Lues",
+    "error": "Erreur lors du chargement",
+    "filters": "Filtres",
+    "type": "Type",
+    "status": "Statut",
+    "allTypes": "Tous les types",
+    "allStatuses": "Tous les statuts",
+    "apply": "Appliquer",
+    "reset": "Réinitialiser",
+    "timeAgo": {
+      "justNow": "À l'instant",
+      "minutesAgo": "Il y a {minutes} min",
+      "hoursAgo": "Il y a {hours}h",
+      "daysAgo": "Il y a {days}j"
+    },
+    "types": {
+      "connection_request": "Demande de connexion",
+      "activity_validation": "Validation d'activité",
+      "message_received": "Message reçu",
+      "appointment_request": "Demande de rendez-vous",
+      "training_reminder": "Rappel de formation",
+      "event_reminder": "Rappel d'événement",
+      "system_announcement": "Annonce système",
+      "newsletter": "Newsletter"
+    },
+    "statuses": {
+      "unread": "Non lues",
+      "read": "Lues"
     }
   },
   "nav": {
@@ -1673,7 +1743,8 @@
     "badges": {
       "negotiator": "Négociateur",
       "trainer": "Formateur"
-    }
+    },
+    "connect": "Se connecter"
   },
   "event": {
     "description": "Description",

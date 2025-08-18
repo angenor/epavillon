@@ -475,13 +475,13 @@ CREATE TABLE public.negotiation_documents (
 -- =============================================
 
 -- Demandes de connexion
-CREATE TYPE connection_status AS ENUM ('pending', 'accepted', 'rejected', 'blocked');
+CREATE TYPE connection_status_v2 AS ENUM ('pending', 'accepted', 'rejected', 'blocked', 'cancelled');
 
 CREATE TABLE public.connections (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     requester_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
     recipient_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
-    status connection_status DEFAULT 'pending',
+    status connection_status_v2 DEFAULT 'pending',
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     UNIQUE(requester_id, recipient_id)

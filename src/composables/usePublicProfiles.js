@@ -158,6 +158,7 @@ export function usePublicProfiles() {
         .from('users')
         .select(`
           id,
+          email,
           first_name,
           last_name,
           biography,
@@ -226,6 +227,81 @@ export function usePublicProfiles() {
         console.warn('Erreur lors de la récupération des rôles:', roleErr)
       }
 
+      // Récupération des activités organisées par l'utilisateur
+      let organizedActivities = []
+      try {
+        const { data: activitiesData } = await supabase
+          .from('activities')
+          .select(`
+            id,
+            title,
+            activity_type,
+            proposed_start_date,
+            final_start_date,
+            created_at,
+            validation_status
+          `)
+          .eq('submitted_by', userId)
+          .eq('validation_status', 'approved')
+          .eq('is_deleted', false)
+          .order('created_at', { ascending: false })
+        
+        organizedActivities = activitiesData || []
+      } catch (activitiesErr) {
+        console.warn('Erreur lors de la récupération des activités organisées:', activitiesErr)
+      }
+
+      // Récupération des activités où l'utilisateur est intervenant (par email)
+      let speakerActivities = []
+      if (data.email) {
+        try {
+          // Requête depuis activities avec jointure sur activity_speakers
+          const { data: activitiesWithSpeakers } = await supabase
+            .from('activities')
+            .select(`
+              id,
+              title,
+              activity_type,
+              proposed_start_date,
+              final_start_date,
+              created_at,
+              validation_status,
+              activity_speakers!inner(
+                id,
+                email,
+                position,
+                organization
+              )
+            `)
+            .eq('activity_speakers.email', data.email)
+            .eq('validation_status', 'approved')
+            .eq('is_deleted', false)
+            .order('created_at', { ascending: false })
+          
+          // Transformer les données pour avoir le format attendu
+          speakerActivities = activitiesWithSpeakers?.map(activity => {
+            // Extraire les infos du speaker depuis le tableau activity_speakers
+            const speakerInfo = activity.activity_speakers?.[0]
+            
+            // Retourner l'activité sans le tableau activity_speakers mais avec speaker_info
+            const { activity_speakers, ...activityData } = activity
+            
+            return {
+              ...activityData,
+              speaker_info: speakerInfo ? {
+                position: speakerInfo.position,
+                organization: speakerInfo.organization
+              } : null
+            }
+          }) || []
+          
+        } catch (speakerErr) {
+          console.warn('Erreur lors de la récupération des activités d\'intervention:', speakerErr)
+        }
+      } else {
+        console.warn('Aucun email disponible pour rechercher les activités d\'intervention')
+      }
+
       return {
         ...data,
         country,
@@ -233,10 +309,12 @@ export function usePublicProfiles() {
         roles,
         stats: {
           member_since: new Date(data.created_at).getFullYear(),
-          activities_count: 0, // Pour l'instant
-          trainings_count: 0
+          activities_count: organizedActivities.length,
+          trainings_count: 0,
+          speaker_activities_count: speakerActivities.length
         },
-        activities: [],
+        activities: organizedActivities,
+        speaker_activities: speakerActivities,
         trainings: []
       }
 
@@ -324,11 +402,21 @@ export function usePublicProfiles() {
         .or(`and(requester_id.eq.${user.id},recipient_id.eq.${recipientId}),and(requester_id.eq.${recipientId},recipient_id.eq.${user.id})`)
         .single()
 
-      if (existingConnection) {
+      // Vérifier si une connexion active existe déjà (pending ou accepted)
+      if (existingConnection && ['pending', 'accepted'].includes(existingConnection.status)) {
         throw new Error('Une demande de connexion existe déjà')
+      }
+      
+      // Si une connexion annulée/rejetée existe, la supprimer d'abord
+      if (existingConnection && ['cancelled', 'rejected'].includes(existingConnection.status)) {
+        await supabase
+          .from('connections')
+          .delete()
+          .eq('id', existingConnection.id)
       }
 
       // Créer la demande de connexion
+      // Note: La notification sera créée automatiquement par le trigger de base de données
       const { data, error: insertError } = await supabase
         .from('connections')
         .insert({
@@ -342,17 +430,6 @@ export function usePublicProfiles() {
       if (insertError) {
         throw insertError
       }
-
-      // Créer une notification
-      await supabase
-        .from('notifications')
-        .insert({
-          user_id: recipientId,
-          notification_type: 'connection_request',
-          title: 'Nouvelle demande de connexion',
-          content: message || 'Quelqu\'un souhaite se connecter avec vous',
-          related_entity_id: data.id
-        })
 
       return data
 

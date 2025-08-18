@@ -200,6 +200,78 @@
         "blockedUsers": "Blocked users",
         "blockedUsersDesc": "Manage your list of blocked users"
       }
+    },
+    "connections": {
+      "title": "Connections",
+      "requests": "Connection Requests",
+      "received": "Received",
+      "sent": "Sent",
+      "noRequests": "No pending requests",
+      "noRequestsMessage": "You have no pending connection requests.",
+      "noSentRequests": "No sent requests",
+      "noSentRequestsMessage": "You haven't sent any connection requests.",
+      "requestedOn": "Requested on",
+      "sentOn": "Sent on",
+      "lastUpdate": "Last updated on",
+      "viewProfile": "View profile",
+      "accept": "Accept",
+      "reject": "Reject",
+      "cancel": "Cancel",
+      "blockUser": "Block this user",
+      "confirmBlock": "Are you sure you want to block this user? This action is irreversible.",
+      "confirmCancel": "Are you sure you want to cancel this connection request?",
+      "status": {
+        "pending": "Pending",
+        "accepted": "Accepted",
+        "rejected": "Rejected",
+        "blocked": "Blocked",
+        "cancelled": "Cancelled"
+      }
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "Manage all your notifications in one place",
+    "empty": "No notifications",
+    "noResults": "No results for your filters",
+    "tryDifferentFilters": "Try different filters to see more notifications",
+    "markAllRead": "Mark all as read",
+    "markAsRead": "Mark as read",
+    "markAsUnread": "Mark as unread",
+    "viewAll": "View all notifications",
+    "loadMore": "Load more notifications",
+    "total": "Total",
+    "unread": "Unread",
+    "read": "Read",
+    "error": "Error loading notifications",
+    "filters": "Filters",
+    "type": "Type",
+    "status": "Status",
+    "allTypes": "All types",
+    "allStatuses": "All statuses",
+    "apply": "Apply",
+    "reset": "Reset",
+    "retry": "Retry",
+    "delete": "Delete",
+    "timeAgo": {
+      "justNow": "Just now",
+      "minutesAgo": "{minutes} min ago",
+      "hoursAgo": "{hours}h ago",
+      "daysAgo": "{days}d ago"
+    },
+    "types": {
+      "connection_request": "Connection request",
+      "activity_validation": "Activity validation",
+      "message_received": "Message received",
+      "appointment_request": "Appointment request",
+      "training_reminder": "Training reminder",
+      "event_reminder": "Event reminder",
+      "system_announcement": "System announcement",
+      "newsletter": "Newsletter"
+    },
+    "statuses": {
+      "unread": "Unread",
+      "read": "Read"
     }
   },
   "nav": {
@@ -1667,6 +1739,7 @@
     "badges": {
       "negotiator": "Negotiator",
       "trainer": "Trainer"
-    }
+    },
+    "connect": "Connect"
   }
 }

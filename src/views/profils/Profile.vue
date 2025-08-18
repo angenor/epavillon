@@ -198,6 +198,9 @@
 
         <!-- Colonne latérale -->
         <div class="space-y-6">
+          <!-- Demandes de connexion -->
+          <ConnectionRequestsSection />
+          
           <!-- Statistiques rapides -->
           <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
@@ -282,6 +285,7 @@ import { useToast } from '@/composables/useToast'
 import ProfileInfoSection from '@/components/profile/ProfileInfoSection.vue'
 import ProfileSettingsSection from '@/components/profile/ProfileSettingsSection.vue'
 import RoleSpecificSection from '@/components/profile/RoleSpecificSection.vue'
+import ConnectionRequestsSection from '@/components/profils/ConnectionRequestsSection.vue'
 
 const { t } = useI18n()
 const { success, error } = useToast()
