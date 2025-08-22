@@ -114,6 +114,23 @@
             </div>
           </div>
 
+          <!-- Messagerie -->
+          <router-link
+            v-if="authStore.isAuthenticated"
+            to="/messages"
+            class="relative p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
+            :title="t('messaging.title')"
+          >
+            <font-awesome-icon icon="comments" class="w-5 h-5" />
+            <!-- Badge de messages non lus (sera connecté plus tard au store) -->
+            <span
+              v-if="false"
+              class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-1"
+            >
+              3
+            </span>
+          </router-link>
+
           <!-- Notifications -->
           <NotificationDropdown v-if="authStore.isAuthenticated" />
 

@@ -139,6 +139,12 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/messages',
+      name: 'messages',
+      component: () => import('../views/messagerie/Messagerie.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/formations',
       name: 'formations',
       component: () => import('../views/formation/Index.vue'),

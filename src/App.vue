@@ -4,6 +4,7 @@ import AppNavBar from './components/AppNavBar.vue'
 import SideBar from './components/SideBar.vue'
 import FooterSection from './components/FooterSection.vue'
 import ToastContainer from './components/ui/ToastContainer.vue'
+import MessagingSystem from './components/messaging/MessagingSystem.vue'
 import { ref, computed } from 'vue'
 
 const sidebarOpen = ref(false)
@@ -29,6 +30,7 @@ const handleCloseSidebar = () => {
     <FooterSection />
     <SideBar :is-open="sidebarOpen" @close="handleCloseSidebar" />
     <ToastContainer />
+    <MessagingSystem />
   </div>
 </template>
 
