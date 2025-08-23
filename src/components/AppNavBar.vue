@@ -8,18 +8,18 @@
           <button @click="toggleSidebar" class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
             <font-awesome-icon :icon="['fas', 'bars']" class="w-6 h-6" />
           </button>
-          
+
           <router-link to="/" class="flex-shrink-0 group cursor-pointer">
             <!-- Logo pour le mode clair -->
-            <img 
-              src="/logos/logo-ifdd-court.svg" 
-              alt="Logo IFDD" 
+            <img
+              src="/logos/logo-ifdd-court.svg"
+              alt="Logo IFDD"
               class="h-10 w-auto dark:hidden transition-transform duration-300 group-hover:scale-105"
             >
             <!-- Logo pour le mode sombre -->
-            <img 
-              src="/logos/logo-ifdd-blanc.png" 
-              alt="Logo IFDD" 
+            <img
+              src="/logos/logo-ifdd-blanc.png"
+              alt="Logo IFDD"
               class="h-10 w-auto hidden dark:block transition-transform duration-300 group-hover:scale-105"
             >
           </router-link>
@@ -35,7 +35,7 @@
             </router-link>
             <div class="absolute left-0 mt-2 w-56 rounded-xl shadow-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transform scale-95 group-hover:scale-100 transition-all duration-300 origin-top-left">
               <div class="p-2">
-                <router-link 
+                <router-link
                   v-for="year in availableYears"
                   :key="year"
                   :to="`/programmations?year=${year}`"
@@ -135,8 +135,8 @@
           <NotificationDropdown v-if="authStore.isAuthenticated" />
 
           <!-- Bouton de changement de thème -->
-          <button 
-            @click="toggleTheme" 
+          <button
+            @click="toggleTheme"
             class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
             :title="theme === 'light' ? t('common.darkMode') : t('common.lightMode')"
           >
@@ -149,7 +149,7 @@
             <button class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
               <div class="w-8 h-8 rounded-full flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 overflow-hidden">
                 <!-- Photo de profil si disponible -->
-                <img 
+                <img
                   v-if="authStore.profile?.profile_photo_thumbnail_url || authStore.profile?.profile_photo_url"
                   :src="authStore.profile?.profile_photo_thumbnail_url || authStore.profile?.profile_photo_url"
                   :alt="`${authStore.profile?.first_name} ${authStore.profile?.last_name}`"
@@ -157,7 +157,7 @@
                   @error="handlePhotoError"
                 />
                 <!-- Initiales si pas de photo -->
-                <div 
+                <div
                   v-else
                   class="w-full h-full bg-gradient-to-br from-ifdd-bleu to-ifdd-bleu-clair flex items-center justify-center text-white font-medium"
                 >
@@ -172,7 +172,7 @@
                   <div class="flex items-center space-x-3">
                     <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
                       <!-- Photo de profil grande -->
-                      <img 
+                      <img
                         v-if="authStore.profile?.profile_photo_url || authStore.profile?.profile_photo_thumbnail_url"
                         :src="authStore.profile?.profile_photo_url || authStore.profile?.profile_photo_thumbnail_url"
                         :alt="`${authStore.profile?.first_name} ${authStore.profile?.last_name}`"
@@ -180,7 +180,7 @@
                         @error="handlePhotoError"
                       />
                       <!-- Initiales si pas de photo -->
-                      <div 
+                      <div
                         v-else
                         class="w-full h-full bg-gradient-to-br from-ifdd-bleu to-ifdd-bleu-clair flex items-center justify-center text-white font-medium text-lg"
                       >
@@ -208,10 +208,6 @@
                   <font-awesome-icon :icon="['fas', 'user']" class="w-4 h-4 mr-3 text-gray-400 group-hover/item:text-ifdd-bleu transition-colors" />
                   {{ t('common.profile') }}
                 </router-link>
-                <router-link to="/settings" class="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 group/item">
-                  <font-awesome-icon :icon="['fas', 'cog']" class="w-4 h-4 mr-3 text-gray-400 group-hover/item:text-ifdd-bleu transition-colors" />
-                  {{ t('common.settings') }}
-                </router-link>
                 <div class="border-t border-gray-100 dark:border-gray-700 my-2"></div>
                 <button @click="handleLogout" class="w-full flex items-center px-4 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200 group/item">
                   <font-awesome-icon :icon="['fas', 'sign-out-alt']" class="w-4 h-4 mr-3" />
@@ -220,7 +216,7 @@
               </div>
             </div>
           </div>
-          
+
           <!-- Boutons connexion/inscription si non connecté -->
           <div v-else class="flex items-center space-x-2">
             <router-link
@@ -292,7 +288,7 @@ const loadAvailableYears = async () => {
       .from('events')
       .select('year')
       .order('year', { ascending: false })
-    
+
     if (!error && data) {
       const years = [...new Set(data.map(event => event.year))].sort((a, b) => b - a)
       availableYears.value = years.slice(0, 5) // Limiter à 5 années les plus récentes
