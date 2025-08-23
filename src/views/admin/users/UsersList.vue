@@ -1,5 +1,13 @@
 <template>
-  <div class="admin-users">
+  <!-- État de chargement pendant la vérification des permissions -->
+  <div v-if="isLoadingRoles" class="flex items-center justify-center min-h-screen">
+    <div class="text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+      <p class="text-gray-600 dark:text-gray-300">{{ t('common.loading') }}...</p>
+    </div>
+  </div>
+
+  <div v-else class="admin-users">
     <!-- Header avec actions -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
       <div>
@@ -265,7 +273,7 @@ import { useAdmin } from '@/composables/useAdmin'
 const { t } = useI18n()
 const router = useRouter()
 const { supabase } = useSupabase()
-const { hasAdminRole } = useAdmin()
+const { hasAdminRole, isLoadingRoles, loadUserRoles } = useAdmin()
 
 // État
 const isLoading = ref(true)
@@ -279,9 +287,13 @@ const filters = ref({
   status: ''
 })
 
-// Vérification des permissions
-if (!hasAdminRole.value) {
-  throw new Error('Accès non autorisé')
+// Vérification des permissions (attendre le chargement des rôles)
+const checkAccess = async () => {
+  await loadUserRoles()
+  
+  if (!hasAdminRole.value) {
+    throw new Error('Accès non autorisé')
+  }
 }
 
 // Computed
@@ -341,7 +353,8 @@ const visiblePages = computed(() => {
 // Méthodes
 const loadUsers = async () => {
   try {
-    const { data, error } = await supabase
+    // Première requête : récupérer les utilisateurs de base
+    const { data: usersData, error: usersError } = await supabase
       .from('users')
       .select(`
         id,
@@ -352,14 +365,53 @@ const loadUsers = async () => {
         is_blocked,
         is_suspended,
         created_at,
-        organization:organizations(id, name),
-        user_roles(id, role, is_active)
+        organization_id,
+        country_id
       `)
       .order('created_at', { ascending: false })
 
-    if (error) throw error
+    if (usersError) throw usersError
 
-    users.value = data || []
+    // Ensuite, enrichir avec les organisations et rôles
+    const enrichedUsers = await Promise.all(
+      (usersData || []).map(async (user) => {
+        // Récupérer l'organisation si elle existe
+        let organization = null
+        if (user.organization_id) {
+          try {
+            const { data: orgData } = await supabase
+              .from('organizations')
+              .select('id, name')
+              .eq('id', user.organization_id)
+              .single()
+            organization = orgData
+          } catch (orgError) {
+            console.warn('Erreur organisation:', orgError)
+          }
+        }
+
+        // Récupérer les rôles
+        let user_roles = []
+        try {
+          const { data: rolesData } = await supabase
+            .from('user_roles')
+            .select('id, role, is_active')
+            .eq('user_id', user.id)
+            .eq('is_active', true)
+          user_roles = rolesData || []
+        } catch (roleError) {
+          console.warn('Erreur rôles:', roleError)
+        }
+
+        return {
+          ...user,
+          organization,
+          user_roles
+        }
+      })
+    )
+
+    users.value = enrichedUsers
   } catch (error) {
     console.error('Erreur lors du chargement des utilisateurs:', error)
   } finally {
@@ -457,7 +509,18 @@ watch(() => filters.value, () => {
 }, { deep: true })
 
 // Cycle de vie
-onMounted(() => {
-  loadUsers()
+onMounted(async () => {
+  try {
+    // D'abord vérifier les permissions
+    await checkAccess()
+    
+    // Puis charger les utilisateurs
+    await loadUsers()
+  } catch (error) {
+    console.error('Erreur lors du chargement de la page utilisateurs:', error)
+    if (error.message === 'Accès non autorisé') {
+      throw error
+    }
+  }
 })
 </script>

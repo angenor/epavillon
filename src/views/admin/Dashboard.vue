@@ -1,5 +1,13 @@
 <template>
-  <div class="admin-dashboard">
+  <!-- État de chargement pendant la vérification des permissions -->
+  <div v-if="isLoadingRoles" class="flex items-center justify-center min-h-screen">
+    <div class="text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+      <p class="text-gray-600 dark:text-gray-300">{{ t('common.loading') }}...</p>
+    </div>
+  </div>
+
+  <div v-else class="admin-dashboard">
     <!-- Header -->
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
@@ -207,14 +215,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
 
 const { t } = useI18n()
 const { supabase } = useSupabase()
-const { hasAdminRole } = useAdmin()
+const { hasAdminRole, isLoadingRoles, loadUserRoles } = useAdmin()
 
 // État
 const isLoading = ref(true)
@@ -234,9 +242,14 @@ const alerts = ref({
 
 const pendingActivities = ref([])
 
-// Vérification des permissions
-if (!hasAdminRole.value) {
-  throw new Error('Accès non autorisé')
+// Vérification des permissions (attendre le chargement des rôles)
+const checkAccess = async () => {
+  // Attendre que les rôles soient chargés
+  await loadUserRoles()
+  
+  if (!hasAdminRole.value) {
+    throw new Error('Accès non autorisé')
+  }
 }
 
 // Méthodes
@@ -343,10 +356,22 @@ const loadPendingActivities = async () => {
 
 // Cycle de vie
 onMounted(async () => {
-  await Promise.all([
-    loadStats(),
-    loadAlerts(),
-    loadPendingActivities()
-  ])
+  try {
+    // D'abord vérifier les permissions
+    await checkAccess()
+    
+    // Puis charger les données
+    await Promise.all([
+      loadStats(),
+      loadAlerts(),
+      loadPendingActivities()
+    ])
+  } catch (error) {
+    console.error('Erreur lors du chargement du dashboard:', error)
+    // Rediriger vers la page de login si l'accès n'est pas autorisé
+    if (error.message === 'Accès non autorisé') {
+      throw error // Laisser l'erreur remonter pour être gérée par Vue
+    }
+  }
 })
 </script>

@@ -1,5 +1,13 @@
 <template>
-  <div class="admin-trainings">
+  <!-- État de chargement pendant la vérification des permissions -->
+  <div v-if="isLoadingRoles" class="flex items-center justify-center min-h-screen">
+    <div class="text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+      <p class="text-gray-600 dark:text-gray-300">{{ t('common.loading') }}...</p>
+    </div>
+  </div>
+
+  <div v-else class="admin-trainings">
     <div class="mb-8">
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
         Gestion des Formations
@@ -115,19 +123,26 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
 
+const { t } = useI18n()
 const router = useRouter()
 const { supabase } = useSupabase()
-const { hasAdminRole } = useAdmin()
+const { hasAdminRole, isLoadingRoles, loadUserRoles } = useAdmin()
 
 const isLoading = ref(true)
 const trainings = ref([])
 
-if (!hasAdminRole.value) {
-  throw new Error('Accès non autorisé')
+// Vérification des permissions (attendre le chargement des rôles)
+const checkAccess = async () => {
+  await loadUserRoles()
+  
+  if (!hasAdminRole.value) {
+    throw new Error('Accès non autorisé')
+  }
 }
 
 const activeTrainings = computed(() => 
@@ -188,7 +203,15 @@ const toggleTrainingStatus = async (training) => {
   }
 }
 
-onMounted(() => {
-  loadTrainings()
+onMounted(async () => {
+  try {
+    await checkAccess()
+    await loadTrainings()
+  } catch (error) {
+    console.error('Erreur:', error)
+    if (error.message === 'Accès non autorisé') {
+      throw error
+    }
+  }
 })
 </script>

@@ -1,5 +1,13 @@
 <template>
-  <div class="admin-reports">
+  <!-- État de chargement pendant la vérification des permissions -->
+  <div v-if="isLoadingRoles" class="flex items-center justify-center min-h-screen">
+    <div class="text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+      <p class="text-gray-600 dark:text-gray-300">{{ t('common.loading') }}...</p>
+    </div>
+  </div>
+
+  <div v-else class="admin-reports">
     <div class="mb-8">
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
         Rapports et Analyses
@@ -104,11 +112,13 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
 
+const { t } = useI18n()
 const { supabase } = useSupabase()
-const { hasAdminRole } = useAdmin()
+const { hasAdminRole, isLoadingRoles, loadUserRoles } = useAdmin()
 
 const isExporting = ref(false)
 
@@ -173,8 +183,13 @@ const exportTypes = [
   }
 ]
 
-if (!hasAdminRole.value) {
-  throw new Error('Accès non autorisé')
+// Vérification des permissions (attendre le chargement des rôles)
+const checkAccess = async () => {
+  await loadUserRoles()
+  
+  if (!hasAdminRole.value) {
+    throw new Error('Accès non autorisé')
+  }
 }
 
 const loadMetrics = async () => {
@@ -220,7 +235,15 @@ const exportData = async (exportKey) => {
   }
 }
 
-onMounted(() => {
-  loadMetrics()
+onMounted(async () => {
+  try {
+    await checkAccess()
+    await loadMetrics()
+  } catch (error) {
+    console.error('Erreur:', error)
+    if (error.message === 'Accès non autorisé') {
+      throw error
+    }
+  }
 })
 </script>

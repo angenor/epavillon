@@ -1,5 +1,13 @@
 <template>
-  <div class="admin-event-create">
+  <!-- État de chargement pendant la vérification des permissions -->
+  <div v-if="isLoadingRoles" class="flex items-center justify-center min-h-screen">
+    <div class="text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+      <p class="text-gray-600 dark:text-gray-300">{{ t('common.loading') }}...</p>
+    </div>
+  </div>
+
+  <div v-else class="admin-event-create">
     <div class="mb-8">
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
         Créer un Événement
@@ -138,14 +146,16 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
 import { useAuth } from '@/composables/useAuth'
 
+const { t } = useI18n()
 const router = useRouter()
 const { supabase } = useSupabase()
-const { hasAdminRole } = useAdmin()
+const { hasAdminRole, isLoadingRoles, loadUserRoles } = useAdmin()
 const { currentUser } = useAuth()
 
 const isSaving = ref(false)
@@ -163,8 +173,13 @@ const formData = ref({
   address: ''
 })
 
-if (!hasAdminRole.value) {
-  throw new Error('Accès non autorisé')
+// Vérification des permissions (attendre le chargement des rôles)
+const checkAccess = async () => {
+  await loadUserRoles()
+  
+  if (!hasAdminRole.value) {
+    throw new Error('Accès non autorisé')
+  }
 }
 
 const loadCountries = async () => {
@@ -208,7 +223,15 @@ const createEvent = async () => {
   }
 }
 
-onMounted(() => {
-  loadCountries()
+onMounted(async () => {
+  try {
+    await checkAccess()
+    await loadCountries()
+  } catch (error) {
+    console.error('Erreur:', error)
+    if (error.message === 'Accès non autorisé') {
+      throw error
+    }
+  }
 })
 </script>

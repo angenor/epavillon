@@ -1,5 +1,13 @@
 <template>
-  <div class="admin-activities">
+  <!-- État de chargement pendant la vérification des permissions -->
+  <div v-if="isLoadingRoles" class="flex items-center justify-center min-h-screen">
+    <div class="text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+      <p class="text-gray-600 dark:text-gray-300">{{ t('common.loading') }}...</p>
+    </div>
+  </div>
+
+  <div v-else class="admin-activities">
     <!-- Header avec actions -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
       <div>
@@ -383,7 +391,7 @@ import { useAuth } from '@/composables/useAuth'
 const { t } = useI18n()
 const router = useRouter()
 const { supabase } = useSupabase()
-const { hasAdminRole, validateActivity } = useAdmin()
+const { hasAdminRole, isLoadingRoles, loadUserRoles, validateActivity } = useAdmin()
 const { currentUser } = useAuth()
 
 // État
@@ -413,9 +421,13 @@ const stats = ref({
   total: 0
 })
 
-// Vérification des permissions
-if (!hasAdminRole.value) {
-  throw new Error('Accès non autorisé')
+// Vérification des permissions (attendre le chargement des rôles)
+const checkAccess = async () => {
+  await loadUserRoles()
+  
+  if (!hasAdminRole.value) {
+    throw new Error('Accès non autorisé')
+  }
 }
 
 // Computed
@@ -670,9 +682,17 @@ watch([() => filters.value, activeTab], () => {
 
 // Cycle de vie
 onMounted(async () => {
-  await Promise.all([
-    loadActivities(),
-    loadEvents()
-  ])
+  try {
+    await checkAccess()
+    await Promise.all([
+      loadActivities(),
+      loadEvents()
+    ])
+  } catch (error) {
+    console.error('Erreur:', error)
+    if (error.message === 'Accès non autorisé') {
+      throw error
+    }
+  }
 })
 </script>
