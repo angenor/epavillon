@@ -33,6 +33,7 @@
     "@tiptap/vue-3": "^3.0.9",
     "aos": "^2.3.4",
     "compressorjs": "^1.2.1",
+    "date-fns": "^4.1.0",
     "dotenv": "^17.2.1",
     "firebase": "^12.1.0",
     "peerjs": "^1.5.5",

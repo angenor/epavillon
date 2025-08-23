@@ -210,8 +210,8 @@ CREATE TABLE public.events (
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     -- Contrainte pour s'assurer que les informations de localisation sont fournies pour les événements physiques
     CONSTRAINT check_location_for_physical_events CHECK (
-        (participation_mode = 'online') 
-        OR 
+        (participation_mode = 'online')
+        OR
         (country_id IS NOT NULL AND city IS NOT NULL AND address IS NOT NULL)
     )
 );
@@ -878,7 +878,7 @@ CREATE TABLE public.media_gallery (
 CREATE TABLE public.video_testimonials (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     detail_url TEXT NULL,
-    title TEXT NULL, 
+    title TEXT NULL,
     context_type media_context NOT NULL,
     context_id UUID NULL,
     video_url TEXT NOT NULL,
@@ -1081,7 +1081,7 @@ CREATE TRIGGER update_francophonie_meetings_updated_at BEFORE UPDATE ON public.f
 CREATE OR REPLACE FUNCTION increment_view_count()
 RETURNS TRIGGER AS $$
 BEGIN
-    UPDATE public.innovations_practices 
+    UPDATE public.innovations_practices
     SET view_count = view_count + 1
     WHERE id = NEW.innovation_practice_id;
     RETURN NEW;
@@ -1123,18 +1123,18 @@ FOR SELECT USING (user_id = auth.uid());
 
 -- Politiques pour les utilisateurs
 -- Politique spéciale pour l'inscription
-CREATE POLICY "Allow users to insert their own profile during signup" 
-ON public.users 
-FOR INSERT 
+CREATE POLICY "Allow users to insert their own profile during signup"
+ON public.users
+FOR INSERT
 WITH CHECK (
   -- Permettre l'insertion si l'ID correspond à l'utilisateur qui vient de s'authentifier
   auth.uid() = id
 );
 
 -- Politique pour la lecture du profil
-CREATE POLICY "Users can read own profile" 
-ON public.users 
-FOR SELECT 
+CREATE POLICY "Users can read own profile"
+ON public.users
+FOR SELECT
 USING (
   auth.uid() = id OR
   -- Optionnel : permettre la lecture des profils publics
@@ -1142,20 +1142,20 @@ USING (
 );
 
 -- Politique pour la mise à jour
-CREATE POLICY "Users can update own profile" 
-ON public.users 
-FOR UPDATE 
+CREATE POLICY "Users can update own profile"
+ON public.users
+FOR UPDATE
 USING (auth.uid() = id)
 WITH CHECK (auth.uid() = id);
 
 -- Politique pour les administrateurs
-CREATE POLICY "Admins can do everything" 
-ON public.users 
-FOR ALL 
+CREATE POLICY "Admins can do everything"
+ON public.users
+FOR ALL
 USING (
   EXISTS (
-    SELECT 1 FROM public.user_roles 
-    WHERE user_id = auth.uid() 
+    SELECT 1 FROM public.user_roles
+    WHERE user_id = auth.uid()
     AND role IN ('admin', 'super_admin')
     AND is_active = true
   )
@@ -1167,19 +1167,30 @@ CREATE POLICY "Users can view their own messages" ON public.messages
 
 CREATE POLICY "Users can send messages to connections" ON public.messages
     FOR INSERT WITH CHECK (
-        sender_id = auth.uid() 
+        sender_id = auth.uid()
         AND EXISTS (
-            SELECT 1 FROM public.connections 
-            WHERE ((requester_id = auth.uid() AND recipient_id = messages.recipient_id) 
+            SELECT 1 FROM public.connections
+            WHERE ((requester_id = auth.uid() AND recipient_id = messages.recipient_id)
             OR (recipient_id = auth.uid() AND requester_id = messages.recipient_id))
             AND status = 'accepted'
         )
         AND NOT EXISTS (
-            SELECT 1 FROM public.users 
-            WHERE id = auth.uid() 
+            SELECT 1 FROM public.users
+            WHERE id = auth.uid()
             AND (is_blocked = TRUE OR is_suspended = TRUE)
         )
+        AND NOT EXISTS (
+            SELECT 1 FROM public.user_blocks
+            WHERE (blocker_id = auth.uid() AND blocked_id = messages.recipient_id)
+            OR (blocker_id = messages.recipient_id AND blocked_id = auth.uid())
+        )
     );
+
+CREATE POLICY "Users can update their own messages" ON public.messages
+    FOR UPDATE USING (sender_id = auth.uid());
+
+CREATE POLICY "Users can delete their own messages" ON public.messages
+    FOR DELETE USING (sender_id = auth.uid());
 
 -- Politiques pour les organisations
 CREATE POLICY "public_view_organizations" ON public.organizations
@@ -1187,12 +1198,12 @@ CREATE POLICY "public_view_organizations" ON public.organizations
 
 CREATE POLICY "authenticated_create_organizations" ON public.organizations
     FOR INSERT WITH CHECK (
-        auth.uid() IS NOT NULL 
+        auth.uid() IS NOT NULL
         AND created_by = auth.uid()
     );
 
 CREATE POLICY "creator_update_organizations" ON public.organizations
-    FOR UPDATE 
+    FOR UPDATE
     USING (created_by = auth.uid())
     WITH CHECK (created_by = auth.uid());
 
@@ -1202,11 +1213,11 @@ CREATE POLICY "Published events are viewable by all" ON public.events
 
 CREATE POLICY "Only admins can create events" ON public.events
     FOR INSERT WITH CHECK (
-        auth.uid() IS NOT NULL 
+        auth.uid() IS NOT NULL
         AND created_by = auth.uid()
         AND EXISTS (
-            SELECT 1 FROM public.user_roles 
-            WHERE user_id = auth.uid() 
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
             AND role IN ('admin', 'super_admin')
             AND is_active = true
         )
@@ -1216,16 +1227,16 @@ CREATE POLICY "Users can update their own events" ON public.events
     FOR UPDATE USING (
         created_by = auth.uid() OR
         EXISTS (
-            SELECT 1 FROM public.user_roles 
-            WHERE user_id = auth.uid() 
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
             AND role IN ('admin', 'super_admin')
             AND is_active = true
         )
     ) WITH CHECK (
         created_by = auth.uid() OR
         EXISTS (
-            SELECT 1 FROM public.user_roles 
-            WHERE user_id = auth.uid() 
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
             AND role IN ('admin', 'super_admin')
             AND is_active = true
         )
@@ -1242,21 +1253,21 @@ CREATE POLICY "activities_insert_policy" ON public.activities
 
 -- Politique UPDATE (modification) - Corrigée pour résoudre les problèmes de permissions
 CREATE POLICY "activities_update_policy" ON public.activities
-    FOR UPDATE 
+    FOR UPDATE
     USING (
-        submitted_by = auth.uid() 
+        submitted_by = auth.uid()
         OR EXISTS (
-            SELECT 1 FROM public.user_roles 
-            WHERE user_id = auth.uid() 
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
             AND role IN ('admin', 'super_admin')
             AND is_active = true
         )
     )
     WITH CHECK (
-        submitted_by = auth.uid() 
+        submitted_by = auth.uid()
         OR EXISTS (
-            SELECT 1 FROM public.user_roles 
-            WHERE user_id = auth.uid() 
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
             AND role IN ('admin', 'super_admin')
             AND is_active = true
         )
@@ -1265,10 +1276,10 @@ CREATE POLICY "activities_update_policy" ON public.activities
 -- Politique DELETE (suppression)
 CREATE POLICY "activities_delete_policy" ON public.activities
     FOR DELETE USING (
-        submitted_by = auth.uid() 
+        submitted_by = auth.uid()
         OR EXISTS (
-            SELECT 1 FROM public.user_roles 
-            WHERE user_id = auth.uid() 
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
             AND role IN ('admin', 'super_admin')
             AND is_active = true
         )
@@ -1319,11 +1330,11 @@ CREATE POLICY "Francophonie meetings are viewable by all authenticated users" ON
 
 CREATE POLICY "Only admins can create francophonie meetings" ON public.francophonie_meetings
     FOR INSERT WITH CHECK (
-        auth.uid() IS NOT NULL 
+        auth.uid() IS NOT NULL
         AND created_by = auth.uid()
         AND EXISTS (
-            SELECT 1 FROM public.user_roles 
-            WHERE user_id = auth.uid() 
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
             AND role IN ('admin', 'super_admin')
             AND is_active = true
         )
@@ -1333,16 +1344,16 @@ CREATE POLICY "Users can update their own francophonie meetings" ON public.franc
     FOR UPDATE USING (
         created_by = auth.uid() OR
         EXISTS (
-            SELECT 1 FROM public.user_roles 
-            WHERE user_id = auth.uid() 
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
             AND role IN ('admin', 'super_admin')
             AND is_active = true
         )
     ) WITH CHECK (
         created_by = auth.uid() OR
         EXISTS (
-            SELECT 1 FROM public.user_roles 
-            WHERE user_id = auth.uid() 
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
             AND role IN ('admin', 'super_admin')
             AND is_active = true
         )
@@ -1352,8 +1363,8 @@ CREATE POLICY "Users can delete their own francophonie meetings" ON public.franc
     FOR DELETE USING (
         created_by = auth.uid() OR
         EXISTS (
-            SELECT 1 FROM public.user_roles 
-            WHERE user_id = auth.uid() 
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
             AND role IN ('admin', 'super_admin')
             AND is_active = true
         )
@@ -1366,8 +1377,8 @@ CREATE POLICY "Users can view their own francophonie meeting registrations" ON p
 CREATE POLICY "Admins can view all francophonie meeting registrations" ON public.francophonie_meeting_registrations
     FOR SELECT USING (
         EXISTS (
-            SELECT 1 FROM public.user_roles 
-            WHERE user_id = auth.uid() 
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
             AND role IN ('admin', 'super_admin')
             AND is_active = true
         )
@@ -1388,9 +1399,9 @@ CREATE OR REPLACE FUNCTION has_role(user_id UUID, role_name user_role_type)
 RETURNS BOOLEAN AS $$
 BEGIN
     RETURN EXISTS (
-        SELECT 1 FROM public.user_roles 
-        WHERE user_id = $1 
-        AND role = $2 
+        SELECT 1 FROM public.user_roles
+        WHERE user_id = $1
+        AND role = $2
         AND is_active = TRUE
         AND (valid_until IS NULL OR valid_until > NOW())
     );
@@ -1406,19 +1417,19 @@ DECLARE
 BEGIN
     -- Nettoyer le texte
     cleaned_text := LOWER(TRIM(input_text));
-    
+
     -- Remplacer les caractères spéciaux par des espaces
     cleaned_text := REGEXP_REPLACE(cleaned_text, '[^a-z0-9à-ÿ]+', ' ', 'g');
-    
+
     -- Diviser en mots
     tokens := STRING_TO_ARRAY(cleaned_text, ' ');
-    
+
     -- Supprimer les mots vides et les doublons
     tokens := ARRAY(
-        SELECT DISTINCT unnest(tokens) 
+        SELECT DISTINCT unnest(tokens)
         WHERE LENGTH(unnest(tokens)) > 2
     );
-    
+
     RETURN tokens;
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
@@ -1432,7 +1443,7 @@ DECLARE
 BEGIN
     -- Générer les tokens de recherche
     NEW.name_search_tokens := generate_search_tokens(NEW.name);
-    
+
     -- Recherche exacte d'abord (nom normalisé)
     SELECT id, name, 1.0 as score INTO similar_org
     FROM public.organizations
@@ -1441,7 +1452,7 @@ BEGIN
     AND is_active = TRUE
     AND is_duplicate = FALSE
     LIMIT 1;
-    
+
     -- Si pas de correspondance exacte, recherche floue
     IF NOT FOUND THEN
         SELECT id, name, similarity(name, NEW.name) as score INTO similar_org
@@ -1453,7 +1464,7 @@ BEGIN
         ORDER BY similarity(name, NEW.name) DESC
         LIMIT 1;
     END IF;
-    
+
     -- Si une organisation similaire est trouvée
     IF FOUND AND similar_org.score > similarity_threshold THEN
         -- Ne marquer comme doublon que si ce n'est pas vérifié
@@ -1462,7 +1473,7 @@ BEGIN
             NEW.duplicate_of = similar_org.id;
         END IF;
     END IF;
-    
+
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -1479,20 +1490,20 @@ RETURNS TABLE (
     name TEXT,
     organization_type organization_type,
     is_verified BOOLEAN
-) 
+)
 SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
     -- Retourner directement les résultats sans logique complexe
     RETURN QUERY
-    SELECT 
+    SELECT
         o.id,
         o.name,
         o.organization_type,
         o.is_verified
     FROM organizations o
-    WHERE 
+    WHERE
         o.is_active = TRUE
         AND (
             o.name ILIKE '%' || search_text || '%'
@@ -1505,7 +1516,7 @@ $$ LANGUAGE plpgsql;
 
 -- Vue consolidée des organisations pour faciliter les requêtes
 CREATE OR REPLACE VIEW public.v_organizations_consolidated AS
-SELECT 
+SELECT
     o.id,
     o.name,
     o.name_normalized,
@@ -1529,16 +1540,16 @@ LEFT JOIN public.countries c ON o.country_id = c.id
 LEFT JOIN public.organizations parent_org ON o.duplicate_of = parent_org.id
 LEFT JOIN public.organization_validations ov ON o.id = ov.organization_id
 LEFT JOIN public.organization_aliases oa ON o.id = oa.organization_id
-GROUP BY 
-    o.id, o.name, o.name_normalized, o.email, o.organization_type, 
-    o.country_id, c.name_fr, c.name_en, o.is_active, o.is_verified, 
+GROUP BY
+    o.id, o.name, o.name_normalized, o.email, o.organization_type,
+    o.country_id, c.name_fr, c.name_en, o.is_active, o.is_verified,
     o.is_duplicate, o.duplicate_of, parent_org.name, o.created_at, o.updated_at;
 
 -- Fonction pour obtenir le nombre total de désignations d'un négociateur
 CREATE OR REPLACE FUNCTION update_negotiator_designation_count()
 RETURNS TRIGGER AS $$
 BEGIN
-    UPDATE public.negotiators 
+    UPDATE public.negotiators
     SET total_designations = (
         SELECT COUNT(*) FROM public.negotiators WHERE user_id = NEW.user_id
     )

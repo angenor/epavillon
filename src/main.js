@@ -14,6 +14,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons'
 
 import App from './App.vue'
 import router from './router'
+import { clickOutside } from './directives/clickOutside'
 
 // Import des fichiers de traduction
 import fr from './locales/fr.json'
@@ -60,6 +61,9 @@ const app = createApp(App)
 
 // Enregistrement global du composant Font Awesome
 app.component('font-awesome-icon', FontAwesomeIcon)
+
+// Enregistrement des directives globales
+app.directive('click-outside', clickOutside)
 
 app.use(createPinia())
 app.use(router)
