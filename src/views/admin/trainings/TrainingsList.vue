@@ -161,19 +161,42 @@ const completionRate = computed(() => {
 
 const loadTrainings = async () => {
   try {
-    const { data, error } = await supabase
+    // D'abord récupérer les formations de base
+    const { data: trainingsData, error } = await supabase
       .from('trainings')
-      .select(`
-        *,
-        participant_count:training_participants(count),
-        completed_count:training_participants(count)
-      `)
+      .select('*')
       .order('created_at', { ascending: false })
 
     if (error) throw error
-    trainings.value = data || []
+
+    // Ensuite enrichir avec les comptages de participants
+    const enrichedTrainings = await Promise.all(
+      (trainingsData || []).map(async (training) => {
+        // Compter tous les participants
+        const { count: totalParticipants } = await supabase
+          .from('training_participants')
+          .select('*', { count: 'exact', head: true })
+          .eq('training_id', training.id)
+
+        // Compter les participants qui ont terminé
+        const { count: completedParticipants } = await supabase
+          .from('training_participants')
+          .select('*', { count: 'exact', head: true })
+          .eq('training_id', training.id)
+          .eq('is_completed', true)
+
+        return {
+          ...training,
+          participant_count: totalParticipants || 0,
+          completed_count: completedParticipants || 0
+        }
+      })
+    )
+
+    trainings.value = enrichedTrainings
   } catch (error) {
     console.error('Erreur lors du chargement des formations:', error)
+    trainings.value = []
   } finally {
     isLoading.value = false
   }
