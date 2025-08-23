@@ -309,12 +309,17 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
-import VueCal from 'vue-cal'
-import 'vue-cal/dist/vuecal.css'
+
+const VueCal = defineAsyncComponent(() => 
+  import('vue-cal').then(module => {
+    import('vue-cal/dist/vuecal.css')
+    return module.default
+  })
+)
 
 const { t, locale } = useI18n()
 const route = useRoute()

@@ -1,46 +1,42 @@
-POST https://jzkuvulxfhtcelpvrxgf.supabase.co/rest/v1/messages?select=id%2Csender_id%2Crecipient_id%2Ccontent%2Cis_read%2Ccreated_at%2Csender%3Asender_id%28id%2Cfirst_name%2Clast_name%2Cprofile_photo_thumbnail_url%29%2Crecipient%3Arecipient_id%28id%2Cfirst_name%2Clast_name%2Cprofile_photo_thumbnail_url%29 403 (Forbidden)
-(anonymous) @ @supabase_supabase-js.js?v=d2e5e037:3937
-(anonymous) @ @supabase_supabase-js.js?v=d2e5e037:3958
-fulfilled @ @supabase_supabase-js.js?v=d2e5e037:3910
-Promise.then
-step @ @supabase_supabase-js.js?v=d2e5e037:3923
-(anonymous) @ @supabase_supabase-js.js?v=d2e5e037:3925
-__awaiter6 @ @supabase_supabase-js.js?v=d2e5e037:3907
-(anonymous) @ @supabase_supabase-js.js?v=d2e5e037:3948
-then @ @supabase_supabase-js.js?v=d2e5e037:89Understand this error
-useMessages.js:240 Erreur lors de l'envoi du message: {code: '42501', details: null, hint: null, message: 'new row violates row-level security policy for table "messages"'}
-sendMessage @ useMessages.js:240
-await in sendMessage
-sendMessage @ messaging.js:105
-wrappedAction @ pinia.js?v=d2e5e037:5503
-store.<computed> @ pinia.js?v=d2e5e037:5197
-sendMessage @ ChatConversation.vue:148
-callWithErrorHandling @ chunk-ZY5X6FX7.js?v=d2e5e037:2270
-callWithAsyncErrorHandling @ chunk-ZY5X6FX7.js?v=d2e5e037:2277
-emit @ chunk-ZY5X6FX7.js?v=d2e5e037:8526
-(anonymous) @ chunk-ZY5X6FX7.js?v=d2e5e037:10235
-sendMessage @ ChatInput.vue:131
-callWithErrorHandling @ chunk-ZY5X6FX7.js?v=d2e5e037:2270
-callWithAsyncErrorHandling @ chunk-ZY5X6FX7.js?v=d2e5e037:2277
-invoker @ chunk-ZY5X6FX7.js?v=d2e5e037:11264Understand this error
-ChatInput.vue:131 [Vue warn]: Unhandled error during execution of component event handler
-  at <ChatInput onSendMessage=fn<sendMessage> onTyping=fn<handleTyping> disabled=false >
-  at <ChatConversation >
-  at <ChatWindow >
-  at <MessagingSystem >
-  at <App>
-warn$1 @ chunk-ZY5X6FX7.js?v=d2e5e037:2123
-logError @ chunk-ZY5X6FX7.js?v=d2e5e037:2334
-handleError @ chunk-ZY5X6FX7.js?v=d2e5e037:2326
-(anonymous) @ chunk-ZY5X6FX7.js?v=d2e5e037:2280
-Promise.catch
-callWithAsyncErrorHandling @ chunk-ZY5X6FX7.js?v=d2e5e037:2279
-emit @ chunk-ZY5X6FX7.js?v=d2e5e037:8526
-(anonymous) @ chunk-ZY5X6FX7.js?v=d2e5e037:10235
-sendMessage @ ChatInput.vue:131
-callWithErrorHandling @ chunk-ZY5X6FX7.js?v=d2e5e037:2270
-callWithAsyncErrorHandling @ chunk-ZY5X6FX7.js?v=d2e5e037:2277
-invoker @ chunk-ZY5X6FX7.js?v=d2e5e037:11264Understand this warning
-messaging.js:111 Uncaught (in promise) TypeError: showToast is not a function
-    at Proxy.sendMessage (messaging.js:111:7)
-    at async sendMessage (ChatConversation.vue:148:18)
+[vite] connecting... client:789:9
+[vite] connected. client:912:15
+[Vue Router warn]: No match found for location with path "/appointments" vue-router.js:204:16
+[Vue warn]: Unhandled error during execution of setup function 
+  at <AdminLayout sidebar-open=false onUpdate:sidebarOpen=fn onVnodeUnmounted=fn<onVnodeUnmounted>  ... > 
+  at <RouterView sidebar-open=false onUpdate:sidebarOpen=fn > 
+  at <App> chunk-ZY5X6FX7.js:2123:13
+[Vue warn]: Unhandled error during execution of component update 
+  at <RouterView sidebar-open=false onUpdate:sidebarOpen=fn > 
+  at <App> chunk-ZY5X6FX7.js:2123:13
+[Vue Router warn]: No match found for location with path "/appointments" vue-router.js:204:16
+Uncaught (in promise) Error: Accès non autorisé
+    setup AdminLayout.vue:241
+    callWithErrorHandling runtime-core.esm-bundler.js:199
+    setupStatefulComponent runtime-core.esm-bundler.js:7960
+    setupComponent runtime-core.esm-bundler.js:7921
+    mountComponent runtime-core.esm-bundler.js:5243
+    processComponent runtime-core.esm-bundler.js:5209
+    patch runtime-core.esm-bundler.js:4727
+    componentUpdateFn runtime-core.esm-bundler.js:5433
+    run reactivity.esm-bundler.js:237
+    runIfDirty reactivity.esm-bundler.js:275
+    callWithErrorHandling runtime-core.esm-bundler.js:199
+    flushJobs runtime-core.esm-bundler.js:408
+    promise callback*queueFlush runtime-core.esm-bundler.js:322
+    queueJob runtime-core.esm-bundler.js:317
+    scheduler runtime-core.esm-bundler.js:5475
+    trigger reactivity.esm-bundler.js:265
+    endBatch reactivity.esm-bundler.js:323
+    notify reactivity.esm-bundler.js:609
+    trigger reactivity.esm-bundler.js:583
+    set value reactivity.esm-bundler.js:1460
+    finalizeNavigation vue-router.mjs:3503
+    pushWithRedirect vue-router.mjs:3368
+    promise callback*pushWithRedirect vue-router.mjs:3335
+    push vue-router.mjs:3260
+    install vue-router.mjs:3704
+    use runtime-core.esm-bundler.js:3886
+    <anonymous> main.js:69
+AdminLayout.vue:114:9
+Le cookie « __cf_bm » a été rejeté car le domaine est invalide. websocket
+La valeur de l’attribut « expires » pour le cookie « _ga_4ETN92F3RM » a été écrasée. admin

@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,7 +6,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: () => import('../views/HomeView.vue'),
     },
     {
       path: '/about',
@@ -145,6 +144,12 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/appointments',
+      name: 'appointments',
+      component: () => import('../views/appointments/Appointments.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/formations',
       name: 'formations',
       component: () => import('../views/formation/Index.vue'),
@@ -178,6 +183,89 @@ const router = createRouter({
           next('/nego/climat')
         }
       }
+    },
+    // Routes d'administration
+    {
+      path: '/admin',
+      component: () => import('../views/admin/AdminLayout.vue'),
+      meta: { requiresAuth: true, requiresRole: ['admin', 'super_admin'] },
+      children: [
+        {
+          path: '',
+          name: 'admin-dashboard',
+          component: () => import('../views/admin/Dashboard.vue')
+        },
+        {
+          path: 'users',
+          name: 'admin-users',
+          component: () => import('../views/admin/users/UsersList.vue')
+        },
+        {
+          path: 'users/:id',
+          name: 'admin-user-detail',
+          component: () => import('../views/admin/users/UserDetail.vue')
+        },
+        {
+          path: 'users/:id/edit',
+          name: 'admin-user-edit',
+          component: () => import('../views/admin/users/UserEdit.vue')
+        },
+        {
+          path: 'activities',
+          name: 'admin-activities',
+          component: () => import('../views/admin/activities/ActivitiesList.vue')
+        },
+        {
+          path: 'activities/:id',
+          name: 'admin-activity-detail',
+          component: () => import('../views/admin/activities/ActivityDetail.vue')
+        },
+        {
+          path: 'organizations',
+          name: 'admin-organizations',
+          component: () => import('../views/admin/organizations/OrganizationsList.vue')
+        },
+        {
+          path: 'organizations/:id',
+          name: 'admin-organization-detail',
+          component: () => import('../views/admin/organizations/OrganizationDetail.vue')
+        },
+        {
+          path: 'events',
+          name: 'admin-events',
+          component: () => import('../views/admin/events/EventsList.vue')
+        },
+        {
+          path: 'events/create',
+          name: 'admin-event-create',
+          component: () => import('../views/admin/events/EventCreate.vue')
+        },
+        {
+          path: 'events/:id',
+          name: 'admin-event-detail',
+          component: () => import('../views/admin/events/EventDetail.vue')
+        },
+        {
+          path: 'trainings',
+          name: 'admin-trainings',
+          component: () => import('../views/admin/trainings/TrainingsList.vue')
+        },
+        {
+          path: 'content',
+          name: 'admin-content',
+          component: () => import('../views/admin/content/ContentModeration.vue')
+        },
+        {
+          path: 'communications',
+          name: 'admin-communications',
+          component: () => import('../views/admin/communications/Communications.vue')
+        },
+        {
+          path: 'reports',
+          name: 'admin-reports',
+          component: () => import('../views/admin/reports/Reports.vue')
+        }
+      ]
     },
   ],
 })

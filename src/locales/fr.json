@@ -48,6 +48,7 @@
     "justNow": "À l'instant",
     "noData": "Aucune donnée",
     "save": "Enregistrer",
+    "close": "Fermer",
     "refresh": "Actualiser",
     "dataRefreshed": "Données actualisées",
     "refreshError": "Erreur lors de l'actualisation",
@@ -58,6 +59,136 @@
     "saveError": "Erreur lors de l'enregistrement",
     "submitting": "Envoi...",
     "per_page": "par page"
+  },
+  "admin": {
+    "layout": {
+      "title": "Administration",
+      "adminPanel": "Panel Admin",
+      "dashboard": "Tableau de bord",
+      "backToSite": "Retour au site"
+    },
+    "nav": {
+      "dashboard": "Tableau de bord",
+      "users": "Utilisateurs",
+      "activities": "Activités",
+      "organizations": "Organisations",
+      "events": "Événements",
+      "trainings": "Formations",
+      "content": "Contenu",
+      "communications": "Communications",
+      "reports": "Rapports"
+    },
+    "dashboard": {
+      "title": "Tableau de Bord Administrateur",
+      "subtitle": "Vue d'ensemble de la plateforme ePavillon",
+      "totalUsers": "Utilisateurs totaux",
+      "activitiesApproved": "Activités approuvées",
+      "activitiesPending": "Activités en attente",
+      "activeOrganizations": "Organisations actives",
+      "pendingActivities": "Activités en attente de validation",
+      "systemAlerts": "Alertes système",
+      "noPendingActivities": "Aucune activité en attente",
+      "review": "Examiner",
+      "duplicateOrgsAlert": "{count} organisation(s) en doublon détectée(s)",
+      "suspendedUsersAlert": "{count} utilisateur(s) suspendu(s)",
+      "unverifiedOrgsAlert": "{count} organisation(s) non vérifiée(s)",
+      "viewDuplicates": "Voir les doublons",
+      "manageUsers": "Gérer les utilisateurs",
+      "verifyOrganizations": "Vérifier les organisations",
+      "noAlertsGood": "Aucune alerte - Tout va bien !"
+    },
+    "users": {
+      "title": "Gestion des Utilisateurs",
+      "subtitle": "Administration des comptes utilisateurs et rôles",
+      "export": "Exporter",
+      "search": "Rechercher",
+      "searchPlaceholder": "Rechercher par nom, email ou organisation...",
+      "role": "Rôle",
+      "allRoles": "Tous les rôles",
+      "status": "Statut",
+      "allStatuses": "Tous les statuts",
+      "resetFilters": "Réinitialiser les filtres",
+      "loading": "Chargement des utilisateurs...",
+      "noUsers": "Aucun utilisateur trouvé",
+      "user": "Utilisateur",
+      "organization": "Organisation",
+      "roles": "Rôles",
+      "joinedAt": "Inscription",
+      "actions": "Actions",
+      "noOrganization": "Aucune organisation",
+      "view": "Voir",
+      "edit": "Modifier",
+      "suspend": "Suspendre",
+      "unsuspend": "Lever la suspension",
+      "showing": "Affichage de",
+      "to": "à",
+      "of": "sur",
+      "results": "résultats",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "roles": {
+        "standard": "Standard",
+        "negotiator": "Négociateur",
+        "unfccc_focal_point": "Point Focal UNFCCC",
+        "trainer": "Formateur",
+        "admin": "Administrateur",
+        "super_admin": "Super Administrateur"
+      },
+      "statuses": {
+        "active": "Actif",
+        "blocked": "Bloqué",
+        "suspended": "Suspendu"
+      }
+    },
+    "activities": {
+      "title": "Validation des Activités",
+      "subtitle": "Gestion et validation des propositions d'activités",
+      "export": "Exporter",
+      "searchPlaceholder": "Rechercher par titre, organisation ou événement...",
+      "allEvents": "Tous les événements",
+      "allThemes": "Toutes les thématiques",
+      "loading": "Chargement des activités...",
+      "noActivities": "Aucune activité trouvée",
+      "activity": "Activité",
+      "organization": "Organisation",
+      "event": "Événement",
+      "status": "Statut",
+      "submittedAt": "Soumise le",
+      "actions": "Actions",
+      "view": "Voir",
+      "approve": "Approuver",
+      "reject": "Rejeter",
+      "confirmApproval": "Confirmer l'approbation",
+      "confirmRejection": "Confirmer le rejet",
+      "rejectionReason": "Raison du rejet...",
+      "showing": "Affichage de",
+      "to": "à",
+      "of": "sur",
+      "results": "résultats",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "stats": {
+        "pending": "En attente",
+        "approved": "Approuvées",
+        "rejected": "Rejetées",
+        "total": "Total"
+      },
+      "tabs": {
+        "pending": "En attente",
+        "underReview": "En examen",
+        "approved": "Approuvées",
+        "rejected": "Rejetées",
+        "all": "Toutes"
+      },
+      "statuses": {
+        "draft": "Brouillon",
+        "submitted": "Soumise",
+        "underReview": "En examen",
+        "approved": "Approuvée",
+        "rejected": "Rejetée",
+        "cancelled": "Annulée"
+      }
+    }
   },
   "profile": {
     "roleSpecific": {
@@ -1976,6 +2107,20 @@
       "uploaded": "Téléchargé",
       "submit": "Créer l'événement",
       "submitting": "Création en cours..."
+    }
+  },
+  "appointments": {
+    "title": "Rendez-vous",
+    "description": "Gérez vos rendez-vous et planifiez des réunions",
+    "newAppointment": "Nouveau rendez-vous",
+    "noAppointments": "Aucun rendez-vous",
+    "noAppointmentsDescription": "Vous n'avez aucun rendez-vous planifié pour le moment.",
+    "comingSoon": "Fonctionnalité de planification de rendez-vous disponible bientôt.",
+    "status": {
+      "scheduled": "Planifié",
+      "confirmed": "Confirmé",
+      "cancelled": "Annulé",
+      "completed": "Terminé"
     }
   }
 }
