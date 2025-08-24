@@ -18,7 +18,7 @@ export function useNegotiationSessions() {
         .select(`
           *,
           zoom_meeting:zoom_meetings(*),
-          session_registrations!inner(
+          session_registrations(
             user_id,
             registered_at
           )

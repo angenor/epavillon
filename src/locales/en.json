@@ -68,7 +68,8 @@
       "content": "Content",
       "communications": "Communications",
       "reports": "Reports",
-      "roles": "Roles"
+      "roles": "Roles",
+      "negotiations": "Negotiations"
     },
     "users": {
       "roleManagement": {
@@ -151,6 +152,92 @@
         "admin": "Administrator with access to management functions",
         "super_admin": "Super administrator with all rights"
       }
+    },
+    "negotiations": {
+      "title": "Negotiations Management",
+      "subtitle": "Administration of negotiation sessions and documents",
+      "createSession": "Create session",
+      "createDocument": "Add document",
+      "sessions": "Sessions",
+      "documents": "Documents",
+      "search": "Search",
+      "searchPlaceholder": "Search by title, description...",
+      "category": "Category",
+      "allCategories": "All categories",
+      "resetFilters": "Reset filters",
+      "loadingSessions": "Loading sessions...",
+      "loadingDocuments": "Loading documents...",
+      "noSessions": "No sessions found",
+      "noDocuments": "No documents found",
+      "session": "Session",
+      "document": "Document",
+      "type": "Type",
+      "datetime": "Date and time",
+      "location": "Location",
+      "registrations": "Registrations",
+      "actions": "Actions",
+      "viewDetails": "View Details",
+      "uploadedBy": "Uploaded by",
+      "createdAt": "Created on",
+      "to": "to",
+      "of": "of",
+      "online": "Online",
+      "edit": "Edit",
+      "delete": "Delete",
+      "download": "Download",
+      "confirmDeleteSession": "Are you sure you want to delete this session?",
+      "confirmDeleteDocument": "Are you sure you want to delete this document?",
+      "showing": "Showing",
+      "results": "results",
+      "previous": "Previous",
+      "next": "Next",
+      "categories": {
+        "climate": "Climate",
+        "biodiversity": "Biodiversity",
+        "desertification": "Desertification"
+      },
+      "documentTypes": {
+        "negotiation_guide": "Negotiation guide",
+        "technical_note": "Technical note",
+        "relevant_document": "Relevant document",
+        "other": "Other"
+      },
+      "sessionTitle": "Session title",
+      "documentTitle": "Document title",
+      "description": "Description",
+      "selectCategory": "Select a category",
+      "startDateTime": "Start date and time",
+      "endDateTime": "End date and time",
+      "externalLink": "External link",
+      "optional": "optional",
+      "cancel": "Cancel",
+      "create": "Create",
+      "creating": "Creating...",
+      "documentType": "Document type",
+      "selectDocumentType": "Select a document type",
+      "fileUrl": "File URL",
+      "coverImage": "Cover image",
+      "meetingType": "Meeting type",
+      "selectMeetingType": "Select a meeting type",
+      "meetingTypes": {
+        "Preparatory_Workshop": "Preparatory Workshop",
+        "Francophone_Consultation": "Francophone Consultation",
+        "Innovation": "Innovation",
+        "Field_Training_Workshop": "Field Training Workshop"
+      }
+    }
+  },
+  "error": {
+    "403": {
+      "title": "Access Denied",
+      "message": "You don't have the necessary permissions to access this page.",
+      "details": "This page requires specific roles that you don't currently have.",
+      "backHome": "Back to Home",
+      "needAccess": "Need access?",
+      "contactAdmin": "Contact an administrator",
+      "connectedAs": "Connected as",
+      "currentRoles": "Current roles",
+      "noRoles": "No active roles"
     }
   },
   "profile": {
@@ -1074,7 +1161,7 @@
       "renewable_energy_land": "Land-based renewable energy",
       "health_solidarity": "Health and solidarity",
       "industry_transition": "Industry transition",
-      "transport_urbanization": "Transport and urbanization",  
+      "transport_urbanization": "Transport and urbanization",
       "nature_oceans": "Nature and oceans",
       "agriculture_food": "Agriculture and food",
       "sustainable_livestock": "Sustainable livestock",
@@ -1920,7 +2007,7 @@
     }
   },
   "directory": {
-    "title": "Public Professional Directory",
+    "title": "Public Directory",
     "subtitle": "Discover professionals from the Francophone sustainable development community",
     "results_count": "{count} professional found | {count} professionals found",
     "no_results": "No profiles found",

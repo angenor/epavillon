@@ -77,7 +77,8 @@
       "content": "Contenu",
       "communications": "Communications",
       "reports": "Rapports",
-      "roles": "Rôles"
+      "roles": "Rôles",
+      "negotiations": "Négociations"
     },
     "dashboard": {
       "title": "Tableau de Bord Administrateur",
@@ -224,6 +225,79 @@
         "super_admin": "Super administrateur avec tous les droits"
       }
     },
+    "negotiations": {
+      "title": "Gestion des Négociations",
+      "subtitle": "Administration des sessions et documents de négociation",
+      "createSession": "Créer une session",
+      "createDocument": "Ajouter un document",
+      "sessions": "Sessions",
+      "documents": "Documents",
+      "search": "Rechercher",
+      "searchPlaceholder": "Rechercher par titre, description...",
+      "category": "Catégorie",
+      "allCategories": "Toutes les catégories",
+      "resetFilters": "Réinitialiser les filtres",
+      "loadingSessions": "Chargement des sessions...",
+      "loadingDocuments": "Chargement des documents...",
+      "noSessions": "Aucune session trouvée",
+      "noDocuments": "Aucun document trouvé",
+      "session": "Session",
+      "document": "Document",
+      "type": "Type",
+      "datetime": "Date et heure",
+      "location": "Lieu",
+      "registrations": "Inscriptions",
+      "actions": "Actions",
+      "viewDetails": "Voir les détails",
+      "uploadedBy": "Téléchargé par",
+      "createdAt": "Créé le",
+      "to": "à",
+      "of": "sur",
+      "online": "En ligne",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "download": "Télécharger",
+      "confirmDeleteSession": "Êtes-vous sûr de vouloir supprimer cette session ?",
+      "confirmDeleteDocument": "Êtes-vous sûr de vouloir supprimer ce document ?",
+      "showing": "Affichage de",
+      "results": "résultats",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "categories": {
+        "climate": "Climat",
+        "biodiversity": "Biodiversité",
+        "desertification": "Désertification"
+      },
+      "documentTypes": {
+        "negotiation_guide": "Guide de négociation",
+        "technical_note": "Note technique",
+        "relevant_document": "Document pertinent",
+        "other": "Autre"
+      },
+      "sessionTitle": "Titre de la session",
+      "documentTitle": "Titre du document",
+      "description": "Description",
+      "selectCategory": "Sélectionnez une catégorie",
+      "startDateTime": "Date et heure de début",
+      "endDateTime": "Date et heure de fin",
+      "externalLink": "Lien externe",
+      "optional": "optionnel",
+      "cancel": "Annuler",
+      "create": "Créer",
+      "creating": "Création...",
+      "documentType": "Type de document",
+      "selectDocumentType": "Sélectionnez un type de document",
+      "fileUrl": "URL du fichier",
+      "coverImage": "Image de couverture",
+      "meetingType": "Type de réunion",
+      "selectMeetingType": "Sélectionnez un type de réunion",
+      "meetingTypes": {
+        "Preparatory_Workshop": "Atelier préparatoire",
+        "Francophone_Consultation": "Consultation francophone",
+        "Innovation": "Innovation",
+        "Field_Training_Workshop": "Atelier de formation sur le terrain"
+      }
+    },
     "activities": {
       "title": "Validation des Activités",
       "subtitle": "Gestion et validation des propositions d'activités",
@@ -272,6 +346,19 @@
         "rejected": "Rejetée",
         "cancelled": "Annulée"
       }
+    }
+  },
+  "error": {
+    "403": {
+      "title": "Accès refusé",
+      "message": "Vous n'avez pas les permissions nécessaires pour accéder à cette page.",
+      "details": "Cette page nécessite des rôles spécifiques que vous ne possédez pas actuellement.",
+      "backHome": "Retour à l'accueil",
+      "needAccess": "Besoin d'un accès ?",
+      "contactAdmin": "Contactez un administrateur",
+      "connectedAs": "Connecté en tant que",
+      "currentRoles": "Rôles actuels",
+      "noRoles": "Aucun rôle actif"
     }
   },
   "profile": {
@@ -1259,7 +1346,7 @@
       },
       "draftSaved": "Brouillon sauvegardé avec succès"
     },
-    
+
     "negotiator": {
       "designationHistory": {
         "title": "Historique des Désignations",
@@ -1456,7 +1543,7 @@
   },
   "activity": {
     "details": "Détails",
-    "themes": "Thèmes", 
+    "themes": "Thèmes",
     "categories": "Catégories",
     "speakers": "Intervenants",
     "noSpeakers": "Aucun intervenant pour le moment",
@@ -1472,7 +1559,7 @@
     },
     "format": {
       "online": "En ligne",
-      "in_person": "En présentiel", 
+      "in_person": "En présentiel",
       "hybrid": "Hybride"
     },
     "theme": {
@@ -2037,7 +2124,7 @@
     }
   },
   "directory": {
-    "title": "Annuaire Public des Professionnels",
+    "title": "Annuaire Public",
     "subtitle": "Découvrez les professionnels de la communauté francophone du développement durable",
     "results_count": "{count} professionnel trouvé | {count} professionnels trouvés",
     "no_results": "Aucun profil trouvé",

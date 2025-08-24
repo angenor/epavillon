@@ -174,13 +174,14 @@ const router = createRouter({
       path: '/nego',
       name: 'nego',
       component: () => import('../views/negociation/NegoListe.vue'),
+      meta: { requiresAuth: true, requiresRole: ['negotiator', 'admin', 'super_admin'] }
     },
     {
       path: '/nego/:category',
       name: 'negotiations',
       component: () => import('../views/negociation/Negociation.vue'),
       meta: { requiresAuth: true, requiresRole: ['negotiator', 'admin', 'super_admin'] },
-      beforeEnter: (to, from, next) => {
+      beforeEnter: (to, _from, next) => {
         const validCategories = ['climat', 'biodiversite', 'desertification']
         if (validCategories.includes(to.params.category)) {
           next()
@@ -274,10 +275,67 @@ const router = createRouter({
           path: 'roles',
           name: 'admin-roles',
           component: () => import('../views/admin/roles/RolesList.vue')
+        },
+        {
+          path: 'negotiations',
+          name: 'admin-negotiations',
+          component: () => import('../views/admin/negotiations/NegotiationsList.vue')
+        },
+        {
+          path: 'negotiations/sessions/:id',
+          name: 'admin-session-detail',
+          component: () => import('../views/admin/negotiations/SessionDetail.vue')
         }
       ]
     },
+    // Page d'erreur 403 - Accès refusé
+    {
+      path: '/403',
+      name: 'access-denied',
+      component: () => import('../views/error/403.vue')
+    },
   ],
+})
+
+// Guard de navigation pour vérifier l'authentification et les rôles
+router.beforeEach(async (to, _from, next) => {
+  const { useAuth } = await import('@/composables/useAuth')
+  const { useUserRoles } = await import('@/composables/useUserRoles')
+  
+  const { currentUser, isAuthenticated } = useAuth()
+  const { getUserRoles } = useUserRoles()
+  
+  // Vérifier si la route nécessite une authentification
+  if (to.meta.requiresAuth && !isAuthenticated.value) {
+    next('/login')
+    return
+  }
+  
+  // Vérifier si la route nécessite des rôles spécifiques
+  if (to.meta.requiresRole && currentUser.value) {
+    try {
+      // Récupérer les rôles actifs de l'utilisateur
+      const userRoles = await getUserRoles(currentUser.value.id)
+      const activeRoles = userRoles
+        .filter(role => role.is_active && (!role.valid_until || new Date(role.valid_until) > new Date()))
+        .map(role => role.role)
+      
+      // Vérifier si l'utilisateur a au moins un des rôles requis
+      const hasRequiredRole = to.meta.requiresRole.some(role => activeRoles.includes(role))
+      
+      if (!hasRequiredRole) {
+        // Rediriger vers une page d'erreur ou d'accès refusé
+        next('/403') // ou next('/') selon votre préférence
+        return
+      }
+    } catch (error) {
+      console.error('Erreur lors de la vérification des rôles:', error)
+      next('/403')
+      return
+    }
+  }
+  
+  next()
 })
 
 export default router
