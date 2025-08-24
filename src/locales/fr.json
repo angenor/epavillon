@@ -76,7 +76,8 @@
       "trainings": "Formations",
       "content": "Contenu",
       "communications": "Communications",
-      "reports": "Rapports"
+      "reports": "Rapports",
+      "roles": "Rôles"
     },
     "dashboard": {
       "title": "Tableau de Bord Administrateur",
@@ -165,6 +166,62 @@
         "editExpiry": "Modifier l'expiration",
         "expiryUpdated": "Date d'expiration mise à jour avec succès",
         "errorUpdatingExpiry": "Erreur lors de la mise à jour de l'expiration"
+      }
+    },
+    "roles": {
+      "title": "Gestion des Rôles",
+      "subtitle": "Administration des rôles utilisateurs et permissions",
+      "availableRoles": "Rôles disponibles",
+      "create": "Attribuer un rôle",
+      "loading": "Chargement des rôles...",
+      "usersCount": "Nombre d'utilisateurs",
+      "assignments": "Attributions de rôles",
+      "allRoles": "Tous les rôles",
+      "noAssignments": "Aucune attribution de rôle trouvée",
+      "user": "Utilisateur",
+      "role": "Rôle",
+      "assignedBy": "Attribué par",
+      "assignedAt": "Date d'attribution",
+      "validUntil": "Valide jusqu'à",
+      "status": "Statut",
+      "actions": "Actions",
+      "active": "Actif",
+      "inactive": "Inactif",
+      "permanent": "Permanent",
+      "revoke": "Révoquer",
+      "activate": "Activer",
+      "confirmRevoke": "Êtes-vous sûr de vouloir révoquer ce rôle ?",
+      "showing": "Affichage de",
+      "to": "à",
+      "of": "sur",
+      "results": "résultats",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "assignRole": "Attribuer un rôle",
+      "selectUser": "Sélectionner un utilisateur",
+      "searchUser": "Rechercher un utilisateur...",
+      "selectRole": "Sélectionner un rôle",
+      "chooseRole": "Choisissez un rôle",
+      "expirationDate": "Date d'expiration",
+      "optional": "optionnel",
+      "cancel": "Annuler",
+      "assign": "Attribuer",
+      "assigning": "Attribution...",
+      "types": {
+        "standard": "Standard",
+        "unfccc_focal_point": "Point Focal CCNUCC",
+        "negotiator": "Négociateur",
+        "trainer": "Formateur",
+        "admin": "Administrateur",
+        "super_admin": "Super Administrateur"
+      },
+      "descriptions": {
+        "standard": "Utilisateur standard avec accès de base à la plateforme",
+        "unfccc_focal_point": "Point focal national pour la CCNUCC",
+        "negotiator": "Négociateur climat participant aux COP",
+        "trainer": "Formateur autorisé à créer et animer des formations",
+        "admin": "Administrateur avec accès aux fonctions de gestion",
+        "super_admin": "Super administrateur avec tous les droits"
       }
     },
     "activities": {

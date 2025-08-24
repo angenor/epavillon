@@ -52,6 +52,24 @@
     "create": "Create"
   },
   "admin": {
+    "layout": {
+      "title": "Administration",
+      "adminPanel": "Admin Panel",
+      "dashboard": "Dashboard",
+      "backToSite": "Back to site"
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "users": "Users",
+      "activities": "Activities",
+      "organizations": "Organizations",
+      "events": "Events",
+      "trainings": "Trainings",
+      "content": "Content",
+      "communications": "Communications",
+      "reports": "Reports",
+      "roles": "Roles"
+    },
     "users": {
       "roleManagement": {
         "title": "Role Management",
@@ -76,6 +94,62 @@
         "errorAddingRole": "Error adding role",
         "errorRemovingRole": "Error removing role",
         "roleAlreadyExists": "User already has this role"
+      }
+    },
+    "roles": {
+      "title": "Role Management",
+      "subtitle": "User role administration and permissions",
+      "availableRoles": "Available roles",
+      "create": "Assign a role",
+      "loading": "Loading roles...",
+      "usersCount": "Number of users",
+      "assignments": "Role assignments",
+      "allRoles": "All roles",
+      "noAssignments": "No role assignments found",
+      "user": "User",
+      "role": "Role",
+      "assignedBy": "Assigned by",
+      "assignedAt": "Assigned date",
+      "validUntil": "Valid until",
+      "status": "Status",
+      "actions": "Actions",
+      "active": "Active",
+      "inactive": "Inactive",
+      "permanent": "Permanent",
+      "revoke": "Revoke",
+      "activate": "Activate",
+      "confirmRevoke": "Are you sure you want to revoke this role?",
+      "showing": "Showing",
+      "to": "to",
+      "of": "of",
+      "results": "results",
+      "previous": "Previous",
+      "next": "Next",
+      "assignRole": "Assign a role",
+      "selectUser": "Select a user",
+      "searchUser": "Search for a user...",
+      "selectRole": "Select a role",
+      "chooseRole": "Choose a role",
+      "expirationDate": "Expiration date",
+      "optional": "optional",
+      "cancel": "Cancel",
+      "assign": "Assign",
+      "assigning": "Assigning...",
+      "types": {
+        "standard": "Standard",
+        "unfccc_focal_point": "UNFCCC Focal Point",
+        "negotiator": "Negotiator",
+        "trainer": "Trainer",
+        "admin": "Administrator",
+        "super_admin": "Super Administrator"
+      },
+      "descriptions": {
+        "standard": "Standard user with basic platform access",
+        "unfccc_focal_point": "National focal point for UNFCCC",
+        "negotiator": "Climate negotiator participating in COPs",
+        "trainer": "Authorized trainer to create and lead training sessions",
+        "admin": "Administrator with access to management functions",
+        "super_admin": "Super administrator with all rights"
       }
     }
   },

@@ -207,6 +207,11 @@ const navigation = [
     name: 'admin.nav.reports',
     href: '/admin/reports',
     icon: 'svg'
+  },
+  {
+    name: 'admin.nav.roles',
+    href: '/admin/roles',
+    icon: 'svg'
   }
 ]
 
