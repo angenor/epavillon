@@ -16,9 +16,9 @@ import App from './App.vue'
 import router from './router'
 import { clickOutside } from './directives/clickOutside'
 
-// Import des fichiers de traduction
-import fr from './locales/fr.json'
-import en from './locales/en.json'
+// Import des modules de traduction
+import frTranslations from './locales/fr/index.js'
+import enTranslations from './locales/en/index.js'
 
 // Ajout des icônes à la bibliothèque Font Awesome
 library.add(fas, far, fab)
@@ -29,8 +29,8 @@ const i18n = createI18n({
   locale: localStorage.getItem('locale') || 'fr', // Langue par défaut: français
   fallbackLocale: 'fr',
   messages: {
-    fr,
-    en
+    fr: frTranslations,
+    en: enTranslations
   }
 })
 

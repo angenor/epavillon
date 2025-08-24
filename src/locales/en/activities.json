@@ -1,0 +1,432 @@
+{
+  "activities": {
+    "title": "Upcoming Activities",
+    "events": "Events",
+    "trainings": "Trainings",
+    "upcoming": "Upcoming",
+    "viewAll": "View All Activities",
+    "start": "Start",
+    "online": "Online",
+    "availableSpots": "Available spots",
+    "noUpcoming": "No upcoming activities",
+    "type": {
+      "panel": "Panel",
+      "workshop": "Workshop",
+      "presentation": "Presentation",
+      "conference": "Conference",
+      "roundtable": "Roundtable",
+      "training": "Training",
+      "networking": "Networking",
+      "side_event": "Side Event",
+      "country_day": "Country Day",
+      "other": "Other"
+    },
+    "format": {
+      "online": "Online",
+      "hybrid": "Hybrid",
+      "in_person": "In-person"
+    },
+    "status": {
+      "draft": "Draft",
+      "submitted": "Submitted",
+      "under_review": "Under Review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    },
+    "theme": {
+      "climate_change": "Climate Change",
+      "biodiversity": "Biodiversity",
+      "sustainable_development": "Sustainable Development",
+      "renewable_energy": "Renewable Energy",
+      "water_resources": "Water Resources",
+      "waste_management": "Waste Management",
+      "green_economy": "Green Economy",
+      "environmental_governance": "Environmental Governance",
+      "mitigation": "Mitigation",
+      "adaptation": "Adaptation",
+      "climate_resilience": "Climate Resilience",
+      "loss_and_damage": "Loss and Damage",
+      "clean_tech_innovations": "Clean Tech Innovations",
+      "renewable_energy_land": "Land-based Renewable Energy",
+      "health_solidarity": "Health and Solidarity",
+      "industry_transition": "Industry Transition",
+      "transport_urbanization": "Transport and Urbanization",
+      "nature_oceans": "Nature and Oceans",
+      "agriculture_food": "Agriculture and Food",
+      "sustainable_livestock": "Sustainable Livestock",
+      "gender": "Gender",
+      "youth": "Youth",
+      "technology": "Technology",
+      "finance": "Finance",
+      "other": "Other"
+    },
+    "category": {
+      "side_event": "Side Event",
+      "official_event": "Official Event",
+      "partner_event": "Partner Event",
+      "exhibition": "Exhibition",
+      "youth_event": "Youth Event",
+      "capacity_building": "Capacity Building",
+      "results_sharing": "Results Sharing",
+      "technological_innovation": "Technological Innovation",
+      "field_project": "Field Project",
+      "best_practices": "Best Practices",
+      "awareness": "Awareness",
+      "consultation": "Consultation"
+    },
+    "organizedBy": "Organized by",
+    "register": "Register",
+    "unregister": "Unregister",
+    "objectives": "Objectives",
+    "detailedPresentation": "Detailed Presentation",
+    "speakers": "Speakers",
+    "availableForQuestions": "Available for questions",
+    "questionsToSpeakers": "Questions to Speakers",
+    "askQuestion": "Ask a question",
+    "questionPlaceholder": "Write your question here...",
+    "targetSpeakers": "Target speakers (optional)",
+    "submitQuestion": "Submit question",
+    "registerToAskQuestions": "Register for the activity to ask questions to the speakers.",
+    "questionsAvailableDuringEvent": "Questions will be available during and after the event.",
+    "recentQuestions": "Recent Questions",
+    "answered": "Answered",
+    "keyInfo": "Key Information",
+    "themes": {
+      "mitigation": "Mitigation",
+      "adaptation": "Adaptation",
+      "climate_resilience": "Climate resilience",
+      "loss_and_damage": "Loss and damage",
+      "clean_tech_innovations": "Clean tech innovations",
+      "renewable_energy_land": "Land-based renewable energy",
+      "health_solidarity": "Health and solidarity",
+      "industry_transition": "Industry transition",
+      "transport_urbanization": "Transport and urbanization",
+      "nature_oceans": "Nature and oceans",
+      "agriculture_food": "Agriculture and food",
+      "sustainable_livestock": "Sustainable livestock",
+      "gender": "Gender",
+      "youth": "Youth",
+      "technology": "Technology",
+      "finance": "Finance",
+      "other": "Other"
+    },
+    "tags": "Tags",
+    "statistics": "Statistics",
+    "registrations": "Registrations",
+    "questions": "Questions",
+    "speakersCount": "Speakers",
+    "documents": "Documents",
+    "joinLinks": "Join Links",
+    "joinZoom": "Join on Zoom",
+    "watchYoutube": "Watch on YouTube",
+    "justNow": "Just now",
+    "minutesAgo": "{{count}} minutes ago",
+    "hoursAgo": "{{count}} hours ago",
+    "daysAgo": "{{count}} days ago",
+    "categories": {
+      "capacity_building": "Capacity building",
+      "results_sharing": "Results sharing",
+      "technological_innovation": "Technological innovation",
+      "field_project": "Field project",
+      "best_practices": "Best practices",
+      "awareness": "Awareness",
+      "consultation": "Consultation"
+    },
+    "duration": {
+      "days": "{{count}} days",
+      "weeks": "{{count}} weeks",
+      "months": "{{count}} months"
+    },
+    "detail": {
+      "error": {
+        "title": "Loading Error",
+        "loadFailed": "Unable to load activity details",
+        "registrationFailed": "Error during registration",
+        "unregistrationFailed": "Error during unregistration"
+      },
+      "register": "Register",
+      "unregister": "Unregister",
+      "registering": "Registering...",
+      "unregistering": "Unregistering...",
+      "share": "Share",
+      "edit": "Edit",
+      "organizedBy": "Organized by",
+      "sections": {
+        "objectives": "Objectives",
+        "detailedPresentation": "Detailed Presentation",
+        "speakers": "Speakers",
+        "documents": "Documents",
+        "information": "Information",
+        "event": "Event"
+      },
+      "activityType": "Activity Type",
+      "mainThemes": "Main Themes",
+      "categories": "Categories",
+      "tags": "Tags",
+      "registrations": "Registrations",
+      "participants": "participants",
+      "eventTitle": "Event Title",
+      "eventYear": "Year",
+      "viewEvent": "View Event"
+    },
+    "types": {
+      "side_event": "Side Event",
+      "country_day": "Country Day",
+      "other": "Other"
+    },
+    "edit": {
+      "title": "Edit Activity",
+      "subtitle": "Modify your activity information",
+      "update": "Update",
+      "updating": "Updating...",
+      "sections": {
+        "basicInfo": "Basic Information",
+        "themesAndCategories": "Themes and Categories",
+        "schedule": "Schedule"
+      },
+      "error": {
+        "title": "Edit Error",
+        "loadFailed": "Unable to load activity",
+        "updateFailed": "Error during update",
+        "saveFailed": "Error during save"
+      },
+      "noPermission": {
+        "title": "Insufficient Permission",
+        "description": "You don't have permission to edit this activity."
+      },
+      "draftSaved": "Draft saved successfully"
+    },
+    "negotiator": {
+      "designationHistory": {
+        "title": "Designation History",
+        "noDesignations": "No designations found",
+        "totalDesignations": "Total designations",
+        "currentYear": "Current year",
+        "latestDesignation": "Latest designation",
+        "designationsList": "Designations list",
+        "designationFor": "Designation for",
+        "designatedBy": "Designated by",
+        "system": "System"
+      },
+      "expertise": {
+        "title": "Expertise and Participations",
+        "specializationThemes": "Specialization themes",
+        "copParticipations": "COP participations",
+        "noThemes": "No specialized themes",
+        "noCops": "No COP participations"
+      },
+      "consultations": {
+        "title": "Consultation History",
+        "noConsultations": "No consultations recorded"
+      },
+      "quickAccess": {
+        "title": "Quick Access",
+        "negotiationSpace": "Negotiation Space",
+        "negotiationSpaceDesc": "Access negotiation tools",
+        "specializedTraining": "Specialized Training",
+        "specializedTrainingDesc": "Training for negotiators"
+      }
+    },
+    "focalPoint": {
+      "negotiators": {
+        "title": "Negotiator Management",
+        "designateNew": "Designate new negotiator",
+        "noNegotiators": "No negotiators designated",
+        "designateDesc": "You can designate negotiators for your country",
+        "totalDesignated": "Total designated",
+        "currentlyActive": "Currently active",
+        "currentYear": "Current year",
+        "negotiatorsList": "Negotiators list",
+        "designatedFor": "Designated for",
+        "designations": "designations",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "history": {
+        "title": "Designation History Made",
+        "noHistory": "No designations made",
+        "designatedFor": "Designated for"
+      },
+      "quickActions": {
+        "title": "Quick Actions",
+        "manageNegotiators": "Manage Negotiators",
+        "manageNegotiatorsDesc": "Designate and manage your negotiators",
+        "viewReports": "View Reports",
+        "viewReportsDesc": "Negotiator activity reports"
+      }
+    },
+    "trainer": {
+      "formations": {
+        "title": "Training Activities",
+        "createNew": "Create new training",
+        "noFormations": "No trainings created",
+        "createDesc": "Start by creating your first training",
+        "totalFormations": "Total trainings",
+        "totalParticipants": "Total participants",
+        "averageRating": "Average rating",
+        "completed": "Completed",
+        "formationsList": "Trainings list",
+        "participants": "participants",
+        "status": {
+          "draft": "Draft",
+          "published": "Published",
+          "ongoing": "Ongoing",
+          "completed": "Completed",
+          "cancelled": "Cancelled"
+        },
+        "viewDetails": "View details",
+        "edit": "Edit"
+      },
+      "evaluations": {
+        "title": "Received Evaluations",
+        "noEvaluations": "No evaluations received",
+        "evaluations": "evaluations",
+        "recentComments": "Recent comments"
+      },
+      "quickActions": {
+        "title": "Quick Actions",
+        "manageFormations": "Manage Trainings",
+        "manageFormationsDesc": "Create and manage your trainings",
+        "viewAnalytics": "View Analytics",
+        "viewAnalyticsDesc": "Your training statistics"
+      }
+    }
+  },
+  "activity": {
+    "showMore": "Show more",
+    "showLess": "Show less",
+    "status": {
+      "completed": "Completed"
+    },
+    "submit": {
+      "title": "Submit an activity",
+      "subtitle": "Propose an activity for this event",
+      "submit": "Submit activity",
+      "submitting": "Submitting...",
+      "sections": {
+        "basicInfo": "Basic Information",
+        "formatAndThemes": "Format and Themes",
+        "schedule": "Schedule",
+        "location": "Location",
+        "speakers": "Speakers",
+        "summary": "Summary"
+      },
+      "steps": {
+        "basicInfo": "Basic Information",
+        "basicInfoDesc": "Title, type and objectives",
+        "formatThemes": "Format and Themes",
+        "formatThemesDesc": "Format, themes and categories",
+        "schedule": "Schedule",
+        "scheduleDesc": "Dates and location",
+        "speakers": "Speakers",
+        "speakersDesc": "Speaker information",
+        "summary": "Summary",
+        "summaryDesc": "Review before submission"
+      },
+      "fields": {
+        "title": "Activity title",
+        "organization": "Organization",
+        "activityType": "Activity type",
+        "objectives": "Objectives",
+        "detailedPresentation": "Detailed presentation",
+        "format": "Format",
+        "themes": "Main themes",
+        "categories": "Categories",
+        "proposedStartDate": "Proposed start date and time",
+        "proposedEndDate": "Proposed end date and time",
+        "country": "Country",
+        "speaker": "Speaker",
+        "civility": "Title",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "email": "Email",
+        "position": "Position",
+        "speakerOrganization": "Organization",
+        "availableForQuestions": "Available to answer questions",
+        "speakers": "Speakers"
+      },
+      "placeholders": {
+        "title": "E.g: Workshop on Climate Adaptation in Africa",
+        "selectType": "Select activity type",
+        "objectives": "Describe the main objectives of your activity...",
+        "detailedPresentation": "Present in detail the content, methodology and expected results...",
+        "selectFormat": "Select format",
+        "selectCountry": "Select a country",
+        "selectCivility": "Select title",
+        "speakerFirstName": "E.g: John",
+        "speakerLastName": "E.g: Doe",
+        "speakerEmail": "E.g: john.doe{'@'}example.com",
+        "position": "E.g: Sustainable Development Director",
+        "speakerOrganization": "E.g: International Organization"
+      },
+      "types": {
+        "side_event": "Side Event",
+        "country_day": "Country Day",
+        "other": "Other"
+      },
+      "categories": {
+        "capacity_building": "Capacity building",
+        "results_sharing": "Results sharing",
+        "technological_innovation": "Technological innovation",
+        "field_project": "Field project",
+        "best_practices": "Best practices",
+        "awareness": "Awareness",
+        "consultation": "Consultation"
+      },
+      "formats": {
+        "online": "Online",
+        "in_person": "In person",
+        "hybrid": "Hybrid"
+      },
+      "themes": {
+        "mitigation": "Mitigation",
+        "adaptation": "Adaptation",
+        "climate_resilience": "Climate resilience",
+        "loss_and_damage": "Loss and damage",
+        "clean_tech_innovations": "Clean tech innovations",
+        "renewable_energy_land": "Land-based renewable energy",
+        "health_solidarity": "Health and solidarity",
+        "industry_transition": "Industry transition",
+        "transport_urbanization": "Transport and urbanization",
+        "nature_oceans": "Nature and oceans",
+        "agriculture_food": "Agriculture and food",
+        "sustainable_livestock": "Sustainable livestock",
+        "gender": "Gender",
+        "youth": "Youth",
+        "technology": "Technology",
+        "finance": "Finance",
+        "other": "Other"
+      },
+      "civilities": {
+        "mr": "Mr.",
+        "mrs": "Mrs.",
+        "ms": "Ms.",
+        "dr": "Dr.",
+        "prof": "Prof."
+      },
+      "addSpeaker": "Add speaker",
+      "speaker": "speaker",
+      "speakers": "speakers",
+      "requirements": {
+        "title": "Organization required",
+        "description": "You must provide your organization information before submitting an activity."
+      },
+      "errors": {
+        "noOrganization": "You must first provide your organization information",
+        "submitFailed": "An error occurred during submission. Please try again."
+      },
+      "helpers": {
+        "organizationInfo": "The activity will be submitted on behalf of your organization"
+      },
+      "loadingOrganization": "Loading organization..."
+    },
+    "draft": {
+      "found": "A draft has been found for this activity",
+      "load": "Load draft",
+      "delete": "Delete draft",
+      "save": "Save as draft",
+      "saving": "Saving..."
+    }
+  }
+}

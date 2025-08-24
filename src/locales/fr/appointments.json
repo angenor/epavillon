@@ -1,0 +1,16 @@
+{
+  "appointments": {
+    "title": "Rendez-vous",
+    "description": "Gérez vos rendez-vous et planifiez des réunions",
+    "newAppointment": "Nouveau rendez-vous",
+    "noAppointments": "Aucun rendez-vous",
+    "noAppointmentsDescription": "Vous n'avez aucun rendez-vous planifié pour le moment.",
+    "comingSoon": "Fonctionnalité de planification de rendez-vous disponible bientôt.",
+    "status": {
+      "scheduled": "Planifié",
+      "confirmed": "Confirmé",
+      "cancelled": "Annulé",
+      "completed": "Terminé"
+    }
+  }
+}

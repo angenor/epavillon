@@ -1,0 +1,294 @@
+{
+  "community": {
+    "title": "Community",
+    "subtitle": "Share your innovations, best practices and testimonials with the community",
+    "hero": {
+      "title": "Community",
+      "subtitle": "Share your innovations, best practices and testimonials with the community"
+    },
+    "filters": {
+      "all": "All",
+      "innovations": "Innovations",
+      "practices": "Best Practices",
+      "testimonials": "Testimonials",
+      "videos": "Videos"
+    },
+    "createPost": {
+      "placeholder": "Share an innovation, best practice or testimonial...",
+      "testimonial": "Testimonial",
+      "innovation": "Innovation",
+      "practice": "Best Practice",
+      "video": "Video",
+      "createTestimonial": "Create a testimonial",
+      "shareInnovation": "Share an innovation",
+      "sharePractice": "Share a best practice",
+      "shareVideo": "Share a video",
+      "postingAs": "Posting as",
+      "testimonialPlaceholder": "Share your experience, impressions or feedback...",
+      "innovationPlaceholder": "Describe your innovation...",
+      "practicePlaceholder": "Describe your best practice...",
+      "relatedTo": "Related to",
+      "selectContext": "Select a context",
+      "backgroundColor": "Background color",
+      "videoUpload": "Upload video",
+      "maxDuration": "Maximum duration",
+      "publish": "Publish",
+      "videoMaxDuration": "Maximum duration: 60 seconds",
+      "videoMaxSize": "Maximum size: 10 MB (automatic compression)",
+      "videoTooLong": "Video must be less than 60 seconds",
+      "videoTooLarge": "Video must not exceed 10 MB",
+      "videoTitle": "Video title",
+      "videoTitlePlaceholder": "Give your video a title...",
+      "detailUrl": "Link to more details",
+      "detailUrlPlaceholder": "https://example.com/more-info",
+      "title": "Create a post",
+      "contextType": "Context type",
+      "contextTypes": {
+        "innovation": "Innovation / Best practice",
+        "training": "Training",
+        "event": "Event",
+        "activity": "Activity",
+        "platform": "Platform"
+      },
+      "testimonialText": "Your testimonial",
+      "addPhoto": "Add a photo (optional)",
+      "uploadPhotoText": "Click to add a photo",
+      "markAsFeatured": "Feature this testimonial",
+      "uploadVideo": "Upload a video",
+      "uploadVideoText": "Click to add a video",
+      "noOrganization": "No organization",
+      "error": "Error creating post"
+    },
+    "modal": {
+      "title": "Create a Post",
+      "postType": "Post Type",
+      "types": {
+        "testimonial": "Written Testimonial",
+        "innovation": "Innovation",
+        "practice": "Best Practice",
+        "video": "Video Testimonial"
+      },
+      "fields": {
+        "title": "Title",
+        "content": "Content",
+        "backgroundColor": "Background Color",
+        "videoFile": "Video File",
+        "videoTitle": "Video Title",
+        "context": "Context"
+      },
+      "placeholders": {
+        "title": "Give your post a title...",
+        "content": "Share your experience, innovation or best practice...",
+        "videoTitle": "Give your video a title..."
+      },
+      "helpers": {
+        "video": "MP4, WebM or MOV. Max 10 seconds.",
+        "innovation": "Share a proven innovation",
+        "practice": "Describe a best practice to share"
+      },
+      "contexts": {
+        "innovation": "Innovation",
+        "practice": "Practice"
+      },
+      "actions": {
+        "publish": "Publish",
+        "publishing": "Publishing...",
+        "cancel": "Cancel"
+      }
+    },
+    "testimonial": {
+      "postedBy": "Posted by",
+      "readMore": "Read more",
+      "readLess": "Read less",
+      "play": "Play video",
+      "innovation": "Innovation",
+      "practice": "Best Practice",
+      "testimonial": "Testimonial",
+      "video": "Video"
+    },
+    "stats": {
+      "testimonials": "Testimonials",
+      "innovations": "Innovations",
+      "practices": "Best Practices",
+      "videos": "Videos"
+    },
+    "testimonials": {
+      "empty": {
+        "title": "No testimonials",
+        "description": "No testimonials available at the moment"
+      }
+    },
+    "empty": {
+      "title": "No posts",
+      "description": "Be the first to share your experience with the community"
+    },
+    "errors": {
+      "loadFailed": "Unable to load posts",
+      "submitFailed": "Error publishing post",
+      "videoTooLong": "Video must not exceed 60 seconds",
+      "videoProcessingFailed": "Error processing video",
+      "uploadFailed": "Upload error"
+    },
+    "success": {
+      "published": "Post created successfully"
+    },
+    "videoUpload": {
+      "title": "Upload Video",
+      "uploading": "Uploading...",
+      "processing": "Processing video...",
+      "duration": "Duration",
+      "seconds": "seconds",
+      "maxDuration": "Max 60 seconds"
+    },
+    "noContent": "No content available",
+    "loadingMore": "Loading...",
+    "loadMore": "Load more",
+    "testimonialDetail": {
+      "testimonial": "Testimonial",
+      "video": "Video testimonial",
+      "share": "Share",
+      "contact": "Contact",
+      "context": "Context",
+      "viewProject": "View project"
+    }
+  },
+  "organization": {
+    "setup": {
+      "title": "Organization Setup",
+      "subtitle": "Search for or register your organization to continue",
+      "step1": "Search",
+      "step2": "Create",
+      "searchTitle": "Search for your organization",
+      "searchLabel": "Organization name",
+      "searchPlaceholder": "Type your organization name...",
+      "searching": "Searching...",
+      "resultsTitle": "Organizations found",
+      "noResults": "No organization found with this name",
+      "matchedAs": "Matched as",
+      "createNew": "Create new organization",
+      "createNewAfterSearch": "Create new organization",
+      "canCreateAfterSearch": "You can now create a new organization",
+      "searchInstructions": "Type at least 3 characters to start searching",
+      "startSearching": "Start by typing your organization name",
+      "createTitle": "Create new organization",
+      "create": "Create organization",
+      "creating": "Creating..."
+    },
+    "fields": {
+      "name": "Organization name",
+      "email": "Official email",
+      "type": "Organization type",
+      "country": "Country",
+      "website": "Website",
+      "description": "Description"
+    },
+    "placeholders": {
+      "name": "E.g: Institute of La Francophonie for Sustainable Development",
+      "email": "contact{'@'}organization.org",
+      "selectType": "Select type",
+      "selectCountry": "Select country",
+      "website": "https://www.organization.org",
+      "description": "Organization description..."
+    },
+    "types": {
+      "public_national_institution": "Public National Institution",
+      "international_organization": "International Organization",
+      "regional_organization": "Regional Organization",
+      "ngo_association": "NGO/Association",
+      "private_sector": "Private Sector"
+    },
+    "verified": "Verified",
+    "requirements": {
+      "authenticated": "Be authenticated",
+      "adminRole": "Have administrator role",
+      "organization": "Organization information provided"
+    }
+  },
+  "organizations": {
+    "title": "Organizations",
+    "subtitle": "{count} active and verified organizations",
+    "search": {
+      "placeholder": "Search by organization name..."
+    },
+    "filters": {
+      "country": "Country",
+      "type": "Organization type",
+      "verification": "Verification status",
+      "sortBy": "Sort by",
+      "allCountries": "All countries",
+      "allTypes": "All types",
+      "allStatuses": "All statuses",
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "reset": "Reset filters"
+    },
+    "categoriesCount": "Categories",
+    "countriesCount": "Countries",
+    "verified": "Verified",
+    "unknownCountry": "Country not specified",
+    "activitiesCount": "{count} activity | {count} activities",
+    "website": "Website",
+    "validate": "Validate",
+    "validations": "{count} validation | {count} validations",
+    "viewDetails": "View details",
+    "viewAs": "Display as",
+    "results": "{count} result | {count} results",
+    "pagination": {
+      "showing": "Showing {start} to {end} of {total} results"
+    },
+    "empty": {
+      "title": "No organizations found",
+      "description": "No organizations match the selected search criteria."
+    },
+    "types": {
+      "public_national_institution": "Public National Institution",
+      "international_organization": "International Organization",
+      "regional_organization": "Regional Organization",
+      "ngo_association": "NGO/Association",
+      "private_sector": "Private Sector"
+    }
+  },
+  "organizationDetail": {
+    "breadcrumbs": {
+      "organizations": "Organizations"
+    },
+    "error": {
+      "title": "Organization not found",
+      "notFound": "The requested organization does not exist or is no longer active."
+    },
+    "verified": "Verified",
+    "unknownCountry": "Country not specified",
+    "createdOn": "Created on",
+    "website": "Website",
+    "description": "Description",
+    "aliases": "Aliases and acronyms",
+    "acronym": "(acronym)",
+    "validate": "Validate this organization",
+    "statistics": "Statistics",
+    "totalActivities": "Total activities",
+    "liveActivities": "Live",
+    "upcomingActivities": "Upcoming",
+    "completedActivities": "Completed",
+    "validations": "Validations",
+    "andMore": "and {count} others",
+    "activities": {
+      "title": "Related activities",
+      "all": "All",
+      "upcoming": "Upcoming",
+      "live": "Live",
+      "completed": "Completed",
+      "filterByEvent": "Filter by event",
+      "allEvents": "All events",
+      "filterByTheme": "Filter by theme",
+      "allThemes": "All themes",
+      "sortBy": "Sort by",
+      "empty": {
+        "title": "No activities found",
+        "description": "This organization has no activities matching the selected criteria."
+      },
+      "pagination": {
+        "showing": "Showing {start} to {end} of {total} activities"
+      }
+    }
+  }
+}

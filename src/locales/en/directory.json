@@ -1,0 +1,36 @@
+{
+  "directory": {
+    "title": "Public Directory",
+    "subtitle": "Discover professionals from the Francophone sustainable development community",
+    "results_count": "{count} professional found | {count} professionals found",
+    "no_results": "No profiles found",
+    "no_results_message": "Try modifying your search criteria or refining your filters.",
+    "view_profile": "View profile",
+    "verified": "Verified",
+    "not_verified": "Not verified",
+    "activities": "activities",
+    "member_since": "Member since",
+    "filters": {
+      "title": "Search filters",
+      "search_name": "Search by name",
+      "search_placeholder": "First or last name...",
+      "organization": "Organization",
+      "all_organizations": "All organizations",
+      "country": "Country",
+      "all_countries": "All countries",
+      "expertise": "Area of expertise",
+      "reset": "Reset",
+      "visible_profiles": "visible profiles"
+    },
+    "expertise": {
+      "negotiator": "Climate negotiator",
+      "sustainable_development": "Sustainable development expert",
+      "trainer": "Trainer"
+    },
+    "badges": {
+      "negotiator": "Negotiator",
+      "trainer": "Trainer"
+    },
+    "connect": "Connect"
+  }
+}

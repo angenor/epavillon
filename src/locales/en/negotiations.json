@@ -1,0 +1,116 @@
+{
+  "negotiations": {
+    "title": "Negotiations",
+    "subtitle": "Dedicated space for Francophone climate negotiators to access negotiation sessions, support documents and coordination meetings",
+    "accessLevel": {
+      "negotiatorsOnly": "Access reserved for negotiators"
+    },
+    "categories": {
+      "climate": "Climate",
+      "biodiversity": "Biodiversity",
+      "desertification": "Desertification"
+    },
+    "sessions": {
+      "title": "Negotiation sessions",
+      "subtitle": "Sessions organized by IFDD and external sessions",
+      "ifddOrganized": "Sessions organized by IFDD",
+      "external": "External sessions",
+      "noSessions": "No sessions available",
+      "noSessionsDesc": "No negotiation sessions are scheduled for this category",
+      "filters": {
+        "all": "All",
+        "upcoming": "Upcoming",
+        "ongoing": "Ongoing",
+        "past": "Past"
+      },
+      "status": {
+        "upcoming": "Upcoming",
+        "ongoing": "Ongoing",
+        "past": "Past"
+      },
+      "register": "Register",
+      "registered": "Registered",
+      "unregister": "Unregister",
+      "participants": "participants",
+      "onlineLocation": "Online",
+      "visitWebsite": "Visit official website",
+      "joinZoom": "Join on Zoom",
+      "addToCalendar": "Add to calendar",
+      "documents": "Documents",
+      "registerSuccess": "Registration successful",
+      "registerError": "Registration error",
+      "unregisterSuccess": "Unregistration successful",
+      "unregisterError": "Unregistration error"
+    },
+    "documents": {
+      "title": "Negotiation support documents",
+      "subtitle": "Document library to help you in your negotiations",
+      "searchPlaceholder": "Search documents...",
+      "noDocuments": "No documents available",
+      "noDocumentsDesc": "No support documents are available for this category",
+      "types": {
+        "negotiationGuide": "Negotiation guide",
+        "technicalNote": "Technical note",
+        "relevantDocument": "Relevant document",
+        "other": "Other"
+      },
+      "filters": {
+        "allTypes": "All types"
+      },
+      "sort": {
+        "recent": "Most recent",
+        "alphabetical": "Alphabetical",
+        "relevance": "Relevance"
+      },
+      "view": "View",
+      "download": "Download",
+      "share": "Share",
+      "favorite": "Favorite",
+      "viewMore": "View more",
+      "viewError": "Error opening document",
+      "downloadSuccess": "Document downloaded",
+      "downloadError": "Download error",
+      "favoriteToggled": "Favorite updated",
+      "favoriteError": "Error updating favorites",
+      "loadMoreError": "Loading error"
+    },
+    "francophonieMeetings": {
+      "title": "Francophonie meetings",
+      "subtitle": "Meeting calendar and francophone coordination",
+      "noMeetings": "No meetings scheduled",
+      "noMeetingsDesc": "No Francophonie meetings are scheduled for this category",
+      "views": {
+        "list": "List",
+        "calendar": "Calendar"
+      },
+      "filters": {
+        "allTypes": "All types",
+        "allStatuses": "All statuses",
+        "upcoming": "Upcoming",
+        "ongoing": "Ongoing",
+        "past": "Past"
+      },
+      "register": "Register",
+      "registered": "Registered",
+      "unregister": "Unregister",
+      "participants": "participants",
+      "joinZoom": "Join on Zoom",
+      "viewDetails": "View details",
+      "registerSuccess": "Registration successful",
+      "registerError": "Registration error",
+      "unregisterSuccess": "Unregistration successful",
+      "unregisterError": "Unregistration error"
+    },
+    "meetingTypes": {
+      "Preparatory_Workshop": "Preparatory workshop",
+      "Francophone_Consultation": "Francophone consultation",
+      "Innovation": "Innovation",
+      "Field_Training_Workshop": "Field training workshop"
+    },
+    "meetingStatus": {
+      "upcoming": "Upcoming",
+      "ongoing": "Ongoing",
+      "past": "Past"
+    }
+  }
+}

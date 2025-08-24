@@ -1,0 +1,116 @@
+{
+  "negotiations": {
+    "title": "Négociations",
+    "subtitle": "Espace dédié aux négociateurs climatiques francophones pour accéder aux sessions de négociation, documents d'aide et réunions de coordination",
+    "accessLevel": {
+      "negotiatorsOnly": "Accès réservé aux négociateurs"
+    },
+    "categories": {
+      "climate": "Climat",
+      "biodiversity": "Biodiversité",
+      "desertification": "Désertification"
+    },
+    "sessions": {
+      "title": "Sessions de négociation",
+      "subtitle": "Sessions organisées par l'IFDD et sessions externes",
+      "ifddOrganized": "Sessions organisées par l'IFDD",
+      "external": "Sessions externes",
+      "noSessions": "Aucune session disponible",
+      "noSessionsDesc": "Aucune session de négociation n'est programmée pour cette catégorie",
+      "filters": {
+        "all": "Toutes",
+        "upcoming": "À venir",
+        "ongoing": "En cours",
+        "past": "Passées"
+      },
+      "status": {
+        "upcoming": "À venir",
+        "ongoing": "En cours",
+        "past": "Passée"
+      },
+      "register": "S'inscrire",
+      "registered": "Inscrit",
+      "unregister": "Se désinscrire",
+      "participants": "participants",
+      "onlineLocation": "En ligne",
+      "visitWebsite": "Visiter le site officiel",
+      "joinZoom": "Rejoindre sur Zoom",
+      "addToCalendar": "Ajouter au calendrier",
+      "documents": "Documents",
+      "registerSuccess": "Inscription réussie",
+      "registerError": "Erreur lors de l'inscription",
+      "unregisterSuccess": "Désinscription réussie",
+      "unregisterError": "Erreur lors de la désinscription"
+    },
+    "documents": {
+      "title": "Documents d'aide à la négociation",
+      "subtitle": "Bibliothèque de documents pour vous aider dans vos négociations",
+      "searchPlaceholder": "Rechercher des documents...",
+      "noDocuments": "Aucun document disponible",
+      "noDocumentsDesc": "Aucun document d'aide n'est disponible pour cette catégorie",
+      "types": {
+        "negotiationGuide": "Guide de négociation",
+        "technicalNote": "Note technique",
+        "relevantDocument": "Document pertinent",
+        "other": "Autre"
+      },
+      "filters": {
+        "allTypes": "Tous les types"
+      },
+      "sort": {
+        "recent": "Plus récents",
+        "alphabetical": "Alphabétique",
+        "relevance": "Pertinence"
+      },
+      "view": "Voir",
+      "download": "Télécharger",
+      "share": "Partager",
+      "favorite": "Favori",
+      "viewMore": "Voir plus",
+      "viewError": "Erreur lors de l'ouverture du document",
+      "downloadSuccess": "Document téléchargé",
+      "downloadError": "Erreur lors du téléchargement",
+      "favoriteToggled": "Favori mis à jour",
+      "favoriteError": "Erreur lors de la mise à jour des favoris",
+      "loadMoreError": "Erreur lors du chargement"
+    },
+    "francophonieMeetings": {
+      "title": "Réunions de la Francophonie",
+      "subtitle": "Calendrier des réunions et coordination francophone",
+      "noMeetings": "Aucune réunion programmée",
+      "noMeetingsDesc": "Aucune réunion de la Francophonie n'est programmée pour cette catégorie",
+      "views": {
+        "list": "Liste",
+        "calendar": "Calendrier"
+      },
+      "filters": {
+        "allTypes": "Tous les types",
+        "allStatuses": "Tous les statuts",
+        "upcoming": "À venir",
+        "ongoing": "En cours",
+        "past": "Passées"
+      },
+      "register": "S'inscrire",
+      "registered": "Inscrit",
+      "unregister": "Se désinscrire",
+      "participants": "participants",
+      "joinZoom": "Rejoindre sur Zoom",
+      "viewDetails": "Voir détails",
+      "registerSuccess": "Inscription réussie",
+      "registerError": "Erreur lors de l'inscription",
+      "unregisterSuccess": "Désinscription réussie",
+      "unregisterError": "Erreur lors de la désinscription"
+    },
+    "meetingTypes": {
+      "Preparatory_Workshop": "Atelier préparatoire",
+      "Francophone_Consultation": "Consultation francophone",
+      "Innovation": "Innovation",
+      "Field_Training_Workshop": "Atelier de formation terrain"
+    },
+    "meetingStatus": {
+      "upcoming": "À venir",
+      "ongoing": "En cours",
+      "past": "Passée"
+    }
+  }
+}

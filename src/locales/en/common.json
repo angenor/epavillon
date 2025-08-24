@@ -1,0 +1,177 @@
+{
+  "common": {
+    "language": "Language",
+    "home": "Home",
+    "long": "long",
+    "darkMode": "Dark mode",
+    "lightMode": "Light mode",
+    "logout": "Logout",
+    "profile": "Profile",
+    "settings": "Settings",
+    "messages": "Messages",
+    "appointments": "Appointments",
+    "notifications": "Notifications",
+    "seeMore": "See more",
+    "seeAll": "See all",
+    "register": "Register",
+    "consult": "Consult",
+    "discover": "Discover",
+    "learnMore": "Learn more",
+    "hours": "hours",
+    "participants": "participants",
+    "graduates": "graduates",
+    "certified": "Certified",
+    "online": "Online",
+    "logoAlt": "IFDD Logo",
+    "locale": "en-US",
+    "cancel": "Cancel",
+    "back": "Back",
+    "error": "Error",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "upload": "Upload",
+    "uploading": "Uploading...",
+    "loading": "Loading...",
+    "today": "Today",
+    "daysAgo": "{{days}} days ago",
+    "weeksAgo": "{{weeks}} weeks ago",
+    "monthsAgo": "{{months}} months ago",
+    "hoursAgo": "{{hours}} hours ago",
+    "justNow": "Just now",
+    "save": "Save",
+    "saving": "Saving...",
+    "saveSuccess": "Successfully saved",
+    "saveError": "Error while saving",
+    "submitting": "Submitting...",
+    "per_page": "per page",
+    "refresh": "Refresh",
+    "dataRefreshed": "Data refreshed",
+    "refreshError": "Error while refreshing",
+    "optional": "optional",
+    "create": "Create"
+  },
+  "error": {
+    "403": {
+      "title": "Access Denied",
+      "message": "You don't have the necessary permissions to access this page.",
+      "details": "This page requires specific roles that you don't currently have.",
+      "backHome": "Back to Home",
+      "needAccess": "Need access?",
+      "contactAdmin": "Contact an administrator",
+      "connectedAs": "Connected as",
+      "currentRoles": "Current roles",
+      "noRoles": "No active roles"
+    }
+  },
+  "nav": {
+    "programmings": "Programmings",
+    "networking": "Networking",
+    "negotiations": "Negotiations",
+    "community": "Community",
+    "directory": "Find Profile",
+    "organizations": "Organizations",
+    "climate": "Climate",
+    "climat": "Climate",
+    "biodiversity": "Biodiversity",
+    "biodiversite": "Biodiversity",
+    "desertification": "Desertification"
+  },
+  "user": {
+    "email": "user{'@'}ifdd.org",
+    "username": "User"
+  },
+  "sidebar": {
+    "userMenu": "User menu",
+    "myActivities": "My activities"
+  },
+  "hero": {
+    "welcome": "Welcome to the epavillon platform",
+    "subtitle": "Institute of La Francophonie for Sustainable Development"
+  },
+  "footer": {
+    "description": "E-pavilion platform of the Institute of La Francophonie for Sustainable Development",
+    "quickLinks": "Quick links",
+    "legalNotice": "Legal notice",
+    "privacyPolicy": "Privacy policy",
+    "contact": "Contact",
+    "technicalSupport": "Technical support",
+    "followUs": "Follow us",
+    "copyright": "© 2025 IFDD. All rights reserved."
+  },
+  "about": {
+    "pageDescription": "This is an about page"
+  },
+  "event": {
+    "description": "Description",
+    "dateTime": "Date and time",
+    "location": "Location",
+    "format": "Format",
+    "online": "Online",
+    "inPerson": "In-Person",
+    "participationMode": "Participation Mode",
+    "participationModes": {
+      "online": "Online",
+      "in_person": "In-Person",
+      "hybrid": "Hybrid"
+    },
+    "formats": {
+      "online": "Online",
+      "in_person": "In-Person",
+      "hybrid": "Hybrid"
+    },
+    "submissionDeadline": "Submission deadline",
+    "daysRemaining": "days remaining",
+    "viewActivities": "View activities",
+    "viewProgramming": "View programming",
+    "submitActivity": "Submit an activity",
+    "upcomingActivities": "Upcoming activities",
+    "upcomingProgramming": "Upcoming programming",
+    "organizedBy": "Organized by",
+    "viewAllActivities": "View all activities",
+    "viewAllProgramming": "View all programming",
+    "quickStats": "Quick Stats",
+    "totalActivities": "Total Activities",
+    "submissions": "Submissions",
+    "activitiesDescription": "Discover the activities planned for this event",
+    "programmingDescription": "Discover the programming planned for this event",
+    "status": {
+      "upcoming": "Upcoming",
+      "ongoing": "Ongoing",
+      "completed": "Completed",
+      "suspended": "Suspended"
+    },
+    "submissionStatus": {
+      "open": "Open",
+      "closed": "Closed"
+    },
+    "submission": {
+      "open": "Open",
+      "closed": "Closed"
+    },
+    "edit": {
+      "title": "Edit Event",
+      "subtitle": "Modify event information",
+      "update": "Update",
+      "updating": "Updating...",
+      "sections": {
+        "basicInfo": "Basic Information",
+        "schedule": "Schedule",
+        "status": "Status"
+      },
+      "fields": {
+        "eventStatus": "Event Status",
+        "submissionStatus": "Submission Status"
+      },
+      "error": {
+        "title": "Edit Error",
+        "loadFailed": "Unable to load event",
+        "updateFailed": "Error during update"
+      },
+      "noPermission": {
+        "title": "Insufficient Permission",
+        "description": "You don't have permission to edit this event."
+      }
+    }
+  }
+}

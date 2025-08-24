@@ -1,0 +1,294 @@
+{
+  "community": {
+    "title": "Communauté",
+    "subtitle": "Partagez vos innovations, bonnes pratiques et témoignages avec la communauté",
+    "hero": {
+      "title": "Communauté",
+      "subtitle": "Partagez vos innovations, bonnes pratiques et témoignages avec la communauté"
+    },
+    "filters": {
+      "all": "Tout",
+      "innovations": "Innovations",
+      "practices": "Bonnes pratiques",
+      "testimonials": "Témoignages",
+      "videos": "Vidéos"
+    },
+    "createPost": {
+      "placeholder": "Partagez une innovation, une bonne pratique ou un témoignage...",
+      "testimonial": "Témoignage",
+      "innovation": "Innovation",
+      "practice": "Bonne pratique",
+      "video": "Vidéo",
+      "createTestimonial": "Créer un témoignage",
+      "title": "Créer un post",
+      "contextType": "Type de contexte",
+      "selectContext": "Sélectionner le contexte",
+      "contextTypes": {
+        "innovation": "Innovation / Bonne pratique",
+        "training": "Formation",
+        "event": "Événement",
+        "activity": "Activité",
+        "platform": "Plateforme"
+      },
+      "testimonialText": "Votre témoignage",
+      "testimonialPlaceholder": "Partagez votre expérience...",
+      "addPhoto": "Ajouter une photo (optionnel)",
+      "uploadPhotoText": "Cliquez pour ajouter une photo",
+      "backgroundColor": "Couleur de fond",
+      "markAsFeatured": "Mettre en avant ce témoignage",
+      "uploadVideo": "Télécharger une vidéo",
+      "uploadVideoText": "Cliquez pour ajouter une vidéo",
+      "videoMaxDuration": "Durée maximale : 60 secondes",
+      "videoMaxSize": "Taille maximale : 10 MB (compression automatique)",
+      "videoTooLong": "La vidéo doit faire moins de 60 secondes",
+      "videoTooLarge": "La vidéo ne doit pas dépasser 10 MB",
+      "videoTitle": "Titre de la vidéo",
+      "videoTitlePlaceholder": "Donnez un titre à votre vidéo...",
+      "detailUrl": "Lien vers plus de détails",
+      "detailUrlPlaceholder": "https://exemple.com/plus-d-infos",
+      "noOrganization": "Aucune organisation",
+      "error": "Erreur lors de la création du post",
+      "shareInnovation": "Partager une innovation",
+      "sharePractice": "Partager une bonne pratique",
+      "shareVideo": "Partager une vidéo",
+      "postingAs": "Publier en tant que",
+      "innovationPlaceholder": "Décrivez votre innovation...",
+      "practicePlaceholder": "Décrivez votre bonne pratique...",
+      "relatedTo": "Lié à",
+      "videoUpload": "Télécharger une vidéo",
+      "maxDuration": "Durée maximale",
+      "publish": "Publier"
+    },
+    "modal": {
+      "title": "Créer une publication",
+      "postType": "Type de publication",
+      "types": {
+        "testimonial": "Témoignage écrit",
+        "innovation": "Innovation",
+        "practice": "Bonne pratique",
+        "video": "Témoignage vidéo"
+      },
+      "fields": {
+        "title": "Titre",
+        "content": "Contenu",
+        "backgroundColor": "Couleur de fond",
+        "videoFile": "Fichier vidéo",
+        "videoTitle": "Titre de la vidéo",
+        "context": "Contexte"
+      },
+      "placeholders": {
+        "title": "Donnez un titre à votre publication...",
+        "content": "Partagez votre expérience, innovation ou bonne pratique...",
+        "videoTitle": "Donnez un titre à votre vidéo..."
+      },
+      "helpers": {
+        "video": "MP4, WebM ou MOV. Max 10 secondes.",
+        "innovation": "Partagez une innovation qui a fait ses preuves",
+        "practice": "Décrivez une bonne pratique à partager"
+      },
+      "contexts": {
+        "innovation": "Innovation",
+        "practice": "Pratique"
+      },
+      "actions": {
+        "publish": "Publier",
+        "publishing": "Publication...",
+        "cancel": "Annuler"
+      }
+    },
+    "testimonial": {
+      "postedBy": "Publié par",
+      "readMore": "Lire plus",
+      "readLess": "Lire moins",
+      "play": "Lire la vidéo",
+      "innovation": "Innovation",
+      "practice": "Bonne pratique",
+      "testimonial": "Témoignage",
+      "video": "Vidéo"
+    },
+    "stats": {
+      "testimonials": "Témoignages",
+      "innovations": "Innovations",
+      "practices": "Bonnes pratiques",
+      "videos": "Vidéos"
+    },
+    "testimonials": {
+      "empty": {
+        "title": "Aucun témoignage",
+        "description": "Aucun témoignage disponible pour le moment"
+      }
+    },
+    "empty": {
+      "title": "Aucune publication",
+      "description": "Soyez le premier à partager votre expérience avec la communauté"
+    },
+    "errors": {
+      "loadFailed": "Impossible de charger les publications",
+      "submitFailed": "Erreur lors de la publication",
+      "videoTooLong": "La vidéo ne doit pas dépasser 10 secondes",
+      "videoProcessingFailed": "Erreur lors du traitement de la vidéo",
+      "uploadFailed": "Erreur lors du téléchargement"
+    },
+    "success": {
+      "published": "Publication créée avec succès"
+    },
+    "videoUpload": {
+      "title": "Télécharger une vidéo",
+      "uploading": "Téléchargement en cours...",
+      "processing": "Traitement de la vidéo...",
+      "duration": "Durée",
+      "seconds": "secondes",
+      "maxDuration": "Max 10 secondes"
+    },
+    "noContent": "Aucun contenu disponible",
+    "loadingMore": "Chargement...",
+    "loadMore": "Charger plus",
+    "testimonialDetail": {
+      "testimonial": "Témoignage",
+      "video": "Vidéo témoignage",
+      "share": "Partager",
+      "contact": "Contacter",
+      "context": "Contexte",
+      "viewProject": "Voir le projet"
+    }
+  },
+  "organization": {
+    "setup": {
+      "title": "Configuration de l'organisation",
+      "subtitle": "Recherchez ou enregistrez votre organisation pour continuer",
+      "step1": "Rechercher",
+      "step2": "Créer",
+      "searchTitle": "Rechercher votre organisation",
+      "searchLabel": "Nom de l'organisation",
+      "searchPlaceholder": "Tapez le nom de votre organisation...",
+      "searching": "Recherche en cours...",
+      "resultsTitle": "Organisations trouvées",
+      "noResults": "Aucune organisation trouvée avec ce nom",
+      "matchedAs": "Trouvé comme",
+      "createNew": "Créer une nouvelle organisation",
+      "createNewAfterSearch": "Créer une nouvelle organisation",
+      "canCreateAfterSearch": "Vous pouvez maintenant créer une nouvelle organisation",
+      "searchInstructions": "Tapez au moins 3 caractères pour commencer la recherche",
+      "startSearching": "Commencez par taper le nom de votre organisation",
+      "createTitle": "Créer une nouvelle organisation",
+      "create": "Créer l'organisation",
+      "creating": "Création en cours..."
+    },
+    "fields": {
+      "name": "Nom de l'organisation",
+      "email": "Email officiel",
+      "type": "Type d'organisation",
+      "country": "Pays",
+      "website": "Site web",
+      "description": "Description"
+    },
+    "placeholders": {
+      "name": "Ex: Institut de la Francophonie pour le Développement Durable",
+      "email": "contact{'@'}organisation.org",
+      "selectType": "Sélectionnez le type",
+      "selectCountry": "Sélectionnez le pays",
+      "website": "https://www.organisation.org",
+      "description": "Description de l'organisation..."
+    },
+    "types": {
+      "public_national_institution": "Institution publique nationale",
+      "international_organization": "Organisation internationale",
+      "regional_organization": "Organisation régionale",
+      "ngo_association": "ONG/Association",
+      "private_sector": "Secteur privé"
+    },
+    "verified": "Vérifiée",
+    "requirements": {
+      "authenticated": "Être connecté",
+      "adminRole": "Avoir un rôle administrateur",
+      "organization": "Organisation renseignée"
+    }
+  },
+  "organizations": {
+    "title": "Organisations",
+    "subtitle": "{count} organisations actives et vérifiées",
+    "categoriesCount": "Catégories",
+    "countriesCount": "Pays représentés",
+    "search": {
+      "placeholder": "Rechercher par nom d'organisation..."
+    },
+    "filters": {
+      "country": "Pays",
+      "type": "Type d'organisation",
+      "verification": "Statut de vérification",
+      "sortBy": "Trier par",
+      "allCountries": "Tous les pays",
+      "allTypes": "Tous les types",
+      "allStatuses": "Tous les statuts",
+      "verified": "Vérifiées",
+      "unverified": "Non vérifiées",
+      "reset": "Réinitialiser les filtres"
+    },
+    "verified": "Vérifiée",
+    "unknownCountry": "Pays non renseigné",
+    "activitiesCount": "{count} activité | {count} activités",
+    "website": "Site web",
+    "validate": "Valider",
+    "validations": "{count} validation | {count} validations",
+    "viewDetails": "Voir détails",
+    "viewAs": "Afficher comme",
+    "results": "{count} résultat | {count} résultats",
+    "pagination": {
+      "showing": "Affichage de {start} à {end} sur {total} résultats"
+    },
+    "empty": {
+      "title": "Aucune organisation trouvée",
+      "description": "Aucune organisation ne correspond aux critères de recherche sélectionnés."
+    },
+    "types": {
+      "public_national_institution": "Institution publique nationale",
+      "international_organization": "Organisation internationale",
+      "regional_organization": "Organisation régionale",
+      "ngo_association": "ONG/Association",
+      "private_sector": "Secteur privé"
+    }
+  },
+  "organizationDetail": {
+    "breadcrumbs": {
+      "organizations": "Organisations"
+    },
+    "error": {
+      "title": "Organisation introuvable",
+      "notFound": "L'organisation demandée n'existe pas ou n'est plus active."
+    },
+    "verified": "Vérifiée",
+    "unknownCountry": "Pays non renseigné",
+    "createdOn": "Créée le",
+    "website": "Site web",
+    "description": "Description",
+    "aliases": "Alias et acronymes",
+    "acronym": "(acronyme)",
+    "validate": "Valider cette organisation",
+    "statistics": "Statistiques",
+    "totalActivities": "Total activités",
+    "liveActivities": "En direct",
+    "upcomingActivities": "À venir",
+    "completedActivities": "Terminées",
+    "validations": "Validations",
+    "andMore": "et {count} autres",
+    "activities": {
+      "title": "Activités liées",
+      "all": "Tout",
+      "upcoming": "À venir",
+      "live": "En direct",
+      "completed": "Terminées",
+      "filterByEvent": "Filtrer par événement",
+      "allEvents": "Tous les événements",
+      "filterByTheme": "Filtrer par thème",
+      "allThemes": "Tous les thèmes",
+      "sortBy": "Trier par",
+      "empty": {
+        "title": "Aucune activité trouvée",
+        "description": "Cette organisation n'a pas d'activités correspondant aux critères sélectionnés."
+      },
+      "pagination": {
+        "showing": "Affichage de {start} à {end} sur {total} activités"
+      }
+    }
+  }
+}

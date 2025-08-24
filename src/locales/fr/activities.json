@@ -1,0 +1,478 @@
+{
+  "activities": {
+    "title": "Activités à venir",
+    "events": "Événements",
+    "trainings": "Formations",
+    "upcoming": "À venir",
+    "viewAll": "Voir toutes les activités",
+    "start": "Début",
+    "online": "En ligne",
+    "availableSpots": "Places disponibles",
+    "noUpcoming": "Aucune activité à venir",
+    "type": {
+      "panel": "Panel",
+      "workshop": "Atelier",
+      "presentation": "Présentation",
+      "conference": "Conférence",
+      "roundtable": "Table ronde",
+      "training": "Formation",
+      "networking": "Réseautage",
+      "side_event": "Événement parallèle",
+      "country_day": "Journée pays",
+      "other": "Autre"
+    },
+    "format": {
+      "online": "En ligne",
+      "hybrid": "Hybride",
+      "in_person": "En présentiel"
+    },
+    "status": {
+      "draft": "Brouillon",
+      "submitted": "Soumise",
+      "under_review": "En révision",
+      "approved": "Approuvée",
+      "rejected": "Rejetée",
+      "cancelled": "Annulée",
+      "live": "En direct",
+      "completed": "Terminée",
+      "postponed": "Reportée"
+    },
+    "theme": {
+      "climate_change": "Changement climatique",
+      "biodiversity": "Biodiversité",
+      "sustainable_development": "Développement durable",
+      "renewable_energy": "Énergies renouvelables",
+      "water_resources": "Ressources en eau",
+      "waste_management": "Gestion des déchets",
+      "green_economy": "Économie verte",
+      "environmental_governance": "Gouvernance environnementale",
+      "mitigation": "Atténuation",
+      "adaptation": "Adaptation",
+      "climate_resilience": "Résilience climatique",
+      "loss_and_damage": "Pertes et dommages",
+      "clean_tech_innovations": "Innovations technologiques propres",
+      "renewable_energy_land": "Énergies renouvelables terrestres",
+      "health_solidarity": "Santé et solidarité",
+      "industry_transition": "Transition industrielle",
+      "transport_urbanization": "Transport et urbanisation",
+      "nature_oceans": "Nature et océans",
+      "agriculture_food": "Agriculture et alimentation",
+      "sustainable_livestock": "Élevage durable",
+      "gender": "Genre",
+      "youth": "Jeunesse",
+      "technology": "Technologie",
+      "finance": "Finance",
+      "other": "Autre"
+    },
+    "category": {
+      "side_event": "Événement parallèle",
+      "official_event": "Événement officiel",
+      "partner_event": "Événement partenaire",
+      "exhibition": "Exposition",
+      "youth_event": "Événement jeunesse",
+      "capacity_building": "Renforcement des capacités",
+      "results_sharing": "Partage de résultats",
+      "technological_innovation": "Innovation technologique",
+      "field_project": "Projet de terrain",
+      "best_practices": "Bonnes pratiques",
+      "awareness": "Sensibilisation",
+      "consultation": "Consultation"
+    },
+    "organizedBy": "Organisé par",
+    "register": "S'inscrire",
+    "unregister": "Se désinscrire",
+    "objectives": "Objectifs",
+    "detailedPresentation": "Présentation détaillée",
+    "speakers": "Intervenants",
+    "availableForQuestions": "Disponible pour les questions",
+    "questionsToSpeakers": "Questions aux intervenants",
+    "askQuestion": "Poser une question",
+    "questionPlaceholder": "Écrivez votre question ici...",
+    "targetSpeakers": "Intervenants ciblés (optionnel)",
+    "submitQuestion": "Envoyer la question",
+    "registerToAskQuestions": "Inscrivez-vous à l'activité pour poser des questions aux intervenants.",
+    "questionsAvailableDuringEvent": "Les questions seront disponibles pendant et après l'événement.",
+    "recentQuestions": "Questions récentes",
+    "answered": "Répondu",
+    "keyInfo": "Informations clés",
+    "themes": {
+      "mitigation": "Atténuation",
+      "adaptation": "Adaptation",
+      "climate_resilience": "Résilience climatique",
+      "loss_and_damage": "Pertes et dommages",
+      "clean_tech_innovations": "Innovations technologiques propres",
+      "renewable_energy_land": "Énergies renouvelables terrestres",
+      "health_solidarity": "Santé et solidarité",
+      "industry_transition": "Transition industrielle",
+      "transport_urbanization": "Transport et urbanisation",
+      "nature_oceans": "Nature et océans",
+      "agriculture_food": "Agriculture et alimentation",
+      "sustainable_livestock": "Élevage durable",
+      "gender": "Genre",
+      "youth": "Jeunesse",
+      "technology": "Technologie",
+      "finance": "Finance",
+      "other": "Autre"
+    },
+    "tags": "Tags",
+    "statistics": "Statistiques",
+    "registrations": "Inscriptions",
+    "questions": "Questions",
+    "speakersCount": "Intervenants",
+    "documents": "Documents",
+    "joinLinks": "Liens de participation",
+    "joinZoom": "Rejoindre sur Zoom",
+    "watchYoutube": "Regarder sur YouTube",
+    "justNow": "À l'instant",
+    "minutesAgo": "Il y a {{count}} minutes",
+    "hoursAgo": "Il y a {{count}} heures",
+    "daysAgo": "Il y a {{count}} jours",
+    "categories": {
+      "capacity_building": "Renforcement des capacités",
+      "results_sharing": "Partage de résultats",
+      "technological_innovation": "Innovation technologique",
+      "field_project": "Projet de terrain",
+      "best_practices": "Bonnes pratiques",
+      "awareness": "Sensibilisation",
+      "consultation": "Consultation"
+    },
+    "duration": {
+      "days": "{{count}} jours",
+      "weeks": "{{count}} semaines",
+      "months": "{{count}} mois"
+    },
+    "detail": {
+      "error": {
+        "title": "Erreur de chargement",
+        "loadFailed": "Impossible de charger les détails de l'activité",
+        "registrationFailed": "Erreur lors de l'inscription",
+        "unregistrationFailed": "Erreur lors de la désinscription"
+      },
+      "register": "S'inscrire",
+      "unregister": "Se désinscrire",
+      "registering": "Inscription...",
+      "unregistering": "Désinscription...",
+      "share": "Partager",
+      "edit": "Modifier",
+      "organizedBy": "Organisé par",
+      "sections": {
+        "objectives": "Objectifs",
+        "detailedPresentation": "Présentation détaillée",
+        "speakers": "Intervenants",
+        "documents": "Documents",
+        "information": "Informations",
+        "event": "Événement"
+      },
+      "activityType": "Type d'activité",
+      "mainThemes": "Thèmes principaux",
+      "categories": "Catégories",
+      "tags": "Tags",
+      "registrations": "Inscriptions",
+      "participants": "participants",
+      "eventTitle": "Titre de l'événement",
+      "eventYear": "Année",
+      "viewEvent": "Voir l'événement"
+    },
+    "types": {
+      "side_event": "Événement parallèle",
+      "country_day": "Journée pays",
+      "other": "Autre"
+    },
+    "edit": {
+      "title": "Modifier l'activité",
+      "subtitle": "Modifiez les informations de votre activité",
+      "update": "Mettre à jour",
+      "updating": "Mise à jour...",
+      "sections": {
+        "basicInfo": "Informations générales",
+        "themesAndCategories": "Thèmes et catégories",
+        "schedule": "Planification"
+      },
+      "error": {
+        "title": "Erreur de modification",
+        "loadFailed": "Impossible de charger l'activité",
+        "updateFailed": "Erreur lors de la mise à jour",
+        "saveFailed": "Erreur lors de la sauvegarde"
+      },
+      "noPermission": {
+        "title": "Permission insuffisante",
+        "description": "Vous n'avez pas l'autorisation de modifier cette activité."
+      },
+      "draftSaved": "Brouillon sauvegardé avec succès"
+    },
+    "negotiator": {
+      "designationHistory": {
+        "title": "Historique des Désignations",
+        "noDesignations": "Aucune désignation trouvée",
+        "totalDesignations": "Total des désignations",
+        "currentYear": "Année actuelle",
+        "latestDesignation": "Dernière désignation",
+        "designationsList": "Liste des désignations",
+        "designationFor": "Désignation pour",
+        "designatedBy": "Désigné par",
+        "system": "Système"
+      },
+      "expertise": {
+        "title": "Expertise et Participations",
+        "specializationThemes": "Thématiques de spécialisation",
+        "copParticipations": "COP participées",
+        "noThemes": "Aucune thématique spécialisée",
+        "noCops": "Aucune COP participée"
+      },
+      "consultations": {
+        "title": "Historique des Concertations",
+        "noConsultations": "Aucune concertation enregistrée"
+      },
+      "quickAccess": {
+        "title": "Accès Rapide",
+        "negotiationSpace": "Espace de Négociation",
+        "negotiationSpaceDesc": "Accéder aux outils de négociation",
+        "specializedTraining": "Formations Spécialisées",
+        "specializedTrainingDesc": "Formations pour négociateurs"
+      }
+    },
+    "focalPoint": {
+      "negotiators": {
+        "title": "Gestion des Négociateurs",
+        "designateNew": "Désigner un nouveau négociateur",
+        "noNegotiators": "Aucun négociateur désigné",
+        "designateDesc": "Vous pouvez désigner des négociateurs pour votre pays",
+        "totalDesignated": "Total désignés",
+        "currentlyActive": "Actuellement actifs",
+        "currentYear": "Année actuelle",
+        "negotiatorsList": "Liste des négociateurs",
+        "designatedFor": "Désigné pour",
+        "designations": "désignations",
+        "active": "Actif",
+        "inactive": "Inactif"
+      },
+      "history": {
+        "title": "Historique des Désignations Effectuées",
+        "noHistory": "Aucune désignation effectuée",
+        "designatedFor": "Désigné pour"
+      },
+      "quickActions": {
+        "title": "Actions Rapides",
+        "manageNegotiators": "Gérer les Négociateurs",
+        "manageNegotiatorsDesc": "Désigner et gérer vos négociateurs",
+        "viewReports": "Voir les Rapports",
+        "viewReportsDesc": "Rapports d'activité des négociateurs"
+      }
+    },
+    "trainer": {
+      "formations": {
+        "title": "Activités de Formation",
+        "createNew": "Créer une nouvelle formation",
+        "noFormations": "Aucune formation créée",
+        "createDesc": "Commencez par créer votre première formation",
+        "totalFormations": "Total des formations",
+        "totalParticipants": "Total des participants",
+        "averageRating": "Note moyenne",
+        "completed": "Terminées",
+        "formationsList": "Liste des formations",
+        "participants": "participants",
+        "status": {
+          "draft": "Brouillon",
+          "published": "Publiée",
+          "ongoing": "En cours",
+          "completed": "Terminée",
+          "cancelled": "Annulée"
+        },
+        "viewDetails": "Voir les détails",
+        "edit": "Modifier"
+      },
+      "evaluations": {
+        "title": "Évaluations Reçues",
+        "noEvaluations": "Aucune évaluation reçue",
+        "evaluations": "évaluations",
+        "recentComments": "Commentaires récents"
+      },
+      "quickActions": {
+        "title": "Actions Rapides",
+        "manageFormations": "Gérer les Formations",
+        "manageFormationsDesc": "Créer et gérer vos formations",
+        "viewAnalytics": "Voir les Analytiques",
+        "viewAnalyticsDesc": "Statistiques de vos formations"
+      }
+    }
+  },
+  "activity": {
+    "details": "Détails",
+    "themes": "Thèmes",
+    "categories": "Catégories",
+    "speakers": "Intervenants",
+    "noSpeakers": "Aucun intervenant pour le moment",
+    "objectives": "Objectifs",
+    "presentation": "Présentation",
+    "documents": "Documents",
+    "register": "S'inscrire",
+    "askQuestion": "Poser une question",
+    "showMore": "Voir plus",
+    "showLess": "Voir moins",
+    "status": {
+      "completed": "Terminée"
+    },
+    "format": {
+      "online": "En ligne",
+      "in_person": "En présentiel",
+      "hybrid": "Hybride"
+    },
+    "theme": {
+      "mitigation": "Atténuation",
+      "adaptation": "Adaptation",
+      "climate_resilience": "Résilience climatique",
+      "loss_and_damage": "Pertes et dommages",
+      "clean_tech_innovations": "Innovations technologiques propres",
+      "renewable_energy_land": "Énergies renouvelables terrestres",
+      "health_solidarity": "Santé et solidarité",
+      "industry_transition": "Transition industrielle",
+      "transport_urbanization": "Transport et urbanisation",
+      "nature_oceans": "Nature et océans",
+      "agriculture_food": "Agriculture et alimentation",
+      "sustainable_livestock": "Élevage durable",
+      "gender": "Genre",
+      "youth": "Jeunesse",
+      "technology": "Technologie",
+      "finance": "Finance",
+      "other": "Autre"
+    },
+    "category": {
+      "capacity_building": "Renforcement des capacités",
+      "results_sharing": "Partage de résultats",
+      "technological_innovation": "Innovation technologique",
+      "field_project": "Projet de terrain",
+      "best_practices": "Bonnes pratiques",
+      "awareness": "Sensibilisation",
+      "consultation": "Consultation"
+    },
+    "submit": {
+      "title": "Soumettre une activité",
+      "subtitle": "Proposez une activité pour cet événement",
+      "submit": "Soumettre l'activité",
+      "submitting": "Soumission en cours...",
+      "sections": {
+        "basicInfo": "Informations générales",
+        "formatAndThemes": "Format et thématiques",
+        "schedule": "Planification",
+        "location": "Localisation",
+        "speakers": "Intervenants",
+        "summary": "Récapitulatif"
+      },
+      "steps": {
+        "basicInfo": "Informations générales",
+        "basicInfoDesc": "Titre, type et objectifs",
+        "formatThemes": "Format et thématiques",
+        "formatThemesDesc": "Format, thèmes et catégories",
+        "schedule": "Planification",
+        "scheduleDesc": "Dates et localisation",
+        "speakers": "Intervenants",
+        "speakersDesc": "Informations des intervenants",
+        "summary": "Récapitulatif",
+        "summaryDesc": "Vérification avant soumission"
+      },
+      "fields": {
+        "title": "Titre de l'activité",
+        "organization": "Organisation",
+        "activityType": "Type d'activité",
+        "objectives": "Objectifs",
+        "detailedPresentation": "Présentation détaillée",
+        "format": "Format",
+        "themes": "Thématiques principales",
+        "categories": "Catégories",
+        "proposedStartDate": "Date et heure de début proposées",
+        "proposedEndDate": "Date et heure de fin proposées",
+        "country": "Pays",
+        "speaker": "Intervenant",
+        "civility": "Civilité",
+        "firstName": "Prénom",
+        "lastName": "Nom",
+        "email": "Email",
+        "position": "Poste",
+        "speakerOrganization": "Organisation",
+        "availableForQuestions": "Disponible pour répondre aux questions",
+        "speakers": "Intervenants"
+      },
+      "placeholders": {
+        "title": "Ex: Atelier sur l'adaptation climatique en Afrique",
+        "selectType": "Sélectionnez le type d'activité",
+        "objectives": "Décrivez les objectifs principaux de votre activité...",
+        "detailedPresentation": "Présentez en détail le contenu, la méthodologie et les résultats attendus...",
+        "selectFormat": "Sélectionnez le format",
+        "selectCountry": "Sélectionnez un pays",
+        "selectCivility": "Sélectionnez la civilité",
+        "speakerFirstName": "Ex: Jean",
+        "speakerLastName": "Ex: Dupont",
+        "speakerEmail": "Ex: jean.dupont{'@'}exemple.com",
+        "position": "Ex: Directeur du développement durable",
+        "speakerOrganization": "Ex: Organisation Internationale"
+      },
+      "types": {
+        "side_event": "Événement parallèle",
+        "country_day": "Journée pays",
+        "other": "Autre"
+      },
+      "categories": {
+        "capacity_building": "Renforcement des capacités",
+        "results_sharing": "Partage de résultats",
+        "technological_innovation": "Innovation technologique",
+        "field_project": "Projet de terrain",
+        "best_practices": "Bonnes pratiques",
+        "awareness": "Sensibilisation",
+        "consultation": "Consultation"
+      },
+      "formats": {
+        "online": "En ligne",
+        "in_person": "En présentiel",
+        "hybrid": "Hybride"
+      },
+      "themes": {
+        "mitigation": "Atténuation",
+        "adaptation": "Adaptation",
+        "climate_resilience": "Résilience climatique",
+        "loss_and_damage": "Pertes et dommages",
+        "clean_tech_innovations": "Innovations technologiques propres",
+        "renewable_energy_land": "Énergies renouvelables terrestres",
+        "health_solidarity": "Santé et solidarité",
+        "industry_transition": "Transition industrielle",
+        "transport_urbanization": "Transport et urbanisation",
+        "nature_oceans": "Nature et océans",
+        "agriculture_food": "Agriculture et alimentation",
+        "sustainable_livestock": "Élevage durable",
+        "gender": "Genre",
+        "youth": "Jeunesse",
+        "technology": "Technologie",
+        "finance": "Finance",
+        "other": "Autre"
+      },
+      "civilities": {
+        "mr": "M.",
+        "mrs": "Mme",
+        "ms": "Mlle",
+        "dr": "Dr",
+        "prof": "Prof."
+      },
+      "addSpeaker": "Ajouter un intervenant",
+      "speaker": "intervenant",
+      "speakers": "intervenants",
+      "requirements": {
+        "title": "Organisation requise",
+        "description": "Vous devez avoir renseigné votre organisation avant de pouvoir soumettre une activité."
+      },
+      "errors": {
+        "noOrganization": "Vous devez d'abord renseigner votre organisation",
+        "submitFailed": "Une erreur est survenue lors de la soumission. Veuillez réessayer."
+      },
+      "helpers": {
+        "organizationInfo": "L'activité sera soumise au nom de votre organisation"
+      },
+      "loadingOrganization": "Chargement de l'organisation..."
+    },
+    "draft": {
+      "found": "Un brouillon a été trouvé pour cette activité",
+      "load": "Charger le brouillon",
+      "delete": "Supprimer le brouillon",
+      "save": "Sauvegarder en brouillon",
+      "saving": "Sauvegarde en cours..."
+    }
+  }
+}

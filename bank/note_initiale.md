@@ -1,1 +1,6 @@
-la messagerie temps réel fonctionne bien avec @src/views/messagerie/Messagerie.vue , mais le temps réel ne fonctionne pas avec @src/components/messaging/MessagingSystem.vue , obliger d'actualiser la page pour ce dernier. Merci de regler celà. Pourquoi ne pas tout simplement utiliser les memes composants dans @src/views/messagerie/Messagerie.vue tout symplement au lieu de fait deux système comptelement différent. Think et trouve la solution
+[intlify] Not found 'community.testimonials.empty.title' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'community.testimonials.empty.description' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'community.testimonials.empty.title' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'community.testimonials.empty.description' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'community.testimonials.empty.title' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'community.testimonials.empty.description' key in 'fr' locale messages. shared.mjs:8:17

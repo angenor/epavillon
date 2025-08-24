@@ -1836,6 +1836,12 @@
       "practices": "Bonnes pratiques",
       "videos": "Vidéos"
     },
+    "testimonials": {
+      "empty": {
+        "title": "Aucun témoignage",
+        "description": "Aucun témoignage disponible pour le moment"
+      }
+    },
     "empty": {
       "title": "Aucune publication",
       "description": "Soyez le premier à partager votre expérience avec la communauté"

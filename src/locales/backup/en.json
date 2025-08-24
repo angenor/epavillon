@@ -1833,6 +1833,12 @@
       "practices": "Best Practices",
       "videos": "Videos"
     },
+    "testimonials": {
+      "empty": {
+        "title": "No testimonials",
+        "description": "No testimonials available at the moment"
+      }
+    },
     "empty": {
       "title": "No posts",
       "description": "Be the first to share your experience with the community"
