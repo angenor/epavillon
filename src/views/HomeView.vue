@@ -2,17 +2,17 @@
   <div>
     <!-- Sidebar -->
     <SideBar :is-open="sidebarOpen" @close="closeSidebar" />
-    
+
     <!-- Main content -->
     <main>
       <!-- Hero Section -->
       <HeroSection />
-      
+
       <!-- Events Section -->
       <EventsSection />
-      
+
       <!-- Formations Section -->
-      <FormationsSection />
+      <!-- <FormationsSection /> -->
     </main>
   </div>
 </template>

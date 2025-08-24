@@ -184,12 +184,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useMessagingStore } from '@/stores/messaging'
 import { useAuthStore } from '@/stores/auth'
 import { useToast } from '@/composables/useToast'
+import { useMessagingRealtime } from '@/composables/useMessagingRealtime'
 
 // Composants
 import ConversationList from '@/components/messaging/ConversationList.vue'
@@ -203,8 +204,14 @@ const messagingStore = useMessagingStore()
 const authStore = useAuthStore()
 const { showToast } = useToast()
 
-const loading = ref(false)
 const showStats = ref(true)
+
+// Utiliser le composable partagé pour le temps réel
+const { 
+  loading, 
+  error, 
+  refreshMessaging 
+} = useMessagingRealtime()
 
 // Computed
 const currentView = computed(() => {
@@ -220,16 +227,12 @@ const realtimeConnected = computed(() => {
 
 // Méthodes
 const refreshData = async () => {
-  loading.value = true
-  
   try {
-    await messagingStore.loadInitialData()
+    await refreshMessaging()
     showToast(t('common.dataRefreshed'), 'success')
   } catch (error) {
     console.error('Erreur lors de l\'actualisation:', error)
     showToast(t('common.refreshError'), 'error')
-  } finally {
-    loading.value = false
   }
 }
 
@@ -241,21 +244,10 @@ onMounted(async () => {
     return
   }
 
-  // Initialiser le système de messagerie
-  try {
-    await messagingStore.loadInitialData()
-    
-    if (authStore.user?.id) {
-      messagingStore.initializeRealtimeSubscriptions(authStore.user.id)
-    }
-  } catch (error) {
-    console.error('Erreur lors de l\'initialisation de la messagerie:', error)
+  // Observer les erreurs d'initialisation
+  if (error.value) {
     showToast(t('messaging.initializationError'), 'error')
   }
-})
-
-onUnmounted(() => {
-  messagingStore.cleanup()
 })
 </script>
 
