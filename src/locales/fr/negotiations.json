@@ -7,9 +7,14 @@
     },
     "categories": {
       "climate": "Climat",
+      "climat": "Climat",
       "biodiversity": "Biodiversité",
+      "biodiversite": "Biodiversité",
       "desertification": "Désertification"
     },
+    "allNegotiations": "Toutes les négociations",
+    "aboutTitle": "À propos des négociations",
+    "aboutDescription": "L'IFDD accompagne les négociateurs francophones dans les processus de négociations internationales sur l'environnement et le développement durable. Nous proposons des sessions de formation, des documents d'aide et des réunions de coordination pour renforcer les capacités des délégations francophones.",
     "sessions": {
       "title": "Sessions de négociation",
       "subtitle": "Sessions organisées par l'IFDD et sessions externes",
