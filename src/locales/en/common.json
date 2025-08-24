@@ -75,7 +75,8 @@
     "climat": "Climate",
     "biodiversity": "Biodiversity",
     "biodiversite": "Biodiversity",
-    "desertification": "Desertification"
+    "desertification": "Desertification",
+    "climate_finance": "Climate Finance"
   },
   "user": {
     "email": "user{'@'}ifdd.org",
