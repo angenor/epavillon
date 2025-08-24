@@ -31,18 +31,26 @@
       </div>
 
       <!-- Sessions List -->
-      <div v-else-if="filteredSessions.length > 0" class="space-y-4">
+      <div v-else-if="filteredSessions.length > 0" class="space-y-8">
         <!-- IFDD Sessions -->
         <div v-if="ifddSessions.length > 0">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            {{ $t('negotiations.sessions.ifddOrganized') }}
-          </h3>
-          <div class="space-y-4">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+              {{ $t('negotiations.sessions.ifddOrganized') }}
+            </h3>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+              {{ ifddSessions.length }} {{ ifddSessions.length > 1 ? 'sessions' : 'session' }}
+            </span>
+          </div>
+          
+          <!-- Grid layout pour les sessions IFDD -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             <SessionCard
               v-for="session in ifddSessions"
               :key="session.id"
               :session="session"
               :is-ifdd="true"
+              :compact="true"
               @register="handleRegister"
               @unregister="handleUnregister"
             />
@@ -51,15 +59,23 @@
 
         <!-- External Sessions -->
         <div v-if="externalSessions.length > 0">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 mt-8">
-            {{ $t('negotiations.sessions.external') }}
-          </h3>
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+              {{ $t('negotiations.sessions.external') }}
+            </h3>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+              {{ externalSessions.length }} {{ externalSessions.length > 1 ? 'sessions' : 'session' }}
+            </span>
+          </div>
+          
+          <!-- Liste verticale pour les sessions externes -->
           <div class="space-y-4">
             <SessionCard
               v-for="session in externalSessions"
               :key="session.id"
               :session="session"
               :is-ifdd="false"
+              :compact="false"
               @register="handleRegister"
               @unregister="handleUnregister"
             />

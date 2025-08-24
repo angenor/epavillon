@@ -1,13 +1,16 @@
 <template>
-  <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 border border-gray-200 dark:border-gray-600">
-    <div class="flex items-start justify-between">
-      <div class="flex-1">
+  <div 
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden"
+    :class="compact ? 'h-full' : ''"
+  >
+    <div class="p-6" :class="compact ? 'h-full flex flex-col' : ''">
+      <div :class="compact ? 'flex-1' : 'flex-1'">
         <!-- Header with title and category badge -->
         <div class="flex items-start justify-between mb-3">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white pr-4">
+          <h3 :class="compact ? 'text-base font-semibold line-clamp-2' : 'text-lg font-semibold'" class="text-gray-900 dark:text-white pr-4">
             {{ session.title }}
           </h3>
-          <div class="flex items-center space-x-2 flex-shrink-0">
+          <div :class="compact ? 'flex flex-col space-y-1' : 'flex items-center space-x-2'" class="flex-shrink-0">
             <span 
               class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
               :class="categoryClasses"
@@ -24,38 +27,38 @@
         </div>
 
         <!-- Description -->
-        <p v-if="session.description" class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
+        <p v-if="session.description" :class="compact ? 'text-sm line-clamp-2' : 'line-clamp-2'" class="text-gray-600 dark:text-gray-300 mb-4">
           {{ session.description }}
         </p>
 
         <!-- Session Details -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div :class="compact ? 'space-y-3 mb-4' : 'grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'">
           <!-- Date and Time -->
           <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             <div>
-              <div>{{ formatDate(session.start_datetime) }}</div>
-              <div class="text-xs">{{ formatTime(session.start_datetime) }} - {{ formatTime(session.end_datetime) }}</div>
+              <div :class="compact ? 'text-xs' : ''">{{ formatDate(session.start_datetime) }}</div>
+              <div class="text-xs opacity-75">{{ formatTime(session.start_datetime) }} - {{ formatTime(session.end_datetime) }}</div>
             </div>
           </div>
 
           <!-- Location -->
           <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-            <span>{{ session.location || $t('negotiations.sessions.onlineLocation') }}</span>
+            <span :class="compact ? 'text-xs' : ''">{{ session.location || $t('negotiations.sessions.onlineLocation') }}</span>
           </div>
 
           <!-- Participants count (for IFDD sessions) -->
           <div v-if="isIfdd" class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
             </svg>
-            <span>{{ session.registrations_count || 0 }} {{ $t('negotiations.sessions.participants') }}</span>
+            <span :class="compact ? 'text-xs' : ''">{{ session.registrations_count || 0 }} {{ $t('negotiations.sessions.participants') }}</span>
           </div>
 
           <!-- External link (for external sessions) -->
@@ -75,13 +78,14 @@
         </div>
 
         <!-- Action Buttons -->
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-3">
+        <div :class="compact ? 'mt-auto pt-4 space-y-2' : 'flex items-center justify-between'">
+          <div :class="compact ? 'space-y-2' : 'flex items-center space-x-3'">
             <!-- Registration for IFDD sessions -->
             <template v-if="isIfdd">
               <button
                 v-if="!session.is_registered"
                 @click="$emit('register', session.id)"
+                :class="compact ? 'w-full justify-center' : ''"
                 class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
               >
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -92,6 +96,7 @@
               <button
                 v-else
                 @click="$emit('unregister', session.id)"
+                :class="compact ? 'w-full justify-center' : ''"
                 class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
               >
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -154,6 +159,10 @@ const props = defineProps({
     required: true
   },
   isIfdd: {
+    type: Boolean,
+    default: false
+  },
+  compact: {
     type: Boolean,
     default: false
   }
