@@ -112,7 +112,7 @@ const props = defineProps({
   category: {
     type: String,
     required: true,
-    validator: (value) => ['climat', 'biodiversite', 'desertification'].includes(value)
+    validator: (value) => ['climat', 'biodiversite', 'desertification', 'climate_finance'].includes(value)
   }
 })
 
@@ -133,7 +133,8 @@ const sessionFilters = [
 const categoryMap = {
   'climat': 'climate',
   'biodiversite': 'biodiversity',
-  'desertification': 'desertification'
+  'desertification': 'desertification',
+  'climate_finance': 'climate_finance'
 }
 
 const filteredSessions = computed(() => {

@@ -13,9 +13,9 @@
     </div>
 
     <!-- Widgets des catégories -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        
+
         <!-- Widget Climat -->
         <router-link
           :to="{ name: 'negotiations', params: { category: 'climat' } }"
@@ -63,7 +63,7 @@
         <!-- Widget Désertification -->
         <router-link
           :to="{ name: 'negotiations', params: { category: 'desertification' } }"
-          class="group relative h-80 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 md:col-span-2 lg:col-span-1"
+          class="group relative h-80 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105"
         >
           <img
             src="/images/nego-bg/desertification.jpeg"
@@ -75,6 +75,28 @@
             <div class="text-center transform group-hover:scale-110 transition-transform duration-300">
               <h2 class="text-4xl md:text-5xl font-bold text-white mb-2 drop-shadow-2xl">
                 {{ t('negotiations.categories.desertification') }}
+              </h2>
+              <div class="w-16 h-1 bg-white mx-auto rounded-full opacity-80"></div>
+            </div>
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+        </router-link>
+
+        <!-- Widget Finance Climat -->
+        <router-link
+          :to="{ name: 'negotiations', params: { category: 'climate_finance' } }"
+          class="group relative h-80 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105"
+        >
+          <img
+            src="/images/nego-bg/finance-climat.jpeg"
+            alt="Finance Climat"
+            class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          >
+          <div class="absolute inset-0 bg-yellow-800/40 group-hover:bg-yellow-800/60 transition-all duration-300"></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="text-center transform group-hover:scale-110 transition-transform duration-300">
+              <h2 class="text-3xl md:text-4xl font-bold text-white mb-2 drop-shadow-2xl">
+                {{ t('negotiations.categories.climate_finance') }}
               </h2>
               <div class="w-16 h-1 bg-white mx-auto rounded-full opacity-80"></div>
             </div>

@@ -146,12 +146,13 @@ const sections = [
 const allCategories = [
   { value: 'climat', label: 'Climat' },
   { value: 'biodiversite', label: 'Biodiversité' },
-  { value: 'desertification', label: 'Désertification' }
+  { value: 'desertification', label: 'Désertification' },
+  { value: 'climate_finance', label: 'Finance Climat' }
 ]
 
 const currentCategory = computed(() => {
   const category = route.params.category
-  return ['climat', 'biodiversite', 'desertification'].includes(category) ? category : 'climat'
+  return ['climat', 'biodiversite', 'desertification', 'climate_finance'].includes(category) ? category : 'climat'
 })
 
 // Fonction pour obtenir le label de la catégorie
@@ -159,7 +160,8 @@ const getCategoryLabel = (category) => {
   const labels = {
     'climat': 'Climat',
     'biodiversite': 'Biodiversité',
-    'desertification': 'Désertification'
+    'desertification': 'Désertification',
+    'climate_finance': 'Finance Climat'
   }
   return labels[category] || 'Climat'
 }
