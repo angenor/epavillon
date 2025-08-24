@@ -166,9 +166,14 @@ const router = createRouter({
       component: () => import('../views/formation/Detail.vue'),
     },
     // Négociations routes
+    // {
+    //   path: '/nego',
+    //   redirect: '/nego/climat',
+    // },
     {
       path: '/nego',
-      redirect: '/nego/climat',
+      name: 'nego',
+      component: () => import('../views/negociation/NegoListe.vue'),
     },
     {
       path: '/nego/:category',

@@ -138,6 +138,33 @@
         "active": "Actif",
         "blocked": "Bloqué",
         "suspended": "Suspendu"
+      },
+      "roleManagement": {
+        "title": "Gestion des rôles",
+        "addRole": "Ajouter un rôle",
+        "removeRole": "Supprimer le rôle",
+        "activateRole": "Activer le rôle",
+        "selectRole": "Sélectionner un rôle",
+        "validUntil": "Valable jusqu'au",
+        "expiry": "Expiration",
+        "noExpiry": "Aucune expiration",
+        "expired": "Expiré",
+        "active": "Actif",
+        "inactive": "Inactif",
+        "assignedBy": "Assigné par",
+        "assignedAt": "Assigné le",
+        "currentRoles": "Rôles actuels",
+        "noRoles": "Aucun rôle assigné",
+        "confirmRemove": "Êtes-vous sûr de vouloir supprimer ce rôle ?",
+        "roleAdded": "Rôle ajouté avec succès",
+        "roleRemoved": "Rôle supprimé avec succès",
+        "roleActivated": "Rôle activé avec succès",
+        "errorAddingRole": "Erreur lors de l'ajout du rôle",
+        "errorRemovingRole": "Erreur lors de la suppression du rôle",
+        "roleAlreadyExists": "L'utilisateur possède déjà ce rôle",
+        "editExpiry": "Modifier l'expiration",
+        "expiryUpdated": "Date d'expiration mise à jour avec succès",
+        "errorUpdatingExpiry": "Erreur lors de la mise à jour de l'expiration"
       }
     },
     "activities": {

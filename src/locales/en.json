@@ -51,6 +51,34 @@
     "optional": "optional",
     "create": "Create"
   },
+  "admin": {
+    "users": {
+      "roleManagement": {
+        "title": "Role Management",
+        "addRole": "Add Role",
+        "removeRole": "Remove Role",
+        "activateRole": "Activate Role",
+        "selectRole": "Select a role",
+        "validUntil": "Valid until",
+        "expiry": "Expiry",
+        "noExpiry": "No expiry",
+        "expired": "Expired",
+        "active": "Active",
+        "inactive": "Inactive",
+        "assignedBy": "Assigned by",
+        "assignedAt": "Assigned on",
+        "currentRoles": "Current Roles",
+        "noRoles": "No roles assigned",
+        "confirmRemove": "Are you sure you want to remove this role?",
+        "roleAdded": "Role added successfully",
+        "roleRemoved": "Role removed successfully",
+        "roleActivated": "Role activated successfully",
+        "errorAddingRole": "Error adding role",
+        "errorRemovingRole": "Error removing role",
+        "roleAlreadyExists": "User already has this role"
+      }
+    }
+  },
   "profile": {
     "tabs": {
       "information": "Information",

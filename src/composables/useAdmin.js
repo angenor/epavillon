@@ -62,11 +62,9 @@ export const useAdmin = () => {
     }
 
     try {
+      // Utiliser la fonction RPC simple temporairement
       const { data, error } = await supabase
-        .from('user_roles')
-        .select('*')
-        .eq('user_id', currentUser.value.id)
-        .eq('is_active', true)
+        .rpc('get_user_roles_simple', { target_user_id: currentUser.value.id })
 
       if (error) throw error
 

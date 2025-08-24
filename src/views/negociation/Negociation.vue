@@ -5,15 +5,30 @@
       <div class="container mx-auto px-4 py-16">
         <div class="max-w-4xl mx-auto text-center">
           <h1 class="text-4xl md:text-5xl font-bold mb-6">
-            {{ $t('nav.negotiations') }}
+            {{ $t('nav.negotiations') }}  {{ getCategoryLabel(currentCategory) }}
           </h1>
           <p class="text-xl opacity-90 mb-8">
             {{ $t('negotiations.subtitle') }}
           </p>
-          <div class="flex items-center justify-center space-x-4 text-sm">
-            <span class="px-3 py-1 bg-white/20 rounded-full">
+          <div class="flex flex-col items-center justify-center space-y-4">
+            <span class="px-3 py-1 bg-white/20 rounded-full text-sm">
               {{ $t('negotiations.accessLevel.negotiatorsOnly') }}
             </span>
+            
+            <!-- Liens vers les autres catégories -->
+            <div class="flex items-center justify-center space-x-4 mt-4">
+              <router-link
+                v-for="cat in allCategories"
+                :key="cat.value"
+                :to="`/nego/${cat.value}`"
+                class="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200"
+                :class="currentCategory === cat.value 
+                  ? 'bg-white text-blue-600 shadow-lg' 
+                  : 'bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm'"
+              >
+                {{ cat.label }}
+              </router-link>
+            </div>
           </div>
         </div>
       </div>
@@ -50,24 +65,24 @@
       </div>
     </div>
 
-    <!-- Category Tabs Navigation -->
+    <!-- Section Tabs Navigation -->
     <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
       <div class="container mx-auto px-4">
         <nav class="flex space-x-8" aria-label="Tabs">
-          <router-link
-            v-for="category in categories"
-            :key="category.value"
-            :to="`/nego/${category.value}`"
+          <button
+            v-for="section in sections"
+            :key="section.value"
+            @click="activeSection = section.value"
             class="py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200"
-            :class="currentCategory === category.value
+            :class="activeSection === section.value
               ? 'border-blue-500 text-blue-600 dark:text-blue-400'
               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'"
           >
             <div class="flex items-center space-x-2">
-              <component :is="category.icon" class="w-5 h-5" />
-              <span>{{ $t(`nav.${category.value}`) }}</span>
+              <font-awesome-icon :icon="section.icon" class="w-5 h-5" />
+              <span>{{ section.label }}</span>
             </div>
-          </router-link>
+          </button>
         </nav>
       </div>
     </div>
@@ -75,46 +90,63 @@
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-8">
       <div class="space-y-8">
-        <!-- Sessions Section -->
-        <SessionSection :category="currentCategory" />
-        
-        <!-- Documents Section -->
-        <DocumentsSection :category="currentCategory" />
-        
-        <!-- Francophonie Meetings -->
-        <FrancophonieMeetingsSection :category="currentCategory" />
+        <!-- Sessions de négociation -->
+        <div v-if="activeSection === 'negotiations'">
+          <SessionSection :category="currentCategory" />
+        </div>
+
+        <!-- Documents d'aide à la négociation -->
+        <div v-if="activeSection === 'documents'">
+          <DocumentsSection :category="currentCategory" />
+        </div>
+
+        <!-- Réunions de la Francophonie -->
+        <div v-if="activeSection === 'meetings'">
+          <FrancophonieMeetingsSection :category="currentCategory" />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import SessionSection from '@/components/negotiations/SessionSection.vue'
 import DocumentsSection from '@/components/negotiations/DocumentsSection.vue'
 import FrancophonieMeetingsSection from '@/components/negotiations/FrancophonieMeetingsSection.vue'
-import ClimateIcon from '@/components/icons/ClimateIcon.vue'
-import BiodiversityIcon from '@/components/icons/BiodiversityIcon.vue'
-import DesertificationIcon from '@/components/icons/DesertificationIcon.vue'
 
 const { t } = useI18n()
 const route = useRoute()
 
-const categories = [
+// Section active (négociations par défaut)
+const activeSection = ref('negotiations')
+
+// Définition des sections avec leurs icônes
+const sections = [
   {
-    value: 'climat',
-    icon: ClimateIcon
+    value: 'negotiations',
+    label: 'Sessions de négociation',
+    icon: ['fas', 'handshake'] // Icône de négociation
   },
   {
-    value: 'biodiversite',
-    icon: BiodiversityIcon
+    value: 'documents',
+    label: 'Documents d\'aide',
+    icon: ['fas', 'file-alt'] // Icône de document
   },
   {
-    value: 'desertification',
-    icon: DesertificationIcon
+    value: 'meetings',
+    label: 'Réunions Francophonie',
+    icon: ['fas', 'users'] // Icône de réunion
   }
+]
+
+// Toutes les catégories disponibles
+const allCategories = [
+  { value: 'climat', label: 'Climat' },
+  { value: 'biodiversite', label: 'Biodiversité' },
+  { value: 'desertification', label: 'Désertification' }
 ]
 
 const currentCategory = computed(() => {
@@ -122,8 +154,18 @@ const currentCategory = computed(() => {
   return ['climat', 'biodiversite', 'desertification'].includes(category) ? category : 'climat'
 })
 
+// Fonction pour obtenir le label de la catégorie
+const getCategoryLabel = (category) => {
+  const labels = {
+    'climat': 'Climat',
+    'biodiversite': 'Biodiversité',
+    'desertification': 'Désertification'
+  }
+  return labels[category] || 'Climat'
+}
+
 onMounted(() => {
   // Set document title
-  document.title = `${t('nav.negotiations')} - ${t('nav.' + currentCategory.value)} | ePavilion`
+  document.title = `${t('nav.negotiations')} - ${getCategoryLabel(currentCategory.value)} | ePavilion`
 })
 </script>
