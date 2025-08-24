@@ -1,13 +1,13 @@
 // Auto-generated translation index for en
-import common from './common.json';
-import auth from './auth.json';
-import admin from './admin.json';
-import profile from './profile.json';
-import events from './events.json';
-import activities from './activities.json';
-import community from './community.json';
-import negotiations from './negotiations.json';
-import directory from './directory.json';
+import common from './common.json' with { type: 'json' };
+import auth from './auth.json' with { type: 'json' };
+import admin from './admin.json' with { type: 'json' };
+import profile from './profile.json' with { type: 'json' };
+import events from './events.json' with { type: 'json' };
+import activities from './activities.json' with { type: 'json' };
+import community from './community.json' with { type: 'json' };
+import negotiations from './negotiations.json' with { type: 'json' };
+import directory from './directory.json' with { type: 'json' };
 
 export default {
   ...common,

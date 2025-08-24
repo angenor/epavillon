@@ -48,7 +48,8 @@ export function useTestimonials() {
       if (filter === 'featured') {
         query = query.eq('featured', true)
       } else if (filter && filter !== 'all') {
-        query = query.eq('context_type', filter)
+        // Utiliser l'opérateur de tableau pour filtrer sur context_type
+        query = query.contains('context_type', [filter])
       }
 
       const { data, error: fetchError } = await query
@@ -358,7 +359,7 @@ export function useTestimonials() {
           }
 
           // Si le témoignage est lié à une innovation/pratique
-          if (testimonial.context_type === 'innovation_practice' && testimonial.context_id) {
+          if (testimonial.context_type.includes('innovation_practice') && testimonial.context_id) {
             const { data: innovationData } = await supabase
               .from('innovations_practices')
               .select('title, category, cover_image_hd_16_9_url')
@@ -371,7 +372,7 @@ export function useTestimonials() {
           }
 
           // Si le témoignage est lié à une formation
-          if (testimonial.context_type === 'training' && testimonial.context_id) {
+          if (testimonial.context_type.includes('training') && testimonial.context_id) {
             const { data: trainingData } = await supabase
               .from('trainings')
               .select('title, category')

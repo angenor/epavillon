@@ -40,20 +40,42 @@
             ></textarea>
           </div>
 
-          <!-- Context Selection -->
+          <!-- Context Types Selection (Multiple) -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {{ t('community.addTestimonial.context') }}
+              {{ t('community.addTestimonial.contextTypes') }}
+            </label>
+            <div class="space-y-2">
+              <label 
+                v-for="contextType in availableContextTypes" 
+                :key="contextType.value"
+                class="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+              >
+                <input
+                  type="checkbox"
+                  :value="contextType.value"
+                  v-model="formData.contextTypes"
+                  class="w-4 h-4 text-ifdd-green-600 bg-gray-100 border-gray-300 rounded focus:ring-ifdd-green-500 dark:focus:ring-ifdd-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                >
+                <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">{{ contextType.label }}</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Context ID (Optional - for specific context) -->
+          <div v-if="formData.contextTypes.length === 1 && formData.contextTypes[0] !== 'platform'">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {{ t('community.addTestimonial.specificContext') }}
             </label>
             <select
               v-model="formData.contextId"
               class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-ifdd-green-500 focus:border-transparent transition-colors"
-              required
             >
-              <option value="">{{ t('community.addTestimonial.selectContext') }}</option>
-              <!-- Options would be loaded from store -->
-              <option value="1">Innovation Example 1</option>
-              <option value="2">Practice Example 1</option>
+              <option value="">{{ t('community.addTestimonial.selectSpecificContext') }}</option>
+              <!-- Options dynamiques selon le type de contexte sélectionné -->
+              <option v-if="formData.contextTypes[0] === 'training'" value="training-1">Formation Exemple 1</option>
+              <option v-if="formData.contextTypes[0] === 'event'" value="event-1">Événement Exemple 1</option>
+              <option v-if="formData.contextTypes[0] === 'innovation_practice'" value="innovation-1">Innovation Exemple 1</option>
             </select>
           </div>
 
@@ -112,7 +134,8 @@ const testimonialsStore = useTestimonialsStore()
 const loading = ref(false)
 const formData = ref({
   text: '',
-  contextId: '',
+  contextTypes: [], // Nouveau: tableau pour multiples contextes
+  contextId: null, // Optionnel: ID spécifique si un seul contexte
   backgroundColor: '#10B981'
 })
 
@@ -125,10 +148,31 @@ const backgroundColors = [
   '#EF4444'
 ]
 
+// Types de contextes disponibles
+const availableContextTypes = [
+  { value: 'platform', label: t('community.contextTypes.platform') },
+  { value: 'training', label: t('community.contextTypes.training') },
+  { value: 'event', label: t('community.contextTypes.event') },
+  { value: 'innovation_practice', label: t('community.contextTypes.innovationPractice') }
+]
+
 const handleSubmit = async () => {
+  if (formData.value.contextTypes.length === 0) {
+    alert(t('community.addTestimonial.selectAtLeastOneContext'))
+    return
+  }
+
   loading.value = true
   try {
-    await testimonialsStore.addTestimonial(formData.value)
+    // Préparer les données pour la base de données
+    const testimonialData = {
+      testimonial_text: formData.value.text,
+      context_type: formData.value.contextTypes, // Envoie le tableau
+      context_id: formData.value.contextTypes.length === 1 && formData.value.contextTypes[0] !== 'platform' ? formData.value.contextId : null,
+      background_color: formData.value.backgroundColor
+    }
+
+    await testimonialsStore.addTestimonial(testimonialData)
     emit('success')
     emit('close')
   } catch (error) {

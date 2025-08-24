@@ -57,7 +57,10 @@
       "relatedTo": "Lié à",
       "videoUpload": "Télécharger une vidéo",
       "maxDuration": "Durée maximale",
-      "publish": "Publier"
+      "publish": "Publier",
+      "testimonialTitle": "Titre du témoignage",
+      "testimonialTitlePlaceholder": "Donnez un titre à votre témoignage...",
+      "willBeUsedAsThumbnail": "Sera utilisé comme miniature"
     },
     "modal": {
       "title": "Créer une publication",
@@ -150,6 +153,22 @@
       "contact": "Contacter",
       "context": "Contexte",
       "viewProject": "Voir le projet"
+    },
+    "addTestimonial": {
+      "title": "Ajouter un témoignage",
+      "testimonialText": "Texte du témoignage",
+      "textPlaceholder": "Partagez votre expérience...",
+      "contextTypes": "Types de contexte",
+      "specificContext": "Contexte spécifique",
+      "selectSpecificContext": "Sélectionner un contexte spécifique",
+      "backgroundColor": "Couleur de fond",
+      "selectAtLeastOneContext": "Veuillez sélectionner au moins un type de contexte"
+    },
+    "contextTypes": {
+      "platform": "Plateforme",
+      "training": "Formation",
+      "event": "Événement",
+      "innovationPractice": "Innovation/Pratique"
     }
   },
   "organization": {

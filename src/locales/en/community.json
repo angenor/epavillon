@@ -33,6 +33,9 @@
       "videoUpload": "Upload video",
       "maxDuration": "Maximum duration",
       "publish": "Publish",
+      "testimonialTitle": "Testimonial title",
+      "testimonialTitlePlaceholder": "Give your testimonial a title...",
+      "willBeUsedAsThumbnail": "Will be used as thumbnail",
       "videoMaxDuration": "Maximum duration: 60 seconds",
       "videoMaxSize": "Maximum size: 10 MB (automatic compression)",
       "videoTooLong": "Video must be less than 60 seconds",
@@ -150,6 +153,22 @@
       "contact": "Contact",
       "context": "Context",
       "viewProject": "View project"
+    },
+    "addTestimonial": {
+      "title": "Add Testimonial",
+      "testimonialText": "Testimonial text",
+      "textPlaceholder": "Share your experience...",
+      "contextTypes": "Context types",
+      "specificContext": "Specific context",
+      "selectSpecificContext": "Select a specific context",
+      "backgroundColor": "Background color",
+      "selectAtLeastOneContext": "Please select at least one context type"
+    },
+    "contextTypes": {
+      "platform": "Platform",
+      "training": "Training",
+      "event": "Event",
+      "innovationPractice": "Innovation/Practice"
     }
   },
   "organization": {

@@ -798,8 +798,8 @@ CREATE TABLE public.user_testimonials (
     background_color TEXT,
     featured BOOLEAN DEFAULT FALSE,
     testimonial_text TEXT NOT NULL,
-    context_type testimonial_context_type NOT NULL,
-    context_id UUID, -- NULL si c'est pour la plateforme
+    context_type testimonial_context_type[] NOT NULL,
+    context_id UUID, -- NULL si c'est pour la plateforme ou si plusieurs contextes
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -1030,7 +1030,8 @@ CREATE INDEX idx_connections_users ON public.connections(requester_id, recipient
 CREATE INDEX idx_negotiators_user ON public.negotiators(user_id);
 CREATE INDEX idx_training_participants ON public.training_participants(training_id, user_id);
 CREATE INDEX idx_comments_context ON public.comments(context_type, context_id);
-CREATE INDEX idx_testimonials_context ON public.user_testimonials(context_type, context_id);
+CREATE INDEX idx_testimonials_context ON public.user_testimonials USING GIN (context_type);
+CREATE INDEX idx_testimonials_context_id ON public.user_testimonials(context_id);
 CREATE INDEX idx_events_country ON public.events(country_id);
 CREATE INDEX idx_francophonie_meetings_country ON public.francophonie_meetings(country_id);
 CREATE INDEX idx_francophonie_meetings_category ON public.francophonie_meetings(category);

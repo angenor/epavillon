@@ -102,21 +102,42 @@
                   >
                 </div>
 
-                <!-- Context Selection -->
+                <!-- Context Types Selection (Multiple) -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {{ t('community.createPost.contextType') }}
+                    {{ t('community.addTestimonial.contextTypes') }}
+                  </label>
+                  <div class="space-y-2">
+                    <label 
+                      v-for="contextType in availableContextTypes" 
+                      :key="contextType.value"
+                      class="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+                    >
+                      <input
+                        type="checkbox"
+                        :value="contextType.value"
+                        v-model="formData.context_types"
+                        class="w-4 h-4 text-ifdd-green-600 bg-gray-100 border-gray-300 rounded focus:ring-ifdd-green-500 dark:focus:ring-ifdd-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      >
+                      <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">{{ contextType.label }}</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Context ID (Optional - for specific context) -->
+                <div v-if="formData.context_types.length === 1 && formData.context_types[0] !== 'platform'">
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ t('community.addTestimonial.specificContext') }}
                   </label>
                   <select
-                    v-model="formData.context_type"
-                    required
+                    v-model="formData.context_id"
                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-ifdd-green-500"
                   >
-                    <option value="">{{ t('community.createPost.selectContext') }}</option>
-                    <option value="innovation_practice">{{ t('community.createPost.contextTypes.innovation') }}</option>
-                    <option value="training">{{ t('community.createPost.contextTypes.training') }}</option>
-                    <option value="event">{{ t('community.createPost.contextTypes.event') }}</option>
-                    <option value="platform">{{ t('community.createPost.contextTypes.platform') }}</option>
+                    <option value="">{{ t('community.addTestimonial.selectSpecificContext') }}</option>
+                    <!-- Options dynamiques selon le type de contexte sélectionné -->
+                    <option v-if="formData.context_types[0] === 'training'" value="training-1">Formation Exemple 1</option>
+                    <option v-if="formData.context_types[0] === 'event'" value="event-1">Événement Exemple 1</option>
+                    <option v-if="formData.context_types[0] === 'innovation_practice'" value="innovation-1">Innovation Exemple 1</option>
                   </select>
                 </div>
 
@@ -240,19 +261,42 @@
                   >
                 </div>
 
-                <!-- Context Selection -->
+                <!-- Context Types Selection (Multiple) -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {{ t('community.createPost.contextType') }} ({{ t('common.optional') || 'Optionnel' }})
+                    {{ t('community.addTestimonial.contextTypes') }} ({{ t('common.optional') || 'Optionnel' }})
+                  </label>
+                  <div class="space-y-2">
+                    <label 
+                      v-for="contextType in videoContextTypes" 
+                      :key="contextType.value"
+                      class="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+                    >
+                      <input
+                        type="checkbox"
+                        :value="contextType.value"
+                        v-model="formData.context_types"
+                        class="w-4 h-4 text-ifdd-green-600 bg-gray-100 border-gray-300 rounded focus:ring-ifdd-green-500 dark:focus:ring-ifdd-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      >
+                      <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">{{ contextType.label }}</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Context ID (Optional - for specific context) -->
+                <div v-if="formData.context_types.length === 1 && formData.context_types[0] !== 'platform'">
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ t('community.addTestimonial.specificContext') }}
                   </label>
                   <select
-                    v-model="formData.context_type"
+                    v-model="formData.context_id"
                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-ifdd-green-500"
                   >
-                    <option value="">{{ t('community.createPost.selectContext') }}</option>
-                    <option value="training">{{ t('community.createPost.contextTypes.training') }}</option>
-                    <option value="activity">{{ t('community.createPost.contextTypes.activity') }}</option>
-                    <option value="event">{{ t('community.createPost.contextTypes.event') }}</option>
+                    <option value="">{{ t('community.addTestimonial.selectSpecificContext') }}</option>
+                    <!-- Options dynamiques selon le type de contexte sélectionné -->
+                    <option v-if="formData.context_types[0] === 'training'" value="training-1">Formation Exemple 1</option>
+                    <option v-if="formData.context_types[0] === 'event'" value="event-1">Événement Exemple 1</option>
+                    <option v-if="formData.context_types[0] === 'activity'" value="activity-1">Activité Exemple 1</option>
                   </select>
                 </div>
 
@@ -395,7 +439,8 @@ const formData = ref({
   testimonial_text: '',
   testimonial_title: '',
   testimonial_detail_url: '',
-  context_type: '',
+  context_types: [], // Nouveau: tableau pour multiples contextes
+  context_id: null, // Optionnel: ID spécifique si un seul contexte
   background_color: '#10B981',
   featured: false,
   photo_url: null,
@@ -404,6 +449,21 @@ const formData = ref({
   title: '',
   detail_url: ''
 })
+
+// Types de contextes disponibles
+const availableContextTypes = [
+  { value: 'platform', label: t('community.contextTypes.platform') },
+  { value: 'training', label: t('community.contextTypes.training') },
+  { value: 'event', label: t('community.contextTypes.event') },
+  { value: 'innovation_practice', label: t('community.contextTypes.innovationPractice') }
+]
+
+// Types de contextes pour vidéos (sous-ensemble)
+const videoContextTypes = [
+  { value: 'training', label: t('community.contextTypes.training') },
+  { value: 'event', label: t('community.contextTypes.event') },
+  { value: 'activity', label: t('community.createPost.contextTypes.activity') }
+]
 
 // Background color options
 const backgroundColors = [
@@ -422,9 +482,10 @@ const isFormValid = computed(() => {
   if (selectedType.value === 'testimonial') {
     return formData.value.testimonial_text.trim().length > 0 && 
            formData.value.testimonial_title.trim().length > 0 &&
-           formData.value.context_type !== ''
+           formData.value.context_types.length > 0 // Vérifier qu'au moins un contexte est sélectionné
   } else if (selectedType.value === 'video') {
     return videoFile.value !== null && formData.value.title.trim().length > 0
+    // Les contextes sont optionnels pour les vidéos
   }
   return false
 })
@@ -441,7 +502,8 @@ const closeModal = () => {
     testimonial_text: '',
     testimonial_title: '',
     testimonial_detail_url: '',
-    context_type: '',
+    context_types: [], // Réinitialiser le tableau
+    context_id: null,
     background_color: '#10B981',
     featured: false,
     photo_url: null,
@@ -658,10 +720,17 @@ const handleSubmit = async () => {
     }
     
     if (selectedType.value === 'testimonial') {
+      // Vérifier qu'au moins un contexte est sélectionné
+      if (formData.value.context_types.length === 0) {
+        alert(t('community.addTestimonial.selectAtLeastOneContext'))
+        return
+      }
+
       // Préparer les données avec l'ID de la session
       const testimonialData = {
         testimonial_text: formData.value.testimonial_text.trim(),
-        context_type: formData.value.context_type,
+        context_type: formData.value.context_types, // Envoyer le tableau
+        context_id: formData.value.context_types.length === 1 && formData.value.context_types[0] !== 'platform' ? formData.value.context_id : null,
         featured: formData.value.featured,
         background_color: formData.value.background_color,
         user_id: userId // Utiliser l'ID de la session active
@@ -691,8 +760,8 @@ const handleSubmit = async () => {
         video_url: uploadedVideoUrl,
         duration_seconds: formData.value.duration_seconds,
         featured: false,
-        context_type: formData.value.context_type || 'event',
-        context_id: null,
+        context_type: formData.value.context_types.length > 0 ? formData.value.context_types[0] : 'event', // Les vidéos gardent un seul contexte pour le moment
+        context_id: formData.value.context_types.length === 1 && formData.value.context_types[0] !== 'platform' ? formData.value.context_id : null,
         is_approved: false, // Videos need approval
         user_id: userId, // Utiliser l'ID de la session active
         title: formData.value.title.trim(),
