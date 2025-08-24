@@ -182,7 +182,7 @@ const router = createRouter({
       component: () => import('../views/negociation/Negociation.vue'),
       meta: { requiresAuth: true, requiresRole: ['negotiator', 'admin', 'super_admin'] },
       beforeEnter: (to, _from, next) => {
-        const validCategories = ['climat', 'biodiversite', 'desertification']
+        const validCategories = ['climat', 'biodiversite', 'desertification', 'climate_finance']
         if (validCategories.includes(to.params.category)) {
           next()
         } else {
@@ -301,16 +301,16 @@ const router = createRouter({
 router.beforeEach(async (to, _from, next) => {
   const { useAuth } = await import('@/composables/useAuth')
   const { useUserRoles } = await import('@/composables/useUserRoles')
-  
+
   const { currentUser, isAuthenticated } = useAuth()
   const { getUserRoles } = useUserRoles()
-  
+
   // Vérifier si la route nécessite une authentification
   if (to.meta.requiresAuth && !isAuthenticated.value) {
     next('/login')
     return
   }
-  
+
   // Vérifier si la route nécessite des rôles spécifiques
   if (to.meta.requiresRole && currentUser.value) {
     try {
@@ -319,10 +319,10 @@ router.beforeEach(async (to, _from, next) => {
       const activeRoles = userRoles
         .filter(role => role.is_active && (!role.valid_until || new Date(role.valid_until) > new Date()))
         .map(role => role.role)
-      
+
       // Vérifier si l'utilisateur a au moins un des rôles requis
       const hasRequiredRole = to.meta.requiresRole.some(role => activeRoles.includes(role))
-      
+
       if (!hasRequiredRole) {
         // Rediriger vers une page d'erreur ou d'accès refusé
         next('/403') // ou next('/') selon votre préférence
@@ -334,7 +334,7 @@ router.beforeEach(async (to, _from, next) => {
       return
     }
   }
-  
+
   next()
 })
 
