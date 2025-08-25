@@ -313,6 +313,76 @@
             </div>
           </div>
 
+          <!-- Status Management -->
+          <div class="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6">
+            <div class="flex items-center mb-6">
+              <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg mr-3">
+                <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                {{ t('activities.edit.sections.status') }}
+              </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Validation Status -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <span class="flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    {{ t('activities.edit.fields.validationStatus') }}
+                  </span>
+                </label>
+                <select
+                  v-model="formData.validation_status"
+                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
+                  :disabled="!isAdmin"
+                >
+                  <option value="draft">{{ t('activities.status.validation.draft') }}</option>
+                  <option value="submitted">{{ t('activities.status.validation.submitted') }}</option>
+                  <option value="under_review">{{ t('activities.status.validation.under_review') }}</option>
+                  <option value="approved">{{ t('activities.status.validation.approved') }}</option>
+                  <option value="rejected">{{ t('activities.status.validation.rejected') }}</option>
+                  <option value="cancelled">{{ t('activities.status.validation.cancelled') }}</option>
+                  <option value="live">{{ t('activities.status.validation.live') }}</option>
+                  <option value="completed">{{ t('activities.status.validation.completed') }}</option>
+                </select>
+                <p v-if="!isAdmin" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  {{ t('activities.edit.adminOnly') }}
+                </p>
+              </div>
+
+              <!-- Activity Status -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <span class="flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    {{ t('activities.edit.fields.activityStatus') }}
+                  </span>
+                </label>
+                <select
+                  v-model="formData.activity_status"
+                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
+                  :disabled="!isAdmin"
+                >
+                  <option :value="null">{{ t('activities.status.activity.none') }}</option>
+                  <option value="live">{{ t('activities.status.activity.live') }}</option>
+                  <option value="completed">{{ t('activities.status.activity.completed') }}</option>
+                  <option value="postponed">{{ t('activities.status.activity.postponed') }}</option>
+                </select>
+                <p v-if="!isAdmin" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  {{ t('activities.edit.adminOnly') }}
+                </p>
+              </div>
+            </div>
+          </div>
+
           <!-- Action Buttons -->
           <div class="flex justify-between pt-6 border-t border-gray-200 dark:border-gray-600">
             <button
@@ -395,7 +465,9 @@ const formData = ref({
   categories: [],
   proposed_start_date: '',
   proposed_end_date: '',
-  country_id: ''
+  country_id: '',
+  validation_status: 'draft',
+  activity_status: null
 })
 
 // Static options
@@ -421,6 +493,12 @@ const canEdit = computed(() => {
          authStore.profile?.user_roles?.some(role => 
            ['admin', 'super_admin'].includes(role.role) && role.is_active
          )
+})
+
+const isAdmin = computed(() => {
+  return authStore.profile?.user_roles?.some(role => 
+    ['admin', 'super_admin'].includes(role.role) && role.is_active
+  )
 })
 
 // Methods
@@ -464,7 +542,9 @@ const loadActivity = async () => {
         new Date(activityData.proposed_start_date).toISOString().slice(0, 16) : '',
       proposed_end_date: activityData.proposed_end_date ? 
         new Date(activityData.proposed_end_date).toISOString().slice(0, 16) : '',
-      country_id: activityData.country_id || ''
+      country_id: activityData.country_id || '',
+      validation_status: activityData.validation_status || 'draft',
+      activity_status: activityData.activity_status || null
     }
 
   } catch (err) {
@@ -496,56 +576,9 @@ const handleSubmit = async () => {
     isSubmitting.value = true
     error.value = null
 
-    console.log('=== STARTING UPDATE PROCESS ===')
-    console.log('Activity ID:', activity.value.id)
-    console.log('User ID:', authStore.user.id)
-
-    // First, let's try a simple title-only update to isolate the issue
-    const testTitle = `EDITED: ${formData.value.title} - ${new Date().toISOString()}`
-    console.log('Testing with simple title update:', testTitle)
-
-    // Perform update with explicit transaction handling
-    const { data: titleUpdateResult, error: titleUpdateError } = await supabase
-      .from('activities')
-      .update({ 
-        title: testTitle,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', activity.value.id)
-      .select('id, title, updated_at')
-
-    if (titleUpdateError) {
-      console.error('Title update failed:', titleUpdateError)
-      throw titleUpdateError
-    }
-
-    console.log('Title update result:', titleUpdateResult)
-
-    // Wait a moment for the database to process
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    // Verify the simple update worked
-    const { data: verifyTitle, error: verifyTitleError } = await supabase
-      .from('activities')
-      .select('id, title, updated_at')
-      .eq('id', activity.value.id)
-      .single()
-
-    if (verifyTitleError) {
-      console.error('Title verification failed:', verifyTitleError)
-      throw verifyTitleError
-    }
-
-    console.log('Title verification result:', verifyTitle)
-    const titleMatches = verifyTitle.title === testTitle
-    console.log('Title persistence check:', titleMatches ? 'SUCCESS' : 'FAILED')
-
-    if (!titleMatches) {
-      throw new Error(`Title update failed to persist. Expected: "${testTitle}", Found: "${verifyTitle.title}"`)
-    }
-
-    // If simple update worked, proceed with full update
-    console.log('Simple update successful, proceeding with full update...')
+    console.log('Starting update for activity:', activity.value.id)
+    console.log('Current user:', authStore.user?.id)
+    console.log('Activity submitted_by:', activity.value.submitted_by)
 
     // Ensure datetime values are properly formatted
     const startDate = formData.value.proposed_start_date ? 
@@ -559,7 +592,7 @@ const handleSubmit = async () => {
     const finalCategories = Array.isArray(formData.value.categories) && formData.value.categories.length > 0 ? 
       formData.value.categories : ['other']
 
-    const fullUpdateData = {
+    const updateData = {
       title: formData.value.title,
       activity_type: formData.value.activity_type,
       format: formData.value.format,
@@ -570,56 +603,40 @@ const handleSubmit = async () => {
       proposed_start_date: startDate,
       proposed_end_date: endDate,
       country_id: formData.value.country_id || null,
+      validation_status: formData.value.validation_status,
+      activity_status: formData.value.activity_status,
       updated_at: new Date().toISOString()
     }
 
-    console.log('Full update data:', fullUpdateData)
+    console.log('Update data:', updateData)
 
-    // Perform the full update
-    const { data: fullUpdateResult, error: fullUpdateError } = await supabase
+    const { data: updateResult, error: updateError } = await supabase
       .from('activities')
-      .update(fullUpdateData)
+      .update(updateData)
       .eq('id', activity.value.id)
       .select()
 
-    if (fullUpdateError) {
-      console.error('Full update failed:', fullUpdateError)
-      throw fullUpdateError
+    console.log('Update result:', updateResult)
+    console.log('Update error:', updateError)
+
+    if (updateError) {
+      console.error('Supabase update error details:', {
+        message: updateError.message,
+        details: updateError.details,
+        hint: updateError.hint,
+        code: updateError.code
+      })
+      throw updateError
     }
 
-    console.log('Full update result:', fullUpdateResult)
-
-    // Wait for database processing
-    await new Promise(resolve => setTimeout(resolve, 1500))
-
-    // Final verification
-    const { data: finalVerification, error: finalVerifyError } = await supabase
-      .from('activities')
-      .select('title, activity_type, format, objectives, detailed_presentation, main_themes, categories, updated_at')
-      .eq('id', activity.value.id)
-      .single()
-
-    if (finalVerifyError) {
-      console.error('Final verification failed:', finalVerifyError)
-      throw finalVerifyError
-    }
-
-    console.log('Final verification result:', finalVerification)
-
-    // Check if the final update persisted
-    const finalTitleMatches = finalVerification.title === formData.value.title
-    console.log('Final update persistence check:', finalTitleMatches ? 'SUCCESS' : 'FAILED')
-    console.log('Expected title:', formData.value.title)
-    console.log('Actual title:', finalVerification.title)
-
-    if (!finalTitleMatches) {
-      throw new Error('Full update failed to persist. The changes were not saved to the database.')
+    if (!updateResult || updateResult.length === 0) {
+      throw new Error('Aucune donnée retournée après la mise à jour. Vérifiez les permissions RLS.')
     }
 
     // Update local activity data
-    activity.value = { ...activity.value, ...fullUpdateResult[0] }
+    activity.value = { ...activity.value, ...updateResult[0] }
 
-    console.log('=== UPDATE PROCESS COMPLETED SUCCESSFULLY ===')
+    console.log('Update successful, redirecting...')
 
     // Redirect to activity detail page
     setTimeout(() => {
@@ -627,7 +644,6 @@ const handleSubmit = async () => {
     }, 500)
 
   } catch (err) {
-    console.error('=== UPDATE PROCESS FAILED ===')
     console.error('Error updating activity:', err)
     error.value = t('activities.edit.error.updateFailed') + ': ' + err.message
   } finally {
@@ -658,7 +674,8 @@ const saveDraft = async () => {
       proposed_start_date: startDate,
       proposed_end_date: endDate,
       country_id: formData.value.country_id || null,
-      validation_status: 'draft'
+      validation_status: 'draft',
+      activity_status: formData.value.activity_status
     }
 
     const { error: saveError } = await supabase
