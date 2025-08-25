@@ -118,11 +118,11 @@ VITE_SUPABASE_ANON_KEY=votre_clé_anon_supabase
 **IMPORTANT** : L'application doit supporter le français et l'anglais
 - **Vue i18n** est configuré pour la gestion des traductions
 - Langues supportées : `fr` (français - par défaut) et `en` (anglais)
-- Fichiers de traduction : `src/locales/fr.json` et `src/locales/en.json`
+- Fichiers de traduction : `src/locales/fr/index.js` et `src/locales/en/index.js`
 - **OBLIGATOIRE** : Utiliser `{{ t('clé.de.traduction') }}` pour TOUS les textes affichés
 - La préférence de langue est stockée dans localStorage
 - Sélecteur de langue disponible dans la navbar
-- **Pour chaque nouveau texte** : 
+- **Pour chaque nouveau texte** :
   1. Ajouter la clé de traduction dans les deux fichiers JSON
   2. Utiliser la fonction `t()` ou `$t()` pour afficher le texte
   3. Ne JAMAIS hardcoder du texte directement dans les templates
