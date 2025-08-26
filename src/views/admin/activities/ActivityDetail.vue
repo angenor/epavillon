@@ -19,23 +19,46 @@
               {{ activity.organization?.name }} - {{ activity.event?.title }}
             </p>
           </div>
-          <div class="flex space-x-3">
-            <span :class="getStatusClass(activity.validation_status)"
-                  class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium">
-              {{ getStatusText(activity.validation_status) }}
-            </span>
+          <div class="flex items-center space-x-3">
+            <!-- Dropdown de statut -->
+            <div class="relative">
+              <select v-model="activity.validation_status" 
+                      @focus="previousStatusValue = activity.validation_status"
+                      @change="handleStatusChange"
+                      :disabled="isUpdatingStatus"
+                      :class="[
+                        'appearance-none rounded-full px-4 py-2 text-sm font-medium border-0 cursor-pointer focus:ring-2 focus:ring-orange-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed',
+                        getStatusClass(activity.validation_status)
+                      ]">
+                <option value="draft">Brouillon</option>
+                <option value="submitted">Soumise</option>
+                <option value="under_review">En examen</option>
+                <option value="approved">Approuvée</option>
+                <option value="rejected">Rejetée</option>
+              </select>
+              <!-- Icône dropdown -->
+              <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </div>
+            
+            <!-- Indicateur de chargement -->
+            <div v-if="isUpdatingStatus" class="flex items-center text-gray-500">
+              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-500 mr-2"></div>
+              <span class="text-sm">Mise à jour...</span>
+            </div>
           </div>
         </div>
         
-        <div v-if="['submitted', 'under_review'].includes(activity.validation_status)" 
-             class="mt-6 flex space-x-3">
-          <button @click="approveActivity"
-                  class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-            Approuver
-          </button>
-          <button @click="rejectActivity"
-                  class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-            Rejeter
+        <!-- Message d'erreur pour le changement de statut -->
+        <div v-if="statusError" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {{ statusError }}
+          <button @click="statusError = null" class="ml-2 text-red-900 hover:text-red-700">
+            <svg class="h-4 w-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
           </button>
         </div>
       </div>
@@ -112,7 +135,7 @@
         <div class="relative bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all max-w-lg w-full mx-4 z-10">
           <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">
-              {{ validationAction === 'approve' ? 'Confirmer l\'approbation' : 'Confirmer le rejet' }}
+              Motif du rejet
             </h3>
             
             <!-- Message d'erreur -->
@@ -120,10 +143,9 @@
               {{ validationError }}
             </div>
             
-            <textarea v-if="validationAction === 'reject'"
-                     v-model="validationReason"
-                     placeholder="Raison du rejet..."
-                     rows="3"
+            <textarea v-model="validationReason"
+                     placeholder="Expliquez brièvement pourquoi cette activité est rejetée..."
+                     rows="4"
                      :disabled="isValidating"
                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed">
             </textarea>
@@ -131,12 +153,9 @@
           <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button @click="confirmValidation"
                     :disabled="isValidating"
-                    :class="[
-                      'w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed',
-                      validationAction === 'approve' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'
-                    ]">
+                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed bg-red-600 hover:bg-red-700">
               <div v-if="isValidating" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-              {{ isValidating ? 'En cours...' : (validationAction === 'approve' ? 'Approuver' : 'Rejeter') }}
+              {{ isValidating ? 'En cours...' : 'Confirmer le rejet' }}
             </button>
             <button @click="closeModal"
                     :disabled="isValidating"
@@ -169,6 +188,9 @@ const validationAction = ref(null)
 const validationReason = ref('')
 const isValidating = ref(false)
 const validationError = ref(null)
+const isUpdatingStatus = ref(false)
+const statusError = ref(null)
+const previousStatusValue = ref(null)
 
 const checkAccess = async () => {
   await loadUserRoles()
@@ -224,15 +246,59 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('fr-FR')
 }
 
-const approveActivity = () => {
-  validationAction.value = 'approve'
-  showValidationModal.value = true
+// Gestion du changement de statut direct
+const handleStatusChange = async (event) => {
+  const newStatus = event.target.value
+  const previousStatus = previousStatusValue.value
+  
+  // Ne rien faire si c'est le même statut
+  if (newStatus === previousStatus) return
+  
+  // Si c'est un rejet, on ouvre la modale pour demander la raison
+  if (newStatus === 'rejected') {
+    validationAction.value = 'reject'
+    validationReason.value = ''
+    showValidationModal.value = true
+    // Restaurer l'ancien statut en attendant la confirmation
+    activity.value.validation_status = previousStatus
+    return
+  }
+  
+  // Pour les autres statuts, mise à jour directe
+  await updateActivityStatus(newStatus, previousStatus)
 }
 
-const rejectActivity = () => {
-  validationAction.value = 'reject'
-  validationReason.value = ''
-  showValidationModal.value = true
+// Mise à jour du statut de l'activité
+const updateActivityStatus = async (newStatus, previousStatus, rejectionReason = null) => {
+  if (!currentUser.value) return
+  
+  isUpdatingStatus.value = true
+  statusError.value = null
+  
+  try {
+    const result = await validateActivity(
+      activity.value.id,
+      newStatus,
+      currentUser.value.id,
+      rejectionReason
+    )
+    
+    if (result.success) {
+      // Le statut a déjà été mis à jour dans l'objet activity via le v-model
+      console.log(`Statut mis à jour vers: ${newStatus}`)
+    } else {
+      // Restaurer l'ancien statut en cas d'erreur
+      activity.value.validation_status = previousStatus
+      statusError.value = result.error?.message || 'Erreur lors de la mise à jour du statut'
+    }
+  } catch (error) {
+    // Restaurer l'ancien statut en cas d'erreur
+    activity.value.validation_status = previousStatus
+    statusError.value = error.message || 'Une erreur inattendue s\'est produite'
+    console.error('Erreur lors de la mise à jour du statut:', error)
+  } finally {
+    isUpdatingStatus.value = false
+  }
 }
 
 const confirmValidation = async () => {
@@ -242,21 +308,10 @@ const confirmValidation = async () => {
   validationError.value = null
 
   try {
-    const status = validationAction.value === 'approve' ? 'approved' : 'rejected'
-    const result = await validateActivity(
-      activity.value.id,
-      status,
-      currentUser.value.id,
-      validationReason.value || null
-    )
-
-    if (result.success) {
-      activity.value.validation_status = status
+    // Seulement pour les rejets maintenant (l'approbation se fait directement via le dropdown)
+    if (validationAction.value === 'reject') {
+      await updateActivityStatus('rejected', previousStatusValue.value, validationReason.value)
       closeModal()
-      // Optionnellement, afficher un message de succès
-      console.log(`Activité ${status === 'approved' ? 'approuvée' : 'rejetée'} avec succès`)
-    } else {
-      validationError.value = result.error?.message || 'Erreur lors de la validation'
     }
   } catch (error) {
     console.error('Erreur lors de la validation:', error)
