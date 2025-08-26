@@ -46,14 +46,29 @@
           </time>
         </div>
 
-        <!-- Type Badge -->
-        <div 
-          :class="[
-            'flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium',
-            getTypeBadgeClass()
-          ]"
-        >
-          {{ getTypeLabel() }}
+        <!-- Actions and Type Badge -->
+        <div class="flex items-center gap-2">
+          <!-- Edit Button - Only for post author -->
+          <button
+            v-if="canEditPost()"
+            @click.stop="$emit('edit', testimonial)"
+            class="flex-shrink-0 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+            :title="t('common.edit')"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+          </button>
+
+          <!-- Type Badge -->
+          <div 
+            :class="[
+              'flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium',
+              getTypeBadgeClass()
+            ]"
+          >
+            {{ getTypeLabel() }}
+          </div>
         </div>
       </div>
 
@@ -162,6 +177,8 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { h } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { storeToRefs } from 'pinia'
 
 const props = defineProps({
   testimonial: {
@@ -174,8 +191,10 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['click'])
-const { t, d } = useI18n()
+const emit = defineEmits(['click', 'edit'])
+const { t } = useI18n()
+const authStore = useAuthStore()
+const { user: currentUser } = storeToRefs(authStore)
 
 // Helper functions for user information
 const getUserPhoto = () => {
@@ -332,6 +351,16 @@ const formatDate = (dateString) => {
     })
   }
 }
+
+// Check if current user can edit this post
+const canEditPost = () => {
+  if (!currentUser.value) return false
+  
+  const postAuthor = props.testimonial.user || props.testimonial.submitted_by
+  if (!postAuthor) return false
+  
+  return currentUser.value.id === postAuthor.id
+}
 </script>
 
 <style scoped>
@@ -367,7 +396,7 @@ button:hover svg {
 
 /* Avatar ring effect */
 .ring-2:hover {
-  ring-width: 3px;
+  --tw-ring-width: 3px;
   transition: all 0.2s ease;
 }
 

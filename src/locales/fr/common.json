@@ -48,6 +48,7 @@
     "justNow": "À l'instant",
     "noData": "Aucune donnée",
     "save": "Enregistrer",
+    "edit": "Modifier",
     "close": "Fermer",
     "refresh": "Actualiser",
     "dataRefreshed": "Données actualisées",
@@ -58,7 +59,41 @@
     "saveSuccess": "Enregistrement effectué avec succès",
     "saveError": "Erreur lors de l'enregistrement",
     "submitting": "Envoi...",
-    "per_page": "par page"
+    "per_page": "par page",
+    "editPost": {
+      "title": "Modifier le contenu",
+      "testimonialText": "Texte du témoignage",
+      "testimonialTitle": "Titre du témoignage",
+      "testimonialPlaceholder": "Partagez votre expérience...",
+      "testimonialTitlePlaceholder": "Donnez un titre à votre témoignage",
+      "detailUrl": "URL de détail",
+      "detailUrlPlaceholder": "https://exemple.com/details",
+      "contextTypes": "Types de contexte",
+      "backgroundColor": "Couleur de fond",
+      "markAsFeatured": "Marquer comme mis en avant",
+      "videoTitle": "Titre de la vidéo",
+      "videoTitlePlaceholder": "Donnez un titre à votre vidéo",
+      "photoUrl": "URL de la photo",
+      "photoUrlPlaceholder": "https://exemple.com/photo.jpg",
+      "description": "Description",
+      "descriptionPlaceholder": "Décrivez votre innovation ou pratique...",
+      "titlePlaceholder": "Titre de votre contenu",
+      "applicationSector": "Secteur d'application",
+      "selectSector": "Sélectionnez un secteur",
+      "coverImageUrl": "URL de l'image de couverture",
+      "coverImageUrlPlaceholder": "https://exemple.com/image.jpg",
+      "videoUrl": "URL de la vidéo",
+      "videoUrlPlaceholder": "https://exemple.com/video.mp4",
+      "duration": "Durée (secondes)",
+      "durationPlaceholder": "Durée en secondes",
+      "error": "Erreur lors de la mise à jour"
+    },
+    "sectors": {
+      "agriculture": "Agriculture",
+      "livestock": "Élevage",
+      "industry": "Industrie",
+      "other": "Autre"
+    }
   },
   "error": {
     "403": {

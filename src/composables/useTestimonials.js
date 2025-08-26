@@ -498,6 +498,96 @@ export function useTestimonials() {
     }
   }
 
+  // Mettre à jour un témoignage
+  const updateTestimonial = async (type, updateData) => {
+    loading.value = true
+    error.value = null
+    
+    try {
+      let tableName
+      let query
+      
+      // Déterminer la table à utiliser selon le type
+      switch (type) {
+        case 'testimonial':
+          tableName = 'user_testimonials'
+          break
+        case 'video_testimonial':
+          tableName = 'video_testimonials'
+          break
+        case 'innovation':
+        case 'practice':
+          tableName = 'innovations_practices'
+          break
+        default:
+          throw new Error('Type de post non reconnu')
+      }
+      
+      // Préparer les données selon le type
+      const { id, ...dataToUpdate } = updateData
+      
+      query = supabase
+        .from(tableName)
+        .update(dataToUpdate)
+        .eq('id', id)
+        .select()
+        .single()
+
+      const { data, error: updateError } = await query
+
+      if (updateError) throw updateError
+      
+      return data
+    } catch (err) {
+      console.error('Error updating testimonial:', err)
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // Supprimer un témoignage
+  const deleteTestimonial = async (type, id) => {
+    loading.value = true
+    error.value = null
+    
+    try {
+      let tableName
+      
+      // Déterminer la table à utiliser selon le type
+      switch (type) {
+        case 'testimonial':
+          tableName = 'user_testimonials'
+          break
+        case 'video_testimonial':
+          tableName = 'video_testimonials'
+          break
+        case 'innovation':
+        case 'practice':
+          tableName = 'innovations_practices'
+          break
+        default:
+          throw new Error('Type de post non reconnu')
+      }
+      
+      const { error: deleteError } = await supabase
+        .from(tableName)
+        .delete()
+        .eq('id', id)
+
+      if (deleteError) throw deleteError
+      
+      return true
+    } catch (err) {
+      console.error('Error deleting testimonial:', err)
+      error.value = err.message
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     loading,
     error,
@@ -509,6 +599,8 @@ export function useTestimonials() {
     fetchTrainings,
     fetchCommunityFeed,
     createTestimonial,
-    createVideoTestimonial
+    createVideoTestimonial,
+    updateTestimonial,
+    deleteTestimonial
   }
 }

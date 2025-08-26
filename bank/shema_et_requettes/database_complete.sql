@@ -789,6 +789,19 @@ CREATE TABLE public.innovations_practices (
 
 -- Types de contexte pour témoignages et commentaires
 CREATE TYPE testimonial_context_type AS ENUM ('innovation_practice', 'training', 'event', 'platform');
+CREATE TYPE thematique_type AS ENUM (
+    'pertes_et_prejudices',
+    'adaptation',
+    'attenuation',
+    'finance',
+    'genre',
+    'ace',
+    'agriculture',
+    'transparence',
+    'mecanismes_de_cooperation',
+    'bilan_mondial',
+    'droits_de_l_homme_et_climat'
+);
 
 -- Témoignages utilisateurs (multi-contexte)
 CREATE TABLE public.user_testimonials (
@@ -799,6 +812,7 @@ CREATE TABLE public.user_testimonials (
     featured BOOLEAN DEFAULT FALSE,
     testimonial_text TEXT NOT NULL,
     context_type testimonial_context_type[] NOT NULL,
+    thematique_type thematique_type[] NOT NULL,
     context_id UUID, -- NULL si c'est pour la plateforme ou si plusieurs contextes
     created_at TIMESTAMPTZ DEFAULT NOW()
 );

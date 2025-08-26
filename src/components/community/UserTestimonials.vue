@@ -38,6 +38,7 @@
         :testimonial="post"
         :style="'facebook'"
         @click="openTestimonialDetail(post)"
+        @edit="handleEditPost"
       />
     </div>
 
@@ -79,6 +80,16 @@
         @close="selectedTestimonial = null"
       />
     </Teleport>
+
+    <!-- Edit Post Modal -->
+    <Teleport to="body">
+      <EditPostModal
+        v-if="postToEdit"
+        :post="postToEdit"
+        @close="postToEdit = null"
+        @updated="handlePostUpdated"
+      />
+    </Teleport>
   </div>
 </template>
 
@@ -88,6 +99,7 @@ import { useI18n } from 'vue-i18n'
 import { useTestimonials } from '@/composables/useTestimonials'
 import TestimonialCard from './TestimonialCard.vue'
 import TestimonialDetailModal from './TestimonialDetailModal.vue'
+import EditPostModal from './EditPostModal.vue'
 
 // Props
 const props = defineProps({
@@ -110,6 +122,7 @@ const {
 
 const posts = ref([])
 const selectedTestimonial = ref(null)
+const postToEdit = ref(null)
 const postsPerPage = ref(10)
 const currentPage = ref(1)
 const hasMore = ref(false)
@@ -163,6 +176,19 @@ const loadMorePosts = async () => {
     currentPage.value++
     await loadPosts()
   }
+}
+
+// Handle edit post event
+const handleEditPost = (post) => {
+  console.log('Edit post:', post)
+  postToEdit.value = post
+}
+
+// Handle post updated event
+const handlePostUpdated = () => {
+  // Refresh the feed after successful update
+  loadPosts(true)
+  postToEdit.value = null
 }
 
 // Réinitialiser quand le filtre change

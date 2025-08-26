@@ -49,7 +49,42 @@
     "dataRefreshed": "Data refreshed",
     "refreshError": "Error while refreshing",
     "optional": "optional",
-    "create": "Create"
+    "create": "Create",
+    "edit": "Edit",
+    "editPost": {
+      "title": "Edit content",
+      "testimonialText": "Testimonial text",
+      "testimonialTitle": "Testimonial title",
+      "testimonialPlaceholder": "Share your experience...",
+      "testimonialTitlePlaceholder": "Give a title to your testimonial",
+      "detailUrl": "Detail URL",
+      "detailUrlPlaceholder": "https://example.com/details",
+      "contextTypes": "Context types",
+      "backgroundColor": "Background color",
+      "markAsFeatured": "Mark as featured",
+      "videoTitle": "Video title",
+      "videoTitlePlaceholder": "Give a title to your video",
+      "photoUrl": "Photo URL",
+      "photoUrlPlaceholder": "https://example.com/photo.jpg",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe your innovation or practice...",
+      "titlePlaceholder": "Title of your content",
+      "applicationSector": "Application sector",
+      "selectSector": "Select a sector",
+      "coverImageUrl": "Cover image URL",
+      "coverImageUrlPlaceholder": "https://example.com/image.jpg",
+      "videoUrl": "Video URL",
+      "videoUrlPlaceholder": "https://example.com/video.mp4",
+      "duration": "Duration (seconds)",
+      "durationPlaceholder": "Duration in seconds",
+      "error": "Error updating content"
+    },
+    "sectors": {
+      "agriculture": "Agriculture",
+      "livestock": "Livestock",
+      "industry": "Industry",
+      "other": "Other"
+    }
   },
   "error": {
     "403": {
