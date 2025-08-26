@@ -898,6 +898,7 @@ CREATE TABLE public.video_testimonials (
     video_url TEXT NOT NULL,
     thumbnail_url TEXT,
     featured BOOLEAN DEFAULT FALSE,
+    thematique_type thematique_type[] NOT NULL,
     duration_seconds INTEGER CHECK (duration_seconds <= 60),
     user_id UUID NOT NULL REFERENCES public.users(id),
     is_approved BOOLEAN DEFAULT FALSE,

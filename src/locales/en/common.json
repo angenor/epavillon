@@ -84,6 +84,52 @@
       "livestock": "Livestock",
       "industry": "Industry",
       "other": "Other"
+    },
+    "thematiques": {
+      "pertes_et_prejudices": "Loss and Damage",
+      "adaptation": "Adaptation",
+      "attenuation": "Mitigation",
+      "finance": "Finance",
+      "genre": "Gender",
+      "ace": "Action for Climate Empowerment (ACE)",
+      "agriculture": "Agriculture",
+      "transparence": "Transparency",
+      "mecanismes_de_cooperation": "Cooperation Mechanisms",
+      "bilan_mondial": "Global Stocktake",
+      "droits_de_l_homme_et_climat": "Human Rights and Climate"
+    }
+  },
+  "community": {
+    "addTestimonial": {
+      "title": "Add a testimonial",
+      "testimonialText": "Testimonial text",
+      "textPlaceholder": "Share your experience...",
+      "contextTypes": "Context types",
+      "thematiques": "Thematic areas",
+      "backgroundColor": "Background color",
+      "selectAtLeastOneContext": "Please select at least one context type",
+      "selectAtLeastOneThematique": "Please select at least one thematic area",
+      "specificContext": "Specific context",
+      "selectSpecificContext": "Select a specific context"
+    },
+    "contextTypes": {
+      "platform": "General Platform",
+      "training": "Training",
+      "event": "Event",
+      "innovationPractice": "Innovation/Practice",
+      "activity": "Activity"
+    },
+    "uploadVideo": {
+      "title": "Upload video testimonial",
+      "videoFile": "Video file",
+      "dropzone": "Drop your video here or click to select",
+      "maxDuration": "Maximum duration: 10 seconds",
+      "tooLong": "Too long",
+      "context": "Context",
+      "thematiques": "Thematic areas",
+      "selectContext": "Select a context",
+      "notice": "Your video will be reviewed before publication.",
+      "selectAtLeastOneThematique": "Please select at least one thematic area"
     }
   },
   "error": {

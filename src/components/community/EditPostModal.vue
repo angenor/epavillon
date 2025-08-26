@@ -81,6 +81,28 @@
             </div>
           </div>
 
+          <!-- Thématiques -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {{ t('community.addTestimonial.thematiques') }}
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-lg p-3">
+              <label 
+                v-for="thematique in availableThematiques" 
+                :key="thematique.value"
+                class="flex items-center p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+              >
+                <input
+                  type="checkbox"
+                  :value="thematique.value"
+                  v-model="formData.thematique_types"
+                  class="w-4 h-4 text-ifdd-green-600 bg-gray-100 border-gray-300 rounded focus:ring-ifdd-green-500 dark:focus:ring-ifdd-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                >
+                <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ thematique.label }}</span>
+              </label>
+            </div>
+          </div>
+
           <!-- Testimonial Text -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -256,6 +278,28 @@
             </div>
           </div>
 
+          <!-- Thématiques -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {{ t('community.addTestimonial.thematiques') }}
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-lg p-3">
+              <label 
+                v-for="thematique in availableThematiques" 
+                :key="thematique.value"
+                class="flex items-center p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+              >
+                <input
+                  type="checkbox"
+                  :value="thematique.value"
+                  v-model="formData.thematique_types"
+                  class="w-4 h-4 text-ifdd-green-600 bg-gray-100 border-gray-300 rounded focus:ring-ifdd-green-500 dark:focus:ring-ifdd-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                >
+                <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ thematique.label }}</span>
+              </label>
+            </div>
+          </div>
+
           <!-- Video URL -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -344,6 +388,7 @@ const formData = reactive({
   photo_url: '',
   context_types: [],
   context_id: null,
+  thematique_types: [], // Nouveau: tableau pour les thématiques
   background_color: '',
   featured: false,
   
@@ -365,6 +410,7 @@ const initializeFormData = () => {
   // Common fields
   formData.featured = props.post.featured || false
   formData.background_color = props.post.background_color || '#10B981'
+  formData.thematique_types = Array.isArray(props.post.thematique_type) ? props.post.thematique_type : (props.post.thematique_type ? [props.post.thematique_type] : [])
   
   if (props.post.type === 'testimonial') {
     formData.testimonial_text = props.post.testimonial_text || ''
@@ -434,6 +480,7 @@ const handleSubmit = async () => {
       updateData.testimonial_detail_url = formData.testimonial_detail_url
       updateData.context_type = formData.context_types
       updateData.context_id = formData.context_id
+      updateData.thematique_type = formData.thematique_types
       updateData.background_color = formData.background_color
       updateData.featured = formData.featured
       if (formData.photo_url) {
@@ -452,6 +499,7 @@ const handleSubmit = async () => {
       updateData.detail_url = formData.detail_url
       updateData.context_type = formData.context_types
       updateData.context_id = formData.context_id
+      updateData.thematique_type = formData.thematique_types
       if (formData.duration_seconds) {
         updateData.duration_seconds = formData.duration_seconds
       }
@@ -482,6 +530,21 @@ const videoContextTypes = [
   { value: 'training', label: 'Formation' },
   { value: 'event', label: 'Événement' },
   { value: 'activity', label: 'Activité' }
+]
+
+// Thématiques disponibles
+const availableThematiques = [
+  { value: 'pertes_et_prejudices', label: t('common.thematiques.pertes_et_prejudices') },
+  { value: 'adaptation', label: t('common.thematiques.adaptation') },
+  { value: 'attenuation', label: t('common.thematiques.attenuation') },
+  { value: 'finance', label: t('common.thematiques.finance') },
+  { value: 'genre', label: t('common.thematiques.genre') },
+  { value: 'ace', label: t('common.thematiques.ace') },
+  { value: 'agriculture', label: t('common.thematiques.agriculture') },
+  { value: 'transparence', label: t('common.thematiques.transparence') },
+  { value: 'mecanismes_de_cooperation', label: t('common.thematiques.mecanismes_de_cooperation') },
+  { value: 'bilan_mondial', label: t('common.thematiques.bilan_mondial') },
+  { value: 'droits_de_l_homme_et_climat', label: t('common.thematiques.droits_de_l_homme_et_climat') }
 ]
 
 // Background color options

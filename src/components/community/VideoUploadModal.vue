@@ -101,6 +101,28 @@
             </select>
           </div>
 
+          <!-- Thématiques Selection (Multiple) -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {{ t('community.uploadVideo.thematiques') }}
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-xl p-3">
+              <label 
+                v-for="thematique in availableThematiques" 
+                :key="thematique.value"
+                class="flex items-center p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+              >
+                <input
+                  type="checkbox"
+                  :value="thematique.value"
+                  v-model="formData.thematiqueTypes"
+                  class="w-4 h-4 text-ifdd-green-600 bg-gray-100 border-gray-300 rounded focus:ring-ifdd-green-500 dark:focus:ring-ifdd-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                >
+                <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ thematique.label }}</span>
+              </label>
+            </div>
+          </div>
+
           <!-- Notice -->
           <div class="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl">
             <div class="flex items-start gap-3">
@@ -125,7 +147,7 @@
           </button>
           <button
             type="submit"
-            :disabled="loading || !videoFile || videoDuration > 10"
+            :disabled="loading || !videoFile || videoDuration > 10 || formData.thematiqueTypes.length === 0"
             class="flex-1 px-4 py-3 bg-ifdd-green-600 hover:bg-ifdd-green-700 text-white rounded-xl font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {{ loading ? t('common.uploading') : t('common.upload') }}
@@ -150,7 +172,8 @@ const videoFile = ref(null)
 const videoUrl = ref(null)
 const videoDuration = ref(null)
 const formData = ref({
-  contextId: ''
+  contextId: '',
+  thematiqueTypes: [] // Nouveau: tableau pour les thématiques
 })
 
 const handleFileSelect = (event) => {
@@ -190,12 +213,37 @@ const removeVideo = () => {
   videoDuration.value = null
 }
 
+// Thématiques disponibles
+const availableThematiques = [
+  { value: 'pertes_et_prejudices', label: t('common.thematiques.pertes_et_prejudices') },
+  { value: 'adaptation', label: t('common.thematiques.adaptation') },
+  { value: 'attenuation', label: t('common.thematiques.attenuation') },
+  { value: 'finance', label: t('common.thematiques.finance') },
+  { value: 'genre', label: t('common.thematiques.genre') },
+  { value: 'ace', label: t('common.thematiques.ace') },
+  { value: 'agriculture', label: t('common.thematiques.agriculture') },
+  { value: 'transparence', label: t('common.thematiques.transparence') },
+  { value: 'mecanismes_de_cooperation', label: t('common.thematiques.mecanismes_de_cooperation') },
+  { value: 'bilan_mondial', label: t('common.thematiques.bilan_mondial') },
+  { value: 'droits_de_l_homme_et_climat', label: t('common.thematiques.droits_de_l_homme_et_climat') }
+]
+
 const handleSubmit = async () => {
   if (!videoFile.value || videoDuration.value > 10) return
   
+  if (formData.value.thematiqueTypes.length === 0) {
+    alert(t('community.uploadVideo.selectAtLeastOneThematique'))
+    return
+  }
+  
   loading.value = true
   try {
-    await testimonialsStore.addVideoTestimonial(videoFile.value, formData.value.contextId)
+    // Ajouter les thématiques aux données vidéo
+    const videoData = {
+      contextId: formData.value.contextId,
+      thematiqueTypes: formData.value.thematiqueTypes
+    }
+    await testimonialsStore.addVideoTestimonial(videoFile.value, videoData)
     emit('success')
     emit('close')
   } catch (error) {

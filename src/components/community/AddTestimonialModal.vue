@@ -62,6 +62,28 @@
             </div>
           </div>
 
+          <!-- Thématiques Selection (Multiple) -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {{ t('community.addTestimonial.thematiques') }}
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-lg p-3">
+              <label 
+                v-for="thematique in availableThematiques" 
+                :key="thematique.value"
+                class="flex items-center p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+              >
+                <input
+                  type="checkbox"
+                  :value="thematique.value"
+                  v-model="formData.thematiqueTypes"
+                  class="w-4 h-4 text-ifdd-green-600 bg-gray-100 border-gray-300 rounded focus:ring-ifdd-green-500 dark:focus:ring-ifdd-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                >
+                <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ thematique.label }}</span>
+              </label>
+            </div>
+          </div>
+
           <!-- Context ID (Optional - for specific context) -->
           <div v-if="formData.contextTypes.length === 1 && formData.contextTypes[0] !== 'platform'">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -136,6 +158,7 @@ const formData = ref({
   text: '',
   contextTypes: [], // Nouveau: tableau pour multiples contextes
   contextId: null, // Optionnel: ID spécifique si un seul contexte
+  thematiqueTypes: [], // Nouveau: tableau pour les thématiques
   backgroundColor: '#10B981'
 })
 
@@ -156,9 +179,29 @@ const availableContextTypes = [
   { value: 'innovation_practice', label: t('community.contextTypes.innovationPractice') }
 ]
 
+// Thématiques disponibles
+const availableThematiques = [
+  { value: 'pertes_et_prejudices', label: t('common.thematiques.pertes_et_prejudices') },
+  { value: 'adaptation', label: t('common.thematiques.adaptation') },
+  { value: 'attenuation', label: t('common.thematiques.attenuation') },
+  { value: 'finance', label: t('common.thematiques.finance') },
+  { value: 'genre', label: t('common.thematiques.genre') },
+  { value: 'ace', label: t('common.thematiques.ace') },
+  { value: 'agriculture', label: t('common.thematiques.agriculture') },
+  { value: 'transparence', label: t('common.thematiques.transparence') },
+  { value: 'mecanismes_de_cooperation', label: t('common.thematiques.mecanismes_de_cooperation') },
+  { value: 'bilan_mondial', label: t('common.thematiques.bilan_mondial') },
+  { value: 'droits_de_l_homme_et_climat', label: t('common.thematiques.droits_de_l_homme_et_climat') }
+]
+
 const handleSubmit = async () => {
   if (formData.value.contextTypes.length === 0) {
     alert(t('community.addTestimonial.selectAtLeastOneContext'))
+    return
+  }
+  
+  if (formData.value.thematiqueTypes.length === 0) {
+    alert(t('community.addTestimonial.selectAtLeastOneThematique'))
     return
   }
 
@@ -169,6 +212,7 @@ const handleSubmit = async () => {
       testimonial_text: formData.value.text,
       context_type: formData.value.contextTypes, // Envoie le tableau
       context_id: formData.value.contextTypes.length === 1 && formData.value.contextTypes[0] !== 'platform' ? formData.value.contextId : null,
+      thematique_type: formData.value.thematiqueTypes, // Nouveau: tableau des thématiques
       background_color: formData.value.backgroundColor
     }
 
