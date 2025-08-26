@@ -1,7 +1,10 @@
 <template>
   <div class="admin-activity-detail">
-    <div v-if="isLoading" class="flex items-center justify-center h-64">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+    <div v-if="isLoadingRoles || isLoading" class="flex items-center justify-center min-h-screen">
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+        <p class="text-gray-600 dark:text-gray-300">Chargement...</p>
+      </div>
     </div>
     
     <div v-else-if="activity" class="space-y-6">
@@ -103,31 +106,41 @@
 
     <!-- Modal de validation -->
     <div v-if="showValidationModal" class="fixed inset-0 z-50 overflow-y-auto">
-      <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20">
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="closeModal"></div>
 
-        <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div class="relative bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all max-w-lg w-full mx-4 z-10">
           <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">
               {{ validationAction === 'approve' ? 'Confirmer l\'approbation' : 'Confirmer le rejet' }}
             </h3>
+            
+            <!-- Message d'erreur -->
+            <div v-if="validationError" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+              {{ validationError }}
+            </div>
+            
             <textarea v-if="validationAction === 'reject'"
                      v-model="validationReason"
                      placeholder="Raison du rejet..."
                      rows="3"
-                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                     :disabled="isValidating"
+                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed">
             </textarea>
           </div>
           <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button @click="confirmValidation"
+                    :disabled="isValidating"
                     :class="[
-                      'w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm',
+                      'w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed',
                       validationAction === 'approve' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'
                     ]">
-              {{ validationAction === 'approve' ? 'Approuver' : 'Rejeter' }}
+              <div v-if="isValidating" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              {{ isValidating ? 'En cours...' : (validationAction === 'approve' ? 'Approuver' : 'Rejeter') }}
             </button>
             <button @click="closeModal"
-                    class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600">
+                    :disabled="isValidating"
+                    class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
               Annuler
             </button>
           </div>
@@ -139,15 +152,14 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
 import { useAuth } from '@/composables/useAuth'
 
 const route = useRoute()
-const router = useRouter()
 const { supabase } = useSupabase()
-const { hasAdminRole, validateActivity } = useAdmin()
+const { hasAdminRole, isLoadingRoles, loadUserRoles, validateActivity } = useAdmin()
 const { currentUser } = useAuth()
 
 const isLoading = ref(true)
@@ -155,9 +167,14 @@ const activity = ref(null)
 const showValidationModal = ref(false)
 const validationAction = ref(null)
 const validationReason = ref('')
+const isValidating = ref(false)
+const validationError = ref(null)
 
-if (!hasAdminRole.value) {
-  throw new Error('Accès non autorisé')
+const checkAccess = async () => {
+  await loadUserRoles()
+  if (!hasAdminRole.value) {
+    throw new Error('Accès non autorisé')
+  }
 }
 
 const loadActivity = async () => {
@@ -221,6 +238,9 @@ const rejectActivity = () => {
 const confirmValidation = async () => {
   if (!currentUser.value) return
 
+  isValidating.value = true
+  validationError.value = null
+
   try {
     const status = validationAction.value === 'approve' ? 'approved' : 'rejected'
     const result = await validateActivity(
@@ -233,9 +253,16 @@ const confirmValidation = async () => {
     if (result.success) {
       activity.value.validation_status = status
       closeModal()
+      // Optionnellement, afficher un message de succès
+      console.log(`Activité ${status === 'approved' ? 'approuvée' : 'rejetée'} avec succès`)
+    } else {
+      validationError.value = result.error?.message || 'Erreur lors de la validation'
     }
   } catch (error) {
     console.error('Erreur lors de la validation:', error)
+    validationError.value = error.message || 'Une erreur inattendue s\'est produite'
+  } finally {
+    isValidating.value = false
   }
 }
 
@@ -243,9 +270,18 @@ const closeModal = () => {
   showValidationModal.value = false
   validationAction.value = null
   validationReason.value = ''
+  validationError.value = null
 }
 
-onMounted(() => {
-  loadActivity()
+onMounted(async () => {
+  try {
+    await checkAccess()
+    await loadActivity()
+  } catch (error) {
+    if (error.message === 'Accès non autorisé') {
+      throw error
+    }
+    console.error('Erreur lors de l\'initialisation:', error)
+  }
 })
 </script>
