@@ -332,7 +332,8 @@ const updateActivityStatus = async (newStatus, previousStatus, rejectionReason =
     )
     
     if (result.success) {
-      // Le statut a déjà été mis à jour dans l'objet activity via le v-model
+      // Mettre à jour le statut dans l'interface après succès
+      activity.value.validation_status = newStatus
       console.log(`Statut mis à jour vers: ${newStatus}`)
     } else {
       // Restaurer l'ancien statut en cas d'erreur
