@@ -166,6 +166,48 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal de confirmation générale pour changement de statut -->
+    <div v-if="showStatusConfirmModal" class="fixed inset-0 z-50 overflow-y-auto">
+      <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="closeStatusConfirmModal"></div>
+
+        <div class="relative bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all max-w-md w-full mx-4 z-10">
+          <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="flex">
+              <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-orange-100 sm:mx-0 sm:h-10 sm:w-10">
+                <svg class="h-6 w-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+              </div>
+              <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+                  Confirmer le changement de statut
+                </h3>
+                <div class="mt-2">
+                  <p class="text-sm text-gray-500 dark:text-gray-300">
+                    {{ getStatusChangeMessage() }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+            <button @click="confirmStatusChange"
+                    :disabled="isUpdatingStatus"
+                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-orange-600 text-base font-medium text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+              <div v-if="isUpdatingStatus" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              {{ isUpdatingStatus ? 'En cours...' : 'Confirmer' }}
+            </button>
+            <button @click="closeStatusConfirmModal"
+                    :disabled="isUpdatingStatus"
+                    class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
+              Annuler
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -191,6 +233,8 @@ const validationError = ref(null)
 const isUpdatingStatus = ref(false)
 const statusError = ref(null)
 const previousStatusValue = ref(null)
+const showStatusConfirmModal = ref(false)
+const pendingStatusChange = ref(null)
 
 const checkAccess = async () => {
   await loadUserRoles()
@@ -254,18 +298,22 @@ const handleStatusChange = async (event) => {
   // Ne rien faire si c'est le même statut
   if (newStatus === previousStatus) return
   
-  // Si c'est un rejet, on ouvre la modale pour demander la raison
+  // Stocker le changement en attente
+  pendingStatusChange.value = { newStatus, previousStatus }
+  
+  // Restaurer l'ancien statut en attendant la confirmation
+  activity.value.validation_status = previousStatus
+  
+  // Si c'est un rejet, on ouvre la modale spéciale pour demander la raison
   if (newStatus === 'rejected') {
     validationAction.value = 'reject'
     validationReason.value = ''
     showValidationModal.value = true
-    // Restaurer l'ancien statut en attendant la confirmation
-    activity.value.validation_status = previousStatus
     return
   }
   
-  // Pour les autres statuts, mise à jour directe
-  await updateActivityStatus(newStatus, previousStatus)
+  // Pour les autres statuts, ouvrir la modale de confirmation générale
+  showStatusConfirmModal.value = true
 }
 
 // Mise à jour du statut de l'activité
@@ -326,6 +374,35 @@ const closeModal = () => {
   validationAction.value = null
   validationReason.value = ''
   validationError.value = null
+}
+
+// Fonctions pour la modale de confirmation générale
+const confirmStatusChange = async () => {
+  if (!pendingStatusChange.value) return
+  
+  const { newStatus, previousStatus } = pendingStatusChange.value
+  await updateActivityStatus(newStatus, previousStatus)
+  closeStatusConfirmModal()
+}
+
+const closeStatusConfirmModal = () => {
+  showStatusConfirmModal.value = false
+  pendingStatusChange.value = null
+}
+
+const getStatusChangeMessage = () => {
+  if (!pendingStatusChange.value) return ''
+  
+  const { newStatus, previousStatus } = pendingStatusChange.value
+  const statusTexts = {
+    draft: 'Brouillon',
+    submitted: 'Soumise',
+    under_review: 'En examen',
+    approved: 'Approuvée',
+    rejected: 'Rejetée'
+  }
+  
+  return `Êtes-vous sûr de vouloir changer le statut de "${statusTexts[previousStatus]}" vers "${statusTexts[newStatus]}" ?`
 }
 
 onMounted(async () => {
