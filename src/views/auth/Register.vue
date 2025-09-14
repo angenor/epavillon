@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen relative flex items-center justify-center px-4 py-12">
     <!-- Image de fond avec repeat -->
-    <div 
+    <div
       class="absolute inset-0 z-0 dark:opacity-20"
       :style="{
         backgroundImage: 'url(/images/people-bg/people-bg-1.jpg)',
@@ -11,7 +11,7 @@
       }"
     >
     </div>
-    
+
     <!-- Contenu principal avec z-index élevé -->
     <div class="relative z-10 w-full max-w-2xl space-y-8">
       <!-- Logo -->
@@ -165,14 +165,14 @@
                 >
                 <!-- Icône de validation -->
                 <div v-if="form.confirmPassword" class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <font-awesome-icon 
+                  <font-awesome-icon
                     v-if="passwordsMatch"
-                    icon="check-circle" 
+                    icon="check-circle"
                     class="h-5 w-5 text-green-500"
                   />
-                  <font-awesome-icon 
+                  <font-awesome-icon
                     v-else
-                    icon="times-circle" 
+                    icon="times-circle"
                     class="h-5 w-5 text-red-500"
                   />
                 </div>
@@ -274,12 +274,12 @@ onMounted(async () => {
     const { data, error: queryError } = await from('countries')
       .select('*')
       .order('name_fr', { ascending: true })
-    
+
     if (queryError) {
       console.error('Supabase query error:', queryError)
       throw queryError
     }
-    
+
     console.log('Countries loaded:', data?.length || 0, 'countries')
     countries.value = data || []
   } catch (err) {
@@ -301,7 +301,7 @@ const searchOrganizations = async () => {
       .ilike('name', `%${form.organizationName}%`)
       .eq('is_active', true)
       .limit(5)
-    
+
     organizationSuggestions.value = data || []
   } catch (err) {
     console.error('Error searching organizations:', err)
@@ -326,7 +326,7 @@ const checkPasswordStrength = () => {
   if (/[^A-Za-z0-9]/.test(password)) strength += 12.5
 
   passwordStrength.value = strength
-  
+
   // Vérifier aussi la correspondance si confirmPassword est rempli
   if (form.confirmPassword) {
     checkPasswordMatch()
@@ -356,7 +356,7 @@ const confirmPasswordClasses = computed(() => {
   if (!form.confirmPassword) {
     return 'border-gray-300 dark:border-gray-600 focus:ring-green-500 focus:border-transparent'
   }
-  
+
   if (passwordsMatch.value) {
     return 'border-green-500 dark:border-green-500 focus:ring-green-500 focus:border-green-500'
   } else {
@@ -400,7 +400,7 @@ const handleRegister = async () => {
 
     // 2. Le profil utilisateur sera créé automatiquement par le trigger
     await new Promise(resolve => setTimeout(resolve, 1000))
-    
+
     // 3. Mettre à jour le profil avec les informations supplémentaires
     const { error: updateError } = await from('users')
       .update({
@@ -413,6 +413,52 @@ const handleRegister = async () => {
     if (updateError) {
       console.warn('Profile update error:', updateError)
       // Ne pas bloquer l'inscription si la mise à jour échoue
+    }
+
+    // 4. Envoyer l'email de confirmation via Laravel backend
+    if (authData?.user) {
+      try {
+        // Générer un lien de confirmation avec l'ID utilisateur
+        const confirmationLink = `${window.location.origin}/verify-email?user_id=${authData.user.id}&email=${encodeURIComponent(authData.user.email)}`
+
+        const emailBody = `
+          <h2>Bienvenue sur E-Pavillon Climatique!</h2>
+          <p>Merci de vous être inscrit(e). Pour activer votre compte, veuillez cliquer sur le lien ci-dessous:</p>
+          <p><a href="${confirmationLink}" style="background-color: #10b981; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Confirmer mon compte</a></p>
+          <p>Ou copiez ce lien dans votre navigateur:</p>
+          <p>${confirmationLink}</p>
+          <hr>
+          <p><small>Si vous n'avez pas créé de compte, vous pouvez ignorer cet email.</small></p>
+        `
+
+        const emailPayload = {
+          'receivers-emails': authData.user.email,
+          'email-titre': 'Confirmez votre compte E-Pavillon Climatique',
+          'email-body': emailBody
+        }
+
+        const response = await fetch('https://epavillonclimatique.francophonie.org/api/send_email', {
+          method: 'POST',
+          mode: 'cors',
+          credentials: 'omit',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(emailPayload)
+        })
+
+        if (!response.ok) {
+          console.error('Email sending failed with status:', response.status)
+          const errorData = await response.text()
+          console.error('Error details:', errorData)
+        } else {
+          console.log('Confirmation email sent successfully to:', authData.user.email)
+        }
+      } catch (emailError) {
+        console.error('Email sending error:', emailError)
+        // Ne pas bloquer l'inscription si l'envoi d'email échoue
+      }
     }
 
     // Redirection après inscription réussie
