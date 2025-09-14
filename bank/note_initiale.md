@@ -17,3 +17,8 @@ Ra.n.<computed>.n.<computed> @ chunk-WvXQhsoW.js:17
 Sn @ chunk-WvXQhsoW.js:13
 He @ chunk-WvXQhsoW.js:13
 n @ chunk-WvXQhsoW.js:17
+
+
+L'objectif ici était d'envoyer l'email de confirmation de création de compte à travers mon serveur via le lien https://epavillonclimatique.francophonie.org/api/send_email .
+Mais j'ai constaté que superbase ne fourni pas le token de confirmation ici.
+Ma Queston est donc : comment faire pour envoyer un email de confirmation de création de compte à travers mon serveur (Laravel) en utilisant superbase Auth?
