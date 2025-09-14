@@ -73,7 +73,6 @@
                 <router-link to="/nego/climat" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:translate-x-1">{{ t('nav.climate') }}</router-link>
                 <router-link to="/nego/biodiversite" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:translate-x-1">{{ t('nav.biodiversity') }}</router-link>
                 <router-link to="/nego/desertification" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:translate-x-1">{{ t('nav.desertification') }}</router-link>
-                <router-link to="/nego/climate_finance" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:translate-x-1">{{ t('negotiations.categories.climate_finance') }}</router-link>
               </div>
             </div>
           </div>

@@ -182,7 +182,7 @@ const router = createRouter({
       component: () => import('../views/negociation/Negociation.vue'),
       meta: { requiresAuth: true, requiresRole: ['negotiator', 'admin', 'super_admin'] },
       beforeEnter: (to, _from, next) => {
-        const validCategories = ['climat', 'biodiversite', 'desertification', 'climate_finance']
+        const validCategories = ['climat', 'biodiversite', 'desertification']
         if (validCategories.includes(to.params.category)) {
           next()
         } else {

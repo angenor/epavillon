@@ -400,7 +400,7 @@ CREATE TABLE public.activity_question_answers (
 -- =============================================
 
 -- Types de sessions
-CREATE TYPE session_category AS ENUM ('climate', 'biodiversity', 'desertification', 'climate_finance');
+CREATE TYPE session_category AS ENUM ('climate', 'biodiversity', 'desertification');
 
 CREATE TYPE meeting_type AS ENUM ('Preparatory_Workshop', 'Francophone_Consultation', 'Innovation','Field_Training_Workshop');
 
