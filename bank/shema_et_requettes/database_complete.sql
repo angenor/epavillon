@@ -400,7 +400,7 @@ CREATE TABLE public.activity_question_answers (
 -- =============================================
 
 -- Types de sessions
-CREATE TYPE session_category AS ENUM ('climate', 'biodiversity', 'desertification');
+CREATE TYPE session_category_v2 AS ENUM ('climate', 'biodiversity', 'desertification');
 
 CREATE TYPE meeting_type AS ENUM ('Preparatory_Workshop', 'Francophone_Consultation', 'Innovation','Field_Training_Workshop');
 
@@ -412,7 +412,7 @@ CREATE TABLE public.negotiation_sessions (
     start_datetime TIMESTAMPTZ NOT NULL,
     end_datetime TIMESTAMPTZ NOT NULL,
     location TEXT,
-    category session_category NOT NULL,
+    category session_category_v2 NOT NULL,
     is_ifdd_organized BOOLEAN DEFAULT TRUE,
     external_link TEXT,
     zoom_meeting_id UUID REFERENCES public.zoom_meetings(id),
