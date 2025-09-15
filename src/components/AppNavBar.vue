@@ -9,16 +9,16 @@
             <font-awesome-icon :icon="['fas', 'bars']" class="w-6 h-6" />
           </button>
 
-          <router-link to="/" class="flex-shrink-0 group cursor-pointer">
+          <router-link to="/" class="flex-shrink-0 bg-white dark:bg-gray-300 rounded-md group cursor-pointer">
             <!-- Logo pour le mode clair -->
             <img
-              src="/logos/logo-ifdd-court.svg"
+              src="/logos/logo-epavillon.png"
               alt="Logo IFDD"
               class="h-10 w-auto dark:hidden transition-transform duration-300 group-hover:scale-105"
             >
             <!-- Logo pour le mode sombre -->
             <img
-              src="/logos/logo-ifdd-blanc.png"
+              src="/logos/logo-epavillon.png"
               alt="Logo IFDD"
               class="h-10 w-auto hidden dark:block transition-transform duration-300 group-hover:scale-105"
             >
