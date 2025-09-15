@@ -4,9 +4,9 @@
       <div class="grid lg:grid-cols-2 gap-12 items-center">
         <!-- Image -->
         <div class="order-2 lg:order-1">
-          <img 
-            src="/images/cop.jpg" 
-            alt="Événements COP" 
+          <img
+            src="/images/cop.jpg"
+            alt="Événements COP"
             class="rounded-2xl shadow-xl w-full h-auto object-cover"
           >
         </div>
@@ -39,8 +39,8 @@
 
           <!-- Events List -->
           <div v-else-if="events.length > 0" class="space-y-4 mb-8">
-            <div 
-              v-for="event in displayedEvents" 
+            <div
+              v-for="event in displayedEvents"
               :key="event.id"
               class="bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-900/50 p-6 transition-all"
               :class="getEventCardClass(event)"
@@ -61,7 +61,7 @@
                 <font-awesome-icon :icon="['fas', 'location-dot']" class="w-4 h-4 mr-2" />
                 <span>{{ formatLocation(event) }}</span>
               </div>
-              <router-link 
+              <router-link
                 :to="`/events/${event.id}`"
                 class="text-ifdd-bleu dark:text-ifdd-bleu-light hover:text-ifdd-bleu-dark dark:hover:text-ifdd-bleu font-medium flex items-center space-x-2 transition-colors"
               >
@@ -78,8 +78,8 @@
           </div>
 
           <!-- Bouton voir tous -->
-          <router-link 
-            to="/events"
+          <router-link
+            to="/programmations"
             class="inline-block w-full sm:w-auto px-6 py-3 bg-ifdd-bleu hover:bg-ifdd-bleu-dark dark:bg-ifdd-bleu-light dark:hover:bg-ifdd-bleu text-white font-medium font-helvetica rounded-lg transition-colors shadow-lg hover:shadow-xl text-center"
           >
             {{ t('events.seeAllEvents') }}
@@ -99,10 +99,10 @@ export default {
   name: 'EventsSection',
   setup() {
     const { t, locale } = useI18n()
-    const { 
-      events, 
-      loading, 
-      error, 
+    const {
+      events,
+      loading,
+      error,
       fetchUpcomingEvents,
       formatDate,
       getEventStatus
@@ -116,22 +116,22 @@ export default {
     // Afficher seulement 3 événements avec différents statuts
     const displayedEvents = computed(() => {
       if (!events.value.length) return []
-      
+
       const ongoing = events.value.filter(e => getEventStatus(e) === 'ongoing')
       const upcoming = events.value.filter(e => getEventStatus(e) === 'upcoming')
       const completed = events.value.filter(e => getEventStatus(e) === 'completed')
-      
+
       const result = []
       if (ongoing.length > 0) result.push(ongoing[0])
       if (upcoming.length > 0) result.push(upcoming[0])
       if (completed.length > 0) result.push(completed[0])
-      
+
       // Si on n'a pas 3 événements, compléter avec les autres
       const remaining = events.value.filter(e => !result.includes(e))
       while (result.length < 3 && remaining.length > 0) {
         result.push(remaining.shift())
       }
-      
+
       return result.slice(0, 3)
     })
 
@@ -141,7 +141,7 @@ export default {
         if (event.online_start_datetime && event.online_end_datetime) {
           const start = new Date(event.online_start_datetime)
           const end = new Date(event.online_end_datetime)
-          
+
           if (start.toDateString() === end.toDateString()) {
             // Même jour
             return formatDate(event.online_start_datetime)
@@ -157,7 +157,7 @@ export default {
       } else if (event.in_person_start_date && event.in_person_end_date) {
         const start = new Date(event.in_person_start_date)
         const end = new Date(event.in_person_end_date)
-        
+
         if (start.toDateString() === end.toDateString()) {
           return formatDate(event.in_person_start_date)
         } else {
@@ -168,7 +168,7 @@ export default {
           return `${startDay}-${endDay} ${month} ${year}`
         }
       }
-      
+
       return ''
     }
 
@@ -187,7 +187,7 @@ export default {
     const getEventCardClass = (event) => {
       const status = getEventStatus(event)
       const classes = []
-      
+
       if (status === 'ongoing') {
         classes.push('border-l-4 border-ifdd-bleu')
       } else if (status === 'upcoming') {
@@ -195,7 +195,7 @@ export default {
       } else {
         classes.push('opacity-50 hover:opacity-75')
       }
-      
+
       return classes.join(' ')
     }
 
@@ -214,7 +214,7 @@ export default {
       }
     }
 
-    return { 
+    return {
       t,
       events,
       displayedEvents,

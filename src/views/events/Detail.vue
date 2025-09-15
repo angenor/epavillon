@@ -429,6 +429,7 @@ const loadActivities = async () => {
       .from('activities')
       .select('*, organizations(id, name, logo_url)')
       .eq('event_id', route.params.id)
+      .eq('validation_status', 'approved')
       .order('proposed_start_date', { ascending: true })
       .limit(6)
 
