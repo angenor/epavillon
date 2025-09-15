@@ -362,7 +362,7 @@ const loadActivity = async () => {
   try {
     loading.value = true
     
-    // Charger l'activité avec toutes les relations
+    // Charger l'activité avec toutes les relations (seulement si approuvée)
     const { data: activityData, error: activityError } = await supabase
       .from('activities')
       .select(`
@@ -389,6 +389,7 @@ const loadActivity = async () => {
         )
       `)
       .eq('id', route.params.id)
+      .eq('validation_status', 'approved')
       .single()
 
     if (activityError) throw activityError

@@ -436,6 +436,7 @@ const loadActivities = async () => {
       .from('activities')
       .select('*')
       .eq('event_id', eventId.value)
+      .eq('validation_status', 'approved')
       .order('proposed_start_date', { ascending: true })
 
     if (error) throw error
