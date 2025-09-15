@@ -1,7 +1,7 @@
 // supabase/functions/custom-auth-email/index.ts
 // Custom Auth Hook Edge Function for Supabase
 // Uses Deno.serve (recommended) and forwards signup confirmation emails to a Laravel API.
-const LARAVEL_URL = Deno.env.get('SUPABASE_CUSTOM_AUTH_LARAVEL_URL') ?? 'https://epavillonclimatique.francophonie.org/api/send_email';
+const LARAVEL_URL = Deno.env.get('SUPABASE_CUSTOM_AUTH_LARAVEL_URL') ?? 'https://epavillonclimatique.francophonie.org/send_email';
 const LARAVEL_KEY = Deno.env.get('SUPABASE_CUSTOM_AUTH_LARAVEL_KEY') ?? '';
 console.info('custom-auth-email function started');
 Deno.serve(async (req: Request) => {

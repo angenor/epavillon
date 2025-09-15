@@ -219,6 +219,28 @@
                   </div>
                 </div>
 
+                <!-- Thématiques Selection (Required) -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ t('community.addTestimonial.thematiques') }} *
+                  </label>
+                  <div class="grid grid-cols-2 gap-2">
+                    <label
+                      v-for="thematique in availableThematiques"
+                      :key="thematique.value"
+                      class="flex items-center p-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+                    >
+                      <input
+                        type="checkbox"
+                        :value="thematique.value"
+                        v-model="formData.thematique_types"
+                        class="w-4 h-4 text-ifdd-green-600 bg-gray-100 border-gray-300 rounded focus:ring-ifdd-green-500 dark:focus:ring-ifdd-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      >
+                      <span class="ml-2 text-xs text-gray-700 dark:text-gray-300">{{ thematique.label }}</span>
+                    </label>
+                  </div>
+                </div>
+
                 <!-- Featured Checkbox -->
                 <div class="flex items-center">
                   <input
@@ -261,30 +283,25 @@
                   >
                 </div>
 
-                <!-- Context Types Selection (Multiple) -->
+                <!-- Context Type Selection (Single for videos) -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {{ t('community.addTestimonial.contextTypes') }} ({{ t('common.optional') || 'Optionnel' }})
+                    {{ t('community.addTestimonial.contextTypes') }} *
                   </label>
-                  <div class="space-y-2">
-                    <label 
-                      v-for="contextType in videoContextTypes" 
-                      :key="contextType.value"
-                      class="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
-                    >
-                      <input
-                        type="checkbox"
-                        :value="contextType.value"
-                        v-model="formData.context_types"
-                        class="w-4 h-4 text-ifdd-green-600 bg-gray-100 border-gray-300 rounded focus:ring-ifdd-green-500 dark:focus:ring-ifdd-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                      >
-                      <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">{{ contextType.label }}</span>
-                    </label>
-                  </div>
+                  <select
+                    v-model="formData.video_context_type"
+                    required
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-ifdd-green-500"
+                  >
+                    <option value="">{{ t('community.addTestimonial.selectContext') }}</option>
+                    <option v-for="contextType in videoContextTypes" :key="contextType.value" :value="contextType.value">
+                      {{ contextType.label }}
+                    </option>
+                  </select>
                 </div>
 
                 <!-- Context ID (Optional - for specific context) -->
-                <div v-if="formData.context_types.length === 1 && formData.context_types[0] !== 'platform'">
+                <div v-if="formData.video_context_type && formData.video_context_type !== 'platform'">
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {{ t('community.addTestimonial.specificContext') }}
                   </label>
@@ -294,10 +311,32 @@
                   >
                     <option value="">{{ t('community.addTestimonial.selectSpecificContext') }}</option>
                     <!-- Options dynamiques selon le type de contexte sélectionné -->
-                    <option v-if="formData.context_types[0] === 'training'" value="training-1">Formation Exemple 1</option>
-                    <option v-if="formData.context_types[0] === 'event'" value="event-1">Événement Exemple 1</option>
-                    <option v-if="formData.context_types[0] === 'activity'" value="activity-1">Activité Exemple 1</option>
+                    <option v-if="formData.video_context_type === 'training'" value="training-1">Formation Exemple 1</option>
+                    <option v-if="formData.video_context_type === 'event'" value="event-1">Événement Exemple 1</option>
+                    <option v-if="formData.video_context_type === 'activity'" value="activity-1">Activité Exemple 1</option>
                   </select>
+                </div>
+
+                <!-- Thématiques for Videos -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {{ t('community.addTestimonial.thematiques') }} *
+                  </label>
+                  <div class="grid grid-cols-2 gap-2">
+                    <label
+                      v-for="thematique in availableThematiques"
+                      :key="thematique.value"
+                      class="flex items-center p-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+                    >
+                      <input
+                        type="checkbox"
+                        :value="thematique.value"
+                        v-model="formData.thematique_types"
+                        class="w-4 h-4 text-ifdd-green-600 bg-gray-100 border-gray-300 rounded focus:ring-ifdd-green-500 dark:focus:ring-ifdd-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      >
+                      <span class="ml-2 text-xs text-gray-700 dark:text-gray-300">{{ thematique.label }}</span>
+                    </label>
+                  </div>
                 </div>
 
                 <!-- Video Upload -->
@@ -439,7 +478,9 @@ const formData = ref({
   testimonial_text: '',
   testimonial_title: '',
   testimonial_detail_url: '',
-  context_types: [], // Nouveau: tableau pour multiples contextes
+  context_types: [], // Tableau pour multiples contextes (témoignages)
+  video_context_type: '', // Contexte unique pour les vidéos
+  thematique_types: [], // Tableau pour les thématiques (requis)
   context_id: null, // Optionnel: ID spécifique si un seul contexte
   background_color: '#10B981',
   featured: false,
@@ -450,7 +491,7 @@ const formData = ref({
   detail_url: ''
 })
 
-// Types de contextes disponibles
+// Types de contextes disponibles (doit correspondre à l'énumération testimonial_context_type)
 const availableContextTypes = [
   { value: 'platform', label: t('community.contextTypes.platform') },
   { value: 'training', label: t('community.contextTypes.training') },
@@ -458,11 +499,26 @@ const availableContextTypes = [
   { value: 'innovation_practice', label: t('community.contextTypes.innovationPractice') }
 ]
 
-// Types de contextes pour vidéos (sous-ensemble)
+// Types de contextes pour vidéos (doit correspondre à l'énumération media_context)
 const videoContextTypes = [
   { value: 'training', label: t('community.contextTypes.training') },
   { value: 'event', label: t('community.contextTypes.event') },
-  { value: 'activity', label: t('community.createPost.contextTypes.activity') }
+  { value: 'activity', label: t('community.contextTypes.activity') }
+]
+
+// Thématiques disponibles (doit correspondre à l'énumération thematique_type)
+const availableThematiques = [
+  { value: 'pertes_et_prejudices', label: t('common.thematiques.pertes_et_prejudices') },
+  { value: 'adaptation', label: t('common.thematiques.adaptation') },
+  { value: 'attenuation', label: t('common.thematiques.attenuation') },
+  { value: 'finance', label: t('common.thematiques.finance') },
+  { value: 'genre', label: t('common.thematiques.genre') },
+  { value: 'ace', label: t('common.thematiques.ace') },
+  { value: 'agriculture', label: t('common.thematiques.agriculture') },
+  { value: 'transparence', label: t('common.thematiques.transparence') },
+  { value: 'mecanismes_de_cooperation', label: t('common.thematiques.mecanismes_de_cooperation') },
+  { value: 'bilan_mondial', label: t('common.thematiques.bilan_mondial') },
+  { value: 'droits_de_l_homme_et_climat', label: t('common.thematiques.droits_de_l_homme_et_climat') }
 ]
 
 // Background color options
@@ -480,12 +536,15 @@ const backgroundColors = [
 // Form validation
 const isFormValid = computed(() => {
   if (selectedType.value === 'testimonial') {
-    return formData.value.testimonial_text.trim().length > 0 && 
+    return formData.value.testimonial_text.trim().length > 0 &&
            formData.value.testimonial_title.trim().length > 0 &&
-           formData.value.context_types.length > 0 // Vérifier qu'au moins un contexte est sélectionné
+           formData.value.context_types.length > 0 && // Vérifier qu'au moins un contexte est sélectionné
+           formData.value.thematique_types.length > 0 // Vérifier qu'au moins une thématique est sélectionnée
   } else if (selectedType.value === 'video') {
-    return videoFile.value !== null && formData.value.title.trim().length > 0
-    // Les contextes sont optionnels pour les vidéos
+    return videoFile.value !== null &&
+           formData.value.title.trim().length > 0 &&
+           formData.value.video_context_type.trim().length > 0 && // Contexte requis pour les vidéos
+           formData.value.thematique_types.length > 0 // Thématiques requises pour les vidéos
   }
   return false
 })
@@ -503,6 +562,8 @@ const closeModal = () => {
     testimonial_title: '',
     testimonial_detail_url: '',
     context_types: [], // Réinitialiser le tableau
+    video_context_type: '', // Réinitialiser le contexte vidéo
+    thematique_types: [], // Réinitialiser les thématiques
     context_id: null,
     background_color: '#10B981',
     featured: false,
@@ -729,7 +790,8 @@ const handleSubmit = async () => {
       // Préparer les données avec l'ID de la session
       const testimonialData = {
         testimonial_text: formData.value.testimonial_text.trim(),
-        context_type: formData.value.context_types, // Envoyer le tableau
+        context_type: formData.value.context_types, // Envoyer le tableau de types de contexte
+        thematique_type: formData.value.thematique_types, // Envoyer le tableau de thématiques
         context_id: formData.value.context_types.length === 1 && formData.value.context_types[0] !== 'platform' ? formData.value.context_id : null,
         featured: formData.value.featured,
         background_color: formData.value.background_color,
@@ -760,8 +822,9 @@ const handleSubmit = async () => {
         video_url: uploadedVideoUrl,
         duration_seconds: formData.value.duration_seconds,
         featured: false,
-        context_type: formData.value.context_types.length > 0 ? formData.value.context_types[0] : 'event', // Les vidéos gardent un seul contexte pour le moment
-        context_id: formData.value.context_types.length === 1 && formData.value.context_types[0] !== 'platform' ? formData.value.context_id : null,
+        context_type: formData.value.video_context_type, // Utiliser le contexte spécifique aux vidéos
+        thematique_type: formData.value.thematique_types, // Ajouter les thématiques pour les vidéos
+        context_id: formData.value.video_context_type !== 'platform' ? formData.value.context_id : null,
         is_approved: false, // Videos need approval
         user_id: userId, // Utiliser l'ID de la session active
         title: formData.value.title.trim(),
