@@ -392,7 +392,8 @@ const handleRegister = async () => {
         data: {
           first_name: form.firstName,
           last_name: form.lastName
-        }
+        },
+        emailRedirectTo: 'https://epavillonclimatique.francophonie.org/login'
       }
     })
 
@@ -415,56 +416,24 @@ const handleRegister = async () => {
       // Ne pas bloquer l'inscription si la mise à jour échoue
     }
 
-    // 4. Envoyer l'email de confirmation via Laravel backend
-    if (authData?.user) {
-      try {
-        // Générer un lien de confirmation avec l'ID utilisateur
-        const confirmationLink = `${window.location.origin}/verify-email?user_id=${authData.user.id}&email=${encodeURIComponent(authData.user.email)}`
+    // 4. L'email de confirmation sera envoyé automatiquement par l'Auth Hook
+    console.log('Inscription réussie. Email de confirmation envoyé automatiquement à:', authData.user.email)
 
-        const emailBody = `
-          <h2>Bienvenue sur E-Pavillon Climatique!</h2>
-          <p>Merci de vous être inscrit(e). Pour activer votre compte, veuillez cliquer sur le lien ci-dessous:</p>
-          <p><a href="${confirmationLink}" style="background-color: #10b981; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Confirmer mon compte</a></p>
-          <p>Ou copiez ce lien dans votre navigateur:</p>
-          <p>${confirmationLink}</p>
-          <hr>
-          <p><small>Si vous n'avez pas créé de compte, vous pouvez ignorer cet email.</small></p>
-        `
-
-        const emailPayload = {
-          'receivers-emails': authData.user.email,
-          'email-titre': 'Confirmez votre compte E-Pavillon Climatique',
-          'email-body': emailBody
-        }
-
-        const response = await fetch('https://epavillonclimatique.francophonie.org/api/send_email', {
-          method: 'POST',
-          mode: 'cors',
-          credentials: 'omit',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify(emailPayload)
-        })
-
-        if (!response.ok) {
-          console.error('Email sending failed with status:', response.status)
-          const errorData = await response.text()
-          console.error('Error details:', errorData)
-        } else {
-          console.log('Confirmation email sent successfully to:', authData.user.email)
-        }
-      } catch (emailError) {
-        console.error('Email sending error:', emailError)
-        // Ne pas bloquer l'inscription si l'envoi d'email échoue
-      }
-    }
-
-    // Redirection après inscription réussie
-    router.push('/verify-email')
+    // Redirection après inscription réussie - temporairement vers login
+    // TODO: Revenir à '/verify-email' une fois le problème de build résolu
+    alert('Inscription réussie ! Un email de confirmation a été envoyé à ' + authData.user.email)
+    router.push('/login')
   } catch (err) {
     console.error('Registration error:', err)
+
+    // Si c'est une erreur de timeout du hook, ne pas bloquer l'inscription
+    if (err.message?.includes('Failed to reach hook within maximum time')) {
+      console.warn('Auth Hook timeout, but registration was successful')
+      // Rediriger quand même vers la page de vérification
+      router.push('/verify-email')
+      return
+    }
+
     if (err.message?.includes('already registered')) {
       error.value = t('auth.errors.emailAlreadyUsed')
     } else if (err.message?.includes('after 16 seconds') || err.status === 429) {

@@ -4,3 +4,6 @@ sigle evenemnt
 google calendar
 les lien de navigation: Breadcrumbs
 
+https://jzkuvulxfhtcelpvrxgf.supabase.co/functions/v1/registration-email
+
+secret: v1,whsec_Vz4Q6SF1ABm2QdZro/b8/G7g4rAQgnyo1SaIwJDqo+EY0lAtmrtKFnJhycHsu/cXsprY/yV6xzQiOAco
