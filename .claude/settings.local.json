@@ -14,7 +14,8 @@
       "Bash(grep:*)",
       "Bash(node:*)",
       "Bash(npm run dev:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "WebFetch(domain:www.ifdd.francophonie.org)"
     ],
     "deny": [],
     "ask": []

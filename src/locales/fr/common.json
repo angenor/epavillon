@@ -190,14 +190,21 @@
     "subtitle": "Institut de la Francophonie pour le Développement Durable"
   },
   "footer": {
-    "description": "Plateforme e-pavillon de l'Institut de la Francophonie pour le Développement Durable",
-    "quickLinks": "Liens rapides",
-    "legalNotice": "Mentions légales",
-    "privacyPolicy": "Politique de confidentialité",
+    "description": "Institut de la Francophonie pour le Développement Durable - Plateforme e-pavillon",
+    "informations": "Informations",
+    "aboutUs": "Qui sommes-nous?",
+    "news": "Actualités",
+    "trainings": "Formations",
+    "faq": "FAQ",
+    "statutes": "Statuts",
     "contact": "Contact",
-    "technicalSupport": "Support technique",
+    "phone": "Tél",
+    "fax": "Téléc",
     "followUs": "Suivez-nous",
-    "copyright": "© 2025 IFDD. Tous droits réservés."
+    "termsOfUse": "Conditions d'utilisation",
+    "privacyPolicy": "Politique de confidentialité",
+    "copyright": "© 2025 Organisation internationale de la Francophonie",
+    "poweredBy": "Plateforme développée avec Claude Code"
   },
   "about": {
     "pageDescription": "This is an about page"

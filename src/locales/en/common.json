@@ -182,14 +182,21 @@
     "subtitle": "Institute of La Francophonie for Sustainable Development"
   },
   "footer": {
-    "description": "E-pavilion platform of the Institute of La Francophonie for Sustainable Development",
-    "quickLinks": "Quick links",
-    "legalNotice": "Legal notice",
-    "privacyPolicy": "Privacy policy",
+    "description": "Institute of La Francophonie for Sustainable Development - E-pavilion platform",
+    "informations": "Information",
+    "aboutUs": "About Us",
+    "news": "News",
+    "trainings": "Trainings",
+    "faq": "FAQ",
+    "statutes": "Statutes",
     "contact": "Contact",
-    "technicalSupport": "Technical support",
+    "phone": "Phone",
+    "fax": "Fax",
     "followUs": "Follow us",
-    "copyright": "© 2025 IFDD. All rights reserved."
+    "termsOfUse": "Terms of Use",
+    "privacyPolicy": "Privacy Policy",
+    "copyright": "© 2025 International Organization of La Francophonie",
+    "poweredBy": "Platform developed with Claude Code"
   },
   "about": {
     "pageDescription": "This is an about page"

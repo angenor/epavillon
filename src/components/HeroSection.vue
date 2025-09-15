@@ -160,37 +160,54 @@ export default {
     let photoDisplayTimeout = null
 
     // Données mockées pour le développement/test
-    const mockVideoTestimonials = [
-      {
-        id: 'mock-video-1',
-        type: 'video',
-        video_url: '/videos/video_couverture2.mp4',
-        thumbnail_url: null,
-        title: 'Témoignage ePavillon',
-        user: {
-          first_name: 'Utilisateur',
-          last_name: 'ePavillon',
-          profile_photo_url: null
-        },
-        featured: true,
-        duration_seconds: 30
-      },
-      {
-        id: 'mock-video-2',
-        type: 'video',
-        video_url: '/videos/IFDD_Roumanie.mp4',
-        thumbnail_url: null,
-        user: {
-          first_name: 'Marie',
-          last_name: 'Martin',
-          profile_photo_url: null
-        },
-        featured: false,
-        duration_seconds: 45
-      }
-    ]
+    // TÉMOIGNAGES VIDÉOS TEMPORAIREMENT DÉSACTIVÉS
+    // const mockVideoTestimonials = [
+    //   {
+    //     id: 'mock-video-1',
+    //     type: 'video',
+    //     video_url: '/videos/video_couverture.mp4',
+    //     thumbnail_url: null,
+    //     title: 'Témoignage ePavillon',
+    //     user: {
+    //       first_name: 'Utilisateur',
+    //       last_name: 'ePavillon',
+    //       profile_photo_url: null
+    //     },
+    //     featured: true,
+    //     duration_seconds: 30
+    //   },
+    //   // {
+    //   //   id: 'mock-video-2',
+    //   //   type: 'video',
+    //   //   video_url: '/videos/video_couverture.mp4',
+    //   //   thumbnail_url: null,
+    //   //   user: {
+    //   //     first_name: 'Marie',
+    //   //     last_name: 'Martin',
+    //   //     profile_photo_url: null
+    //   //   },
+    //   //   featured: false,
+    //   //   duration_seconds: 45
+    //   // }
+    // ]
+    const mockVideoTestimonials = []
 
     const mockWrittenTestimonials = [
+      {
+        id: 'mock-written-biligua',
+        type: 'written',
+        photo_url: '/images/temoignages/temoignage-Biligua-Koivogui.jpg',
+        testimonial_text: 'Ma participation aux formations de l\'IFDD sur les négociations climatiques a été transformatrice pour ma carrière de négociatrice. Grâce aux outils pratiques et aux simulations de négociations, j\'ai développé une meilleure compréhension des enjeux complexes du financement climatique et de l\'adaptation.',
+        user: {
+          first_name: 'Biligua',
+          last_name: 'Koivogui',
+          organization: {
+            name: 'Ministère de l\'Environnement de Guinée'
+          }
+        },
+        featured: true,
+        background_color: '#1e40af'
+      },
       {
         id: 'mock-written-1',
         type: 'written',
@@ -200,7 +217,7 @@ export default {
           first_name: 'Antoine',
           last_name: 'Faye',
           organization: {
-            name: 'Négociateur Francophone'
+            name: 'Consultant indépendant'
           }
         },
         featured: true
@@ -233,15 +250,19 @@ export default {
 
       // En développement, utiliser les données mockées si l'un ou l'autre manque
       if (import.meta.env.DEV) {
-        if (videos.length === 0) {
-          console.log('No featured videos in DB, using mock video data')
-          // Filtrer seulement les vidéos mockées featured
-          videoTestimonials.value = mockVideoTestimonials.filter(v => v.featured)
-        } else {
-          // Générer les miniatures pour les vidéos
-          const videosWithThumbnails = await generateThumbnailsForVideos(videos.slice(0, 10), false)
-          videoTestimonials.value = videosWithThumbnails.map(v => ({ ...v, type: 'video' }))
-        }
+        // TÉMOIGNAGES VIDÉOS TEMPORAIREMENT DÉSACTIVÉS
+        // if (videos.length === 0) {
+        //   console.log('No featured videos in DB, using mock video data')
+        //   // Filtrer seulement les vidéos mockées featured
+        //   videoTestimonials.value = mockVideoTestimonials.filter(v => v.featured)
+        // } else {
+        //   // Générer les miniatures pour les vidéos
+        //   const videosWithThumbnails = await generateThumbnailsForVideos(videos.slice(0, 10), false)
+        //   videoTestimonials.value = videosWithThumbnails.map(v => ({ ...v, type: 'video' }))
+        // }
+
+        // Ne pas charger les vidéos pour le moment
+        videoTestimonials.value = []
 
         if (written.length === 0) {
           console.log('No featured written testimonials in DB, using mock written data')
@@ -251,9 +272,10 @@ export default {
           writtenTestimonials.value = written.slice(0, 10).map(w => ({ ...w, type: 'written' }))
         }
       } else {
-        // En production, utiliser seulement les données de la DB
-        const videosWithThumbnails = await generateThumbnailsForVideos(videos.slice(0, 10), false)
-        videoTestimonials.value = videosWithThumbnails.map(v => ({ ...v, type: 'video' }))
+        // En production, utiliser seulement les données de la DB (sans vidéos pour le moment)
+        // const videosWithThumbnails = await generateThumbnailsForVideos(videos.slice(0, 10), false)
+        // videoTestimonials.value = videosWithThumbnails.map(v => ({ ...v, type: 'video' }))
+        videoTestimonials.value = []
         writtenTestimonials.value = written.slice(0, 10).map(w => ({ ...w, type: 'written' }))
       }
 

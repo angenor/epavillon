@@ -217,19 +217,13 @@
             </div>
           </div>
 
-          <!-- Boutons connexion/inscription si non connecté -->
-          <div v-else class="flex items-center space-x-2">
+          <!-- Bouton connexion si non connecté -->
+          <div v-else>
             <router-link
               to="/login"
-              class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-ifdd-bleu dark:hover:text-ifdd-bleu-clair transition-colors"
-            >
-              {{ t('auth.login.title') }}
-            </router-link>
-            <router-link
-              to="/register"
               class="px-4 py-2 text-sm font-medium text-white bg-ifdd-bleu hover:bg-ifdd-bleu-fonce rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
             >
-              {{ t('common.register') }}
+              {{ t('auth.login.submit') }}
             </router-link>
           </div>
         </div>
