@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen relative flex items-center justify-center px-4 py-12">
     <!-- Image de fond avec repeat -->
-    <div 
+    <div
       class="absolute inset-0 z-0 dark:opacity-20"
       :style="{
         backgroundImage: 'url(/images/people-bg/people-bg-1.jpg)',
@@ -11,7 +11,7 @@
       }"
     >
     </div>
-    
+
     <!-- Contenu principal avec z-index élevé -->
     <div class="relative z-10 w-full max-w-md space-y-8">
       <!-- Logo -->
@@ -136,7 +136,7 @@
         </div>
 
         <!-- Connexion sociale -->
-        <div class="grid grid-cols-2 gap-3 mt-6">
+        <!-- <div class="grid grid-cols-2 gap-3 mt-6">
           <button
             type="button"
             @click="handleGoogleLogin"
@@ -154,7 +154,7 @@
             <font-awesome-icon :icon="['fab', 'microsoft']" class="h-5 w-5" />
             <span class="ml-2">Microsoft</span>
           </button>
-        </div>
+        </div> -->
       </form>
     </div>
   </div>

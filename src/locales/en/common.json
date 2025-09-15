@@ -51,6 +51,9 @@
     "optional": "optional",
     "create": "Create",
     "edit": "Edit",
+    "view": "View",
+    "delete": "Delete",
+    "deleting": "Deleting...",
     "editPost": {
       "title": "Edit content",
       "testimonialText": "Testimonial text",

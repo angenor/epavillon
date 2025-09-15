@@ -60,6 +60,9 @@
     "saveError": "Erreur lors de l'enregistrement",
     "submitting": "Envoi...",
     "per_page": "par page",
+    "view": "Voir",
+    "delete": "Supprimer",
+    "deleting": "Suppression...",
     "editPost": {
       "title": "Modifier le contenu",
       "testimonialText": "Texte du témoignage",

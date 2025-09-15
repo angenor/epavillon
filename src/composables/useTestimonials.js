@@ -588,6 +588,11 @@ export function useTestimonials() {
     }
   }
 
+  // Fonction simplifiée pour la suppression de posts
+  const deletePost = async (post) => {
+    return await deleteTestimonial(post.type, post.id)
+  }
+
   return {
     loading,
     error,
@@ -601,6 +606,7 @@ export function useTestimonials() {
     createTestimonial,
     createVideoTestimonial,
     updateTestimonial,
-    deleteTestimonial
+    deleteTestimonial,
+    deletePost
   }
 }

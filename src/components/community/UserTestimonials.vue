@@ -39,6 +39,7 @@
         :style="'facebook'"
         @click="openTestimonialDetail(post)"
         @edit="handleEditPost"
+        @delete="handleDeletePost"
       />
     </div>
 
@@ -114,10 +115,11 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const { 
-  loading, 
-  error, 
-  fetchCommunityFeed 
+const {
+  loading,
+  error,
+  fetchCommunityFeed,
+  deletePost
 } = useTestimonials()
 
 const posts = ref([])
@@ -189,6 +191,33 @@ const handlePostUpdated = () => {
   // Refresh the feed after successful update
   loadPosts(true)
   postToEdit.value = null
+}
+
+// Handle delete post event
+const handleDeletePost = async (post) => {
+  const confirmMessage = post.type === 'testimonial'
+    ? `Êtes-vous sûr de vouloir supprimer ce témoignage ?`
+    : post.type === 'innovation'
+    ? `Êtes-vous sûr de vouloir supprimer cette innovation "${post.title}" ?`
+    : post.type === 'practice'
+    ? `Êtes-vous sûr de vouloir supprimer cette bonne pratique "${post.title}" ?`
+    : post.type === 'video_testimonial'
+    ? `Êtes-vous sûr de vouloir supprimer cette vidéo témoignage ?`
+    : `Êtes-vous sûr de vouloir supprimer ce contenu ?`
+
+  if (window.confirm(confirmMessage)) {
+    try {
+      const success = await deletePost(post)
+      if (success) {
+        // Remove from local posts array
+        posts.value = posts.value.filter(p => !(p.type === post.type && p.id === post.id))
+        totalPosts.value = Math.max(0, totalPosts.value - 1)
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error)
+      alert('Erreur lors de la suppression. Veuillez réessayer.')
+    }
+  }
 }
 
 // Réinitialiser quand le filtre change

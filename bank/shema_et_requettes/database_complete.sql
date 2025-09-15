@@ -1125,6 +1125,8 @@ ALTER TABLE public.activity_questions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.training_participants ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.comments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_testimonials ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.video_testimonials ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.innovations_practices ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.newsletter_subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.francophonie_meetings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.francophonie_meeting_registrations ENABLE ROW LEVEL SECURITY;
@@ -1414,6 +1416,17 @@ CREATE POLICY "Users can update their own events" ON public.events
         )
     );
 
+CREATE POLICY "Admins can delete events" ON public.events
+    FOR DELETE USING (
+        EXISTS (
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
+            AND (valid_until IS NULL OR valid_until > NOW())
+        )
+    );
+
 -- Politiques pour les activités (mises à jour avec les corrections de fix_activities_update_policies.sql)
 -- Politique SELECT (lecture)
 CREATE POLICY "activities_select_policy" ON public.activities
@@ -1491,6 +1504,41 @@ CREATE POLICY "Testimonials are viewable by all" ON public.user_testimonials
 
 CREATE POLICY "Users can create testimonials" ON public.user_testimonials
     FOR INSERT WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Users can update own testimonials" ON public.user_testimonials
+    FOR UPDATE USING (user_id = auth.uid())
+    WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Users can delete own testimonials" ON public.user_testimonials
+    FOR DELETE USING (user_id = auth.uid());
+
+-- Politiques pour les témoignages vidéo
+CREATE POLICY "Video testimonials are viewable by all" ON public.video_testimonials
+    FOR SELECT USING (is_approved = true);
+
+CREATE POLICY "Users can create video testimonials" ON public.video_testimonials
+    FOR INSERT WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Users can update own video testimonials" ON public.video_testimonials
+    FOR UPDATE USING (user_id = auth.uid())
+    WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Users can delete own video testimonials" ON public.video_testimonials
+    FOR DELETE USING (user_id = auth.uid());
+
+-- Politiques pour les innovations et bonnes pratiques
+CREATE POLICY "Innovations practices are viewable by all" ON public.innovations_practices
+    FOR SELECT USING (is_published = true);
+
+CREATE POLICY "Users can create innovations practices" ON public.innovations_practices
+    FOR INSERT WITH CHECK (submitted_by = auth.uid());
+
+CREATE POLICY "Users can update own innovations practices" ON public.innovations_practices
+    FOR UPDATE USING (submitted_by = auth.uid())
+    WITH CHECK (submitted_by = auth.uid());
+
+CREATE POLICY "Users can delete own innovations practices" ON public.innovations_practices
+    FOR DELETE USING (submitted_by = auth.uid());
 
 -- Politiques pour les newsletters
 CREATE POLICY "Users can manage their own subscriptions" ON public.newsletter_subscriptions

@@ -76,10 +76,17 @@
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <router-link :to="`/admin/events/${event.id}`"
-                             class="text-orange-600 hover:text-orange-900">
-                    Voir
-                  </router-link>
+                  <div class="flex items-center justify-end space-x-3">
+                    <router-link :to="`/admin/events/${event.id}`"
+                               class="text-orange-600 hover:text-orange-900">
+                      {{ t('common.view') }}
+                    </router-link>
+                    <button @click="confirmDeleteEvent(event)"
+                            class="text-red-600 hover:text-red-900"
+                            :disabled="isDeleting">
+                      {{ isDeleting && deletingEventId === event.id ? t('common.deleting') : t('common.delete') }}
+                    </button>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -102,6 +109,8 @@ const { hasAdminRole, isLoadingRoles, loadUserRoles } = useAdmin()
 
 const isLoading = ref(true)
 const events = ref([])
+const isDeleting = ref(false)
+const deletingEventId = ref(null)
 
 // Vérification des permissions (attendre le chargement des rôles)
 const checkAccess = async () => {
@@ -139,9 +148,43 @@ const getStatusClass = (status) => {
 }
 
 const getSubmissionClass = (status) => {
-  return status === 'open' 
+  return status === 'open'
     ? 'bg-green-100 text-green-800'
     : 'bg-red-100 text-red-800'
+}
+
+const confirmDeleteEvent = (event) => {
+  const message = `Êtes-vous sûr de vouloir supprimer l'événement "${event.title}" (${event.year}) ?\n\nATTENTION : Cette action supprimera également toutes les activités associées à cet événement et ne peut pas être annulée.`
+
+  if (window.confirm(message)) {
+    deleteEvent(event.id)
+  }
+}
+
+const deleteEvent = async (eventId) => {
+  isDeleting.value = true
+  deletingEventId.value = eventId
+
+  try {
+    const { error } = await supabase
+      .from('events')
+      .delete()
+      .eq('id', eventId)
+
+    if (error) throw error
+
+    // Retirer l'événement de la liste
+    events.value = events.value.filter(event => event.id !== eventId)
+
+    // Notification de succès
+    alert('Événement supprimé avec succès.')
+  } catch (error) {
+    console.error('Erreur lors de la suppression de l\'événement:', error)
+    alert('Erreur lors de la suppression de l\'événement. Veuillez réessayer.')
+  } finally {
+    isDeleting.value = false
+    deletingEventId.value = null
+  }
 }
 
 onMounted(async () => {
