@@ -7,9 +7,9 @@
     <div class="container mx-auto px-4 py-6">
       <div class="max-w-4xl mx-auto">
         <!-- Create Post Section -->
-        <CreatePost 
+        <CreatePost
           v-if="user"
-          @posted="handleNewPost" 
+          @posted="handleNewPost"
           class="mb-6"
         />
 
@@ -37,7 +37,7 @@
 
         <!-- Unified Facebook-like Feed -->
         <div class="space-y-6">
-          <UserTestimonials 
+          <UserTestimonials
             :filter="currentFilter"
             :style="'facebook'"
           />
@@ -47,30 +47,39 @@
 
     <!-- Add Testimonial Modal -->
     <Teleport to="body">
-      <AddTestimonialModal 
-        v-if="showTestimonialModal" 
+      <AddTestimonialModal
+        v-if="showTestimonialModal"
         @close="showTestimonialModal = false"
         @success="handleTestimonialSuccess"
       />
     </Teleport>
+
+    <!-- Maintenance Modal -->
+    <MaintenanceModal
+      :show="showMaintenanceModal"
+      @close="closeMaintenanceModal"
+      @go-home="goHome"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, h } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
+import { useMaintenanceModal } from '@/composables/useMaintenanceModal'
 import CommunityHero from '@/components/community/CommunityHero.vue'
 import UserTestimonials from '@/components/community/UserTestimonials.vue'
 import CreatePost from '@/components/community/CreatePost.vue'
 import AddTestimonialModal from '@/components/community/AddTestimonialModal.vue'
+import MaintenanceModal from '@/components/common/MaintenanceModal.vue'
 
 const { t } = useI18n()
-const router = useRouter()
 const authStore = useAuthStore()
 const { user } = storeToRefs(authStore)
+
+const { showMaintenanceModal, closeMaintenanceModal, goHome } = useMaintenanceModal()
 
 const showTestimonialModal = ref(false)
 const currentFilter = ref('all')

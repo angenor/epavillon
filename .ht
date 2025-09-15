@@ -1,0 +1,23 @@
+# .htaccess dans le dossier racine
+RewriteEngine On
+
+# 1. Rediriger les requêtes API vers Laravel
+RewriteCond %{REQUEST_URI} ^/api/.*$ [OR]
+RewriteCond %{REQUEST_URI} ^/send_email$ [OR]
+RewriteCond %{REQUEST_URI} ^/getdocs$ [OR]
+RewriteRule ^(.*)$ /public/index.php/$1 [L]
+
+# 2. Servir les fichiers statiques de Vue directement depuis dist
+RewriteCond %{REQUEST_URI} ^/(css|js|img|fonts|assets)/
+RewriteRule ^(.*)$ /dist/$1 [L]
+
+# 3. Si le fichier existe dans dist, le servir directement
+RewriteCond %{DOCUMENT_ROOT}/dist%{REQUEST_URI} -f
+RewriteRule ^(.*)$ /dist/$1 [L]
+
+# 4. Pour toutes les autres routes (Vue Router), servir index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteCond %{REQUEST_URI} !^/dist/
+RewriteRule ^.*$ /dist/index.html [L]

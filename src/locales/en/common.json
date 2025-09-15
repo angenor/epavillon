@@ -54,6 +54,13 @@
     "view": "View",
     "delete": "Delete",
     "deleting": "Deleting...",
+    "close": "Close",
+    "maintenance": {
+      "title": "Page under maintenance",
+      "message": "This page is currently under maintenance. We are working to improve it to provide you with a better experience.",
+      "backSoon": "We'll be back soon!",
+      "returnHome": "Return to home"
+    },
     "editPost": {
       "title": "Edit content",
       "testimonialText": "Testimonial text",

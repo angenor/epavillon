@@ -50,6 +50,12 @@
     "save": "Enregistrer",
     "edit": "Modifier",
     "close": "Fermer",
+    "maintenance": {
+      "title": "Page en maintenance",
+      "message": "Cette page est actuellement en cours de maintenance. Nous travaillons à l'améliorer pour vous offrir une meilleure expérience.",
+      "backSoon": "Nous serons de retour bientôt !",
+      "returnHome": "Retourner à l'accueil"
+    },
     "refresh": "Actualiser",
     "dataRefreshed": "Données actualisées",
     "refreshError": "Erreur lors de l'actualisation",
