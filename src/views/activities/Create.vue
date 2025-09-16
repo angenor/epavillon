@@ -723,6 +723,34 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal de succès après soumission -->
+    <div v-if="showSuccessModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full mx-auto transform transition-all duration-300">
+        <div class="p-6">
+          <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-green-100 dark:bg-green-900/30 rounded-full">
+            <svg class="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white text-center mb-2">
+            {{ t('activity.submit.success.title') }}
+          </h3>
+
+          <p class="text-gray-600 dark:text-gray-400 text-center mb-6">
+            {{ t('activity.submit.success.message') }}
+          </p>
+
+          <button
+            @click="closeSuccessModal"
+            class="w-full px-4 py-2.5 text-sm font-medium text-white bg-green-600 dark:bg-green-500 rounded-xl hover:bg-green-700 dark:hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-green-400 transition-all duration-200"
+          >
+            {{ t('activity.submit.success.backToEvent') }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -778,6 +806,7 @@ const isSavingDraft = ref(false)
 const currentStep = ref(0)
 const hasDraft = ref(false)
 const showDraftModal = ref(false)
+const showSuccessModal = ref(false)
 
 const steps = [
   { title: t('activity.submit.steps.basicInfo'), subtitle: t('activity.submit.steps.basicInfoDesc') },
@@ -990,6 +1019,11 @@ const goToEvent = () => {
   router.push(`/events/${eventId}`)
 }
 
+const closeSuccessModal = () => {
+  showSuccessModal.value = false
+  router.push(`/events/${eventId}`)
+}
+
 
 
 // Fonction pour construire les datetime complets
@@ -1061,7 +1095,8 @@ const handleSubmit = async () => {
     // Clear draft after successful submission
     deleteDraft()
 
-    router.push(`/activities/${activityResult.id}`)
+    // Show success modal instead of direct redirect
+    showSuccessModal.value = true
   } catch (error) {
     console.error('Error submitting activity:', error)
     alert(t('activity.submit.errors.submitFailed'))

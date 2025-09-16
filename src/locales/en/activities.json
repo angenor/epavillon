@@ -426,6 +426,11 @@
         "noOrganization": "You must first provide your organization information",
         "submitFailed": "An error occurred during submission. Please try again."
       },
+      "success": {
+        "title": "Activity submitted successfully",
+        "message": "Your activity has been submitted and will be reviewed by the event organizers.",
+        "backToEvent": "Back to event"
+      },
       "helpers": {
         "organizationInfo": "The activity will be submitted on behalf of your organization"
       },

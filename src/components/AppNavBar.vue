@@ -115,21 +115,21 @@
           </div>
 
           <!-- Messagerie -->
-          <router-link
+          <!-- <router-link
             v-if="authStore.isAuthenticated"
             to="/messages"
             class="relative p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
             :title="t('messaging.title')"
           >
             <font-awesome-icon icon="comments" class="w-5 h-5" />
-            <!-- Badge de messages non lus (sera connecté plus tard au store) -->
+
             <span
               v-if="false"
               class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-1"
             >
               3
             </span>
-          </router-link>
+          </router-link> -->
 
           <!-- Notifications -->
           <NotificationDropdown v-if="authStore.isAuthenticated" />
@@ -195,11 +195,11 @@
                     </div>
                   </div>
                 </div>
-                <router-link to="/messages" class="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 group/item">
+                <!-- <router-link to="/messages" class="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 group/item">
                   <font-awesome-icon :icon="['fas', 'envelope']" class="w-4 h-4 mr-3 text-gray-400 group-hover/item:text-ifdd-bleu transition-colors" />
                   {{ t('common.messages') }}
                   <span class="ml-auto bg-ifdd-bleu text-white text-xs px-2 py-0.5 rounded-full">3</span>
-                </router-link>
+                </router-link> -->
                 <router-link to="/appointments" class="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 group/item">
                   <font-awesome-icon :icon="['fas', 'calendar']" class="w-4 h-4 mr-3 text-gray-400 group-hover/item:text-ifdd-bleu transition-colors" />
                   {{ t('common.appointments') }}

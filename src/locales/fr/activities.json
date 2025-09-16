@@ -472,6 +472,11 @@
         "noOrganization": "Vous devez d'abord renseigner votre organisation",
         "submitFailed": "Une erreur est survenue lors de la soumission. Veuillez réessayer."
       },
+      "success": {
+        "title": "Activité soumise avec succès",
+        "message": "Votre activité a été soumise et sera évaluée par les organisateurs de l'événement.",
+        "backToEvent": "Retourner à l'événement"
+      },
       "helpers": {
         "organizationInfo": "L'activité sera soumise au nom de votre organisation"
       },
