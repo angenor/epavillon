@@ -17,7 +17,7 @@
       <!-- Logo -->
       <div class="text-center">
         <img class="mx-auto h-24 w-auto" src="/logo-ifdd.png" :alt="t('common.logoAlt')">
-        <h1 class="mt-6 text-3xl font-bold tracking-tight">
+        <h1 class="mt-6 text-3xl font-bold tracking-tight text-black dark:text-white">
           {{ t('auth.register.title') }}
         </h1>
         <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
@@ -29,7 +29,7 @@
       </div>
 
       <!-- Formulaire -->
-      <form @submit.prevent="handleRegister" class="mt-8 space-y-6 bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
+      <form @submit.prevent="handleRegister" class="mt-8 space-y-6 bg-white text-black dark:text-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
         <!-- Informations personnelles -->
         <div>
           <h2 class="text-lg font-medium mb-4">{{ t('auth.register.personalInfo') }}</h2>

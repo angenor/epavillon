@@ -17,7 +17,7 @@
       <!-- Logo -->
       <div class="text-center">
         <img class="mx-auto h-24 w-auto" src="/logo-ifdd.png" :alt="t('common.logoAlt')">
-        <h1 class="mt-6 text-3xl font-bold tracking-tight">
+        <h1 class="mt-6 text-3xl font-bold tracking-tight text-black dark:text-white">
           {{ t('auth.login.title') }}
         </h1>
         <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
@@ -30,7 +30,7 @@
 
       <!-- Formulaire -->
       <form @submit.prevent="handleLogin" class="mt-8 space-y-6">
-        <div class="space-y-5">
+        <div class="space-y-5 text-black dark:text-white">
           <!-- Email -->
           <div>
             <label for="email" class="block text-sm font-medium mb-2">
@@ -85,7 +85,7 @@
               type="checkbox"
               class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
             >
-            <label for="remember-me" class="ml-2 block text-sm">
+            <label for="remember-me" class="ml-2 block text-sm text-black dark:text-white">
               {{ t('auth.login.rememberMe') }}
             </label>
           </div>
@@ -124,7 +124,7 @@
         </div>
 
         <!-- Séparateur -->
-        <div class="relative mt-6">
+        <!-- <div class="relative mt-6">
           <div class="absolute inset-0 flex items-center">
             <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
           </div>
@@ -133,7 +133,7 @@
               {{ t('auth.login.orContinueWith') }}
             </span>
           </div>
-        </div>
+        </div> -->
 
         <!-- Connexion sociale -->
         <!-- <div class="grid grid-cols-2 gap-3 mt-6">

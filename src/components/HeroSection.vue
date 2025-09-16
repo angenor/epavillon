@@ -248,35 +248,23 @@ export default {
       const written = await fetchWrittenTestimonials(true) // true pour featured uniquement
       console.log('Featured written testimonials loaded:', written)
 
-      // En développement, utiliser les données mockées si l'un ou l'autre manque
-      if (import.meta.env.DEV) {
-        // TÉMOIGNAGES VIDÉOS TEMPORAIREMENT DÉSACTIVÉS
-        // if (videos.length === 0) {
-        //   console.log('No featured videos in DB, using mock video data')
-        //   // Filtrer seulement les vidéos mockées featured
-        //   videoTestimonials.value = mockVideoTestimonials.filter(v => v.featured)
-        // } else {
-        //   // Générer les miniatures pour les vidéos
-        //   const videosWithThumbnails = await generateThumbnailsForVideos(videos.slice(0, 10), false)
-        //   videoTestimonials.value = videosWithThumbnails.map(v => ({ ...v, type: 'video' }))
-        // }
+      // Utiliser les données de la DB en priorité, sinon utiliser les données mockées
+      // TÉMOIGNAGES VIDÉOS TEMPORAIREMENT DÉSACTIVÉS
+      videoTestimonials.value = []
 
-        // Ne pas charger les vidéos pour le moment
-        videoTestimonials.value = []
-
-        if (written.length === 0) {
-          console.log('No featured written testimonials in DB, using mock written data')
-          // Filtrer seulement les témoignages écrits mockés featured
-          writtenTestimonials.value = mockWrittenTestimonials.filter(w => w.featured)
-        } else {
-          writtenTestimonials.value = written.slice(0, 10).map(w => ({ ...w, type: 'written' }))
-        }
+      // Témoignages écrits : utiliser les données de la DB, sinon les données mockées
+      if (written.length === 0) {
+        console.log('No featured written testimonials in DB, using mock written data')
+        // Filtrer seulement les témoignages écrits mockés featured
+        writtenTestimonials.value = mockWrittenTestimonials.filter(w => w.featured)
       } else {
-        // En production, utiliser seulement les données de la DB (sans vidéos pour le moment)
-        // const videosWithThumbnails = await generateThumbnailsForVideos(videos.slice(0, 10), false)
-        // videoTestimonials.value = videosWithThumbnails.map(v => ({ ...v, type: 'video' }))
-        videoTestimonials.value = []
         writtenTestimonials.value = written.slice(0, 10).map(w => ({ ...w, type: 'written' }))
+      }
+
+      // Si aucune donnée de la DB et pas en mode DEV, utiliser les mockées comme fallback
+      if (writtenTestimonials.value.length === 0) {
+        console.log('Using fallback mock data for testimonials')
+        writtenTestimonials.value = mockWrittenTestimonials.filter(w => w.featured)
       }
 
       // Combiner tous les témoignages
