@@ -472,7 +472,13 @@
       "load": "Charger le brouillon",
       "delete": "Supprimer le brouillon",
       "save": "Sauvegarder en brouillon",
-      "saving": "Sauvegarde en cours..."
+      "saving": "Sauvegarde en cours...",
+      "saved": {
+        "title": "Brouillon sauvegardé",
+        "message": "Votre brouillon a été sauvegardé avec succès. Vous pouvez continuer votre saisie ou retourner à l'événement.",
+        "continue": "Continuer la saisie",
+        "goToEvent": "Retourner à l'événement"
+      }
     }
   }
 }

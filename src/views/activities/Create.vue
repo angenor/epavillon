@@ -665,6 +665,42 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal de confirmation après sauvegarde -->
+    <div v-if="showDraftModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full mx-auto transform transition-all duration-300">
+        <div class="p-6">
+          <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-green-100 dark:bg-green-900/30 rounded-full">
+            <svg class="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white text-center mb-2">
+            {{ t('activity.draft.saved.title') }}
+          </h3>
+
+          <p class="text-gray-600 dark:text-gray-400 text-center mb-6">
+            {{ t('activity.draft.saved.message') }}
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-3">
+            <button
+              @click="continueDraft"
+              class="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-green-400 transition-all duration-200"
+            >
+              {{ t('activity.draft.saved.continue') }}
+            </button>
+            <button
+              @click="goToEvent"
+              class="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-green-600 dark:bg-green-500 rounded-xl hover:bg-green-700 dark:hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-green-400 transition-all duration-200"
+            >
+              {{ t('activity.draft.saved.goToEvent') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -716,6 +752,7 @@ const isSubmitting = ref(false)
 const isSavingDraft = ref(false)
 const currentStep = ref(0)
 const hasDraft = ref(false)
+const showDraftModal = ref(false)
 
 const steps = [
   { title: t('activity.submit.steps.basicInfo'), subtitle: t('activity.submit.steps.basicInfoDesc') },
@@ -844,8 +881,9 @@ const saveDraft = async () => {
       timestamp: new Date().toISOString()
     }
     localStorage.setItem(getDraftKey(), JSON.stringify(draftData))
-    // Show success message
     console.log('Draft saved successfully')
+    // Afficher le modal de confirmation
+    showDraftModal.value = true
   } catch (error) {
     console.error('Error saving draft:', error)
   } finally {
@@ -876,6 +914,15 @@ const deleteDraft = () => {
   } catch (error) {
     console.error('Error deleting draft:', error)
   }
+}
+
+const continueDraft = () => {
+  showDraftModal.value = false
+}
+
+const goToEvent = () => {
+  showDraftModal.value = false
+  router.push(`/events/${eventId}`)
 }
 
 

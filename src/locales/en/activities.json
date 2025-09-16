@@ -426,7 +426,13 @@
       "load": "Load draft",
       "delete": "Delete draft",
       "save": "Save as draft",
-      "saving": "Saving..."
+      "saving": "Saving...",
+      "saved": {
+        "title": "Draft Saved",
+        "message": "Your draft has been saved successfully. You can continue editing or return to the event.",
+        "continue": "Continue Editing",
+        "goToEvent": "Return to Event"
+      }
     }
   }
 }
