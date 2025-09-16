@@ -8,6 +8,7 @@ import activities from './activities.json' with { type: 'json' };
 import community from './community.json' with { type: 'json' };
 import negotiations from './negotiations.json' with { type: 'json' };
 import directory from './directory.json' with { type: 'json' };
+import organizations from './organizations.json' with { type: 'json' };
 
 export default {
   ...common,
@@ -19,4 +20,5 @@ export default {
   ...community,
   ...negotiations,
   ...directory,
+  ...organizations,
 };

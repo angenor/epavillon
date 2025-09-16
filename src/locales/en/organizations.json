@@ -1,0 +1,52 @@
+{
+  "organization": {
+    "setup": {
+      "title": "Organization Setup",
+      "subtitle": "Search for your organization or create a new one",
+      "step1": "Search",
+      "step2": "Create",
+      "searchTitle": "Search for an existing organization",
+      "searchLabel": "Organization name or acronym",
+      "searchPlaceholder": "Enter organization name or acronym...",
+      "searching": "Searching...",
+      "resultsTitle": "Organizations found",
+      "noResults": "No organization found",
+      "canCreateAfterSearch": "You can now create a new organization",
+      "searchInstructions": "Enter at least 3 characters to search",
+      "startSearching": "Start your search to find an existing organization",
+      "createNewAfterSearch": "Create new organization",
+      "createTitle": "Create a new organization",
+      "create": "Create organization",
+      "creating": "Creating..."
+    },
+    "fields": {
+      "name": "Organization name",
+      "acronym": "Acronym",
+      "email": "Email",
+      "type": "Organization type",
+      "country": "Country",
+      "website": "Website",
+      "description": "Description",
+      "logo": "Logo",
+      "chooseLogo": "Choose logo",
+      "logoHelp": "PNG, JPG, SVG. Max 2MB"
+    },
+    "placeholders": {
+      "name": "E.g.: Institute of La Francophonie for Sustainable Development",
+      "acronym": "E.g.: IFDD",
+      "email": "contact{'@'}organization.org",
+      "website": "https://www.organization.org",
+      "selectType": "Select a type",
+      "selectCountry": "Select a country",
+      "description": "Briefly describe your organization..."
+    },
+    "types": {
+      "public_national_institution": "Public national institution",
+      "international_organization": "International organization",
+      "regional_organization": "Regional organization",
+      "ngo_association": "NGO / Association",
+      "private_sector": "Private sector"
+    },
+    "verified": "Verified"
+  }
+}

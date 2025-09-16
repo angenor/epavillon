@@ -18,7 +18,6 @@ if (!supabaseUrl || !supabaseAnonKey) {
       signOut: () => Promise.reject(new Error('Supabase not configured')),
       getSession: () => Promise.resolve({ data: { session: null } }),
       resetPasswordForEmail: () => Promise.reject(new Error('Supabase not configured')),
-      updateSession: () => Promise.reject(new Error('Supabase not configured')),
       resend: () => Promise.reject(new Error('Supabase not configured')),
       user: { value: null }
     },

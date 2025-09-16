@@ -35,7 +35,7 @@
         <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">
           {{ t('organization.setup.searchTitle') }}
         </h2>
-        
+
         <!-- Search Input -->
         <div class="mb-6">
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -173,6 +173,19 @@
             />
           </div>
 
+          <!-- Organization Acronym -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {{ t('organization.fields.acronym') }}
+            </label>
+            <input
+              v-model="newOrganization.acronym"
+              type="text"
+              :placeholder="t('organization.placeholders.acronym')"
+              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
+            />
+          </div>
+
           <!-- Organization Email -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -228,10 +241,55 @@
             </label>
             <input
               v-model="newOrganization.website"
-              type="url"
+              type="text"
+              @blur="formatWebsite"
               :placeholder="t('organization.placeholders.website')"
               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
             />
+          </div>
+
+          <!-- Organization Logo -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {{ t('organization.fields.logo') }}
+            </label>
+            <div class="flex items-center space-x-4">
+              <div class="flex-shrink-0 cursor-pointer" @click="$refs.logoInput.click()">
+                <img
+                  v-if="logoPreview"
+                  :src="logoPreview"
+                  alt="Logo preview"
+                  class="h-20 w-20 object-contain rounded-lg border border-gray-300 dark:border-gray-600"
+                />
+                <div
+                  v-else
+                  class="h-20 w-20 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center"
+                >
+                  <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="flex-1">
+                <input
+                  type="file"
+                  @change="handleLogoUpload"
+                  accept="image/png,image/jpeg,image/jpg,image/svg+xml"
+                  class="hidden"
+                  ref="logoInput"
+                />
+                <button
+                  type="button"
+                  @click="$refs.logoInput.click()"
+                  class="cursor-pointer px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                >
+                  {{ t('organization.fields.chooseLogo') }}
+                </button>
+                <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                  {{ t('organization.fields.logoHelp') }}
+                </p>
+              </div>
+            </div>
           </div>
 
           <!-- Description (Optional) -->
@@ -243,7 +301,7 @@
               v-model="newOrganization.description"
               rows="3"
               :placeholder="t('organization.placeholders.description')"
-              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors resize-none"
+              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
             />
           </div>
 
@@ -299,19 +357,26 @@ const isSubmitting = ref(false)
 const countries = ref([])
 const hasSearched = ref(false)
 
-// Form data for new organization  
+// Form data for new organization
 const newOrganization = reactive({
   name: '',
   email: '',
   organization_type: '',
   country_id: '',
   website: '',
-  description: ''
+  description: '',
+  acronym: '',
+  logo_url: ''
 })
+
+// Logo handling
+const logoFile = ref(null)
+const logoPreview = ref('')
+const logoInput = ref(null)
 
 const organizationTypes = [
   'public_national_institution',
-  'international_organization', 
+  'international_organization',
   'regional_organization',
   'ngo_association',
   'private_sector'
@@ -324,7 +389,7 @@ const loadCountries = async () => {
       .from('countries')
       .select('id, name_fr, name_en')
       .order('name_fr')
-    
+
     if (error) throw error
     countries.value = data || []
   } catch (error) {
@@ -345,11 +410,11 @@ const searchOrganizations = async () => {
   searchTimeout = setTimeout(async () => {
     try {
       searchLoading.value = true
-      
+
       // Use the simplified search function from the database
       const { data, error } = await supabase
         .rpc('search_organizations_simple', { search_text: searchQuery.value })
-      
+
       if (error) throw error
       searchResults.value = data || []
       hasSearched.value = true // Marquer qu'une recherche a été effectuée
@@ -371,12 +436,12 @@ const selectOrganization = async (organization) => {
       .from('users')
       .update({ organization_id: organization.organization_id })
       .eq('id', authStore.user.id)
-    
+
     if (error) throw error
-    
+
     // Update the auth store profile
     await authStore.fetchUser()
-    
+
     // Redirect to the original destination or events
     const redirectTo = route.query.redirect || '/events'
     router.push(redirectTo)
@@ -386,13 +451,81 @@ const selectOrganization = async (organization) => {
   }
 }
 
+// Format website URL
+const formatWebsite = () => {
+  let url = newOrganization.website.trim()
+
+  if (!url) return
+
+  // Remove any existing protocol
+  url = url.replace(/^(https?:\/\/)?/, '')
+
+  // Add https:// if no protocol was specified
+  if (url) {
+    newOrganization.website = 'https://' + url
+  }
+}
+
+// Handle logo upload
+const handleLogoUpload = async (event) => {
+  const file = event.target.files[0]
+  if (!file) return
+
+  // Validate file size (max 2MB)
+  if (file.size > 2 * 1024 * 1024) {
+    console.error('File size exceeds 2MB')
+    // TODO: Show error notification
+    return
+  }
+
+  logoFile.value = file
+
+  // Create preview
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    logoPreview.value = e.target.result
+  }
+  reader.readAsDataURL(file)
+}
+
+// Upload logo to storage
+const uploadLogo = async (organizationId) => {
+  if (!logoFile.value) return null
+
+  const fileExt = logoFile.value.name.split('.').pop()
+  const fileName = `logo/${organizationId}_logo.${fileExt}`
+
+  const { error } = await supabase.storage
+    .from('epavillonp')
+    .upload(fileName, logoFile.value, {
+      upsert: true
+    })
+
+  if (error) {
+    console.error('Error uploading logo:', error)
+    return null
+  }
+
+  // Get public URL
+  const { data: { publicUrl } } = supabase.storage
+    .from('epavillonp')
+    .getPublicUrl(fileName)
+
+  return publicUrl
+}
+
 // Create new organization
 const createOrganization = async () => {
   if (isSubmitting.value) return
-  
+
   isSubmitting.value = true
-  
+
   try {
+    // Format website before submission
+    if (newOrganization.website) {
+      formatWebsite()
+    }
+
     // Create the organization
     const { data: orgData, error: orgError } = await supabase
       .from('organizations')
@@ -402,20 +535,36 @@ const createOrganization = async () => {
       })
       .select()
       .single()
-    
+
     if (orgError) throw orgError
-    
+
+    // Upload logo if provided
+    if (logoFile.value) {
+      const logoUrl = await uploadLogo(orgData.id)
+      if (logoUrl) {
+        // Update organization with logo URL
+        const { error: updateError } = await supabase
+          .from('organizations')
+          .update({ logo_url: logoUrl })
+          .eq('id', orgData.id)
+
+        if (updateError) {
+          console.error('Error updating logo URL:', updateError)
+        }
+      }
+    }
+
     // Update user's organization_id
     const { error: userError } = await supabase
       .from('users')
       .update({ organization_id: orgData.id })
       .eq('id', authStore.user.id)
-    
+
     if (userError) throw userError
-    
+
     // Update the auth store profile
     await authStore.fetchUser()
-    
+
     // Redirect to the original destination or events
     const redirectTo = route.query.redirect || '/events'
     router.push(redirectTo)

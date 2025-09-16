@@ -1,11 +1,2 @@
-nous avons un problème actuellement pour charger certains témoignages, nous voulons les établir en dur provisoirement, en attendant de résoudre le problème avec notre hébergeur (Supabase).
-
-Voici des liens pour témoignages: tu généreras les information complémentaires:
-
-# témoignage 1
-- Vidéo lien: "/videos/video_couverture2.mp4"
-
-# témoignage 2
-- photo lien: "/images/témoignages/Antoine_Faye.jpg"
-- Nom: Antoine Faye
-- contenu témoignage: En effet, pour celles et ceux parmi nous qui participent annuellement aux Conférences des Parties (CdP), le Pavillon de la Francophonie nous sert toujours de « bouée de sauvetage », lorsqu'en plein dans les négociations, les textes en anglais deviennent un peu confus.
+je veux pouvoir setup le logo le l'organisation, renseigner le sigle dans @src/views/organization/Setup.vue lors de la création de l'organisation.
+De plus, la validation du website est un peu plus tros stricte actuellement il faut d'abord "http://" ou "https://" pour que ça passe. je veux que ce soit plus souple. Exemple : "monorganisation.fr" ou "www.monorganisation.fr" ou "https://monorganisation.fr" ou "http://monorganisation.fr" ou "https://www.monorganisation.fr" ou "http://www.monorganisation.fr" doivent être acceptés.

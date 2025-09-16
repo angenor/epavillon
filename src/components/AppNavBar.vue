@@ -146,8 +146,8 @@
 
           <!-- Menu utilisateur dropdown -->
           <div v-if="authStore.isAuthenticated" class="relative group">
-            <button class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
-              <div class="w-8 h-8 rounded-full flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 overflow-hidden">
+            <button class=" flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
+              <div class="w-8 h-8 bg-ifdd-bleu rounded-full flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 overflow-hidden">
                 <!-- Photo de profil si disponible -->
                 <img
                   v-if="authStore.profile?.profile_photo_thumbnail_url || authStore.profile?.profile_photo_url"

@@ -123,6 +123,7 @@ CREATE TYPE organization_type AS ENUM (
 CREATE TABLE public.organizations (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT NOT NULL,
+    acronym TEXT, -- Acronyme de l'organisation
     email TEXT UNIQUE NOT NULL,
     email_verified BOOLEAN DEFAULT FALSE,
     organization_type organization_type NOT NULL,

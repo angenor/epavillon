@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen relative flex items-center justify-center px-4 py-12">
     <!-- Image de fond avec repeat -->
-    <div 
+    <div
       class="absolute inset-0 z-0 dark:opacity-20"
       :style="{
         backgroundImage: 'url(/images/people-bg/people-bg-1.jpg)',
@@ -11,7 +11,7 @@
       }"
     >
     </div>
-    
+
     <!-- Contenu principal avec z-index élevé -->
     <div class="relative z-10 w-full max-w-md space-y-8 text-center">
       <!-- Logo -->
@@ -26,7 +26,7 @@
 
       <!-- Contenu -->
       <div class="space-y-4">
-        <h1 class="text-3xl font-bold tracking-tight">
+        <h1 class="text-3xl font-bold tracking-tight text-black dark:text-white">
           {{ t('auth.verifyEmail.title') }}
         </h1>
         <p class="text-gray-600 dark:text-gray-400">
@@ -39,7 +39,7 @@
 
       <!-- Instructions -->
       <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 text-left">
-        <h2 class="font-medium mb-3">{{ t('auth.verifyEmail.instructions') }}</h2>
+        <h2 class="font-medium mb-3 text-black dark:text-white">{{ t('auth.verifyEmail.instructions') }}</h2>
         <ol class="list-decimal list-inside space-y-2 text-sm text-gray-600 dark:text-gray-400">
           <li>{{ t('auth.verifyEmail.step1') }}</li>
           <li>{{ t('auth.verifyEmail.step2') }}</li>

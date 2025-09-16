@@ -1,0 +1,52 @@
+{
+  "organization": {
+    "setup": {
+      "title": "Configuration de l'organisation",
+      "subtitle": "Recherchez votre organisation ou créez-en une nouvelle",
+      "step1": "Rechercher",
+      "step2": "Créer",
+      "searchTitle": "Rechercher une organisation existante",
+      "searchLabel": "Nom ou sigle de l'organisation",
+      "searchPlaceholder": "Entrez le nom ou sigle de l'organisation...",
+      "searching": "Recherche en cours...",
+      "resultsTitle": "Organisations trouvées",
+      "noResults": "Aucune organisation trouvée",
+      "canCreateAfterSearch": "Vous pouvez maintenant créer une nouvelle organisation",
+      "searchInstructions": "Entrez au moins 3 caractères pour rechercher",
+      "startSearching": "Commencez votre recherche pour trouver une organisation existante",
+      "createNewAfterSearch": "Créer une nouvelle organisation",
+      "createTitle": "Créer une nouvelle organisation",
+      "create": "Créer l'organisation",
+      "creating": "Création en cours..."
+    },
+    "fields": {
+      "name": "Nom de l'organisation",
+      "acronym": "Acronyme",
+      "email": "Email",
+      "type": "Type d'organisation",
+      "country": "Pays",
+      "website": "Site web",
+      "description": "Description",
+      "logo": "Logo",
+      "chooseLogo": "Choisir un logo",
+      "logoHelp": "PNG, JPG, SVG. Max 2MB"
+    },
+    "placeholders": {
+      "name": "Ex: Institut de la Francophonie pour le Développement Durable",
+      "acronym": "Ex: IFDD",
+      "email": "contact{'@'}organisation.org",
+      "website": "https://www.organisation.org",
+      "selectType": "Sélectionnez un type",
+      "selectCountry": "Sélectionnez un pays",
+      "description": "Décrivez brièvement votre organisation..."
+    },
+    "types": {
+      "public_national_institution": "Institution publique nationale",
+      "international_organization": "Organisation internationale",
+      "regional_organization": "Organisation régionale",
+      "ngo_association": "ONG / Association",
+      "private_sector": "Secteur privé"
+    },
+    "verified": "Vérifiée"
+  }
+}

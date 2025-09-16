@@ -177,7 +177,7 @@ const showPassword = ref(false)
 const form = reactive({
   email: '',
   password: '',
-  rememberMe: false
+  rememberMe: true
 })
 
 const handleLogin = async () => {
@@ -191,12 +191,6 @@ const handleLogin = async () => {
     })
 
     if (signInError) throw signInError
-
-    // Si l'utilisateur a coché "Se souvenir de moi", on garde la session plus longtemps
-    if (!form.rememberMe) {
-      // Session courte par défaut
-      await auth.updateSession({ expiresIn: 3600 }) // 1 heure
-    }
 
     // Redirection après connexion réussie
     router.push('/')

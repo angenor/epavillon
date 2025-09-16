@@ -422,7 +422,7 @@ const handleRegister = async () => {
     // Redirection après inscription réussie - temporairement vers login
     // TODO: Revenir à '/verify-email' une fois le problème de build résolu
     alert('Inscription réussie ! Un email de confirmation a été envoyé à ' + authData.user.email)
-    router.push('/login')
+    router.push('/verify-email')
   } catch (err) {
     console.error('Registration error:', err)
 
