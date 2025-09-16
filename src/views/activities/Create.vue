@@ -316,16 +316,38 @@
                 </h2>
 
                 <div class="space-y-5">
+                  <!-- Date de l'activité -->
+                  <div class="group mb-6">
+                    <label for="activity_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-green-600 dark:group-focus-within:text-green-400">
+                      {{ t('activity.submit.fields.activityDate') }} *
+                    </label>
+                    <div class="relative">
+                      <input
+                        id="activity_date"
+                        v-model="form.activity_date"
+                        type="date"
+                        required
+                        class="w-full px-4 py-3 pl-11 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
+                      />
+                      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Heures de début et fin -->
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="group">
-                      <label for="proposed_start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-green-600 dark:group-focus-within:text-green-400">
-                        {{ t('activity.submit.fields.proposedStartDate') }} *
+                      <label for="start_time" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-green-600 dark:group-focus-within:text-green-400">
+                        {{ t('activity.submit.fields.startTime') }} *
                       </label>
                       <div class="relative">
                         <input
-                          id="proposed_start_date"
-                          v-model="form.proposed_start_date"
-                          type="datetime-local"
+                          id="start_time"
+                          v-model="form.start_time"
+                          type="time"
                           required
                           class="w-full px-4 py-3 pl-11 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
                         />
@@ -338,14 +360,14 @@
                     </div>
 
                     <div class="group">
-                      <label for="proposed_end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-green-600 dark:group-focus-within:text-green-400">
-                        {{ t('activity.submit.fields.proposedEndDate') }} *
+                      <label for="end_time" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-green-600 dark:group-focus-within:text-green-400">
+                        {{ t('activity.submit.fields.endTime') }} *
                       </label>
                       <div class="relative">
                         <input
-                          id="proposed_end_date"
-                          v-model="form.proposed_end_date"
-                          type="datetime-local"
+                          id="end_time"
+                          v-model="form.end_time"
+                          type="time"
                           required
                           class="w-full px-4 py-3 pl-11 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
                         />
@@ -734,6 +756,9 @@ const form = ref({
   format: '',
   main_themes: [],
   categories: [],
+  activity_date: '',
+  start_time: '',
+  end_time: '',
   proposed_start_date: '',
   proposed_end_date: '',
   country_id: '',
@@ -765,19 +790,19 @@ const steps = [
 const availableThemes = [
   'mitigation',
   'adaptation',
-  'climate_resilience',
+  'climate_ambition_ndc',
   'loss_and_damage',
-  'clean_tech_innovations',
+  'water_fisheries',
   'renewable_energy_land',
   'health_solidarity',
-  'industry_transition',
+  'industry_transition_and_technology',
   'transport_urbanization',
-  'nature_oceans',
+  'climate_justice_indigenous',
   'agriculture_food',
   'sustainable_livestock',
-  'gender',
-  'youth',
-  'technology',
+  'gender_youth_and_education',
+  'just_energy_transition',
+  'forests_nature_based_solutions',
   'finance',
   'other'
 ]
@@ -789,7 +814,7 @@ const availableCategories = [
   'field_project',
   'best_practices',
   'awareness',
-  'consultation'
+  'concertation'
 ]
 
 const canSubmit = computed(() => {
@@ -801,8 +826,9 @@ const canSubmit = computed(() => {
     form.value.format &&
     form.value.main_themes.length > 0 &&
     form.value.categories.length > 0 &&
-    form.value.proposed_start_date &&
-    form.value.proposed_end_date &&
+    form.value.activity_date &&
+    form.value.start_time &&
+    form.value.end_time &&
     form.value.speakers.length > 0 &&
     form.value.speakers.every(s => s.civility && s.first_name && s.last_name && s.email && s.position && s.organization)
 })
@@ -814,7 +840,7 @@ const canProceedToNextStep = computed(() => {
     case 1: // Format and Themes
       return form.value.format && form.value.main_themes.length > 0 && form.value.categories.length > 0
     case 2: // Schedule and Location
-      return form.value.proposed_start_date && form.value.proposed_end_date
+      return form.value.activity_date && form.value.start_time && form.value.end_time
     case 3: // Speakers
       return form.value.speakers.length > 0 && form.value.speakers.every(s => s.civility && s.first_name && s.last_name && s.email && s.position && s.organization)
     default:
@@ -875,8 +901,14 @@ const getDraftKey = () => {
 const saveDraft = async () => {
   isSavingDraft.value = true
   try {
+    // Construire les datetime complets avant sauvegarde
+    const proposedStartDate = buildDateTime(form.value.activity_date, form.value.start_time)
+    const proposedEndDate = buildDateTime(form.value.activity_date, form.value.end_time)
+
     const draftData = {
       ...form.value,
+      proposed_start_date: proposedStartDate,
+      proposed_end_date: proposedEndDate,
       currentStep: currentStep.value,
       timestamp: new Date().toISOString()
     }
@@ -896,11 +928,44 @@ const loadDraft = () => {
     const draftData = localStorage.getItem(getDraftKey())
     if (draftData) {
       const parsed = JSON.parse(draftData)
+
+      // Migration des anciens thèmes vers les nouveaux
+      const themeMapping = {
+        'clean_tech_innovations': 'industry_transition_and_technology',
+        'technology': 'industry_transition_and_technology',
+        'climate_resilience': 'climate_ambition_ndc',
+        'nature_oceans': 'forests_nature_based_solutions',
+        'gender': 'gender_youth_and_education',
+        'youth': 'gender_youth_and_education',
+        'industry_transition': 'industry_transition_and_technology'
+      }
+
+      // Migrer les thèmes principaux
+      if (parsed.main_themes && Array.isArray(parsed.main_themes)) {
+        parsed.main_themes = parsed.main_themes.map(theme => themeMapping[theme] || theme).filter(theme => availableThemes.includes(theme))
+      }
+
+      // Extraire la date et les heures des datetime si elles existent
+      if (parsed.proposed_start_date) {
+        const startDateTime = new Date(parsed.proposed_start_date)
+        if (!isNaN(startDateTime.getTime())) {
+          parsed.activity_date = startDateTime.toISOString().split('T')[0]
+          parsed.start_time = startDateTime.toTimeString().substring(0, 5)
+        }
+      }
+
+      if (parsed.proposed_end_date) {
+        const endDateTime = new Date(parsed.proposed_end_date)
+        if (!isNaN(endDateTime.getTime())) {
+          parsed.end_time = endDateTime.toTimeString().substring(0, 5)
+        }
+      }
+
       // Charger automatiquement le brouillon s'il existe
       form.value = { ...parsed }
       currentStep.value = parsed.currentStep || 0
       hasDraft.value = false
-      console.log('Draft loaded automatically')
+      console.log('Draft loaded automatically with theme migration')
     }
   } catch (error) {
     console.error('Error loading draft:', error)
@@ -927,6 +992,12 @@ const goToEvent = () => {
 
 
 
+// Fonction pour construire les datetime complets
+const buildDateTime = (date, time) => {
+  if (!date || !time) return ''
+  return `${date}T${time}:00`
+}
+
 const handleSubmit = async () => {
   if (!canSubmit.value) return
 
@@ -934,25 +1005,36 @@ const handleSubmit = async () => {
   try {
     const { supabase } = useSupabase()
 
+    // Construire les datetime complets pour la base de données
+    const proposedStartDate = buildDateTime(form.value.activity_date, form.value.start_time)
+    const proposedEndDate = buildDateTime(form.value.activity_date, form.value.end_time)
+
+    // Préparer les données pour l'insertion
+    const activityData = {
+      event_id: eventId,
+      organization_id: authStore.profile.organization_id,
+      submitted_by: authStore.user.id,
+      title: form.value.title,
+      activity_type: form.value.activity_type,
+      objectives: form.value.objectives,
+      detailed_presentation: form.value.detailed_presentation,
+      format: form.value.format,
+      main_themes: form.value.main_themes,
+      categories: form.value.categories,
+      proposed_start_date: proposedStartDate,
+      proposed_end_date: proposedEndDate,
+      country_id: form.value.country_id || null,
+      validation_status: 'submitted'
+    }
+
+    console.log('Submitting activity data:', activityData)
+    console.log('Main themes:', form.value.main_themes)
+    console.log('Categories:', form.value.categories)
+
     // Créer l'activité
-    const { data: activityData, error: activityError } = await supabase
+    const { data: activityResult, error: activityError } = await supabase
       .from('activities')
-      .insert({
-        event_id: eventId,
-        organization_id: authStore.profile.organization_id,
-        submitted_by: authStore.user.id,
-        title: form.value.title,
-        activity_type: form.value.activity_type,
-        objectives: form.value.objectives,
-        detailed_presentation: form.value.detailed_presentation,
-        format: form.value.format,
-        main_themes: form.value.main_themes,
-        categories: form.value.categories,
-        proposed_start_date: form.value.proposed_start_date,
-        proposed_end_date: form.value.proposed_end_date,
-        country_id: form.value.country_id || null,
-        validation_status: 'submitted'
-      })
+      .insert(activityData)
       .select()
       .single()
 
@@ -960,7 +1042,7 @@ const handleSubmit = async () => {
 
     // Ajouter les intervenants
     const speakersToInsert = form.value.speakers.map(speaker => ({
-      activity_id: activityData.id,
+      activity_id: activityResult.id,
       civility: speaker.civility || null,
       first_name: speaker.first_name,
       last_name: speaker.last_name,
@@ -979,7 +1061,7 @@ const handleSubmit = async () => {
     // Clear draft after successful submission
     deleteDraft()
 
-    router.push(`/activities/${activityData.id}`)
+    router.push(`/activities/${activityResult.id}`)
   } catch (error) {
     console.error('Error submitting activity:', error)
     alert(t('activity.submit.errors.submitFailed'))

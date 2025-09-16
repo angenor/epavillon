@@ -225,26 +225,26 @@ CREATE TYPE activity_categories AS ENUM (
     'field_project',
     'best_practices',
     'awareness',
-    'consultation'
+    'concertation'
 );
 
 
 CREATE TYPE activity_theme AS ENUM (
     'mitigation',
     'adaptation',
-    'climate_resilience',
+    'climate_ambition_ndc',
     'loss_and_damage',
-    'clean_tech_innovations',
+    'water_fisheries',
     'renewable_energy_land',
     'health_solidarity',
-    'industry_transition',
+    'industry_transition_and_technology',
     'transport_urbanization',
-    'nature_oceans',
+    'climate_justice_indigenous',
     'agriculture_food',
     'sustainable_livestock',
-    'gender',
-    'youth',
-    'technology',
+    'gender_youth_and_education',
+    'just_energy_transition',
+    'forests_nature_based_solutions',
     'finance',
     'other'
 );
