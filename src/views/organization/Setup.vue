@@ -169,8 +169,13 @@
               type="text"
               required
               :placeholder="t('organization.placeholders.name')"
-              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
+              :class="['w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors',
+                       formErrors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600']"
+              @input="formErrors.name = ''"
             />
+            <p v-if="formErrors.name" class="mt-1 text-sm text-red-600 dark:text-red-400">
+              {{ formErrors.name }}
+            </p>
           </div>
 
           <!-- Organization Acronym -->
@@ -196,8 +201,13 @@
               type="email"
               required
               :placeholder="t('organization.placeholders.email')"
-              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
+              :class="['w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors',
+                       formErrors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600']"
+              @input="formErrors.email = ''"
             />
+            <p v-if="formErrors.email" class="mt-1 text-sm text-red-600 dark:text-red-400">
+              {{ formErrors.email }}
+            </p>
           </div>
 
           <!-- Organization Type -->
@@ -208,13 +218,18 @@
             <select
               v-model="newOrganization.organization_type"
               required
-              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
+              :class="['w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors',
+                       formErrors.type ? 'border-red-500' : 'border-gray-300 dark:border-gray-600']"
+              @change="formErrors.type = ''"
             >
               <option value="">{{ t('organization.placeholders.selectType') }}</option>
               <option v-for="type in organizationTypes" :key="type" :value="type">
                 {{ t(`organization.types.${type}`) }}
               </option>
             </select>
+            <p v-if="formErrors.type" class="mt-1 text-sm text-red-600 dark:text-red-400">
+              {{ formErrors.type }}
+            </p>
           </div>
 
           <!-- Country -->
@@ -225,33 +240,24 @@
             <select
               v-model="newOrganization.country_id"
               required
-              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
+              :class="['w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors',
+                       formErrors.country ? 'border-red-500' : 'border-gray-300 dark:border-gray-600']"
+              @change="formErrors.country = ''"
             >
               <option value="">{{ t('organization.placeholders.selectCountry') }}</option>
               <option v-for="country in countries" :key="country.id" :value="country.id">
                 {{ country.name_fr }}
               </option>
             </select>
-          </div>
-
-          <!-- Website (Optional) -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {{ t('organization.fields.website') }}
-            </label>
-            <input
-              v-model="newOrganization.website"
-              type="text"
-              @blur="formatWebsite"
-              :placeholder="t('organization.placeholders.website')"
-              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
-            />
+            <p v-if="formErrors.country" class="mt-1 text-sm text-red-600 dark:text-red-400">
+              {{ formErrors.country }}
+            </p>
           </div>
 
           <!-- Organization Logo -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {{ t('organization.fields.logo') }}
+              {{ t('organization.fields.logo') }} *
             </label>
             <div class="flex items-center space-x-4">
               <div class="flex-shrink-0 cursor-pointer" @click="$refs.logoInput.click()">
@@ -263,7 +269,8 @@
                 />
                 <div
                   v-else
-                  class="h-20 w-20 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center"
+                  :class="['h-20 w-20 rounded-lg border-2 border-dashed flex items-center justify-center',
+                           formErrors.logo ? 'border-red-500' : 'border-gray-300 dark:border-gray-600']"
                 >
                   <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -288,8 +295,25 @@
                 <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
                   {{ t('organization.fields.logoHelp') }}
                 </p>
+                <p v-if="formErrors.logo" class="mt-1 text-sm text-red-600 dark:text-red-400">
+                  {{ formErrors.logo }}
+                </p>
               </div>
             </div>
+          </div>
+
+          <!-- Website (Optional) -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {{ t('organization.fields.website') }}
+            </label>
+            <input
+              v-model="newOrganization.website"
+              type="text"
+              @blur="formatWebsite"
+              :placeholder="t('organization.placeholders.website')"
+              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
+            />
           </div>
 
           <!-- Description (Optional) -->
@@ -356,6 +380,7 @@ const searchLoading = ref(false)
 const isSubmitting = ref(false)
 const countries = ref([])
 const hasSearched = ref(false)
+const formErrors = ref({})
 
 // Form data for new organization
 const newOrganization = reactive({
@@ -471,10 +496,14 @@ const handleLogoUpload = async (event) => {
   const file = event.target.files[0]
   if (!file) return
 
+  // Clear logo error if exists
+  if (formErrors.value.logo) {
+    delete formErrors.value.logo
+  }
+
   // Validate file size (max 2MB)
   if (file.size > 2 * 1024 * 1024) {
-    console.error('File size exceeds 2MB')
-    // TODO: Show error notification
+    formErrors.value.logo = t('organization.errors.logoTooLarge')
     return
   }
 
@@ -514,9 +543,49 @@ const uploadLogo = async (organizationId) => {
   return publicUrl
 }
 
+// Validate form
+const validateForm = () => {
+  formErrors.value = {}
+  let isValid = true
+
+  // Check required fields
+  if (!newOrganization.name) {
+    formErrors.value.name = t('organization.errors.nameRequired')
+    isValid = false
+  }
+  if (!newOrganization.email) {
+    formErrors.value.email = t('organization.errors.emailRequired')
+    isValid = false
+  }
+  if (!newOrganization.organization_type) {
+    formErrors.value.type = t('organization.errors.typeRequired')
+    isValid = false
+  }
+  if (!newOrganization.country_id) {
+    formErrors.value.country = t('organization.errors.countryRequired')
+    isValid = false
+  }
+  if (!logoFile.value) {
+    formErrors.value.logo = t('organization.errors.logoRequired')
+    isValid = false
+  }
+
+  return isValid
+}
+
 // Create new organization
 const createOrganization = async () => {
   if (isSubmitting.value) return
+
+  // Validate form
+  if (!validateForm()) {
+    // Scroll to first error
+    const firstError = document.querySelector('.text-red-600')
+    if (firstError) {
+      firstError.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+    return
+  }
 
   isSubmitting.value = true
 

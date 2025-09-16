@@ -47,6 +47,14 @@
       "ngo_association": "NGO / Association",
       "private_sector": "Private sector"
     },
-    "verified": "Verified"
+    "verified": "Verified",
+    "errors": {
+      "nameRequired": "Organization name is required",
+      "emailRequired": "Email is required",
+      "typeRequired": "Organization type is required",
+      "countryRequired": "Country is required",
+      "logoRequired": "Logo is required",
+      "logoTooLarge": "File exceeds 2MB. Please choose a smaller image"
+    }
   }
 }

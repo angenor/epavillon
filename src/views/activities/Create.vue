@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen relative transition-colors duration-200">
     <!-- Image de fond avec repeat -->
-    <div 
+    <div
       class="absolute inset-0 z-0 "
       :style="{
         backgroundImage: 'url(/images/people-bg/people-bg-2.jpg)',
@@ -55,7 +55,7 @@
               <p class="text-green-100 dark:text-green-200 text-lg mb-4">
                 {{ t('activity.submit.subtitle') }}
               </p>
-              
+
               <!-- Informations de l'événement -->
               <div v-if="eventData" class="mt-4 p-4 bg-green-700 dark:bg-green-800 rounded-xl bg-opacity-50">
                 <h2 class="text-xl font-semibold mb-2">{{ eventData.title }}</h2>
@@ -67,12 +67,12 @@
                     </svg>
                     <span>{{ formatEventDate(eventData) }}</span>
                   </div>
-                  
+
                   <!-- Statut de soumission -->
                   <span :class="[
                     'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                    eventData.submission_status === 'open' 
-                      ? 'bg-green-100 text-green-800' 
+                    eventData.submission_status === 'open'
+                      ? 'bg-green-100 text-green-800'
                       : 'bg-red-100 text-red-800'
                   ]">
                     <svg class="w-2 h-2 mr-1" fill="currentColor" viewBox="0 0 8 8">
@@ -80,7 +80,7 @@
                     </svg>
                     {{ t(`event.submissionStatus.${eventData.submission_status}`) }}
                   </span>
-                  
+
                   <!-- Date limite -->
                   <div v-if="eventData.submission_deadline" class="flex items-center text-green-100">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -91,12 +91,12 @@
                 </div>
               </div>
             </div>
-            
+
             <!-- Logo de l'événement -->
             <div v-if="eventData?.logo_url" class="hidden sm:block ml-6 flex-shrink-0">
               <div class="bg-white dark:bg-gray-100 p-2 rounded-xl shadow-lg">
-                <img 
-                  :src="eventData.logo_url" 
+                <img
+                  :src="eventData.logo_url"
                   :alt="eventData.title"
                   class="h-20 w-20 object-contain"
                 >
@@ -195,7 +195,7 @@
                         <option value="">{{ t('activity.submit.placeholders.selectType') }}</option>
                         <option value="side_event">{{ t('activity.submit.types.side_event') + ' (1 H 00 max)'}}</option>
                         <option value="country_day">{{ t('activity.submit.types.country_day') + ' (2 H 30 max)' }}</option>
-                        <option value="other">{{ t('activity.submit.types.other') }}</option>
+                        <!-- <option value="other">{{ t('activity.submit.types.other') }}</option> -->
                       </select>
                       <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -266,8 +266,8 @@
                         class="w-full px-4 py-3 pl-11 pr-10 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 appearance-none cursor-pointer"
                       >
                         <option value="">{{ t('activity.submit.placeholders.selectFormat') }}</option>
-                        <option value="online">{{ t('activity.submit.formats.online') }}</option>
-                        <option value="in_person">{{ t('activity.submit.formats.in_person') }}</option>
+                        <option disabled value="online">{{ t('activity.submit.formats.online') }}</option>
+                        <option disabled value="in_person">{{ t('activity.submit.formats.in_person') }}</option>
                         <option value="hybrid">{{ t('activity.submit.formats.hybrid') }}</option>
                       </select>
                       <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -587,7 +587,7 @@
                   </div>
                   {{ t('activity.submit.sections.summary') }}
                 </h2>
-                
+
                 <div class="bg-white dark:bg-gray-800 rounded-xl p-6 space-y-4 border border-gray-200 dark:border-gray-600">
                   <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                     <h3 class="font-medium text-gray-900 dark:text-white mb-1">{{ t('activity.submit.fields.title') }}</h3>
@@ -639,7 +639,7 @@
                   {{ t('common.cancel') }}
                 </button>
               </div>
-              
+
               <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                 <button
                   type="button"
@@ -656,7 +656,7 @@
                   </svg>
                   {{ isSavingDraft ? t('activity.draft.saving') : t('activity.draft.save') }}
                 </button>
-                
+
                 <button
                   v-if="currentStep < steps.length - 1"
                   type="button"
@@ -669,7 +669,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
-                
+
                 <button
                   v-else
                   type="submit"
@@ -919,7 +919,7 @@ const handleSubmit = async () => {
   isSubmitting.value = true
   try {
     const { supabase } = useSupabase()
-    
+
     // Créer l'activité
     const { data: activityData, error: activityError } = await supabase
       .from('activities')
@@ -964,7 +964,7 @@ const handleSubmit = async () => {
 
     // Clear draft after successful submission
     deleteDraft()
-    
+
     router.push(`/activities/${activityData.id}`)
   } catch (error) {
     console.error('Error submitting activity:', error)
@@ -992,21 +992,21 @@ const loadOrganizationData = async () => {
         .select('id, name, email, organization_type')
         .eq('id', authStore.profile.organization_id)
         .single()
-      
+
       if (error) {
         console.error('Erreur lors du chargement de l\'organisation:', error)
         // En cas d'erreur, utiliser un nom par défaut
-        organizationData.value = { 
+        organizationData.value = {
           name: `Organisation ID: ${authStore.profile.organization_id.slice(0, 8)}...`
         }
         return
       }
-      
+
       organizationData.value = data
     } catch (error) {
       console.error('Erreur lors du chargement des données de l\'organisation:', error)
       // En cas d'erreur, utiliser un nom par défaut
-      organizationData.value = { 
+      organizationData.value = {
         name: `Organisation ID: ${authStore.profile.organization_id.slice(0, 8)}...`
       }
     }
@@ -1022,12 +1022,12 @@ const loadEventData = async () => {
       .select('id, title, logo_url, submission_status, submission_deadline, online_start_datetime, in_person_start_date, participation_mode')
       .eq('id', eventId)
       .single()
-    
+
     if (error) {
       console.error('Erreur lors du chargement de l\'événement:', error)
       return
     }
-    
+
     eventData.value = data
   } catch (error) {
     console.error('Erreur lors du chargement de l\'événement:', error)
@@ -1039,11 +1039,11 @@ const loadEventData = async () => {
 // Formater la date de l'événement
 const formatEventDate = (event) => {
   if (!event) return ''
-  
+
   // Priorité aux dates en ligne puis en présentiel
   const dateString = event.online_start_datetime || event.in_person_start_date
   if (!dateString) return ''
-  
+
   const date = new Date(dateString)
   return date.toLocaleDateString(locale.value === 'fr' ? 'fr-FR' : 'en-US', {
     year: 'numeric',
@@ -1066,15 +1066,15 @@ const formatDate = (dateString) => {
 onMounted(async () => {
   // Charger les données de l'événement
   await loadEventData()
-  
+
   // Charger les pays une seule fois
   await fetchCountries()
-  
+
   // Charger l'organisation si disponible
   if (authStore.profile?.organization_id && !organizationData.value) {
     await loadOrganizationData()
   }
-  
+
   // Vérifier s'il y a un brouillon
   checkForDraft()
 })

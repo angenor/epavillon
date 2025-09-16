@@ -47,6 +47,14 @@
       "ngo_association": "ONG / Association",
       "private_sector": "Secteur privé"
     },
-    "verified": "Vérifiée"
+    "verified": "Vérifiée",
+    "errors": {
+      "nameRequired": "Le nom de l'organisation est obligatoire",
+      "emailRequired": "L'email est obligatoire",
+      "typeRequired": "Le type d'organisation est obligatoire",
+      "countryRequired": "Le pays est obligatoire",
+      "logoRequired": "Le logo est obligatoire",
+      "logoTooLarge": "Le fichier dépasse 2MB. Veuillez choisir une image plus petite"
+    }
   }
 }

@@ -1,2 +1,3 @@
-je veux pouvoir setup le logo le l'organisation, renseigner le sigle dans @src/views/organization/Setup.vue lors de la création de l'organisation.
-De plus, la validation du website est un peu plus tros stricte actuellement il faut d'abord "http://" ou "https://" pour que ça passe. je veux que ce soit plus souple. Exemple : "monorganisation.fr" ou "www.monorganisation.fr" ou "https://monorganisation.fr" ou "http://monorganisation.fr" ou "https://www.monorganisation.fr" ou "http://www.monorganisation.fr" doivent être acceptés.
+- Tous les champs des intervenants doivent etre obligatoires
+- L'utilisateur doit pouvoir sauvegarder son brouillon à tout moment
+- lorsque l'utilisateur va sur la page de saisie d'une activité concernant un événement, si il y a un brouillon, il doit etre chargé automatiquement
