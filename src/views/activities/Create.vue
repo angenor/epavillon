@@ -14,35 +14,6 @@
       <div class="absolute inset-0  dark:bg-gray-900/80"></div>
     </div>
     <div class="relative z-10 max-w-5xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-      <!-- Draft Alert with improved design -->
-      <div v-if="hasDraft" class="mb-6 p-4 bg-white dark:bg-gray-800 border border-blue-200 dark:border-blue-700 rounded-xl shadow-sm">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg mr-3">
-              <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <span class="text-gray-800 dark:text-gray-200 font-medium">
-              {{ t('activity.draft.found') }}
-            </span>
-          </div>
-          <div class="flex space-x-2">
-            <button
-              @click="loadDraft"
-              class="px-4 py-2 text-sm bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-200 font-medium"
-            >
-              {{ t('activity.draft.load') }}
-            </button>
-            <button
-              @click="deleteDraft"
-              class="px-4 py-2 text-sm border border-red-300 dark:border-red-600 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200"
-            >
-              {{ t('activity.draft.delete') }}
-            </button>
-          </div>
-        </div>
-      </div>
 
       <div class="bg-white dark:bg-gray-800 shadow-xl rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
         <!-- Modern Header -->
@@ -463,11 +434,12 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div class="group">
                         <label :for="`civility-${index}`" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          {{ t('activity.submit.fields.civility') }}
+                          {{ t('activity.submit.fields.civility') }} *
                         </label>
                         <select
                           :id="`civility-${index}`"
                           v-model="speaker.civility"
+                          required
                           class="w-full px-4 py-3 pr-10 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 appearance-none cursor-pointer"
                         >
                         <option value="">{{ t('activity.submit.placeholders.selectCivility') }}</option>
@@ -523,12 +495,13 @@
 
                       <div class="group">
                         <label :for="`position-${index}`" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          {{ t('activity.submit.fields.position') }}
+                          {{ t('activity.submit.fields.position') }} *
                         </label>
                         <input
                           :id="`position-${index}`"
                           v-model="speaker.position"
                           type="text"
+                          required
                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
                           :placeholder="t('activity.submit.placeholders.position')"
                         />
@@ -536,12 +509,13 @@
 
                       <div class="group">
                         <label :for="`speakerOrganization-${index}`" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          {{ t('activity.submit.fields.speakerOrganization') }}
+                          {{ t('activity.submit.fields.speakerOrganization') }} *
                         </label>
                         <input
                           :id="`speakerOrganization-${index}`"
                           v-model="speaker.organization"
                           type="text"
+                          required
                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
                           :placeholder="t('activity.submit.placeholders.speakerOrganization')"
                         />
@@ -645,7 +619,7 @@
                   type="button"
                   @click="saveDraft"
                   :disabled="isSavingDraft"
-                  class="px-5 py-2.5 text-sm font-medium text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20 border border-blue-300 dark:border-blue-700 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center"
+                  class="px-5 py-2.5 cursor-pointer text-sm font-medium text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20 border border-blue-300 dark:border-blue-700 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center"
                 >
                   <svg v-if="isSavingDraft" class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -793,7 +767,7 @@ const canSubmit = computed(() => {
     form.value.proposed_start_date &&
     form.value.proposed_end_date &&
     form.value.speakers.length > 0 &&
-    form.value.speakers.every(s => s.first_name && s.last_name && s.email)
+    form.value.speakers.every(s => s.civility && s.first_name && s.last_name && s.email && s.position && s.organization)
 })
 
 const canProceedToNextStep = computed(() => {
@@ -805,7 +779,7 @@ const canProceedToNextStep = computed(() => {
     case 2: // Schedule and Location
       return form.value.proposed_start_date && form.value.proposed_end_date
     case 3: // Speakers
-      return form.value.speakers.length > 0 && form.value.speakers.every(s => s.first_name && s.last_name && s.email)
+      return form.value.speakers.length > 0 && form.value.speakers.every(s => s.civility && s.first_name && s.last_name && s.email && s.position && s.organization)
     default:
       return true
   }
@@ -884,9 +858,11 @@ const loadDraft = () => {
     const draftData = localStorage.getItem(getDraftKey())
     if (draftData) {
       const parsed = JSON.parse(draftData)
+      // Charger automatiquement le brouillon s'il existe
       form.value = { ...parsed }
       currentStep.value = parsed.currentStep || 0
       hasDraft.value = false
+      console.log('Draft loaded automatically')
     }
   } catch (error) {
     console.error('Error loading draft:', error)
@@ -902,15 +878,6 @@ const deleteDraft = () => {
   }
 }
 
-const checkForDraft = () => {
-  try {
-    const draftData = localStorage.getItem(getDraftKey())
-    hasDraft.value = !!draftData
-  } catch (error) {
-    console.error('Error checking for draft:', error)
-    hasDraft.value = false
-  }
-}
 
 
 const handleSubmit = async () => {
@@ -1075,8 +1042,8 @@ onMounted(async () => {
     await loadOrganizationData()
   }
 
-  // Vérifier s'il y a un brouillon
-  checkForDraft()
+  // Charger automatiquement le brouillon s'il existe
+  loadDraft()
 })
 
 // Watcher pour charger l'organisation quand le profil est disponible
