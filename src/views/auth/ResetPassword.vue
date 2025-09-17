@@ -189,7 +189,7 @@ onMounted(async () => {
     error.value = t('auth.resetPassword.invalidToken')
     setTimeout(() => {
       router.push('/forgot-password')
-    }, 3000)
+    }, 5000)
   }
 })
 

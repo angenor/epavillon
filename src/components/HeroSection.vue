@@ -39,7 +39,7 @@
     </div>
 
     <!-- Vidéo par défaut si aucun témoignage -->
-    <video
+    <!-- <video
       v-else
       class="absolute inset-0 z-0 w-full h-full object-cover dark:sepia"
       src="/videos/IFDD_Roumanie.mp4"
@@ -47,7 +47,7 @@
       muted
       loop
       playsinline
-    ></video>
+    ></video> -->
 
     <!-- Overlay gradient -->
     <!-- <div class="absolute z-0 inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50 dark:from-black/70 dark:via-black/50 dark:to-black/70"></div> -->
@@ -65,7 +65,7 @@
         <div class="h-2 w-2 rounded-full bg-green-600"></div>
         <!-- Etiquette dynamique selon le type -->
         <div v-if="currentTestimonial?.type === 'video'" class="ml-2 text-white font-bold">Innovation/Bonne pratique</div>
-        <div v-else-if="currentTestimonial?.type === 'written'" class="ml-2 text-white font-bold">Témoignage négociatrice Francophone</div>
+        <div v-else-if="currentTestimonial?.type === 'written'" class="ml-2 text-white font-bold">Témoignage négociat(eur)rice Francophone</div>
       </div>
 
       <div class="flex space-x-3 mt-16 ml-10 overflow-x-auto pb-4">
@@ -202,7 +202,7 @@ export default {
           first_name: 'Biligua',
           last_name: 'Koivogui',
           organization: {
-            name: 'Ministère de l\'Environnement de Guinée'
+            name: 'Témoignage négociatrice Francophone'
           }
         },
         featured: true,

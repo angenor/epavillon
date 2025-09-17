@@ -1,22 +1,24 @@
 <template>
   <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
-    <!-- Hero Section avec effet parallaxe -->
-    <div class="relative h-[70vh] min-h-[500px] overflow-hidden">
-      <!-- Image de fond avec overlay moderne -->
-      <div class="absolute inset-0">
-        <img 
-          :src="getBannerUrl()" 
-          :alt="event.title"
-          class="w-full h-full object-cover scale-105 animate-subtle-zoom"
-          loading="eager"
-        >
-        <!-- Overlay avec gradient complexe -->
-        <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/80"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-orange-900/20 to-transparent"></div>
+    <!-- Hero Section avec ratio préservé 32:9 -->
+    <div class="relative w-full ">
+      <!-- Container avec aspect ratio 32:9 pour préserver l'image complète -->
+      <div class="relative w-full" style="aspect-ratio: 32/9">
+        <!-- Container responsive avec hauteur min/max -->
+        <div class="relative w-full h-full" style="min-height: 250px; max-height: 70vh;">
+          <!-- Image de fond sans découpage -->
+          <img
+            :src="getBannerUrl()"
+            :alt="event.title"
+            class="absolute inset-0 w-full h-full object-cover"
+            loading="eager"
+          >
+          <!-- Overlay léger pour améliorer la lisibilité du texte -->
+        </div>
       </div>
-      
-      <!-- Contenu Hero -->
-      <div class="relative h-full flex flex-col justify-end">
+
+      <!-- Contenu Hero positionné en superposition -->
+      <div class="absolute inset-x-0 bottom-0 flex flex-col justify-end">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
           <!-- Badges flottants -->
           <div class="flex flex-wrap gap-3 mb-6">
@@ -24,11 +26,11 @@
               <span class="inline-block w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
               {{ t(`event.status.${event.event_status || event.status}`) }}
             </span>
-            
+
             <span v-if="event.submission_status" class="backdrop-blur-md bg-white/10 border border-white/20 text-white px-4 py-2 rounded-full text-sm font-medium animate-fade-in-up animation-delay-100">
               {{ t(`event.submissionStatus.${event.submission_status}`) }}
             </span>
-            
+
             <span v-if="event.year" class="backdrop-blur-md bg-white/10 border border-white/20 text-white px-4 py-2 rounded-full text-sm font-medium animate-fade-in-up animation-delay-200">
               {{ event.year }}
             </span>
@@ -69,13 +71,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Bouton scroll indicator -->
-      <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <svg class="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-        </svg>
-      </div>
     </div>
 
     <!-- Actions flottantes -->
@@ -83,7 +78,7 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 backdrop-blur-lg border border-gray-100 dark:border-gray-700">
           <div class="flex flex-wrap gap-4">
-            <button 
+            <button
               @click="goToActivities"
               class="group relative px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105"
             >
@@ -95,8 +90,8 @@
               </span>
               <div class="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
-            
-            <button 
+
+            <button
               v-if="canSubmitActivity"
               @click="goToSubmission"
               class="group relative px-8 py-4 bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:border-orange-500 hover:shadow-lg hover:scale-105"
@@ -136,7 +131,7 @@
               <div class="w-1 h-8 bg-gradient-to-b from-orange-500 to-orange-600 rounded-full"></div>
               {{ t('event.description') }}
             </h2>
-            <div 
+            <div
               v-html="event.description"
               class="prose prose-lg prose-gray dark:prose-invert max-w-none text-gray-700 dark:text-gray-300"
             />
@@ -147,8 +142,8 @@
         <div class="lg:col-span-1 space-y-6">
           <!-- Logo de l'événement -->
           <div v-if="event.logo_url" class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-100 dark:border-gray-700 flex items-center justify-center">
-            <img 
-              :src="event.logo_url" 
+            <img
+              :src="event.logo_url"
               :alt="`${event.title} logo`"
               class="max-h-32 w-auto"
             >
@@ -189,8 +184,8 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div 
-            v-for="activity in activities.slice(0, 6)" 
+          <div
+            v-for="activity in activities.slice(0, 6)"
             :key="activity.id"
             @click="goToActivityDetail(activity.id)"
             class="group cursor-pointer"
@@ -199,14 +194,14 @@
               <!-- Image ou gradient -->
               <div class="h-48 relative overflow-hidden">
                 <div v-if="activity.banner" class="absolute inset-0">
-                  <img 
-                    :src="activity.banner" 
+                  <img
+                    :src="activity.banner"
                     :alt="activity.title"
                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   >
                 </div>
                 <div v-else class="absolute inset-0 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600"></div>
-                
+
                 <!-- Overlay avec format -->
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div class="absolute bottom-4 left-4">
@@ -260,7 +255,7 @@
 
         <!-- Bouton voir toutes les activités -->
         <div class="text-center mt-12">
-          <button 
+          <button
             @click="goToActivities"
             class="group inline-flex items-center gap-3 px-8 py-4 bg-white dark:bg-gray-800 text-orange-600 dark:text-orange-400 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-200 dark:border-gray-700"
           >
@@ -373,9 +368,9 @@ const formatTime = (dateString) => {
 }
 
 const getEventDate = () => {
-  return event.value.online_start_datetime || 
-         event.value.in_person_start_date || 
-         event.value.start_date || 
+  return event.value.online_start_datetime ||
+         event.value.in_person_start_date ||
+         event.value.start_date ||
          null
 }
 
@@ -392,9 +387,9 @@ const goToActivityDetail = (activityId) => {
 }
 
 const getBannerUrl = () => {
-  return event.value.banner_high_quality_32_9_url || 
-         event.value.banner || 
-         '/images/example/event_banniere_par_defaut_32_9.jpg'
+  return event.value.banner_high_quality_32_9_url ||
+         event.value.banner ||
+         '/images/example/event_banniere_par_defaut_32_9_v3.jpg'
 }
 
 const loadEvent = async () => {
@@ -406,12 +401,12 @@ const loadEvent = async () => {
       .single()
 
     if (error) throw error
-    
+
     if (data.countries) {
       country.value = data.countries
       delete data.countries
     }
-    
+
     event.value = {
       ...event.value,
       ...data,
@@ -434,7 +429,7 @@ const loadActivities = async () => {
       .limit(6)
 
     if (error) throw error
-    
+
     activities.value = (data || []).map(activity => ({
       ...activity,
       format: activity.format || 'hybrid'
