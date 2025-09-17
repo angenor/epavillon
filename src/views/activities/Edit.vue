@@ -284,11 +284,34 @@
               </h2>
             </div>
 
+            <!-- Timezone Info -->
+            <div v-if="event?.timezone" class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <div class="flex items-start">
+                <svg class="w-5 h-5 text-blue-500 dark:text-blue-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div class="ml-3">
+                  <h4 class="text-sm font-medium text-blue-900 dark:text-blue-200">
+                    {{ t('activities.edit.timezoneInfo.title') || 'Fuseau horaire de l\'événement' }}
+                  </h4>
+                  <p class="mt-1 text-sm text-blue-800 dark:text-blue-300">
+                    {{ getTimezoneLabel(event.timezone, t.locale?.value || 'fr') }}
+                  </p>
+                  <p class="mt-2 text-xs text-blue-700 dark:text-blue-400">
+                    {{ t('activities.edit.timezoneInfo.description') || 'Toutes les dates et heures de cette activité sont affichées dans ce fuseau horaire' }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <!-- Start Date -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {{ t('activity.submit.fields.proposedStartDate') }}
+                  <span v-if="event?.timezone" class="text-xs text-gray-500 dark:text-gray-400 font-normal">
+                    ({{ event.timezone }})
+                  </span>
                 </label>
                 <input
                   v-model="formData.proposed_start_date"
@@ -308,6 +331,9 @@
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {{ t('activity.submit.fields.proposedEndDate') }}
+                  <span v-if="event?.timezone" class="text-xs text-gray-500 dark:text-gray-400 font-normal">
+                    ({{ event.timezone }})
+                  </span>
                 </label>
                 <input
                   v-model="formData.proposed_end_date"
@@ -471,6 +497,7 @@ import { useSupabase } from '@/composables/useSupabase'
 import { useAuthStore } from '@/stores/auth'
 import RichTextEditor from '@/components/ui/RichTextEditor.vue'
 import { useActivityDateValidation } from '@/composables/useActivityDateValidation'
+import { useTimezone } from '@/composables/useTimezone'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -478,6 +505,7 @@ const router = useRouter()
 const { supabase } = useSupabase()
 const authStore = useAuthStore()
 const { validateActivityDates, getAcceptableDateRange } = useActivityDateValidation()
+const { formatDateTimeWithTimezone, getTimezoneLabel } = useTimezone()
 
 // Reactive data
 const isLoading = ref(true)

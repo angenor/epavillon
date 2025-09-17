@@ -18,7 +18,8 @@
       "WebFetch(domain:www.ifdd.francophonie.org)",
       "WebFetch(domain:epavillonclimatique.francophonie.org)",
       "Bash(npm run preview:*)",
-      "Bash(firebase deploy:*)"
+      "Bash(firebase deploy:*)",
+      "Bash(pkill:*)"
     ],
     "deny": [],
     "ask": []

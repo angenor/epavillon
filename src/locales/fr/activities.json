@@ -205,6 +205,10 @@
         "schedule": "Planification",
         "status": "Gestion du statut"
       },
+      "timezoneInfo": {
+        "title": "Fuseau horaire de l'événement",
+        "description": "Toutes les dates et heures de cette activité sont affichées dans ce fuseau horaire"
+      },
       "fields": {
         "validationStatus": "Statut de validation",
         "activityStatus": "Statut de l'activité"
@@ -535,6 +539,12 @@
         "message": "Votre brouillon a été sauvegardé avec succès. Vous pouvez continuer votre saisie ou retourner à l'événement.",
         "continue": "Continuer la saisie",
         "goToEvent": "Retourner à l'événement"
+      }
+    },
+    "create": {
+      "timezoneInfo": {
+        "title": "Fuseau horaire de l'événement",
+        "description": "Toutes les heures de cette activité seront affichées dans ce fuseau horaire"
       }
     }
   }

@@ -131,6 +131,27 @@
                 class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
               />
             </div>
+
+            <!-- Timezone -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {{ t('events.create.fields.timezone') || 'Fuseau horaire' }}
+              </label>
+              <select
+                v-model="formData.timezone"
+                required
+                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
+              >
+                <optgroup v-for="(zones, continent) in groupedTimezones" :key="continent" :label="continent">
+                  <option v-for="tz in zones" :key="tz.value" :value="tz.value">
+                    {{ tz.label }}
+                  </option>
+                </optgroup>
+              </select>
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                {{ t('events.create.helpers.timezone') || 'Le fuseau horaire sera utilisé pour tous les horaires de l\'événement' }}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -426,12 +447,14 @@ import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAuthStore } from '@/stores/auth'
 import { useOrganizationCheck } from '@/composables/useOrganizationCheck'
+import { useTimezone } from '@/composables/useTimezone'
 
 const { t } = useI18n()
 const router = useRouter()
 const { supabase } = useSupabase()
 const authStore = useAuthStore()
 const { hasAdminRole, hasOrganization, canCreateEvents, getRequirementsStatus } = useOrganizationCheck()
+const { getGroupedTimezones, detectUserTimezone } = useTimezone()
 
 // Unique ID for form elements
 const uniqueId = Date.now()
@@ -449,7 +472,8 @@ const formData = reactive({
   city: '',
   address: '',
   inPersonStartDate: '',
-  inPersonEndDate: ''
+  inPersonEndDate: '',
+  timezone: detectUserTimezone() // Détection automatique du fuseau horaire
 })
 
 // Upload tracking
@@ -468,6 +492,12 @@ const generatedBanners = reactive({
 
 // Countries data
 const countries = ref([])
+
+// Timezones data
+const groupedTimezones = computed(() => {
+  const locale = t.locale?.value || 'fr'
+  return getGroupedTimezones(locale)
+})
 
 const isSubmitting = ref(false)
 const participationModes = ['online', 'hybrid', 'in_person']
@@ -552,6 +582,7 @@ const handleSubmit = async () => {
       participation_mode: formData.participationMode,
       event_status: 'upcoming',
       submission_status: 'open',
+      timezone: formData.timezone, // Ajout du fuseau horaire
       created_by: authStore.user?.id
     }
 

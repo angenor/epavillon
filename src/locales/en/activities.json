@@ -202,6 +202,10 @@
         "schedule": "Schedule",
         "status": "Status Management"
       },
+      "timezoneInfo": {
+        "title": "Event timezone",
+        "description": "All dates and times for this activity are displayed in this timezone"
+      },
       "fields": {
         "validationStatus": "Validation Status",
         "activityStatus": "Activity Status"
@@ -489,6 +493,12 @@
         "message": "Your draft has been saved successfully. You can continue editing or return to the event.",
         "continue": "Continue Editing",
         "goToEvent": "Return to Event"
+      }
+    },
+    "create": {
+      "timezoneInfo": {
+        "title": "Event timezone",
+        "description": "All times for this activity will be displayed in this timezone"
       }
     }
   }

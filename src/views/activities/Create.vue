@@ -316,6 +316,26 @@
                 </h2>
 
                 <div class="space-y-5">
+                  <!-- Timezone Info -->
+                  <div v-if="eventData?.timezone" class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                    <div class="flex items-start">
+                      <svg class="w-5 h-5 text-blue-500 dark:text-blue-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div class="ml-3">
+                        <h4 class="text-sm font-medium text-blue-900 dark:text-blue-200">
+                          {{ t('activity.create.timezoneInfo.title') || 'Fuseau horaire de l\'événement' }}
+                        </h4>
+                        <p class="mt-1 text-sm text-blue-800 dark:text-blue-300">
+                          {{ getTimezoneLabel(eventData.timezone, locale) }}
+                        </p>
+                        <p class="mt-2 text-xs text-blue-700 dark:text-blue-400">
+                          {{ t('activity.create.timezoneInfo.description') || 'Toutes les heures de cette activité seront affichées dans ce fuseau horaire' }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
                   <!-- Date de l'activité -->
                   <div class="group mb-6">
                     <label for="activity_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-green-600 dark:group-focus-within:text-green-400">
@@ -338,9 +358,10 @@
                         </svg>
                       </div>
                     </div>
-                    <!-- Afficher la période de l'événement -->
+                    <!-- Afficher la période de l'événement avec le fuseau horaire -->
                     <p v-if="eventData" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                       {{ t('activities.validation.eventPeriod') }}: {{ formatEventPeriod() }}
+                      <span v-if="eventData.timezone" class="font-medium">({{ getTimezoneLabel(eventData.timezone, locale) }})</span>
                     </p>
                   </div>
 
@@ -792,6 +813,7 @@ import { useSupabase } from '@/composables/useSupabase'
 import { useActivityDateValidation } from '@/composables/useActivityDateValidation'
 import ProgressBar from '@/components/ui/ProgressBar.vue'
 import RichTextEditor from '@/components/ui/RichTextEditor.vue'
+import { useTimezone } from '@/composables/useTimezone'
 
 const router = useRouter()
 const route = useRoute()
@@ -799,6 +821,7 @@ const { t, locale } = useI18n()
 const authStore = useAuthStore()
 const { countries, fetchCountries } = useCountries()
 const { validateActivityDates, getAcceptableDateRange } = useActivityDateValidation()
+const { formatDateTimeWithTimezone, getTimezoneLabel } = useTimezone()
 
 const eventId = route.params.eventId
 
@@ -1201,7 +1224,7 @@ const loadEventData = async () => {
     const { supabase } = useSupabase()
     const { data, error } = await supabase
       .from('events')
-      .select('id, title, logo_url, submission_status, submission_deadline, online_start_datetime, online_end_datetime, in_person_start_date, in_person_end_date, participation_mode')
+      .select('id, title, logo_url, submission_status, submission_deadline, online_start_datetime, online_end_datetime, in_person_start_date, in_person_end_date, participation_mode, timezone')
       .eq('id', eventId)
       .single()
 

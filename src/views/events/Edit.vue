@@ -214,6 +214,33 @@
                 />
               </div>
 
+              <!-- Timezone -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <span class="flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    {{ t('events.edit.fields.timezone') || 'Fuseau horaire' }}
+                    <span class="text-red-500">*</span>
+                  </span>
+                </label>
+                <select
+                  v-model="formData.timezone"
+                  required
+                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
+                >
+                  <optgroup v-for="(zones, continent) in groupedTimezones" :key="continent" :label="continent">
+                    <option v-for="tz in zones" :key="tz.value" :value="tz.value">
+                      {{ tz.label }}
+                    </option>
+                  </optgroup>
+                </select>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  {{ t('events.edit.helpers.timezone') || 'Le fuseau horaire sera utilisé pour toutes les activités de l\'événement' }}
+                </p>
+              </div>
+
               <!-- Address -->
               <div class="md:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -592,12 +619,14 @@ import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAuthStore } from '@/stores/auth'
 import RichTextEditor from '@/components/ui/RichTextEditor.vue'
+import { useTimezone } from '@/composables/useTimezone'
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const { supabase } = useSupabase()
 const authStore = useAuthStore()
+const { getGroupedTimezones, detectUserTimezone } = useTimezone()
 
 // Reactive data
 const isLoading = ref(true)
@@ -606,6 +635,12 @@ const isUploading = ref(false)
 const error = ref(null)
 const event = ref(null)
 const countries = ref([])
+
+// Timezones data
+const groupedTimezones = computed(() => {
+  const locale = t.locale?.value || 'fr'
+  return getGroupedTimezones(locale)
+})
 
 // Form data
 const formData = ref({
@@ -618,6 +653,7 @@ const formData = ref({
   city: '',
   address: '',
   logo_url: '',
+  timezone: detectUserTimezone(), // Ajout du fuseau horaire
   // Bannières
   banner_high_quality_32_9_url: '',
   banner_high_quality_16_9_url: '',
@@ -680,6 +716,7 @@ const loadEvent = async () => {
       city: eventData.city || '',
       address: eventData.address || '',
       logo_url: eventData.logo_url || '',
+      timezone: eventData.timezone || detectUserTimezone(), // Ajout du fuseau horaire
       // Bannières
       banner_high_quality_32_9_url: eventData.banner_high_quality_32_9_url || '',
       banner_high_quality_16_9_url: eventData.banner_high_quality_16_9_url || '',
@@ -688,17 +725,17 @@ const loadEvent = async () => {
       banner_low_quality_16_9_url: eventData.banner_low_quality_16_9_url || '',
       banner_low_quality_1_1_url: eventData.banner_low_quality_1_1_url || '',
       // Dates en ligne
-      online_start_datetime: eventData.online_start_datetime ? 
+      online_start_datetime: eventData.online_start_datetime ?
         new Date(eventData.online_start_datetime).toISOString().slice(0, 16) : '',
-      online_end_datetime: eventData.online_end_datetime ? 
+      online_end_datetime: eventData.online_end_datetime ?
         new Date(eventData.online_end_datetime).toISOString().slice(0, 16) : '',
       // Dates en présentiel
-      in_person_start_date: eventData.in_person_start_date ? 
+      in_person_start_date: eventData.in_person_start_date ?
         new Date(eventData.in_person_start_date).toISOString().slice(0, 10) : '',
-      in_person_end_date: eventData.in_person_end_date ? 
+      in_person_end_date: eventData.in_person_end_date ?
         new Date(eventData.in_person_end_date).toISOString().slice(0, 10) : '',
       // Statuts et deadline
-      submission_deadline: eventData.submission_deadline ? 
+      submission_deadline: eventData.submission_deadline ?
         new Date(eventData.submission_deadline).toISOString().slice(0, 16) : '',
       event_status: eventData.event_status || 'upcoming',
       submission_status: eventData.submission_status || 'open'
@@ -741,6 +778,7 @@ const handleSubmit = async () => {
       year: formData.value.year,
       participation_mode: formData.value.participation_mode,
       logo_url: formData.value.logo_url || null,
+      timezone: formData.value.timezone, // Ajout du fuseau horaire
       // Bannières
       banner_high_quality_32_9_url: formData.value.banner_high_quality_32_9_url || null,
       banner_high_quality_16_9_url: formData.value.banner_high_quality_16_9_url || null,
@@ -751,7 +789,7 @@ const handleSubmit = async () => {
       // Statuts
       event_status: formData.value.event_status,
       submission_status: formData.value.submission_status,
-      submission_deadline: formData.value.submission_deadline ? 
+      submission_deadline: formData.value.submission_deadline ?
         new Date(formData.value.submission_deadline).toISOString() : null,
       updated_at: new Date().toISOString()
     }
