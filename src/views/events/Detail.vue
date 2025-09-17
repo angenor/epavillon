@@ -41,12 +41,12 @@
           </div>
 
           <!-- Titre avec animation -->
-          <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4 animate-fade-in-up animation-delay-400">
+          <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4 animate-fade-in-up animation-delay-400 [text-shadow:_0_4px_8px_rgb(0_0_0_/_40%),_0_2px_4px_rgb(0_0_0_/_30%)]">
             {{ event.title }}
           </h1>
 
           <!-- Informations rapides -->
-          <div class="flex flex-wrap items-center gap-6 text-white/90 animate-fade-in-up animation-delay-500">
+          <div class="flex flex-wrap items-center gap-6 text-white/90 animate-fade-in-up animation-delay-500 [text-shadow:_0_2px_4px_rgb(0_0_0_/_30%)]">
             <div v-if="event.city" class="flex items-center gap-2">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
