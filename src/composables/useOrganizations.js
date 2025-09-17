@@ -63,8 +63,7 @@ export function useOrganizations() {
             name_fr,
             name_en,
             code
-          ),
-          activities(count)
+          )
         `, { count: 'exact' })
         .eq('is_active', true)
         .eq('is_duplicate', false)
@@ -101,7 +100,27 @@ export function useOrganizations() {
 
       if (queryError) throw queryError
 
-      organizations.value = data || []
+      // Pour chaque organisation, compter les activités approuvées
+      if (data && data.length > 0) {
+        const orgWithCounts = await Promise.all(
+          data.map(async (org) => {
+            const { count: activityCount } = await from('activities')
+              .select('*', { count: 'exact', head: true })
+              .eq('organization_id', org.id)
+              .in('validation_status', ['approved', 'live', 'completed', 'cancelled'])
+              .eq('is_deleted', false)
+
+            return {
+              ...org,
+              activities: [{ count: activityCount || 0 }]
+            }
+          })
+        )
+        organizations.value = orgWithCounts
+      } else {
+        organizations.value = data || []
+      }
+
       totalItems.value = count || 0
 
     } catch (err) {
@@ -124,6 +143,30 @@ export function useOrganizations() {
     } catch (err) {
       console.error('Erreur lors de la récupération des pays:', err)
       return []
+    }
+  }
+
+  async function fetchUniqueCountriesFromOrganizations() {
+    try {
+      const { data, error: queryError } = await from('organizations')
+        .select('country_id')
+        .eq('is_active', true)
+        .eq('is_duplicate', false)
+
+      if (queryError) throw queryError
+
+      // Extraire les country_id uniques
+      const uniqueCountryIds = new Set()
+      data.forEach(org => {
+        if (org.country_id) {
+          uniqueCountryIds.add(org.country_id)
+        }
+      })
+
+      return uniqueCountryIds.size
+    } catch (err) {
+      console.error('Erreur lors de la récupération des pays distincts:', err)
+      return 0
     }
   }
 
@@ -248,6 +291,7 @@ export function useOrganizations() {
     // Méthodes
     fetchOrganizations,
     fetchCountries,
+    fetchUniqueCountriesFromOrganizations,
     validateOrganization,
     goToPage,
     nextPage,

@@ -327,6 +327,9 @@
                         v-model="form.activity_date"
                         type="date"
                         required
+                        :min="dateRange.minDate ? dateRange.minDate.split('T')[0] : ''"
+                        :max="dateRange.maxDate ? dateRange.maxDate.split('T')[0] : ''"
+                        @change="validateDates"
                         class="w-full px-4 py-3 pl-11 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
                       />
                       <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -335,6 +338,10 @@
                         </svg>
                       </div>
                     </div>
+                    <!-- Afficher la période de l'événement -->
+                    <p v-if="eventData" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                      {{ t('activities.validation.eventPeriod') }}: {{ formatEventPeriod() }}
+                    </p>
                   </div>
 
                   <!-- Heures de début et fin -->
@@ -349,6 +356,7 @@
                           v-model="form.start_time"
                           type="time"
                           required
+                          @change="validateDates"
                           class="w-full px-4 py-3 pl-11 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
                         />
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -369,6 +377,7 @@
                           v-model="form.end_time"
                           type="time"
                           required
+                          @change="validateDates"
                           class="w-full px-4 py-3 pl-11 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
                         />
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -376,6 +385,25 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Erreurs de validation des dates -->
+                  <div v-if="dateValidationErrors.length > 0" class="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                    <div class="flex items-start">
+                      <svg class="w-5 h-5 text-red-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                      </svg>
+                      <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800 dark:text-red-200">
+                          {{ t('activities.validation.dateError') }}
+                        </h3>
+                        <ul class="mt-2 text-sm text-red-700 dark:text-red-300 list-disc list-inside">
+                          <li v-for="error in dateValidationErrors" :key="error">
+                            {{ t(error) }}
+                          </li>
+                        </ul>
                       </div>
                     </div>
                   </div>
@@ -669,7 +697,7 @@
                 <button
                   v-else
                   type="submit"
-                  :disabled="isSubmitting || !canSubmit"
+                  :disabled="isSubmitting || !canSubmit || dateValidationErrors.length > 0"
                   class="px-6 py-2.5 text-sm font-medium text-white bg-green-600 dark:bg-green-500 rounded-xl hover:bg-green-700 dark:hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-green-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 flex items-center justify-center"
                 >
                   <svg v-if="isSubmitting" class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -761,6 +789,7 @@ import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { useCountries } from '@/composables/useCountries'
 import { useSupabase } from '@/composables/useSupabase'
+import { useActivityDateValidation } from '@/composables/useActivityDateValidation'
 import ProgressBar from '@/components/ui/ProgressBar.vue'
 import RichTextEditor from '@/components/ui/RichTextEditor.vue'
 
@@ -769,6 +798,7 @@ const route = useRoute()
 const { t, locale } = useI18n()
 const authStore = useAuthStore()
 const { countries, fetchCountries } = useCountries()
+const { validateActivityDates, getAcceptableDateRange } = useActivityDateValidation()
 
 const eventId = route.params.eventId
 
@@ -807,6 +837,7 @@ const currentStep = ref(0)
 const hasDraft = ref(false)
 const showDraftModal = ref(false)
 const showSuccessModal = ref(false)
+const dateValidationErrors = ref([])
 
 const steps = [
   { title: t('activity.submit.steps.basicInfo'), subtitle: t('activity.submit.steps.basicInfoDesc') },
@@ -892,6 +923,19 @@ const organizationName = computed(() => {
 })
 
 const organizationData = ref(null)
+
+// Computed pour la plage de dates acceptables
+const dateRange = computed(() => {
+  if (!eventData.value) return { minDate: null, maxDate: null }
+
+  const eventStartDate = eventData.value.online_start_datetime || eventData.value.in_person_start_date
+  const eventEndDate = eventData.value.online_end_datetime || eventData.value.in_person_end_date
+
+  // Si pas de date de fin, utiliser la date de début + 30 jours par défaut
+  const endDate = eventEndDate || new Date(new Date(eventStartDate).getTime() + 30 * 24 * 60 * 60 * 1000).toISOString()
+
+  return getAcceptableDateRange(eventStartDate, endDate)
+})
 
 const addSpeaker = () => {
   form.value.speakers.push({
@@ -1035,6 +1079,13 @@ const buildDateTime = (date, time) => {
 const handleSubmit = async () => {
   if (!canSubmit.value) return
 
+  // Valider les dates avant soumission
+  validateDates()
+  if (dateValidationErrors.value.length > 0) {
+    alert(t('activities.validation.dateError'))
+    return
+  }
+
   isSubmitting.value = true
   try {
     const { supabase } = useSupabase()
@@ -1150,7 +1201,7 @@ const loadEventData = async () => {
     const { supabase } = useSupabase()
     const { data, error } = await supabase
       .from('events')
-      .select('id, title, logo_url, submission_status, submission_deadline, online_start_datetime, in_person_start_date, participation_mode')
+      .select('id, title, logo_url, submission_status, submission_deadline, online_start_datetime, online_end_datetime, in_person_start_date, in_person_end_date, participation_mode')
       .eq('id', eventId)
       .single()
 
@@ -1192,6 +1243,58 @@ const formatDate = (dateString) => {
     month: 'short',
     day: 'numeric'
   })
+}
+
+// Validation des dates
+const validateDates = () => {
+  if (!eventData.value || !form.value.activity_date || !form.value.start_time || !form.value.end_time) {
+    dateValidationErrors.value = []
+    return
+  }
+
+  const eventStartDate = eventData.value.online_start_datetime || eventData.value.in_person_start_date
+  const eventEndDate = eventData.value.online_end_datetime || eventData.value.in_person_end_date
+
+  // Si pas de date de fin d'événement, utiliser date de début + 30 jours
+  const endDate = eventEndDate || new Date(new Date(eventStartDate).getTime() + 30 * 24 * 60 * 60 * 1000).toISOString()
+
+  const proposedStartDate = buildDateTime(form.value.activity_date, form.value.start_time)
+  const proposedEndDate = buildDateTime(form.value.activity_date, form.value.end_time)
+
+  const validation = validateActivityDates({
+    activityStartDate: proposedStartDate,
+    activityEndDate: proposedEndDate,
+    eventStartDate: eventStartDate,
+    eventEndDate: endDate
+  })
+
+  dateValidationErrors.value = validation.errors
+}
+
+// Formater la période de l'événement
+const formatEventPeriod = () => {
+  if (!eventData.value) return ''
+
+  const startDate = eventData.value.online_start_datetime || eventData.value.in_person_start_date
+  const endDate = eventData.value.online_end_datetime || eventData.value.in_person_end_date
+
+  if (!startDate) return ''
+
+  const start = new Date(startDate).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  })
+
+  if (!endDate) return start
+
+  const end = new Date(endDate).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  })
+
+  return `${start} - ${end}`
 }
 
 onMounted(async () => {

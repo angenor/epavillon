@@ -294,8 +294,14 @@
                   v-model="formData.proposed_start_date"
                   type="datetime-local"
                   required
+                  :min="dateRange.minDate"
+                  :max="dateRange.maxDate"
+                  @change="validateDates"
                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
                 />
+                <p v-if="event" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  {{ t('activities.validation.eventPeriod') }}: {{ formatEventDates() }}
+                </p>
               </div>
 
               <!-- End Date -->
@@ -307,8 +313,33 @@
                   v-model="formData.proposed_end_date"
                   type="datetime-local"
                   required
+                  :min="dateRange.minDate"
+                  :max="dateRange.maxDate"
+                  @change="validateDates"
                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
                 />
+                <p v-if="event" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  {{ t('activities.validation.tolerance') }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Date Validation Errors -->
+            <div v-if="dateValidationErrors.length > 0" class="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <div class="flex items-start">
+                <svg class="w-5 h-5 text-red-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                </svg>
+                <div class="ml-3">
+                  <h3 class="text-sm font-medium text-red-800 dark:text-red-200">
+                    {{ t('activities.validation.dateError') }}
+                  </h3>
+                  <ul class="mt-2 text-sm text-red-700 dark:text-red-300 list-disc list-inside">
+                    <li v-for="error in dateValidationErrors" :key="error">
+                      {{ t(error) }}
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
@@ -412,7 +443,7 @@
 
               <button
                 type="submit"
-                :disabled="isSubmitting"
+                :disabled="isSubmitting || dateValidationErrors.length > 0"
                 class="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 font-medium"
               >
                 <span v-if="isSubmitting" class="flex items-center">
@@ -439,12 +470,14 @@ import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAuthStore } from '@/stores/auth'
 import RichTextEditor from '@/components/ui/RichTextEditor.vue'
+import { useActivityDateValidation } from '@/composables/useActivityDateValidation'
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const { supabase } = useSupabase()
 const authStore = useAuthStore()
+const { validateActivityDates, getAcceptableDateRange } = useActivityDateValidation()
 
 // Reactive data
 const isLoading = ref(true)
@@ -452,7 +485,9 @@ const isSubmitting = ref(false)
 const isSaving = ref(false)
 const error = ref(null)
 const activity = ref(null)
+const event = ref(null)
 const countries = ref([])
+const dateValidationErrors = ref([])
 
 // Form data
 const formData = ref({
@@ -487,18 +522,28 @@ const categories = [
 // Computed properties
 const canEdit = computed(() => {
   if (!activity.value || !authStore.user) return false
-  
+
   // User can edit their own activity or if they are admin
-  return activity.value.submitted_by === authStore.user.id || 
-         authStore.profile?.user_roles?.some(role => 
+  return activity.value.submitted_by === authStore.user.id ||
+         authStore.profile?.user_roles?.some(role =>
            ['admin', 'super_admin'].includes(role.role) && role.is_active
          )
 })
 
 const isAdmin = computed(() => {
-  return authStore.profile?.user_roles?.some(role => 
+  return authStore.profile?.user_roles?.some(role =>
     ['admin', 'super_admin'].includes(role.role) && role.is_active
   )
+})
+
+// Computed pour la plage de dates acceptables
+const dateRange = computed(() => {
+  if (!event.value) return { minDate: null, maxDate: null }
+
+  const eventStartDate = event.value.online_start_datetime || event.value.in_person_start_date
+  const eventEndDate = event.value.online_end_datetime || event.value.in_person_end_date
+
+  return getAcceptableDateRange(eventStartDate, eventEndDate)
 })
 
 // Methods
@@ -509,16 +554,20 @@ const loadActivity = async () => {
 
     const activityId = route.params.id
     
-    // Load activity
+    // Load activity with event data
     const { data: activityData, error: activityError } = await supabase
       .from('activities')
-      .select('*')
+      .select(`
+        *,
+        event:events(*)
+      `)
       .eq('id', activityId)
       .single()
 
     if (activityError) throw activityError
 
     activity.value = activityData
+    event.value = activityData.event
     
     // Populate form data
     // Convert HTML to plain text for objectives if it contains HTML tags
@@ -571,6 +620,13 @@ const loadCountries = async () => {
 
 const handleSubmit = async () => {
   if (!canEdit.value || isSubmitting.value) return
+
+  // Valider les dates avant la soumission
+  validateDates()
+  if (dateValidationErrors.value.length > 0) {
+    error.value = t('activities.validation.dateError')
+    return
+  }
 
   try {
     isSubmitting.value = true
@@ -699,6 +755,49 @@ const saveDraft = async () => {
 
 const goBack = () => {
   router.back()
+}
+
+// Validation des dates
+const validateDates = () => {
+  if (!event.value || !formData.value.proposed_start_date || !formData.value.proposed_end_date) {
+    dateValidationErrors.value = []
+    return
+  }
+
+  const eventStartDate = event.value.online_start_datetime || event.value.in_person_start_date
+  const eventEndDate = event.value.online_end_datetime || event.value.in_person_end_date
+
+  const validation = validateActivityDates({
+    activityStartDate: formData.value.proposed_start_date,
+    activityEndDate: formData.value.proposed_end_date,
+    eventStartDate: eventStartDate,
+    eventEndDate: eventEndDate
+  })
+
+  dateValidationErrors.value = validation.errors
+}
+
+// Formater les dates de l'événement pour l'affichage
+const formatEventDates = () => {
+  if (!event.value) return ''
+
+  const startDate = event.value.online_start_datetime || event.value.in_person_start_date
+  const endDate = event.value.online_end_datetime || event.value.in_person_end_date
+
+  if (!startDate || !endDate) return ''
+
+  const start = new Date(startDate).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  })
+  const end = new Date(endDate).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  })
+
+  return `${start} - ${end}`
 }
 
 // Lifecycle

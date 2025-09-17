@@ -60,7 +60,7 @@
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zM9.954 4.569c-1.01 1.265-1.654 2.92-1.769 4.43h3.63c-.115-1.51-.759-3.165-1.769-4.43-.015-.02-.03-.04-.045-.06A6.95 6.95 0 0010 4c0 .017-.001.033-.002.05a.521.521 0 00-.044.02zm.002 7.862c1.01-1.265 1.654-2.92 1.769-4.43h-3.63c.115 1.51.759 3.165 1.769 4.43.015.02.03.04.045.06 0 .169.001.338.002.507a.512.512 0 00.044-.02c.002-.017.002-.033.002-.05a6.95 6.95 0 00-.001-.497zm3.178-2.43h1.946a6.004 6.004 0 01-2.783 4.118c.454-1.147.748-2.572.837-4.118zm-.111-1h-1.946c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0113.023 9z" clip-rule="evenodd"/>
                 </svg>
-                <span>{{ countries.length }} {{ $t('organizations.countriesCount') }}</span>
+                <span>{{ uniqueCountriesCount }} {{ $t('organizations.countriesCount') }}</span>
               </div>
             </div>
           </div>
@@ -366,6 +366,7 @@ const {
   sortOptions,
   fetchOrganizations,
   fetchCountries,
+  fetchUniqueCountriesFromOrganizations,
   validateOrganization,
   goToPage,
   nextPage,
@@ -376,6 +377,7 @@ const {
 
 const countries = ref([])
 const viewMode = ref('grid')
+const uniqueCountriesCount = ref(0)
 
 const visiblePages = computed(() => {
   const delta = 2
@@ -425,7 +427,8 @@ async function handleValidateOrganization(organizationId) {
 onMounted(async () => {
   await Promise.all([
     fetchOrganizations(),
-    fetchCountries().then(data => countries.value = data)
+    fetchCountries().then(data => countries.value = data),
+    fetchUniqueCountriesFromOrganizations().then(count => uniqueCountriesCount.value = count)
   ])
 })
 </script>

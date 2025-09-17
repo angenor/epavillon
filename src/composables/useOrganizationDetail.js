@@ -2,7 +2,7 @@ import { ref, computed } from 'vue'
 import { useSupabase } from '@/composables/useSupabase'
 
 export function useOrganizationDetail() {
-  const { supabase, auth, from } = useSupabase()
+  const { auth, from } = useSupabase()
   
   const organization = ref(null)
   const activities = ref([])
@@ -171,6 +171,7 @@ export function useOrganizationDetail() {
         `, { count: 'exact' })
         .eq('organization_id', organizationId)
         .eq('is_deleted', false)
+        .in('validation_status', ['approved', 'live', 'completed', 'cancelled'])
 
       // Filtrage par onglet temporel
       if (activeTab.value === 'completed') {

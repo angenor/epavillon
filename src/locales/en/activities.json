@@ -195,7 +195,49 @@
         "title": "Insufficient Permission",
         "description": "You don't have permission to edit this activity."
       },
-      "draftSaved": "Draft saved successfully"
+      "draftSaved": "Draft saved successfully",
+      "sections": {
+        "basicInfo": "Basic Information",
+        "themesAndCategories": "Themes and Categories",
+        "schedule": "Schedule",
+        "status": "Status Management"
+      },
+      "fields": {
+        "validationStatus": "Validation Status",
+        "activityStatus": "Activity Status"
+      },
+      "adminOnly": "Admin only"
+    },
+    "validation": {
+      "dateError": "Date validation error",
+      "invalidDates": "Activity dates are invalid",
+      "invalidEventDates": "Event dates are invalid",
+      "startDateTooEarly": "Start date is before the event start",
+      "startDateTooLate": "Start date is after the event end",
+      "endDateTooEarly": "End date is before the event start",
+      "endDateTooLate": "End date is after the event end",
+      "endBeforeStart": "End date must be after start date",
+      "outsideEventPeriod": "Activity must occur strictly during the event period",
+      "eventPeriod": "Event period",
+      "tolerance": "Dates must be strictly within the event period"
+    },
+    "status": {
+      "validation": {
+        "draft": "Draft",
+        "submitted": "Submitted",
+        "under_review": "Under Review",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled",
+        "live": "Live",
+        "completed": "Completed"
+      },
+      "activity": {
+        "none": "None",
+        "live": "Live",
+        "completed": "Completed",
+        "postponed": "Postponed"
+      }
     },
     "negotiator": {
       "designationHistory": {

@@ -1,2 +1,2 @@
-
-comme dans "/activities/:idActivity" seul les activités approuved pouvent etres visible sur "/organizations/:idActivity" merci de corriger
+- on doit choisir le fusoraire utilisé pour les dates et heures lors que la création d'évènement et pouvoir aussi le modifier plus tard ( @src/views/events/Create.vue et @src/views/events/Edit.vue )
+- Ainsi, lors de la création d'une activité, le fuseau horaire de l'évènement doit être affiché et utilisé pour la saisie des dates et heures. La date/heure sera ainsi enregistrée avec le fuseau horaire de l'évènement mère de cette activité ( @src/views/activities/Create.vue et src/views/activities/Edit.vue)

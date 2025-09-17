@@ -198,7 +198,49 @@
         "title": "Permission insuffisante",
         "description": "Vous n'avez pas l'autorisation de modifier cette activité."
       },
-      "draftSaved": "Brouillon sauvegardé avec succès"
+      "draftSaved": "Brouillon sauvegardé avec succès",
+      "sections": {
+        "basicInfo": "Informations générales",
+        "themesAndCategories": "Thèmes et catégories",
+        "schedule": "Planification",
+        "status": "Gestion du statut"
+      },
+      "fields": {
+        "validationStatus": "Statut de validation",
+        "activityStatus": "Statut de l'activité"
+      },
+      "adminOnly": "Réservé aux administrateurs"
+    },
+    "validation": {
+      "dateError": "Erreur de validation des dates",
+      "invalidDates": "Les dates de l'activité sont invalides",
+      "invalidEventDates": "Les dates de l'événement sont invalides",
+      "startDateTooEarly": "La date de début est avant le début de l'événement",
+      "startDateTooLate": "La date de début est après la fin de l'événement",
+      "endDateTooEarly": "La date de fin est avant le début de l'événement",
+      "endDateTooLate": "La date de fin est après la fin de l'événement",
+      "endBeforeStart": "La date de fin doit être après la date de début",
+      "outsideEventPeriod": "L'activité doit se dérouler strictement pendant la période de l'événement",
+      "eventPeriod": "Période de l'événement",
+      "tolerance": "Les dates doivent être strictement dans la période de l'événement"
+    },
+    "status": {
+      "validation": {
+        "draft": "Brouillon",
+        "submitted": "Soumise",
+        "under_review": "En révision",
+        "approved": "Approuvée",
+        "rejected": "Rejetée",
+        "cancelled": "Annulée",
+        "live": "En direct",
+        "completed": "Terminée"
+      },
+      "activity": {
+        "none": "Aucun",
+        "live": "En direct",
+        "completed": "Terminée",
+        "postponed": "Reportée"
+      }
     },
     "negotiator": {
       "designationHistory": {

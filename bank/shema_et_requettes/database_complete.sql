@@ -203,7 +203,9 @@ CREATE TABLE public.events (
     country_id UUID REFERENCES public.countries(id) NOT NULL,
     city TEXT NOT NULL,
     logo_url TEXT,
-    address TEXT NOT NULL,,
+    address TEXT NOT NULL,
+    -- Fuseau horaire
+    timezone TEXT NOT NULL,
     in_person_start_date DATE,
     in_person_end_date DATE,
     created_by UUID REFERENCES public.users(id),
