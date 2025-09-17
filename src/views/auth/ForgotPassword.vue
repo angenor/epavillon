@@ -123,7 +123,7 @@ const handleResetPassword = async () => {
 
   try {
     const { error: resetError } = await auth.resetPasswordForEmail(email.value, {
-      redirectTo: `${window.location.origin}/reset-password`
+      redirectTo: 'https://epavillonclimatique.francophonie.org/reset-password'
     })
 
     if (resetError) throw resetError
