@@ -226,7 +226,9 @@
       "endBeforeStart": "La date de fin doit être après la date de début",
       "outsideEventPeriod": "L'activité doit se dérouler strictement pendant la période de l'événement",
       "eventPeriod": "Période de l'événement",
-      "tolerance": "Les dates doivent être strictement dans la période de l'événement"
+      "tolerance": "Les dates doivent être strictement dans la période de l'événement",
+      "timeRange": "Les heures doivent être comprises entre 7:00 et 19:00",
+      "endTimeAfterStart": "L'heure de fin doit être après l'heure de début"
     },
     "status": {
       "validation": {

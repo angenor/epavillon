@@ -14,7 +14,7 @@
             <span class="px-3 py-1 bg-white/20 rounded-full text-sm">
               {{ $t('negotiations.accessLevel.negotiatorsOnly') }}
             </span>
-            
+
             <!-- Liens vers les autres catégories -->
             <div class="flex items-center justify-center space-x-4 mt-4">
               <router-link
@@ -22,8 +22,8 @@
                 :key="cat.value"
                 :to="`/nego/${cat.value}`"
                 class="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200"
-                :class="currentCategory === cat.value 
-                  ? 'bg-white text-blue-600 shadow-lg' 
+                :class="currentCategory === cat.value
+                  ? 'bg-white text-blue-600 shadow-lg'
                   : 'bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm'"
               >
                 {{ cat.label }}
@@ -147,7 +147,6 @@ const allCategories = [
   { value: 'climat', label: 'Climat' },
   { value: 'biodiversite', label: 'Biodiversité' },
   { value: 'desertification', label: 'Désertification' },
-  { value: 'climate_finance', label: 'Finance Climat' }
 ]
 
 const currentCategory = computed(() => {

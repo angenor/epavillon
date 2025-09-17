@@ -505,7 +505,7 @@ const router = useRouter()
 const { supabase } = useSupabase()
 const authStore = useAuthStore()
 const { validateActivityDates, getAcceptableDateRange } = useActivityDateValidation()
-const { formatDateTimeWithTimezone, getTimezoneLabel } = useTimezone()
+const { formatDateTimeWithTimezone, getTimezoneLabel, convertToUTC } = useTimezone()
 
 // Reactive data
 const isLoading = ref(true)
@@ -664,11 +664,11 @@ const handleSubmit = async () => {
     console.log('Current user:', authStore.user?.id)
     console.log('Activity submitted_by:', activity.value.submitted_by)
 
-    // Ensure datetime values are properly formatted
-    const startDate = formData.value.proposed_start_date ? 
-      new Date(formData.value.proposed_start_date).toISOString() : null
-    const endDate = formData.value.proposed_end_date ? 
-      new Date(formData.value.proposed_end_date).toISOString() : null
+    // Ensure datetime values are properly formatted with timezone consideration
+    const startDate = formData.value.proposed_start_date ?
+      convertDateTimeWithTimezone(formData.value.proposed_start_date) : null
+    const endDate = formData.value.proposed_end_date ?
+      convertDateTimeWithTimezone(formData.value.proposed_end_date) : null
 
     // Ensure arrays are properly formatted
     const finalMainThemes = Array.isArray(formData.value.main_themes) && formData.value.main_themes.length > 0 ? 
@@ -741,11 +741,11 @@ const saveDraft = async () => {
   try {
     isSaving.value = true
     
-    // Ensure datetime values are properly formatted
-    const startDate = formData.value.proposed_start_date ? 
-      new Date(formData.value.proposed_start_date).toISOString() : null
-    const endDate = formData.value.proposed_end_date ? 
-      new Date(formData.value.proposed_end_date).toISOString() : null
+    // Ensure datetime values are properly formatted with timezone consideration
+    const startDate = formData.value.proposed_start_date ?
+      convertDateTimeWithTimezone(formData.value.proposed_start_date) : null
+    const endDate = formData.value.proposed_end_date ?
+      convertDateTimeWithTimezone(formData.value.proposed_end_date) : null
     
     const draftData = {
       title: formData.value.title,
@@ -787,9 +787,32 @@ const goBack = () => {
 
 // Validation des dates
 const validateDates = () => {
+  const errors = []
+
   if (!event.value || !formData.value.proposed_start_date || !formData.value.proposed_end_date) {
     dateValidationErrors.value = []
     return
+  }
+
+  // Extraire les heures des datetime-local pour validation
+  const startDateTime = new Date(formData.value.proposed_start_date)
+  const endDateTime = new Date(formData.value.proposed_end_date)
+
+  const startHour = startDateTime.getHours()
+  const endHour = endDateTime.getHours()
+
+  // Validation des heures (7:00 à 19:00)
+  if (startHour < 7 || startHour > 19) {
+    errors.push('activities.validation.timeRange')
+  }
+
+  if (endHour < 7 || endHour > 19) {
+    errors.push('activities.validation.timeRange')
+  }
+
+  // Validation que l'heure de fin est après l'heure de début
+  if (endDateTime <= startDateTime) {
+    errors.push('activities.validation.endTimeAfterStart')
   }
 
   const eventStartDate = event.value.online_start_datetime || event.value.in_person_start_date
@@ -802,7 +825,40 @@ const validateDates = () => {
     eventEndDate: eventEndDate
   })
 
-  dateValidationErrors.value = validation.errors
+  dateValidationErrors.value = [...errors, ...validation.errors]
+}
+
+// Fonction pour convertir les datetime en tenant compte du fuseau horaire de l'événement
+const convertDateTimeWithTimezone = (datetimeLocal) => {
+  if (!datetimeLocal) return null
+
+  // Si l'événement a un fuseau horaire, faire la conversion
+  if (event.value?.timezone) {
+    try {
+      // Parser la datetime-local
+      const date = new Date(datetimeLocal)
+
+      // Obtenir l'offset entre UTC et le fuseau horaire de l'événement à cette date
+      const offsetMinutes = getTimezoneOffsetMinutes(date, event.value.timezone)
+
+      // Ajuster la date UTC en soustrayant l'offset pour avoir l'heure locale correcte en UTC
+      const adjustedDate = new Date(date.getTime() - (offsetMinutes * 60 * 1000))
+
+      return adjustedDate.toISOString()
+    } catch (error) {
+      console.error('Erreur lors de la conversion du fuseau horaire:', error)
+      return new Date(datetimeLocal).toISOString()
+    }
+  }
+
+  return new Date(datetimeLocal).toISOString()
+}
+
+// Fonction utilitaire pour obtenir l'offset en minutes pour un fuseau horaire donné
+const getTimezoneOffsetMinutes = (date, timezone) => {
+  const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }))
+  const tzDate = new Date(date.toLocaleString('en-US', { timeZone: timezone }))
+  return (tzDate.getTime() - utcDate.getTime()) / (1000 * 60)
 }
 
 // Formater les dates de l'événement pour l'affichage

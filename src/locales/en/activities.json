@@ -223,7 +223,9 @@
       "endBeforeStart": "End date must be after start date",
       "outsideEventPeriod": "Activity must occur strictly during the event period",
       "eventPeriod": "Event period",
-      "tolerance": "Dates must be strictly within the event period"
+      "tolerance": "Dates must be strictly within the event period",
+      "timeRange": "Times must be between 7:00 AM and 7:00 PM",
+      "endTimeAfterStart": "End time must be after start time"
     },
     "status": {
       "validation": {

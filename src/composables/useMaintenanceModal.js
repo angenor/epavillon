@@ -17,6 +17,10 @@ export function useMaintenanceModal(pagePath = null) {
 
   const closeMaintenanceModal = () => {
     showMaintenanceModal.value = false
+    // Si on est sur une page en maintenance, rediriger vers l'accueil
+    if (maintenancePages.value.has(currentPath)) {
+      router.push('/')
+    }
   }
 
   const goHome = () => {

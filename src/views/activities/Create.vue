@@ -377,6 +377,8 @@
                           v-model="form.start_time"
                           type="time"
                           required
+                          min="07:00"
+                          max="19:00"
                           @change="validateDates"
                           class="w-full px-4 py-3 pl-11 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
                         />
@@ -398,6 +400,8 @@
                           v-model="form.end_time"
                           type="time"
                           required
+                          min="07:00"
+                          max="19:00"
                           @change="validateDates"
                           class="w-full px-4 py-3 pl-11 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
                         />
@@ -821,7 +825,7 @@ const { t, locale } = useI18n()
 const authStore = useAuthStore()
 const { countries, fetchCountries } = useCountries()
 const { validateActivityDates, getAcceptableDateRange } = useActivityDateValidation()
-const { formatDateTimeWithTimezone, getTimezoneLabel } = useTimezone()
+const { formatDateTimeWithTimezone, getTimezoneLabel, convertToUTC } = useTimezone()
 
 const eventId = route.params.eventId
 
@@ -1093,10 +1097,50 @@ const closeSuccessModal = () => {
 
 
 
-// Fonction pour construire les datetime complets
+// Fonction pour construire les datetime complets en tenant compte du fuseau horaire de l'événement
 const buildDateTime = (date, time) => {
   if (!date || !time) return ''
+
+  const dateTimeString = `${date}T${time}:00`
+
+  // Si l'événement a un fuseau horaire, traiter la date comme étant dans ce fuseau
+  if (eventData.value?.timezone) {
+    try {
+      // Utiliser le constructeur Date avec le fuseau horaire pour une conversion correcte
+      // Créer la date en tant que "naive" (sans fuseau)
+      const [datePart, timePart] = dateTimeString.split('T')
+      const [year, month, day] = datePart.split('-').map(Number)
+      const [hour, minute, second = 0] = timePart.split(':').map(Number)
+
+      // Créer une date dans le fuseau horaire de l'événement
+      // Utiliser une approche qui force l'interprétation dans le bon fuseau horaire
+      const tempDateString = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}T${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:${second.toString().padStart(2, '0')}`
+
+      // Pour simuler la création d'une date dans le fuseau horaire spécifique,
+      // on utilise l'astuce de créer d'abord la date en UTC puis ajuster
+      const utcDate = new Date(tempDateString + 'Z') // Z force UTC
+
+      // Obtenir l'offset entre UTC et le fuseau horaire de l'événement à cette date
+      const offsetMinutes = getTimezoneOffsetMinutes(utcDate, eventData.value.timezone)
+
+      // Ajuster la date UTC en soustrayant l'offset pour avoir l'heure locale correcte en UTC
+      const adjustedDate = new Date(utcDate.getTime() - (offsetMinutes * 60 * 1000))
+
+      return adjustedDate.toISOString()
+    } catch (error) {
+      console.error('Erreur lors de la conversion du fuseau horaire:', error)
+      return `${date}T${time}:00`
+    }
+  }
+
   return `${date}T${time}:00`
+}
+
+// Fonction utilitaire pour obtenir l'offset en minutes pour un fuseau horaire donné
+const getTimezoneOffsetMinutes = (date, timezone) => {
+  const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }))
+  const tzDate = new Date(date.toLocaleString('en-US', { timeZone: timezone }))
+  return (tzDate.getTime() - utcDate.getTime()) / (1000 * 60)
 }
 
 const handleSubmit = async () => {
@@ -1270,9 +1314,33 @@ const formatDate = (dateString) => {
 
 // Validation des dates
 const validateDates = () => {
+  const errors = []
+
   if (!eventData.value || !form.value.activity_date || !form.value.start_time || !form.value.end_time) {
     dateValidationErrors.value = []
     return
+  }
+
+  // Validation des heures (7:00 à 19:00)
+  const startHour = parseInt(form.value.start_time.split(':')[0])
+  const endHour = parseInt(form.value.end_time.split(':')[0])
+  const startMinute = parseInt(form.value.start_time.split(':')[1])
+  const endMinute = parseInt(form.value.end_time.split(':')[1])
+
+  if (startHour < 7 || startHour > 19) {
+    errors.push('activities.validation.timeRange')
+  }
+
+  if (endHour < 7 || endHour > 19) {
+    errors.push('activities.validation.timeRange')
+  }
+
+  // Validation que l'heure de fin est après l'heure de début
+  const startTimeInMinutes = startHour * 60 + startMinute
+  const endTimeInMinutes = endHour * 60 + endMinute
+
+  if (endTimeInMinutes <= startTimeInMinutes) {
+    errors.push('activities.validation.endTimeAfterStart')
   }
 
   const eventStartDate = eventData.value.online_start_datetime || eventData.value.in_person_start_date
@@ -1291,7 +1359,7 @@ const validateDates = () => {
     eventEndDate: endDate
   })
 
-  dateValidationErrors.value = validation.errors
+  dateValidationErrors.value = [...errors, ...validation.errors]
 }
 
 // Formater la période de l'événement
