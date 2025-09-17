@@ -1,7 +1,8 @@
 // supabase/functions/custom-auth-email/index.ts
 // Custom Auth Hook Edge Function for Supabase
-// Uses Deno.serve (recommended) and forwards signup confirmation emails to a Laravel API.
-const LARAVEL_URL = Deno.env.get('SUPABASE_CUSTOM_AUTH_LARAVEL_URL') ?? 'https://epavillonclimatique.francophonie.org/send_email';
+// Handles both signup confirmation and password reset emails
+const LARAVEL_SIGNUP_URL = Deno.env.get('SUPABASE_CUSTOM_AUTH_LARAVEL_URL') ?? 'https://epavillonclimatique.francophonie.org/send_email';
+const LARAVEL_RESET_URL = Deno.env.get('SUPABASE_CUSTOM_PASSWORD_RESET_URL') ?? 'https://epavillonclimatique.francophonie.org/send_email_passeword_reset';
 const LARAVEL_KEY = Deno.env.get('SUPABASE_CUSTOM_AUTH_LARAVEL_KEY') ?? '';
 console.info('custom-auth-email function started');
 Deno.serve(async (req: Request) => {
@@ -44,10 +45,15 @@ Deno.serve(async (req: Request) => {
         }
       });
     }
-    // Handle signup confirmation
-    if (email_action_type === 'signup') {
-      console.log('Processing signup confirmation:', {
+    // Handle signup confirmation AND password reset
+    if (email_action_type === 'signup' || email_action_type === 'recovery') {
+      const isPasswordReset = email_action_type === 'recovery';
+      const actionName = isPasswordReset ? 'password reset' : 'signup confirmation';
+      const laravelUrl = isPasswordReset ? LARAVEL_RESET_URL : LARAVEL_SIGNUP_URL;
+
+      console.log(`Processing ${actionName}:`, {
         email: user.email,
+        action_type: email_action_type,
         has_token: !!token,
         has_token_hash: !!token_hash,
         token_length: token?.length,
@@ -58,11 +64,11 @@ Deno.serve(async (req: Request) => {
       });
 
       try {
-        // Créer un AbortController pour timeout de 2 secondes (plus court)
+        // Créer un AbortController pour timeout de 3 secondes
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 3000);
 
-        const response = await fetch(LARAVEL_URL, {
+        const response = await fetch(laravelUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -76,10 +82,14 @@ Deno.serve(async (req: Request) => {
             token_hash: token_hash,
             redirect_to: redirect_to,
             user_id: user.id,
-            action: 'signup_confirmation',
-            // Construire le lien de confirmation correct
+            action: isPasswordReset ? 'password_reset' : 'signup_confirmation',
+            // Construire le lien correct selon le type d'action
             // Utiliser le token le plus long disponible
-            confirmation_url: `https://jzkuvulxfhtcelpvrxgf.supabase.co/auth/v1/verify?token=${token_hash || token}&type=signup&redirect_to=${encodeURIComponent('https://epavillonclimatique.francophonie.org/login')}`,
+            confirmation_url: `https://jzkuvulxfhtcelpvrxgf.supabase.co/auth/v1/verify?token=${token_hash || token}&type=${isPasswordReset ? 'recovery' : 'signup'}&redirect_to=${encodeURIComponent(redirect_to || (isPasswordReset ? 'https://epavillonclimatique.francophonie.org/reset-password' : 'https://epavillonclimatique.francophonie.org/login'))}`,
+            // Pour compatibilité avec Laravel - ajouter reset_url pour les mots de passe
+            ...(isPasswordReset && {
+              reset_url: `https://jzkuvulxfhtcelpvrxgf.supabase.co/auth/v1/verify?token=${token_hash || token}&type=recovery&redirect_to=${encodeURIComponent(redirect_to || 'https://epavillonclimatique.francophonie.org/reset-password')}`
+            }),
             // Données supplémentaires pour Laravel
             supabase_url: 'https://jzkuvulxfhtcelpvrxgf.supabase.co',
             project_ref: 'jzkuvulxfhtcelpvrxgf'
@@ -93,7 +103,7 @@ Deno.serve(async (req: Request) => {
           console.error('Laravel API returned error', response.status, text);
           // Return an error so Supabase will use its fallback email provider
           return new Response(JSON.stringify({
-            error: 'Failed to send email via Laravel'
+            error: `Failed to send ${actionName} email via Laravel`
           }), {
             status: 500,
             headers: {
@@ -101,9 +111,9 @@ Deno.serve(async (req: Request) => {
             }
           });
         }
-        console.info('Email sent successfully via Laravel');
+        console.info(`${actionName} email sent successfully via Laravel`);
         return new Response(JSON.stringify({
-          message: 'Email sent successfully'
+          message: `${actionName} email sent successfully`
         }), {
           status: 200,
           headers: {
@@ -115,9 +125,9 @@ Deno.serve(async (req: Request) => {
 
         // Si c'est un timeout, retourner un succès pour éviter l'erreur côté client
         if (err.name === 'AbortError') {
-          console.warn('Laravel API timeout, but email might still be sent');
+          console.warn(`Laravel API timeout, but ${actionName} email might still be sent`);
           return new Response(JSON.stringify({
-            message: 'Email processing initiated (timeout occurred)'
+            message: `${actionName} email processing initiated (timeout occurred)`
           }), {
             status: 200,
             headers: {

@@ -37,7 +37,11 @@
             type="email"
             autocomplete="email"
             required
-            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-800 dark:text-white"
+            class="appearance-none relative block w-full px-3 py-2 border rounded-lg placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent dark:bg-gray-800 dark:text-white transition-colors"
+            :class="{
+              'border-gray-300 dark:border-gray-600 focus:ring-green-500': !email || isEmailValid,
+              'border-red-300 dark:border-red-500 focus:ring-red-500': email && !isEmailValid
+            }"
             :placeholder="t('auth.placeholders.email')"
           >
         </div>
@@ -70,7 +74,7 @@
         <div class="space-y-4">
           <button
             type="submit"
-            :disabled="loading || success"
+            :disabled="loading || success || !isEmailValid"
             class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <span v-if="loading" class="absolute left-0 inset-y-0 flex items-center pl-3">
@@ -92,7 +96,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 
@@ -104,7 +108,15 @@ const loading = ref(false)
 const error = ref('')
 const success = ref('')
 
+// Validation de l'email
+const isEmailValid = computed(() => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return email.value.trim() !== '' && emailRegex.test(email.value)
+})
+
 const handleResetPassword = async () => {
+  if (!isEmailValid.value) return
+
   loading.value = true
   error.value = ''
   success.value = ''
@@ -119,7 +131,19 @@ const handleResetPassword = async () => {
     success.value = t('auth.forgotPassword.successMessage')
   } catch (err) {
     console.error('Password reset error:', err)
-    error.value = t('auth.forgotPassword.errorMessage')
+
+    // Si c'est une erreur de timeout du hook, ne pas bloquer la demande
+    if (err.message?.includes('Failed to reach hook within maximum time')) {
+      console.warn('Auth Hook timeout, but password reset email was likely sent')
+      success.value = t('auth.forgotPassword.successMessage')
+      return
+    }
+
+    if (err.message?.includes('after 16 seconds') || err.status === 429) {
+      error.value = t('auth.errors.tooManyRequests')
+    } else {
+      error.value = t('auth.forgotPassword.errorMessage')
+    }
   } finally {
     loading.value = false
   }
