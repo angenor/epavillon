@@ -75,14 +75,14 @@
 
     <!-- Actions flottantes -->
     <div class="relative -mt-8 mb-8">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 backdrop-blur-lg border border-gray-100 dark:border-gray-700">
-          <div class="flex flex-wrap gap-4">
+      <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-4 sm:p-6 backdrop-blur-lg border border-gray-100 dark:border-gray-700">
+          <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <button
               @click="goToActivities"
-              class="group relative px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105"
+              class="group relative w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105"
             >
-              <span class="relative z-10 flex items-center gap-3">
+              <span class="relative z-10 flex items-center justify-center sm:justify-start gap-2 sm:gap-3 text-sm sm:text-base">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
@@ -94,9 +94,9 @@
             <button
               v-if="canSubmitActivity"
               @click="goToSubmission"
-              class="group relative px-8 py-4 bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:border-orange-500 hover:shadow-lg hover:scale-105"
+              class="group relative w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:border-orange-500 hover:shadow-lg hover:scale-105"
             >
-              <span class="relative z-10 flex items-center gap-3">
+              <span class="relative z-10 flex items-center justify-center sm:justify-start gap-2 sm:gap-3 text-sm sm:text-base">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
@@ -106,13 +106,13 @@
             </button>
 
             <!-- Deadline countdown si applicable -->
-            <div v-if="event.submission_deadline && remainingDays > 0" class="ml-auto flex items-center gap-2 px-6 py-4 bg-orange-50 dark:bg-orange-900/20 rounded-xl">
-              <svg class="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div v-if="event.submission_deadline && remainingDays > 0" class="w-full sm:w-auto sm:ml-auto flex items-center justify-center sm:justify-start gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-orange-50 dark:bg-orange-900/20 rounded-xl">
+              <svg class="w-5 h-5 flex-shrink-0 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">{{ t('event.submissionDeadline') }}</p>
-                <p class="font-bold text-orange-600 dark:text-orange-400">{{ remainingDays }} {{ t('event.daysRemaining') }}</p>
+              <div class="text-center sm:text-left">
+                <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{{ t('event.submissionDeadline') }}</p>
+                <p class="text-sm sm:text-base font-bold text-orange-600 dark:text-orange-400">{{ remainingDays }} {{ t('event.daysRemaining') }}</p>
               </div>
             </div>
           </div>
