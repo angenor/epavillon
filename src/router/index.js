@@ -329,13 +329,13 @@ router.beforeEach(async (to, _from, next) => {
       const hasRequiredRole = to.meta.requiresRole.some(role => activeRoles.includes(role))
 
       if (!hasRequiredRole) {
-        // Rediriger vers une page d'erreur ou d'accès refusé
-        next('/403') // ou next('/') selon votre préférence
+        // Rediriger vers une page d'erreur ou d'accès refusé avec l'information de la route tentée
+        next({ path: '/403', query: { from: to.path } })
         return
       }
     } catch (error) {
       console.error('Erreur lors de la vérification des rôles:', error)
-      next('/403')
+      next({ path: '/403', query: { from: to.path } })
       return
     }
   }

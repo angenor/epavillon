@@ -155,6 +155,7 @@
       "title": "Accès refusé",
       "message": "Vous n'avez pas les permissions nécessaires pour accéder à cette page.",
       "details": "Cette page nécessite des rôles spécifiques que vous ne possédez pas actuellement.",
+      "negotiatorMessage": "Cette page est réservée aux négociatrices et négociateurs désignés par leur pays. Contactez les autorités compétentes de votre pays pour qu'elles valident votre autorisation avec l'IFDD.",
       "backHome": "Retour à l'accueil",
       "needAccess": "Besoin d'un accès ?",
       "contactAdmin": "Contactez un administrateur",

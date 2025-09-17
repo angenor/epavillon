@@ -27,7 +27,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.728-.833-2.498 0L4.316 15.5c-.77.833.192 2.5 1.732 2.5z"/>
               </svg>
               <p class="text-sm text-gray-700 dark:text-gray-300">
-                {{ t('error.403.details') }}
+                {{ isNegotiatorPage ? t('error.403.negotiatorMessage') : t('error.403.details') }}
               </p>
             </div>
           </div>
@@ -35,7 +35,7 @@
           <!-- Actions -->
           <div class="mt-6 space-y-4">
             <!-- Retour à l'accueil -->
-            <router-link to="/" 
+            <router-link to="/"
                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
               {{ t('error.403.backHome') }}
             </router-link>
@@ -43,8 +43,8 @@
             <!-- Contacter l'administrateur -->
             <div class="text-center">
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                {{ t('error.403.needAccess') }}
-                <a href="mailto:admin@ifdd.francophonie.org" 
+                <!-- {{ t('error.403.needAccess') }} -->
+                <a href="mailto:Issa.Bado@francophonie.org"
                    class="text-orange-600 hover:text-orange-500 dark:text-orange-400 font-medium">
                   {{ t('error.403.contactAdmin') }}
                 </a>
@@ -68,16 +68,31 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuth } from '@/composables/useAuth'
 import { useUserRoles } from '@/composables/useUserRoles'
+import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
 const { currentUser } = useAuth()
 const { getUserRoles } = useUserRoles()
+const router = useRouter()
 
 const userRoles = ref([])
+
+// Vérifier si l'utilisateur tentait d'accéder à une page de négociation
+const isNegotiatorPage = computed(() => {
+  // Vérifier si le paramètre de requête indique une page de négociation
+  const route = router.currentRoute.value
+  if (route.query.from) {
+    return route.query.from.includes('/nego')
+  }
+
+  // Fallback: vérifier l'historique du navigateur
+  const fromRoute = router.options.history.state?.back
+  return fromRoute && (fromRoute.includes('/nego') || fromRoute.includes('negociation'))
+})
 
 const loadUserRoles = async () => {
   if (currentUser.value) {

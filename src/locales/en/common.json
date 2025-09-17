@@ -147,6 +147,7 @@
       "title": "Access Denied",
       "message": "You don't have the necessary permissions to access this page.",
       "details": "This page requires specific roles that you don't currently have.",
+      "negotiatorMessage": "This page is reserved for negotiators designated by their countries. Contact the competent authorities of your country to validate your authorization with IFDD.",
       "backHome": "Back to Home",
       "needAccess": "Need access?",
       "contactAdmin": "Contact an administrator",
