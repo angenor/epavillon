@@ -189,6 +189,8 @@ CREATE TABLE public.events (
     acronym TEXT,
     description TEXT NOT NULL,
     submission_deadline TIMESTAMPTZ NOT NULL,
+    -- champ pour indiquer si la programmation de l'évènement est disponible
+    is_programmation_available BOOLEAN,
     event_status event_status DEFAULT 'upcoming',
     submission_status submission_status DEFAULT 'open',
     banner_high_quality_32_9_url TEXT,

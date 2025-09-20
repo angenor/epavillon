@@ -1,5 +1,131 @@
 <template>
   <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
+    <!-- Skeleton loader -->
+    <div v-if="isLoading">
+      <!-- Hero Skeleton -->
+      <div class="relative w-full">
+        <div class="relative w-full" style="aspect-ratio: 32/9">
+          <div class="relative w-full h-full" style="min-height: 250px; max-height: 70vh;">
+            <div class="absolute inset-0 w-full h-full bg-gray-300 dark:bg-gray-700 animate-pulse"></div>
+          </div>
+        </div>
+
+        <!-- Contenu Hero Skeleton -->
+        <div class="absolute inset-x-0 bottom-0 flex flex-col justify-end">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+            <!-- Badges skeleton -->
+            <div class="flex flex-wrap gap-3 mb-6">
+              <div class="w-24 h-8 bg-white/20 rounded-full animate-pulse"></div>
+              <div class="w-20 h-8 bg-white/20 rounded-full animate-pulse"></div>
+              <div class="w-16 h-8 bg-white/20 rounded-full animate-pulse"></div>
+            </div>
+
+            <!-- Titre skeleton -->
+            <div class="space-y-3 mb-4">
+              <div class="w-3/4 h-12 md:h-16 bg-white/20 rounded-lg animate-pulse"></div>
+              <div class="w-1/2 h-12 md:h-16 bg-white/20 rounded-lg animate-pulse"></div>
+            </div>
+
+            <!-- Infos skeleton -->
+            <div class="flex flex-wrap gap-6">
+              <div class="w-32 h-6 bg-white/20 rounded animate-pulse"></div>
+              <div class="w-28 h-6 bg-white/20 rounded animate-pulse"></div>
+              <div class="w-24 h-6 bg-white/20 rounded animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions skeleton -->
+      <div class="relative -mt-8 mb-8">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-4 sm:p-6">
+            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <div class="w-full sm:w-48 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl animate-pulse"></div>
+              <div class="w-full sm:w-48 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl animate-pulse"></div>
+              <div class="w-full sm:w-auto sm:ml-auto h-12 bg-gray-200 dark:bg-gray-700 rounded-xl animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenu principal skeleton -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- Description skeleton -->
+          <div class="lg:col-span-2">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-1 h-8 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+                <div class="w-32 h-7 bg-gray-300 dark:bg-gray-600 rounded animate-pulse"></div>
+              </div>
+              <div class="space-y-4">
+                <div class="w-full h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div class="w-full h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div class="w-3/4 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div class="w-full h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div class="w-5/6 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sidebar skeleton -->
+          <div class="lg:col-span-1 space-y-6">
+            <!-- Logo skeleton -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+              <div class="w-full h-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+            </div>
+
+            <!-- Stats skeleton -->
+            <div class="bg-gray-200 dark:bg-gray-700 rounded-2xl p-6 animate-pulse">
+              <div class="w-24 h-5 bg-gray-300 dark:bg-gray-600 rounded mb-4"></div>
+              <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                  <div class="w-20 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                  <div class="w-16 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div class="w-24 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                  <div class="w-12 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div class="w-18 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                  <div class="w-14 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section activités skeleton -->
+      <div class="mt-16 py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-12">
+            <div class="w-64 h-10 bg-gray-300 dark:bg-gray-600 rounded mx-auto mb-4 animate-pulse"></div>
+            <div class="w-96 h-5 bg-gray-200 dark:bg-gray-700 rounded mx-auto animate-pulse"></div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div v-for="i in 6" :key="i" class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+              <div class="h-48 bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
+              <div class="p-6">
+                <div class="w-3/4 h-6 bg-gray-200 dark:bg-gray-700 rounded mb-3 animate-pulse"></div>
+                <div class="space-y-2">
+                  <div class="w-24 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  <div class="w-20 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  <div class="w-28 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                </div>
+                <div class="w-32 h-5 bg-gray-200 dark:bg-gray-700 rounded mt-4 animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenu réel -->
+    <div v-else>
     <!-- Hero Section avec ratio préservé 32:9 -->
     <div class="relative w-full ">
       <!-- Container avec aspect ratio 32:9 pour préserver l'image complète -->
@@ -172,7 +298,7 @@
     </div>
 
     <!-- Section Activités -->
-    <div v-if="activities.length > 0" class="mt-16 py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
+    <div v-if="isLoadingActivities || activities.length > 0" class="mt-16 py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -183,7 +309,24 @@
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Skeleton pour les activités -->
+        <div v-if="isLoadingActivities" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div v-for="i in 6" :key="i" class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+            <div class="h-48 bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
+            <div class="p-6">
+              <div class="w-3/4 h-6 bg-gray-200 dark:bg-gray-700 rounded mb-3 animate-pulse"></div>
+              <div class="space-y-2">
+                <div class="w-24 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div class="w-20 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div class="w-28 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+              </div>
+              <div class="w-32 h-5 bg-gray-200 dark:bg-gray-700 rounded mt-4 animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contenu réel des activités -->
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div
             v-for="activity in activities.slice(0, 6)"
             :key="activity.id"
@@ -254,7 +397,7 @@
         </div>
 
         <!-- Bouton voir toutes les activités -->
-        <div class="text-center mt-12">
+        <div v-if="!isLoadingActivities" class="text-center mt-12">
           <button
             @click="goToActivities"
             class="group inline-flex items-center gap-3 px-8 py-4 bg-white dark:bg-gray-800 text-orange-600 dark:text-orange-400 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-200 dark:border-gray-700"
@@ -265,7 +408,13 @@
             </svg>
           </button>
         </div>
+
+        <!-- Skeleton pour le bouton -->
+        <div v-else class="text-center mt-12">
+          <div class="w-48 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl mx-auto animate-pulse"></div>
+        </div>
       </div>
+    </div>
     </div>
   </div>
 </template>
@@ -282,6 +431,8 @@ const router = useRouter()
 const supabase = useSupabase()
 
 // État
+const isLoading = ref(true)
+const isLoadingActivities = ref(true)
 const event = ref({
   id: '',
   year: new Date().getFullYear(),
@@ -394,6 +545,7 @@ const getBannerUrl = () => {
 
 const loadEvent = async () => {
   try {
+    isLoading.value = true
     const { data, error } = await supabase
       .from('events')
       .select('*, countries(id, name_fr, name_en)')
@@ -415,11 +567,14 @@ const loadEvent = async () => {
     }
   } catch (error) {
     console.error('Error loading event:', error)
+  } finally {
+    isLoading.value = false
   }
 }
 
 const loadActivities = async () => {
   try {
+    isLoadingActivities.value = true
     const { data, error } = await supabase
       .from('activities')
       .select('*, organizations(id, name, logo_url)')
@@ -436,6 +591,8 @@ const loadActivities = async () => {
     }))
   } catch (error) {
     console.error('Error loading activities:', error)
+  } finally {
+    isLoadingActivities.value = false
   }
 }
 

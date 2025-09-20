@@ -81,7 +81,7 @@
         <!-- Menu utilisateur -->
         <div class="flex items-center space-x-2">
           <!-- Language Selector -->
-          <div class="relative">
+          <div class="relative" data-language-menu>
             <button
               @click="showLanguageMenu = !showLanguageMenu"
               class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 flex items-center space-x-1"
@@ -145,9 +145,12 @@
           </button>
 
           <!-- Menu utilisateur dropdown -->
-          <div v-if="authStore.isAuthenticated" class="relative group">
-            <button class=" flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
-              <div class="w-8 h-8 bg-ifdd-bleu rounded-full flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 overflow-hidden">
+          <div v-if="authStore.isAuthenticated" class="relative" data-profile-menu>
+            <button
+              @click="showProfileDropdown = !showProfileDropdown"
+              class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
+            >
+              <div class="w-8 h-8 bg-ifdd-bleu rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden">
                 <!-- Photo de profil si disponible -->
                 <img
                   v-if="authStore.profile?.profile_photo_thumbnail_url || authStore.profile?.profile_photo_url"
@@ -164,9 +167,16 @@
                   {{ authStore.userInitials || 'U' }}
                 </div>
               </div>
-              <font-awesome-icon :icon="['fas', 'chevron-down']" class="w-4 h-4 text-gray-500 transition-transform duration-300 group-hover:rotate-180" />
+              <font-awesome-icon
+                :icon="['fas', 'chevron-down']"
+                class="w-4 h-4 text-gray-500 transition-transform duration-300"
+                :class="{ 'rotate-180': showProfileDropdown }"
+              />
             </button>
-            <div class="absolute right-0 mt-2 w-64 rounded-xl shadow-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transform scale-95 group-hover:scale-100 transition-all duration-300 origin-top-right">
+            <div
+              v-if="showProfileDropdown"
+              class="absolute right-0 mt-2 w-64 rounded-xl shadow-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 opacity-100 visible transform scale-100 transition-all duration-300 origin-top-right z-50"
+            >
               <div class="p-2">
                 <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
                   <div class="flex items-center space-x-3">
@@ -235,7 +245,7 @@
 <script setup>
 import { useTheme } from '@/composables/useTheme'
 import { useI18n } from 'vue-i18n'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
@@ -253,6 +263,7 @@ const { supabase } = useSupabase()
 
 // Refs
 const showLanguageMenu = ref(false)
+const showProfileDropdown = ref(false)
 const availableYears = ref([])
 
 // Méthodes
@@ -264,6 +275,7 @@ const changeLanguage = (lang) => {
 
 const handleLogout = async () => {
   try {
+    showProfileDropdown.value = false
     await authStore.signOut()
     router.push('/login')
   } catch (error) {
@@ -296,8 +308,28 @@ const toggleSidebar = () => {
   emit('toggle-sidebar')
 }
 
+// Gérer les clics en dehors du dropdown pour le fermer
+const handleClickOutside = (event) => {
+  // Fermer le dropdown de langue si ouvert
+  const languageButton = event.target.closest('[data-language-menu]')
+  if (!languageButton && showLanguageMenu.value) {
+    showLanguageMenu.value = false
+  }
+
+  // Fermer le dropdown de profil si ouvert
+  const profileButton = event.target.closest('[data-profile-menu]')
+  if (!profileButton && showProfileDropdown.value) {
+    showProfileDropdown.value = false
+  }
+}
+
 // Lifecycle
 onMounted(() => {
   loadAvailableYears()
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
 })
 </script>

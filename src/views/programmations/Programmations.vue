@@ -160,7 +160,13 @@
               </button>
               <button
                 @click.stop="goToEventDetail(event)"
-                class="flex-1 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors text-sm font-medium text-center"
+                :disabled="!event.is_programmation_available"
+                :class="[
+                  'flex-1 px-4 py-2 border rounded-lg text-sm font-medium text-center transition-colors',
+                  event.is_programmation_available
+                    ? 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer'
+                    : 'bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                ]"
               >
                 {{ t('programmations.viewProgramming') }}
               </button>
@@ -227,6 +233,10 @@ const loadEvents = async () => {
 }
 
 const goToEventDetail = (event) => {
+  // Vérifier si la programmation est disponible avant de naviguer
+  if (!event.is_programmation_available) {
+    return
+  }
   router.push(`/programmations/${event.year}/${event.id}`)
 }
 
