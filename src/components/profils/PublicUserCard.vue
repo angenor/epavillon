@@ -1,23 +1,32 @@
 <template>
   <div
     :class="[
-      'bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow duration-200',
+      'bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl hover:shadow-gray-200/50 dark:hover:shadow-gray-900/50 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-1 group',
       viewMode === 'list' ? 'flex' : ''
     ]"
   >
-    <!-- Photo de profil -->
+    <!-- Photo de profil premium -->
     <div :class="[
-      'flex-shrink-0 flex justify-center',
+      'flex-shrink-0 flex justify-center relative',
       viewMode === 'list' ? 'w-20 h-20 items-center' : 'w-full pt-6 pb-4'
     ]">
-      <img
-        :src="profile.profile_photo_thumbnail_url || '/images/default-avatar.png'"
-        :alt="`Photo de ${profile.first_name} ${profile.last_name}`"
-        :class="[
-          'object-cover rounded-full border-2 border-gray-200 dark:border-gray-600 shadow-sm',
-          viewMode === 'list' ? 'w-16 h-16' : 'w-20 h-20'
-        ]"
-      />
+      <div class="relative">
+        <img
+          :src="profile.profile_photo_thumbnail_url || '/images/default-avatar.png'"
+          :alt="`Photo de ${profile.first_name} ${profile.last_name}`"
+          :class="[
+            'object-cover rounded-full border-3 border-white dark:border-gray-700 shadow-lg transition-all duration-300 group-hover:shadow-xl group-hover:scale-110',
+            viewMode === 'list' ? 'w-16 h-16' : 'w-20 h-20'
+          ]"
+        />
+        <!-- Anneau de statut décoratif -->
+        <div :class="[
+          'absolute -inset-1 rounded-full bg-gradient-to-r from-ifdd-green-400 to-ifdd-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300',
+          viewMode === 'list' ? 'w-18 h-18' : 'w-22 h-22'
+        ]"></div>
+        <!-- Indicateur en ligne (optionnel) -->
+        <div class="absolute bottom-1 right-1 w-4 h-4 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></div>
+      </div>
     </div>
 
     <!-- Contenu -->
@@ -121,17 +130,21 @@
       ]">
         <router-link
           :to="{ name: 'public-profile', params: { id: profile.id } }"
-          class="flex-1 bg-ifdd-green-600 hover:bg-ifdd-green-700 text-blue-900 dark:text-white text-sm font-medium py-2 px-4 rounded-md text-center transition-colors duration-200"
+          class="flex-1 bg-gradient-to-r from-ifdd-green-600 to-ifdd-green-700 hover:from-ifdd-green-700 hover:to-ifdd-green-800 text-white text-sm font-semibold py-3 px-6 rounded-lg text-center transition-all duration-300 transform hover:scale-105 hover:shadow-lg group-hover:shadow-ifdd-green-500/25 flex items-center justify-center space-x-2"
         >
-          {{ $t('directory.view_profile') }}
+          <span>{{ $t('directory.view_profile') }}</span>
+          <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
         </router-link>
         
         <button
           v-if="isAuthenticated"
           @click="$emit('connection-request', profile.id)"
-          class="flex-shrink-0 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm font-medium py-2 px-3 rounded-md transition-colors duration-200"
+          class="flex-shrink-0 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-ifdd-green-300 text-sm font-medium p-3 rounded-lg transition-all duration-300 transform hover:scale-110 hover:shadow-md group"
+          title="Se connecter"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 transition-colors duration-300 group-hover:text-ifdd-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
         </button>

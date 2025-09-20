@@ -1,8 +1,15 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
-      {{ $t('directory.filters.title') }}
-    </h3>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 backdrop-blur-sm">
+    <div class="flex items-center space-x-3 mb-6">
+      <div class="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-ifdd-green-100 to-ifdd-green-200 dark:from-ifdd-green-900 dark:to-ifdd-green-800 rounded-lg">
+        <svg class="w-4 h-4 text-ifdd-green-600 dark:text-ifdd-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+        {{ $t('directory.filters.title') }}
+      </h3>
+    </div>
 
     <!-- Recherche par nom -->
     <div class="mb-6">
@@ -20,7 +27,7 @@
           v-model="localFilters.search"
           type="text"
           :placeholder="$t('directory.filters.search_placeholder')"
-          class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-ifdd-green-500 focus:border-ifdd-green-500 sm:text-sm"
+          class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-ifdd-green-500 focus:border-ifdd-green-500 transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 sm:text-sm"
           @input="debouncedEmit"
         />
       </div>
@@ -34,7 +41,7 @@
       <select
         id="organization"
         v-model="localFilters.organization"
-        class="block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-ifdd-green-500 focus:border-ifdd-green-500 sm:text-sm"
+        class="block w-full py-3 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-ifdd-green-500 focus:border-ifdd-green-500 transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 sm:text-sm appearance-none cursor-pointer"
         @change="emitChange"
       >
         <option value="">{{ $t('directory.filters.all_organizations') }}</option>
@@ -57,7 +64,7 @@
       <select
         id="country"
         v-model="localFilters.country"
-        class="block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-ifdd-green-500 focus:border-ifdd-green-500 sm:text-sm"
+        class="block w-full py-3 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-ifdd-green-500 focus:border-ifdd-green-500 transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 sm:text-sm appearance-none cursor-pointer"
         @change="emitChange"
       >
         <option value="">{{ $t('directory.filters.all_countries') }}</option>
@@ -76,23 +83,23 @@
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
         {{ $t('directory.filters.expertise') }}
       </label>
-      <div class="space-y-2">
+      <div class="space-y-3">
         <div
           v-for="expertise in expertiseOptionsWithTranslation"
           :key="expertise.value"
-          class="flex items-center"
+          class="flex items-center p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-ifdd-green-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-200 cursor-pointer group"
         >
           <input
             :id="`expertise-${expertise.value}`"
             v-model="localFilters.expertise"
             :value="expertise.value"
             type="checkbox"
-            class="h-4 w-4 text-ifdd-green-600 focus:ring-ifdd-green-500 border-gray-300 dark:border-gray-600 rounded"
+            class="h-5 w-5 text-ifdd-green-600 focus:ring-ifdd-green-500 border-gray-300 dark:border-gray-600 rounded-md transition-colors duration-200"
             @change="emitChange"
           />
           <label
             :for="`expertise-${expertise.value}`"
-            class="ml-2 text-sm text-gray-700 dark:text-gray-300"
+            class="ml-3 text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white cursor-pointer flex-1 font-medium"
           >
             {{ expertise.label }}
           </label>
@@ -100,23 +107,28 @@
       </div>
     </div>
 
-    <!-- Bouton de réinitialisation -->
-    <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+    <!-- Bouton de réinitialisation premium -->
+    <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
       <button
         @click="resetFilters"
-        class="w-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm font-medium py-2 px-4 rounded-md transition-colors duration-200"
+        class="w-full bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 dark:from-gray-700 dark:to-gray-600 dark:hover:from-gray-600 dark:hover:to-gray-500 text-gray-700 dark:text-gray-300 text-sm font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 group"
       >
-        {{ $t('directory.filters.reset') }}
+        <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+        <span>{{ $t('directory.filters.reset') }}</span>
       </button>
     </div>
 
-    <!-- Compteur de profils visibles -->
-    <div class="mt-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-md">
-      <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        {{ $t('directory.filters.visible_profiles') }}
+    <!-- Compteur de profils visibles premium -->
+    <div class="mt-6 p-4 bg-gradient-to-r from-ifdd-green-50 to-ifdd-green-100 dark:from-ifdd-green-900/20 dark:to-ifdd-green-800/20 rounded-lg border border-ifdd-green-200 dark:border-ifdd-green-800">
+      <div class="flex items-center text-sm text-ifdd-green-700 dark:text-ifdd-green-300">
+        <div class="flex items-center justify-center w-6 h-6 bg-ifdd-green-200 dark:bg-ifdd-green-800 rounded-full mr-3">
+          <svg class="w-3 h-3 text-ifdd-green-600 dark:text-ifdd-green-400" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <span class="font-medium">{{ $t('directory.filters.visible_profiles') }}</span>
       </div>
     </div>
   </div>

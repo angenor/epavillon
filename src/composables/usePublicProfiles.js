@@ -55,7 +55,7 @@ export function usePublicProfiles() {
             role,
             is_active
           )
-        `)
+        `, { count: 'exact' })
         .eq('is_blocked', false)
         .eq('is_suspended', false)
 
