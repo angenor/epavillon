@@ -196,11 +196,11 @@
           >
           <label for="terms" class="ml-2 block text-sm">
             {{ t('auth.register.acceptTerms') }}
-            <a href="/terms" target="_blank" class="text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300">
+            <a href="https://www.ifdd.francophonie.org/conditions-dutilisation/" target="_blank" class="text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300">
               {{ t('auth.register.termsOfService') }}
             </a>
             {{ t('auth.register.and') }}
-            <a href="/privacy" target="_blank" class="text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300">
+            <a href="https://www.ifdd.francophonie.org/conditions-dutilisation/" target="_blank" class="text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300">
               {{ t('auth.register.privacyPolicy') }}
             </a>
           </label>

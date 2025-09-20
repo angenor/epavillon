@@ -2,11 +2,17 @@
   <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
     <!-- Skeleton loader -->
     <div v-if="isLoading">
-      <!-- Hero Skeleton -->
+      <!-- Hero Section avec image réelle (hors skeleton) -->
       <div class="relative w-full">
         <div class="relative w-full" style="aspect-ratio: 32/9">
           <div class="relative w-full h-full" style="min-height: 250px; max-height: 70vh;">
-            <div class="absolute inset-0 w-full h-full bg-gray-300 dark:bg-gray-700 animate-pulse"></div>
+            <!-- Image chargée immédiatement (peut être en cache) -->
+            <img
+              :src="getBannerUrl()"
+              :alt="event.title || 'Event banner'"
+              class="absolute inset-0 w-full h-full object-cover"
+              loading="eager"
+            >
           </div>
         </div>
 
