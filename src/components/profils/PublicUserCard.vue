@@ -21,7 +21,7 @@
         />
         <!-- Anneau de statut décoratif -->
         <div :class="[
-          'absolute -inset-1 rounded-full bg-gradient-to-r from-ifdd-green-400 to-ifdd-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300',
+          'absolute -inset-1 rounded-full bg-gradient-to-r from-ifdd-vert-light to-ifdd-vert opacity-0 group-hover:opacity-100 transition-opacity duration-300',
           viewMode === 'list' ? 'w-18 h-18' : 'w-22 h-22'
         ]"></div>
         <!-- Indicateur en ligne (optionnel) -->
@@ -130,7 +130,7 @@
       ]">
         <router-link
           :to="{ name: 'public-profile', params: { id: profile.id } }"
-          class="flex-1 bg-gradient-to-r from-ifdd-green-600 to-ifdd-green-700 hover:from-ifdd-green-700 hover:to-ifdd-green-800 text-white text-sm font-semibold py-3 px-6 rounded-lg text-center transition-all duration-300 transform hover:scale-105 hover:shadow-lg group-hover:shadow-ifdd-green-500/25 flex items-center justify-center space-x-2"
+          class="flex-1 bg-gradient-to-r from-ifdd-vert to-ifdd-vert-dark hover:from-ifdd-vert-dark hover:to-ifdd-violet-dark text-white text-sm font-semibold py-3 px-6 rounded-lg text-center transition-all duration-300 transform hover:scale-105 hover:shadow-lg group-hover:shadow-ifdd-vert/25 flex items-center justify-center space-x-2"
         >
           <span>{{ $t('directory.view_profile') }}</span>
           <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,10 +141,10 @@
         <button
           v-if="isAuthenticated"
           @click="$emit('connection-request', profile.id)"
-          class="flex-shrink-0 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-ifdd-green-300 text-sm font-medium p-3 rounded-lg transition-all duration-300 transform hover:scale-110 hover:shadow-md group"
+          class="flex-shrink-0 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-ifdd-vert-light text-sm font-medium p-3 rounded-lg transition-all duration-300 transform hover:scale-110 hover:shadow-md group"
           title="Se connecter"
         >
-          <svg class="w-5 h-5 transition-colors duration-300 group-hover:text-ifdd-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 transition-colors duration-300 group-hover:text-ifdd-vert" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
         </button>

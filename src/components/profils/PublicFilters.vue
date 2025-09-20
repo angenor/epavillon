@@ -1,8 +1,8 @@
 <template>
   <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 backdrop-blur-sm">
     <div class="flex items-center space-x-3 mb-6">
-      <div class="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-ifdd-green-100 to-ifdd-green-200 dark:from-ifdd-green-900 dark:to-ifdd-green-800 rounded-lg">
-        <svg class="w-4 h-4 text-ifdd-green-600 dark:text-ifdd-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-ifdd-vert-light/20 to-ifdd-vert/20 dark:from-ifdd-vert-dark/20 dark:to-ifdd-violet-dark/20 rounded-lg">
+        <svg class="w-4 h-4 text-ifdd-vert dark:text-ifdd-vert-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"/>
         </svg>
       </div>
@@ -27,7 +27,7 @@
           v-model="localFilters.search"
           type="text"
           :placeholder="$t('directory.filters.search_placeholder')"
-          class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-ifdd-green-500 focus:border-ifdd-green-500 transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 sm:text-sm"
+          class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-ifdd-vert focus:border-ifdd-vert transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 sm:text-sm"
           @input="debouncedEmit"
         />
       </div>
@@ -41,7 +41,7 @@
       <select
         id="organization"
         v-model="localFilters.organization"
-        class="block w-full py-3 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-ifdd-green-500 focus:border-ifdd-green-500 transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 sm:text-sm appearance-none cursor-pointer"
+        class="block w-full py-3 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-ifdd-vert focus:border-ifdd-vert transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 sm:text-sm appearance-none cursor-pointer"
         @change="emitChange"
       >
         <option value="">{{ $t('directory.filters.all_organizations') }}</option>
@@ -64,7 +64,7 @@
       <select
         id="country"
         v-model="localFilters.country"
-        class="block w-full py-3 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-ifdd-green-500 focus:border-ifdd-green-500 transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 sm:text-sm appearance-none cursor-pointer"
+        class="block w-full py-3 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg shadow-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-ifdd-vert focus:border-ifdd-vert transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 sm:text-sm appearance-none cursor-pointer"
         @change="emitChange"
       >
         <option value="">{{ $t('directory.filters.all_countries') }}</option>
@@ -87,14 +87,14 @@
         <div
           v-for="expertise in expertiseOptionsWithTranslation"
           :key="expertise.value"
-          class="flex items-center p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-ifdd-green-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-200 cursor-pointer group"
+          class="flex items-center p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-ifdd-vert-light hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-200 cursor-pointer group"
         >
           <input
             :id="`expertise-${expertise.value}`"
             v-model="localFilters.expertise"
             :value="expertise.value"
             type="checkbox"
-            class="h-5 w-5 text-ifdd-green-600 focus:ring-ifdd-green-500 border-gray-300 dark:border-gray-600 rounded-md transition-colors duration-200"
+            class="h-5 w-5 text-ifdd-vert focus:ring-ifdd-vert border-gray-300 dark:border-gray-600 rounded-md transition-colors duration-200"
             @change="emitChange"
           />
           <label
@@ -121,10 +121,10 @@
     </div>
 
     <!-- Compteur de profils visibles premium -->
-    <div class="mt-6 p-4 bg-gradient-to-r from-ifdd-green-50 to-ifdd-green-100 dark:from-ifdd-green-900/20 dark:to-ifdd-green-800/20 rounded-lg border border-ifdd-green-200 dark:border-ifdd-green-800">
-      <div class="flex items-center text-sm text-ifdd-green-700 dark:text-ifdd-green-300">
-        <div class="flex items-center justify-center w-6 h-6 bg-ifdd-green-200 dark:bg-ifdd-green-800 rounded-full mr-3">
-          <svg class="w-3 h-3 text-ifdd-green-600 dark:text-ifdd-green-400" fill="currentColor" viewBox="0 0 20 20">
+    <div class="mt-6 p-4 bg-gradient-to-r from-ifdd-vert-light/10 to-ifdd-vert/10 dark:from-ifdd-vert-dark/20 dark:to-ifdd-violet-dark/20 rounded-lg border border-ifdd-vert-light dark:border-ifdd-vert-dark">
+      <div class="flex items-center text-sm text-ifdd-vert-dark dark:text-ifdd-vert-light">
+        <div class="flex items-center justify-center w-6 h-6 bg-ifdd-vert-light/30 dark:bg-ifdd-vert-dark/30 rounded-full mr-3">
+          <svg class="w-3 h-3 text-ifdd-vert dark:text-ifdd-vert-light" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
