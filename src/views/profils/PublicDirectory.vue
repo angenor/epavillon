@@ -386,7 +386,7 @@ const updateURLParams = () => {
     page: pagination.value.currentPage,
     perPage: pagination.value.perPage
   }
-  
+
   // Supprimer les paramètres vides
   Object.keys(query).forEach(key => {
     if (!query[key] || (typeof query[key] === 'string' && !query[key].trim())) {
