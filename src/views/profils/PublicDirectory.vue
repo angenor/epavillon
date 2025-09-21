@@ -11,12 +11,6 @@
 
       <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="text-center">
-          <div class="inline-flex items-center px-4 py-2 rounded-full bg-white bg-opacity-20 backdrop-blur-sm text-white text-sm font-medium mb-6">
-            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
-            </svg>
-            Communauté IFDD
-          </div>
 
           <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
             {{ $t('directory.title') }}
@@ -79,7 +73,7 @@
                   <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                     {{ $t('directory.results_count', { count: totalResults }) }}
                   </h3>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">Membres de la communauté</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Membres du réseau</p>
                 </div>
               </div>
 
@@ -142,7 +136,7 @@
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-ifdd-vert"></div>
               </div>
               <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">{{ $t('common.loading') }}</h3>
-              <p class="text-gray-500 dark:text-gray-400">Chargement des membres de la communauté...</p>
+              <p class="text-gray-500 dark:text-gray-400">Chargement des profils...</p>
             </div>
           </div>
 
@@ -325,7 +319,7 @@ const {
   getCommunityStats
 } = usePublicProfiles()
 
-// Statistiques de la communauté
+// Statistiques des profils
 const communityStats = ref({
   totalUsers: 0,
   countriesCount: 0,

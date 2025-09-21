@@ -1,7 +1,7 @@
 {
   "directory": {
-    "title": "Communauté",
-    "subtitle": "Découvrez les membres de la communauté francophone du développement durable",
+    "title": "Profils",
+    "subtitle": "Découvrez les profils de la francophonie du développement durable",
     "results_count": "{count} membre trouvé | {count} membres trouvés",
     "no_results": "Aucun profil trouvé",
     "no_results_message": "Essayez de modifier vos critères de recherche ou d'affiner vos filtres.",
