@@ -11,12 +11,16 @@
       viewMode === 'list' ? 'w-20 h-20 items-center' : 'w-full pt-6 pb-4'
     ]">
       <div class="relative">
-        <img
-          :src="profile.profile_photo_thumbnail_url || '/images/default-avatar.png'"
+        <UserAvatar
+          :src="profile.profile_photo_thumbnail_url"
+          :first-name="profile.first_name"
+          :last-name="profile.last_name"
           :alt="`Photo de ${profile.first_name} ${profile.last_name}`"
+          :size="viewMode === 'list' ? 'lg' : 'xl'"
+          :show-status="true"
+          status="online"
           :class="[
-            'object-cover rounded-full border-3 border-white dark:border-gray-700 shadow-lg transition-all duration-300 group-hover:shadow-xl group-hover:scale-110',
-            viewMode === 'list' ? 'w-16 h-16' : 'w-20 h-20'
+            'border-3 border-white dark:border-gray-700 shadow-lg transition-all duration-300 group-hover:shadow-xl group-hover:scale-110'
           ]"
         />
         <!-- Anneau de statut décoratif -->
@@ -24,8 +28,6 @@
           'absolute -inset-1 rounded-full bg-gradient-to-r from-ifdd-vert-light to-ifdd-vert opacity-0 group-hover:opacity-100 transition-opacity duration-300',
           viewMode === 'list' ? 'w-18 h-18' : 'w-22 h-22'
         ]"></div>
-        <!-- Indicateur en ligne (optionnel) -->
-        <div class="absolute bottom-1 right-1 w-4 h-4 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></div>
       </div>
     </div>
 
@@ -45,7 +47,7 @@
               {{ profile.address }}
             </p>
           </div>
-          
+
           <!-- Badges -->
           <div class="flex flex-col items-end space-y-1 ml-2">
             <div v-if="isNegotiator" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
@@ -54,7 +56,7 @@
               </svg>
               {{ $t('directory.badges.negotiator') }}
             </div>
-            
+
             <div v-if="isTrainer" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
               <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.75 2.524z" />
@@ -130,18 +132,18 @@
       ]">
         <router-link
           :to="{ name: 'public-profile', params: { id: profile.id } }"
-          class="flex-1 bg-gradient-to-r from-ifdd-vert to-ifdd-vert-dark hover:from-ifdd-vert-dark hover:to-ifdd-violet-dark text-white text-sm font-semibold py-3 px-6 rounded-lg text-center transition-all duration-300 transform hover:scale-105 hover:shadow-lg group-hover:shadow-ifdd-vert/25 flex items-center justify-center space-x-2"
+          class="flex-1 text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-ifdd-vert-light text-sm font-medium p-3 rounded-lg transition-all duration-300 transform hover:scale-110 hover:shadow-md flex items-center justify-center space-x-2"
         >
           <span>{{ $t('directory.view_profile') }}</span>
           <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
           </svg>
         </router-link>
-        
+
         <button
           v-if="isAuthenticated"
           @click="$emit('connection-request', profile.id)"
-          class="flex-shrink-0 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-ifdd-vert-light text-sm font-medium p-3 rounded-lg transition-all duration-300 transform hover:scale-110 hover:shadow-md group"
+          class="flex-shrink-0 text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-ifdd-vert-light text-sm font-medium p-3 rounded-lg transition-all duration-300 transform hover:scale-110 hover:shadow-md group"
           title="Se connecter"
         >
           <svg class="w-5 h-5 transition-colors duration-300 group-hover:text-ifdd-vert" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -156,6 +158,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import UserAvatar from '@/components/ui/UserAvatar.vue'
 
 const authStore = useAuthStore()
 
