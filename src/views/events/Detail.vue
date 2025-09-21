@@ -212,7 +212,13 @@
           <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <button
               @click="goToActivities"
-              class="group relative w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105"
+              :disabled="!event.is_programmation_available"
+              :class="[
+                'group relative w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 font-semibold rounded-xl overflow-hidden transition-all duration-300',
+                event.is_programmation_available
+                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:shadow-lg hover:scale-105 cursor-pointer'
+                  : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+              ]"
             >
               <span class="relative z-10 flex items-center justify-center sm:justify-start gap-2 sm:gap-3 text-sm sm:text-base">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -220,7 +226,10 @@
                 </svg>
                 {{ t('event.viewProgramming') }}
               </span>
-              <div class="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div
+                v-if="event.is_programmation_available"
+                class="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              ></div>
             </button>
 
             <button
@@ -406,10 +415,24 @@
         <div v-if="!isLoadingActivities" class="text-center mt-12">
           <button
             @click="goToActivities"
-            class="group inline-flex items-center gap-3 px-8 py-4 bg-white dark:bg-gray-800 text-orange-600 dark:text-orange-400 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-200 dark:border-gray-700"
+            :disabled="!event.is_programmation_available"
+            :class="[
+              'group inline-flex items-center gap-3 px-8 py-4 font-semibold rounded-xl shadow-lg transition-all duration-300 border',
+              event.is_programmation_available
+                ? 'bg-white dark:bg-gray-800 text-orange-600 dark:text-orange-400 hover:shadow-xl hover:scale-105 border-gray-200 dark:border-gray-700 cursor-pointer'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 border-gray-300 dark:border-gray-600 cursor-not-allowed'
+            ]"
           >
             {{ t('event.viewAllProgramming') }}
-            <svg class="w-5 h-5 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              :class="[
+                'w-5 h-5 transition-transform',
+                event.is_programmation_available ? 'group-hover:translate-x-2' : ''
+              ]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </button>
@@ -471,7 +494,8 @@ const event = ref({
   acronym: '',
   created_by: '',
   created_at: '',
-  updated_at: ''
+  updated_at: '',
+  is_programmation_available: true
 })
 
 const activities = ref([])
@@ -532,6 +556,7 @@ const getEventDate = () => {
 }
 
 const goToActivities = () => {
+  if (!event.value.is_programmation_available) return
   router.push(`/programmations/${event.value.year}/${event.value.id}`)
 }
 

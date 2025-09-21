@@ -51,23 +51,23 @@
         <div>
           <h3 class="text-lg font-semibold mb-4 text-white">{{ t('footer.followUs') }}</h3>
           <div class="flex space-x-4 mb-6">
-            <a href="#" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">
+            <a href="https://www.facebook.com/IFDD.OIF/" target="_blank" rel="noopener noreferrer" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">
               <font-awesome-icon :icon="['fab', 'facebook']" class="w-6 h-6" />
             </a>
-            <a href="#" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">
+            <a href="https://www.linkedin.com/company/institut-de-la-francophonie-pour-le-d%C3%A9veloppement-durable-ifdd/?originalSubdomain=frb" target="_blank" rel="noopener noreferrer" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">
               <font-awesome-icon :icon="['fab', 'linkedin']" class="w-6 h-6" />
             </a>
-            <a href="#" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">
+            <a href="https://twitter.com/ifdd_oif?lang=fr" target="_blank" rel="noopener noreferrer" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">
               <font-awesome-icon :icon="['fab', 'twitter']" class="w-6 h-6" />
             </a>
-            <a href="#" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">
+            <a href="https://www.youtube.com/channel/UCHSa2CMiR5Vv_D0ldxFpokQ" target="_blank" rel="noopener noreferrer" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">
               <font-awesome-icon :icon="['fab', 'youtube']" class="w-6 h-6" />
             </a>
           </div>
 
           <div class="space-y-2">
-            <a href="#" class="block text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors text-sm">{{ t('footer.termsOfUse') }}</a>
-            <a href="#" class="block text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors text-sm">{{ t('footer.privacyPolicy') }}</a>
+            <a href="https://www.ifdd.francophonie.org/conditions-dutilisation/" target="_blank" rel="noopener noreferrer" class="block text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors text-sm">{{ t('footer.termsOfUse') }}</a>
+            <a href="https://www.ifdd.francophonie.org/conditions-dutilisation/" target="_blank" rel="noopener noreferrer" class="block text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors text-sm">{{ t('footer.privacyPolicy') }}</a>
           </div>
         </div>
       </div>
@@ -80,6 +80,9 @@
           </p>
           <p class="text-gray-500 dark:text-gray-600 text-xs">
             {{ t('footer.poweredBy') }}
+            <a href="https://angenor.firebaseapp.com/" target="_blank" rel="noopener noreferrer" class="hover:text-gray-400 dark:hover:text-gray-500 transition-colors">
+              Angenor N'GOUANDI
+            </a>
           </p>
         </div>
       </div>
