@@ -11,6 +11,16 @@ export default function useUserActivities() {
   const error = ref(null)
   const totalCount = ref(0)
 
+  // Fonction utilitaire pour nettoyer les noms de fichiers
+  const sanitizeFileName = (fileName) => {
+    return fileName
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Supprimer les accents
+      .replace(/[^a-zA-Z0-9.-]/g, '_') // Remplacer les caractères spéciaux par des underscores
+      .replace(/_{2,}/g, '_') // Remplacer les underscores multiples par un seul
+      .toLowerCase()
+  }
+
   const fetchUserActivities = async (options = {}) => {
     const {
       page = 1,
@@ -249,7 +259,8 @@ export default function useUserActivities() {
 
   const uploadDocument = async (activityId, file, title) => {
     try {
-      const fileName = `${activityId}/${Date.now()}_${file.name}`
+      const cleanFileName = sanitizeFileName(file.name)
+      const fileName = `${activityId}/${Date.now()}_${cleanFileName}`
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('activity-documents')
         .upload(fileName, file)
@@ -312,8 +323,21 @@ export default function useUserActivities() {
 
   const uploadBanner = async (activityId, file, type = 'cover') => {
     try {
-      const fileName = `${activityId}/${type}_${Date.now()}_${file.name}`
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const updateField = type === 'cover'
+        ? 'cover_image_high_url'
+        : 'banner_url'
+
+      // Récupérer l'URL actuelle pour suppression
+      const { data: currentActivity } = await supabase
+        .from('activities')
+        .select(updateField)
+        .eq('id', activityId)
+        .eq('submitted_by', authStore.user.id)
+        .single()
+
+      const cleanFileName = sanitizeFileName(file.name)
+      const fileName = `${activityId}/${type}_${Date.now()}_${cleanFileName}`
+      const { error: uploadError } = await supabase.storage
         .from('activity-banners')
         .upload(fileName, file)
 
@@ -322,10 +346,6 @@ export default function useUserActivities() {
       const { data: urlData } = supabase.storage
         .from('activity-banners')
         .getPublicUrl(fileName)
-
-      const updateField = type === 'cover'
-        ? 'cover_image_high_url'
-        : 'banner_url'
 
       const { data, error: updateError } = await supabase
         .from('activities')
@@ -336,6 +356,21 @@ export default function useUserActivities() {
         .single()
 
       if (updateError) throw updateError
+
+      // Supprimer l'ancienne bannière si elle existe
+      if (currentActivity?.[updateField]) {
+        try {
+          const urlParts = currentActivity[updateField].split('/object/public/activity-banners/')
+          if (urlParts.length > 1) {
+            const oldBannerPath = urlParts[1]
+            await supabase.storage
+              .from('activity-banners')
+              .remove([oldBannerPath])
+          }
+        } catch (deleteErr) {
+          console.warn('Could not delete old banner:', deleteErr)
+        }
+      }
 
       return data
     } catch (err) {
@@ -352,6 +387,13 @@ export default function useUserActivities() {
       // Notifier le début du processus
       if (onProgress) onProgress({ stage: 'validation', progress: 10 })
 
+      // Récupérer les URLs actuelles pour suppression
+      const { data: currentSpeaker } = await supabase
+        .from('activity_speakers')
+        .select('photo_url, photo_thumbnail_url')
+        .eq('id', speakerId)
+        .single()
+
       // Valider le fichier
       const validation = validateImageFile(file)
       if (!validation.isValid) {
@@ -366,11 +408,14 @@ export default function useUserActivities() {
 
       const timestamp = Date.now()
 
+      // Nettoyer le nom de fichier pour éviter les caractères spéciaux
+      const cleanFileName = sanitizeFileName(file.name)
+
       // Notifier le début de l'upload
       if (onProgress) onProgress({ stage: 'uploading_hq', progress: 40 })
 
       // Upload de la version haute qualité
-      const highQualityFileName = `intervenants/${speakerId}_hq_${timestamp}_${file.name}`
+      const highQualityFileName = `intervenants/${speakerId}_hq_${timestamp}_${cleanFileName}`
       const { error: hqUploadError } = await supabase.storage
         .from('epavillonp')
         .upload(highQualityFileName, highQuality.file)
@@ -384,7 +429,7 @@ export default function useUserActivities() {
       if (onProgress) onProgress({ stage: 'uploading_thumb', progress: 60 })
 
       // Upload de la miniature
-      const thumbnailFileName = `intervenants/${speakerId}_thumb_${timestamp}_${file.name}`
+      const thumbnailFileName = `intervenants/${speakerId}_thumb_${timestamp}_${cleanFileName}`
       const { error: thumbUploadError } = await supabase.storage
         .from('epavillonp')
         .upload(thumbnailFileName, thumbnail.file)
@@ -447,6 +492,41 @@ export default function useUserActivities() {
           return { ...data, photo_thumbnail_url: thumbUrlData.publicUrl }
         }
 
+        // Supprimer les anciennes images si elles existent
+        if (currentSpeaker?.photo_url) {
+          try {
+            // Extraire le chemin à partir de l'URL publique
+            const urlParts = currentSpeaker.photo_url.split('/object/public/epavillonp/')
+            if (urlParts.length > 1) {
+              const oldPhotoPath = urlParts[1]
+              if (oldPhotoPath.startsWith('intervenants/')) {
+                await supabase.storage
+                  .from('epavillonp')
+                  .remove([oldPhotoPath])
+              }
+            }
+          } catch (deleteErr) {
+            console.warn('Could not delete old photo:', deleteErr)
+          }
+        }
+
+        if (currentSpeaker?.photo_thumbnail_url) {
+          try {
+            // Extraire le chemin à partir de l'URL publique
+            const urlParts = currentSpeaker.photo_thumbnail_url.split('/object/public/epavillonp/')
+            if (urlParts.length > 1) {
+              const oldThumbnailPath = urlParts[1]
+              if (oldThumbnailPath.startsWith('intervenants/')) {
+                await supabase.storage
+                  .from('epavillonp')
+                  .remove([oldThumbnailPath])
+              }
+            }
+          } catch (deleteErr) {
+            console.warn('Could not delete old thumbnail:', deleteErr)
+          }
+        }
+
         // Notifier la fin du processus
         if (onProgress) onProgress({ stage: 'completed', progress: 100 })
         return testUpdate
@@ -461,6 +541,25 @@ export default function useUserActivities() {
           .single()
 
         if (updateError) throw updateError
+
+        // Supprimer les anciennes images en cas de fallback aussi
+        if (currentSpeaker?.photo_url) {
+          try {
+            // Extraire le chemin à partir de l'URL publique
+            const urlParts = currentSpeaker.photo_url.split('/object/public/epavillonp/')
+            if (urlParts.length > 1) {
+              const oldPhotoPath = urlParts[1]
+              if (oldPhotoPath.startsWith('intervenants/')) {
+                await supabase.storage
+                  .from('epavillonp')
+                  .remove([oldPhotoPath])
+              }
+            }
+          } catch (deleteErr) {
+            console.warn('Could not delete old photo in fallback:', deleteErr)
+          }
+        }
+
         // Notifier la fin du processus
         if (onProgress) onProgress({ stage: 'completed', progress: 100 })
         return { ...data, photo_thumbnail_url: thumbUrlData.publicUrl }
