@@ -68,7 +68,7 @@
           >
             <!-- Zone de recadrage 16:9 -->
             <div
-              class="absolute border-2 border-red-500 bg-red-500 bg-opacity-20"
+              class="absolute border-2 border-red-500 bg-red-500/20 cursor-move"
               :style="cropAreaStyle"
               style="pointer-events: auto;"
               @mousedown="startDragging"
@@ -76,7 +76,7 @@
             >
               <div class="absolute inset-0 bg-transparent">
                 <!-- Texte de débogage -->
-                <div class="text-white text-xs p-1 bg-black bg-opacity-50">
+                <div class="text-white text-xs p-1 bg-black/50">
                   Recadrage 16:9
                 </div>
               </div>
