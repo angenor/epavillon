@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-20 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto">
       <!-- Loading State -->
       <div v-if="loading" class="animate-pulse space-y-4">
@@ -1080,7 +1080,7 @@ const addNewSpeaker = () => {
 
 const removeSpeaker = async (speakerId) => {
   if (!confirm(t('events.confirmDeleteSpeaker'))) return
-  
+
   try {
     await deleteSpeaker(speakerId)
     speakers.value = speakers.value.filter(s => s.id !== speakerId)
