@@ -216,6 +216,7 @@
     "speakers": "Intervenants",
     "addSpeaker": "Ajouter un intervenant",
     "uploadSpeakerPhoto": "Télécharger une photo",
+    "uploading": "Téléchargement en cours...",
     "viewFullSize": "Voir en taille réelle",
     "removeSpeaker": "Supprimer l'intervenant",
     "confirmed": "Confirmé",

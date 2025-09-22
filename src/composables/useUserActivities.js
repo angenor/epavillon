@@ -344,10 +344,13 @@ export default function useUserActivities() {
     }
   }
 
-  const uploadSpeakerPhoto = async (speakerId, file) => {
+  const uploadSpeakerPhoto = async (speakerId, file, onProgress = null) => {
     try {
       // Importer la fonction de traitement d'image
       const { processSpeakerPhoto, validateImageFile } = await import('@/utils/imageProcessor')
+
+      // Notifier le début du processus
+      if (onProgress) onProgress({ stage: 'validation', progress: 10 })
 
       // Valider le fichier
       const validation = validateImageFile(file)
@@ -355,10 +358,16 @@ export default function useUserActivities() {
         throw new Error(validation.errors.join('\n'))
       }
 
+      // Notifier le début du traitement
+      if (onProgress) onProgress({ stage: 'processing', progress: 20 })
+
       // Traiter l'image pour générer les deux versions
       const { highQuality, thumbnail } = await processSpeakerPhoto(file)
 
       const timestamp = Date.now()
+
+      // Notifier le début de l'upload
+      if (onProgress) onProgress({ stage: 'uploading_hq', progress: 40 })
 
       // Upload de la version haute qualité
       const highQualityFileName = `intervenants/${speakerId}_hq_${timestamp}_${file.name}`
@@ -371,6 +380,9 @@ export default function useUserActivities() {
         throw hqUploadError
       }
 
+      // Notifier l'upload de la miniature
+      if (onProgress) onProgress({ stage: 'uploading_thumb', progress: 60 })
+
       // Upload de la miniature
       const thumbnailFileName = `intervenants/${speakerId}_thumb_${timestamp}_${file.name}`
       const { error: thumbUploadError } = await supabase.storage
@@ -382,6 +394,9 @@ export default function useUserActivities() {
         throw thumbUploadError
       }
 
+      // Notifier l'obtention des URLs
+      if (onProgress) onProgress({ stage: 'getting_urls', progress: 80 })
+
       // Obtenir les URLs publiques
       const { data: hqUrlData } = supabase.storage
         .from('epavillonp')
@@ -390,6 +405,9 @@ export default function useUserActivities() {
       const { data: thumbUrlData } = supabase.storage
         .from('epavillonp')
         .getPublicUrl(thumbnailFileName)
+
+      // Notifier la mise à jour de la base de données
+      if (onProgress) onProgress({ stage: 'updating_db', progress: 90 })
 
       // Vérifier d'abord si l'intervenant existe
       const { error: fetchError } = await supabase
@@ -429,6 +447,8 @@ export default function useUserActivities() {
           return { ...data, photo_thumbnail_url: thumbUrlData.publicUrl }
         }
 
+        // Notifier la fin du processus
+        if (onProgress) onProgress({ stage: 'completed', progress: 100 })
         return testUpdate
       } catch (updateErr) {
         console.error('Update error, trying fallback:', updateErr)
@@ -441,6 +461,8 @@ export default function useUserActivities() {
           .single()
 
         if (updateError) throw updateError
+        // Notifier la fin du processus
+        if (onProgress) onProgress({ stage: 'completed', progress: 100 })
         return { ...data, photo_thumbnail_url: thumbUrlData.publicUrl }
       }
     } catch (err) {

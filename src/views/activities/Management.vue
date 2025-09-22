@@ -350,16 +350,58 @@
                       <!-- Upload photo button -->
                       <label
                         class="absolute -bottom-1 -right-1 w-6 h-6 bg-ifdd-bleu text-white rounded-full flex items-center justify-center cursor-pointer hover:bg-ifdd-bleu-fonce transition-colors"
-                        :title="t('events.uploadSpeakerPhoto')"
+                        :class="{ 'opacity-50 cursor-not-allowed': uploadingPhoto[speaker.id] }"
+                        :title="uploadingPhoto[speaker.id] ? t('events.uploading') : t('events.uploadSpeakerPhoto')"
                       >
-                        <font-awesome-icon :icon="['fas', 'camera']" class="text-xs" />
+                        <font-awesome-icon
+                          v-if="uploadingPhoto[speaker.id]"
+                          :icon="['fas', 'spinner']"
+                          class="text-xs animate-spin"
+                        />
+                        <font-awesome-icon
+                          v-else
+                          :icon="['fas', 'camera']"
+                          class="text-xs"
+                        />
                         <input
                           type="file"
                           @change="uploadSpeakerPhotoHandler(speaker.id, $event)"
                           class="hidden"
                           accept="image/*"
+                          :disabled="uploadingPhoto[speaker.id]"
                         >
                       </label>
+
+                      <!-- Progress bar overlay -->
+                      <div
+                        v-if="uploadingPhoto[speaker.id]"
+                        class="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center"
+                      >
+                        <div class="w-12 h-12 relative">
+                          <!-- Circular progress bar -->
+                          <svg class="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
+                            <path
+                              class="text-gray-300"
+                              stroke="currentColor"
+                              stroke-width="3"
+                              fill="transparent"
+                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                            <path
+                              class="text-ifdd-bleu"
+                              stroke="currentColor"
+                              stroke-width="3"
+                              fill="transparent"
+                              stroke-linecap="round"
+                              :stroke-dasharray="`${uploadProgress[speaker.id] || 0}, 100`"
+                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                          </svg>
+                          <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="text-xs text-white font-medium">{{ Math.round(uploadProgress[speaker.id] || 0) }}%</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
                     <!-- Informations de l'intervenant -->
@@ -816,6 +858,8 @@ const newSpeakerForm = ref({
 const savingNewSpeaker = ref(false)
 const showPhotoModal = ref(false)
 const selectedSpeakerPhoto = ref(null)
+const uploadingPhoto = ref({})
+const uploadProgress = ref({})
 
 const tabs = [
   { key: 'general', label: t('events.tabs.general') },
@@ -1204,8 +1248,23 @@ const uploadSpeakerPhotoHandler = async (speakerId, event) => {
   const file = event.target.files[0]
   if (!file) return
 
+  // Éviter les uploads multiples
+  if (uploadingPhoto.value[speakerId]) return
+
   try {
-    const updatedSpeaker = await uploadSpeakerPhoto(speakerId, file)
+    // Initialiser l'état de progression
+    uploadingPhoto.value[speakerId] = true
+    uploadProgress.value[speakerId] = 0
+
+    // Définir le callback de progression
+    const onProgress = ({ stage, progress }) => {
+      uploadProgress.value[speakerId] = progress
+
+      // Optionnel: Log pour debug
+      console.log(`Upload ${speakerId}: ${stage} - ${progress}%`)
+    }
+
+    const updatedSpeaker = await uploadSpeakerPhoto(speakerId, file, onProgress)
     const speakerIndex = speakers.value.findIndex(s => s.id === speakerId)
     if (speakerIndex !== -1) {
       speakers.value[speakerIndex].photo_url = updatedSpeaker.photo_url
@@ -1222,6 +1281,12 @@ const uploadSpeakerPhotoHandler = async (speakerId, event) => {
     alert(`Erreur lors de l'upload de la photo: ${error.message}`)
     // Reset du champ de fichier même en cas d'erreur
     event.target.value = ''
+  } finally {
+    // Nettoyer l'état de progression
+    setTimeout(() => {
+      delete uploadingPhoto.value[speakerId]
+      delete uploadProgress.value[speakerId]
+    }, 1000) // Laisser voir le 100% pendant 1 seconde
   }
 }
 
