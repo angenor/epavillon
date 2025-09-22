@@ -58,6 +58,16 @@
       "cancelled": "Annulé",
       "live": "En direct"
     },
+    "statusDescription": {
+      "draft": "L'activité est en cours de préparation",
+      "submitted": "L'activité a été soumise pour validation",
+      "under_review": "L'activité est en cours d'examen par les modérateurs",
+      "approved": "L'activité a été approuvée et peut être publiée",
+      "rejected": "L'activité a été rejetée et nécessite des modifications",
+      "cancelled": "L'activité a été annulée",
+      "live": "L'activité est en cours",
+      "completed": "L'activité est terminée"
+    },
     "submission": {
       "open": "Ouvertes",
       "closed": "Fermées"
@@ -218,6 +228,13 @@
     "activityNotFound": "Activité introuvable",
     "confirmDeleteSpeaker": "Voulez-vous vraiment supprimer cet intervenant?",
     "confirmDeleteDocument": "Voulez-vous vraiment supprimer ce document?",
+    "validationTimeline": "Statut de validation",
+    "timezoneInfo": "Fuseau horaire de l'événement",
+    "timezoneDescription": "Toutes les heures de cette activité seront affichées dans ce fuseau horaire",
+    "activityDate": "Date de l'activité",
+    "startTime": "Heure de début",
+    "endTime": "Heure de fin",
+    "eventPeriod": "Période de l'événement",
     "tabs": {
       "general": "Informations générales",
       "speakers": "Intervenants",

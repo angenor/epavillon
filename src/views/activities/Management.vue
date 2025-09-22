@@ -21,19 +21,34 @@
 
           <div class="flex items-start justify-between">
             <div class="flex-1">
-              <h1 v-if="!editingField.title"
-                  @click="startEdit('title')"
-                  class="text-3xl font-bold text-gray-900 dark:text-white mb-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 -ml-2 rounded">
-                {{ activity.title }}
-                <font-awesome-icon :icon="['fas', 'edit']" class="ml-2 text-lg text-gray-400" />
-              </h1>
-              <input v-else
-                     v-model="tempValue.title"
-                     @blur="saveField('title')"
-                     @keyup.enter="saveField('title')"
-                     @keyup.escape="cancelEdit('title')"
-                     class="text-3xl font-bold bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 w-full"
-                     ref="titleInput">
+              <div v-if="!editingField.title" class="relative">
+                <h1 @click="startEdit('title')"
+                    class="text-3xl font-bold text-gray-900 dark:text-white mb-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 -ml-2 rounded">
+                  {{ activity.title }}
+                  <font-awesome-icon :icon="['fas', 'edit']" class="ml-2 text-lg text-gray-400" />
+                </h1>
+              </div>
+              <div v-else class="relative">
+                <input v-model="tempValue.title"
+                       @input="onFieldChange('title')"
+                       @keyup.enter="saveField('title')"
+                       @keyup.escape="cancelEdit('title')"
+                       class="text-3xl font-bold bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 w-full pr-24"
+                       ref="titleInput">
+                <div class="absolute right-0 top-1/2 -translate-y-1/2 flex space-x-2">
+                  <button v-if="hasUnsavedChanges.title"
+                          @click="saveField('title')"
+                          :disabled="savingField.title"
+                          class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50">
+                    <font-awesome-icon v-if="savingField.title" :icon="['fas', 'spinner']" class="animate-spin" />
+                    <font-awesome-icon v-else :icon="['fas', 'save']" />
+                  </button>
+                  <button @click="cancelEdit('title')"
+                          class="px-3 py-1 bg-gray-400 text-white rounded hover:bg-gray-500">
+                    <font-awesome-icon :icon="['fas', 'times']" />
+                  </button>
+                </div>
+              </div>
 
               <div class="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
                 <span
@@ -53,6 +68,96 @@
               <font-awesome-icon :icon="['fas', 'eye']" class="mr-2" />
               {{ t('events.viewPublic') }}
             </router-link>
+          </div>
+        </div>
+
+        <!-- Timeline de validation -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            {{ t('events.validationTimeline') }}
+          </h3>
+          <div class="relative">
+            <div class="absolute left-0 top-0 h-full w-0.5 bg-gray-200 dark:bg-gray-700"></div>
+            <div class="space-y-4">
+              <!-- Draft -->
+              <div class="flex items-center" :class="getTimelineItemClass('draft')">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+                     :class="getTimelineIconClass('draft')">
+                  <font-awesome-icon :icon="getTimelineIcon('draft')" class="text-sm" />
+                </div>
+                <div class="ml-4 flex-1">
+                  <p class="text-sm font-medium" :class="getTimelineTextClass('draft')">{{ t('events.status.draft') }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('events.statusDescription.draft') }}</p>
+                </div>
+              </div>
+
+              <!-- Submitted -->
+              <div class="flex items-center" :class="getTimelineItemClass('submitted')">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+                     :class="getTimelineIconClass('submitted')">
+                  <font-awesome-icon :icon="getTimelineIcon('submitted')" class="text-sm" />
+                </div>
+                <div class="ml-4 flex-1">
+                  <p class="text-sm font-medium" :class="getTimelineTextClass('submitted')">{{ t('events.status.submitted') }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('events.statusDescription.submitted') }}</p>
+                </div>
+              </div>
+
+              <!-- Under Review -->
+              <div class="flex items-center" :class="getTimelineItemClass('under_review')">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+                     :class="getTimelineIconClass('under_review')">
+                  <font-awesome-icon :icon="getTimelineIcon('under_review')" class="text-sm" />
+                </div>
+                <div class="ml-4 flex-1">
+                  <p class="text-sm font-medium" :class="getTimelineTextClass('under_review')">{{ t('events.status.under_review') }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('events.statusDescription.under_review') }}</p>
+                </div>
+              </div>
+
+              <!-- Approved/Rejected -->
+              <div v-if="activity.validation_status === 'approved' || activity.validation_status === 'rejected'"
+                   class="flex items-center" :class="getTimelineItemClass(activity.validation_status)">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+                     :class="getTimelineIconClass(activity.validation_status)">
+                  <font-awesome-icon :icon="getTimelineIcon(activity.validation_status)" class="text-sm" />
+                </div>
+                <div class="ml-4 flex-1">
+                  <p class="text-sm font-medium" :class="getTimelineTextClass(activity.validation_status)">
+                    {{ t(`events.status.${activity.validation_status}`) }}
+                  </p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">
+                    {{ t(`events.statusDescription.${activity.validation_status}`) }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Live -->
+              <div v-if="activity.validation_status === 'live'"
+                   class="flex items-center" :class="getTimelineItemClass('live')">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+                     :class="getTimelineIconClass('live')">
+                  <font-awesome-icon :icon="getTimelineIcon('live')" class="text-sm" />
+                </div>
+                <div class="ml-4 flex-1">
+                  <p class="text-sm font-medium" :class="getTimelineTextClass('live')">{{ t('events.status.live') }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('events.statusDescription.live') }}</p>
+                </div>
+              </div>
+
+              <!-- Completed -->
+              <div v-if="activity.validation_status === 'completed'"
+                   class="flex items-center" :class="getTimelineItemClass('completed')">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+                     :class="getTimelineIconClass('completed')">
+                  <font-awesome-icon :icon="getTimelineIcon('completed')" class="text-sm" />
+                </div>
+                <div class="ml-4 flex-1">
+                  <p class="text-sm font-medium" :class="getTimelineTextClass('completed')">{{ t('events.status.completed') }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('events.statusDescription.completed') }}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -161,29 +266,81 @@
                 ></textarea>
               </div>
 
-              <!-- Dates -->
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {{ t('events.startDate') }}
-                  </label>
-                  <input
-                    type="datetime-local"
-                    :value="formatDateTimeLocal(activity.proposed_start_date)"
-                    @change="updateDate('proposed_start_date', $event.target.value)"
-                    class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
-                  >
+              <!-- Dates et heures -->
+              <div class="space-y-4">
+                <!-- Timezone Info -->
+                <div v-if="eventData?.timezone" class="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                  <div class="flex items-start">
+                    <font-awesome-icon :icon="['fas', 'clock']" class="w-5 h-5 text-blue-500 dark:text-blue-400 mt-0.5" />
+                    <div class="ml-3">
+                      <h4 class="text-sm font-medium text-blue-900 dark:text-blue-200">
+                        {{ t('events.timezoneInfo') }}
+                      </h4>
+                      <p class="mt-1 text-sm text-blue-800 dark:text-blue-300">
+                        {{ eventTimezone }}
+                      </p>
+                      <p class="mt-2 text-xs text-blue-700 dark:text-blue-400">
+                        {{ t('events.timezoneDescription') }}
+                      </p>
+                    </div>
+                  </div>
                 </div>
+
+                <!-- Date de l'activité -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {{ t('events.endDate') }}
+                    {{ t('events.activityDate') }}
                   </label>
                   <input
-                    type="datetime-local"
-                    :value="formatDateTimeLocal(activity.proposed_end_date)"
-                    @change="updateDate('proposed_end_date', $event.target.value)"
+                    type="date"
+                    v-model="activityDate"
+                    :min="eventData?.start_date?.split('T')[0]"
+                    :max="eventData?.end_date?.split('T')[0]"
                     class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
                   >
+                  <p v-if="eventData" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {{ t('events.eventPeriod') }}: {{ formatEventPeriod() }}
+                  </p>
+                </div>
+
+                <!-- Heures de début et fin -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      {{ t('events.startTime') }}
+                    </label>
+                    <input
+                      type="time"
+                      v-model="startTime"
+                      class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
+                    >
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      {{ t('events.endTime') }}
+                    </label>
+                    <input
+                      type="time"
+                      v-model="endTime"
+                      class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
+                    >
+                  </div>
+                </div>
+
+                <!-- Boutons d'enregistrement pour les dates -->
+                <div v-if="hasPendingDateChanges" class="mt-4 flex justify-end space-x-2">
+                  <button @click="cancelDateChanges"
+                          class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition-colors">
+                    <font-awesome-icon :icon="['fas', 'times']" class="mr-2" />
+                    {{ t('common.cancel') }}
+                  </button>
+                  <button @click="saveDates"
+                          :disabled="savingField.dates"
+                          class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors">
+                    <font-awesome-icon v-if="savingField.dates" :icon="['fas', 'spinner']" class="animate-spin mr-2" />
+                    <font-awesome-icon v-else :icon="['fas', 'save']" class="mr-2" />
+                    {{ t('common.save') }}
+                  </button>
                 </div>
               </div>
             </div>
@@ -398,16 +555,15 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import useUserActivities from '@/composables/useUserActivities'
+import { useTimezone } from '@/composables/useTimezone'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 const {
   getActivityById,
   updateActivity,
-  addSpeaker,
-  updateSpeaker,
   deleteSpeaker,
   uploadDocument,
   deleteDocument,
@@ -415,14 +571,21 @@ const {
   uploadSpeakerPhoto,
   sendConfirmationEmail
 } = useUserActivities()
+const { getTimezoneLabel } = useTimezone()
 
 const loading = ref(true)
 const activity = ref(null)
+const eventData = ref(null)
 const speakers = ref([])
 const documents = ref([])
 const editingField = ref({})
 const tempValue = ref({})
 const activeTab = ref('general')
+const activityDate = ref('')
+const startTime = ref('')
+const endTime = ref('')
+const hasUnsavedChanges = ref({})
+const savingField = ref({})
 
 const tabs = [
   { key: 'general', label: t('events.tabs.general') },
@@ -447,10 +610,22 @@ const formatDate = (dateString) => {
   })
 }
 
-const formatDateTimeLocal = (dateString) => {
-  if (!dateString) return ''
-  const date = new Date(dateString)
-  return date.toISOString().slice(0, 16)
+const eventTimezone = computed(() => {
+  if (!eventData.value?.timezone) return ''
+  return getTimezoneLabel(eventData.value.timezone, locale.value)
+})
+
+const formatEventPeriod = () => {
+  if (!eventData.value) return ''
+  const start = new Date(eventData.value.start_date)
+  const end = new Date(eventData.value.end_date)
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: eventData.value.timezone || 'UTC'
+  }
+  return `${start.toLocaleDateString(locale.value, options)} - ${end.toLocaleDateString(locale.value, options)}`
 }
 
 const getStatusClass = (status) => {
@@ -467,14 +642,105 @@ const getStatusClass = (status) => {
   return classes[status] || classes.draft
 }
 
+const getTimelineItemClass = (status) => {
+  const currentStatus = activity.value?.validation_status
+  const statusOrder = ['draft', 'submitted', 'under_review', 'approved', 'rejected', 'live', 'completed']
+  const currentIndex = statusOrder.indexOf(currentStatus)
+  const itemIndex = statusOrder.indexOf(status)
+
+  if (currentStatus === 'rejected' && status !== 'rejected') {
+    return itemIndex < statusOrder.indexOf('rejected') ? '' : 'opacity-50'
+  }
+
+  return itemIndex <= currentIndex ? '' : 'opacity-50'
+}
+
+const getTimelineIconClass = (status) => {
+  const currentStatus = activity.value?.validation_status
+  const statusOrder = ['draft', 'submitted', 'under_review', 'approved', 'rejected', 'live', 'completed']
+  const currentIndex = statusOrder.indexOf(currentStatus)
+  const itemIndex = statusOrder.indexOf(status)
+
+  if (status === currentStatus) {
+    if (status === 'rejected') return 'bg-red-500 text-white'
+    if (status === 'approved') return 'bg-green-500 text-white'
+    if (status === 'live') return 'bg-purple-500 text-white'
+    if (status === 'completed') return 'bg-blue-500 text-white'
+    return 'bg-ifdd-bleu text-white'
+  }
+
+  if (currentStatus === 'rejected' && itemIndex < statusOrder.indexOf('rejected')) {
+    return 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400'
+  }
+
+  return itemIndex < currentIndex
+    ? 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400'
+    : 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
+}
+
+const getTimelineTextClass = (status) => {
+  const currentStatus = activity.value?.validation_status
+  return status === currentStatus
+    ? 'text-gray-900 dark:text-white'
+    : 'text-gray-500 dark:text-gray-400'
+}
+
+const getTimelineIcon = (status) => {
+  const icons = {
+    draft: ['fas', 'edit'],
+    submitted: ['fas', 'paper-plane'],
+    under_review: ['fas', 'search'],
+    approved: ['fas', 'check'],
+    rejected: ['fas', 'times'],
+    cancelled: ['fas', 'ban'],
+    live: ['fas', 'broadcast-tower'],
+    completed: ['fas', 'flag-checkered']
+  }
+  return icons[status] || ['fas', 'circle']
+}
+
+const isStatusCompleted = (status) => {
+  const currentStatus = activity.value?.validation_status
+  const statusOrder = ['draft', 'submitted', 'under_review', 'approved', 'live', 'completed']
+  const currentIndex = statusOrder.indexOf(currentStatus)
+  const itemIndex = statusOrder.indexOf(status)
+
+  if (currentStatus === 'rejected') {
+    return itemIndex < statusOrder.indexOf('under_review')
+  }
+
+  return itemIndex <= currentIndex
+}
+
+const getProgressWidth = () => {
+  const currentStatus = activity.value?.validation_status
+  const statusOrder = ['draft', 'submitted', 'under_review', 'approved', 'live', 'completed']
+
+  if (currentStatus === 'rejected') {
+    return '50%' // S'arrête à under_review
+  }
+
+  const currentIndex = statusOrder.indexOf(currentStatus)
+  if (currentIndex === -1) return '0%'
+
+  const percentage = ((currentIndex + 1) / statusOrder.length) * 100
+  return `${percentage}%`
+}
+
 const startEdit = (field) => {
   editingField.value[field] = true
   tempValue.value[field] = activity.value[field]
+  hasUnsavedChanges.value[field] = false
 }
 
 const cancelEdit = (field) => {
   delete editingField.value[field]
   delete tempValue.value[field]
+  delete hasUnsavedChanges.value[field]
+}
+
+const onFieldChange = (field) => {
+  hasUnsavedChanges.value[field] = tempValue.value[field] !== activity.value[field]
 }
 
 const saveField = async (field) => {
@@ -484,23 +750,77 @@ const saveField = async (field) => {
     return
   }
 
+  savingField.value[field] = true
   try {
     await updateActivity(activity.value.id, { [field]: value })
     activity.value[field] = value
     cancelEdit(field)
   } catch (error) {
     console.error('Error updating field:', error)
+  } finally {
+    delete savingField.value[field]
   }
 }
 
-const updateDate = async (field, value) => {
+const hasPendingDateChanges = computed(() => {
+  if (!activity.value) return false
+
+  const currentStartDate = activity.value.proposed_start_date ? new Date(activity.value.proposed_start_date) : null
+  const currentEndDate = activity.value.proposed_end_date ? new Date(activity.value.proposed_end_date) : null
+
+  if (currentStartDate) {
+    const savedDate = currentStartDate.toISOString().split('T')[0]
+    const savedStartTime = currentStartDate.toTimeString().slice(0, 5)
+    const savedEndTime = currentEndDate ? currentEndDate.toTimeString().slice(0, 5) : ''
+
+    return savedDate !== activityDate.value || savedStartTime !== startTime.value || savedEndTime !== endTime.value
+  }
+
+  return false
+})
+
+const saveDates = async () => {
+  if (!activityDate.value || !startTime.value || !endTime.value) return
+
+  savingField.value['dates'] = true
   try {
-    await updateActivity(activity.value.id, { [field]: new Date(value).toISOString() })
-    activity.value[field] = new Date(value).toISOString()
+    // Create start datetime
+    const startDateTime = new Date(activityDate.value)
+    const [startHours, startMinutes] = startTime.value.split(':')
+    startDateTime.setHours(parseInt(startHours), parseInt(startMinutes), 0, 0)
+
+    // Create end datetime
+    const endDateTime = new Date(activityDate.value)
+    const [endHours, endMinutes] = endTime.value.split(':')
+    endDateTime.setHours(parseInt(endHours), parseInt(endMinutes), 0, 0)
+
+    await updateActivity(activity.value.id, {
+      proposed_start_date: startDateTime.toISOString(),
+      proposed_end_date: endDateTime.toISOString()
+    })
+
+    activity.value.proposed_start_date = startDateTime.toISOString()
+    activity.value.proposed_end_date = endDateTime.toISOString()
   } catch (error) {
-    console.error('Error updating date:', error)
+    console.error('Error updating dates:', error)
+  } finally {
+    delete savingField.value['dates']
   }
 }
+
+const cancelDateChanges = () => {
+  if (activity.value.proposed_start_date) {
+    const startDate = new Date(activity.value.proposed_start_date)
+    activityDate.value = startDate.toISOString().split('T')[0]
+    startTime.value = startDate.toTimeString().slice(0, 5)
+  }
+  if (activity.value.proposed_end_date) {
+    const endDate = new Date(activity.value.proposed_end_date)
+    endTime.value = endDate.toTimeString().slice(0, 5)
+  }
+}
+
+// La fonction updateActivityTime est remplacée par saveDates
 
 const addNewSpeaker = () => {
   // TODO: Open modal to add speaker
@@ -584,17 +904,30 @@ const sendConfirmationEmailHandler = async (speakerId) => {
 const loadActivity = async () => {
   try {
     loading.value = true
-    
+
     const data = await getActivityById(route.params.id)
-    
+
     if (!data || data.submitted_by !== authStore.user?.id) {
       router.push('/events/dashboard')
       return
     }
-    
+
     activity.value = data
+    eventData.value = data.events
     speakers.value = data.activity_speakers || []
     documents.value = data.activity_documents || []
+
+    // Initialize date and time fields
+    if (data.proposed_start_date) {
+      const startDate = new Date(data.proposed_start_date)
+      activityDate.value = startDate.toISOString().split('T')[0]
+      startTime.value = startDate.toTimeString().slice(0, 5)
+    }
+
+    if (data.proposed_end_date) {
+      const endDate = new Date(data.proposed_end_date)
+      endTime.value = endDate.toTimeString().slice(0, 5)
+    }
   } catch (error) {
     console.error('Error loading activity:', error)
     router.push('/events/dashboard')
