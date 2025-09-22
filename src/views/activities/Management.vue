@@ -349,19 +349,24 @@
 
                       <!-- Upload photo button -->
                       <label
-                        class="absolute -bottom-1 -right-1 w-6 h-6 bg-ifdd-bleu text-white rounded-full flex items-center justify-center cursor-pointer hover:bg-ifdd-bleu-fonce transition-colors"
+                        class="absolute -bottom-1 -right-1 w-8 h-8 bg-ifdd-bleu text-white rounded-full flex items-center justify-center cursor-pointer hover:bg-ifdd-bleu-fonce transition-colors shadow-lg border-2 border-white"
                         :class="{ 'opacity-50 cursor-not-allowed': uploadingPhoto[speaker.id] }"
-                        :title="uploadingPhoto[speaker.id] ? t('events.uploading') : t('events.uploadSpeakerPhoto')"
+                        :title="uploadingPhoto[speaker.id] ? t('events.uploading') : (speaker.photo_url ? t('events.changePhoto') : t('events.addPhoto'))"
                       >
                         <font-awesome-icon
                           v-if="uploadingPhoto[speaker.id]"
                           :icon="['fas', 'spinner']"
-                          class="text-xs animate-spin"
+                          class="text-sm animate-spin"
+                        />
+                        <font-awesome-icon
+                          v-else-if="speaker.photo_url"
+                          :icon="['fas', 'edit']"
+                          class="text-sm"
                         />
                         <font-awesome-icon
                           v-else
-                          :icon="['fas', 'camera']"
-                          class="text-xs"
+                          :icon="['fas', 'plus']"
+                          class="text-sm"
                         />
                         <input
                           type="file"
