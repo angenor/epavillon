@@ -137,21 +137,51 @@
                 {{ t('events.coverImage') }}
               </h3>
               <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                <img
-                  :src="activity.cover_image_high_url || '/images/example/event_banniere_par_defaut_16_9.jpg'"
-                  alt="Cover"
-                  class="w-full aspect-video object-cover rounded-lg mb-4"
-                >
-                <label class="px-4 py-2 bg-ifdd-bleu text-white rounded-lg hover:bg-ifdd-bleu-fonce transition-colors cursor-pointer inline-block">
-                  <font-awesome-icon :icon="['fas', 'upload']" class="mr-2" />
-                  {{ t('events.uploadCover') }}
-                  <input
-                    type="file"
-                    @change="uploadCover"
-                    class="hidden"
-                    accept="image/*"
+                <!-- Bannière actuelle si elle existe -->
+                <div v-if="activity.cover_image_high_url && !editingBanner" class="relative mb-4">
+                  <img
+                    :src="activity.cover_image_high_url"
+                    alt="Cover"
+                    class="w-full aspect-video object-cover rounded-lg"
                   >
-                </label>
+                  <button
+                    @click="editingBanner = true"
+                    class="absolute top-2 right-2 p-2 bg-black bg-opacity-50 text-white rounded-full hover:bg-opacity-70 transition-opacity"
+                  >
+                    <font-awesome-icon :icon="['fas', 'edit']" />
+                  </button>
+                </div>
+
+                <!-- Image par défaut si pas de bannière -->
+                <div v-else-if="!activity.cover_image_high_url && !editingBanner" class="relative mb-4">
+                  <img
+                    src="/images/example/event_banniere_par_defaut_16_9.jpg"
+                    alt="Cover par défaut"
+                    class="w-full aspect-video object-cover rounded-lg opacity-60"
+                  >
+                  <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded-lg">
+                    <span class="text-white text-lg font-medium">{{ t('events.defaultBanner') }}</span>
+                  </div>
+                </div>
+
+                <!-- Éditeur d'image 16:9 -->
+                <ImageCropper16x9
+                  v-if="editingBanner || !activity.cover_image_high_url"
+                  :initial-image="activity.cover_image_high_url"
+                  @image-selected="onBannerImageSelected"
+                  @image-processed="onBannerImageProcessed"
+                />
+
+                <!-- Bouton d'upload si pas en mode édition -->
+                <div v-if="!editingBanner && activity.cover_image_high_url" class="text-center">
+                  <button
+                    @click="editingBanner = true"
+                    class="px-4 py-2 bg-ifdd-bleu text-white rounded-lg hover:bg-ifdd-bleu-fonce transition-colors"
+                  >
+                    <font-awesome-icon :icon="['fas', 'image']" class="mr-2" />
+                    {{ t('events.changeBanner') }}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -828,6 +858,7 @@ import useUserActivities from '@/composables/useUserActivities'
 import { useTimezone } from '@/composables/useTimezone'
 import ActivityValidationTimeline from '@/components/ActivityValidationTimeline.vue'
 import RichTextEditor from '@/components/ui/RichTextEditor.vue'
+import ImageCropper16x9 from '@/components/ui/ImageCropper16x9.vue'
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -876,6 +907,7 @@ const showPhotoModal = ref(false)
 const selectedSpeakerPhoto = ref(null)
 const uploadingPhoto = ref({})
 const uploadProgress = ref({})
+const editingBanner = ref(false)
 
 
 const stats = computed(() => ({
@@ -1258,15 +1290,25 @@ const removeDocument = async (docId) => {
   }
 }
 
-const uploadCover = async (event) => {
-  const file = event.target.files[0]
-  if (!file) return
+const onBannerImageSelected = (file) => {
+  // L'image a été sélectionnée, le composant gère l'édition
+  console.log('Image selected for banner:', file.name)
+}
 
+const onBannerImageProcessed = async (blob) => {
   try {
+    // Créer un fichier à partir du blob
+    const file = new File([blob], 'banner-16x9.jpg', { type: 'image/jpeg' })
+
+    // Uploader la bannière
     const updatedActivity = await uploadBanner(activity.value.id, file, 'cover')
     activity.value.cover_image_high_url = updatedActivity.cover_image_high_url
+
+    // Sortir du mode édition
+    editingBanner.value = false
   } catch (error) {
-    console.error('Error uploading cover:', error)
+    console.error('Error uploading processed banner:', error)
+    alert('Erreur lors de l\'upload de la bannière')
   }
 }
 
