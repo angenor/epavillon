@@ -72,98 +72,11 @@
         </div>
 
         <!-- Timeline de validation -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">
-            {{ t('events.validationTimeline') }}
-          </h3>
-          <div class="relative">
-            <!-- Ligne horizontale de progression -->
-            <div class="absolute top-5 left-5 right-5 h-0.5 bg-gray-200 dark:bg-gray-700"></div>
-            <div class="absolute top-5 left-5 h-0.5 bg-ifdd-bleu transition-all duration-500"
-                 :style="{ width: getProgressWidth() }"></div>
-
-            <!-- Timeline horizontale -->
-            <div class="flex justify-between items-start relative">
-              <!-- Draft -->
-              <div class="flex flex-col items-center flex-1" :class="getTimelineItemClass('draft')">
-                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full mb-3"
-                     :class="getTimelineIconClass('draft')">
-                  <font-awesome-icon :icon="getTimelineIcon('draft')" class="text-sm" />
-                </div>
-                <div class="text-center">
-                  <p class="text-sm font-medium" :class="getTimelineTextClass('draft')">{{ t('events.status.draft') }}</p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-24">{{ t('events.statusDescription.draft') }}</p>
-                </div>
-              </div>
-
-              <!-- Submitted -->
-              <div class="flex flex-col items-center flex-1" :class="getTimelineItemClass('submitted')">
-                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full mb-3"
-                     :class="getTimelineIconClass('submitted')">
-                  <font-awesome-icon :icon="getTimelineIcon('submitted')" class="text-sm" />
-                </div>
-                <div class="text-center">
-                  <p class="text-sm font-medium" :class="getTimelineTextClass('submitted')">{{ t('events.status.submitted') }}</p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-24">{{ t('events.statusDescription.submitted') }}</p>
-                </div>
-              </div>
-
-              <!-- Under Review -->
-              <div class="flex flex-col items-center flex-1" :class="getTimelineItemClass('under_review')">
-                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full mb-3"
-                     :class="getTimelineIconClass('under_review')">
-                  <font-awesome-icon :icon="getTimelineIcon('under_review')" class="text-sm" />
-                </div>
-                <div class="text-center">
-                  <p class="text-sm font-medium" :class="getTimelineTextClass('under_review')">{{ t('events.status.under_review') }}</p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-24">{{ t('events.statusDescription.under_review') }}</p>
-                </div>
-              </div>
-
-              <!-- Approved/Rejected -->
-              <div class="flex flex-col items-center flex-1" :class="getTimelineItemClass(activity.validation_status)">
-                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full mb-3"
-                     :class="getTimelineIconClass(activity.validation_status)">
-                  <font-awesome-icon :icon="getTimelineIcon(activity.validation_status)" class="text-sm" />
-                </div>
-                <div class="text-center">
-                  <p class="text-sm font-medium" :class="getTimelineTextClass(activity.validation_status)">
-                    {{ t(`events.status.${activity.validation_status}`) }}
-                  </p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-24">
-                    {{ t(`events.statusDescription.${activity.validation_status}`) }}
-                  </p>
-                </div>
-              </div>
-
-              <!-- Live (si applicable) -->
-              <div v-if="activity.validation_status === 'live' || activity.validation_status === 'completed'"
-                   class="flex flex-col items-center flex-1" :class="getTimelineItemClass('live')">
-                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full mb-3"
-                     :class="getTimelineIconClass('live')">
-                  <font-awesome-icon :icon="getTimelineIcon('live')" class="text-sm" />
-                </div>
-                <div class="text-center">
-                  <p class="text-sm font-medium" :class="getTimelineTextClass('live')">{{ t('events.status.live') }}</p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-24">{{ t('events.statusDescription.live') }}</p>
-                </div>
-              </div>
-
-              <!-- Completed (si applicable) -->
-              <div v-if="activity.validation_status === 'completed'"
-                   class="flex flex-col items-center flex-1" :class="getTimelineItemClass('completed')">
-                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full mb-3"
-                     :class="getTimelineIconClass('completed')">
-                  <font-awesome-icon :icon="getTimelineIcon('completed')" class="text-sm" />
-                </div>
-                <div class="text-center">
-                  <p class="text-sm font-medium" :class="getTimelineTextClass('completed')">{{ t('events.status.completed') }}</p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-24">{{ t('events.statusDescription.completed') }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ActivityValidationTimeline
+          v-if="activity"
+          :current-status="activity.validation_status"
+          class="mb-8"
+        />
 
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -272,19 +185,20 @@
                 </label>
                 <div v-if="!editingField.detailed_presentation" class="relative">
                   <div @click="startEdit('detailed_presentation')"
-                       class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600">
-                    {{ activity.detailed_presentation }}
-                    <font-awesome-icon :icon="['fas', 'edit']" class="ml-2 text-gray-400" />
+                       class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 min-h-[120px]">
+                    <div v-html="activity.detailed_presentation" class="prose dark:prose-invert max-w-none"></div>
+                    <font-awesome-icon :icon="['fas', 'edit']" class="ml-2 text-gray-400 float-right" />
                   </div>
                 </div>
                 <div v-else class="relative">
-                  <textarea v-model="tempValue.detailed_presentation"
-                            @input="onFieldChange('detailed_presentation')"
-                            @keyup.escape="cancelEdit('detailed_presentation')"
-                            rows="6"
-                            class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 pr-24"
-                            ref="detailedPresentationInput"></textarea>
-                  <div class="absolute bottom-2 right-2 flex space-x-2">
+                  <RichTextEditor
+                    v-model="tempValue.detailed_presentation"
+                    @input="onFieldChange('detailed_presentation')"
+                    :placeholder="t('activity.submit.placeholders.detailedPresentation')"
+                    :show-character-count="true"
+                    :max-length="5000"
+                  />
+                  <div class="mt-2 flex justify-end space-x-2">
                     <button v-if="hasUnsavedChanges.detailed_presentation"
                             @click="saveField('detailed_presentation')"
                             :disabled="savingField.detailed_presentation"
@@ -706,6 +620,8 @@ import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import useUserActivities from '@/composables/useUserActivities'
 import { useTimezone } from '@/composables/useTimezone'
+import ActivityValidationTimeline from '@/components/ActivityValidationTimeline.vue'
+import RichTextEditor from '@/components/ui/RichTextEditor.vue'
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -796,78 +712,6 @@ const getStatusClass = (status) => {
   return classes[status] || classes.draft
 }
 
-const getTimelineItemClass = (status) => {
-  const currentStatus = activity.value?.validation_status
-  const statusOrder = ['draft', 'submitted', 'under_review', 'approved', 'rejected', 'live', 'completed']
-  const currentIndex = statusOrder.indexOf(currentStatus)
-  const itemIndex = statusOrder.indexOf(status)
-
-  if (currentStatus === 'rejected' && status !== 'rejected') {
-    return itemIndex < statusOrder.indexOf('rejected') ? '' : 'opacity-50'
-  }
-
-  return itemIndex <= currentIndex ? '' : 'opacity-50'
-}
-
-const getTimelineIconClass = (status) => {
-  const currentStatus = activity.value?.validation_status
-  const statusOrder = ['draft', 'submitted', 'under_review', 'approved', 'rejected', 'live', 'completed']
-  const currentIndex = statusOrder.indexOf(currentStatus)
-  const itemIndex = statusOrder.indexOf(status)
-
-  if (status === currentStatus) {
-    if (status === 'rejected') return 'bg-red-500 text-white'
-    if (status === 'approved') return 'bg-green-500 text-white'
-    if (status === 'live') return 'bg-purple-500 text-white'
-    if (status === 'completed') return 'bg-blue-500 text-white'
-    return 'bg-ifdd-bleu text-white'
-  }
-
-  if (currentStatus === 'rejected' && itemIndex < statusOrder.indexOf('rejected')) {
-    return 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400'
-  }
-
-  return itemIndex < currentIndex
-    ? 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400'
-    : 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
-}
-
-const getTimelineTextClass = (status) => {
-  const currentStatus = activity.value?.validation_status
-  return status === currentStatus
-    ? 'text-gray-900 dark:text-white'
-    : 'text-gray-500 dark:text-gray-400'
-}
-
-const getTimelineIcon = (status) => {
-  const icons = {
-    draft: ['fas', 'edit'],
-    submitted: ['fas', 'paper-plane'],
-    under_review: ['fas', 'search'],
-    approved: ['fas', 'check'],
-    rejected: ['fas', 'times'],
-    cancelled: ['fas', 'ban'],
-    live: ['fas', 'broadcast-tower'],
-    completed: ['fas', 'flag-checkered']
-  }
-  return icons[status] || ['fas', 'circle']
-}
-
-
-const getProgressWidth = () => {
-  const currentStatus = activity.value?.validation_status
-  const statusOrder = ['draft', 'submitted', 'under_review', 'approved', 'live', 'completed']
-
-  if (currentStatus === 'rejected') {
-    return '50%' // S'arrête à under_review
-  }
-
-  const currentIndex = statusOrder.indexOf(currentStatus)
-  if (currentIndex === -1) return '0%'
-
-  const percentage = ((currentIndex + 1) / statusOrder.length) * 100
-  return `${percentage}%`
-}
 
 const startEdit = (field) => {
   editingField.value[field] = true
