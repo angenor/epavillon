@@ -24,6 +24,8 @@
     }
   },
   "events": {
+    "myActivities": "My activities",
+    "dashboardDescription": "Manage all your submitted activities in one place",
     "title": "Upcoming and past events",
     "subtitle": "Participate in major international events on climate, biodiversity and sustainable development.",
     "description": "Description",
@@ -107,6 +109,49 @@
     },
     "seeAllEvents": "See all events",
     "noEvents": "No events available at the moment",
+    "speakers": "Speakers",
+    "addSpeaker": "Add speaker",
+    "uploadSpeakerPhoto": "Upload photo",
+    "removeSpeaker": "Remove speaker",
+    "confirmed": "Confirmed",
+    "pendingConfirmation": "Pending confirmation",
+    "notInvited": "Not invited",
+    "sendConfirmationEmail": "Send confirmation email",
+    "documents": "Documents",
+    "uploadDocument": "Upload document",
+    "coverImage": "Cover image",
+    "uploadCover": "Upload cover",
+    "activityNotFound": "Activity not found",
+    "confirmDeleteSpeaker": "Are you sure you want to delete this speaker?",
+    "confirmDeleteDocument": "Are you sure you want to delete this document?",
+    "objectives": "Objectives",
+    "detailedPresentation": "Detailed presentation",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "createdOn": "Created on",
+    "viewPublic": "View public page",
+    "stats": {
+      "registrations": "Registrations",
+      "speakers": "Speakers",
+      "documents": "Documents",
+      "questions": "Questions"
+    },
+    "status": {
+      "draft": "Draft",
+      "submitted": "Submitted",
+      "under_review": "Under review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled",
+      "live": "Live",
+      "completed": "Completed"
+    },
+    "tabs": {
+      "general": "General information",
+      "speakers": "Speakers",
+      "documents": "Documents",
+      "banners": "Banners"
+    },
     "create": {
       "title": "Create a new event",
       "subtitle": "Fill in the information below to create a new event",

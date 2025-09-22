@@ -24,6 +24,8 @@
     }
   },
   "events": {
+    "myActivities": "Mes activités",
+    "dashboardDescription": "Gérez toutes vos activités soumises en un seul endroit",
     "title": "Événements à venir et passés",
     "subtitle": "Participez aux grands événements internationaux sur le climat, la biodiversité et le développement durable.",
     "description": "Description",
@@ -46,7 +48,15 @@
       "ongoing": "EN COURS",
       "upcoming": "À VENIR",
       "completed": "TERMINÉ",
-      "suspended": "SUSPENDU"
+      "suspended": "SUSPENDU",
+      "draft": "Brouillon",
+      "submitted": "Soumis",
+      "underReview": "En révision",
+      "under_review": "En révision",
+      "approved": "Approuvé",
+      "rejected": "Rejeté",
+      "cancelled": "Annulé",
+      "live": "En direct"
     },
     "submission": {
       "open": "Ouvertes",
@@ -157,6 +167,62 @@
         "in_person": "En présentiel",
         "hybrid": "Hybride"
       }
+    },
+    "stats": {
+      "total": "Total",
+      "upcoming": "À venir",
+      "draft": "Brouillons",
+      "totalRegistrations": "Total inscriptions",
+      "registrations": "Inscriptions",
+      "speakers": "Intervenants",
+      "documents": "Documents",
+      "questions": "Questions"
+    },
+    "allStatuses": "Tous les statuts",
+    "allTypes": "Tous les types",
+    "types": {
+      "sideEvent": "Événement parallèle",
+      "countryDay": "Journée pays",
+      "other": "Autre",
+      "conference": "Conférence",
+      "workshop": "Atelier",
+      "panel": "Panel",
+      "networking": "Réseautage"
+    },
+    "registrations": "inscriptions",
+    "manage": "Gérer",
+    "duplicate": "Dupliquer",
+    "delete": "Supprimer",
+    "confirmDuplicate": "Voulez-vous vraiment dupliquer cette activité?",
+    "confirmDelete": "Voulez-vous vraiment supprimer cette activité?",
+    "noActivities": "Aucune activité",
+    "noActivitiesDescription": "Vous n'avez pas encore soumis d'activités",
+    "createdOn": "Créé le",
+    "viewPublic": "Voir la page publique",
+    "objectives": "Objectifs",
+    "detailedPresentation": "Présentation détaillée",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "speakers": "Intervenants",
+    "addSpeaker": "Ajouter un intervenant",
+    "uploadSpeakerPhoto": "Télécharger une photo",
+    "removeSpeaker": "Supprimer l'intervenant",
+    "confirmed": "Confirmé",
+    "pendingConfirmation": "En attente de confirmation",
+    "notInvited": "Non invité",
+    "sendConfirmationEmail": "Envoyer l'email de confirmation",
+    "documents": "Documents",
+    "uploadDocument": "Télécharger un document",
+    "coverImage": "Image de couverture",
+    "uploadCover": "Télécharger une couverture",
+    "activityNotFound": "Activité introuvable",
+    "confirmDeleteSpeaker": "Voulez-vous vraiment supprimer cet intervenant?",
+    "confirmDeleteDocument": "Voulez-vous vraiment supprimer ce document?",
+    "tabs": {
+      "general": "Informations générales",
+      "speakers": "Intervenants",
+      "documents": "Documents",
+      "banners": "Bannières"
     }
   },
   "trainings": {

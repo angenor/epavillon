@@ -59,6 +59,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/events/dashboard',
+      name: 'events-dashboard',
+      component: () => import('../views/events/Dashboard.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/events/:id',
       name: 'event-detail',
       component: () => import('../views/events/Detail.vue'),
@@ -79,6 +85,12 @@ const router = createRouter({
       path: '/activities/:id',
       name: 'activity-detail',
       component: () => import('../views/activities/Detail.vue'),
+    },
+    {
+      path: '/activities/:id/manage',
+      name: 'activity-management',
+      component: () => import('../views/activities/Management.vue'),
+      meta: { requiresAuth: true },
     },
     {
       path: '/activities/:id/edit',

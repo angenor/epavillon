@@ -449,19 +449,28 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
+import { useAuthStore } from '@/stores/auth'
+import useUserEvents from '@/composables/useUserEvents'
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
-const supabase = useSupabase()
+const { supabase } = useSupabase()
+const authStore = useAuthStore()
+const { updateEventField, getEventStats, getEventRegistrations } = useUserEvents()
 
 // État
 const isLoading = ref(true)
 const isLoadingActivities = ref(true)
+const isManagementMode = ref(false)
+const isOwner = ref(false)
+const editingField = ref(null)
+const eventStats = ref({ total: 0, confirmed: 0, pending: 0, cancelled: 0 })
+const registrations = ref([])
 const event = ref({
   id: '',
   year: new Date().getFullYear(),
@@ -502,6 +511,9 @@ const activities = ref([])
 const country = ref(null)
 
 // Computed
+const canManage = computed(() => {
+  return isManagementMode.value && isOwner.value
+})
 const canSubmitActivity = computed(() => {
   if (event.value.submission_status === 'closed') return false
   if (!event.value.submission_deadline) return false
@@ -628,10 +640,65 @@ const loadActivities = async () => {
 }
 
 // Lifecycle
-onMounted(() => {
-  loadEvent()
+onMounted(async () => {
+  // Check if management mode
+  isManagementMode.value = route.query.mode === 'management'
+
+  await loadEvent()
+
+  // Check ownership
+  if (authStore.user && event.value.created_by === authStore.user.id) {
+    isOwner.value = true
+
+    // Load management data if in management mode
+    if (isManagementMode.value) {
+      await loadManagementData()
+    }
+  }
+
   loadActivities()
 })
+
+// Watch for route changes
+watch(() => route.query.mode, (newMode) => {
+  isManagementMode.value = newMode === 'management'
+  if (isManagementMode.value && isOwner.value) {
+    loadManagementData()
+  }
+})
+
+// Management functions
+const loadManagementData = async () => {
+  try {
+    eventStats.value = await getEventStats(event.value.id)
+    registrations.value = await getEventRegistrations(event.value.id)
+  } catch (error) {
+    console.error('Error loading management data:', error)
+  }
+}
+
+const startEditing = (field) => {
+  if (!canManage.value) return
+  editingField.value = field
+}
+
+const stopEditing = () => {
+  editingField.value = null
+}
+
+const saveField = async (field, value) => {
+  if (!canManage.value) return
+
+  try {
+    const updated = await updateEventField(event.value.id, field, value)
+    if (updated) {
+      event.value[field] = value
+    }
+    stopEditing()
+  } catch (error) {
+    console.error('Error saving field:', error)
+  }
+}
 </script>
 
 <style scoped>

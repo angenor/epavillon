@@ -320,6 +320,8 @@ CREATE TABLE public.activity_speakers (
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     email TEXT NOT NULL,
+    photo_url TEXT,
+    has_confirmed_by_email BOOLEAN DEFAULT FALSE,
     position TEXT,
     organization TEXT,
     is_available_for_questions BOOLEAN DEFAULT TRUE, -- Disponibilité pour les questions
