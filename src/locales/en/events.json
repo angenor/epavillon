@@ -163,6 +163,7 @@
     "speakerNameRequired": "Speaker's first and last name are required",
     "speakerEmailRequired": "Speaker's email is required",
     "speakerPositionRequired": "Speaker's position is required",
+    "invalidEmailFormat": "Invalid email format",
     "speakerOrganizationRequired": "Speaker's organization is required",
     "civility": "Title",
     "firstName": "First Name",

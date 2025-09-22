@@ -252,6 +252,7 @@
     "speakerNameRequired": "Le nom et prénom de l'intervenant sont obligatoires",
     "speakerEmailRequired": "L'email de l'intervenant est obligatoire",
     "speakerPositionRequired": "Le poste de l'intervenant est obligatoire",
+    "invalidEmailFormat": "Format d'email invalide",
     "speakerOrganizationRequired": "L'organisation de l'intervenant est obligatoire",
     "civility": "Civilité",
     "firstName": "Prénom",

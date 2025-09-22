@@ -1068,6 +1068,15 @@ const saveSpeakerField = async (speakerId, field) => {
         return
       }
 
+      // Validate email format
+      if (field === 'email') {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(value.trim())) {
+          alert(t('events.invalidEmailFormat'))
+          return
+        }
+      }
+
       if (value === speaker[field]) {
         cancelEditSpeaker(speakerId, field)
         return
@@ -1173,6 +1182,13 @@ const submitNewSpeaker = async () => {
 
   if (!newSpeakerForm.value.email.trim()) {
     alert(t('events.speakerEmailRequired'))
+    return
+  }
+
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(newSpeakerForm.value.email.trim())) {
+    alert(t('events.invalidEmailFormat'))
     return
   }
 
