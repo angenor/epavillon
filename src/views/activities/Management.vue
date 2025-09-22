@@ -159,7 +159,7 @@
                     alt="Cover par défaut"
                     class="w-full aspect-video object-cover rounded-lg opacity-60"
                   >
-                  <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded-lg">
+                  <div class="absolute inset-0 flex items-center justify-center bg-black/30 rounded-lg">
                     <span class="text-white text-lg font-medium">{{ t('events.defaultBanner') }}</span>
                   </div>
                 </div>
