@@ -610,6 +610,111 @@
         <p class="text-gray-600 dark:text-gray-400">{{ t('events.activityNotFound') }}</p>
       </div>
     </div>
+
+    <!-- Add Speaker Modal -->
+    <div v-if="showAddSpeakerModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+              {{ t('events.addNewSpeaker') }}
+            </h3>
+            <button @click="cancelAddSpeaker" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+              <font-awesome-icon :icon="['fas', 'times']" />
+            </button>
+          </div>
+
+          <form @submit.prevent="submitNewSpeaker" class="space-y-4">
+            <!-- Civilité -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {{ t('events.civility') }}
+              </label>
+              <select v-model="newSpeakerForm.civility"
+                      class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2">
+                <option value="M.">M.</option>
+                <option value="Mme">Mme</option>
+                <option value="Dr">Dr</option>
+                <option value="Pr">Pr</option>
+              </select>
+            </div>
+
+            <!-- Prénom -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {{ t('events.firstName') }} *
+              </label>
+              <input v-model="newSpeakerForm.first_name"
+                     type="text"
+                     required
+                     class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
+                     :placeholder="t('events.firstNamePlaceholder')">
+            </div>
+
+            <!-- Nom -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {{ t('events.lastName') }} *
+              </label>
+              <input v-model="newSpeakerForm.last_name"
+                     type="text"
+                     required
+                     class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
+                     :placeholder="t('events.lastNamePlaceholder')">
+            </div>
+
+            <!-- Poste -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {{ t('events.position') }}
+              </label>
+              <input v-model="newSpeakerForm.position"
+                     type="text"
+                     class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
+                     :placeholder="t('events.positionPlaceholder')">
+            </div>
+
+            <!-- Organisation -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {{ t('events.organization') }}
+              </label>
+              <input v-model="newSpeakerForm.organization"
+                     type="text"
+                     class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
+                     :placeholder="t('events.organizationPlaceholder')">
+            </div>
+
+            <!-- Email -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {{ t('events.email') }} *
+              </label>
+              <input v-model="newSpeakerForm.email"
+                     type="email"
+                     required
+                     class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
+                     :placeholder="t('events.emailPlaceholder')">
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <button type="button"
+                      @click="cancelAddSpeaker"
+                      class="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors">
+                {{ t('common.cancel') }}
+              </button>
+              <button type="submit"
+                      :disabled="savingNewSpeaker"
+                      class="px-4 py-2 bg-ifdd-bleu text-white rounded-lg hover:bg-ifdd-bleu-fonce disabled:opacity-50 transition-colors">
+                <font-awesome-icon v-if="savingNewSpeaker" :icon="['fas', 'spinner']" class="animate-spin mr-2" />
+                {{ t('events.addSpeaker') }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -630,6 +735,7 @@ const authStore = useAuthStore()
 const {
   getActivityById,
   updateActivity,
+  addSpeaker,
   updateSpeaker,
   deleteSpeaker,
   uploadDocument,
@@ -656,6 +762,16 @@ const savingField = ref({})
 const tempSpeakerValue = ref({})
 const hasUnsavedSpeakerChanges = ref({})
 const savingSpeakerField = ref({})
+const showAddSpeakerModal = ref(false)
+const newSpeakerForm = ref({
+  civility: 'M.',
+  first_name: '',
+  last_name: '',
+  position: '',
+  organization: '',
+  email: ''
+})
+const savingNewSpeaker = ref(false)
 
 const tabs = [
   { key: 'general', label: t('events.tabs.general') },
@@ -918,8 +1034,51 @@ const cancelDateChanges = () => {
 // La fonction updateActivityTime est remplacée par saveDates
 
 const addNewSpeaker = () => {
-  // TODO: Open modal to add speaker
-  console.log('Add speaker modal')
+  // Reset form
+  newSpeakerForm.value = {
+    civility: 'M.',
+    first_name: '',
+    last_name: '',
+    position: '',
+    organization: '',
+    email: ''
+  }
+  showAddSpeakerModal.value = true
+}
+
+const submitNewSpeaker = async () => {
+  // Validate required fields
+  if (!newSpeakerForm.value.first_name.trim() || !newSpeakerForm.value.last_name.trim()) {
+    alert(t('events.speakerNameRequired'))
+    return
+  }
+
+  if (!newSpeakerForm.value.email.trim()) {
+    alert(t('events.speakerEmailRequired'))
+    return
+  }
+
+  savingNewSpeaker.value = true
+  try {
+    const speakerData = {
+      ...newSpeakerForm.value,
+      has_confirmed_by_email: false
+    }
+
+    const newSpeaker = await addSpeaker(activity.value.id, speakerData)
+    speakers.value.push(newSpeaker)
+
+    showAddSpeakerModal.value = false
+  } catch (error) {
+    console.error('Error adding speaker:', error)
+    alert(t('events.errorAddingSpeaker'))
+  } finally {
+    savingNewSpeaker.value = false
+  }
+}
+
+const cancelAddSpeaker = () => {
+  showAddSpeakerModal.value = false
 }
 
 const removeSpeaker = async (speakerId) => {
