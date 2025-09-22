@@ -73,88 +73,92 @@
 
         <!-- Timeline de validation -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">
             {{ t('events.validationTimeline') }}
           </h3>
           <div class="relative">
-            <div class="absolute left-0 top-0 h-full w-0.5 bg-gray-200 dark:bg-gray-700"></div>
-            <div class="space-y-4">
+            <!-- Ligne horizontale de progression -->
+            <div class="absolute top-5 left-5 right-5 h-0.5 bg-gray-200 dark:bg-gray-700"></div>
+            <div class="absolute top-5 left-5 h-0.5 bg-ifdd-bleu transition-all duration-500"
+                 :style="{ width: getProgressWidth() }"></div>
+
+            <!-- Timeline horizontale -->
+            <div class="flex justify-between items-start relative">
               <!-- Draft -->
-              <div class="flex items-center" :class="getTimelineItemClass('draft')">
-                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+              <div class="flex flex-col items-center flex-1" :class="getTimelineItemClass('draft')">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full mb-3"
                      :class="getTimelineIconClass('draft')">
                   <font-awesome-icon :icon="getTimelineIcon('draft')" class="text-sm" />
                 </div>
-                <div class="ml-4 flex-1">
+                <div class="text-center">
                   <p class="text-sm font-medium" :class="getTimelineTextClass('draft')">{{ t('events.status.draft') }}</p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('events.statusDescription.draft') }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-24">{{ t('events.statusDescription.draft') }}</p>
                 </div>
               </div>
 
               <!-- Submitted -->
-              <div class="flex items-center" :class="getTimelineItemClass('submitted')">
-                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+              <div class="flex flex-col items-center flex-1" :class="getTimelineItemClass('submitted')">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full mb-3"
                      :class="getTimelineIconClass('submitted')">
                   <font-awesome-icon :icon="getTimelineIcon('submitted')" class="text-sm" />
                 </div>
-                <div class="ml-4 flex-1">
+                <div class="text-center">
                   <p class="text-sm font-medium" :class="getTimelineTextClass('submitted')">{{ t('events.status.submitted') }}</p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('events.statusDescription.submitted') }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-24">{{ t('events.statusDescription.submitted') }}</p>
                 </div>
               </div>
 
               <!-- Under Review -->
-              <div class="flex items-center" :class="getTimelineItemClass('under_review')">
-                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+              <div class="flex flex-col items-center flex-1" :class="getTimelineItemClass('under_review')">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full mb-3"
                      :class="getTimelineIconClass('under_review')">
                   <font-awesome-icon :icon="getTimelineIcon('under_review')" class="text-sm" />
                 </div>
-                <div class="ml-4 flex-1">
+                <div class="text-center">
                   <p class="text-sm font-medium" :class="getTimelineTextClass('under_review')">{{ t('events.status.under_review') }}</p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('events.statusDescription.under_review') }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-24">{{ t('events.statusDescription.under_review') }}</p>
                 </div>
               </div>
 
               <!-- Approved/Rejected -->
-              <div v-if="activity.validation_status === 'approved' || activity.validation_status === 'rejected'"
-                   class="flex items-center" :class="getTimelineItemClass(activity.validation_status)">
-                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+              <div class="flex flex-col items-center flex-1" :class="getTimelineItemClass(activity.validation_status)">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full mb-3"
                      :class="getTimelineIconClass(activity.validation_status)">
                   <font-awesome-icon :icon="getTimelineIcon(activity.validation_status)" class="text-sm" />
                 </div>
-                <div class="ml-4 flex-1">
+                <div class="text-center">
                   <p class="text-sm font-medium" :class="getTimelineTextClass(activity.validation_status)">
                     {{ t(`events.status.${activity.validation_status}`) }}
                   </p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-24">
                     {{ t(`events.statusDescription.${activity.validation_status}`) }}
                   </p>
                 </div>
               </div>
 
-              <!-- Live -->
-              <div v-if="activity.validation_status === 'live'"
-                   class="flex items-center" :class="getTimelineItemClass('live')">
-                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+              <!-- Live (si applicable) -->
+              <div v-if="activity.validation_status === 'live' || activity.validation_status === 'completed'"
+                   class="flex flex-col items-center flex-1" :class="getTimelineItemClass('live')">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full mb-3"
                      :class="getTimelineIconClass('live')">
                   <font-awesome-icon :icon="getTimelineIcon('live')" class="text-sm" />
                 </div>
-                <div class="ml-4 flex-1">
+                <div class="text-center">
                   <p class="text-sm font-medium" :class="getTimelineTextClass('live')">{{ t('events.status.live') }}</p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('events.statusDescription.live') }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-24">{{ t('events.statusDescription.live') }}</p>
                 </div>
               </div>
 
-              <!-- Completed -->
+              <!-- Completed (si applicable) -->
               <div v-if="activity.validation_status === 'completed'"
-                   class="flex items-center" :class="getTimelineItemClass('completed')">
-                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+                   class="flex flex-col items-center flex-1" :class="getTimelineItemClass('completed')">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full mb-3"
                      :class="getTimelineIconClass('completed')">
                   <font-awesome-icon :icon="getTimelineIcon('completed')" class="text-sm" />
                 </div>
-                <div class="ml-4 flex-1">
+                <div class="text-center">
                   <p class="text-sm font-medium" :class="getTimelineTextClass('completed')">{{ t('events.status.completed') }}</p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('events.statusDescription.completed') }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-24">{{ t('events.statusDescription.completed') }}</p>
                 </div>
               </div>
             </div>
@@ -231,19 +235,34 @@
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {{ t('events.objectives') }}
                 </label>
-                <div v-if="!editingField.objectives"
-                     @click="startEdit('objectives')"
-                     class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600">
-                  {{ activity.objectives }}
-                  <font-awesome-icon :icon="['fas', 'edit']" class="ml-2 text-gray-400" />
+                <div v-if="!editingField.objectives" class="relative">
+                  <div @click="startEdit('objectives')"
+                       class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600">
+                    {{ activity.objectives }}
+                    <font-awesome-icon :icon="['fas', 'edit']" class="ml-2 text-gray-400" />
+                  </div>
                 </div>
-                <textarea v-else
-                          v-model="tempValue.objectives"
-                          @blur="saveField('objectives')"
-                          @keyup.escape="cancelEdit('objectives')"
-                          rows="4"
-                          class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
-                ></textarea>
+                <div v-else class="relative">
+                  <textarea v-model="tempValue.objectives"
+                            @input="onFieldChange('objectives')"
+                            @keyup.escape="cancelEdit('objectives')"
+                            rows="4"
+                            class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 pr-24"
+                            ref="objectivesInput"></textarea>
+                  <div class="absolute bottom-2 right-2 flex space-x-2">
+                    <button v-if="hasUnsavedChanges.objectives"
+                            @click="saveField('objectives')"
+                            :disabled="savingField.objectives"
+                            class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50">
+                      <font-awesome-icon v-if="savingField.objectives" :icon="['fas', 'spinner']" class="animate-spin" />
+                      <font-awesome-icon v-else :icon="['fas', 'save']" />
+                    </button>
+                    <button @click="cancelEdit('objectives')"
+                            class="px-3 py-1 bg-gray-400 text-white rounded hover:bg-gray-500">
+                      <font-awesome-icon :icon="['fas', 'times']" />
+                    </button>
+                  </div>
+                </div>
               </div>
 
               <!-- Detailed Presentation -->
@@ -251,19 +270,34 @@
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {{ t('events.detailedPresentation') }}
                 </label>
-                <div v-if="!editingField.detailed_presentation"
-                     @click="startEdit('detailed_presentation')"
-                     class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600">
-                  {{ activity.detailed_presentation }}
-                  <font-awesome-icon :icon="['fas', 'edit']" class="ml-2 text-gray-400" />
+                <div v-if="!editingField.detailed_presentation" class="relative">
+                  <div @click="startEdit('detailed_presentation')"
+                       class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600">
+                    {{ activity.detailed_presentation }}
+                    <font-awesome-icon :icon="['fas', 'edit']" class="ml-2 text-gray-400" />
+                  </div>
                 </div>
-                <textarea v-else
-                          v-model="tempValue.detailed_presentation"
-                          @blur="saveField('detailed_presentation')"
-                          @keyup.escape="cancelEdit('detailed_presentation')"
-                          rows="6"
-                          class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
-                ></textarea>
+                <div v-else class="relative">
+                  <textarea v-model="tempValue.detailed_presentation"
+                            @input="onFieldChange('detailed_presentation')"
+                            @keyup.escape="cancelEdit('detailed_presentation')"
+                            rows="6"
+                            class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 pr-24"
+                            ref="detailedPresentationInput"></textarea>
+                  <div class="absolute bottom-2 right-2 flex space-x-2">
+                    <button v-if="hasUnsavedChanges.detailed_presentation"
+                            @click="saveField('detailed_presentation')"
+                            :disabled="savingField.detailed_presentation"
+                            class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50">
+                      <font-awesome-icon v-if="savingField.detailed_presentation" :icon="['fas', 'spinner']" class="animate-spin" />
+                      <font-awesome-icon v-else :icon="['fas', 'save']" />
+                    </button>
+                    <button @click="cancelEdit('detailed_presentation')"
+                            class="px-3 py-1 bg-gray-400 text-white rounded hover:bg-gray-500">
+                      <font-awesome-icon :icon="['fas', 'times']" />
+                    </button>
+                  </div>
+                </div>
               </div>
 
               <!-- Dates et heures -->
@@ -401,12 +435,128 @@
                     <div class="flex-1 min-w-0">
                       <div class="flex items-start justify-between">
                         <div class="flex-1">
-                          <h4 class="font-medium text-gray-900 dark:text-white">
-                            {{ speaker.civility }} {{ speaker.first_name }} {{ speaker.last_name }}
-                          </h4>
-                          <p class="text-sm text-gray-600 dark:text-gray-400">{{ speaker.position }}</p>
-                          <p class="text-sm text-gray-600 dark:text-gray-400">{{ speaker.organization }}</p>
-                          <p class="text-sm text-gray-600 dark:text-gray-400">{{ speaker.email }}</p>
+                          <!-- Nom complet -->
+                          <div v-if="!editingField[`speaker_${speaker.id}_name`]" class="mb-2">
+                            <h4 @click="startEditSpeaker(speaker.id, 'name')"
+                                class="font-medium text-gray-900 dark:text-white cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 px-2 py-1 -ml-2 rounded">
+                              {{ speaker.civility }} {{ speaker.first_name }} {{ speaker.last_name }}
+                              <font-awesome-icon :icon="['fas', 'edit']" class="ml-2 text-sm text-gray-400" />
+                            </h4>
+                          </div>
+                          <div v-else class="mb-2 space-y-2">
+                            <div class="grid grid-cols-3 gap-2">
+                              <input v-model="tempSpeakerValue[speaker.id].civility"
+                                     @input="onSpeakerFieldChange(speaker.id, 'name')"
+                                     placeholder="Civilité"
+                                     class="text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-2 py-1">
+                              <input v-model="tempSpeakerValue[speaker.id].first_name"
+                                     @input="onSpeakerFieldChange(speaker.id, 'name')"
+                                     placeholder="Prénom"
+                                     class="text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-2 py-1">
+                              <input v-model="tempSpeakerValue[speaker.id].last_name"
+                                     @input="onSpeakerFieldChange(speaker.id, 'name')"
+                                     placeholder="Nom"
+                                     class="text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-2 py-1">
+                            </div>
+                            <div class="flex space-x-2">
+                              <button v-if="hasUnsavedSpeakerChanges[speaker.id]?.name"
+                                      @click="saveSpeakerField(speaker.id, 'name')"
+                                      :disabled="savingSpeakerField[speaker.id]?.name"
+                                      class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50">
+                                <font-awesome-icon v-if="savingSpeakerField[speaker.id]?.name" :icon="['fas', 'spinner']" class="animate-spin" />
+                                <font-awesome-icon v-else :icon="['fas', 'save']" />
+                              </button>
+                              <button @click="cancelEditSpeaker(speaker.id, 'name')"
+                                      class="px-3 py-1 bg-gray-400 text-white rounded hover:bg-gray-500">
+                                <font-awesome-icon :icon="['fas', 'times']" />
+                              </button>
+                            </div>
+                          </div>
+
+                          <!-- Poste -->
+                          <div v-if="!editingField[`speaker_${speaker.id}_position`]" class="mb-1">
+                            <p @click="startEditSpeaker(speaker.id, 'position')"
+                               class="text-sm text-gray-600 dark:text-gray-400 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 px-2 py-1 -ml-2 rounded">
+                              {{ speaker.position }}
+                              <font-awesome-icon :icon="['fas', 'edit']" class="ml-2 text-xs text-gray-400" />
+                            </p>
+                          </div>
+                          <div v-else class="mb-1">
+                            <div class="flex items-center space-x-2">
+                              <input v-model="tempSpeakerValue[speaker.id].position"
+                                     @input="onSpeakerFieldChange(speaker.id, 'position')"
+                                     placeholder="Poste"
+                                     class="text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 flex-1">
+                              <button v-if="hasUnsavedSpeakerChanges[speaker.id]?.position"
+                                      @click="saveSpeakerField(speaker.id, 'position')"
+                                      :disabled="savingSpeakerField[speaker.id]?.position"
+                                      class="px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50">
+                                <font-awesome-icon v-if="savingSpeakerField[speaker.id]?.position" :icon="['fas', 'spinner']" class="animate-spin" />
+                                <font-awesome-icon v-else :icon="['fas', 'save']" />
+                              </button>
+                              <button @click="cancelEditSpeaker(speaker.id, 'position')"
+                                      class="px-2 py-1 bg-gray-400 text-white rounded hover:bg-gray-500">
+                                <font-awesome-icon :icon="['fas', 'times']" />
+                              </button>
+                            </div>
+                          </div>
+
+                          <!-- Organisation -->
+                          <div v-if="!editingField[`speaker_${speaker.id}_organization`]" class="mb-1">
+                            <p @click="startEditSpeaker(speaker.id, 'organization')"
+                               class="text-sm text-gray-600 dark:text-gray-400 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 px-2 py-1 -ml-2 rounded">
+                              {{ speaker.organization }}
+                              <font-awesome-icon :icon="['fas', 'edit']" class="ml-2 text-xs text-gray-400" />
+                            </p>
+                          </div>
+                          <div v-else class="mb-1">
+                            <div class="flex items-center space-x-2">
+                              <input v-model="tempSpeakerValue[speaker.id].organization"
+                                     @input="onSpeakerFieldChange(speaker.id, 'organization')"
+                                     placeholder="Organisation"
+                                     class="text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 flex-1">
+                              <button v-if="hasUnsavedSpeakerChanges[speaker.id]?.organization"
+                                      @click="saveSpeakerField(speaker.id, 'organization')"
+                                      :disabled="savingSpeakerField[speaker.id]?.organization"
+                                      class="px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50">
+                                <font-awesome-icon v-if="savingSpeakerField[speaker.id]?.organization" :icon="['fas', 'spinner']" class="animate-spin" />
+                                <font-awesome-icon v-else :icon="['fas', 'save']" />
+                              </button>
+                              <button @click="cancelEditSpeaker(speaker.id, 'organization')"
+                                      class="px-2 py-1 bg-gray-400 text-white rounded hover:bg-gray-500">
+                                <font-awesome-icon :icon="['fas', 'times']" />
+                              </button>
+                            </div>
+                          </div>
+
+                          <!-- Email -->
+                          <div v-if="!editingField[`speaker_${speaker.id}_email`]" class="mb-2">
+                            <p @click="startEditSpeaker(speaker.id, 'email')"
+                               class="text-sm text-gray-600 dark:text-gray-400 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 px-2 py-1 -ml-2 rounded">
+                              {{ speaker.email }}
+                              <font-awesome-icon :icon="['fas', 'edit']" class="ml-2 text-xs text-gray-400" />
+                            </p>
+                          </div>
+                          <div v-else class="mb-2">
+                            <div class="flex items-center space-x-2">
+                              <input v-model="tempSpeakerValue[speaker.id].email"
+                                     @input="onSpeakerFieldChange(speaker.id, 'email')"
+                                     type="email"
+                                     placeholder="Email"
+                                     class="text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 flex-1">
+                              <button v-if="hasUnsavedSpeakerChanges[speaker.id]?.email"
+                                      @click="saveSpeakerField(speaker.id, 'email')"
+                                      :disabled="savingSpeakerField[speaker.id]?.email"
+                                      class="px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50">
+                                <font-awesome-icon v-if="savingSpeakerField[speaker.id]?.email" :icon="['fas', 'spinner']" class="animate-spin" />
+                                <font-awesome-icon v-else :icon="['fas', 'save']" />
+                              </button>
+                              <button @click="cancelEditSpeaker(speaker.id, 'email')"
+                                      class="px-2 py-1 bg-gray-400 text-white rounded hover:bg-gray-500">
+                                <font-awesome-icon :icon="['fas', 'times']" />
+                              </button>
+                            </div>
+                          </div>
 
                           <!-- Statut de confirmation par email -->
                           <div class="flex items-center space-x-2 mt-2">
@@ -564,6 +714,7 @@ const authStore = useAuthStore()
 const {
   getActivityById,
   updateActivity,
+  updateSpeaker,
   deleteSpeaker,
   uploadDocument,
   deleteDocument,
@@ -586,6 +737,9 @@ const startTime = ref('')
 const endTime = ref('')
 const hasUnsavedChanges = ref({})
 const savingField = ref({})
+const tempSpeakerValue = ref({})
+const hasUnsavedSpeakerChanges = ref({})
+const savingSpeakerField = ref({})
 
 const tabs = [
   { key: 'general', label: t('events.tabs.general') },
@@ -699,18 +853,6 @@ const getTimelineIcon = (status) => {
   return icons[status] || ['fas', 'circle']
 }
 
-const isStatusCompleted = (status) => {
-  const currentStatus = activity.value?.validation_status
-  const statusOrder = ['draft', 'submitted', 'under_review', 'approved', 'live', 'completed']
-  const currentIndex = statusOrder.indexOf(currentStatus)
-  const itemIndex = statusOrder.indexOf(status)
-
-  if (currentStatus === 'rejected') {
-    return itemIndex < statusOrder.indexOf('under_review')
-  }
-
-  return itemIndex <= currentIndex
-}
 
 const getProgressWidth = () => {
   const currentStatus = activity.value?.validation_status
@@ -759,6 +901,115 @@ const saveField = async (field) => {
     console.error('Error updating field:', error)
   } finally {
     delete savingField.value[field]
+  }
+}
+
+// Speaker editing functions
+const startEditSpeaker = (speakerId, field) => {
+  const fieldKey = `speaker_${speakerId}_${field}`
+  editingField.value[fieldKey] = true
+
+  if (!tempSpeakerValue.value[speakerId]) {
+    tempSpeakerValue.value[speakerId] = {}
+  }
+
+  const speaker = speakers.value.find(s => s.id === speakerId)
+  if (speaker) {
+    if (field === 'name') {
+      tempSpeakerValue.value[speakerId] = {
+        civility: speaker.civility,
+        first_name: speaker.first_name,
+        last_name: speaker.last_name
+      }
+    } else {
+      tempSpeakerValue.value[speakerId][field] = speaker[field]
+    }
+  }
+
+  if (!hasUnsavedSpeakerChanges.value[speakerId]) {
+    hasUnsavedSpeakerChanges.value[speakerId] = {}
+  }
+  hasUnsavedSpeakerChanges.value[speakerId][field] = false
+}
+
+const cancelEditSpeaker = (speakerId, field) => {
+  const fieldKey = `speaker_${speakerId}_${field}`
+  delete editingField.value[fieldKey]
+
+  if (hasUnsavedSpeakerChanges.value[speakerId]) {
+    delete hasUnsavedSpeakerChanges.value[speakerId][field]
+  }
+}
+
+const onSpeakerFieldChange = (speakerId, field) => {
+  const speaker = speakers.value.find(s => s.id === speakerId)
+  if (!speaker) return
+
+  if (!hasUnsavedSpeakerChanges.value[speakerId]) {
+    hasUnsavedSpeakerChanges.value[speakerId] = {}
+  }
+
+  if (field === 'name') {
+    const hasChanges =
+      tempSpeakerValue.value[speakerId].civility !== speaker.civility ||
+      tempSpeakerValue.value[speakerId].first_name !== speaker.first_name ||
+      tempSpeakerValue.value[speakerId].last_name !== speaker.last_name
+    hasUnsavedSpeakerChanges.value[speakerId][field] = hasChanges
+  } else {
+    hasUnsavedSpeakerChanges.value[speakerId][field] =
+      tempSpeakerValue.value[speakerId][field] !== speaker[field]
+  }
+}
+
+const saveSpeakerField = async (speakerId, field) => {
+  const speaker = speakers.value.find(s => s.id === speakerId)
+  if (!speaker) return
+
+  if (!savingSpeakerField.value[speakerId]) {
+    savingSpeakerField.value[speakerId] = {}
+  }
+
+  savingSpeakerField.value[speakerId][field] = true
+
+  try {
+    let updateData = {}
+
+    if (field === 'name') {
+      updateData = {
+        civility: tempSpeakerValue.value[speakerId].civility,
+        first_name: tempSpeakerValue.value[speakerId].first_name,
+        last_name: tempSpeakerValue.value[speakerId].last_name
+      }
+
+      // Check if values are the same
+      if (updateData.civility === speaker.civility &&
+          updateData.first_name === speaker.first_name &&
+          updateData.last_name === speaker.last_name) {
+        cancelEditSpeaker(speakerId, field)
+        return
+      }
+    } else {
+      const value = tempSpeakerValue.value[speakerId][field]
+      if (value === speaker[field]) {
+        cancelEditSpeaker(speakerId, field)
+        return
+      }
+      updateData[field] = value
+    }
+
+    // Use updateSpeaker function from composable
+    await updateSpeaker(speakerId, updateData)
+
+    // Update local speaker data
+    Object.assign(speaker, updateData)
+
+    cancelEditSpeaker(speakerId, field)
+  } catch (error) {
+    console.error('Error updating speaker:', error)
+  } finally {
+    if (savingSpeakerField.value[speakerId]) {
+      delete savingSpeakerField.value[speakerId][field]
+    }
   }
 }
 
