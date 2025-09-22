@@ -138,10 +138,9 @@
               </h3>
               <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                 <img
-                  v-if="activity.cover_image_high_url"
-                  :src="activity.cover_image_high_url"
+                  :src="activity.cover_image_high_url || '/images/example/event_banniere_par_defaut_16_9.jpg'"
                   alt="Cover"
-                  class="w-full h-64 object-cover rounded-lg mb-4"
+                  class="w-full aspect-video object-cover rounded-lg mb-4"
                 >
                 <label class="px-4 py-2 bg-ifdd-bleu text-white rounded-lg hover:bg-ifdd-bleu-fonce transition-colors cursor-pointer inline-block">
                   <font-awesome-icon :icon="['fas', 'upload']" class="mr-2" />
