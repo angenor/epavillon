@@ -336,15 +336,15 @@ export default function useUserActivities() {
         .single()
 
       const cleanFileName = sanitizeFileName(file.name)
-      const fileName = `${activityId}/${type}_${Date.now()}_${cleanFileName}`
+      const fileName = `activities_banner/${activityId}_${type}_${Date.now()}_${cleanFileName}`
       const { error: uploadError } = await supabase.storage
-        .from('activity-banners')
+        .from('epavillonp')
         .upload(fileName, file)
 
       if (uploadError) throw uploadError
 
       const { data: urlData } = supabase.storage
-        .from('activity-banners')
+        .from('epavillonp')
         .getPublicUrl(fileName)
 
       const { data, error: updateError } = await supabase
@@ -360,12 +360,14 @@ export default function useUserActivities() {
       // Supprimer l'ancienne bannière si elle existe
       if (currentActivity?.[updateField]) {
         try {
-          const urlParts = currentActivity[updateField].split('/object/public/activity-banners/')
+          const urlParts = currentActivity[updateField].split('/object/public/epavillonp/')
           if (urlParts.length > 1) {
             const oldBannerPath = urlParts[1]
-            await supabase.storage
-              .from('activity-banners')
-              .remove([oldBannerPath])
+            if (oldBannerPath.startsWith('activities_banner/')) {
+              await supabase.storage
+                .from('epavillonp')
+                .remove([oldBannerPath])
+            }
           }
         } catch (deleteErr) {
           console.warn('Could not delete old banner:', deleteErr)
