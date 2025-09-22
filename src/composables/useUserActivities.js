@@ -348,13 +348,13 @@ export default function useUserActivities() {
     try {
       const fileName = `intervenants/${speakerId}_${Date.now()}_${file.name}`
       const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('apavillonp')
+        .from('epavillonp')
         .upload(fileName, file)
 
       if (uploadError) throw uploadError
 
       const { data: urlData } = supabase.storage
-        .from('apavillonp')
+        .from('epavillonp')
         .getPublicUrl(fileName)
 
       const { data, error: updateError } = await supabase

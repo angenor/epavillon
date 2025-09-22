@@ -1,4 +1,5 @@
-les boutons "Enregistrer et Annuler" apparaisse bien lorsqu'on modifie la date, l'heure et le titre mais n'apparaisse pas quand on modifie Objectifs, 'Présentation détaillée' , d'ailleur je constate qu'on ne peut pas modifier les informations d'un Intervenant à part la photo. Enfin je constate que le Timeline est toujour verticale au lieu d'etre horizontale
+cette page est presque parfaite, mais je ne le trouve pas très esthétique. Je veux qu'elle soit plus amusant et premium avec des animations sympa. 
+Cette page est la page qui permet au organisation, entreprise etc de manager leur evenement, avant, pendant et après leur activité aux évènement créé par l'IFDD.
 
 
 nombre de visite, page manage, page public et page

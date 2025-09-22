@@ -308,6 +308,21 @@
                 </button>
               </div>
 
+              <!-- Avertissement pour photos manquantes -->
+              <div v-if="speakers.some(s => !s.photo_url)" class="mb-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border border-yellow-200 dark:border-yellow-800">
+                <div class="flex items-start">
+                  <font-awesome-icon :icon="['fas', 'exclamation-triangle']" class="w-5 h-5 text-yellow-500 dark:text-yellow-400 mt-0.5" />
+                  <div class="ml-3">
+                    <h4 class="text-sm font-medium text-yellow-900 dark:text-yellow-200">
+                      {{ t('events.speakerPhotoWarning.title') }}
+                    </h4>
+                    <p class="mt-1 text-sm text-yellow-800 dark:text-yellow-300">
+                      {{ t('events.speakerPhotoWarning.message') }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div
                   v-for="speaker in speakers"
@@ -325,7 +340,7 @@
                       >
                       <div
                         v-else
-                        class="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center"
+                        class="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center border-2 border-yellow-300 dark:border-yellow-600"
                       >
                         <font-awesome-icon :icon="['fas', 'user']" class="text-gray-400 text-xl" />
                       </div>
@@ -666,10 +681,11 @@
             <!-- Poste -->
             <div>
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {{ t('events.position') }}
+                {{ t('events.position') }} *
               </label>
               <input v-model="newSpeakerForm.position"
                      type="text"
+                     required
                      class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
                      :placeholder="t('events.positionPlaceholder')">
             </div>
@@ -677,10 +693,11 @@
             <!-- Organisation -->
             <div>
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {{ t('events.organization') }}
+                {{ t('events.organization') }} *
               </label>
               <input v-model="newSpeakerForm.organization"
                      type="text"
+                     required
                      class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
                      :placeholder="t('events.organizationPlaceholder')">
             </div>
@@ -941,6 +958,12 @@ const saveSpeakerField = async (speakerId, field) => {
         last_name: tempSpeakerValue.value[speakerId].last_name
       }
 
+      // Validate required fields
+      if (!updateData.first_name.trim() || !updateData.last_name.trim()) {
+        alert(t('events.speakerNameRequired'))
+        return
+      }
+
       // Check if values are the same
       if (updateData.civility === speaker.civility &&
           updateData.first_name === speaker.first_name &&
@@ -950,6 +973,19 @@ const saveSpeakerField = async (speakerId, field) => {
       }
     } else {
       const value = tempSpeakerValue.value[speakerId][field]
+
+      // Validate required fields
+      if (!value.trim()) {
+        if (field === 'position') {
+          alert(t('events.speakerPositionRequired'))
+        } else if (field === 'organization') {
+          alert(t('events.speakerOrganizationRequired'))
+        } else if (field === 'email') {
+          alert(t('events.speakerEmailRequired'))
+        }
+        return
+      }
+
       if (value === speaker[field]) {
         cancelEditSpeaker(speakerId, field)
         return
@@ -1055,6 +1091,16 @@ const submitNewSpeaker = async () => {
 
   if (!newSpeakerForm.value.email.trim()) {
     alert(t('events.speakerEmailRequired'))
+    return
+  }
+
+  if (!newSpeakerForm.value.position.trim()) {
+    alert(t('events.speakerPositionRequired'))
+    return
+  }
+
+  if (!newSpeakerForm.value.organization.trim()) {
+    alert(t('events.speakerOrganizationRequired'))
     return
   }
 

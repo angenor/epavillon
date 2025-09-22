@@ -240,7 +240,28 @@
       "speakers": "Intervenants",
       "documents": "Documents",
       "banners": "Bannières"
-    }
+    },
+    "speakerPhotoWarning": {
+      "title": "Photos d'intervenants manquantes",
+      "message": "Certains intervenants n'ont pas de photo. Bien que non obligatoires, les photos améliorent considérablement la présentation de votre activité."
+    },
+    "speakerNameRequired": "Le nom et prénom de l'intervenant sont obligatoires",
+    "speakerEmailRequired": "L'email de l'intervenant est obligatoire",
+    "speakerPositionRequired": "Le poste de l'intervenant est obligatoire",
+    "speakerOrganizationRequired": "L'organisation de l'intervenant est obligatoire",
+    "civility": "Civilité",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "position": "Poste",
+    "organization": "Organisation",
+    "email": "Email",
+    "firstNamePlaceholder": "Entrez le prénom",
+    "lastNamePlaceholder": "Entrez le nom de famille",
+    "positionPlaceholder": "Ex: Directeur, Chercheur, Expert...",
+    "organizationPlaceholder": "Ex: Ministère, Université, ONG...",
+    "emailPlaceholder": "email@exemple.com",
+    "addNewSpeaker": "Ajouter un nouvel intervenant",
+    "errorAddingSpeaker": "Erreur lors de l'ajout de l'intervenant"
   },
   "trainings": {
     "title": "Formations disponibles",
