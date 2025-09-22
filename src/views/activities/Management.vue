@@ -121,28 +121,52 @@
           </div>
         </div>
 
-        <!-- Tabs -->
+        <!-- Sections -->
+        <div class="space-y-8">
+        <!-- Bannières Section -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-          <div class="border-b border-gray-200 dark:border-gray-700">
-            <nav class="flex space-x-8 px-6" aria-label="Tabs">
-              <button
-                v-for="tab in tabs"
-                :key="tab.key"
-                @click="activeTab = tab.key"
-                class="py-4 px-1 border-b-2 font-medium text-sm transition-colors"
-                :class="activeTab === tab.key
-                  ? 'border-ifdd-bleu text-ifdd-bleu'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'"
-              >
-                {{ tab.label }}
-              </button>
-            </nav>
+          <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
+              <font-awesome-icon :icon="['fas', 'image']" class="mr-3 text-ifdd-bleu" />
+              {{ t('events.tabs.banners') }}
+            </h2>
           </div>
+          <div class="p-6 space-y-6">
+            <div>
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
+                {{ t('events.coverImage') }}
+              </h3>
+              <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                <img
+                  v-if="activity.cover_image_high_url"
+                  :src="activity.cover_image_high_url"
+                  alt="Cover"
+                  class="w-full h-64 object-cover rounded-lg mb-4"
+                >
+                <label class="px-4 py-2 bg-ifdd-bleu text-white rounded-lg hover:bg-ifdd-bleu-fonce transition-colors cursor-pointer inline-block">
+                  <font-awesome-icon :icon="['fas', 'upload']" class="mr-2" />
+                  {{ t('events.uploadCover') }}
+                  <input
+                    type="file"
+                    @change="uploadCover"
+                    class="hidden"
+                    accept="image/*"
+                  >
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
 
-          <!-- Tab Content -->
-          <div class="p-6">
-            <!-- General Info Tab -->
-            <div v-if="activeTab === 'general'" class="space-y-6">
+        <!-- Informations générales Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
+              <font-awesome-icon :icon="['fas', 'info-circle']" class="mr-3 text-ifdd-bleu" />
+              {{ t('events.tabs.general') }}
+            </h2>
+          </div>
+          <div class="p-6 space-y-6">
               <!-- Objectives -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -291,10 +315,18 @@
                   </button>
                 </div>
               </div>
-            </div>
+          </div>
+        </div>
 
-            <!-- Speakers Tab -->
-            <div v-if="activeTab === 'speakers'" class="space-y-4">
+        <!-- Intervenants Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
+              <font-awesome-icon :icon="['fas', 'microphone']" class="mr-3 text-ifdd-bleu" />
+              {{ t('events.tabs.speakers') }}
+            </h2>
+          </div>
+          <div class="p-6 space-y-4">
               <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">
                   {{ t('events.speakers') }}
@@ -585,10 +617,18 @@
                   </div>
                 </div>
               </div>
-            </div>
+          </div>
+        </div>
 
-            <!-- Documents Tab -->
-            <div v-if="activeTab === 'documents'" class="space-y-4">
+        <!-- Documents Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
+              <font-awesome-icon :icon="['fas', 'file-alt']" class="mr-3 text-ifdd-bleu" />
+              {{ t('events.tabs.documents') }}
+            </h2>
+          </div>
+          <div class="p-6 space-y-4">
               <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">
                   {{ t('events.documents') }}
@@ -637,35 +677,8 @@
                   </div>
                 </div>
               </div>
-            </div>
-
-            <!-- Banners Tab -->
-            <div v-if="activeTab === 'banners'" class="space-y-6">
-              <div>
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                  {{ t('events.coverImage') }}
-                </h3>
-                <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                  <img
-                    v-if="activity.cover_image_high_url"
-                    :src="activity.cover_image_high_url"
-                    alt="Cover"
-                    class="w-full h-64 object-cover rounded-lg mb-4"
-                  >
-                  <label class="px-4 py-2 bg-ifdd-bleu text-white rounded-lg hover:bg-ifdd-bleu-fonce transition-colors cursor-pointer inline-block">
-                    <font-awesome-icon :icon="['fas', 'upload']" class="mr-2" />
-                    {{ t('events.uploadCover') }}
-                    <input
-                      type="file"
-                      @change="uploadCover"
-                      class="hidden"
-                      accept="image/*"
-                    >
-                  </label>
-                </div>
-              </div>
-            </div>
           </div>
+        </div>
         </div>
       </div>
 
@@ -842,7 +855,6 @@ const speakers = ref([])
 const documents = ref([])
 const editingField = ref({})
 const tempValue = ref({})
-const activeTab = ref('general')
 const activityDate = ref('')
 const startTime = ref('')
 const endTime = ref('')
@@ -866,12 +878,6 @@ const selectedSpeakerPhoto = ref(null)
 const uploadingPhoto = ref({})
 const uploadProgress = ref({})
 
-const tabs = [
-  { key: 'general', label: t('events.tabs.general') },
-  { key: 'speakers', label: t('events.tabs.speakers') },
-  { key: 'documents', label: t('events.tabs.documents') },
-  { key: 'banners', label: t('events.tabs.banners') }
-]
 
 const stats = computed(() => ({
   totalRegistrations: activity.value?.activity_registrations?.[0]?.count || 0,
