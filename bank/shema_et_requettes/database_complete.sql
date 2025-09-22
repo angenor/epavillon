@@ -320,7 +320,8 @@ CREATE TABLE public.activity_speakers (
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     email TEXT NOT NULL,
-    photo_url TEXT,
+    photo_url TEXT, -- URL de la photo haute définition
+    photo_thumbnail_url TEXT, -- URL de la miniature de la photo
     has_confirmed_by_email BOOLEAN DEFAULT FALSE,
     position TEXT,
     organization TEXT,

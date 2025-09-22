@@ -346,27 +346,103 @@ export default function useUserActivities() {
 
   const uploadSpeakerPhoto = async (speakerId, file) => {
     try {
-      const fileName = `intervenants/${speakerId}_${Date.now()}_${file.name}`
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      // Importer la fonction de traitement d'image
+      const { processSpeakerPhoto, validateImageFile } = await import('@/utils/imageProcessor')
+
+      // Valider le fichier
+      const validation = validateImageFile(file)
+      if (!validation.isValid) {
+        throw new Error(validation.errors.join('\n'))
+      }
+
+      // Traiter l'image pour générer les deux versions
+      const { highQuality, thumbnail } = await processSpeakerPhoto(file)
+
+      const timestamp = Date.now()
+
+      // Upload de la version haute qualité
+      const highQualityFileName = `intervenants/${speakerId}_hq_${timestamp}_${file.name}`
+      const { error: hqUploadError } = await supabase.storage
         .from('epavillonp')
-        .upload(fileName, file)
+        .upload(highQualityFileName, highQuality.file)
 
-      if (uploadError) throw uploadError
+      if (hqUploadError) {
+        console.error('High quality upload error:', hqUploadError)
+        throw hqUploadError
+      }
 
-      const { data: urlData } = supabase.storage
+      // Upload de la miniature
+      const thumbnailFileName = `intervenants/${speakerId}_thumb_${timestamp}_${file.name}`
+      const { error: thumbUploadError } = await supabase.storage
         .from('epavillonp')
-        .getPublicUrl(fileName)
+        .upload(thumbnailFileName, thumbnail.file)
 
-      const { data, error: updateError } = await supabase
+      if (thumbUploadError) {
+        console.error('Thumbnail upload error:', thumbUploadError)
+        throw thumbUploadError
+      }
+
+      // Obtenir les URLs publiques
+      const { data: hqUrlData } = supabase.storage
+        .from('epavillonp')
+        .getPublicUrl(highQualityFileName)
+
+      const { data: thumbUrlData } = supabase.storage
+        .from('epavillonp')
+        .getPublicUrl(thumbnailFileName)
+
+      // Vérifier d'abord si l'intervenant existe
+      const { error: fetchError } = await supabase
         .from('activity_speakers')
-        .update({ photo_url: urlData.publicUrl })
+        .select('id')
         .eq('id', speakerId)
-        .select()
         .single()
 
-      if (updateError) throw updateError
+      if (fetchError) {
+        console.error('Fetch speaker error:', fetchError)
+        throw fetchError
+      }
 
-      return data
+      // Essayer d'ajouter le champ thumbnail s'il existe
+      try {
+        const { data: testUpdate, error: testError } = await supabase
+          .from('activity_speakers')
+          .update({
+            photo_url: hqUrlData.publicUrl,
+            photo_thumbnail_url: thumbUrlData.publicUrl
+          })
+          .eq('id', speakerId)
+          .select()
+          .single()
+
+        if (testError) {
+          // Si erreur avec thumbnail, utiliser seulement photo_url
+          console.warn('Thumbnail field not available, using only photo_url:', testError)
+          const { data, error: updateError } = await supabase
+            .from('activity_speakers')
+            .update({ photo_url: hqUrlData.publicUrl })
+            .eq('id', speakerId)
+            .select()
+            .single()
+
+          if (updateError) throw updateError
+          return { ...data, photo_thumbnail_url: thumbUrlData.publicUrl }
+        }
+
+        return testUpdate
+      } catch (updateErr) {
+        console.error('Update error, trying fallback:', updateErr)
+        // Fallback: mettre à jour seulement photo_url
+        const { data, error: updateError } = await supabase
+          .from('activity_speakers')
+          .update({ photo_url: hqUrlData.publicUrl })
+          .eq('id', speakerId)
+          .select()
+          .single()
+
+        if (updateError) throw updateError
+        return { ...data, photo_thumbnail_url: thumbUrlData.publicUrl }
+      }
     } catch (err) {
       console.error('Error uploading speaker photo:', err)
       throw err

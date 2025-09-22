@@ -144,23 +144,50 @@ async function compressToSize(canvas, mimeType, initialQuality, maxSizeBytes) {
 }
 
 /**
+ * Génère les deux versions d'une photo d'intervenant (haute qualité et miniature)
+ * @param {File} file - Le fichier image source
+ * @returns {Promise<{highQuality: {file: File, dataUrl: string}, thumbnail: {file: File, dataUrl: string}}>}
+ */
+export async function processSpeakerPhoto(file) {
+  try {
+    // Générer la version haute qualité
+    const highQuality = await processImage(file, {
+      maxWidth: 800,
+      maxHeight: 800,
+      quality: 0.9,
+      maxSizeKB: 800
+    })
+
+    // Générer la miniature
+    const thumbnail = await generateThumbnail(file, 150)
+
+    return {
+      highQuality,
+      thumbnail
+    }
+  } catch (error) {
+    throw new Error(`Erreur lors du traitement de la photo: ${error.message}`)
+  }
+}
+
+/**
  * Valide un fichier image
  */
 export function validateImageFile(file) {
   const errors = []
-  
+
   // Vérifier le type
   const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
   if (!validTypes.includes(file.type)) {
     errors.push('Format non supporté. Utilisez JPG, PNG ou WebP.')
   }
-  
+
   // Vérifier la taille (5MB max pour le fichier original)
   const maxSize = 5 * 1024 * 1024 // 5MB
   if (file.size > maxSize) {
     errors.push('Le fichier est trop volumineux (max 5MB).')
   }
-  
+
   return {
     isValid: errors.length === 0,
     errors

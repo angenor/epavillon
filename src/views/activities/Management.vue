@@ -333,10 +333,12 @@
                     <!-- Photo de l'intervenant -->
                     <div class="flex-shrink-0 relative">
                       <img
-                        v-if="speaker.photo_url"
-                        :src="speaker.photo_url"
+                        v-if="speaker.photo_thumbnail_url || speaker.photo_url"
+                        :src="speaker.photo_thumbnail_url || speaker.photo_url"
                         :alt="`${speaker.first_name} ${speaker.last_name}`"
-                        class="w-16 h-16 rounded-full object-cover"
+                        class="w-16 h-16 rounded-full object-cover cursor-pointer"
+                        @click="showSpeakerPhotoModal(speaker)"
+                        :title="t('events.viewFullSize')"
                       >
                       <div
                         v-else
@@ -732,6 +734,29 @@
         </div>
       </div>
     </div>
+
+    <!-- Speaker Photo Modal -->
+    <div v-if="showPhotoModal && selectedSpeakerPhoto" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50" @click="closePhotoModal">
+      <div class="bg-white dark:bg-gray-800 rounded-lg max-w-2xl max-h-[90vh] overflow-hidden" @click.stop>
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+              {{ selectedSpeakerPhoto.name }}
+            </h3>
+            <button @click="closePhotoModal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+              <font-awesome-icon :icon="['fas', 'times']" class="text-xl" />
+            </button>
+          </div>
+          <div class="flex justify-center">
+            <img
+              :src="selectedSpeakerPhoto.url"
+              :alt="selectedSpeakerPhoto.name"
+              class="max-w-full max-h-[70vh] object-contain rounded-lg"
+            >
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -789,6 +814,8 @@ const newSpeakerForm = ref({
   email: ''
 })
 const savingNewSpeaker = ref(false)
+const showPhotoModal = ref(false)
+const selectedSpeakerPhoto = ref(null)
 
 const tabs = [
   { key: 'general', label: t('events.tabs.general') },
@@ -1182,9 +1209,19 @@ const uploadSpeakerPhotoHandler = async (speakerId, event) => {
     const speakerIndex = speakers.value.findIndex(s => s.id === speakerId)
     if (speakerIndex !== -1) {
       speakers.value[speakerIndex].photo_url = updatedSpeaker.photo_url
+      // Mettre à jour la miniature si elle existe
+      if (updatedSpeaker.photo_thumbnail_url) {
+        speakers.value[speakerIndex].photo_thumbnail_url = updatedSpeaker.photo_thumbnail_url
+      }
     }
+
+    // Reset du champ de fichier
+    event.target.value = ''
   } catch (error) {
     console.error('Error uploading speaker photo:', error)
+    alert(`Erreur lors de l'upload de la photo: ${error.message}`)
+    // Reset du champ de fichier même en cas d'erreur
+    event.target.value = ''
   }
 }
 
@@ -1199,6 +1236,21 @@ const sendConfirmationEmailHandler = async (speakerId) => {
   } catch (error) {
     console.error('Error sending confirmation email:', error)
   }
+}
+
+const showSpeakerPhotoModal = (speaker) => {
+  if (speaker.photo_url) {
+    selectedSpeakerPhoto.value = {
+      url: speaker.photo_url,
+      name: `${speaker.first_name} ${speaker.last_name}`
+    }
+    showPhotoModal.value = true
+  }
+}
+
+const closePhotoModal = () => {
+  showPhotoModal.value = false
+  selectedSpeakerPhoto.value = null
 }
 
 const loadActivity = async () => {
