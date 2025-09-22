@@ -43,38 +43,58 @@
 
       <!-- Zone de recadrage -->
       <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
+        <!-- Informations de débogage -->
+        <div class="mb-2 text-xs text-gray-600 dark:text-gray-400">
+          <p>Image: {{ imageWidth }}x{{ imageHeight }} | Ratio correct: {{ isCorrectRatio }}</p>
+          <p>Crop zone: {{ Math.round(cropArea.width) }}x{{ Math.round(cropArea.height) }}</p>
+        </div>
+
         <div class="relative mx-auto" :style="{ maxWidth: '600px' }">
           <!-- Image d'origine -->
           <img
             ref="originalImage"
             :src="selectedImage"
             alt="Image à recadrer"
-            class="max-w-full h-auto"
+            class="max-w-full h-auto block border-2 border-gray-300"
             @load="onImageLoad"
+            @error="onImageError"
           >
 
-          <!-- Overlay de recadrage (si nécessaire) -->
+          <!-- Overlay de recadrage -->
           <div
-            v-if="!isCorrectRatio"
-            class="absolute inset-0 border-2 border-dashed border-ifdd-bleu bg-black bg-opacity-30"
-            :style="cropOverlayStyle"
+            v-if="!isCorrectRatio && imageWidth > 0 && imageHeight > 0"
+            class="absolute inset-0"
+            style="pointer-events: none;"
           >
             <!-- Zone de recadrage 16:9 -->
             <div
-              class="absolute bg-transparent border-2 border-solid border-white shadow-lg cursor-move"
+              class="absolute border-2 border-red-500 bg-red-500 bg-opacity-20"
               :style="cropAreaStyle"
+              style="pointer-events: auto;"
               @mousedown="startDragging"
               @touchstart="startDragging"
             >
+              <div class="absolute inset-0 bg-transparent">
+                <!-- Texte de débogage -->
+                <div class="text-white text-xs p-1 bg-black bg-opacity-50">
+                  Recadrage 16:9
+                </div>
+              </div>
+
               <!-- Coins de redimensionnement -->
               <div
                 v-for="corner in corners"
                 :key="corner"
-                :class="`absolute w-3 h-3 bg-white border border-gray-400 ${getCornerClasses(corner)}`"
+                :class="`absolute w-4 h-4 bg-red-500 border border-white ${getCornerClasses(corner)}`"
                 @mousedown.stop="startResizing(corner)"
                 @touchstart.stop="startResizing(corner)"
               ></div>
             </div>
+          </div>
+
+          <!-- Message si image non chargée -->
+          <div v-if="imageWidth === 0" class="absolute inset-0 flex items-center justify-center bg-gray-200 bg-opacity-75">
+            <p class="text-gray-600">Chargement de l'image...</p>
           </div>
         </div>
 
@@ -216,19 +236,8 @@ const isCorrectRatio = computed(() => {
 
 const corners = ['top-left', 'top-right', 'bottom-left', 'bottom-right']
 
-const cropOverlayStyle = computed(() => ({
-  top: '0',
-  left: '0',
-  width: '100%',
-  height: '100%'
-}))
-
 const cropAreaStyle = computed(() => {
-  const imgElement = originalImage.value
-  if (!imgElement) return {}
-
-  const imgRect = imgElement.getBoundingClientRect()
-  const containerRect = imgElement.parentElement.getBoundingClientRect()
+  if (!originalImage.value || imageWidth.value === 0) return {}
 
   return {
     left: `${cropArea.value.x}px`,
@@ -260,11 +269,15 @@ const onImageLoad = () => {
   const img = originalImage.value
   if (!img) return
 
+  console.log('Image loaded:', img.naturalWidth, 'x', img.naturalHeight)
+
   imageWidth.value = img.naturalWidth
   imageHeight.value = img.naturalHeight
 
   const ratio = imageWidth.value / imageHeight.value
   currentRatio.value = `${Math.round(ratio * 100) / 100}:1`
+
+  console.log('Current ratio:', currentRatio.value, 'Is correct:', isCorrectRatio.value)
 
   if (!isCorrectRatio.value) {
     setupInitialCrop()
@@ -275,35 +288,61 @@ const onImageLoad = () => {
   updatePreview()
 }
 
+const onImageError = (event) => {
+  console.error('Error loading image:', event)
+  imageWidth.value = 0
+  imageHeight.value = 0
+}
+
 const setupInitialCrop = () => {
   const img = originalImage.value
-  if (!img) return
-
-  const imgRect = img.getBoundingClientRect()
-  const targetRatio = 16 / 9
-
-  let cropWidth, cropHeight
-
-  if (imageWidth.value / imageHeight.value > targetRatio) {
-    // Image trop large, recadrer la largeur
-    cropHeight = imageHeight.value
-    cropWidth = cropHeight * targetRatio
-  } else {
-    // Image trop haute, recadrer la hauteur
-    cropWidth = imageWidth.value
-    cropHeight = cropWidth / targetRatio
+  if (!img) {
+    console.log('No image element found')
+    return
   }
 
-  // Centrer le recadrage
-  const scale = imgRect.width / imageWidth.value
-  cropArea.value = {
-    x: (imgRect.width - cropWidth * scale) / 2,
-    y: (imgRect.height - cropHeight * scale) / 2,
-    width: cropWidth * scale,
-    height: cropHeight * scale
-  }
+  // Attendre que l'image soit complètement chargée et rendue
+  setTimeout(() => {
+    const imgRect = img.getBoundingClientRect()
+    console.log('Image rect:', imgRect)
 
-  updatePreview()
+    if (imgRect.width === 0 || imgRect.height === 0) {
+      console.log('Image not yet rendered, retrying...')
+      setTimeout(setupInitialCrop, 200)
+      return
+    }
+
+    const targetRatio = 16 / 9
+    const currentRatio = imageWidth.value / imageHeight.value
+    const displayRatio = imgRect.width / imgRect.height
+
+    console.log('Target ratio:', targetRatio, 'Current ratio:', currentRatio, 'Display ratio:', displayRatio)
+
+    let cropWidth, cropHeight
+
+    if (displayRatio > targetRatio) {
+      // Image affichée trop large, recadrer la largeur
+      cropHeight = imgRect.height
+      cropWidth = cropHeight * targetRatio
+    } else {
+      // Image affichée trop haute, recadrer la hauteur
+      cropWidth = imgRect.width
+      cropHeight = cropWidth / targetRatio
+    }
+
+    // Centrer le recadrage
+    const newCropArea = {
+      x: (imgRect.width - cropWidth) / 2,
+      y: (imgRect.height - cropHeight) / 2,
+      width: cropWidth,
+      height: cropHeight
+    }
+
+    console.log('New crop area:', newCropArea)
+
+    cropArea.value = newCropArea
+    updatePreview()
+  }, 200)
 }
 
 const autoFitCrop = () => {
@@ -315,11 +354,26 @@ const resetCrop = () => {
   if (!img) return
 
   const imgRect = img.getBoundingClientRect()
+  const targetRatio = 16 / 9
+  const imgRatio = imgRect.width / imgRect.height
+
+  let cropWidth, cropHeight
+
+  if (imgRatio > targetRatio) {
+    // Image plus large que 16:9, prendre toute la hauteur
+    cropHeight = imgRect.height
+    cropWidth = cropHeight * targetRatio
+  } else {
+    // Image plus haute que 16:9, prendre toute la largeur
+    cropWidth = imgRect.width
+    cropHeight = cropWidth / targetRatio
+  }
+
   cropArea.value = {
-    x: 0,
-    y: 0,
-    width: imgRect.width,
-    height: imgRect.height
+    x: (imgRect.width - cropWidth) / 2,
+    y: (imgRect.height - cropHeight) / 2,
+    width: cropWidth,
+    height: cropHeight
   }
   updatePreview()
 }
@@ -422,7 +476,7 @@ const startResizing = (corner) => {
   document.addEventListener('touchend', stopResizing)
 }
 
-const handleResize = (event) => {
+const handleResize = () => {
   if (!isResizing.value) return
   // Logique de redimensionnement ici si nécessaire
   // Pour l'instant, on garde le ratio 16:9 fixe
