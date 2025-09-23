@@ -300,12 +300,12 @@ const checkAccess = async () => {
 const loadStats = async () => {
   try {
     // Statistiques générales
-    const { data: users, error: usersError } = await supabase
+    const { count: usersCount, error: usersError } = await supabase
       .from('users')
       .select('id', { count: 'exact', head: true })
 
     if (!usersError) {
-      stats.value.totalUsers = users || 0
+      stats.value.totalUsers = usersCount || 0
     }
 
     let approvedQuery = supabase
@@ -317,10 +317,10 @@ const loadStats = async () => {
       approvedQuery = approvedQuery.eq('event_id', selectedEventId.value)
     }
 
-    const { data: approvedActivities, error: approvedError } = await approvedQuery
+    const { count: approvedCount, error: approvedError } = await approvedQuery
 
     if (!approvedError) {
-      stats.value.activitiesApproved = approvedActivities || 0
+      stats.value.activitiesApproved = approvedCount || 0
     }
 
     let pendingQuery = supabase
@@ -332,19 +332,19 @@ const loadStats = async () => {
       pendingQuery = pendingQuery.eq('event_id', selectedEventId.value)
     }
 
-    const { data: pendingCount, error: pendingError } = await pendingQuery
+    const { count: pendingCount, error: pendingError } = await pendingQuery
 
     if (!pendingError) {
       stats.value.activitiesPending = pendingCount || 0
     }
 
-    const { data: organizations, error: orgsError } = await supabase
+    const { count: organizationsCount, error: orgsError } = await supabase
       .from('organizations')
       .select('id', { count: 'exact', head: true })
       .eq('is_active', true)
 
     if (!orgsError) {
-      stats.value.activeOrganizations = organizations || 0
+      stats.value.activeOrganizations = organizationsCount || 0
     }
 
   } catch (error) {
