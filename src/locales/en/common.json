@@ -56,6 +56,7 @@
     "delete": "Delete",
     "deleting": "Deleting...",
     "close": "Close",
+    "reset": "Reset",
     "maintenance": {
       "title": "Page under maintenance",
       "message": "This page is currently under maintenance. We are working to improve it to provide you with a better experience.",

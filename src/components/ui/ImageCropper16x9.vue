@@ -209,6 +209,7 @@ const previewCanvas = ref(null)
 const selectedImage = ref(props.initialImage)
 const showCropper = ref(false)
 const processing = ref(false)
+const originalFile = ref(null)
 
 // Image properties
 const imageWidth = ref(0)
@@ -255,6 +256,9 @@ const triggerFileSelect = () => {
 const handleFileSelect = (event) => {
   const file = event.target.files[0]
   if (!file) return
+
+  // Stocker le fichier original
+  originalFile.value = file
 
   const reader = new FileReader()
   reader.onload = (e) => {
@@ -553,20 +557,44 @@ const selectNewImage = () => {
 }
 
 const finalizeImage = () => {
-  // Si l'image est déjà au bon ratio, on l'émet directement
+  // Si l'image est déjà au bon ratio
   if (isCorrectRatio.value) {
-    // Convertir l'image en blob pour l'upload
+    const img = originalImage.value
+
+    // Vérifier que l'élément image existe et est valide
+    if (!img || !(img instanceof HTMLImageElement) || !img.complete || img.naturalWidth === 0) {
+      console.error('Invalid or unloaded image element')
+      return
+    }
+
+    // Si le fichier original fait moins de 160KB, l'émettre directement pour préserver la taille
+    if (originalFile.value && (originalFile.value.size / 1024) <= 160) {
+      console.log(`Image originale (${Math.round(originalFile.value.size / 1024)}KB) émise directement sans recompression`)
+      emit('imageProcessed', originalFile.value)
+      return
+    }
+
+    // Sinon, convertir l'image en blob pour l'upload
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
-    const img = originalImage.value
 
     canvas.width = imageWidth.value
     canvas.height = imageHeight.value
-    ctx.drawImage(img, 0, 0)
 
-    canvas.toBlob((blob) => {
-      emit('imageProcessed', blob)
-    }, 'image/jpeg', 0.9)
+    try {
+      ctx.drawImage(img, 0, 0, imageWidth.value, imageHeight.value)
+
+      canvas.toBlob((blob) => {
+        if (blob) {
+          console.log(`Image recompressée via canvas (${Math.round(blob.size / 1024)}KB)`)
+          emit('imageProcessed', blob)
+        } else {
+          console.error('Failed to create blob from canvas')
+        }
+      }, 'image/jpeg', 0.9)
+    } catch (error) {
+      console.error('Error drawing image on canvas:', error)
+    }
   }
 }
 </script>

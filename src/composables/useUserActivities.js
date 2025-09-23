@@ -323,33 +323,67 @@ export default function useUserActivities() {
 
   const uploadBanner = async (activityId, file, type = 'cover') => {
     try {
-      const updateField = type === 'cover'
-        ? 'cover_image_high_url'
-        : 'banner_url'
+      // Importer la fonction de traitement d'image
+      const { processBannerImage, validateImageFile } = await import('@/utils/imageProcessor')
 
-      // Récupérer l'URL actuelle pour suppression
+      // Récupérer les URLs actuelles pour suppression
       const { data: currentActivity } = await supabase
         .from('activities')
-        .select(updateField)
+        .select('cover_image_high_url, cover_image_low_url')
         .eq('id', activityId)
         .eq('submitted_by', authStore.user.id)
         .single()
 
+      // Valider le fichier
+      const validation = validateImageFile(file)
+      if (!validation.isValid) {
+        throw new Error(validation.errors.join('\n'))
+      }
+
+      // Traiter l'image pour générer les deux versions
+      const { highQuality, lowQuality } = await processBannerImage(file)
+
+      const timestamp = Date.now()
       const cleanFileName = sanitizeFileName(file.name)
-      const fileName = `activities_banner/${activityId}_${type}_${Date.now()}_${cleanFileName}`
-      const { error: uploadError } = await supabase.storage
+
+      // Upload de la version haute qualité
+      const highQualityFileName = `activities_banner/${activityId}_${type}_hq_${timestamp}_${cleanFileName}`
+      const { error: hqUploadError } = await supabase.storage
         .from('epavillonp')
-        .upload(fileName, file)
+        .upload(highQualityFileName, highQuality.file)
 
-      if (uploadError) throw uploadError
+      if (hqUploadError) {
+        console.error('High quality upload error:', hqUploadError)
+        throw hqUploadError
+      }
 
-      const { data: urlData } = supabase.storage
+      // Upload de la version basse qualité
+      const lowQualityFileName = `activities_banner/${activityId}_${type}_lq_${timestamp}_${cleanFileName}`
+      const { error: lqUploadError } = await supabase.storage
         .from('epavillonp')
-        .getPublicUrl(fileName)
+        .upload(lowQualityFileName, lowQuality.file)
 
+      if (lqUploadError) {
+        console.error('Low quality upload error:', lqUploadError)
+        throw lqUploadError
+      }
+
+      // Obtenir les URLs publiques
+      const { data: hqUrlData } = supabase.storage
+        .from('epavillonp')
+        .getPublicUrl(highQualityFileName)
+
+      const { data: lqUrlData } = supabase.storage
+        .from('epavillonp')
+        .getPublicUrl(lowQualityFileName)
+
+      // Mettre à jour la base de données avec les deux URLs
       const { data, error: updateError } = await supabase
         .from('activities')
-        .update({ [updateField]: urlData.publicUrl })
+        .update({
+          cover_image_high_url: hqUrlData.publicUrl,
+          cover_image_low_url: lqUrlData.publicUrl
+        })
         .eq('id', activityId)
         .eq('submitted_by', authStore.user.id)
         .select()
@@ -357,10 +391,10 @@ export default function useUserActivities() {
 
       if (updateError) throw updateError
 
-      // Supprimer l'ancienne bannière si elle existe
-      if (currentActivity?.[updateField]) {
+      // Supprimer les anciennes bannières si elles existent
+      if (currentActivity?.cover_image_high_url) {
         try {
-          const urlParts = currentActivity[updateField].split('/object/public/epavillonp/')
+          const urlParts = currentActivity.cover_image_high_url.split('/object/public/epavillonp/')
           if (urlParts.length > 1) {
             const oldBannerPath = urlParts[1]
             if (oldBannerPath.startsWith('activities_banner/')) {
@@ -370,7 +404,23 @@ export default function useUserActivities() {
             }
           }
         } catch (deleteErr) {
-          console.warn('Could not delete old banner:', deleteErr)
+          console.warn('Could not delete old high quality banner:', deleteErr)
+        }
+      }
+
+      if (currentActivity?.cover_image_low_url) {
+        try {
+          const urlParts = currentActivity.cover_image_low_url.split('/object/public/epavillonp/')
+          if (urlParts.length > 1) {
+            const oldBannerPath = urlParts[1]
+            if (oldBannerPath.startsWith('activities_banner/')) {
+              await supabase.storage
+                .from('epavillonp')
+                .remove([oldBannerPath])
+            }
+          }
+        } catch (deleteErr) {
+          console.warn('Could not delete old low quality banner:', deleteErr)
         }
       }
 

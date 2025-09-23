@@ -171,6 +171,77 @@ export async function processSpeakerPhoto(file) {
 }
 
 /**
+ * Génère les deux versions d'une bannière d'activité (haute et basse qualité)
+ * @param {File} file - Le fichier image source
+ * @returns {Promise<{highQuality: {file: File, dataUrl: string}, lowQuality: {file: File, dataUrl: string}}>}
+ */
+export async function processBannerImage(file) {
+  try {
+    // Vérifier d'abord la taille du fichier original
+    const originalSizeKB = file.size / 1024
+
+    let highQuality
+
+    if (originalSizeKB <= 160) {
+      // Si l'image fait déjà moins de 160KB, la garder telle quelle pour la haute qualité
+      const reader = new FileReader()
+      const dataUrl = await new Promise((resolve) => {
+        reader.onloadend = () => resolve(reader.result)
+        reader.readAsDataURL(file)
+      })
+
+      highQuality = {
+        file: file,
+        dataUrl: dataUrl
+      }
+    } else {
+      // Si l'image fait plus de 160KB, la compresser à 160KB max
+      highQuality = await processImage(file, {
+        maxWidth: 1920,
+        maxHeight: 1080,
+        quality: 0.9,
+        maxSizeKB: 160
+      })
+    }
+
+    // Générer la version basse qualité (entre 20KB et 30KB)
+    // On vise 25KB comme cible optimale
+    const lowQuality = await processImage(file, {
+      maxWidth: 640,
+      maxHeight: 360,
+      quality: 0.7,
+      maxSizeKB: 30
+    })
+
+    // Vérifier que la version basse qualité respecte la taille minimale
+    if (lowQuality.file.size < 20 * 1024) {
+      // Si trop petite, augmenter légèrement la qualité
+      const adjustedLowQuality = await processImage(file, {
+        maxWidth: 720,
+        maxHeight: 405,
+        quality: 0.75,
+        maxSizeKB: 30
+      })
+
+      // Si toujours trop petite, accepter la version précédente
+      if (adjustedLowQuality.file.size >= 20 * 1024) {
+        return {
+          highQuality,
+          lowQuality: adjustedLowQuality
+        }
+      }
+    }
+
+    return {
+      highQuality,
+      lowQuality
+    }
+  } catch (error) {
+    throw new Error(`Erreur lors du traitement de la bannière: ${error.message}`)
+  }
+}
+
+/**
  * Valide un fichier image
  */
 export function validateImageFile(file) {

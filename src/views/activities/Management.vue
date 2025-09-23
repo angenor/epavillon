@@ -1295,14 +1295,24 @@ const onBannerImageSelected = (file) => {
   console.log('Image selected for banner:', file.name)
 }
 
-const onBannerImageProcessed = async (blob) => {
+const onBannerImageProcessed = async (fileOrBlob) => {
   try {
-    // Créer un fichier à partir du blob
-    const file = new File([blob], 'banner-16x9.jpg', { type: 'image/jpeg' })
+    let file
+
+    // Si c'est déjà un File (émis directement par ImageCropper), l'utiliser tel quel
+    if (fileOrBlob instanceof File) {
+      file = fileOrBlob
+      console.log(`Utilisation du fichier original: ${Math.round(file.size / 1024)}KB`)
+    } else {
+      // Sinon, créer un fichier à partir du blob
+      file = new File([fileOrBlob], 'banner-16x9.jpg', { type: 'image/jpeg' })
+      console.log(`Fichier créé à partir du blob: ${Math.round(file.size / 1024)}KB`)
+    }
 
     // Uploader la bannière
     const updatedActivity = await uploadBanner(activity.value.id, file, 'cover')
     activity.value.cover_image_high_url = updatedActivity.cover_image_high_url
+    activity.value.cover_image_low_url = updatedActivity.cover_image_low_url
 
     // Sortir du mode édition
     editingBanner.value = false
