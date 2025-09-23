@@ -99,6 +99,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/activities/preview/:id',
+      name: 'activity-preview',
+      component: () => import('../views/activities/Preview.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/community',
       name: 'community',
       component: () => import('../views/community/Community.vue'),

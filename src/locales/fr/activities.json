@@ -570,6 +570,19 @@
         "title": "Erreur de chargement",
         "message": "Une erreur est survenue lors du chargement de l'activité. Veuillez réessayer plus tard."
       }
+    },
+    "preview": {
+      "button": "Prévisualiser",
+      "badge": "Prévisualisation",
+      "banner": {
+        "title": "Mode prévisualisation",
+        "description": "Seul vous pouvez voir cette page - elle n'est pas encore publique"
+      },
+      "backToManagement": "Retour à la gestion",
+      "error": {
+        "title": "Erreur de prévisualisation",
+        "message": "Impossible de charger la prévisualisation de cette activité."
+      }
     }
   }
 }

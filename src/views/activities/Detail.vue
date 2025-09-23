@@ -87,11 +87,11 @@
     <div class="flex flex-col lg:flex-row gap-4 lg:gap-6 w-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative -mt-6 sm:-mt-8 md:-mt-10 mb-10">
       <div class="w-full lg:max-w-3xl bg-white dark:bg-gray-800 rounded-xl h-min pb-10 shadow-xl">
         <!-- Affiche/Poster de l'activité -->
-        <div 
+        <div
           class="h-64 sm:h-80 md:h-96 rounded-xl shadow-md relative overflow-hidden bg-gradient-to-br from-blue-50 to-green-50 dark:from-blue-900/20 dark:to-green-900/20"
         >
-          <img 
-            :src="activity?.cover_image_high_url || activity?.cover_image_low_url || '/images/example/poster-default.png'"
+          <img
+            :src="getActivityPosterUrl()"
             :alt="activity?.title || 'Activity poster'"
             class="w-full h-full object-cover"
             loading="lazy"
@@ -213,8 +213,19 @@
                 :key="speaker.id"
                 class="flex flex-col justify-center items-center group cursor-pointer"
               >
-                <div class="h-12 w-12 sm:h-14 sm:w-14 bg-gradient-to-br from-amber-200 to-orange-300 shadow-md rounded-full flex items-center justify-center text-gray-700 font-bold text-lg group-hover:scale-110 transition-transform">
-                  {{ getInitials(speaker) }}
+                <div class="h-12 w-12 sm:h-14 sm:w-14 shadow-md rounded-full flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform">
+                  <img
+                    v-if="speaker.photo_thumbnail_url || speaker.photo_url"
+                    :src="speaker.photo_thumbnail_url || speaker.photo_url"
+                    :alt="`${speaker.first_name} ${speaker.last_name}`"
+                    class="w-full h-full object-cover"
+                  >
+                  <div
+                    v-else
+                    class="w-full h-full bg-gradient-to-br from-amber-200 to-orange-300 flex items-center justify-center text-gray-700 font-bold text-lg"
+                  >
+                    {{ getInitials(speaker) }}
+                  </div>
                 </div>
                 <div class="text-xs sm:text-sm w-32 sm:w-40 text-center mt-2">
                   <div class="font-bold text-gray-900 dark:text-white line-clamp-2">
@@ -396,12 +407,21 @@ const getBannerUrl = () => {
   // Priorité : bannière de l'événement parent
   if (event.value?.banner_high_quality_32_9_url) return event.value.banner_high_quality_32_9_url
   if (event.value?.banner_low_quality_32_9_url) return event.value.banner_low_quality_32_9_url
-  
+
   // Sinon bannière de l'activité
   if (activity.value?.banner_url) return activity.value.banner_url
-  
+
   // Par défaut
   return '/images/example/event_banniere_par_defaut_32_9.jpg'
+}
+
+const getActivityPosterUrl = () => {
+  // Priorité : poster de l'activité (haute qualité puis basse qualité)
+  if (activity.value?.cover_image_high_url) return activity.value.cover_image_high_url
+  if (activity.value?.cover_image_low_url) return activity.value.cover_image_low_url
+
+  // Sinon bannière par défaut
+  return '/images/example/poster-default.png'
 }
 
 const loadActivity = async () => {

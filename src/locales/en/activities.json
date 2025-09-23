@@ -524,6 +524,19 @@
         "title": "Loading error",
         "message": "An error occurred while loading the activity. Please try again later."
       }
+    },
+    "preview": {
+      "button": "Preview",
+      "badge": "Preview",
+      "banner": {
+        "title": "Preview mode",
+        "description": "Only you can see this page - it's not yet public"
+      },
+      "backToManagement": "Back to management",
+      "error": {
+        "title": "Preview error",
+        "message": "Unable to load the preview of this activity."
+      }
     }
   }
 }
