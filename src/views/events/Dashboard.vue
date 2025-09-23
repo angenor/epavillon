@@ -144,7 +144,7 @@
                   :class="{ 'bg-gradient-to-br from-ifdd-bleu to-ifdd-bleu-clair': !event.cover_image_low_url }"
                 >
                   <div v-if="!event.cover_image_low_url" class="w-full h-full flex items-center justify-center">
-                    <font-awesome-icon :icon="['fas', getEventIcon(event.activity_type)]" class="w-8 h-8 text-white/50" />
+                    <font-awesome-icon :icon="['fas', getEventIcon(event.activity_type)]" class="w-8 h-8 text-gray-500 dark:text-white/50" />
                   </div>
                 </div>
               </div>

@@ -533,6 +533,7 @@
         "description": "Only you can see this page - it's not yet public"
       },
       "backToManagement": "Back to management",
+      "defaultPoster": "Default banner image",
       "error": {
         "title": "Preview error",
         "message": "Unable to load the preview of this activity."

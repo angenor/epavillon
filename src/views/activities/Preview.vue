@@ -123,8 +123,13 @@
               :src="getActivityPosterUrl()"
               :alt="activity?.title || 'Activity poster'"
               class="w-full h-full object-cover"
+              :class="{ 'opacity-60': isUsingDefaultPoster }"
               loading="lazy"
             >
+            <!-- Indication image par défaut -->
+            <div v-if="isUsingDefaultPoster" class="absolute inset-0 flex items-center justify-center bg-black/30 rounded-xl">
+              <span class="text-white text-lg font-medium">{{ t('activity.preview.defaultPoster') }}</span>
+            </div>
           </div>
           <div class="p-4 sm:p-6 md:p-8">
 
@@ -312,6 +317,11 @@ const error = ref(false)
 const isDescriptionExpanded = ref(false)
 const descriptionContainer = ref(null)
 const shouldShowToggleButton = ref(false)
+
+// Computed pour savoir si on utilise l'image par défaut
+const isUsingDefaultPoster = computed(() => {
+  return !activity.value?.cover_image_high_url && !activity.value?.cover_image_low_url
+})
 
 // Fonction pour vérifier si le contenu dépasse 300px de hauteur
 const checkContentHeight = async () => {

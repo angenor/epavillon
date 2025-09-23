@@ -579,6 +579,7 @@
         "description": "Seul vous pouvez voir cette page - elle n'est pas encore publique"
       },
       "backToManagement": "Retour à la gestion",
+      "defaultPoster": "Image de bannière par défaut",
       "error": {
         "title": "Erreur de prévisualisation",
         "message": "Impossible de charger la prévisualisation de cette activité."

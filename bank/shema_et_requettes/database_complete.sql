@@ -356,6 +356,7 @@ CREATE TABLE public.activity_registrations (
 CREATE TABLE public.activity_documents (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     activity_id UUID NOT NULL REFERENCES public.activities(id) ON DELETE CASCADE,
+    types TEXT[], -- 'presentation', 'report', 'additional_resource', 'autre'.
     title TEXT NOT NULL,
     file_url TEXT NOT NULL,
     file_type TEXT,
