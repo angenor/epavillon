@@ -69,7 +69,8 @@
               <div class="flex flex-col items-center">
                 <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
                      :class="getStepIconClass('draft')">
-                  <font-awesome-icon :icon="['fas', 'edit']" class="text-sm" />
+                  <div v-if="isStepInProgress('draft')" class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <font-awesome-icon v-else :icon="['fas', 'edit']" class="text-sm" />
                 </div>
                 <div class="text-center mt-2">
                   <p class="text-sm font-medium" :class="getStepTextClass('draft')">
@@ -84,7 +85,8 @@
               <div class="flex flex-col items-center">
                 <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
                      :class="getStepIconClass('submitted')">
-                  <font-awesome-icon :icon="['fas', 'paper-plane']" class="text-sm" />
+                  <div v-if="isStepInProgress('submitted')" class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <font-awesome-icon v-else :icon="['fas', 'paper-plane']" class="text-sm" />
                 </div>
                 <div class="text-center mt-2">
                   <p class="text-sm font-medium" :class="getStepTextClass('submitted')">
@@ -99,7 +101,8 @@
               <div class="flex flex-col items-center">
                 <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
                      :class="getStepIconClass('under_review')">
-                  <font-awesome-icon :icon="['fas', 'search']" class="text-sm" />
+                  <div v-if="isStepInProgress('under_review')" class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <font-awesome-icon v-else :icon="['fas', 'search']" class="text-sm" />
                 </div>
                 <div class="text-center mt-2">
                   <p class="text-sm font-medium" :class="getStepTextClass('under_review')">
@@ -114,7 +117,8 @@
               <div class="flex flex-col items-center">
                 <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
                      :class="getPathStepClass('approved')">
-                  <font-awesome-icon :icon="['fas', 'check']" class="text-sm" />
+                  <div v-if="isStepInProgress('approved')" class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <font-awesome-icon v-else :icon="['fas', 'check']" class="text-sm" />
                 </div>
                 <div class="text-center mt-2">
                   <p class="text-sm font-medium" :class="getPathTextClass('approved')">
@@ -129,7 +133,8 @@
               <div class="flex flex-col items-center">
                 <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
                      :class="getPathStepClass('live')">
-                  <font-awesome-icon :icon="['fas', 'broadcast-tower']" class="text-sm" />
+                  <div v-if="isStepInProgress('live')" class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <font-awesome-icon v-else :icon="['fas', 'broadcast-tower']" class="text-sm" />
                 </div>
                 <div class="text-center mt-2">
                   <p class="text-sm font-medium" :class="getPathTextClass('live')">
@@ -144,7 +149,8 @@
               <div class="flex flex-col items-center">
                 <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
                      :class="getPathStepClass('completed')">
-                  <font-awesome-icon :icon="['fas', 'flag-checkered']" class="text-sm" />
+                  <div v-if="isStepInProgress('completed')" class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <font-awesome-icon v-else :icon="['fas', 'flag-checkered']" class="text-sm" />
                 </div>
                 <div class="text-center mt-2">
                   <p class="text-sm font-medium" :class="getPathTextClass('completed')">
@@ -369,6 +375,21 @@ const isStepCompleted = (status) => {
   // Si on est dans un statut avancé, toutes les étapes principales sont complétées
   if (['approved', 'rejected', 'live', 'completed'].includes(props.currentStatus)) {
     return mainStatusOrder.includes(status)
+  }
+
+  return false
+}
+
+// Fonction pour déterminer si une étape est en cours
+const isStepInProgress = (status) => {
+  // Ne pas afficher le spinner pour les statuts finaux (Annulé et Rejeté)
+  if (props.currentStatus === 'cancelled' || props.currentStatus === 'rejected') {
+    return false
+  }
+
+  // Vérifier si c'est le statut actuel et qu'il n'est pas annulé ou rejeté
+  if (status === props.currentStatus && status !== 'cancelled' && status !== 'rejected') {
+    return true
   }
 
   return false
