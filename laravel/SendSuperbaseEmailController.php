@@ -139,8 +139,9 @@ class SendSuperbaseEmailController extends Controller
                 }
             }
 
-            // Envoyer l'email
+            // Envoyer l'email avec copies
             \Mail::to($coordinatorEmail)
+                ->cc(['angenor99@gmail.com', 'Issa.Bado@francophonie.org'])
                 ->send(new SendActivitesRecuEmail(
                     $emailData,
                     "Confirmation de réception de votre activité - {$activityTitle}"
