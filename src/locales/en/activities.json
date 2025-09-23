@@ -525,6 +525,37 @@
         "message": "An error occurred while loading the activity. Please try again later."
       }
     },
+    "tags": {
+      "title": "Tags and Keywords",
+      "add": "Add",
+      "placeholder": "Type a tag and press Enter",
+      "count": "{current}/{max} tags",
+      "remaining": "{count} tag(s) remaining",
+      "maxReached": "Limit reached",
+      "currentTags": "Current tags",
+      "noTags": "No tags added",
+      "addFirstTag": "Add your first tag to improve your activity's visibility",
+      "remove": "Remove this tag",
+      "maxTagsReached": "You can only add {max} tags maximum",
+      "tagAlreadyExists": "This tag already exists",
+      "tagTooLong": "Tag cannot exceed 50 characters",
+      "encouragement": {
+        "title": "Why add tags?",
+        "description": "Tags significantly improve the visibility and discoverability of your activity.",
+        "benefit1": "Better search engine optimization (SEO)",
+        "benefit2": "Increased discoverability on our platform",
+        "benefit3": "Personalized recommendations for participants"
+      }
+    },
+    "documentManagement": {
+      "encouragement": {
+        "title": "Share your resources!",
+        "description": "Enrich your activity by adding useful documents for participants.",
+        "benefit1": "Presentations, reports and complementary resources",
+        "benefit2": "Permanent access to content for participants",
+        "benefit3": "Showcase your expertise and work"
+      }
+    },
     "preview": {
       "button": "Preview",
       "badge": "Preview",

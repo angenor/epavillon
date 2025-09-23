@@ -571,6 +571,37 @@
         "message": "Une erreur est survenue lors du chargement de l'activité. Veuillez réessayer plus tard."
       }
     },
+    "tags": {
+      "title": "Tags et mots-clés",
+      "add": "Ajouter",
+      "placeholder": "Tapez un tag et appuyez sur Entrée",
+      "count": "{current}/{max} tags",
+      "remaining": "{count} tag(s) restant(s)",
+      "maxReached": "Limite atteinte",
+      "currentTags": "Tags actuels",
+      "noTags": "Aucun tag ajouté",
+      "addFirstTag": "Ajoutez votre premier tag pour améliorer la visibilité de votre activité",
+      "remove": "Supprimer ce tag",
+      "maxTagsReached": "Vous ne pouvez ajouter que {max} tags maximum",
+      "tagAlreadyExists": "Ce tag existe déjà",
+      "tagTooLong": "Le tag ne peut pas dépasser 50 caractères",
+      "encouragement": {
+        "title": "Pourquoi ajouter des tags ?",
+        "description": "Les tags améliorent considérablement la visibilité et la découvrabilité de votre activité.",
+        "benefit1": "Meilleur référencement sur les moteurs de recherche (SEO)",
+        "benefit2": "Découvrabilité accrue sur notre plateforme",
+        "benefit3": "Recommandations personnalisées pour les participants"
+      }
+    },
+    "documentManagement": {
+      "encouragement": {
+        "title": "Partagez vos ressources !",
+        "description": "Enrichissez votre activité en ajoutant des documents utiles pour les participants.",
+        "benefit1": "Présentations, rapports et ressources complémentaires",
+        "benefit2": "Accès permanent aux contenus pour les participants",
+        "benefit3": "Valorisation de votre expertise et de vos travaux"
+      }
+    },
     "preview": {
       "button": "Prévisualiser",
       "badge": "Prévisualisation",

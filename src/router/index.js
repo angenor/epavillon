@@ -89,7 +89,7 @@ const router = createRouter({
     {
       path: '/activities/:id/manage',
       name: 'activity-management',
-      component: () => import('../views/activities/Management.vue'),
+      component: () => import('../views/activities/ManagementRefactored.vue'),
       meta: { requiresAuth: true },
     },
     {
