@@ -85,8 +85,7 @@
               <div class="flex flex-col items-center">
                 <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
                      :class="getStepIconClass('submitted')">
-                  <div v-if="isStepInProgress('submitted')" class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  <font-awesome-icon v-else :icon="['fas', 'paper-plane']" class="text-sm" />
+                  <font-awesome-icon :icon="['fas', 'paper-plane']" class="text-sm" />
                 </div>
                 <div class="text-center mt-2">
                   <p class="text-sm font-medium" :class="getStepTextClass('submitted')">
@@ -345,7 +344,7 @@ const getStepIconClass = (status) => {
 
   // Si c'est l'étape actuelle
   if (status === props.currentStatus) {
-    return 'bg-ifdd-bleu text-white border-2 border-ifdd-bleu'
+    return 'bg-green-500 text-white border-2 border-green-500'
   }
 
   // Si l'étape est passée (validée)
