@@ -957,6 +957,7 @@ import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import useUserActivities from '@/composables/useUserActivities'
 import { useTimezone } from '@/composables/useTimezone'
+import { useSupabase } from '@/composables/useSupabase'
 import ActivityValidationTimeline from '@/components/ActivityValidationTimeline.vue'
 import RichTextEditor from '@/components/ui/RichTextEditor.vue'
 import ImageCropper16x9 from '@/components/ui/ImageCropper16x9.vue'
@@ -965,6 +966,7 @@ const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
+const { supabase } = useSupabase()
 const {
   getActivityById,
   updateActivity,
@@ -1591,6 +1593,36 @@ const loadActivity = async () => {
     if (!data || data.submitted_by !== authStore.user?.id) {
       router.push('/events/dashboard')
       return
+    }
+
+    // Incrémenter le compteur de vues et mettre à jour last_viewed_at
+    try {
+      // D'abord récupérer le compteur actuel
+      const { data: currentActivity, error: fetchError } = await supabase
+        .from('activities')
+        .select('activites_dashboard_view_count')
+        .eq('id', route.params.id)
+        .single()
+
+      if (!fetchError && currentActivity) {
+        const newCount = (currentActivity.activites_dashboard_view_count || 0) + 1
+
+        const { error: updateError } = await supabase
+          .from('activities')
+          .update({
+            activites_dashboard_view_count: newCount,
+            last_viewed_at: new Date().toISOString()
+          })
+          .eq('id', route.params.id)
+          .eq('submitted_by', authStore.user?.id) // S'assurer que c'est bien l'utilisateur qui a soumis l'activité
+
+        if (updateError) {
+          console.error('Error updating activity view count:', updateError)
+        }
+      }
+    } catch (trackingError) {
+      console.error('Error tracking activity view:', trackingError)
+      // Ne pas bloquer le chargement de la page en cas d'erreur de tracking
     }
 
     activity.value = data

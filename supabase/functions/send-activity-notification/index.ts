@@ -132,17 +132,30 @@ Deno.serve(async (req: Request) => {
           Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
         );
 
-        const { error: updateError } = await supabaseClient
+        // D'abord récupérer le compteur actuel
+        const { data: currentActivity, error: fetchError } = await supabaseClient
           .from('activities')
-          .update({
-            send_activites_recu_email_count: supabaseClient.raw('send_activites_recu_email_count + 1')
-          })
-          .eq('id', activity_id);
+          .select('send_activites_recu_email_count')
+          .eq('id', activity_id)
+          .single();
 
-        if (updateError) {
-          console.error('Failed to increment email count:', updateError);
-        } else {
-          console.info('Email count incremented successfully for activity:', activity_id);
+        if (!fetchError && currentActivity) {
+          const newCount = (currentActivity.send_activites_recu_email_count || 0) + 1;
+
+          const { error: updateError } = await supabaseClient
+            .from('activities')
+            .update({
+              send_activites_recu_email_count: newCount
+            })
+            .eq('id', activity_id);
+
+          if (updateError) {
+            console.error('Failed to increment email count:', updateError);
+          } else {
+            console.info('Email count incremented successfully for activity:', activity_id, 'New count:', newCount);
+          }
+        } else if (fetchError) {
+          console.error('Failed to fetch current email count:', fetchError);
         }
       } catch (updateErr) {
         console.error('Error incrementing email count:', updateErr);
