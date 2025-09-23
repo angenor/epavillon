@@ -22,7 +22,7 @@
             v-if="showBifurcation"
             x1="50%" y1="100"
             x2="65%" y2="100"
-            :stroke="isApprovedPath ? '#00FF00' : '#d1d5db'"
+            :stroke="(isApprovedPath || isCancelledPath) ? '#00FF00' : '#d1d5db'"
             stroke-width="2"/>
 
           <!-- Ligne de bifurcation vers Rejeté -->
@@ -227,7 +227,7 @@ const mainSteps = [
 
 // Afficher la bifurcation dès l'étape de soumission
 const showBifurcation = computed(() => {
-  const afterSubmitStatuses = ['submitted', 'under_review', 'approved', 'rejected', 'live', 'completed']
+  const afterSubmitStatuses = ['submitted', 'under_review', 'approved', 'rejected', 'cancelled', 'live', 'completed']
   return afterSubmitStatuses.includes(props.currentStatus)
 })
 
@@ -263,7 +263,7 @@ const activeProgressWidth = computed(() => {
   }
 
   // Si on a dépassé l'examen, la ligne principale est complète
-  if (['approved', 'rejected', 'live', 'completed'].includes(props.currentStatus)) {
+  if (['approved', 'rejected', 'cancelled', 'live', 'completed'].includes(props.currentStatus)) {
     return 'calc(60% - 20px)'
   }
 
@@ -300,6 +300,11 @@ const getPathStepClass = (status) => {
     }
   }
 
+  // Si le statut est cancelled, approved doit être validée (car on ne peut annuler qu'après approbation)
+  if (isCancelledPath.value && status === 'approved') {
+    return 'bg-green-500 text-white'
+  }
+
   // Étape future ou sur un autre chemin
   return 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
 }
@@ -312,6 +317,11 @@ const getPathTextClass = (status) => {
 
   // Si on est sur le chemin approuvé
   if (isApprovedPath.value && ['approved', 'live', 'completed'].includes(status)) {
+    return 'text-gray-700 dark:text-gray-300'
+  }
+
+  // Si on est sur le chemin annulé et c'est approved (qui a été validée avant l'annulation)
+  if (isCancelledPath.value && status === 'approved') {
     return 'text-gray-700 dark:text-gray-300'
   }
 
@@ -343,8 +353,8 @@ const getStepIconClass = (status) => {
     return 'bg-green-500 text-white'
   }
 
-  // Si on est dans un statut avancé (approved, rejected, live, completed)
-  if (['approved', 'rejected', 'live', 'completed'].includes(props.currentStatus)) {
+  // Si on est dans un statut avancé (approved, rejected, cancelled, live, completed)
+  if (['approved', 'rejected', 'cancelled', 'live', 'completed'].includes(props.currentStatus)) {
     // Toutes les étapes principales sont validées
     if (mainStatusOrder.includes(status)) {
       return 'bg-green-500 text-white'
@@ -373,7 +383,7 @@ const isStepCompleted = (status) => {
   }
 
   // Si on est dans un statut avancé, toutes les étapes principales sont complétées
-  if (['approved', 'rejected', 'live', 'completed'].includes(props.currentStatus)) {
+  if (['approved', 'rejected', 'cancelled', 'live', 'completed'].includes(props.currentStatus)) {
     return mainStatusOrder.includes(status)
   }
 
