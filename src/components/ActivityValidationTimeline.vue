@@ -13,7 +13,7 @@
           <line
             x1="40" y1="100"
             x2="50%" y2="100"
-            :stroke="currentStatus !== 'draft' ? '#3b82f6' : '#d1d5db'"
+            :stroke="currentStatus !== 'draft' ? '#00FF00' : '#d1d5db'"
             stroke-width="2"
             class="transition-all duration-500"/>
 
@@ -22,7 +22,7 @@
             v-if="showBifurcation"
             x1="50%" y1="100"
             x2="65%" y2="100"
-            :stroke="isApprovedPath ? '#10b981' : '#d1d5db'"
+            :stroke="isApprovedPath ? '#00FF00' : '#d1d5db'"
             stroke-width="2"/>
 
           <!-- Ligne de bifurcation vers Rejeté -->
@@ -30,7 +30,7 @@
             v-if="showBifurcation"
             x1="50%" y1="100"
             x2="65%" y2="180"
-            :stroke="isRejectedPath ? '#ef4444' : '#d1d5db'"
+            :stroke="isRejectedPath ? '#00FF00' : '#d1d5db'"
             stroke-width="2"/>
 
           <!-- Ligne de bifurcation Approuvé vers Annulé -->
@@ -38,7 +38,7 @@
             v-if="showBifurcation"
             x1="65%" y1="100"
             x2="75%" y2="40"
-            :stroke="isCancelledPath ? '#f97316' : '#d1d5db'"
+            :stroke="isCancelledPath ? '#00FF00' : '#d1d5db'"
             stroke-width="2"/>
 
           <!-- Ligne Approuvé -> En cours -->
@@ -46,7 +46,7 @@
             v-if="showFullPath && showBifurcation && !isCancelledPath"
             x1="65%" y1="100"
             x2="80%" y2="100"
-            :stroke="currentStatus === 'live' || currentStatus === 'completed' ? '#10b981' : '#d1d5db'"
+            :stroke="currentStatus === 'live' || currentStatus === 'completed' ? '#00FF00' : '#d1d5db'"
             stroke-width="2"/>
 
           <!-- Ligne En cours -> Terminé -->
@@ -54,7 +54,7 @@
             v-if="showFullPath && showBifurcation && !isCancelledPath"
             x1="80%" y1="100"
             x2="95%" y2="100"
-            :stroke="currentStatus === 'completed' ? '#10b981' : '#d1d5db'"
+            :stroke="currentStatus === 'completed' ? '#00FF00' : '#d1d5db'"
             stroke-width="2"/>
         </svg>
 
