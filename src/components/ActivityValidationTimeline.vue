@@ -372,33 +372,16 @@ const getStepTextClass = (status) => {
   return 'text-gray-500 dark:text-gray-400'
 }
 
-const isStepCompleted = (status) => {
-  const mainStatusOrder = ['draft', 'submitted', 'under_review']
-  const currentIndex = mainStatusOrder.indexOf(props.currentStatus)
-  const stepIndex = mainStatusOrder.indexOf(status)
-
-  // Si on est dans les étapes principales
-  if (currentIndex !== -1 && stepIndex !== -1) {
-    return stepIndex < currentIndex
-  }
-
-  // Si on est dans un statut avancé, toutes les étapes principales sont complétées
-  if (['approved', 'rejected', 'cancelled', 'live', 'completed'].includes(props.currentStatus)) {
-    return mainStatusOrder.includes(status)
-  }
-
-  return false
-}
 
 // Fonction pour déterminer si une étape est en cours
 const isStepInProgress = (status) => {
-  // Ne pas afficher le spinner pour les statuts finaux (Annulé et Rejeté)
-  if (props.currentStatus === 'cancelled' || props.currentStatus === 'rejected') {
+  // Ne pas afficher le spinner pour les statuts finaux (Approved, Completed, Annulé et Rejeté)
+  if (props.currentStatus === 'approved' || props.currentStatus === 'completed' || props.currentStatus === 'cancelled' || props.currentStatus === 'rejected') {
     return false
   }
 
-  // Vérifier si c'est le statut actuel et qu'il n'est pas annulé ou rejeté
-  if (status === props.currentStatus && status !== 'cancelled' && status !== 'rejected') {
+  // Vérifier si c'est le statut actuel
+  if (status === props.currentStatus) {
     return true
   }
 
