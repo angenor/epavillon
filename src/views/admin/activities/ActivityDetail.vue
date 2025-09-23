@@ -44,6 +44,17 @@
               </div>
             </div>
             
+            <!-- Bouton notification activité reçue -->
+            <button @click="sendActivityReceivedNotification"
+                    :disabled="isSendingNotification"
+                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
+              <div v-if="isSendingNotification" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              <svg v-else class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+              {{ isSendingNotification ? 'Envoi...' : 'Notifier réception' }}
+            </button>
+
             <!-- Indicateur de chargement -->
             <div v-if="isUpdatingStatus" class="flex items-center text-gray-500">
               <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-500 mr-2"></div>
@@ -56,6 +67,25 @@
         <div v-if="statusError" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
           {{ statusError }}
           <button @click="statusError = null" class="ml-2 text-red-900 hover:text-red-700">
+            <svg class="h-4 w-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Messages pour la notification -->
+        <div v-if="notificationError" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {{ notificationError }}
+          <button @click="notificationError = null" class="ml-2 text-red-900 hover:text-red-700">
+            <svg class="h-4 w-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div v-if="notificationSuccess" class="mt-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+          {{ notificationSuccess }}
+          <button @click="notificationSuccess = null" class="ml-2 text-green-900 hover:text-green-700">
             <svg class="h-4 w-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
@@ -107,8 +137,13 @@
                   {{ formatDate(activity.created_at) }}
                 </dd>
               </div>
-            </dl>
-          </div>
+              <div>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Notifications envoyées</dt>
+                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                  {{ activity.send_activites_recu_email_count || 0 }} email(s)
+                </dd>
+              </div>
+            </dl>          </div>
 
           <div v-if="activity.main_themes?.length" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold mb-4">Thématiques</h3>
@@ -235,6 +270,9 @@ const statusError = ref(null)
 const previousStatusValue = ref(null)
 const showStatusConfirmModal = ref(false)
 const pendingStatusChange = ref(null)
+const isSendingNotification = ref(false)
+const notificationError = ref(null)
+const notificationSuccess = ref(null)
 
 const checkAccess = async () => {
   await loadUserRoles()
@@ -393,7 +431,7 @@ const closeStatusConfirmModal = () => {
 
 const getStatusChangeMessage = () => {
   if (!pendingStatusChange.value) return ''
-  
+
   const { newStatus, previousStatus } = pendingStatusChange.value
   const statusTexts = {
     draft: 'Brouillon',
@@ -402,8 +440,54 @@ const getStatusChangeMessage = () => {
     approved: 'Approuvée',
     rejected: 'Rejetée'
   }
-  
+
   return `Êtes-vous sûr de vouloir changer le statut de "${statusTexts[previousStatus]}" vers "${statusTexts[newStatus]}" ?`
+}
+
+// Fonction pour envoyer la notification d'activité reçue
+const sendActivityReceivedNotification = async () => {
+  if (!activity.value || !currentUser.value) return
+
+  isSendingNotification.value = true
+  notificationError.value = null
+  notificationSuccess.value = null
+
+  try {
+    const { data, error } = await supabase.functions.invoke('send-activity-notification', {
+      body: {
+        activity_id: activity.value.id,
+        activity_title: activity.value.title,
+        coordinator_email: activity.value.contact_email,
+        coordinator_name: activity.value.contact_name,
+        organization_name: activity.value.organization?.name,
+        event_title: activity.value.event?.title,
+        event_logo: activity.value.event?.logo_url,
+        event_city: activity.value.event?.city,
+        event_country: activity.value.event?.country,
+        proposed_start_date: activity.value.proposed_start_date,
+        proposed_end_date: activity.value.proposed_end_date,
+        timezone: activity.value.timezone || 'UTC'
+      }
+    })
+
+    if (error) {
+      throw error
+    }
+
+    notificationSuccess.value = 'Notification envoyée avec succès au coordinateur'
+    
+    // Incrémenter le compteur localement pour un feedback immédiat
+    if (activity.value) {
+      activity.value.send_activites_recu_email_count = (activity.value.send_activites_recu_email_count || 0) + 1
+    }
+    console.log('Notification sent successfully:', data)
+
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi de la notification:', error)
+    notificationError.value = error.message || 'Erreur lors de l\'envoi de la notification'
+  } finally {
+    isSendingNotification.value = false
+  }
 }
 
 onMounted(async () => {

@@ -24,6 +24,8 @@ email_rappel_30min
 email_rappel_15min
 
 
-/activities/:id/manage : l'utilisateur doit pouvoir annuler son activité mais pas pouvoir restauré une fois annulé
+/activities/:id/manage :
+- l'utilisateur doit pouvoir annuler son activité mais pas pouvoir restauré une fois annulé
+- il doit pouvoir ajouter des tags
 
 dans le dashboad, je veux utiliser @amcharts/amcharts5@5.10.7 qui est déjà istallé pour affchicher le graphe de "nombre de soumission en fonction des jours" et un autre graphe qui montre la proportion de 'public_national_institution', 'international_organization', 'regional_organization', 'ngo_association' et 'private_sector' la documentation se trouve à https://www.amcharts.com/docs/v5/
