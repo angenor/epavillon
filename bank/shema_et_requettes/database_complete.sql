@@ -294,6 +294,7 @@ CREATE TABLE public.activities (
     -- Soft delete
     send_activites_recu_email_count NUMBER DEFAULT 0,
     activites_dashboard_view_count NUMBER DEFAULT 0,
+    last_viewed_at REFERENCES DEFAULT NULL
     is_deleted BOOLEAN DEFAULT FALSE,
     deleted_at TIMESTAMPTZ,
     deleted_by UUID REFERENCES public.users(id),
