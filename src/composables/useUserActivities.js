@@ -106,10 +106,14 @@ export default function useUserActivities() {
           activity_questions(*)
         `)
         .eq('id', activityId)
-        .eq('submitted_by', authStore.user.id)
         .single()
 
       if (fetchError) throw fetchError
+
+      // Vérifier que l'utilisateur est bien le soumetteur
+      if (data && data.submitted_by !== authStore.user.id) {
+        throw new Error('Unauthorized access')
+      }
 
       return data
     } catch (err) {
