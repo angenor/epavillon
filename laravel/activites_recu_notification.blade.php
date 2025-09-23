@@ -1,5 +1,5 @@
 @component('mail::message')
-{{-- En-tête avec logo et titre --}}
+{{-- En-tête avec logo si disponible --}}
 @if(isset($details['event_logo']) && $details['event_logo'])
 <div style="text-align: center; margin-bottom: 30px;">
     <img src="{{ $details['event_logo'] }}" alt="Logo de l'événement" style="max-height: 80px; width: auto;">
@@ -16,7 +16,7 @@ Bonjour,
 
 Nous accusons réception de votre proposition d'activité et vous remercions pour votre soumission.
 
-{{-- Détails de l'activité dans un panel --}}
+{{-- Détails de l'activité --}}
 @component('mail::panel')
 ## 📋 **Détails de votre activité**
 
@@ -30,8 +30,8 @@ Nous accusons réception de votre proposition d'activité et vous remercions pou
 **Événement :** {{ $details['event_title'] }}
 @endif
 
-@if(isset($details['event_city']) && $details['event_city'] && isset($details['event_country']) && $details['event_country'])
-**Lieu :** {{ $details['event_city'] }}, {{ $details['event_country'] }}
+@if(isset($details['event_country']) && $details['event_country'])
+**Pays :** {{ $details['event_country'] }}
 @endif
 
 @if(isset($details['formatted_start_date']) && $details['formatted_start_date'] && isset($details['formatted_end_date']) && $details['formatted_end_date'])
@@ -43,7 +43,7 @@ Du {{ $details['formatted_start_date'] }} au {{ $details['formatted_end_date'] }
 @endif
 @endcomponent
 
-{{-- Message principal --}}
+{{-- Prochaines étapes --}}
 @component('mail::panel')
 ### 🔍 **Prochaines étapes**
 
@@ -54,14 +54,14 @@ Votre proposition d'activité est maintenant entre les mains de notre **comité 
 En attendant, nous vous remercions pour votre engagement et votre contribution à cet événement.
 @endcomponent
 
-{{-- Section informative --}}
+{{-- Message de contact --}}
 Si vous avez des questions concernant votre soumission, n'hésitez pas à nous contacter.
 
 {{-- Signature --}}
 Cordialement,
 **L'équipe E-pavillon Climatique de l'IFDD**
 
-{{-- Subcopy avec informations supplémentaires --}}
+{{-- Informations supplémentaires --}}
 @component('mail::subcopy')
 Cette notification confirme que nous avons bien reçu votre proposition d'activité.
 Vous recevrez une nouvelle notification dès que notre comité aura pris une décision.

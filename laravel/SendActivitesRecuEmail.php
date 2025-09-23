@@ -34,7 +34,7 @@ class SendActivitesRecuEmail extends Mailable
     public function build()
     {
         return $this->subject($this->subject)
-                    ->view('emails.activites_recu_notification')
+                    ->markdown('emails.activites_recu_notification')
                     ->with('details', $this->details);
     }
 }
