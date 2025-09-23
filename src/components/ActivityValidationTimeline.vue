@@ -37,7 +37,7 @@
           <line
             v-if="showBifurcation"
             x1="65%" y1="20"
-            x2="75%" y2="100"
+            x2="75%" y2="-40"
             :stroke="isCancelledPath ? '#f97316' : '#d1d5db'"
             stroke-width="2"/>
 
@@ -169,8 +169,8 @@
               </div>
             </div>
 
-            <!-- Annulé (branche du bas après Approuvé) -->
-            <div v-if="showBifurcation" class="absolute left-[75%]" style="top: 80px; transform: translateX(-50%);">
+            <!-- Annulé (branche du haut après Approuvé) -->
+            <div v-if="showBifurcation" class="absolute left-[75%]" style="top: -60px; transform: translateX(-50%);">
               <div class="flex flex-col items-center">
                 <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
                      :class="getPathStepClass('cancelled')">
