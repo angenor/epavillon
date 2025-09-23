@@ -19,6 +19,29 @@
       "roles": "Roles",
       "negotiations": "Negotiations"
     },
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "subtitle": "ePavillon platform overview",
+      "totalUsers": "Total users",
+      "activitiesApproved": "Approved activities",
+      "activitiesPending": "Pending activities",
+      "activeOrganizations": "Active organizations",
+      "pendingActivities": "Pending validation activities",
+      "systemAlerts": "System alerts",
+      "noPendingActivities": "No pending activities",
+      "review": "Review",
+      "duplicateOrgsAlert": "{count} duplicate organization(s) detected",
+      "suspendedUsersAlert": "{count} suspended user(s)",
+      "unverifiedOrgsAlert": "{count} unverified organization(s)",
+      "viewDuplicates": "View duplicates",
+      "manageUsers": "Manage users",
+      "verifyOrganizations": "Verify organizations",
+      "noAlertsGood": "No alerts - All good!",
+      "submissionsPerDay": "Submissions per day",
+      "submissionsPerDaySubtitle": "Evolution of activity submissions per day",
+      "organizationTypes": "Organization types distribution",
+      "organizationTypesSubtitle": "Proportion of different organization types"
+    },
     "users": {
       "roleManagement": {
         "title": "Role Management",

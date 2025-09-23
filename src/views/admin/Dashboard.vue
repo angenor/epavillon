@@ -109,6 +109,15 @@
       </div>
     </div>
 
+    <!-- Charts Section -->
+    <div class="my-8 grid grid-cols-1 lg:grid-cols-1 gap-3">
+      <!-- Submissions per Day Chart -->
+      <SubmissionsPerDayChart />
+
+      <!-- Organization Types Chart -->
+      <OrganizationTypesChart />
+    </div>
+
     <!-- Recent Activity & Alerts -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <!-- Pending Activities -->
@@ -126,7 +135,7 @@
             {{ t('admin.dashboard.noPendingActivities') }}
           </div>
           <ul v-else class="space-y-4">
-            <li v-for="activity in pendingActivities.slice(0, 5)" :key="activity.id" 
+            <li v-for="activity in pendingActivities.slice(0, 5)" :key="activity.id"
                 class="flex items-center justify-between">
               <div class="flex-1 min-w-0">
                 <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
@@ -211,6 +220,8 @@
         </div>
       </div>
     </div>
+
+
   </div>
 </template>
 
@@ -219,6 +230,8 @@ import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
+import SubmissionsPerDayChart from '@/components/admin/charts/SubmissionsPerDayChart.vue'
+import OrganizationTypesChart from '@/components/admin/charts/OrganizationTypesChart.vue'
 
 const { t } = useI18n()
 const { supabase } = useSupabase()
@@ -246,7 +259,7 @@ const pendingActivities = ref([])
 const checkAccess = async () => {
   // Attendre que les rôles soient chargés
   await loadUserRoles()
-  
+
   if (!hasAdminRole.value) {
     throw new Error('Accès non autorisé')
   }
@@ -359,7 +372,7 @@ onMounted(async () => {
   try {
     // D'abord vérifier les permissions
     await checkAccess()
-    
+
     // Puis charger les données
     await Promise.all([
       loadStats(),

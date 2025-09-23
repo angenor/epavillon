@@ -19,7 +19,8 @@
       "WebFetch(domain:epavillonclimatique.francophonie.org)",
       "Bash(npm run preview:*)",
       "Bash(firebase deploy:*)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "WebFetch(domain:www.amcharts.com)"
     ],
     "deny": [],
     "ask": []

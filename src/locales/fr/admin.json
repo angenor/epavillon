@@ -36,7 +36,11 @@
       "viewDuplicates": "Voir les doublons",
       "manageUsers": "Gérer les utilisateurs",
       "verifyOrganizations": "Vérifier les organisations",
-      "noAlertsGood": "Aucune alerte - Tout va bien !"
+      "noAlertsGood": "Aucune alerte - Tout va bien !",
+      "submissionsPerDay": "Soumissions par jour",
+      "submissionsPerDaySubtitle": "Évolution du nombre de soumissions d'activités par jour",
+      "organizationTypes": "Répartition des types d'organisations",
+      "organizationTypesSubtitle": "Proportion des différents types d'organisations"
     },
     "users": {
       "title": "Gestion des Utilisateurs",
