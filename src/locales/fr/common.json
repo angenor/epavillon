@@ -73,6 +73,8 @@
     "view": "Voir",
     "delete": "Supprimer",
     "deleting": "Suppression...",
+    "goBack": "Retour",
+    "goHome": "Accueil",
     "editPost": {
       "title": "Modifier le contenu",
       "testimonialText": "Texte du témoignage",

@@ -21,11 +21,11 @@
           />
         </div>
       </div>
-      
+
       <!-- Badge de chargement -->
       <div
         v-if="processing"
-        class="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center"
+        class="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center"
       >
         <font-awesome-icon
           icon="spinner"
@@ -55,7 +55,7 @@
         @change="handleFileSelect"
         :disabled="processing"
       >
-      
+
       <!-- Texte d'aide -->
       <p class="text-xs text-gray-500 dark:text-gray-400 text-center">
         {{ t('auth.helpers.photoRequirements') }}
@@ -175,7 +175,7 @@ const handleFileSelect = async (event) => {
       previewUrl: dataUrl,
       thumbnailUrl: thumbnailDataUrl
     }
-    
+
     console.log('ProfilePhotoUpload émet les données photo:', photoData) // Debug
     emit('update:modelValue', photoData)
 

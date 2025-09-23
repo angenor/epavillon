@@ -257,8 +257,8 @@
     </div>
 
     <!-- Editor Content -->
-    <EditorContent 
-      :editor="editor" 
+    <EditorContent
+      :editor="editor"
       class="editor-content rounded-b-xl bg-white dark:bg-gray-800 min-h-[150px] transition-all duration-200"
       :class="{
         'border border-gray-300 dark:border-gray-600 focus-within:ring-2 focus-within:ring-green-500 dark:focus-within:ring-green-400 focus-within:border-transparent': !isLimitExceeded,
@@ -270,7 +270,7 @@
     <div v-if="showCharacterCount" class="mt-2">
       <!-- Progress Bar -->
       <div v-if="maxLength" class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mb-2">
-        <div 
+        <div
           class="h-1.5 rounded-full transition-all duration-300"
           :class="{
             'bg-green-500': characterCount < maxLength * 0.8,
@@ -280,10 +280,10 @@
           :style="{ width: Math.min((characterCount / maxLength) * 100, 100) + '%' }"
         ></div>
       </div>
-      
+
       <!-- Character Count Text -->
       <div class="text-right">
-        <span 
+        <span
           class="text-xs transition-colors duration-200"
           :class="{
             'text-gray-500 dark:text-gray-400': !isLimitExceeded && remainingCharacters > 100,
@@ -291,7 +291,7 @@
             'text-red-600 dark:text-red-400': isLimitExceeded
           }"
         >
-          {{ characterCount }} 
+          {{ characterCount }}
           <span v-if="maxLength">/ {{ maxLength }}</span>
           caractères
           <span v-if="remainingCharacters !== null && remainingCharacters >= 0" class="ml-1">
@@ -305,12 +305,12 @@
     </div>
 
     <!-- Link Dialog -->
-    <div v-if="showLinkDialog" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div v-if="showLinkDialog" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           {{ editor?.isActive('link') ? 'Modifier le lien' : 'Ajouter un lien' }}
         </h3>
-        
+
         <div class="mb-4">
           <label for="link-url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             URL du lien
@@ -325,7 +325,7 @@
             @keydown.escape="showLinkDialog = false"
           />
         </div>
-        
+
         <div class="flex justify-end space-x-3">
           <button
             @click="showLinkDialog = false"

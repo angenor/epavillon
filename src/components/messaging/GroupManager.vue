@@ -107,7 +107,7 @@
                 {{ formatTime(message.created_at) }}
               </span>
             </div>
-            
+
             <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
               <p class="text-sm text-gray-900 dark:text-white whitespace-pre-wrap">
                 {{ message.content }}
@@ -188,7 +188,7 @@
     <!-- Modal de création de groupe -->
     <div
       v-if="showCreateGroupModal"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
       @click="showCreateGroupModal = false"
     >
       <div
@@ -320,9 +320,9 @@ const handleGroupKeydown = (event) => {
 
 const sendGroupMessage = async () => {
   if (!groupMessageContent.value.trim() || !currentGroup.value) return
-  
+
   const result = await messagingStore.sendGroupMessage(currentGroup.value.id, groupMessageContent.value)
-  
+
   if (result.success) {
     groupMessageContent.value = ''
     scrollToBottom()
@@ -331,15 +331,15 @@ const sendGroupMessage = async () => {
 
 const createGroup = async () => {
   if (!newGroup.value.name.trim()) return
-  
+
   creatingGroup.value = true
-  
+
   try {
     const result = await messagingStore.groupsService.createGroup(
       newGroup.value.name,
       newGroup.value.description
     )
-    
+
     if (result.success) {
       showToast(t('messaging.groupCreated'), 'success')
       showCreateGroupModal.value = false
@@ -354,13 +354,13 @@ const createGroup = async () => {
 
 const leaveGroup = async () => {
   if (!currentGroup.value) return
-  
+
   if (confirm(t('messaging.confirmLeaveGroup'))) {
     const result = await messagingStore.groupsService.removeMemberFromGroup(
       currentGroup.value.id,
       messagingStore.authStore.user?.id
     )
-    
+
     if (result.success) {
       showToast(t('messaging.leftGroup'), 'success')
       messagingStore.setCurrentView('conversations')

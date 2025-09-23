@@ -55,6 +55,8 @@
     "view": "View",
     "delete": "Delete",
     "deleting": "Deleting...",
+    "goBack": "Go Back",
+    "goHome": "Home",
     "close": "Close",
     "reset": "Reset",
     "maintenance": {

@@ -548,6 +548,28 @@
         "title": "Fuseau horaire de l'événement",
         "description": "Toutes les heures de cette activité seront affichées dans ce fuseau horaire"
       }
+    },
+    "error": {
+      "notFound": {
+        "title": "Activité introuvable",
+        "message": "L'activité que vous recherchez n'existe pas ou a été supprimée."
+      },
+      "notApproved": {
+        "title": "Activité non disponible",
+        "message": "Cette activité n'est pas encore approuvée et ne peut pas être consultée."
+      },
+      "pending": {
+        "title": "Activité en attente",
+        "message": "Cette activité est en cours de révision et ne peut pas être consultée pour le moment."
+      },
+      "rejected": {
+        "title": "Activité non accessible",
+        "message": "Cette activité a été rejetée et ne peut pas être consultée."
+      },
+      "generic": {
+        "title": "Erreur de chargement",
+        "message": "Une erreur est survenue lors du chargement de l'activité. Veuillez réessayer plus tard."
+      }
     }
   }
 }

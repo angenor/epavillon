@@ -2,7 +2,7 @@
     <!-- Photos show-screen -->
     <div v-if="photoShow" style="z-index: 9999;" class="fixed w-screen h-screen flex justify-center items-center bg-opacity-40 backdrop-blur-sm z-50 bg-ifdd-green3 overflow-y-scroll">
         <img class="w-screen h-screen absolute object-contain" :src="programmation.photos[photoIndex].url.split('/')[0] == 'images_uploades' ? '/' + programmation.photos[photoIndex].url : programmation.photos[photoIndex].url" alt="">
-        
+
         <div class="absolute rounded-t-xl bottom-0 py-4 px-6 bg-ifdd-blue2 bg-opacity-40">
             <div class="flex">
                 <button v-if="photoIndex > 0" @click="photoIndex--" class="bg-ifdd-yellow transition-all relative z-0 mb-1 flex text-ifdd-green3 px-3 rounded-full shadow-md">
@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- S'inscrire Pop Up -->
     <div style="z-index: 99;" v-if="inscriptionPopUp" class="fixed h-screen w-screen bg-opacity-40 backdrop-blur-sm bg-black z-50 bg-ifdd-green3 overflow-y-scroll">
         <div class="z-50 bg-white shadow-xl rounded-xl mx-auto mt-7 w-80 pr-7 pb-7 pl-7">
@@ -73,7 +73,7 @@
                         <Label class="font-bold" for="email" style="background: -webkit-linear-gradient(left, red , purple); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Votre email: </Label>
                         <div><input required v-model="form.email" class="rounded-md w-full" id="email" type="email" placeholder="Entrez email ici"></div>
                     </div>
-                    
+
                     <div class="mt-2 mb-2">
                         <Label class="font-bold" for="sexe" style="background: -webkit-linear-gradient(left, red , purple); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Votre sexe/genre </Label>
                         <select v-model="form.sexe" name="sexe" id="sexe" class="h-10 cursor-pointer rounded-md w-64 focus:outline-none border-green-custom">
@@ -84,9 +84,9 @@
                     </div>
 
                     <Label class="font-bold" for="country" style="background: -webkit-linear-gradient(left, red , purple); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Votre pays: </Label>
-                    <select 
+                    <select
                         class="h-10 cursor-pointer rounded-md w-64 focus:outline-none border-green-custom"
-                        id="country" 
+                        id="country"
                         name="country"
                         v-model="form.pays"
                         >
@@ -396,7 +396,7 @@
     <!-- Pop Up Questions reponse -->
     <div style="z-index: 99;" v-if="false" class="fixed h-screen w-screen bg-opacity-40 backdrop-blur-sm bg-black z-50 bg-ifdd-green3 overflow-y-scroll">
         <div class="z-50 bg-white bg-opacity-100 pb-44 relative shadow-xl rounded-r-xl w-100 pt-3 pr-5 pl-3 h-screen overflow-y-scroll">
-             
+
             <div>
                 <div class="flex">
                     <div class="rounded-full min-w-10 min-h-10 max-h-10 max-w-10 bg-black"></div>
@@ -469,14 +469,14 @@
             </div>
         </div>
     </div>
-    
+
 
     <app-layout>
         <div class="relative bg-gray-100 bg-opacity-80 pb-10">
             <!-- banière -->
             <div class="relative w-screen bg-banniere h-72 mt-16">
                 <!-- <img class="w-screen  md:object-cover object-contain relative z-0" :src="'/images/banniere.jpeg'" alt="">
-                <div  class="absolute hidden md:block bottom-5 left-5 font-bold p-4 z-50 bg-black bg-opacity-50 text-white border-l-4 border-ifdd-yellow text-4xl">
+                <div  class="absolute hidden md:block bottom-5 left-5 font-bold p-4 z-50 bg-black/50 text-white border-l-4 border-ifdd-yellow text-4xl">
                     <span style="background: -webkit-linear-gradient(left, #FDCD01 , #00ADEF); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" class="">Programmation du Pavillon de la Francophonie</span>
                 </div> -->
                 <div class=" absolute top-10 left-3 bg-white rounded-md overflow-hidden" v-if="programmation.coordinateur.intervenant.user.organisation.logo_url"><img class="h-12 ml-2" :src="'/' + programmation.coordinateur.intervenant.user.organisation.logo_url" alt=""></div>
@@ -500,7 +500,7 @@
                 <div @click="go(route('programmation.index', 2023))" class=" cursor-pointer whitespace-nowrap hover:underline">Programmation 2023 ></div>
                 <div class="underline text-ifdd-gray truncate w-80 text-justify">{{programmation.titre}}</div>
             </div> -->
-            
+
             <div class="mx-1 sm:mx-5 relative">
                 <div class="mb-2 sm:mb-5 bg-opacity-60 p-2 sm:p-5">
                     <div class="w-full">
@@ -517,9 +517,9 @@
                                     <div class="hidden sm:block mx-auto ml-10 relative">
                                         <input
                                             class="h-0 w-0 absolute"
-                                            v-on:focus="$event.target.select()" 
-                                            ref="clone" 
-                                            readonly 
+                                            v-on:focus="$event.target.select()"
+                                            ref="clone"
+                                            readonly
                                             :value="'https://epavillon.francophonie.org/programmation/'+programmation.id"/>
                                         <img @click="copy" class="w-10 opacity-60 cursor-pointer h-10 object-cover" src="/images/icons/copy.png" alt="">
                                     </div>
@@ -530,7 +530,7 @@
                                         network="facebook"
                                         :url="'https://epavillon.francophonie.org/programmation/'+programmation.id"
                                         :title="programmation.evenement+': '+ programmation.titre"
-                                        
+
                                         >
                                         <img class="h-16 mx-auto mt-1 transition-all hover:scale-110" src="/images/logos/facebook.png" alt="">
                                     </ShareNetwork>
@@ -538,7 +538,7 @@
                                         network="whatsapp"
                                         :url="'https://epavillon.francophonie.org/programmation/'+programmation.id"
                                         :title="programmation.evenement+': '+ programmation.titre"
-                                        
+
                                         >
                                         <img class="h-16 mx-auto my-1 transition-all hover:scale-110" src="/images/logos/whatsapp.png" alt="">
                                     </ShareNetwork>
@@ -546,7 +546,7 @@
                                         network="LinkedIn"
                                         :url="'https://epavillon.francophonie.org/programmation/'+programmation.id"
                                         :title="programmation.evenement+': '+ programmation.titre"
-                                        
+
                                         >
                                         <img class="h-16 mx-auto my-1 transition-all hover:scale-110" src="/images/logos/linkedin.png" alt="">
                                     </ShareNetwork>
@@ -554,7 +554,7 @@
                                         network="Twitter"
                                         :url="'https://epavillon.francophonie.org/programmation/'+programmation.id"
                                         :title="programmation.evenement+': '+ programmation.titre"
-                                        
+
                                         >
                                         <img class="h-16 mx-auto my-1 transition-all hover:scale-110" src="/images/logos/twitter.png" alt="">
                                     </ShareNetwork>
@@ -572,7 +572,7 @@
                             <div class="ml-1">{{pays.nom}}</div>
                         </div> -->
 
-                        
+
                         <!-- <div class="italic my-2 text-sm text-ifdd-green3 font-bold"><span class="text-ifdd-gray">{{inscrits}}</span> inscrits</div> -->
                         <div class="flex flex-wrap-reverse justify-between relative z-10">
                             <!-- <div class="w-5/12 h-82 absolute">
@@ -594,7 +594,7 @@
                                     <div class="ml-5"><img class="h-4" src="/images/icons/location_gray.svg" alt=""></div>
                                     <div class="ml-1">{{programmation.pays?.nom}}</div>
                                 </div>
-                                <div @click="test()" class="text-2xl sm:text-3xl text-ifdd-green3 text-justify font-bold my-5"> 
+                                <div @click="test()" class="text-2xl sm:text-3xl text-ifdd-green3 text-justify font-bold my-5">
                                     {{programmation.titre}}
                                 </div>
                                 <div v-if="curseurPhoto == null">
@@ -609,9 +609,9 @@
                                     <div class="text-2xl border-b border-gray-400 font-bold text-ifdd-blue2 w-11/12">Galerie photo</div>
                                     <galery-photo :evenement="programmation" @photoFromChild="photoChild" />
                                 </div>
-                                
+
                                     <!-- <button style="background: -webkit-linear-gradient(left, blue , red); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" class=" rounded-md px-2 py-1 border-2 font-bold border-ifdd-yellow mt-2 hover:scale-105 active:scale-100 transition-all">
-                                        Questions pour un panéliste 
+                                        Questions pour un panéliste
                                     </button> -->
 
                                 <div class="pt-2 sm:pt-0 w-full">
@@ -628,7 +628,7 @@
                                         <div class=" border-b border-gray-400 font-bold text-ifdd-gray w-11/12">Description</div>
                                         <afficheur :valeurAffiche="programmation.presentation" />
                                     </div> -->
-                                    <!-- Panéliste --> 
+                                    <!-- Panéliste -->
                                     <div class="mt-4 text-2xl border-b border-gray-400 font-bold text-ifdd-blue2 w-11/12">Panélistes</div>
                                     <div class="flex flex-wrap mb-2 mt-1 max-w-105 py-4">
                                         <div v-for="(intervenant, index) in programmation.intervenant_tmps" :key="index" class="justify-center content-center mx-1 min-w-40 rounded-md p-4">
@@ -653,7 +653,7 @@
                                             </a>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Résumé de l'évenement -->
                                     <div class="mt-5">
                                         <div class=" text-2xl border-b border-gray-400 font-bold text-ifdd-blue2 w-11/12">Description</div>
@@ -737,7 +737,7 @@
             return {
                 photoShow: false,
                 photoIndex: 0,
-                intervenantsUsers: [], 
+                intervenantsUsers: [],
                 partageHover: false,
                 copierLien: false,
                 curseurPhoto: null,
@@ -765,7 +765,7 @@
             photoChild(data){
                 this.photoIndex = data.photoSelectedIndex;
                 this.photoShow = true;
-                
+
             },
             copy() {
                 const input = this.$refs.clone;
@@ -786,7 +786,7 @@
                 this.$inertia.get(lienRoute);
             },
             userSubscription(){
-                
+
                 // this.form.post(route('zoom.user.suscribe'), {
                 //     onSuccess: (res) => {
                 //         // this.form.data = res.props.data
@@ -846,7 +846,7 @@
                 const ladate = moment(String(date))
                 return ladate.date() +' '+ calendrier[ladate.month()] +' '+ ladate.year()
             },
-            
+
             convertirHeure(heure) {
                 // console.log('----->heure');
                 // console.log(heure);
@@ -856,8 +856,8 @@
                 }else{
                     duration = moment.duration(heure);
                 }
-                
-               
+
+
                 // return duration.hours() + 'h ' + duration.minutes() + 's';
                 return duration.hours() + 'h' + (duration.minutes() < 10 ? '0'+duration.minutes() : duration.minutes());
             },

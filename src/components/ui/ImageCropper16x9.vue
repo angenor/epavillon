@@ -159,7 +159,7 @@
         >
         <button
           @click="editImage"
-          class="absolute top-2 right-2 p-2 bg-black bg-opacity-50 text-white rounded-full hover:bg-opacity-70 transition-opacity"
+          class="absolute top-2 right-2 p-2 bg-black/50 text-white rounded-full hover:bg-opacity-70 transition-opacity"
         >
           <font-awesome-icon :icon="['fas', 'edit']" />
         </button>

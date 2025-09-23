@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
       <!-- Header -->
       <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
@@ -20,7 +20,7 @@
       <form @submit.prevent="handleSubmit" class="p-6 space-y-6">
         <!-- Post Type Display -->
         <div class="flex items-center gap-2 mb-4">
-          <div 
+          <div
             :class="[
               'px-3 py-1 rounded-full text-xs font-medium',
               getTypeBadgeClass()
@@ -65,8 +65,8 @@
               {{ t('common.editPost.contextTypes') }}
             </label>
             <div class="space-y-2">
-              <label 
-                v-for="contextType in availableContextTypes" 
+              <label
+                v-for="contextType in availableContextTypes"
                 :key="contextType.value"
                 class="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
               >
@@ -87,8 +87,8 @@
               {{ t('community.addTestimonial.thematiques') }}
             </label>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-lg p-3">
-              <label 
-                v-for="thematique in availableThematiques" 
+              <label
+                v-for="thematique in availableThematiques"
                 :key="thematique.value"
                 class="flex items-center p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
               >
@@ -262,8 +262,8 @@
               {{ t('common.editPost.contextTypes') }} ({{ t('common.optional') }})
             </label>
             <div class="space-y-2">
-              <label 
-                v-for="contextType in videoContextTypes" 
+              <label
+                v-for="contextType in videoContextTypes"
                 :key="contextType.value"
                 class="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
               >
@@ -284,8 +284,8 @@
               {{ t('community.addTestimonial.thematiques') }}
             </label>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-lg p-3">
-              <label 
-                v-for="thematique in availableThematiques" 
+              <label
+                v-for="thematique in availableThematiques"
                 :key="thematique.value"
                 class="flex items-center p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
               >
@@ -391,13 +391,13 @@ const formData = reactive({
   thematique_types: [], // Nouveau: tableau pour les thématiques
   background_color: '',
   featured: false,
-  
+
   // Innovation/Practice fields
   title: '',
   description: '',
   application_sector: '',
   cover_image_hd_16_9_url: '',
-  
+
   // Video testimonial fields
   video_url: '',
   title: '', // Video title
@@ -411,7 +411,7 @@ const initializeFormData = () => {
   formData.featured = props.post.featured || false
   formData.background_color = props.post.background_color || '#10B981'
   formData.thematique_types = Array.isArray(props.post.thematique_type) ? props.post.thematique_type : (props.post.thematique_type ? [props.post.thematique_type] : [])
-  
+
   if (props.post.type === 'testimonial') {
     formData.testimonial_text = props.post.testimonial_text || ''
     formData.testimonial_title = props.post.testimonial_title || ''
@@ -458,7 +458,7 @@ const getTypeBadgeClass = () => {
     case 'video_testimonial':
       return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
     case 'testimonial':
-      return props.post.context_type === 'training' 
+      return props.post.context_type === 'training'
         ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
         : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
     default:
@@ -473,7 +473,7 @@ const handleSubmit = async () => {
   try {
     // Prepare update data based on post type
     const updateData = { id: props.post.id }
-    
+
     if (props.post.type === 'testimonial') {
       updateData.testimonial_text = formData.testimonial_text
       updateData.testimonial_title = formData.testimonial_title
@@ -506,7 +506,7 @@ const handleSubmit = async () => {
     }
 
     await updateTestimonial(props.post.type, updateData)
-    
+
     emit('updated')
     emit('close')
   } catch (err) {

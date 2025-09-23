@@ -2,7 +2,7 @@
   <transition name="sidebar">
     <div v-if="isOpen" class="fixed inset-0 z-50 flex">
       <!-- Overlay -->
-      <div @click="closeSidebar" class="fixed inset-0 bg-black bg-opacity-50"></div>
+      <div @click="closeSidebar" class="fixed inset-0 bg-black/50"></div>
 
       <!-- Sidebar -->
       <div class="relative flex flex-col w-80 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl border-r border-gray-200/50 dark:border-gray-800/50">

@@ -502,6 +502,28 @@
         "title": "Event timezone",
         "description": "All times for this activity will be displayed in this timezone"
       }
+    },
+    "error": {
+      "notFound": {
+        "title": "Activity not found",
+        "message": "The activity you are looking for does not exist or has been deleted."
+      },
+      "notApproved": {
+        "title": "Activity not available",
+        "message": "This activity is not yet approved and cannot be viewed."
+      },
+      "pending": {
+        "title": "Activity pending",
+        "message": "This activity is under review and cannot be viewed at the moment."
+      },
+      "rejected": {
+        "title": "Activity not accessible",
+        "message": "This activity has been rejected and cannot be viewed."
+      },
+      "generic": {
+        "title": "Loading error",
+        "message": "An error occurred while loading the activity. Please try again later."
+      }
     }
   }
 }

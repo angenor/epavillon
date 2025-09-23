@@ -244,17 +244,56 @@
     </div>
 
   </div>
+
+  <!-- Modal d'erreur d'accès -->
+  <div v-if="showErrorModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full mx-4 transform transition-all">
+      <div class="p-6 text-center">
+        <!-- Icône d'erreur -->
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center">
+          <font-awesome-icon :icon="['fas', 'exclamation-triangle']" class="w-8 h-8 text-red-600 dark:text-red-400" />
+        </div>
+
+        <!-- Titre -->
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+          {{ t(errorModal.title) }}
+        </h3>
+
+        <!-- Message -->
+        <p class="text-gray-600 dark:text-gray-300 mb-6">
+          {{ t(errorModal.message) }}
+        </p>
+
+        <!-- Boutons -->
+        <div class="flex gap-3 justify-center">
+          <button
+            @click="goBack"
+            class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors"
+          >
+            {{ t('common.goBack') }}
+          </button>
+          <button
+            @click="goHome"
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+          >
+            {{ t('common.goHome') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAuthStore } from '@/stores/auth'
 
 const { t } = useI18n()
 const route = useRoute()
+const router = useRouter()
 const supabase = useSupabase()
 const authStore = useAuthStore()
 
@@ -270,6 +309,13 @@ const loading = ref(true)
 const isDescriptionExpanded = ref(false)
 const descriptionContainer = ref(null)
 const shouldShowToggleButton = ref(false)
+
+// États pour le modal d'erreur
+const showErrorModal = ref(false)
+const errorModal = ref({
+  title: '',
+  message: ''
+})
 
 // Computed
 const canRegister = computed(() => {
@@ -361,7 +407,32 @@ const getBannerUrl = () => {
 const loadActivity = async () => {
   try {
     loading.value = true
-    
+
+    // D'abord vérifier si l'activité existe
+    const { data: activityCheck, error: checkError } = await supabase
+      .from('activities')
+      .select('id, validation_status')
+      .eq('id', route.params.id)
+      .single()
+
+    if (checkError) {
+      // L'activité n'existe pas
+      showError('activity.error.notFound.title', 'activity.error.notFound.message')
+      return
+    }
+
+    // Vérifier si l'activité est approuvée
+    if (activityCheck.validation_status !== 'approved') {
+      let errorKey = 'activity.error.notApproved'
+      if (activityCheck.validation_status === 'pending') {
+        errorKey = 'activity.error.pending'
+      } else if (activityCheck.validation_status === 'rejected') {
+        errorKey = 'activity.error.rejected'
+      }
+      showError(`${errorKey}.title`, `${errorKey}.message`)
+      return
+    }
+
     // Charger l'activité avec toutes les relations (seulement si approuvée)
     const { data: activityData, error: activityError } = await supabase
       .from('activities')
@@ -448,6 +519,8 @@ const loadActivity = async () => {
     
   } catch (error) {
     console.error('Error loading activity:', error)
+    // Erreur générique de chargement
+    showError('activity.error.generic.title', 'activity.error.generic.message')
   } finally {
     loading.value = false
   }
@@ -477,6 +550,23 @@ const registerToActivity = async () => {
 const openQuestionModal = () => {
   // Implémenter l'ouverture du modal de questions
   console.log('Opening question modal')
+}
+
+// Fonctions pour gérer le modal d'erreur
+const showError = (titleKey, messageKey) => {
+  errorModal.value = {
+    title: titleKey,
+    message: messageKey
+  }
+  showErrorModal.value = true
+}
+
+const goBack = () => {
+  router.go(-1)
+}
+
+const goHome = () => {
+  router.push('/')
 }
 
 // Lifecycle

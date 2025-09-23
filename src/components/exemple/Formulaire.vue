@@ -2,9 +2,9 @@
   <div
     class="min-h-screen bg-fixed w-screen bg-font-apporter-expertise bg-cover bg-center flex items-center justify-center p-4"
   >
-    
+
     <div
-      class="relative w-full max-w-2xl bg-white shadow-2xl bg-opacity-50 backdrop-blur-md mt-24 rounded-2xl border border-white border-opacity-20 transform transition-all duration-300 hover:shadow-3xl overflow-hidden"
+      class="relative w-full max-w-2xl bg-white/50 shadow-2xl backdrop-blur-md mt-24 rounded-2xl border border-white border-opacity-20 transform transition-all duration-300 hover:shadow-3xl overflow-hidden"
       data-aos="fade-up"
       data-aos-duration="800"
     >
@@ -743,27 +743,27 @@ export default {
         const currentRoles = userData.roles || [];
 
         // Ajouter le rôle 'expert' s'il n'existe pas déjà
-        const updatedRoles = currentRoles.includes('expert') 
-          ? currentRoles 
+        const updatedRoles = currentRoles.includes('expert')
+          ? currentRoles
           : [...currentRoles, 'expert'];
 
         // Mise à jour du profil avec les informations d'expertise selon le modèle Firebase
         await updateDoc(userRef, {
           dateDerniereMiseAJour: serverTimestamp(),
-          
+
           // Informations personnelles
           tel: state.tel,
           biographie: state.biographie,
-          
+
           // Organisation professionnelle
           organisation: {
             nom: state.organisation,
             fonction: state.fonction,
           },
-          
+
           // Attribution automatique du rôle expert
           roles: updatedRoles,
-          
+
           // Informations d'expertise
           expertiseInfo: {
             domaine: state.domaine,
@@ -773,7 +773,7 @@ export default {
             dateValidation: serverTimestamp(),
             statut: 'validé', // Expert approuvé automatiquement
           },
-          
+
           // Statut de disponibilité par défaut
           statusAppel: 'disponible',
         });
