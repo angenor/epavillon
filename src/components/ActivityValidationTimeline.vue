@@ -33,9 +33,17 @@
             :stroke="isRejectedPath ? '#ef4444' : '#d1d5db'"
             stroke-width="2"/>
 
+          <!-- Ligne de bifurcation Approuvé vers Annulé -->
+          <line
+            v-if="showBifurcation"
+            x1="65%" y1="20"
+            x2="75%" y2="100"
+            :stroke="isCancelledPath ? '#f97316' : '#d1d5db'"
+            stroke-width="2"/>
+
           <!-- Ligne Approuvé -> En cours -->
           <line
-            v-if="showFullPath && showBifurcation"
+            v-if="showFullPath && showBifurcation && !isCancelledPath"
             x1="65%" y1="20"
             x2="80%" y2="20"
             :stroke="currentStatus === 'live' || currentStatus === 'completed' ? '#10b981' : '#d1d5db'"
@@ -43,7 +51,7 @@
 
           <!-- Ligne En cours -> Terminé -->
           <line
-            v-if="showFullPath && showBifurcation"
+            v-if="showFullPath && showBifurcation && !isCancelledPath"
             x1="80%" y1="20"
             x2="95%" y2="20"
             :stroke="currentStatus === 'completed' ? '#10b981' : '#d1d5db'"
@@ -117,7 +125,7 @@
             </div>
 
             <!-- En cours -->
-            <div v-if="showFullPath && showBifurcation" class="absolute left-[80%]" style="top: 0; transform: translateX(-50%);">
+            <div v-if="showFullPath && showBifurcation && !isCancelledPath" class="absolute left-[80%]" style="top: 0; transform: translateX(-50%);">
               <div class="flex flex-col items-center">
                 <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
                      :class="getPathStepClass('live')">
@@ -132,7 +140,7 @@
             </div>
 
             <!-- Terminé -->
-            <div v-if="showFullPath && showBifurcation" class="absolute left-[95%]" style="top: 0; transform: translateX(-50%);">
+            <div v-if="showFullPath && showBifurcation && !isCancelledPath" class="absolute left-[95%]" style="top: 0; transform: translateX(-50%);">
               <div class="flex flex-col items-center">
                 <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
                      :class="getPathStepClass('completed')">
@@ -156,6 +164,21 @@
                 <div class="text-center mt-2">
                   <p class="text-sm font-medium" :class="getPathTextClass('rejected')">
                     {{ t('events.status.rejected') }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Annulé (branche du bas après Approuvé) -->
+            <div v-if="showBifurcation" class="absolute left-[75%]" style="top: 80px; transform: translateX(-50%);">
+              <div class="flex flex-col items-center">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+                     :class="getPathStepClass('cancelled')">
+                  <font-awesome-icon :icon="['fas', 'ban']" class="text-sm" />
+                </div>
+                <div class="text-center mt-2">
+                  <p class="text-sm font-medium" :class="getPathTextClass('cancelled')">
+                    {{ t('events.status.cancelled') }}
                   </p>
                 </div>
               </div>
@@ -212,6 +235,11 @@ const isRejectedPath = computed(() => {
   return props.currentStatus === 'rejected'
 })
 
+// Détecter si on est sur le chemin annulé
+const isCancelledPath = computed(() => {
+  return props.currentStatus === 'cancelled'
+})
+
 // Ordre logique des statuts pour calculer la progression
 const statusOrder = [
   'draft', 'submitted', 'under_review', 'approved',
@@ -245,6 +273,8 @@ const getPathStepClass = (status) => {
         return 'bg-green-500 text-white border-2 border-green-500'
       case 'rejected':
         return 'bg-red-500 text-white border-2 border-red-500'
+      case 'cancelled':
+        return 'bg-orange-500 text-white border-2 border-orange-500'
       case 'live':
         return 'bg-purple-500 text-white border-2 border-purple-500'
       case 'completed':
@@ -282,6 +312,11 @@ const getPathTextClass = (status) => {
   // Si on est sur le chemin rejeté
   if (isRejectedPath.value && status === 'rejected') {
     return 'text-red-600 dark:text-red-400'
+  }
+
+  // Si on est sur le chemin annulé
+  if (isCancelledPath.value && status === 'cancelled') {
+    return 'text-orange-600 dark:text-orange-400'
   }
 
   return 'text-gray-400 dark:text-gray-500'
