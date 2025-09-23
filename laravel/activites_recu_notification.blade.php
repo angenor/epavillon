@@ -30,16 +30,14 @@ Nous accusons réception de votre proposition d'activité et vous remercions pou
 **Événement :** {{ $details['event_title'] }}
 @endif
 
-@if(isset($details['event_country']) && $details['event_country'])
+@if(isset($details['event_city']) && $details['event_city'] && isset($details['event_country']) && $details['event_country'])
+**Lieu :** {{ $details['event_city'] }}, {{ $details['event_country'] }}
+@elseif(isset($details['event_country']) && $details['event_country'])
 **Pays :** {{ $details['event_country'] }}
 @endif
 
-@if(isset($details['formatted_start_date']) && $details['formatted_start_date'] && isset($details['formatted_end_date']) && $details['formatted_end_date'])
-**Dates proposées :**
-Du {{ $details['formatted_start_date'] }} au {{ $details['formatted_end_date'] }}
-@if(isset($details['timezone']) && $details['timezone'] !== 'UTC')
-(Fuseau horaire : {{ $details['timezone'] }})
-@endif
+@if(isset($details['formatted_date']) && $details['formatted_date'])
+**Dates proposées :** {{ $details['formatted_date'] }}
 @endif
 @endcomponent
 
@@ -52,6 +50,13 @@ Votre proposition d'activité est maintenant entre les mains de notre **comité 
 **Nous vous ferons un retour sur votre proposition sous peu.**
 
 En attendant, nous vous remercions pour votre engagement et votre contribution à cet événement.
+@endcomponent
+
+{{-- Bouton d'accès au dashboard --}}
+Nous vous invitons à ajouter vos bannières, gérer et suivre l'évolution du statut de votre activité directement depuis votre tableau de bord :
+
+@component('mail::button', ['url' => $details['dashboard_url'] ?? 'https://epavillonclimatique.francophonie.org/events/dashboard'])
+Accéder à votre tableau de bord
 @endcomponent
 
 {{-- Message de contact --}}

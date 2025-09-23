@@ -82,6 +82,9 @@ class SendSuperbaseEmailController extends Controller
         }
 
         try {
+            // Configurer Carbon en français pour les jours de la semaine
+            \Carbon\Carbon::setLocale('fr');
+
             // Préparer les données pour l'email
             $emailData = [
                 'activity_id' => $activityId,
@@ -95,9 +98,28 @@ class SendSuperbaseEmailController extends Controller
                 'proposed_start_date' => $proposedStartDate,
                 'proposed_end_date' => $proposedEndDate,
                 'timezone' => $timezone,
-                'formatted_start_date' => $proposedStartDate ? \Carbon\Carbon::parse($proposedStartDate)->setTimezone($timezone)->format('d/m/Y à H:i') : null,
-                'formatted_end_date' => $proposedEndDate ? \Carbon\Carbon::parse($proposedEndDate)->setTimezone($timezone)->format('d/m/Y à H:i') : null,
+                'formatted_date' => null,
+                'dashboard_url' => 'https://epavillonclimatique.francophonie.org/events/dashboard'
             ];
+
+            // Formater les dates si elles existent
+            if ($proposedStartDate && $proposedEndDate) {
+                $startCarbon = \Carbon\Carbon::parse($proposedStartDate)->setTimezone($timezone);
+                $endCarbon = \Carbon\Carbon::parse($proposedEndDate)->setTimezone($timezone);
+
+                // Si c'est le même jour
+                if ($startCarbon->isSameDay($endCarbon)) {
+                    $emailData['formatted_date'] = ucfirst($startCarbon->translatedFormat('l j F Y')) . ', ' .
+                                                   $startCarbon->format('H\hi') . ' - ' .
+                                                   $endCarbon->format('H\hi') .
+                                                   ' (heure de ' . ($eventCity ? $eventCity : $timezone) . ')';
+                } else {
+                    // Si sur plusieurs jours
+                    $emailData['formatted_date'] = 'Du ' . ucfirst($startCarbon->translatedFormat('l j F Y à H\hi')) .
+                                                   ' au ' . ucfirst($endCarbon->translatedFormat('l j F Y à H\hi')) .
+                                                   ' (heure de ' . ($eventCity ? $eventCity : $timezone) . ')';
+                }
+            }
 
             // Envoyer l'email
             \Mail::to($coordinatorEmail)

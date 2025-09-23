@@ -1,1 +1,7 @@
-{"error":"Failed to send activity received notification via Laravel","details":"{\"success\":false,\"error\":\"Erreur lors de l'envoi de l'email: No hint path defined for [mail]. (View: \\/home\\/epavillonclimati\\/public_html\\/resources\\/views\\/emails\\/activites_recu_notification.blade.php)\"}"}
+C'est presque parfait format de quelque éléments à corriger:
+
+Lieu: Bélem, Brésil
+Dates proposées: Lundi 10 Novembre 2025, 10h00 - 11h00 (heure de Bélem)
+
+Nous vous invitons à ajouter vos bannières, à gérer et à suivre l'évolution du statut de vos activités via le bouton ci-dessous(tu réecriras le texte approprié)
+"https://epavillonclimatique.francophonie.org/events/dashboard"

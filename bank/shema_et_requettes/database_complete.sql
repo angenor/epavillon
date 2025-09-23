@@ -293,6 +293,7 @@ CREATE TABLE public.activities (
     tags TEXT[], -- Tags stockés directement dans un tableau
     -- Soft delete
     send_activites_recu_email_count NUMBER DEFAULT 0,
+    activites_dashboard_view_count NUMBER DEFAULT 0,
     is_deleted BOOLEAN DEFAULT FALSE,
     deleted_at TIMESTAMPTZ,
     deleted_by UUID REFERENCES public.users(id),
