@@ -146,7 +146,7 @@
                   >
                   <button
                     @click="editingBanner = true"
-                    class="absolute top-2 right-2 p-2 bg-black bg-opacity-50 text-white rounded-full hover:bg-opacity-70 transition-opacity"
+                    class="absolute top-2 right-2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-opacity"
                   >
                     <font-awesome-icon :icon="['fas', 'edit']" />
                   </button>
@@ -441,7 +441,7 @@
                       <!-- Progress bar overlay -->
                       <div
                         v-if="uploadingPhoto[speaker.id]"
-                        class="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center"
+                        class="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center"
                       >
                         <div class="w-12 h-12 relative">
                           <!-- Circular progress bar -->
@@ -718,7 +718,7 @@
     </div>
 
     <!-- Add Speaker Modal -->
-    <div v-if="showAddSpeakerModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div v-if="showAddSpeakerModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
         <div class="p-6">
           <div class="flex items-center justify-between mb-4">
@@ -825,7 +825,7 @@
     </div>
 
     <!-- Speaker Photo Modal -->
-    <div v-if="showPhotoModal && selectedSpeakerPhoto" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50" @click="closePhotoModal">
+    <div v-if="showPhotoModal && selectedSpeakerPhoto" class="fixed inset-0 bg-black/75 flex items-center justify-center p-4 z-50" @click="closePhotoModal">
       <div class="bg-white dark:bg-gray-800 rounded-lg max-w-2xl max-h-[90vh] overflow-hidden" @click.stop>
         <div class="p-4">
           <div class="flex items-center justify-between mb-4">
