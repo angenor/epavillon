@@ -13,6 +13,7 @@
     "deploy:hosting": "npm run build && firebase deploy --only hosting"
   },
   "dependencies": {
+    "@amcharts/amcharts5": "^5.10.7",
     "@fortawesome/fontawesome-svg-core": "^7.0.0",
     "@fortawesome/free-brands-svg-icons": "^7.0.0",
     "@fortawesome/free-regular-svg-icons": "^7.0.0",

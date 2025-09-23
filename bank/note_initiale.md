@@ -1,75 +1,29 @@
-POST
-https://jzkuvulxfhtcelpvrxgf.supabase.co/storage/v1/object/documents/activities_document/719b6f82-bdcc-4b77-9834-c745d2e7e739/1758592770237_angenor_lettre_de_motivation.pdf
-[HTTP/3 400  515ms]
+https://github.com/amcharts/amcharts5
 
-Error uploading document: StorageApiError: new row violates row-level security policy
-    StorageError errors.ts:5
-    StorageApiError errors.ts:19
-    handleError fetch.ts:32
-    promise callback*handleError/< fetch.ts:29
-    fulfilled @supabase_supabase-js.js:3057
-    promise callback*step @supabase_supabase-js.js:3070
-    __awaiter3 @supabase_supabase-js.js:3072
-    __awaiter3 @supabase_supabase-js.js:3054
-    handleError fetch.ts:23
-    _handleRequest fetch.ts:80
-    promise callback*_handleRequest/</< fetch.ts:80
-    _handleRequest fetch.ts:72
-    __awaiter3 @supabase_supabase-js.js:3072
-    __awaiter3 @supabase_supabase-js.js:3054
-    _handleRequest @supabase_supabase-js.js:3104
-    post fetch.ts:100
-    __awaiter3 @supabase_supabase-js.js:3072
-    __awaiter3 @supabase_supabase-js.js:3054
-    post @supabase_supabase-js.js:3122
-    uploadOrUpdate StorageFileApi.ts:122
-    __awaiter4 @supabase_supabase-js.js:3167
-    __awaiter4 @supabase_supabase-js.js:3149
-    uploadOrUpdate @supabase_supabase-js.js:3198
-    upload StorageFileApi.ts:161
-    __awaiter4 @supabase_supabase-js.js:3167
-    __awaiter4 @supabase_supabase-js.js:3149
-    upload @supabase_supabase-js.js:3250
-    uploadDocument useUserActivities.js:266
-    submitNewDocument Management.vue:1447
-    cacheKey runtime-dom.esm-bundler.js:1712
-    callWithErrorHandling runtime-core.esm-bundler.js:199
-    callWithAsyncErrorHandling runtime-core.esm-bundler.js:206
-useUserActivities.js:297:15
-Error adding document: StorageApiError: new row violates row-level security policy
-    StorageError errors.ts:5
-    StorageApiError errors.ts:19
-    handleError fetch.ts:32
-    promise callback*handleError/< fetch.ts:29
-    fulfilled @supabase_supabase-js.js:3057
-    promise callback*step @supabase_supabase-js.js:3070
-    __awaiter3 @supabase_supabase-js.js:3072
-    __awaiter3 @supabase_supabase-js.js:3054
-    handleError fetch.ts:23
-    _handleRequest fetch.ts:80
-    promise callback*_handleRequest/</< fetch.ts:80
-    _handleRequest fetch.ts:72
-    __awaiter3 @supabase_supabase-js.js:3072
-    __awaiter3 @supabase_supabase-js.js:3054
-    _handleRequest @supabase_supabase-js.js:3104
-    post fetch.ts:100
-    __awaiter3 @supabase_supabase-js.js:3072
-    __awaiter3 @supabase_supabase-js.js:3054
-    post @supabase_supabase-js.js:3122
-    uploadOrUpdate StorageFileApi.ts:122
-    __awaiter4 @supabase_supabase-js.js:3167
-    __awaiter4 @supabase_supabase-js.js:3149
-    uploadOrUpdate @supabase_supabase-js.js:3198
-    upload StorageFileApi.ts:161
-    __awaiter4 @supabase_supabase-js.js:3167
-    __awaiter4 @supabase_supabase-js.js:3149
-    upload @supabase_supabase-js.js:3250
-    uploadDocument useUserActivities.js:266
-    submitNewDocument Management.vue:1447
-    cacheKey runtime-dom.esm-bundler.js:1712
-    callWithErrorHandling runtime-core.esm-bundler.js:199
-    callWithAsyncErrorHandling runtime-core.esm-bundler.js:206
-Management.vue:1457:13
 
-​
+prendre en compte les thématiques dans les témoignanges des négociatrices
 
+# statistiques
+nombre de soumission par jour
+nombre de soumission par type d'organisation
+
+nombre de lecture activités
+nombre de lecture page manage
+
+# gestion des emails
+activites_recu_email
+notifier_intervenant_email
+custom_email
+email_confirmation
+email_annulation
+email_groupe_statut(coodonateurs event valider, annuler, tout)
+email_rappel_48h
+email_rappel_24h
+email_rappel_1h
+email_rappel_30min
+email_rappel_15min
+
+
+/activities/:id/manage : l'utilisateur doit pouvoir annuler son activité mais pas pouvoir restauré une fois annulé
+
+dans le dashboad, je veux utiliser @amcharts/amcharts5@5.10.7 qui est déjà istallé pour affchicher le graphe de "nombre de soumission en fonction des jours" et un autre graphe qui montre la proportion de 'public_national_institution', 'international_organization', 'regional_organization', 'ngo_association' et 'private_sector' la documentation se trouve à https://www.amcharts.com/docs/v5/

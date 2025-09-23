@@ -9,19 +9,3 @@ https://jzkuvulxfhtcelpvrxgf.supabase.co/functions/v1/registration-email
 secret: v1,whsec_Vz4Q6SF1ABm2QdZro/b8/G7g4rAQgnyo1SaIwJDqo+EY0lAtmrtKFnJhycHsu/cXsprY/yV6xzQiOAco
 
 
-
-
-
-
-
-
-
-
-
-https://github.com/amcharts/amcharts5
-
-je veux que le panel admin soit réductible avec un bouton. Lorsqu'il se retracte, il doit afficher uniquement les icônes des sections. Lorsqu'il est étendu, il doit afficher les icônes et les noms des sections. Le bouton pour rétracter/étendre le panel doit être situé en haut à droite du panel.
-
-
-
-prendre en compte les thématiques dans les témoignanges des négociatrices

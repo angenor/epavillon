@@ -153,9 +153,12 @@
               <div class="flex-1 min-w-0">
                 <div class="flex items-start justify-between">
                   <div class="flex-1">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white truncate">
+                    <router-link
+                      :to="`/activities/${event.id}/manage`"
+                      class="text-lg font-semibold text-gray-900 dark:text-white hover:text-ifdd-bleu dark:hover:text-ifdd-bleu-clair transition-colors truncate block"
+                    >
                       {{ event.title }}
-                    </h3>
+                    </router-link>
                     <div class="flex items-center space-x-4 mt-1 text-sm text-gray-600 dark:text-gray-400">
                       <span class="flex items-center">
                         <font-awesome-icon :icon="['fas', 'calendar']" class="w-4 h-4 mr-1" />
@@ -184,29 +187,13 @@
 
                   <!-- Actions -->
                   <div class="flex items-center space-x-2 ml-4">
-                      <router-link
+                    <router-link
                       :to="`/activities/${event.id}/manage`"
                       class="p-2 text-ifdd-bleu hover:bg-ifdd-bleu/10 rounded-lg transition-colors"
                       :title="t('events.manage')"
                     >
                       <font-awesome-icon :icon="['fas', 'cog']" class="w-5 h-5" />
                     </router-link>
-
-                    <button
-                      @click="duplicateEvent(event)"
-                      class="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                      :title="t('events.duplicate')"
-                    >
-                      <font-awesome-icon :icon="['fas', 'copy']" class="w-5 h-5" />
-                    </button>
-
-                    <button
-                      @click="deleteEvent(event)"
-                      class="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-colors"
-                      :title="t('events.delete')"
-                    >
-                      <font-awesome-icon :icon="['fas', 'trash']" class="w-5 h-5" />
-                    </button>
                   </div>
                 </div>
               </div>
@@ -228,7 +215,7 @@ import useUserActivities from '@/composables/useUserActivities'
 const { t } = useI18n()
 const authStore = useAuthStore()
 const router = useRouter()
-const { fetchUserActivities, deleteActivity, activities: userActivities } = useUserActivities()
+const { fetchUserActivities, activities: userActivities } = useUserActivities()
 
 const loading = ref(true)
 const events = ref([])
@@ -330,27 +317,6 @@ const loadEvents = async () => {
   }
 }
 
-const duplicateEvent = async (event) => {
-  if (!confirm(t('events.confirmDuplicate'))) return
-
-  try {
-    // TODO: Implement duplicate functionality
-    console.log('Duplicate functionality to be implemented', event.id)
-  } catch (error) {
-    console.error('Error duplicating event:', error)
-  }
-}
-
-const deleteEvent = async (event) => {
-  if (!confirm(t('events.confirmDelete'))) return
-
-  try {
-    await deleteActivity(event.id)
-    events.value = events.value.filter(e => e.id !== event.id)
-  } catch (error) {
-    console.error('Error deleting event:', error)
-  }
-}
 
 onMounted(() => {
   loadEvents()

@@ -23,48 +23,70 @@
 
     <!-- Sidebar -->
     <aside :class="[
-      'fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-300 ease-in-out lg:translate-x-0',
-      sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+      'fixed inset-y-0 left-0 z-50 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform transition-all duration-300 ease-in-out lg:translate-x-0',
+      sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+      collapsed ? 'lg:w-20' : 'lg:w-64',
+      'w-64'
     ]">
-      <!-- Logo -->
-      <div class="flex items-center h-16 px-6 bg-orange-600 dark:bg-orange-700">
-        <img src="/logo-ifdd.png" alt="IFDD" class="h-8 w-auto">
-        <span class="ml-3 text-white font-semibold text-lg">
-          {{ t('admin.layout.adminPanel') }}
-        </span>
+      <!-- Logo and Toggle Button -->
+      <div class="relative flex items-center h-16 bg-orange-600 dark:bg-orange-700" :class="collapsed ? 'justify-center px-2' : 'justify-between px-6'">
+        <div class="flex items-center">
+          <img src="/logo-ifdd.png" alt="IFDD" class="h-8 w-auto flex-shrink-0">
+          <span v-if="!collapsed" class="ml-3 text-white font-semibold text-lg transition-opacity duration-300">
+            {{ t('admin.layout.adminPanel') }}
+          </span>
+        </div>
+        <!-- Collapse/Expand Button - Desktop Only -->
+        <button @click="toggleCollapsed"
+                class="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full p-1.5 hover:bg-gray-50 dark:hover:bg-gray-700 shadow-sm transition-colors">
+          <svg class="w-4 h-4 text-gray-600 dark:text-gray-400 transition-transform duration-300"
+               :class="collapsed ? 'rotate-180' : ''"
+               fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </button>
       </div>
 
       <!-- Navigation -->
-      <nav class="mt-8 px-4 space-y-2">
+      <nav class="mt-8 space-y-2" :class="collapsed ? 'px-2' : 'px-4'">
         <router-link
           v-for="item in navigation"
           :key="item.name"
           :to="item.href"
           :class="[
-            'group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200',
+            'group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 relative',
             isActiveRoute(item.href)
               ? 'bg-orange-100 dark:bg-orange-900 text-orange-900 dark:text-orange-100'
-              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700',
+            collapsed ? 'justify-center' : ''
           ]"
+          :title="collapsed ? t(item.name) : null"
         >
-          <component :is="item.icon"
-                     :class="[
-                       'mr-3 h-5 w-5',
-                       isActiveRoute(item.href)
-                         ? 'text-orange-600 dark:text-orange-400'
-                         : 'text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300'
-                     ]" />
-          {{ t(item.name) }}
+          <font-awesome-icon
+            :icon="item.icon"
+            :class="[
+              'h-5 w-5 flex-shrink-0',
+              !collapsed ? 'mr-3' : '',
+              isActiveRoute(item.href)
+                ? 'text-orange-600 dark:text-orange-400'
+                : 'text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300'
+            ]" />
+          <span v-if="!collapsed" class="transition-opacity duration-300">
+            {{ t(item.name) }}
+          </span>
         </router-link>
       </nav>
 
       <!-- User Info -->
       <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
-        <div class="flex items-center">
+        <div :class="[
+          'flex items-center',
+          collapsed ? 'justify-center' : ''
+        ]">
           <img :src="currentUser?.profile_photo_thumbnail_url || '/images/default-avatar.png'"
                :alt="currentUser?.first_name"
-               class="h-8 w-8 rounded-full">
-          <div class="ml-3 flex-1 min-w-0">
+               class="h-8 w-8 rounded-full flex-shrink-0">
+          <div v-if="!collapsed" class="ml-3 flex-1 min-w-0 transition-opacity duration-300">
             <p class="text-sm font-medium text-gray-700 dark:text-gray-200 truncate">
               {{ currentUser?.first_name }} {{ currentUser?.last_name }}
             </p>
@@ -78,8 +100,8 @@
 
     <!-- Contenu principal -->
     <main :class="[
-      'lg:ml-64 min-h-screen',
-      'transition-all duration-300 ease-in-out'
+      'min-h-screen transition-all duration-300 ease-in-out',
+      collapsed ? 'lg:ml-20' : 'lg:ml-64'
     ]">
       <!-- Header -->
       <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
@@ -146,19 +168,21 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 import { useAdmin } from '@/composables/useAdmin'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 const { t } = useI18n()
 const route = useRoute()
 const { currentUser } = useAuth()
-const { hasAdminRole, getUserRole, loadUserRoles, canAccessAdmin, isLoadingRoles } = useAdmin()
+const { getUserRole, loadUserRoles, canAccessAdmin, isLoadingRoles } = useAdmin()
 
 // État
 const sidebarOpen = ref(false)
+const collapsed = ref(localStorage.getItem('adminSidebarCollapsed') === 'true')
 const unreadNotifications = ref(0)
 
 // Navigation
@@ -166,57 +190,57 @@ const navigation = [
   {
     name: 'admin.nav.dashboard',
     href: '/admin',
-    icon: 'svg'
+    icon: ['fas', 'tachometer-alt']
   },
   {
     name: 'admin.nav.users',
     href: '/admin/users',
-    icon: 'svg'
+    icon: ['fas', 'users']
   },
   {
     name: 'admin.nav.activities',
     href: '/admin/activities',
-    icon: 'svg'
+    icon: ['fas', 'calendar-check']
   },
   {
     name: 'admin.nav.organizations',
     href: '/admin/organizations',
-    icon: 'svg'
+    icon: ['fas', 'building']
   },
   {
     name: 'admin.nav.events',
     href: '/admin/events',
-    icon: 'svg'
+    icon: ['fas', 'calendar-alt']
   },
   {
     name: 'admin.nav.trainings',
     href: '/admin/trainings',
-    icon: 'svg'
+    icon: ['fas', 'graduation-cap']
   },
   {
     name: 'admin.nav.content',
     href: '/admin/content',
-    icon: 'svg'
+    icon: ['fas', 'file-alt']
   },
   {
     name: 'admin.nav.communications',
     href: '/admin/communications',
-    icon: 'svg'
+    icon: ['fas', 'envelope']
   },
   {
     name: 'admin.nav.reports',
     href: '/admin/reports',
-    icon: 'svg'
+    icon: ['fas', 'chart-bar']
   },
   {
     name: 'admin.nav.roles',
     href: '/admin/roles',
-    icon: 'svg'
+    icon: ['fas', 'user-shield']
   },
   {
     name: 'admin.nav.negotiations',
     href: '/admin/negotiations',
-    icon: 'svg'
+    icon: ['fas', 'handshake']
   }
 ]
 
@@ -245,6 +269,19 @@ const isActiveRoute = (href) => {
   }
   return route.path.startsWith(href)
 }
+
+const toggleCollapsed = () => {
+  collapsed.value = !collapsed.value
+  localStorage.setItem('adminSidebarCollapsed', collapsed.value.toString())
+}
+
+// Watchers
+watch(collapsed, (newVal) => {
+  // Fermer le menu mobile si on collapse en desktop
+  if (newVal && window.innerWidth >= 1024) {
+    sidebarOpen.value = false
+  }
+})
 
 onMounted(async () => {
   // Attendre que les rôles soient chargés

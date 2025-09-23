@@ -140,6 +140,7 @@ VITE_SUPABASE_ANON_KEY=votre_clé_anon_supabase
 - Les couleurs de la **charte graphique IFDD** et polices sont définies dans `tailwind.config.js`
 - Documentation TailwindCSS : https://tailwindcss.com/docs
 - **IMPORTANT** : TailwindCSS v4 ne supporte plus la syntaxe `bg-opacity-xx`. Utiliser la nouvelle syntaxe `bg-couleur/opacité` (ex: `bg-green-500/50` pour 50% d'opacité)
+- **IMPORTANT** : Dans TailwindCSS v4, les boutons ne possèdent plus `cursor-pointer` par défaut. Il faut l'ajouter manuellement avec la classe `cursor-pointer` (ex: `<button class="cursor-pointer ...">...</button>`)
 
 ### Composants UI recommandés
 - **Skeleton loaders** : Utiliser des skeleton loaders pour améliorer l'expérience utilisateur pendant le chargement des données
