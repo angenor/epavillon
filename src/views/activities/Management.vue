@@ -673,16 +673,13 @@
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">
                   {{ t('events.documents') }}
                 </h3>
-                <label class="px-4 py-2 bg-ifdd-bleu text-white rounded-lg hover:bg-ifdd-bleu-fonce transition-colors cursor-pointer">
-                  <font-awesome-icon :icon="['fas', 'upload']" class="mr-2" />
-                  {{ t('events.uploadDocument') }}
-                  <input
-                    type="file"
-                    @change="uploadNewDocument"
-                    class="hidden"
-                    accept=".pdf,.doc,.docx,.ppt,.pptx"
-                  >
-                </label>
+                <button
+                  @click="addNewDocument"
+                  class="px-4 py-2 bg-ifdd-bleu text-white rounded-lg hover:bg-ifdd-bleu-fonce transition-colors"
+                >
+                  <font-awesome-icon :icon="['fas', 'plus']" class="mr-2" />
+                  {{ t('events.addDocument') }}
+                </button>
               </div>
 
               <div class="space-y-2">
@@ -692,12 +689,16 @@
                   class="flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-3 rounded-lg"
                 >
                   <div class="flex items-center space-x-3">
-                    <font-awesome-icon :icon="['fas', 'file-pdf']" class="text-red-600" />
-                    <div>
+                    <font-awesome-icon :icon="getDocumentIcon(doc.file_type)" :class="getDocumentIconColor(doc.file_type)" />
+                    <div class="flex-1">
                       <p class="font-medium text-gray-900 dark:text-white">{{ doc.title }}</p>
-                      <p class="text-sm text-gray-600 dark:text-gray-400">
-                        {{ formatDate(doc.uploaded_at) }}
-                      </p>
+                      <div class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                        <span v-if="doc.types && doc.types.length > 0"
+                              class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+                          {{ t(`events.documentTypes.${doc.types[0]}`) }}
+                        </span>
+                        <span>{{ formatDate(doc.uploaded_at) }}</span>
+                      </div>
                     </div>
                   </div>
                   <div class="flex items-center space-x-2">
@@ -705,12 +706,14 @@
                       :href="doc.file_url"
                       target="_blank"
                       class="text-ifdd-bleu hover:text-ifdd-bleu-fonce"
+                      :title="t('events.downloadDocument')"
                     >
                       <font-awesome-icon :icon="['fas', 'download']" />
                     </a>
                     <button
                       @click="removeDocument(doc.id)"
                       class="text-red-600 hover:text-red-800"
+                      :title="t('events.deleteDocument')"
                     >
                       <font-awesome-icon :icon="['fas', 'trash']" />
                     </button>
@@ -835,6 +838,93 @@
       </div>
     </div>
 
+    <!-- Add Document Modal -->
+    <div v-if="showAddDocumentModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+      <div class="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+              {{ t('events.addNewDocument') }}
+            </h3>
+            <button @click="cancelAddDocument" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+              <font-awesome-icon :icon="['fas', 'times']" />
+            </button>
+          </div>
+
+          <form @submit.prevent="submitNewDocument" class="space-y-4">
+            <!-- Titre -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {{ t('events.documentTitle') }} *
+              </label>
+              <input v-model="newDocumentForm.title"
+                     type="text"
+                     required
+                     class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
+                     :placeholder="t('events.documentTitlePlaceholder')">
+            </div>
+
+            <!-- Type -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {{ t('events.documentType') }} *
+              </label>
+              <select v-model="newDocumentForm.type"
+                      required
+                      class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2">
+                <option value="">{{ t('events.selectDocumentType') }}</option>
+                <option value="presentation">{{ t('events.documentTypes.presentation') }}</option>
+                <option value="report">{{ t('events.documentTypes.report') }}</option>
+                <option value="additional_resource">{{ t('events.documentTypes.additional_resource') }}</option>
+                <option value="autre">{{ t('events.documentTypes.autre') }}</option>
+              </select>
+            </div>
+
+            <!-- Fichier -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {{ t('events.documentFile') }} *
+              </label>
+              <input type="file"
+                     @change="onDocumentFileSelected"
+                     required
+                     class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
+                     accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.xls,.xlsx">
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                {{ t('events.documentFileFormats') }}
+              </p>
+            </div>
+
+            <!-- Affichage du fichier sélectionné -->
+            <div v-if="selectedDocumentFile" class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+              <div class="flex items-center space-x-2">
+                <font-awesome-icon :icon="['fas', 'file']" class="text-gray-600 dark:text-gray-400" />
+                <span class="text-sm text-gray-900 dark:text-white">{{ selectedDocumentFile.name }}</span>
+                <span class="text-xs text-gray-500 dark:text-gray-400">
+                  ({{ Math.round(selectedDocumentFile.size / 1024) }} KB)
+                </span>
+              </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <button type="button"
+                      @click="cancelAddDocument"
+                      class="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors">
+                {{ t('common.cancel') }}
+              </button>
+              <button type="submit"
+                      :disabled="savingNewDocument"
+                      class="px-4 py-2 bg-ifdd-bleu text-white rounded-lg hover:bg-ifdd-bleu-fonce disabled:opacity-50 transition-colors">
+                <font-awesome-icon v-if="savingNewDocument" :icon="['fas', 'spinner']" class="animate-spin mr-2" />
+                {{ t('events.addDocument') }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <!-- Speaker Photo Modal -->
     <div v-if="showPhotoModal && selectedSpeakerPhoto" class="fixed inset-0 bg-black/75 flex items-center justify-center p-4 z-50" @click="closePhotoModal">
       <div class="bg-white dark:bg-gray-800 rounded-lg max-w-2xl max-h-[90vh] overflow-hidden" @click.stop>
@@ -919,6 +1009,14 @@ const selectedSpeakerPhoto = ref(null)
 const uploadingPhoto = ref({})
 const uploadProgress = ref({})
 const editingBanner = ref(false)
+const showAddDocumentModal = ref(false)
+const newDocumentForm = ref({
+  title: '',
+  type: '',
+  file: null
+})
+const selectedDocumentFile = ref(null)
+const savingNewDocument = ref(false)
 
 
 const stats = computed(() => ({
@@ -967,6 +1065,30 @@ const getStatusClass = (status) => {
     completed: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
   }
   return classes[status] || classes.draft
+}
+
+const getDocumentIcon = (fileType) => {
+  if (!fileType) return ['fas', 'file']
+
+  const type = fileType.toLowerCase()
+  if (type.includes('pdf')) return ['fas', 'file-pdf']
+  if (type.includes('word') || type.includes('doc')) return ['fas', 'file-word']
+  if (type.includes('powerpoint') || type.includes('ppt')) return ['fas', 'file-powerpoint']
+  if (type.includes('excel') || type.includes('xls')) return ['fas', 'file-excel']
+  if (type.includes('text') || type.includes('txt')) return ['fas', 'file-alt']
+  return ['fas', 'file']
+}
+
+const getDocumentIconColor = (fileType) => {
+  if (!fileType) return 'text-gray-600 dark:text-gray-400'
+
+  const type = fileType.toLowerCase()
+  if (type.includes('pdf')) return 'text-red-600'
+  if (type.includes('word') || type.includes('doc')) return 'text-blue-600'
+  if (type.includes('powerpoint') || type.includes('ppt')) return 'text-orange-600'
+  if (type.includes('excel') || type.includes('xls')) return 'text-green-600'
+  if (type.includes('text') || type.includes('txt')) return 'text-gray-600'
+  return 'text-gray-600 dark:text-gray-400'
 }
 
 
@@ -1278,16 +1400,69 @@ const removeSpeaker = async (speakerId) => {
   }
 }
 
-const uploadNewDocument = async (event) => {
-  const file = event.target.files[0]
-  if (!file) return
-
-  try {
-    const doc = await uploadDocument(activity.value.id, file, file.name)
-    documents.value.push(doc)
-  } catch (error) {
-    console.error('Error uploading document:', error)
+const addNewDocument = () => {
+  // Reset form
+  newDocumentForm.value = {
+    title: '',
+    type: '',
+    file: null
   }
+  selectedDocumentFile.value = null
+  showAddDocumentModal.value = true
+}
+
+const onDocumentFileSelected = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    selectedDocumentFile.value = file
+    newDocumentForm.value.file = file
+  }
+}
+
+const submitNewDocument = async () => {
+  // Validate required fields
+  if (!newDocumentForm.value.title.trim()) {
+    alert(t('events.documentTitleRequired'))
+    return
+  }
+
+  if (!newDocumentForm.value.type) {
+    alert(t('events.documentTypeRequired'))
+    return
+  }
+
+  if (!newDocumentForm.value.file) {
+    alert(t('events.documentFileRequired'))
+    return
+  }
+
+  savingNewDocument.value = true
+  try {
+    const documentData = {
+      title: newDocumentForm.value.title.trim(),
+      types: [newDocumentForm.value.type], // Array as per database schema
+      file: newDocumentForm.value.file
+    }
+
+    const newDocument = await uploadDocument(
+      activity.value.id,
+      documentData.file,
+      documentData.title,
+      documentData.types
+    )
+    documents.value.push(newDocument)
+
+    showAddDocumentModal.value = false
+  } catch (error) {
+    console.error('Error adding document:', error)
+    alert(t('events.errorAddingDocument'))
+  } finally {
+    savingNewDocument.value = false
+  }
+}
+
+const cancelAddDocument = () => {
+  showAddDocumentModal.value = false
 }
 
 const removeDocument = async (docId) => {

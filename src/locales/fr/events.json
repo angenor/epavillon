@@ -278,7 +278,27 @@
     "organizationPlaceholder": "Ex: Ministère, Université, ONG...",
     "emailPlaceholder": "email@exemple.com",
     "addNewSpeaker": "Ajouter un nouvel intervenant",
-    "errorAddingSpeaker": "Erreur lors de l'ajout de l'intervenant"
+    "errorAddingSpeaker": "Erreur lors de l'ajout de l'intervenant",
+    "addDocument": "Ajouter un document",
+    "addNewDocument": "Ajouter un nouveau document",
+    "documentTitle": "Titre du document",
+    "documentTitlePlaceholder": "Entrez le titre du document",
+    "documentType": "Type de document",
+    "selectDocumentType": "Sélectionnez un type",
+    "documentTypes": {
+      "presentation": "Présentation",
+      "report": "Rapport",
+      "additional_resource": "Ressource additionnelle",
+      "autre": "Autre"
+    },
+    "documentFile": "Fichier",
+    "documentFileFormats": "Formats acceptés : PDF, DOC, DOCX, PPT, PPTX, TXT, XLS, XLSX",
+    "documentTitleRequired": "Le titre du document est obligatoire",
+    "documentTypeRequired": "Le type de document est obligatoire",
+    "documentFileRequired": "Le fichier est obligatoire",
+    "errorAddingDocument": "Erreur lors de l'ajout du document",
+    "downloadDocument": "Télécharger le document",
+    "deleteDocument": "Supprimer le document"
   },
   "trainings": {
     "title": "Formations disponibles",

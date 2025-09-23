@@ -257,29 +257,36 @@ export default function useUserActivities() {
     }
   }
 
-  const uploadDocument = async (activityId, file, title) => {
+  const uploadDocument = async (activityId, file, title, types = null) => {
     try {
       const cleanFileName = sanitizeFileName(file.name)
-      const fileName = `${activityId}/${Date.now()}_${cleanFileName}`
+      const fileName = `activities_document/${activityId}/${Date.now()}_${cleanFileName}`
       const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('activity-documents')
+        .from('epavillonv')
         .upload(fileName, file)
 
       if (uploadError) throw uploadError
 
       const { data: urlData } = supabase.storage
-        .from('activity-documents')
+        .from('epavillonv')
         .getPublicUrl(fileName)
+
+      const insertData = {
+        activity_id: activityId,
+        title: title || file.name,
+        file_url: urlData.publicUrl,
+        file_type: file.type,
+        uploaded_by: authStore.user.id
+      }
+
+      // Add types if provided
+      if (types && Array.isArray(types) && types.length > 0) {
+        insertData.types = types
+      }
 
       const { data, error: insertError } = await supabase
         .from('activity_documents')
-        .insert({
-          activity_id: activityId,
-          title: title || file.name,
-          file_url: urlData.publicUrl,
-          file_type: file.type,
-          uploaded_by: authStore.user.id
-        })
+        .insert(insertData)
         .select()
         .single()
 
@@ -301,10 +308,14 @@ export default function useUserActivities() {
         .single()
 
       if (doc?.file_url) {
-        const path = doc.file_url.split('/').slice(-2).join('/')
-        await supabase.storage
-          .from('activity-documents')
-          .remove([path])
+        // Extract path from URL for epavillonv bucket
+        const urlParts = doc.file_url.split('/object/public/epavillonv/')
+        if (urlParts.length > 1) {
+          const filePath = urlParts[1]
+          await supabase.storage
+            .from('epavillonv')
+            .remove([filePath])
+        }
       }
 
       const { error: deleteError } = await supabase

@@ -1865,3 +1865,65 @@ COMMENT ON TABLE public.francophonie_meeting_registrations IS 'Inscriptions des 
 COMMENT ON COLUMN public.francophonie_meetings.country_id IS 'Pays où se déroule la réunion (référence obligatoire vers la table countries)';
 COMMENT ON COLUMN public.francophonie_meetings.category IS 'Catégorie de la réunion (climate, biodiversity, desertification)';
 COMMENT ON COLUMN public.francophonie_meetings.zoom_meeting_id IS 'Référence optionnelle vers les informations Zoom si la réunion est en ligne';
+
+-- =============================================
+-- 34. CONFIGURATION DES BUCKETS DE STOCKAGE (STORAGE)
+-- =============================================
+-- Note: Les buckets doivent être créés via l'interface Supabase ou via API
+-- Cette section documente la configuration des buckets utilisés dans l'application
+
+-- Bucket: epavillonp (Principal - très permissif)
+-- Utilisation: Bannières d'événements, photos de profil, photos d'intervenants
+-- Structure:
+--   - activities_banner/       : Bannières des activités
+--   - intervenants/           : Photos des intervenants
+--   - profile_photos/         : Photos de profil des utilisateurs
+--   - organization_logos/     : Logos des organisations
+-- Configuration: Public, RLS désactivé ou très permissif
+
+-- Bucket: documents (Documents d'activités)
+-- Utilisation: Documents uploadés pour les activités (PDF, DOC, PPT, XLS, etc.)
+-- Structure:
+--   - activities_document/{activity_id}/ : Documents par activité
+-- Configuration recommandée: Public avec politiques RLS flexibles
+
+-- =============================================
+-- POLITIQUES RLS POUR LE BUCKET "documents"
+-- =============================================
+-- À exécuter pour configurer le bucket documents avec des permissions flexibles
+
+-- Supprimer les anciennes politiques (si existantes)
+-- DELETE FROM storage.policies WHERE bucket_id = 'documents';
+
+-- Politique de lecture publique
+-- CREATE POLICY "Public Access - Read documents"
+-- ON storage.objects
+-- FOR SELECT
+-- TO public
+-- USING (bucket_id = 'documents');
+
+-- Politique d'upload pour utilisateurs authentifiés
+-- CREATE POLICY "Authenticated users can upload documents"
+-- ON storage.objects
+-- FOR INSERT
+-- TO authenticated
+-- WITH CHECK (bucket_id = 'documents');
+
+-- Politique de mise à jour pour utilisateurs authentifiés
+-- CREATE POLICY "Authenticated users can update documents"
+-- ON storage.objects
+-- FOR UPDATE
+-- TO authenticated
+-- USING (bucket_id = 'documents')
+-- WITH CHECK (bucket_id = 'documents');
+
+-- Politique de suppression pour utilisateurs authentifiés
+-- CREATE POLICY "Authenticated users can delete documents"
+-- ON storage.objects
+-- FOR DELETE
+-- TO authenticated
+-- USING (bucket_id = 'documents');
+
+-- Note: Pour une configuration ultra-permissive (non recommandé en production),
+-- désactiver RLS sur le bucket via l'interface Supabase:
+-- Storage > documents > Policies > Désactiver "RLS enabled"
