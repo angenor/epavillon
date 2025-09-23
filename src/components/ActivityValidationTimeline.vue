@@ -4,33 +4,163 @@
       {{ t('events.validationTimeline') }}
     </h3>
     <div class="relative">
-      <!-- Ligne horizontale de progression -->
-      <div class="absolute top-5 left-5 right-5 h-0.5 bg-gray-200 dark:bg-gray-700"></div>
-      <div class="absolute top-5 left-5 h-0.5 bg-ifdd-bleu transition-all duration-500"
-           :style="{ width: progressWidth }"></div>
+      <!-- Conteneur principal du timeline -->
+      <div class="relative min-h-[180px]">
 
-      <!-- Timeline horizontale -->
-      <div class="flex justify-between items-start relative">
-        <div
-          v-for="(step, index) in timelineSteps"
-          :key="step.status"
-          class="flex flex-col items-center"
-          :class="getStepFlexClass(index)"
-        >
-          <!-- Icône de l'étape -->
-          <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full mb-3"
-               :class="getStepIconClass(step.status)">
-            <font-awesome-icon :icon="step.icon" class="text-sm" />
-          </div>
+        <!-- Lignes de connexion -->
+        <svg class="absolute inset-0 w-full h-full" style="z-index: 1;">
+          <!-- Ligne principale (Brouillon -> Soumis -> En examen) -->
+          <line
+            x1="40" y1="20"
+            x2="50%" y2="20"
+            :stroke="currentStatus !== 'draft' ? '#3b82f6' : '#d1d5db'"
+            stroke-width="2"
+            class="transition-all duration-500"/>
 
-          <!-- Texte de l'étape -->
-          <div class="text-center">
-            <p class="text-sm font-medium" :class="getStepTextClass(step.status)">
-              {{ t(`events.status.${step.status}`) }}
-            </p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-24">
-              {{ t(`events.statusDescription.${step.status}`) }}
-            </p>
+          <!-- Ligne de bifurcation vers Approuvé -->
+          <line
+            v-if="showBifurcation"
+            x1="50%" y1="20"
+            x2="65%" y2="20"
+            :stroke="isApprovedPath ? '#10b981' : '#d1d5db'"
+            stroke-width="2"/>
+
+          <!-- Ligne de bifurcation vers Rejeté -->
+          <line
+            v-if="showBifurcation"
+            x1="50%" y1="20"
+            x2="65%" y2="100"
+            :stroke="isRejectedPath ? '#ef4444' : '#d1d5db'"
+            stroke-width="2"/>
+
+          <!-- Ligne Approuvé -> En cours -->
+          <line
+            v-if="showFullPath && showBifurcation"
+            x1="65%" y1="20"
+            x2="80%" y2="20"
+            :stroke="currentStatus === 'live' || currentStatus === 'completed' ? '#10b981' : '#d1d5db'"
+            stroke-width="2"/>
+
+          <!-- Ligne En cours -> Terminé -->
+          <line
+            v-if="showFullPath && showBifurcation"
+            x1="80%" y1="20"
+            x2="95%" y2="20"
+            :stroke="currentStatus === 'completed' ? '#10b981' : '#d1d5db'"
+            stroke-width="2"/>
+        </svg>
+
+        <!-- Étapes du timeline -->
+        <div class="relative" style="z-index: 10;">
+
+          <!-- Étapes principales alignées horizontalement -->
+          <div class="flex items-start">
+
+            <!-- Brouillon -->
+            <div class="absolute left-[20px]" style="top: 0;">
+              <div class="flex flex-col items-center">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+                     :class="getStepIconClass('draft')">
+                  <font-awesome-icon :icon="['fas', 'edit']" class="text-sm" />
+                </div>
+                <div class="text-center mt-2">
+                  <p class="text-sm font-medium" :class="getStepTextClass('draft')">
+                    {{ t('events.status.draft') }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Soumis -->
+            <div class="absolute left-[25%]" style="top: 0; transform: translateX(-50%);">
+              <div class="flex flex-col items-center">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+                     :class="getStepIconClass('submitted')">
+                  <font-awesome-icon :icon="['fas', 'paper-plane']" class="text-sm" />
+                </div>
+                <div class="text-center mt-2">
+                  <p class="text-sm font-medium" :class="getStepTextClass('submitted')">
+                    {{ t('events.status.submitted') }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- En examen -->
+            <div class="absolute left-[50%]" style="top: 0; transform: translateX(-50%);">
+              <div class="flex flex-col items-center">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+                     :class="getStepIconClass('under_review')">
+                  <font-awesome-icon :icon="['fas', 'search']" class="text-sm" />
+                </div>
+                <div class="text-center mt-2">
+                  <p class="text-sm font-medium" :class="getStepTextClass('under_review')">
+                    {{ t('events.status.under_review') }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Approuvé (branche du haut) -->
+            <div v-if="showBifurcation" class="absolute left-[65%]" style="top: 0; transform: translateX(-50%);">
+              <div class="flex flex-col items-center">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+                     :class="getPathStepClass('approved')">
+                  <font-awesome-icon :icon="['fas', 'check']" class="text-sm" />
+                </div>
+                <div class="text-center mt-2">
+                  <p class="text-sm font-medium" :class="getPathTextClass('approved')">
+                    {{ t('events.status.approved') }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- En cours -->
+            <div v-if="showFullPath && showBifurcation" class="absolute left-[80%]" style="top: 0; transform: translateX(-50%);">
+              <div class="flex flex-col items-center">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+                     :class="getPathStepClass('live')">
+                  <font-awesome-icon :icon="['fas', 'broadcast-tower']" class="text-sm" />
+                </div>
+                <div class="text-center mt-2">
+                  <p class="text-sm font-medium" :class="getPathTextClass('live')">
+                    {{ t('events.status.live') }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Terminé -->
+            <div v-if="showFullPath && showBifurcation" class="absolute left-[95%]" style="top: 0; transform: translateX(-50%);">
+              <div class="flex flex-col items-center">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+                     :class="getPathStepClass('completed')">
+                  <font-awesome-icon :icon="['fas', 'flag-checkered']" class="text-sm" />
+                </div>
+                <div class="text-center mt-2">
+                  <p class="text-sm font-medium" :class="getPathTextClass('completed')">
+                    {{ t('events.status.completed') }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rejeté (branche du bas) -->
+            <div v-if="showBifurcation" class="absolute left-[65%]" style="top: 80px; transform: translateX(-50%);">
+              <div class="flex flex-col items-center">
+                <div class="relative z-10 flex items-center justify-center w-10 h-10 rounded-full"
+                     :class="getPathStepClass('rejected')">
+                  <font-awesome-icon :icon="['fas', 'times']" class="text-sm" />
+                </div>
+                <div class="text-center mt-2">
+                  <p class="text-sm font-medium" :class="getPathTextClass('rejected')">
+                    {{ t('events.status.rejected') }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -52,50 +182,34 @@ const props = defineProps({
       'draft', 'submitted', 'under_review', 'approved',
       'rejected', 'cancelled', 'live', 'completed'
     ].includes(value)
+  },
+  showFullPath: {
+    type: Boolean,
+    default: true // Afficher le chemin complet (En cours, Terminé)
   }
 })
 
-// Définition des étapes selon le schéma de base de données
-const baseSteps = [
+// Étapes principales avant la bifurcation
+const mainSteps = [
   { status: 'draft', icon: ['fas', 'edit'] },
   { status: 'submitted', icon: ['fas', 'paper-plane'] },
   { status: 'under_review', icon: ['fas', 'search'] }
 ]
 
-// Logique de timeline selon le statut actuel
-const timelineSteps = computed(() => {
-  const steps = [...baseSteps]
+// Afficher la bifurcation dès l'étape de soumission
+const showBifurcation = computed(() => {
+  const afterSubmitStatuses = ['submitted', 'under_review', 'approved', 'rejected', 'live', 'completed']
+  return afterSubmitStatuses.includes(props.currentStatus)
+})
 
-  // Ajouter les étapes finales selon le statut actuel
-  switch (props.currentStatus) {
-    case 'approved':
-      steps.push({ status: 'approved', icon: ['fas', 'check'] })
-      break
-    case 'rejected':
-      steps.push({ status: 'rejected', icon: ['fas', 'times'] })
-      break
-    case 'cancelled':
-      steps.push({ status: 'cancelled', icon: ['fas', 'ban'] })
-      break
-    case 'live':
-      steps.push(
-        { status: 'approved', icon: ['fas', 'check'] },
-        { status: 'live', icon: ['fas', 'broadcast-tower'] }
-      )
-      break
-    case 'completed':
-      steps.push(
-        { status: 'approved', icon: ['fas', 'check'] },
-        { status: 'live', icon: ['fas', 'broadcast-tower'] },
-        { status: 'completed', icon: ['fas', 'flag-checkered'] }
-      )
-      break
-    default:
-      // Pour draft, submitted, under_review - on ne montre que les étapes de base
-      break
-  }
+// Détecter si on est sur le chemin approuvé
+const isApprovedPath = computed(() => {
+  return ['approved', 'live', 'completed'].includes(props.currentStatus)
+})
 
-  return steps
+// Détecter si on est sur le chemin rejeté
+const isRejectedPath = computed(() => {
+  return props.currentStatus === 'rejected'
 })
 
 // Ordre logique des statuts pour calculer la progression
@@ -104,59 +218,99 @@ const statusOrder = [
   'rejected', 'cancelled', 'live', 'completed'
 ]
 
-const progressWidth = computed(() => {
-  const currentIndex = statusOrder.indexOf(props.currentStatus)
-  const totalSteps = timelineSteps.value.length
+// Calcul de la largeur de progression active sur la ligne principale
+const activeProgressWidth = computed(() => {
+  const mainStatusOrder = ['draft', 'submitted', 'under_review']
 
-  if (currentIndex === -1 || totalSteps === 0) return '0%'
-
-  // Pour les statuts de rejet/annulation, la progression s'arrête à under_review
-  if (['rejected', 'cancelled'].includes(props.currentStatus)) {
-    const underReviewIndex = timelineSteps.value.findIndex(step => step.status === 'under_review')
-    return `${((underReviewIndex + 1) / totalSteps) * 100}%`
+  // Si on est dans les étapes principales
+  if (mainStatusOrder.includes(props.currentStatus)) {
+    const index = mainStatusOrder.indexOf(props.currentStatus)
+    return `${((index + 1) / 3) * 60 - 5}%`
   }
 
-  // Pour les autres statuts, calculer normalement
-  const currentStepIndex = timelineSteps.value.findIndex(step => step.status === props.currentStatus)
-  if (currentStepIndex === -1) return '0%'
+  // Si on a dépassé l'examen, la ligne principale est complète
+  if (['approved', 'rejected', 'live', 'completed'].includes(props.currentStatus)) {
+    return 'calc(60% - 20px)'
+  }
 
-  return `${((currentStepIndex + 1) / totalSteps) * 100}%`
+  return '0%'
 })
 
-const getStepFlexClass = (index) => {
-  const totalSteps = timelineSteps.value.length
-  if (totalSteps <= 4) {
-    return 'flex-1'
-  }
-  // Pour plus de 4 étapes, ajuster l'espacement
-  return index === 0 || index === totalSteps - 1 ? 'flex-shrink-0' : 'flex-1'
-}
-
-const getStepIconClass = (status) => {
+// Nouvelle fonction pour styliser les étapes des chemins
+const getPathStepClass = (status) => {
+  // Si c'est le statut actuel
   if (status === props.currentStatus) {
-    // Couleurs spéciales pour les statuts finaux
     switch (status) {
-      case 'rejected':
-        return 'bg-red-500 text-white'
-      case 'cancelled':
-        return 'bg-orange-500 text-white'
       case 'approved':
-        return 'bg-green-500 text-white'
+        return 'bg-green-500 text-white border-2 border-green-500'
+      case 'rejected':
+        return 'bg-red-500 text-white border-2 border-red-500'
       case 'live':
-        return 'bg-purple-500 text-white'
+        return 'bg-purple-500 text-white border-2 border-purple-500'
       case 'completed':
-        return 'bg-blue-500 text-white'
+        return 'bg-blue-500 text-white border-2 border-blue-500'
       default:
-        return 'bg-ifdd-bleu text-white'
+        return 'bg-ifdd-bleu text-white border-2 border-ifdd-bleu'
     }
   }
 
-  // Étapes déjà passées
-  if (isStepCompleted(status)) {
-    return 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400'
+  // Si on est sur le bon chemin et l'étape est passée (validée)
+  if (isApprovedPath.value && ['approved', 'live', 'completed'].includes(status)) {
+    const order = ['approved', 'live', 'completed']
+    const currentIndex = order.indexOf(props.currentStatus)
+    const stepIndex = order.indexOf(status)
+    if (stepIndex !== -1 && currentIndex !== -1 && stepIndex < currentIndex) {
+      return 'bg-green-500 text-white'
+    }
   }
 
-  // Étapes futures
+  // Étape future ou sur un autre chemin
+  return 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
+}
+
+// Nouvelle fonction pour le texte des chemins
+const getPathTextClass = (status) => {
+  if (status === props.currentStatus) {
+    return 'text-gray-900 dark:text-white'
+  }
+
+  // Si on est sur le chemin approuvé
+  if (isApprovedPath.value && ['approved', 'live', 'completed'].includes(status)) {
+    return 'text-gray-700 dark:text-gray-300'
+  }
+
+  // Si on est sur le chemin rejeté
+  if (isRejectedPath.value && status === 'rejected') {
+    return 'text-red-600 dark:text-red-400'
+  }
+
+  return 'text-gray-400 dark:text-gray-500'
+}
+
+const getStepIconClass = (status) => {
+  const mainStatusOrder = ['draft', 'submitted', 'under_review']
+  const currentIndex = mainStatusOrder.indexOf(props.currentStatus)
+  const stepIndex = mainStatusOrder.indexOf(status)
+
+  // Si c'est l'étape actuelle
+  if (status === props.currentStatus) {
+    return 'bg-ifdd-bleu text-white border-2 border-ifdd-bleu'
+  }
+
+  // Si l'étape est passée (validée)
+  if (stepIndex !== -1 && currentIndex !== -1 && stepIndex < currentIndex) {
+    return 'bg-green-500 text-white'
+  }
+
+  // Si on est dans un statut avancé (approved, rejected, live, completed)
+  if (['approved', 'rejected', 'live', 'completed'].includes(props.currentStatus)) {
+    // Toutes les étapes principales sont validées
+    if (mainStatusOrder.includes(status)) {
+      return 'bg-green-500 text-white'
+    }
+  }
+
+  // Étape future
   return 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
 }
 
@@ -168,16 +322,20 @@ const getStepTextClass = (status) => {
 }
 
 const isStepCompleted = (status) => {
-  const currentIndex = statusOrder.indexOf(props.currentStatus)
-  const stepIndex = statusOrder.indexOf(status)
+  const mainStatusOrder = ['draft', 'submitted', 'under_review']
+  const currentIndex = mainStatusOrder.indexOf(props.currentStatus)
+  const stepIndex = mainStatusOrder.indexOf(status)
 
-  // Pour les statuts de rejet/annulation, seules les étapes avant under_review sont complétées
-  if (['rejected', 'cancelled'].includes(props.currentStatus)) {
-    const underReviewIndex = statusOrder.indexOf('under_review')
-    return stepIndex < underReviewIndex
+  // Si on est dans les étapes principales
+  if (currentIndex !== -1 && stepIndex !== -1) {
+    return stepIndex < currentIndex
   }
 
-  // Pour les autres statuts, normal
-  return stepIndex < currentIndex
+  // Si on est dans un statut avancé, toutes les étapes principales sont complétées
+  if (['approved', 'rejected', 'live', 'completed'].includes(props.currentStatus)) {
+    return mainStatusOrder.includes(status)
+  }
+
+  return false
 }
 </script>

@@ -1,4 +1,5 @@
-Voci le Timeline d'une activité, après l'examen il y'a 2 chemin possible. Merci de prendre toutes ces pissibilités en compte, tu peut utilisr amcharts5 que j'ai déjà installé et configuré. 
+Voci le Timeline d'une activité, après l'examen il y'a 2 chemin possible(Approuvé ou Rejeté) et après Approuvé il y'a deux chemin possibles(En direct, Annulé). Merci de prendre toutes ces pissibilités en compte dans le timeline,
+                                             - Annulé
+Broullon - Soumis - En examen - - Approuvé - - En direct - Terminé
+                                - Rejeté
 
-Broullon - Soumis - En examen - - Approuvé - En cours - Terminé
-                                -Rejeté
