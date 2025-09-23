@@ -288,7 +288,8 @@ const loadActivity = async () => {
       .select(`
         *,
         organization:organizations(id, name),
-        event:events(id, title, year)
+        event:events(id, title, year, banner_high_quality_1_1_url, country:countries(name_fr)),
+        submitted_user:users!submitted_by(id, first_name, last_name, email)
       `)
       .eq('id', route.params.id)
       .single()
@@ -457,13 +458,13 @@ const sendActivityReceivedNotification = async () => {
       body: {
         activity_id: activity.value.id,
         activity_title: activity.value.title,
-        coordinator_email: activity.value.contact_email,
-        coordinator_name: activity.value.contact_name,
+        coordinator_email: activity.value.submitted_user?.email,
+        coordinator_name: activity.value.submitted_user ? `${activity.value.submitted_user.first_name} ${activity.value.submitted_user.last_name}` : null,
         organization_name: activity.value.organization?.name,
         event_title: activity.value.event?.title,
-        event_logo: activity.value.event?.logo_url,
-        event_city: activity.value.event?.city,
-        event_country: activity.value.event?.country,
+        event_logo: activity.value.event?.banner_high_quality_1_1_url,
+        event_city: null, // Pas de champ city dans la table events
+        event_country: activity.value.event?.country?.name_fr,
         proposed_start_date: activity.value.proposed_start_date,
         proposed_end_date: activity.value.proposed_end_date,
         timezone: activity.value.timezone || 'UTC'

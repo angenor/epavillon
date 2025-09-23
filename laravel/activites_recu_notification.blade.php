@@ -1,28 +1,74 @@
 @component('mail::message')
-{{-- Titre centré et moderne --}}
-# Bienvenue ! 🎉
+{{-- En-tête avec logo et titre --}}
+@if(isset($details['event_logo']) && $details['event_logo'])
+<div style="text-align: center; margin-bottom: 30px;">
+    <img src="{{ $details['event_logo'] }}" alt="Logo de l'événement" style="max-height: 80px; width: auto;">
+</div>
+@endif
 
-Nous sommes ravis de vous compter parmi nous !
+# Confirmation de réception 📝
 
-{{-- Message dans un panel stylé --}}
+@if(isset($details['coordinator_name']) && $details['coordinator_name'])
+Bonjour {{ $details['coordinator_name'] }},
+@else
+Bonjour,
+@endif
+
+Nous accusons réception de votre proposition d'activité et vous remercions pour votre soumission.
+
+{{-- Détails de l'activité dans un panel --}}
 @component('mail::panel')
-Pour finaliser votre inscription, une dernière étape est nécessaire.
-Cliquez sur le bouton ci-dessous pour confirmer votre adresse email.
+## 📋 **Détails de votre activité**
+
+**Titre :** {{ $details['activity_title'] }}
+
+@if(isset($details['organization_name']) && $details['organization_name'])
+**Organisation :** {{ $details['organization_name'] }}
+@endif
+
+@if(isset($details['event_title']) && $details['event_title'])
+**Événement :** {{ $details['event_title'] }}
+@endif
+
+@if(isset($details['event_city']) && $details['event_city'] && isset($details['event_country']) && $details['event_country'])
+**Lieu :** {{ $details['event_city'] }}, {{ $details['event_country'] }}
+@endif
+
+@if(isset($details['formatted_start_date']) && $details['formatted_start_date'] && isset($details['formatted_end_date']) && $details['formatted_end_date'])
+**Dates proposées :**
+Du {{ $details['formatted_start_date'] }} au {{ $details['formatted_end_date'] }}
+@if(isset($details['timezone']) && $details['timezone'] !== 'UTC')
+(Fuseau horaire : {{ $details['timezone'] }})
+@endif
+@endif
 @endcomponent
 
-{{-- Bouton d'action centré --}}
-@component('mail::button', ['url' => $details['message'], 'color' => 'success'])
-✅ Confirmer mon inscription
+{{-- Message principal --}}
+@component('mail::panel')
+### 🔍 **Prochaines étapes**
+
+Votre proposition d'activité est maintenant entre les mains de notre **comité d'administration** qui procédera à son examen dans les meilleurs délais.
+
+**Nous vous ferons un retour sur votre proposition sous peu.**
+
+En attendant, nous vous remercions pour votre engagement et votre contribution à cet événement.
 @endcomponent
 
-{{-- Signature élégante --}}
-Merci de votre confiance,
-**L'équipe E-pavillon Climatique**
+{{-- Section informative --}}
+Si vous avez des questions concernant votre soumission, n'hésitez pas à nous contacter.
 
-{{-- Section alternative en subcopy --}}
+{{-- Signature --}}
+Cordialement,
+**L'équipe E-pavillon Climatique de l'IFDD**
+
+{{-- Subcopy avec informations supplémentaires --}}
 @component('mail::subcopy')
-Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :
-[{{ $details['message'] }}]({{ $details['message'] }})
+Cette notification confirme que nous avons bien reçu votre proposition d'activité.
+Vous recevrez une nouvelle notification dès que notre comité aura pris une décision.
+
+@if(isset($details['activity_id']) && $details['activity_id'])
+**Référence de l'activité :** {{ $details['activity_id'] }}
+@endif
 @endcomponent
 
 @endcomponent
