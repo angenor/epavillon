@@ -140,6 +140,25 @@
       "documents": "Documents",
       "questions": "Questions"
     },
+    "selectEvent": "Select an event",
+    "allEvents": "All events",
+    "allStatuses": "All statuses",
+    "allTypes": "All types",
+    "types": {
+      "sideEvent": "Side event",
+      "countryDay": "Country day",
+      "other": "Other"
+    },
+    "stats": {
+      "total": "Total",
+      "upcoming": "Upcoming",
+      "draft": "Draft",
+      "totalRegistrations": "Total registrations"
+    },
+    "registrations": "registrations",
+    "noActivities": "No activities",
+    "noActivitiesDescription": "You haven't submitted any activities yet",
+    "manage": "Manage",
     "status": {
       "draft": "Draft",
       "submitted": "Submitted",

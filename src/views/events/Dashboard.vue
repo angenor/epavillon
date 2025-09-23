@@ -3,12 +3,39 @@
     <div class="max-w-7xl mx-auto">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-          {{ t('events.myActivities') }}
-        </h1>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">
-          {{ t('events.dashboardDescription') }}
-        </p>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+              {{ t('events.myActivities') }}
+            </h1>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">
+              {{ t('events.dashboardDescription') }}
+            </p>
+          </div>
+
+          <!-- Event Selector -->
+          <div class="min-w-[250px]">
+            <label for="event-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              {{ t('events.selectEvent') }}
+            </label>
+            <select
+              id="event-select"
+              v-model="selectedEventId"
+              @change="loadEvents"
+              :disabled="eventsLoading"
+              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-ifdd-bleu focus:border-transparent cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <option value="">{{ t('events.allEvents') }}</option>
+              <option
+                v-for="event in availableEvents"
+                :key="event.id"
+                :value="event.id"
+              >
+                {{ event.title }} ({{ event.year }})
+              </option>
+            </select>
+          </div>
+        </div>
       </div>
 
       <!-- Stats Cards -->
@@ -211,17 +238,21 @@ import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import useUserActivities from '@/composables/useUserActivities'
+import useEvents from '@/composables/useEvents'
 
 const { t } = useI18n()
 const authStore = useAuthStore()
 const router = useRouter()
-const { fetchUserActivities, activities: userActivities } = useUserActivities()
+const { fetchUserActivities } = useUserActivities()
+const { fetchActiveEvents, events: availableEvents } = useEvents()
 
 const loading = ref(true)
 const events = ref([])
 const searchQuery = ref('')
 const filterStatus = ref('')
 const filterType = ref('')
+const selectedEventId = ref('')
+const eventsLoading = ref(false)
 
 const stats = computed(() => {
   const now = new Date()
@@ -306,7 +337,8 @@ const loadEvents = async () => {
       page: 1,
       limit: 100,
       sortBy: 'created_at',
-      sortOrder: 'desc'
+      sortOrder: 'desc',
+      eventId: selectedEventId.value || null
     })
     events.value = data || []
   } catch (error) {
@@ -318,7 +350,19 @@ const loadEvents = async () => {
 }
 
 
-onMounted(() => {
-  loadEvents()
+const loadAvailableEvents = async () => {
+  eventsLoading.value = true
+  try {
+    await fetchActiveEvents()
+  } catch (error) {
+    console.error('Error loading available events:', error)
+  } finally {
+    eventsLoading.value = false
+  }
+}
+
+onMounted(async () => {
+  await loadAvailableEvents()
+  await loadEvents()
 })
 </script>

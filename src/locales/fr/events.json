@@ -188,6 +188,8 @@
       "documents": "Documents",
       "questions": "Questions"
     },
+    "selectEvent": "Sélectionner un événement",
+    "allEvents": "Tous les événements",
     "allStatuses": "Tous les statuts",
     "allTypes": "Tous les types",
     "types": {

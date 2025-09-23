@@ -28,7 +28,8 @@ export default function useUserActivities() {
       sortBy = 'created_at',
       sortOrder = 'desc',
       filterStatus = null,
-      searchTerm = ''
+      searchTerm = '',
+      eventId = null
     } = options
 
     loading.value = true
@@ -51,6 +52,10 @@ export default function useUserActivities() {
         `, { count: 'exact' })
         .eq('submitted_by', authStore.user.id)
         .eq('is_deleted', false)
+
+      if (eventId) {
+        query = query.eq('event_id', eventId)
+      }
 
       if (filterStatus) {
         query = query.eq('validation_status', filterStatus)

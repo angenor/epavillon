@@ -10,12 +10,39 @@
   <div v-else class="admin-dashboard">
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-        {{ t('admin.dashboard.title') }}
-      </h1>
-      <p class="mt-2 text-gray-600 dark:text-gray-300">
-        {{ t('admin.dashboard.subtitle') }}
-      </p>
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+            {{ t('admin.dashboard.title') }}
+          </h1>
+          <p class="mt-2 text-gray-600 dark:text-gray-300">
+            {{ t('admin.dashboard.subtitle') }}
+          </p>
+        </div>
+
+        <!-- Event Selector -->
+        <div class="min-w-[250px]">
+          <label for="admin-event-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            {{ t('events.selectEvent') }}
+          </label>
+          <select
+            id="admin-event-select"
+            v-model="selectedEventId"
+            @change="loadPendingActivities"
+            :disabled="eventsLoading"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <option value="">{{ t('events.allEvents') }}</option>
+            <option
+              v-for="event in availableEvents"
+              :key="event.id"
+              :value="event.id"
+            >
+              {{ event.title }} ({{ event.year }})
+            </option>
+          </select>
+        </div>
+      </div>
     </div>
 
     <!-- Quick Stats -->
@@ -230,16 +257,20 @@ import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
+import useEvents from '@/composables/useEvents'
 import SubmissionsPerDayChart from '@/components/admin/charts/SubmissionsPerDayChart.vue'
 import OrganizationTypesChart from '@/components/admin/charts/OrganizationTypesChart.vue'
 
 const { t } = useI18n()
 const { supabase } = useSupabase()
 const { hasAdminRole, isLoadingRoles, loadUserRoles } = useAdmin()
+const { fetchActiveEvents, events: availableEvents } = useEvents()
 
 // État
 const isLoading = ref(true)
 const isLoadingActivities = ref(true)
+const selectedEventId = ref('')
+const eventsLoading = ref(false)
 const stats = ref({
   totalUsers: 0,
   activitiesApproved: 0,
@@ -277,19 +308,31 @@ const loadStats = async () => {
       stats.value.totalUsers = users || 0
     }
 
-    const { data: approvedActivities, error: approvedError } = await supabase
+    let approvedQuery = supabase
       .from('activities')
       .select('id', { count: 'exact', head: true })
       .eq('validation_status', 'approved')
+
+    if (selectedEventId.value) {
+      approvedQuery = approvedQuery.eq('event_id', selectedEventId.value)
+    }
+
+    const { data: approvedActivities, error: approvedError } = await approvedQuery
 
     if (!approvedError) {
       stats.value.activitiesApproved = approvedActivities || 0
     }
 
-    const { data: pendingCount, error: pendingError } = await supabase
+    let pendingQuery = supabase
       .from('activities')
       .select('id', { count: 'exact', head: true })
       .in('validation_status', ['submitted', 'under_review'])
+
+    if (selectedEventId.value) {
+      pendingQuery = pendingQuery.eq('event_id', selectedEventId.value)
+    }
+
+    const { data: pendingCount, error: pendingError } = await pendingQuery
 
     if (!pendingError) {
       stats.value.activitiesPending = pendingCount || 0
@@ -344,8 +387,9 @@ const loadAlerts = async () => {
 }
 
 const loadPendingActivities = async () => {
+  isLoadingActivities.value = true
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('activities')
       .select(`
         id,
@@ -354,6 +398,12 @@ const loadPendingActivities = async () => {
         organization:organizations(name)
       `)
       .in('validation_status', ['submitted', 'under_review'])
+
+    if (selectedEventId.value) {
+      query = query.eq('event_id', selectedEventId.value)
+    }
+
+    const { data, error } = await query
       .order('created_at', { ascending: false })
       .limit(10)
 
@@ -367,11 +417,25 @@ const loadPendingActivities = async () => {
   }
 }
 
+const loadAvailableEvents = async () => {
+  eventsLoading.value = true
+  try {
+    await fetchActiveEvents()
+  } catch (error) {
+    console.error('Error loading available events:', error)
+  } finally {
+    eventsLoading.value = false
+  }
+}
+
 // Cycle de vie
 onMounted(async () => {
   try {
     // D'abord vérifier les permissions
     await checkAccess()
+
+    // Charger les événements disponibles
+    await loadAvailableEvents()
 
     // Puis charger les données
     await Promise.all([
