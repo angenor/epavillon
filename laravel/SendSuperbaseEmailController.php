@@ -85,6 +85,14 @@ class SendSuperbaseEmailController extends Controller
             // Configurer Carbon en français pour les jours de la semaine
             \Carbon\Carbon::setLocale('fr');
 
+            // Log pour débugger
+            \Log::info('Données reçues pour l\'email d\'activité:', [
+                'event_city' => $eventCity,
+                'timezone' => $timezone,
+                'proposed_start_date' => $proposedStartDate,
+                'proposed_end_date' => $proposedEndDate
+            ]);
+
             // Préparer les données pour l'email
             $emailData = [
                 'activity_id' => $activityId,
@@ -104,20 +112,30 @@ class SendSuperbaseEmailController extends Controller
 
             // Formater les dates si elles existent
             if ($proposedStartDate && $proposedEndDate) {
+                // Les dates sont stockées en UTC, les convertir vers le timezone de l'événement
                 $startCarbon = \Carbon\Carbon::parse($proposedStartDate)->setTimezone($timezone);
                 $endCarbon = \Carbon\Carbon::parse($proposedEndDate)->setTimezone($timezone);
+
+                // Utiliser le nom de la ville envoyé depuis Vue (déjà extrait du timezone)
+                $cityName = $eventCity ?: 'UTC';
+
+                \Log::info('Formatage des dates:', [
+                    'cityName' => $cityName,
+                    'start_formatted' => $startCarbon->format('Y-m-d H:i:s T'),
+                    'end_formatted' => $endCarbon->format('Y-m-d H:i:s T')
+                ]);
 
                 // Si c'est le même jour
                 if ($startCarbon->isSameDay($endCarbon)) {
                     $emailData['formatted_date'] = ucfirst($startCarbon->translatedFormat('l j F Y')) . ', ' .
                                                    $startCarbon->format('H\hi') . ' - ' .
                                                    $endCarbon->format('H\hi') .
-                                                   ' (heure de ' . ($eventCity ? $eventCity : $timezone) . ')';
+                                                   ' (heure de ' . $cityName . ')';
                 } else {
                     // Si sur plusieurs jours
                     $emailData['formatted_date'] = 'Du ' . ucfirst($startCarbon->translatedFormat('l j F Y à H\hi')) .
                                                    ' au ' . ucfirst($endCarbon->translatedFormat('l j F Y à H\hi')) .
-                                                   ' (heure de ' . ($eventCity ? $eventCity : $timezone) . ')';
+                                                   ' (heure de ' . $cityName . ')';
                 }
             }
 

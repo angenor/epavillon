@@ -252,11 +252,13 @@ import { useRoute } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
 import { useAuth } from '@/composables/useAuth'
+import { useTimezone } from '@/composables/useTimezone'
 
 const route = useRoute()
 const { supabase } = useSupabase()
 const { hasAdminRole, isLoadingRoles, loadUserRoles, validateActivity } = useAdmin()
 const { currentUser } = useAuth()
+const { getCityFromTimezone } = useTimezone()
 
 const isLoading = ref(true)
 const activity = ref(null)
@@ -288,7 +290,7 @@ const loadActivity = async () => {
       .select(`
         *,
         organization:organizations(id, name),
-        event:events(id, title, year, banner_high_quality_1_1_url, country:countries(name_fr)),
+        event:events(id, title, year, banner_high_quality_1_1_url, timezone, country:countries(name_fr)),
         submitted_user:users!submitted_by(id, first_name, last_name, email)
       `)
       .eq('id', route.params.id)
@@ -454,6 +456,12 @@ const sendActivityReceivedNotification = async () => {
   notificationSuccess.value = null
 
   try {
+    // Utiliser le timezone de l'événement s'il existe, sinon celui de l'activité, sinon UTC
+    const timezone = activity.value.event?.timezone || activity.value.timezone || 'UTC'
+    const cityName = getCityFromTimezone(timezone)
+
+    console.log('Timezone utilisé:', timezone, 'Ville extraite:', cityName) // Debug
+
     const { data, error } = await supabase.functions.invoke('send-activity-notification', {
       body: {
         activity_id: activity.value.id,
@@ -463,11 +471,11 @@ const sendActivityReceivedNotification = async () => {
         organization_name: activity.value.organization?.name,
         event_title: activity.value.event?.title,
         event_logo: activity.value.event?.banner_high_quality_1_1_url,
-        event_city: null, // Pas de champ city dans la table events
+        event_city: cityName, // Envoyer le nom de la ville extrait du timezone
         event_country: activity.value.event?.country?.name_fr,
         proposed_start_date: activity.value.proposed_start_date,
         proposed_end_date: activity.value.proposed_end_date,
-        timezone: activity.value.timezone || 'UTC'
+        timezone: timezone
       }
     })
 

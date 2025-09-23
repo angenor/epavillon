@@ -240,6 +240,27 @@ export function useTimezone() {
     return tz ? tz.label[locale] || tz.label.fr : timezone
   }
 
+  // Extraire le nom de la ville d'un fuseau horaire
+  const getCityFromTimezone = (timezone) => {
+    if (!timezone || timezone === 'UTC') return 'UTC'
+
+    // D'abord vérifier si c'est dans notre liste avec un label personnalisé
+    const tz = timezones.find(t => t.value === timezone)
+    if (tz) {
+      // Extraire le nom de la ville du label (ex: "Bélem (GMT-3)" -> "Bélem")
+      const cityMatch = tz.label.fr.match(/^([^(]+)/)
+      if (cityMatch) {
+        return cityMatch[1].trim()
+      }
+    }
+
+    // Sinon, extraire du timezone ID (ex: America/Belem -> Belem)
+    const parts = timezone.split('/')
+    const cityName = parts[parts.length - 1]
+    // Remplacer les underscores par des espaces (ex: Rio_de_Janeiro -> Rio de Janeiro)
+    return cityName.replace(/_/g, ' ')
+  }
+
   return {
     timezones,
     selectedTimezone,
@@ -251,6 +272,7 @@ export function useTimezone() {
     convertToUTC,
     convertFromUTC,
     getTimezoneOffset,
-    getTimezoneLabel
+    getTimezoneLabel,
+    getCityFromTimezone
   }
 }
