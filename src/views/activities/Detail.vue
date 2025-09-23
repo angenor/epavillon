@@ -420,8 +420,8 @@ const getActivityPosterUrl = () => {
   if (activity.value?.cover_image_high_url) return activity.value.cover_image_high_url
   if (activity.value?.cover_image_low_url) return activity.value.cover_image_low_url
 
-  // Sinon bannière par défaut
-  return '/images/example/poster-default.png'
+  // Image par défaut (même que dans Management.vue)
+  return '/images/example/event_banniere_par_defaut_16_9.jpg'
 }
 
 const loadActivity = async () => {

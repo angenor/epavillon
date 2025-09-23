@@ -120,7 +120,7 @@
             class="h-64 sm:h-80 md:h-96 rounded-xl shadow-md relative overflow-hidden bg-gradient-to-br from-blue-50 to-green-50 dark:from-blue-900/20 dark:to-green-900/20"
           >
             <img
-              :src="activity?.cover_image_high_url || activity?.cover_image_low_url || '/images/example/poster-default.png'"
+              :src="getActivityPosterUrl()"
               :alt="activity?.title || 'Activity poster'"
               class="w-full h-full object-cover"
               loading="lazy"
@@ -375,6 +375,15 @@ const getBannerUrl = () => {
 
   // Par défaut
   return '/images/example/event_banniere_par_defaut_32_9.jpg'
+}
+
+const getActivityPosterUrl = () => {
+  // Priorité : poster de l'activité (haute qualité puis basse qualité)
+  if (activity.value?.cover_image_high_url) return activity.value.cover_image_high_url
+  if (activity.value?.cover_image_low_url) return activity.value.cover_image_low_url
+
+  // Image par défaut (même que dans Management.vue)
+  return '/images/example/event_banniere_par_defaut_16_9.jpg'
 }
 
 const loadActivity = async () => {
