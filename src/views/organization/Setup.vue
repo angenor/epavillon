@@ -501,8 +501,8 @@ const handleLogoUpload = async (event) => {
     delete formErrors.value.logo
   }
 
-  // Validate file size (max 2MB)
-  if (file.size > 2 * 1024 * 1024) {
+  // Validate file size (max 500KB)
+  if (file.size > 500 * 1024) {
     formErrors.value.logo = t('organization.errors.logoTooLarge')
     return
   }
