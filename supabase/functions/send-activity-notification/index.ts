@@ -52,6 +52,29 @@ Deno.serve(async (req)=>{
       organization_name,
       event_title
     });
+
+    // Incrémenter le compteur d'emails dans Supabase AVANT l'envoi
+    try {
+      const supabaseClient = createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '');
+      // D'abord récupérer le compteur actuel
+      const { data: currentActivity, error: fetchError } = await supabaseClient.from('activities').select('send_activites_recu_email_count').eq('id', activity_id).single();
+      if (!fetchError && currentActivity) {
+        const newCount = (currentActivity.send_activites_recu_email_count || 0) + 1;
+        const { error: updateError } = await supabaseClient.from('activities').update({
+          send_activites_recu_email_count: newCount
+        }).eq('id', activity_id);
+        if (updateError) {
+          console.error('Failed to increment email count:', updateError);
+        } else {
+          console.info('Email count incremented successfully for activity:', activity_id, 'New count:', newCount);
+        }
+      } else if (fetchError) {
+        console.error('Failed to fetch current email count:', fetchError);
+      }
+    } catch (updateErr) {
+      console.error('Error incrementing email count:', updateErr);
+    }
+
     try {
       // Créer un AbortController pour timeout de 10 secondes
       const controller = new AbortController();
@@ -98,27 +121,6 @@ Deno.serve(async (req)=>{
       }
       const responseData = await response.json().catch(()=>({}));
       console.info('Activity received notification sent successfully via Laravel', responseData);
-      // Incrémenter le compteur d'emails dans Supabase
-      try {
-        const supabaseClient = createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '');
-        // D'abord récupérer le compteur actuel
-        const { data: currentActivity, error: fetchError } = await supabaseClient.from('activities').select('send_activites_recu_email_count').eq('id', activity_id).single();
-        if (!fetchError && currentActivity) {
-          const newCount = (currentActivity.send_activites_recu_email_count || 0) + 1;
-          const { error: updateError } = await supabaseClient.from('activities').update({
-            send_activites_recu_email_count: newCount
-          }).eq('id', activity_id);
-          if (updateError) {
-            console.error('Failed to increment email count:', updateError);
-          } else {
-            console.info('Email count incremented successfully for activity:', activity_id, 'New count:', newCount);
-          }
-        } else if (fetchError) {
-          console.error('Failed to fetch current email count:', fetchError);
-        }
-      } catch (updateErr) {
-        console.error('Error incrementing email count:', updateErr);
-      }
       return new Response(JSON.stringify({
         message: 'Activity received notification sent successfully',
         data: responseData
