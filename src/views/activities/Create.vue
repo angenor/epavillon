@@ -1294,16 +1294,8 @@ const sendActivityReceivedNotification = async (activityId) => {
       console.error('Erreur lors de l\'envoi de la notification:', error)
     } else {
       console.log('Notification de réception envoyée avec succès')
-
-      // Mettre à jour le compteur dans la base de données
-      const { error: updateError } = await supabase
-        .from('activities')
-        .update({ send_activites_recu_email_count: 1 })
-        .eq('id', activityId)
-
-      if (updateError) {
-        console.error('Erreur lors de la mise à jour du compteur:', updateError)
-      }
+      // Le compteur est déjà incrémenté dans la fonction Edge avec les droits SERVICE_ROLE
+      // Pas besoin de le faire ici avec les droits utilisateur limités
     }
   } catch (error) {
     console.error('Erreur lors de l\'envoi de la notification automatique:', error)
