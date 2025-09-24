@@ -7,18 +7,41 @@
       </div>
     </div>
 
-    
+
     <div v-else-if="activity" class="space-y-6">
+      <!-- Banner de l'activité si disponible -->
+      <div v-if="activity.banner_url || activity.cover_image_high_url" class="relative h-64 rounded-lg overflow-hidden shadow-lg">
+        <img :src="activity.banner_url || activity.cover_image_high_url"
+             :alt="activity.title"
+             class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-6">
+          <h1 class="text-3xl font-bold text-white mb-2">{{ activity.title }}</h1>
+          <p class="text-white/90">{{ activity.organization?.name }}</p>
+        </div>
+      </div>
+
       <!-- Header avec actions -->
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <div class="flex justify-between items-start">
-          <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-              {{ activity.title }}
-            </h1>
-            <p class="mt-2 text-gray-600 dark:text-gray-300">
-              {{ activity.organization?.name }} - {{ activity.event?.title }}
-            </p>
+          <div class="flex items-start space-x-4">
+            <!-- Logo de l'organisation -->
+            <div v-if="activity.organization?.logo_url" class="flex-shrink-0">
+              <img :src="activity.organization.logo_url"
+                   :alt="activity.organization.name"
+                   class="w-16 h-16 rounded-lg object-contain bg-gray-100 dark:bg-gray-700 p-2">
+            </div>
+            <div>
+              <h1 v-if="!activity.banner_url && !activity.cover_image_high_url" class="text-2xl font-bold text-gray-900 dark:text-white">
+                {{ activity.title }}
+              </h1>
+              <p class="mt-1 text-lg text-gray-700 dark:text-gray-300">
+                {{ activity.organization?.name }}
+              </p>
+              <p class="text-sm text-gray-600 dark:text-gray-400">
+                {{ activity.event?.title }} - {{ activity.event?.year }}
+              </p>
+            </div>
           </div>
           <div class="flex items-center space-x-3">
             <!-- Dropdown de statut -->
@@ -107,32 +130,178 @@
             <h2 class="text-lg font-semibold mb-4">Objectifs</h2>
             <div class="prose dark:prose-invert max-w-none" v-html="activity.objectives"></div>
           </div>
+
+          <!-- Intervenants / Panelistes -->
+          <div v-if="speakers.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <h2 class="text-lg font-semibold mb-4">Intervenants / Panélistes ({{ speakers.length }})</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div v-for="speaker in speakers" :key="speaker.id"
+                   class="flex items-start space-x-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
+                <img v-if="speaker.photo_url"
+                     :src="speaker.photo_thumbnail_url || speaker.photo_url"
+                     :alt="`${speaker.first_name} ${speaker.last_name}`"
+                     class="w-12 h-12 rounded-full object-cover">
+                <div v-else class="w-12 h-12 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                  <span class="text-lg font-semibold text-gray-600 dark:text-gray-300">
+                    {{ speaker.first_name[0] }}{{ speaker.last_name[0] }}
+                  </span>
+                </div>
+                <div class="flex-1">
+                  <p class="font-medium text-gray-900 dark:text-white">
+                    {{ speaker.civility }} {{ speaker.first_name }} {{ speaker.last_name }}
+                  </p>
+                  <p class="text-sm text-gray-600 dark:text-gray-300">{{ speaker.position }}</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">{{ speaker.organization }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ speaker.email }}</p>
+                  <div class="mt-1 flex items-center space-x-2">
+                    <span v-if="speaker.has_confirmed_by_email"
+                          class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                      Email confirmé
+                    </span>
+                    <span v-if="speaker.is_available_for_questions"
+                          class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                      Disponible pour Q&R
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Documents supports -->
+          <div v-if="documents.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <h2 class="text-lg font-semibold mb-4">Documents supports ({{ documents.length }})</h2>
+            <div class="space-y-2">
+              <div v-for="doc in documents" :key="doc.id"
+                   class="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                <div class="flex items-center space-x-3">
+                  <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                  </svg>
+                  <div>
+                    <p class="font-medium text-gray-900 dark:text-white">{{ doc.title }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                      Types: {{ doc.types?.join(', ') || 'Document' }}
+                    </p>
+                  </div>
+                </div>
+                <a :href="doc.file_url" target="_blank"
+                   class="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-blue-600 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800 cursor-pointer">
+                  <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                  </svg>
+                  Télécharger
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Sidebar avec métadonnées -->
         <div class="space-y-6">
+          <!-- Statistiques -->
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold mb-4">Statistiques</h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                  {{ activity.activites_dashboard_view_count || 0 }}
+                </p>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Vues dashboard</p>
+              </div>
+              <div class="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                <p class="text-2xl font-bold text-green-600 dark:text-green-400">
+                  {{ activity.send_activites_recu_email_count || 0 }}
+                </p>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Emails envoyés</p>
+              </div>
+              <div class="text-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                  {{ registrations.length }}
+                </p>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Inscriptions</p>
+              </div>
+              <div class="text-center p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+                <p class="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                  {{ speakers.length }}
+                </p>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Intervenants</p>
+              </div>
+            </div>
+            <div v-if="activity.last_viewed_at" class="mt-3 text-xs text-gray-500 dark:text-gray-400 text-center">
+              Dernière vue: {{ formatDateTime(activity.last_viewed_at) }}
+            </div>
+          </div>
+
           <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold mb-4">Informations</h3>
             <dl class="space-y-3">
               <div>
-                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Type</dt>
-                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
-                  {{ activity.activity_type }}
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Type d'activité</dt>
+                <dd class="mt-1">
+                  <span class="px-2 py-1 text-xs font-medium rounded-full
+                         {{ getActivityTypeClass(activity.activity_type) }}">
+                    {{ getActivityTypeLabel(activity.activity_type) }}
+                  </span>
                 </dd>
               </div>
               <div>
                 <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Format</dt>
+                <dd class="mt-1">
+                  <span class="px-2 py-1 text-xs font-medium rounded-full
+                         {{ getFormatClass(activity.format) }}">
+                    {{ getFormatLabel(activity.format) }}
+                  </span>
+                </dd>
+              </div>
+              <div v-if="activity.country_id">
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Pays</dt>
                 <dd class="mt-1 text-sm text-gray-900 dark:text-white">
-                  {{ activity.format }}
+                  {{ activity.country?.name_fr }}
                 </dd>
               </div>
               <div>
-                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Date et heures proposées</dt>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Dates proposées</dt>
                 <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                  <div class="font-medium">Début:</div>
                   <div>{{ formatDateTime(activity.proposed_start_date) }}</div>
-                  <div class="mt-1">{{ formatDateTime(activity.proposed_end_date) }}</div>
-                  <div v-if="activity.event?.timezone" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  <div class="font-medium mt-2">Fin:</div>
+                  <div>{{ formatDateTime(activity.proposed_end_date) }}</div>
+                  <div v-if="activity.event?.timezone" class="mt-2 text-xs text-gray-500 dark:text-gray-400">
                     {{ getTimezoneLabel(activity.event.timezone, 'fr') }}
+                  </div>
+                </dd>
+              </div>
+              <div v-if="activity.final_start_date && activity.final_end_date">
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Dates finales</dt>
+                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                  <div class="font-medium text-green-600 dark:text-green-400">Confirmées:</div>
+                  <div>{{ formatDateTime(activity.final_start_date) }}</div>
+                  <div class="mt-1">{{ formatDateTime(activity.final_end_date) }}</div>
+                </dd>
+              </div>
+              <div v-if="activity.youtube_link">
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Lien YouTube</dt>
+                <dd class="mt-1">
+                  <a :href="activity.youtube_link" target="_blank"
+                     class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline cursor-pointer">
+                    Voir sur YouTube
+                  </a>
+                </dd>
+              </div>
+              <div v-if="activity.zoom_meeting_id">
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Réunion Zoom</dt>
+                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                  ID: {{ activity.zoom_meeting_id }}
+                </dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Soumis par</dt>
+                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                  {{ activity.submitted_user?.first_name }} {{ activity.submitted_user?.last_name }}
+                  <div class="text-xs text-gray-500 dark:text-gray-400">
+                    {{ activity.submitted_user?.email }}
                   </div>
                 </dd>
               </div>
@@ -142,20 +311,35 @@
                   {{ formatDate(activity.created_at) }}
                 </dd>
               </div>
-              <div>
-                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Notifications envoyées</dt>
-                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
-                  {{ activity.send_activites_recu_email_count || 0 }} email(s)
-                </dd>
-              </div>
-            </dl>          </div>
+            </dl>
+          </div>
 
           <div v-if="activity.main_themes?.length" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold mb-4">Thématiques</h3>
             <div class="flex flex-wrap gap-2">
               <span v-for="theme in activity.main_themes" :key="theme"
                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
-                {{ theme }}
+                {{ getThemeLabel(theme) }}
+              </span>
+            </div>
+          </div>
+
+          <div v-if="activity.categories?.length" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold mb-4">Catégories</h3>
+            <div class="flex flex-wrap gap-2">
+              <span v-for="category in activity.categories" :key="category"
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
+                {{ getCategoryLabel(category) }}
+              </span>
+            </div>
+          </div>
+
+          <div v-if="activity.tags?.length" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold mb-4">Tags</h3>
+            <div class="flex flex-wrap gap-2">
+              <span v-for="tag in activity.tags" :key="tag"
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300">
+                #{{ tag }}
               </span>
             </div>
           </div>
@@ -252,7 +436,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
@@ -280,6 +464,9 @@ const pendingStatusChange = ref(null)
 const isSendingNotification = ref(false)
 const notificationError = ref(null)
 const notificationSuccess = ref(null)
+const speakers = ref([])
+const documents = ref([])
+const registrations = ref([])
 
 const checkAccess = async () => {
   await loadUserRoles()
@@ -290,23 +477,89 @@ const checkAccess = async () => {
 
 const loadActivity = async () => {
   try {
+    // Charger l'activité avec toutes les relations
     const { data, error } = await supabase
       .from('activities')
       .select(`
         *,
-        organization:organizations(id, name),
-        event:events(id, title, year, banner_high_quality_1_1_url, timezone, country:countries(name_fr)),
-        submitted_user:users!submitted_by(id, first_name, last_name, email)
+        organization:organizations(id, name, logo_url, email, website, organization_type),
+        event:events(id, title, year, banner_high_quality_1_1_url, timezone, city, address, country:countries(name_fr, name_en)),
+        submitted_user:users!submitted_by(id, first_name, last_name, email),
+        country:countries(id, name_fr, name_en)
       `)
       .eq('id', route.params.id)
       .single()
 
     if (error) throw error
     activity.value = data
+
+    // Charger les intervenants
+    await loadSpeakers()
+
+    // Charger les documents
+    await loadDocuments()
+
+    // Charger les inscriptions
+    await loadRegistrations()
+
   } catch (error) {
     console.error('Erreur lors du chargement de l\'activité:', error)
   } finally {
     isLoading.value = false
+  }
+}
+
+const loadSpeakers = async () => {
+  if (!activity.value) return
+
+  try {
+    const { data, error } = await supabase
+      .from('activity_speakers')
+      .select('*')
+      .eq('activity_id', activity.value.id)
+      .order('created_at')
+
+    if (error) throw error
+    speakers.value = data || []
+  } catch (error) {
+    console.error('Erreur lors du chargement des intervenants:', error)
+  }
+}
+
+const loadDocuments = async () => {
+  if (!activity.value) return
+
+  try {
+    const { data, error } = await supabase
+      .from('activity_documents')
+      .select('*')
+      .eq('activity_id', activity.value.id)
+      .order('uploaded_at')
+
+    if (error) throw error
+    documents.value = data || []
+  } catch (error) {
+    console.error('Erreur lors du chargement des documents:', error)
+  }
+}
+
+const loadRegistrations = async () => {
+  if (!activity.value) return
+
+  try {
+    const { data, error } = await supabase
+      .from('activity_registrations')
+      .select(`
+        *,
+        user:users(id, first_name, last_name, email)
+      `)
+      .eq('activity_id', activity.value.id)
+      .order('registration_date')
+
+    if (error) throw error
+    registrations.value = data || []
+  } catch (error) {
+    console.error('Erreur lors du chargement des inscriptions:', error)
   }
 }
 
@@ -316,9 +569,88 @@ const getStatusClass = (status) => {
     submitted: 'bg-blue-100 text-blue-800',
     under_review: 'bg-yellow-100 text-yellow-800',
     approved: 'bg-green-100 text-green-800',
-    rejected: 'bg-red-100 text-red-800'
+    rejected: 'bg-red-100 text-red-800',
+    cancelled: 'bg-orange-100 text-orange-800',
+    live: 'bg-purple-100 text-purple-800',
+    completed: 'bg-indigo-100 text-indigo-800'
   }
   return classes[status] || classes.draft
+}
+
+// Labels pour les types d'activité
+const getActivityTypeLabel = (type) => {
+  const labels = {
+    'side_event': 'Événement parallèle',
+    'country_day': 'Journée pays',
+    'other': 'Autre'
+  }
+  return labels[type] || type
+}
+
+const getActivityTypeClass = (type) => {
+  const classes = {
+    'side_event': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
+    'country_day': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+    'other': 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+  }
+  return classes[type] || classes.other
+}
+
+// Labels pour les formats
+const getFormatLabel = (format) => {
+  const labels = {
+    'online': 'En ligne',
+    'in_person': 'En présentiel',
+    'hybrid': 'Hybride'
+  }
+  return labels[format] || format
+}
+
+const getFormatClass = (format) => {
+  const classes = {
+    'online': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300',
+    'in_person': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
+    'hybrid': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
+  }
+  return classes[format] || classes.online
+}
+
+// Labels pour les thématiques
+const getThemeLabel = (theme) => {
+  const labels = {
+    'mitigation': 'Atténuation',
+    'adaptation': 'Adaptation',
+    'climate_ambition_ndc': 'Ambition climatique & NDC',
+    'loss_and_damage': 'Pertes et préjudices',
+    'water_fisheries': 'Eau et pêcheries',
+    'renewable_energy_land': 'Énergies renouvelables',
+    'health_solidarity': 'Santé et solidarité',
+    'industry_transition_and_technology': 'Transition industrielle et technologie',
+    'transport_urbanization': 'Transport et urbanisation',
+    'climate_justice_indigenous': 'Justice climatique et peuples autochtones',
+    'agriculture_food': 'Agriculture et alimentation',
+    'sustainable_livestock': 'Élevage durable',
+    'gender_youth_and_education': 'Genre, jeunesse et éducation',
+    'just_energy_transition': 'Transition énergétique juste',
+    'forests_nature_based_solutions': 'Forêts et solutions basées sur la nature',
+    'finance': 'Finance',
+    'other': 'Autre'
+  }
+  return labels[theme] || theme
+}
+
+// Labels pour les catégories
+const getCategoryLabel = (category) => {
+  const labels = {
+    'capacity_building': 'Renforcement des capacités',
+    'results_sharing': 'Partage de résultats',
+    'technological_innovation': 'Innovation technologique',
+    'field_project': 'Projet de terrain',
+    'best_practices': 'Bonnes pratiques',
+    'awareness': 'Sensibilisation',
+    'concertation': 'Concertation'
+  }
+  return labels[category] || category
 }
 
 const getStatusText = (status) => {
