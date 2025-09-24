@@ -414,6 +414,23 @@
                     </div>
                   </div>
 
+                  <!-- Message d'information sur la plage horaire -->
+                  <div v-if="form.start_time || form.end_time" class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <div class="flex items-start">
+                      <svg class="w-4 h-4 text-blue-500 dark:text-blue-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div class="ml-2">
+                        <p class="text-xs text-blue-800 dark:text-blue-300">
+                          {{ t('activity.submit.helpers.timeRange') || 'Les heures doivent être entre 7h00 et 19h00' }}
+                        </p>
+                        <p v-if="form.start_time && form.end_time && !isTimeRangeValid()" class="mt-1 text-xs text-red-600 dark:text-red-400 font-medium">
+                          {{ t('activity.submit.errors.invalidTimeRange') || 'Les heures saisies ne sont pas dans la plage acceptée ou l\'heure de fin est avant l\'heure de début' }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
                   <!-- Erreurs de validation des dates -->
                   <div v-if="dateValidationErrors.length > 0" class="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
                     <div class="flex items-start">
@@ -449,7 +466,13 @@
                         <select
                           id="country"
                           v-model="form.country_id"
-                          class="w-full px-4 py-3 pl-11 pr-10 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 appearance-none cursor-pointer"
+                          :disabled="(form.format === 'hybrid' || form.format === 'in_person') && eventData?.country_id"
+                          :class="[
+                            'w-full px-4 py-3 pl-11 pr-10 border rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent transition-all duration-200 appearance-none',
+                            ((form.format === 'hybrid' || form.format === 'in_person') && eventData?.country_id)
+                              ? 'border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 cursor-not-allowed'
+                              : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:border-gray-400 dark:hover:border-gray-500 cursor-pointer'
+                          ]"
                         >
                           <option value="">{{ t('activity.submit.placeholders.selectCountry') }}</option>
                           <option v-for="country in countries" :key="country.id" :value="country.id">
@@ -467,6 +490,12 @@
                           </svg>
                         </div>
                       </div>
+                      <p v-if="(form.format === 'hybrid' || form.format === 'in_person') && eventData?.country_id" class="mt-2 text-xs text-gray-500 dark:text-gray-400 flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {{ t('activity.submit.helpers.countryAutoSelected') || 'Le pays de l\'activité est automatiquement défini selon le pays de l\'événement pour les formats hybride et présentiel' }}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -563,9 +592,17 @@
                           v-model="speaker.email"
                           type="email"
                           required
-                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
+                          :class="[
+                            'w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all duration-200',
+                            speaker.email && !isValidEmail(speaker.email)
+                              ? 'border-red-500 dark:border-red-400'
+                              : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
+                          ]"
                           :placeholder="t('activity.submit.placeholders.speakerEmail')"
                         />
+                        <p v-if="speaker.email && !isValidEmail(speaker.email)" class="mt-1 text-xs text-red-500 dark:text-red-400">
+                          {{ t('activity.submit.errors.invalidEmail') || 'Format d\'email invalide' }}
+                        </p>
                       </div>
 
                       <div class="group">
@@ -927,9 +964,39 @@ const canProceedToNextStep = computed(() => {
     case 1: // Format and Themes
       return form.value.format && form.value.main_themes.length > 0 && form.value.categories.length > 0
     case 2: // Schedule and Location
-      return form.value.activity_date && form.value.start_time && form.value.end_time
+      // Vérifier que les heures sont dans la plage 7h00-19h00
+      if (!form.value.activity_date || !form.value.start_time || !form.value.end_time) {
+        return false
+      }
+
+      const startHour = parseInt(form.value.start_time.split(':')[0])
+      const endHour = parseInt(form.value.end_time.split(':')[0])
+      const startMinute = parseInt(form.value.start_time.split(':')[1])
+      const endMinute = parseInt(form.value.end_time.split(':')[1])
+
+      // Vérifier que les heures sont dans la plage 7h00-19h00
+      if (startHour < 7 || startHour > 19 || endHour < 7 || endHour > 19) {
+        return false
+      }
+
+      // Vérifier que l'heure de fin est après l'heure de début
+      const startTimeInMinutes = startHour * 60 + startMinute
+      const endTimeInMinutes = endHour * 60 + endMinute
+      if (endTimeInMinutes <= startTimeInMinutes) {
+        return false
+      }
+
+      return true
     case 3: // Speakers
-      return form.value.speakers.length > 0 && form.value.speakers.every(s => s.civility && s.first_name && s.last_name && s.email && s.position && s.organization)
+      return form.value.speakers.length > 0 && form.value.speakers.every(s =>
+        s.civility &&
+        s.first_name &&
+        s.last_name &&
+        s.email &&
+        isValidEmail(s.email) && // Valider le format email
+        s.position &&
+        s.organization
+      )
     default:
       return true
   }
@@ -980,6 +1047,38 @@ const removeSpeaker = (index) => {
   if (form.value.speakers.length > 1) {
     form.value.speakers.splice(index, 1)
   }
+}
+
+// Fonction de validation email
+const isValidEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email)
+}
+
+// Fonction de validation de la plage horaire
+const isTimeRangeValid = () => {
+  if (!form.value.start_time || !form.value.end_time) {
+    return true // Pas de validation si les heures ne sont pas définies
+  }
+
+  const startHour = parseInt(form.value.start_time.split(':')[0])
+  const endHour = parseInt(form.value.end_time.split(':')[0])
+  const startMinute = parseInt(form.value.start_time.split(':')[1])
+  const endMinute = parseInt(form.value.end_time.split(':')[1])
+
+  // Vérifier que les heures sont dans la plage 7h00-19h00
+  if (startHour < 7 || startHour > 19 || endHour < 7 || endHour > 19) {
+    return false
+  }
+
+  // Vérifier que l'heure de fin est après l'heure de début
+  const startTimeInMinutes = startHour * 60 + startMinute
+  const endTimeInMinutes = endHour * 60 + endMinute
+  if (endTimeInMinutes <= startTimeInMinutes) {
+    return false
+  }
+
+  return true
 }
 
 const nextStep = () => {
@@ -1340,7 +1439,7 @@ const loadEventData = async () => {
     const { supabase } = useSupabase()
     const { data, error } = await supabase
       .from('events')
-      .select('id, title, logo_url, submission_status, submission_deadline, online_start_datetime, online_end_datetime, in_person_start_date, in_person_end_date, participation_mode, timezone')
+      .select('id, title, logo_url, submission_status, submission_deadline, online_start_datetime, online_end_datetime, in_person_start_date, in_person_end_date, participation_mode, timezone, country_id')
       .eq('id', eventId)
       .single()
 
@@ -1481,6 +1580,13 @@ watch(() => authStore.profile?.organization_id, async (organizationId, oldOrgani
   // Éviter de recharger si c'est la même organisation ou si on a déjà les données
   if (organizationId && organizationId !== oldOrganizationId && !organizationData.value) {
     await loadOrganizationData()
+  }
+})
+
+// Watcher pour auto-sélectionner le pays de l'événement pour format hybride/présentiel
+watch(() => form.value.format, (newFormat) => {
+  if ((newFormat === 'hybrid' || newFormat === 'in_person') && eventData.value?.country_id) {
+    form.value.country_id = eventData.value.country_id
   }
 })
 </script>

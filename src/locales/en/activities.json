@@ -472,7 +472,9 @@
       },
       "errors": {
         "noOrganization": "You must first provide your organization information",
-        "submitFailed": "An error occurred during submission. Please try again."
+        "submitFailed": "An error occurred during submission. Please try again.",
+        "invalidEmail": "Invalid email format",
+        "invalidTimeRange": "The entered times are not within the accepted range or the end time is before the start time"
       },
       "success": {
         "title": "Activity submitted successfully",
@@ -480,7 +482,9 @@
         "backToEvent": "Back to event"
       },
       "helpers": {
-        "organizationInfo": "The activity will be submitted on behalf of your organization"
+        "organizationInfo": "The activity will be submitted on behalf of your organization",
+        "timeRange": "Times must be between 7:00 AM and 7:00 PM",
+        "countryAutoSelected": "The activity country is automatically set to the event country for hybrid and in-person formats"
       },
       "loadingOrganization": "Loading organization..."
     },

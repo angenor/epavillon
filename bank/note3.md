@@ -1,5 +1,8 @@
-Voci le Timeline d'une activité, après "l'examen" il y'a 2 chemin possible(Approuvé ou Rejeté) et après "Approuvé" il y'a deux chemin possibles(En direct, Annulé/cancelled). Merci de prendre toutes ces pissibilités en compte dans le timeline,
-                                             - Annulé
-Broullon - Soumis - En examen - - Approuvé - - En direct - Terminé
-                                - Rejeté
-
+[intlify] Not found 'activity.submit.helpers.timeRange' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'activity.submit.helpers.countryAutoSelected' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'activity.submit.helpers.timeRange' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'activity.submit.errors.invalidTimeRange' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'activity.submit.helpers.countryAutoSelected' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'activity.submit.helpers.timeRange' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'activity.submit.errors.invalidTimeRange' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'activity.submit.helpers.countryAutoSelected' key in 'fr' locale messages.

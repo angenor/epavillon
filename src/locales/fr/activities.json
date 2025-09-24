@@ -526,7 +526,13 @@
         "backToEvent": "Retourner à l'événement"
       },
       "helpers": {
-        "organizationInfo": "L'activité sera soumise au nom de votre organisation"
+        "organizationInfo": "L'activité sera soumise au nom de votre organisation",
+        "timeRange": "Les heures doivent être entre 7h00 et 19h00",
+        "countryAutoSelected": "Le pays de l'activité est automatiquement défini selon le pays de l'événement pour les formats hybride et présentiel"
+      },
+      "errors": {
+        "invalidEmail": "Format d'email invalide",
+        "invalidTimeRange": "Les heures saisies ne sont pas dans la plage acceptée ou l'heure de fin est avant l'heure de début"
       },
       "loadingOrganization": "Chargement de l'organisation..."
     },
