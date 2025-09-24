@@ -29,7 +29,7 @@
       "description": "Description",
       "logo": "Logo",
       "chooseLogo": "Choose logo",
-      "logoHelp": "PNG, JPG, SVG. Max 2MB"
+      "logoHelp": "PNG, JPG, SVG. Max 500kb"
     },
     "placeholders": {
       "name": "E.g.: Institute of La Francophonie for Sustainable Development",
