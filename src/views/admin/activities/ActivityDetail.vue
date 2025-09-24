@@ -35,10 +35,28 @@
               <h1 v-if="!activity.banner_url && !activity.cover_image_high_url" class="text-2xl font-bold text-gray-900 dark:text-white">
                 {{ activity.title }}
               </h1>
-              <p class="mt-1 text-lg text-gray-700 dark:text-gray-300">
-                {{ activity.organization?.name }}
-              </p>
-              <p class="text-sm text-gray-600 dark:text-gray-400">
+              <div class="mt-1">
+                <p class="text-lg text-gray-700 dark:text-gray-300">
+                  {{ activity.organization?.name }}
+                </p>
+                <!-- Pays de l'organisation avec drapeau -->
+                <div v-if="activity.organization?.country" class="flex items-center mt-1">
+                  <svg class="h-4 w-4 text-gray-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  </svg>
+                  <span class="text-sm text-gray-600 dark:text-gray-400 mr-2">
+                    {{ activity.organization.country.name_fr || 'Pays non spécifié' }}
+                  </span>
+                  <img
+                    v-if="activity.organization.country?.code"
+                    :src="`https://flagcdn.com/w20/${activity.organization.country.code.toLowerCase()}.png`"
+                    :alt="activity.organization.country.name_fr"
+                    class="h-4 w-6 object-cover border border-gray-200 dark:border-gray-600"
+                  />
+                </div>
+              </div>
+              <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
                 {{ activity.event?.title }} - {{ activity.event?.year }}
               </p>
             </div>
@@ -114,6 +132,102 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </button>
+        </div>
+      </div>
+
+      <!-- Section Informations importantes mise en valeur -->
+      <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl shadow-lg p-6 mb-6 border-2 border-blue-200 dark:border-blue-700">
+        <h2 class="text-xl font-bold mb-4 text-blue-900 dark:text-blue-100 flex items-center">
+          <svg class="h-6 w-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Informations essentielles
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Type d'activité -->
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Type d'activité</dt>
+            <dd>
+              <span class="px-3 py-1.5 text-sm font-medium rounded-full inline-flex items-center
+                     {{ getActivityTypeClass(activity.activity_type) }}">
+                <svg class="h-4 w-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                  <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 1 1 0 000 2H6a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 00-2-2V5z" clip-rule="evenodd"/>
+                </svg>
+                {{ getActivityTypeLabel(activity.activity_type) }}
+              </span>
+            </dd>
+          </div>
+          <!-- Format -->
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Format</dt>
+            <dd>
+              <span class="px-3 py-1.5 text-sm font-medium rounded-full inline-flex items-center
+                     {{ getFormatClass(activity.format) }}">
+                <svg class="h-4 w-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd"/>
+                </svg>
+                {{ getFormatLabel(activity.format) }}
+              </span>
+            </dd>
+          </div>
+          <!-- Date et heure -->
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+              {{ activity.final_start_date ? 'Date confirmée' : 'Date proposée' }}
+            </dt>
+            <dd class="text-sm text-gray-900 dark:text-white">
+              <div class="flex items-start">
+                <svg class="h-4 w-4 mr-1.5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                <div>
+                  <div class="font-medium">{{ formatDateWithDay(activity.final_start_date || activity.proposed_start_date) }}</div>
+                  <div class="text-gray-600 dark:text-gray-400">
+                    {{ formatTimeRange(activity.final_start_date || activity.proposed_start_date, activity.final_end_date || activity.proposed_end_date) }}
+                  </div>
+                  <div v-if="activity.event?.timezone" class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {{ getTimezoneLabel(activity.event.timezone, 'fr') }}
+                  </div>
+                </div>
+              </div>
+            </dd>
+          </div>
+          <!-- Pays de l'activité -->
+          <div v-if="activity.country_id" class="bg-white dark:bg-gray-800 rounded-lg p-4">
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Pays de l'activité</dt>
+            <dd class="flex items-center">
+              <img
+                v-if="activity.country?.code"
+                :src="`https://flagcdn.com/w20/${activity.country.code.toLowerCase()}.png`"
+                :alt="activity.country.name_fr"
+                class="h-5 w-8 object-cover border border-gray-200 dark:border-gray-600 mr-2"
+              />
+              <span class="text-sm text-gray-900 dark:text-white">{{ activity.country?.name_fr }}</span>
+            </dd>
+          </div>
+          <!-- Intervenants -->
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Intervenants</dt>
+            <dd class="flex items-center">
+              <svg class="h-5 w-5 mr-1.5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+              </svg>
+              <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ speakers.length }}</span>
+              <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">panéliste{{ speakers.length > 1 ? 's' : '' }}</span>
+            </dd>
+          </div>
+          <!-- Documents -->
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Documents</dt>
+            <dd class="flex items-center">
+              <svg class="h-5 w-5 mr-1.5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/>
+              </svg>
+              <span class="text-2xl font-bold text-green-600 dark:text-green-400">{{ documents.length }}</span>
+              <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">support{{ documents.length > 1 ? 's' : '' }}</span>
+            </dd>
+          </div>
         </div>
       </div>
 
@@ -202,7 +316,7 @@
         <div class="space-y-6">
           <!-- Statistiques -->
           <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold mb-4">Statistiques</h3>
+            <h3 class="text-lg font-semibold mb-4">Statistiques d'engagement</h3>
             <div class="grid grid-cols-2 gap-4">
               <div class="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                 <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">
@@ -235,52 +349,8 @@
           </div>
 
           <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold mb-4">Informations</h3>
+            <h3 class="text-lg font-semibold mb-4">Détails complémentaires</h3>
             <dl class="space-y-3">
-              <div>
-                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Type d'activité</dt>
-                <dd class="mt-1">
-                  <span class="px-2 py-1 text-xs font-medium rounded-full
-                         {{ getActivityTypeClass(activity.activity_type) }}">
-                    {{ getActivityTypeLabel(activity.activity_type) }}
-                  </span>
-                </dd>
-              </div>
-              <div>
-                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Format</dt>
-                <dd class="mt-1">
-                  <span class="px-2 py-1 text-xs font-medium rounded-full
-                         {{ getFormatClass(activity.format) }}">
-                    {{ getFormatLabel(activity.format) }}
-                  </span>
-                </dd>
-              </div>
-              <div v-if="activity.country_id">
-                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Pays</dt>
-                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
-                  {{ activity.country?.name_fr }}
-                </dd>
-              </div>
-              <div>
-                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Dates proposées</dt>
-                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
-                  <div class="font-medium">Début:</div>
-                  <div>{{ formatDateTime(activity.proposed_start_date) }}</div>
-                  <div class="font-medium mt-2">Fin:</div>
-                  <div>{{ formatDateTime(activity.proposed_end_date) }}</div>
-                  <div v-if="activity.event?.timezone" class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                    {{ getTimezoneLabel(activity.event.timezone, 'fr') }}
-                  </div>
-                </dd>
-              </div>
-              <div v-if="activity.final_start_date && activity.final_end_date">
-                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Dates finales</dt>
-                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
-                  <div class="font-medium text-green-600 dark:text-green-400">Confirmées:</div>
-                  <div>{{ formatDateTime(activity.final_start_date) }}</div>
-                  <div class="mt-1">{{ formatDateTime(activity.final_end_date) }}</div>
-                </dd>
-              </div>
               <div v-if="activity.youtube_link">
                 <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Lien YouTube</dt>
                 <dd class="mt-1">
@@ -482,10 +552,10 @@ const loadActivity = async () => {
       .from('activities')
       .select(`
         *,
-        organization:organizations(id, name, logo_url, email, website, organization_type),
+        organization:organizations(id, name, logo_url, email, website, organization_type, country:countries(id, name_fr, name_en, code)),
         event:events(id, title, year, banner_high_quality_1_1_url, timezone, city, address, country:countries(name_fr, name_en)),
         submitted_user:users!submitted_by(id, first_name, last_name, email),
-        country:countries(id, name_fr, name_en)
+        country:countries(id, name_fr, name_en, code)
       `)
       .eq('id', route.params.id)
       .single()
@@ -675,6 +745,44 @@ const formatDateTime = (dateString) => {
   const timezone = activity.value?.event?.timezone || 'UTC'
 
   return formatDateTimeWithTimezone(dateString, timezone, 'fr-FR')
+}
+
+// Formater la date avec le jour de la semaine
+const formatDateWithDay = (dateString) => {
+  if (!dateString) return '-'
+
+  const date = new Date(dateString)
+  const options = {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: activity.value?.event?.timezone || 'UTC'
+  }
+  return date.toLocaleDateString('fr-FR', options)
+}
+
+// Formater la plage horaire
+const formatTimeRange = (startDate, endDate) => {
+  if (!startDate || !endDate) return '-'
+
+  const start = new Date(startDate)
+  const end = new Date(endDate)
+  const timezone = activity.value?.event?.timezone || 'UTC'
+
+  const startTime = start.toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: timezone
+  })
+
+  const endTime = end.toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: timezone
+  })
+
+  return `${startTime} - ${endTime}`
 }
 
 // Gestion du changement de statut direct
