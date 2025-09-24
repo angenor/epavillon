@@ -591,7 +591,9 @@
         "benefit1": "Meilleur référencement sur les moteurs de recherche (SEO)",
         "benefit2": "Découvrabilité accrue sur notre plateforme",
         "benefit3": "Recommandations personnalisées pour les participants"
-      }
+      },
+      "approvalRequired": "L'activité doit être approuvée avant de pouvoir modifier les tags",
+      "approvalMessage": "Les tags ne peuvent être ajoutés ou modifiés qu'après l'approbation de l'activité par les organisateurs."
     },
     "documentManagement": {
       "encouragement": {
@@ -601,6 +603,10 @@
         "benefit2": "Accès permanent aux contenus pour les participants",
         "benefit3": "Valorisation de votre expertise et de vos travaux"
       }
+    },
+    "documents": {
+      "approvalRequired": "L'activité doit être approuvée avant de pouvoir modifier les documents",
+      "approvalMessage": "Les documents ne peuvent être ajoutés ou modifiés qu'après l'approbation de l'activité par les organisateurs."
     },
     "preview": {
       "button": "Prévisualiser",

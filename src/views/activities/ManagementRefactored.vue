@@ -82,6 +82,7 @@
             :documents="documentManagement.documents.value"
             :getDocumentIcon="documentManagement.getDocumentIcon"
             :getDocumentIconColor="documentManagement.getDocumentIconColor"
+            :isActivityApproved="isActivityApproved"
             @add-new-document="documentManagement.addNewDocument"
             @remove-document="handleRemoveDocument"
           />
@@ -93,6 +94,7 @@
             :canAddMoreTags="tagManagement.canAddMoreTags.value"
             :remainingTags="tagManagement.remainingTags.value"
             :maxTags="tagManagement.maxTags"
+            :isActivityApproved="isActivityApproved"
             @add-tag="handleAddTag"
             @remove-tag="handleRemoveTag"
             @update:newTag="tagManagement.newTag.value = $event"
@@ -210,6 +212,11 @@ const activityDates = useActivityDates(activity)
 const eventTimezone = computed(() => {
   if (!eventData.value?.timezone) return ''
   return getTimezoneLabel(eventData.value.timezone, locale.value)
+})
+
+const isActivityApproved = computed(() => {
+  const approvedStatuses = ['approved', 'live', 'completed']
+  return activity.value && approvedStatuses.includes(activity.value.validation_status)
 })
 
 // Activity editing methods

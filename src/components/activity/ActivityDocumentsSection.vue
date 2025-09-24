@@ -8,6 +8,18 @@
     </div>
 
     <div class="p-6 space-y-4">
+      <!-- Message d'approbation requise -->
+      <div v-if="!isActivityApproved" class="mb-4 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+        <div class="flex items-start">
+          <font-awesome-icon :icon="['fas', 'exclamation-triangle']" class="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5" />
+          <div class="ml-3">
+            <p class="text-sm text-amber-800 dark:text-amber-300">
+              {{ t('activity.documents.approvalMessage') }}
+            </p>
+          </div>
+        </div>
+      </div>
+
       <!-- Texte d'encouragement -->
       <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800">
         <div class="flex items-start">
@@ -34,7 +46,9 @@
         </h3>
         <button
           @click="$emit('add-new-document')"
-          class="px-4 py-2 bg-ifdd-bleu text-white rounded-lg hover:bg-ifdd-bleu-fonce transition-colors cursor-pointer"
+          :disabled="!isActivityApproved"
+          class="px-4 py-2 bg-ifdd-bleu text-white rounded-lg hover:bg-ifdd-bleu-fonce transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:hover:bg-gray-400"
+          :title="!isActivityApproved ? t('activity.documents.approvalRequired') : ''"
         >
           <font-awesome-icon :icon="['fas', 'plus']" class="mr-2" />
           {{ t('events.addDocument') }}
@@ -76,8 +90,9 @@
             </a>
             <button
               @click="$emit('remove-document', doc.id)"
-              class="text-red-600 hover:text-red-800 cursor-pointer"
-              :title="t('events.deleteDocument')"
+              :disabled="!isActivityApproved"
+              class="text-red-600 hover:text-red-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:text-gray-400 disabled:hover:text-gray-400"
+              :title="!isActivityApproved ? t('activity.documents.approvalRequired') : t('events.deleteDocument')"
             >
               <font-awesome-icon :icon="['fas', 'trash']" />
             </button>
@@ -106,6 +121,10 @@ defineProps({
   getDocumentIconColor: {
     type: Function,
     required: true
+  },
+  isActivityApproved: {
+    type: Boolean,
+    default: false
   }
 })
 

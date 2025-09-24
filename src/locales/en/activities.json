@@ -545,7 +545,9 @@
         "benefit1": "Better search engine optimization (SEO)",
         "benefit2": "Increased discoverability on our platform",
         "benefit3": "Personalized recommendations for participants"
-      }
+      },
+      "approvalRequired": "Activity must be approved before tags can be modified",
+      "approvalMessage": "Tags can only be added or modified after the activity has been approved by the organizers."
     },
     "documentManagement": {
       "encouragement": {
@@ -555,6 +557,10 @@
         "benefit2": "Permanent access to content for participants",
         "benefit3": "Showcase your expertise and work"
       }
+    },
+    "documents": {
+      "approvalRequired": "Activity must be approved before documents can be modified",
+      "approvalMessage": "Documents can only be added or modified after the activity has been approved by the organizers."
     },
     "preview": {
       "button": "Preview",

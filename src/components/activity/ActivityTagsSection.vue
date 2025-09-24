@@ -8,6 +8,18 @@
     </div>
 
     <div class="p-6 space-y-4">
+      <!-- Message d'approbation requise -->
+      <div v-if="!isActivityApproved" class="mb-4 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+        <div class="flex items-start">
+          <font-awesome-icon :icon="['fas', 'exclamation-triangle']" class="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5" />
+          <div class="ml-3">
+            <p class="text-sm text-amber-800 dark:text-amber-300">
+              {{ t('activity.tags.approvalMessage') }}
+            </p>
+          </div>
+        </div>
+      </div>
+
       <!-- Texte d'encouragement -->
       <div class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
         <div class="flex items-start">
@@ -36,16 +48,17 @@
             @input="$emit('update:newTag', $event.target.value)"
             @keypress="handleKeyPress"
             type="text"
-            :placeholder="t('activity.tags.placeholder')"
-            :disabled="!canAddMoreTags"
-            class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            :placeholder="!isActivityApproved ? t('activity.tags.approvalRequired') : t('activity.tags.placeholder')"
+            :disabled="!canAddMoreTags || !isActivityApproved"
+            class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-100 dark:disabled:bg-gray-800"
             maxlength="50"
           >
         </div>
         <button
           @click="addTag"
-          :disabled="!canAddMoreTags || !newTag.trim()"
-          class="px-4 py-2 bg-ifdd-bleu text-white rounded-lg hover:bg-ifdd-bleu-fonce disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+          :disabled="!canAddMoreTags || !newTag.trim() || !isActivityApproved"
+          class="px-4 py-2 bg-ifdd-bleu text-white rounded-lg hover:bg-ifdd-bleu-fonce disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:hover:bg-gray-400 transition-colors cursor-pointer"
+          :title="!isActivityApproved ? t('activity.tags.approvalRequired') : ''"
         >
           <font-awesome-icon :icon="['fas', 'plus']" class="mr-2" />
           {{ t('activity.tags.add') }}
@@ -77,8 +90,9 @@
             <span>{{ tag }}</span>
             <button
               @click="removeTag(index)"
-              class="ml-2 text-ifdd-bleu hover:text-red-600 dark:hover:text-red-400 transition-colors cursor-pointer"
-              :title="t('activity.tags.remove')"
+              :disabled="!isActivityApproved"
+              class="ml-2 text-ifdd-bleu hover:text-red-600 dark:hover:text-red-400 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:text-gray-400 disabled:hover:text-gray-400"
+              :title="!isActivityApproved ? t('activity.tags.approvalRequired') : t('activity.tags.remove')"
             >
               <font-awesome-icon :icon="['fas', 'times']" class="text-xs" />
             </button>
@@ -121,6 +135,10 @@ defineProps({
   maxTags: {
     type: Number,
     required: true
+  },
+  isActivityApproved: {
+    type: Boolean,
+    default: false
   }
 })
 
