@@ -127,9 +127,13 @@
                 </dd>
               </div>
               <div>
-                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Date proposée</dt>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Date et heures proposées</dt>
                 <dd class="mt-1 text-sm text-gray-900 dark:text-white">
-                  {{ formatDate(activity.proposed_start_date) }} - {{ formatDate(activity.proposed_end_date) }}
+                  <div>{{ formatDateTime(activity.proposed_start_date) }}</div>
+                  <div class="mt-1">{{ formatDateTime(activity.proposed_end_date) }}</div>
+                  <div v-if="activity.event?.timezone" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {{ getTimezoneLabel(activity.event.timezone, 'fr') }}
+                  </div>
                 </dd>
               </div>
               <div>
@@ -259,7 +263,7 @@ const route = useRoute()
 const { supabase } = useSupabase()
 const { hasAdminRole, isLoadingRoles, loadUserRoles, validateActivity } = useAdmin()
 const { currentUser } = useAuth()
-const { getCityFromTimezone } = useTimezone()
+const { getCityFromTimezone, formatDateTimeWithTimezone, getTimezoneLabel } = useTimezone()
 
 const isLoading = ref(true)
 const activity = ref(null)
@@ -330,6 +334,15 @@ const getStatusText = (status) => {
 
 const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('fr-FR')
+}
+
+const formatDateTime = (dateString) => {
+  if (!dateString) return '-'
+
+  // Utiliser le fuseau horaire de l'événement s'il existe
+  const timezone = activity.value?.event?.timezone || 'UTC'
+
+  return formatDateTimeWithTimezone(dateString, timezone, 'fr-FR')
 }
 
 // Gestion du changement de statut direct
