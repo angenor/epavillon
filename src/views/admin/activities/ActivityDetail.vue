@@ -6,6 +6,7 @@
         <p class="text-gray-600 dark:text-gray-300">Chargement...</p>
       </div>
     </div>
+
     
     <div v-else-if="activity" class="space-y-6">
       <!-- Header avec actions -->
@@ -22,7 +23,7 @@
           <div class="flex items-center space-x-3">
             <!-- Dropdown de statut -->
             <div class="relative">
-              <select v-model="activity.validation_status" 
+              <select v-model="activity.validation_status"
                       @focus="previousStatusValue = activity.validation_status"
                       @change="handleStatusChange"
                       :disabled="isUpdatingStatus"
@@ -43,7 +44,7 @@
                 </svg>
               </div>
             </div>
-            
+
             <!-- Bouton notification activité reçue -->
             <button @click="sendActivityReceivedNotification"
                     :disabled="isSendingNotification"
@@ -62,7 +63,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Message d'erreur pour le changement de statut -->
         <div v-if="statusError" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
           {{ statusError }}
@@ -172,12 +173,12 @@
             <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">
               Motif du rejet
             </h3>
-            
+
             <!-- Message d'erreur -->
             <div v-if="validationError" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
               {{ validationError }}
             </div>
-            
+
             <textarea v-model="validationReason"
                      placeholder="Expliquez brièvement pourquoi cette activité est rejetée..."
                      rows="4"
@@ -335,16 +336,16 @@ const formatDate = (dateString) => {
 const handleStatusChange = async (event) => {
   const newStatus = event.target.value
   const previousStatus = previousStatusValue.value
-  
+
   // Ne rien faire si c'est le même statut
   if (newStatus === previousStatus) return
-  
+
   // Stocker le changement en attente
   pendingStatusChange.value = { newStatus, previousStatus }
-  
+
   // Restaurer l'ancien statut en attendant la confirmation
   activity.value.validation_status = previousStatus
-  
+
   // Si c'est un rejet, on ouvre la modale spéciale pour demander la raison
   if (newStatus === 'rejected') {
     validationAction.value = 'reject'
@@ -352,7 +353,7 @@ const handleStatusChange = async (event) => {
     showValidationModal.value = true
     return
   }
-  
+
   // Pour les autres statuts, ouvrir la modale de confirmation générale
   showStatusConfirmModal.value = true
 }
@@ -360,10 +361,10 @@ const handleStatusChange = async (event) => {
 // Mise à jour du statut de l'activité
 const updateActivityStatus = async (newStatus, previousStatus, rejectionReason = null) => {
   if (!currentUser.value) return
-  
+
   isUpdatingStatus.value = true
   statusError.value = null
-  
+
   try {
     const result = await validateActivity(
       activity.value.id,
@@ -371,7 +372,7 @@ const updateActivityStatus = async (newStatus, previousStatus, rejectionReason =
       currentUser.value.id,
       rejectionReason
     )
-    
+
     if (result.success) {
       // Mettre à jour le statut dans l'interface après succès
       activity.value.validation_status = newStatus
@@ -421,7 +422,7 @@ const closeModal = () => {
 // Fonctions pour la modale de confirmation générale
 const confirmStatusChange = async () => {
   if (!pendingStatusChange.value) return
-  
+
   const { newStatus, previousStatus } = pendingStatusChange.value
   await updateActivityStatus(newStatus, previousStatus)
   closeStatusConfirmModal()
@@ -484,7 +485,7 @@ const sendActivityReceivedNotification = async () => {
     }
 
     notificationSuccess.value = 'Notification envoyée avec succès au coordinateur'
-    
+
     // Incrémenter le compteur localement pour un feedback immédiat
     if (activity.value) {
       activity.value.send_activites_recu_email_count = (activity.value.send_activites_recu_email_count || 0) + 1

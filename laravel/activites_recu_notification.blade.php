@@ -60,7 +60,7 @@ Accéder à votre tableau de bord
 @endcomponent
 
 {{-- Message de contact --}}
-Si vous avez des questions concernant votre soumission, n'hésitez pas à nous contacter.
+Si vous avez des questions concernant votre soumission, n'hésitez pas à répondre à cet e-mail en utilisant la fonction "Répondre à tous" afin de garder tous les destinataires en copie.
 
 {{-- Signature --}}
 Cordialement,

@@ -825,7 +825,7 @@ const { t, locale } = useI18n()
 const authStore = useAuthStore()
 const { countries, fetchCountries } = useCountries()
 const { validateActivityDates, getAcceptableDateRange } = useActivityDateValidation()
-const { formatDateTimeWithTimezone, getTimezoneLabel, convertToUTC } = useTimezone()
+const { formatDateTimeWithTimezone, getTimezoneLabel, convertToUTC, getCityFromTimezone } = useTimezone()
 
 const eventId = route.params.eventId
 
@@ -1143,6 +1143,75 @@ const getTimezoneOffsetMinutes = (date, timezone) => {
   return (tzDate.getTime() - utcDate.getTime()) / (1000 * 60)
 }
 
+// Fonction pour envoyer la notification de réception d'activité
+const sendActivityReceivedNotification = async (activityId) => {
+  try {
+    const { supabase } = useSupabase()
+
+    // Récupérer les détails complets de l'activité avec les relations
+    const { data: activityData, error: fetchError } = await supabase
+      .from('activities')
+      .select(`
+        *,
+        organization:organizations(id, name),
+        event:events(id, title, year, banner_high_quality_1_1_url, timezone, country:countries(name_fr)),
+        submitted_user:users!submitted_by(id, first_name, last_name, email)
+      `)
+      .eq('id', activityId)
+      .single()
+
+    if (fetchError) {
+      console.error('Erreur lors de la récupération des détails de l\'activité:', fetchError)
+      return
+    }
+
+    // Utiliser le timezone de l'événement s'il existe, sinon UTC
+    const timezone = activityData.event?.timezone || eventData.value?.timezone || 'UTC'
+    const cityName = getCityFromTimezone(timezone)
+
+    console.log('Envoi de la notification pour l\'activité:', activityData.title)
+    console.log('Timezone utilisé:', timezone, 'Ville extraite:', cityName)
+
+    const { data, error } = await supabase.functions.invoke('send-activity-notification', {
+      body: {
+        activity_id: activityData.id,
+        activity_title: activityData.title,
+        coordinator_email: activityData.submitted_user?.email || authStore.user?.email,
+        coordinator_name: activityData.submitted_user ?
+          `${activityData.submitted_user.first_name} ${activityData.submitted_user.last_name}` :
+          authStore.profile ? `${authStore.profile.first_name} ${authStore.profile.last_name}` : null,
+        organization_name: activityData.organization?.name || organizationData.value?.name,
+        event_title: activityData.event?.title || eventData.value?.title,
+        event_logo: activityData.event?.banner_high_quality_1_1_url || eventData.value?.logo_url,
+        event_city: cityName,
+        event_country: activityData.event?.country?.name_fr || null,
+        proposed_start_date: activityData.proposed_start_date,
+        proposed_end_date: activityData.proposed_end_date,
+        timezone: timezone
+      }
+    })
+
+    if (error) {
+      console.error('Erreur lors de l\'envoi de la notification:', error)
+    } else {
+      console.log('Notification de réception envoyée avec succès')
+
+      // Mettre à jour le compteur dans la base de données
+      const { error: updateError } = await supabase
+        .from('activities')
+        .update({ send_activites_recu_email_count: 1 })
+        .eq('id', activityId)
+
+      if (updateError) {
+        console.error('Erreur lors de la mise à jour du compteur:', updateError)
+      }
+    }
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi de la notification automatique:', error)
+    // On ne bloque pas la soumission si l'envoi échoue
+  }
+}
+
 const handleSubmit = async () => {
   if (!canSubmit.value) return
 
@@ -1209,6 +1278,9 @@ const handleSubmit = async () => {
       .insert(speakersToInsert)
 
     if (speakersError) throw speakersError
+
+    // Envoyer automatiquement la notification de réception d'activité
+    await sendActivityReceivedNotification(activityResult.id)
 
     // Clear draft after successful submission
     deleteDraft()
