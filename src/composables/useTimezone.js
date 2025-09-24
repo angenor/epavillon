@@ -176,10 +176,17 @@ export function useTimezone() {
   const convertToUTC = (localDateTime, timezone) => {
     if (!localDateTime || !timezone) return null
 
-    // Créer un objet Date avec la date/heure locale
-    const date = new Date(localDateTime)
+    // Parser la date/heure locale (format: YYYY-MM-DDTHH:mm:ss ou YYYY-MM-DDTHH:mm)
+    const [datePart, timePart] = localDateTime.split('T')
+    const [year, month, day] = datePart.split('-')
+    const timeComponents = timePart.split(':')
+    const hour = timeComponents[0]
+    const minute = timeComponents[1]
+    const second = timeComponents[2] || '00'
 
-    // Obtenir l'offset du fuseau horaire spécifié
+    // Utiliser Intl.DateTimeFormat pour obtenir les parts d'une date de référence
+    // dans le fuseau horaire donné
+    const refDate = new Date()
     const formatter = new Intl.DateTimeFormat('en-US', {
       timeZone: timezone,
       year: 'numeric',
@@ -191,7 +198,63 @@ export function useTimezone() {
       hour12: false
     })
 
-    return date.toISOString()
+    // Créer plusieurs dates candidates autour de la date cible pour gérer les changements d'heure
+    const candidates = []
+    for (let offsetHours = -12; offsetHours <= 12; offsetHours += 1) {
+      const candidateDate = new Date(Date.UTC(
+        parseInt(year),
+        parseInt(month) - 1,
+        parseInt(day),
+        parseInt(hour) - offsetHours,
+        parseInt(minute),
+        parseInt(second)
+      ))
+
+      const parts = formatter.formatToParts(candidateDate)
+      const values = {}
+      parts.forEach(part => {
+        if (part.type !== 'literal') {
+          values[part.type] = part.value
+        }
+      })
+
+      // Vérifier si cette date candidate correspond à notre date locale dans le fuseau horaire
+      if (values.year === year &&
+          values.month === month &&
+          values.day === day &&
+          values.hour === hour &&
+          values.minute === minute) {
+        candidates.push(candidateDate)
+      }
+    }
+
+    // Retourner la première date candidate valide
+    if (candidates.length > 0) {
+      return candidates[0].toISOString()
+    }
+
+    // Fallback: faire une estimation basée sur l'offset GMT du label
+    const tz = timezones.find(t => t.value === timezone)
+    if (tz) {
+      // Extraire l'offset du label (ex: "Paris (GMT+1)" -> +1)
+      const match = tz.label.fr.match(/GMT([+-]\d+)/)
+      if (match) {
+        const offset = parseInt(match[1])
+        const utcDate = new Date(Date.UTC(
+          parseInt(year),
+          parseInt(month) - 1,
+          parseInt(day),
+          parseInt(hour) - offset,
+          parseInt(minute),
+          parseInt(second)
+        ))
+        return utcDate.toISOString()
+      }
+    }
+
+    // Dernier recours: créer la date en local et espérer que ça marche
+    const localDate = new Date(`${localDateTime}`)
+    return localDate.toISOString()
   }
 
   // Convertir une date UTC vers le fuseau horaire local

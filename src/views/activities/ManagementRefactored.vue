@@ -206,7 +206,7 @@ const documentManagement = useDocumentManagement(activityId.value)
 const tagManagement = useTagManagement(activityId.value)
 
 // Activity dates
-const activityDates = useActivityDates(activity)
+const activityDates = useActivityDates(activity, computed(() => eventData.value?.timezone))
 
 // Computed properties
 const eventTimezone = computed(() => {
