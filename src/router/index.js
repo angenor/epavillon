@@ -330,7 +330,11 @@ router.beforeEach(async (to, _from, next) => {
 
   // Vérifier si la route nécessite une authentification
   if (to.meta.requiresAuth && !isAuthenticated.value) {
-    next('/login')
+    // Sauvegarder la route de destination dans le query param
+    next({
+      path: '/login',
+      query: { redirect: to.fullPath }
+    })
     return
   }
 

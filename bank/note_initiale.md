@@ -32,3 +32,9 @@ dans le dashboad, je veux utiliser @amcharts/amcharts5@5.10.7 qui est déjà ist
 
 
 je veux que l'envoie de notification soit plus flexible, s'adate l'orsque le statut de l'évènement est "Soumise",
+
+
+galerie photo activité
+
+
+modification organisation

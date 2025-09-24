@@ -29,22 +29,24 @@
 
 <script setup>
 import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 
 const { t } = useI18n()
 const router = useRouter()
+const route = useRoute()
 const { auth } = useSupabase()
 
 onMounted(async () => {
   try {
     // Supabase gère automatiquement le callback OAuth
     const { data: { session } } = await auth.getSession()
-    
+
     if (session) {
-      // Connexion réussie, rediriger vers la page d'accueil
-      router.push('/')
+      // Connexion réussie, récupérer l'URL de redirection depuis les query params
+      const redirectTo = route.query.redirect || '/'
+      router.push(redirectTo)
     } else {
       // Pas de session, rediriger vers la page de connexion
       router.push('/login')

@@ -22,7 +22,9 @@
         </h1>
         <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
           {{ t('auth.login.subtitle') }}
-          <router-link to="/register" class="font-medium text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300">
+          <router-link
+            :to="{ path: '/register', query: { redirect: route.query.redirect } }"
+            class="font-medium text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300">
             {{ t('auth.login.createAccount') }}
           </router-link>
         </p>
@@ -91,7 +93,9 @@
           </div>
 
           <div class="text-sm">
-            <router-link to="/forgot-password" class="font-medium text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300">
+            <router-link
+              :to="{ path: '/forgot-password', query: { redirect: route.query.redirect } }"
+              class="font-medium text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300">
               {{ t('auth.login.forgotPassword') }}
             </router-link>
           </div>
@@ -162,12 +166,13 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 
 const { t } = useI18n()
 const router = useRouter()
+const route = useRoute()
 const { auth } = useSupabase()
 
 const loading = ref(false)
@@ -193,7 +198,9 @@ const handleLogin = async () => {
     if (signInError) throw signInError
 
     // Redirection après connexion réussie
-    router.push('/')
+    // Vérifier s'il y a une URL de redirection dans les query params
+    const redirectTo = route.query.redirect || '/'
+    router.push(redirectTo)
   } catch (err) {
     console.error('Login error:', err)
     error.value = t('auth.errors.invalidCredentials')
@@ -204,10 +211,12 @@ const handleLogin = async () => {
 
 const handleGoogleLogin = async () => {
   try {
+    // Construire l'URL de callback avec le redirect original si disponible
+    const redirectQuery = route.query.redirect ? `?redirect=${encodeURIComponent(route.query.redirect)}` : ''
     const { error } = await auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`
+        redirectTo: `${window.location.origin}/auth/callback${redirectQuery}`
       }
     })
     if (error) throw error
@@ -219,10 +228,12 @@ const handleGoogleLogin = async () => {
 
 const handleMicrosoftLogin = async () => {
   try {
+    // Construire l'URL de callback avec le redirect original si disponible
+    const redirectQuery = route.query.redirect ? `?redirect=${encodeURIComponent(route.query.redirect)}` : ''
     const { error } = await auth.signInWithOAuth({
       provider: 'azure',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`
+        redirectTo: `${window.location.origin}/auth/callback${redirectQuery}`
       }
     })
     if (error) throw error
