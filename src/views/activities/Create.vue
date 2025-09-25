@@ -1191,7 +1191,7 @@ const goToEvent = () => {
 
 const closeSuccessModal = () => {
   showSuccessModal.value = false
-  router.push(`/events/${eventId}`)
+  router.push(`/events/dashboard`)
 }
 
 
