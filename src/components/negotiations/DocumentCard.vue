@@ -162,32 +162,90 @@ const formatFileSize = (bytes) => {
 }
 
 const shareDocument = async () => {
+  const documentUrl = props.document.file_url || window.location.href
   const shareData = {
     title: props.document.title,
-    text: props.document.description || '',
-    url: window.location.href
+    text: props.document.description || 'Document de négociation',
+    url: documentUrl
   }
 
-  if (navigator.share && navigator.canShare(shareData)) {
+  if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
     try {
       await navigator.share(shareData)
+      console.log('Document shared successfully')
     } catch (error) {
-      console.log('Error sharing:', error)
-      fallbackShare()
+      if (error.name !== 'AbortError') {
+        console.log('Error sharing:', error)
+        fallbackShare(documentUrl)
+      }
     }
   } else {
-    fallbackShare()
+    fallbackShare(documentUrl)
   }
 }
 
-const fallbackShare = () => {
-  const url = window.location.href
-  navigator.clipboard.writeText(url).then(() => {
-    // Could show a toast message here
-    console.log('Link copied to clipboard')
-  }).catch(() => {
-    console.log('Failed to copy link')
-  })
+const fallbackShare = (url) => {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => {
+      // Show a temporary notification
+      showCopyNotification()
+    }).catch((error) => {
+      console.log('Failed to copy link:', error)
+      // Fallback: create a temporary text area
+      fallbackCopyToClipboard(url)
+    })
+  } else {
+    fallbackCopyToClipboard(url)
+  }
+}
+
+const fallbackCopyToClipboard = (text) => {
+  const textArea = document.createElement('textarea')
+  textArea.value = text
+  textArea.style.position = 'fixed'
+  textArea.style.left = '-999999px'
+  textArea.style.top = '-999999px'
+  document.body.appendChild(textArea)
+  textArea.focus()
+  textArea.select()
+
+  try {
+    document.execCommand('copy')
+    showCopyNotification()
+  } catch (error) {
+    console.log('Fallback copy failed:', error)
+  }
+
+  document.body.removeChild(textArea)
+}
+
+const showCopyNotification = () => {
+  // Create a temporary notification
+  const notification = document.createElement('div')
+  notification.textContent = 'Lien copié dans le presse-papiers !'
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #10b981;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+  `
+
+  document.body.appendChild(notification)
+
+  setTimeout(() => {
+    notification.style.opacity = '0'
+    notification.style.transform = 'translateY(-10px)'
+    setTimeout(() => {
+      document.body.removeChild(notification)
+    }, 300)
+  }, 2000)
 }
 
 const onImageError = (event) => {

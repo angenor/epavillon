@@ -209,9 +209,10 @@ const handleViewDocument = async (documentId) => {
 const handleDownloadDocument = async (documentId) => {
   try {
     await downloadDocument(documentId)
-    showToast(t('negotiations.documents.downloadSuccess'), 'success')
+    showToast('Document téléchargé avec succès', 'success')
   } catch (error) {
-    showToast(t('negotiations.documents.downloadError'), 'error')
+    console.error('Download error:', error)
+    showToast('Erreur lors du téléchargement', 'error')
   }
 }
 

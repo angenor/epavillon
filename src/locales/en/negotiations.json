@@ -58,7 +58,10 @@
         "negotiationGuide": "Negotiation guide",
         "technicalNote": "Technical note",
         "relevantDocument": "Relevant document",
-        "other": "Other"
+        "other": "Other",
+        "negotiation_guide": "Negotiation guide",
+        "technical_note": "Technical note",
+        "relevant_document": "Relevant document"
       },
       "filters": {
         "allTypes": "All types"
