@@ -104,17 +104,63 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <button @click="viewTraining(training)"
-                          class="text-orange-600 hover:text-orange-900 mr-4">
+                          class="text-orange-600 hover:text-orange-900 mr-4 cursor-pointer">
                     Voir
                   </button>
                   <button @click="toggleTrainingStatus(training)"
-                          :class="training.is_active ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'">
+                          :class="training.is_active ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'"
+                          class="mr-4 cursor-pointer">
                     {{ training.is_active ? 'Désactiver' : 'Activer' }}
+                  </button>
+                  <button @click="confirmDeleteTraining(training)"
+                          class="text-red-600 hover:text-red-900 cursor-pointer">
+                    {{ t('admin.trainings.delete') }}
                   </button>
                 </td>
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de confirmation de suppression -->
+    <div v-if="showDeleteModal" class="fixed inset-0 bg-gray-600/50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
+      <div class="relative p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
+        <div class="mb-4">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+            {{ t('admin.trainings.confirmDelete') }}
+          </h3>
+        </div>
+
+        <div class="mb-6">
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            {{ t('admin.trainings.deleteWarning') }}
+          </p>
+          <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md p-3">
+            <p class="text-sm text-yellow-800 dark:text-yellow-200">
+              <strong>{{ trainingToDelete?.title }}</strong>
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end space-x-3">
+          <button @click="cancelDelete"
+                  :disabled="isDeletingTraining"
+                  class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 cursor-pointer">
+            {{ t('admin.trainings.cancel') }}
+          </button>
+          <button @click="executeDelete"
+                  :disabled="isDeletingTraining"
+                  class="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 cursor-pointer">
+            <span v-if="isDeletingTraining" class="flex items-center">
+              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              {{ t('common.loading') }}...
+            </span>
+            <span v-else>
+              {{ t('admin.trainings.deleteButton') }}
+            </span>
+          </button>
         </div>
       </div>
     </div>
@@ -127,14 +173,19 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
+import { useEventsAndTrainings } from '@/composables/useEventsAndTrainings'
 
 const { t } = useI18n()
 const router = useRouter()
 const { supabase } = useSupabase()
 const { hasAdminRole, isLoadingRoles, loadUserRoles } = useAdmin()
+const { deleteTraining } = useEventsAndTrainings()
 
 const isLoading = ref(true)
 const trainings = ref([])
+const showDeleteModal = ref(false)
+const trainingToDelete = ref(null)
+const isDeletingTraining = ref(false)
 
 // Vérification des permissions (attendre le chargement des rôles)
 const checkAccess = async () => {
@@ -223,6 +274,43 @@ const toggleTrainingStatus = async (training) => {
     training.is_active = !training.is_active
   } catch (error) {
     console.error('Erreur lors de la mise à jour:', error)
+  }
+}
+
+const confirmDeleteTraining = (training) => {
+  trainingToDelete.value = training
+  showDeleteModal.value = true
+}
+
+const cancelDelete = () => {
+  showDeleteModal.value = false
+  trainingToDelete.value = null
+}
+
+const executeDelete = async () => {
+  if (!trainingToDelete.value) return
+
+  isDeletingTraining.value = true
+  try {
+    await deleteTraining(trainingToDelete.value.id)
+
+    // Supprimer de la liste locale
+    const index = trainings.value.findIndex(t => t.id === trainingToDelete.value.id)
+    if (index !== -1) {
+      trainings.value.splice(index, 1)
+    }
+
+    showDeleteModal.value = false
+    trainingToDelete.value = null
+
+    // Optionnel: Afficher un message de succès
+    console.log(t('admin.trainings.deleteSuccess'))
+  } catch (error) {
+    console.error('Erreur lors de la suppression:', error)
+    // Optionnel: Afficher un message d'erreur
+    alert(t('admin.trainings.deleteError'))
+  } finally {
+    isDeletingTraining.value = false
   }
 }
 

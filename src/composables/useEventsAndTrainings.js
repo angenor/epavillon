@@ -279,6 +279,47 @@ export function useEventsAndTrainings() {
     }
   }
 
+  // Generic delete function for trainings
+  const deleteTraining = async (trainingId) => {
+    const { data: userData } = await supabase.auth.getUser()
+    if (!userData?.user) throw new Error('User not authenticated')
+
+    try {
+      // Vérifier si l'utilisateur a les permissions d'admin
+      const { data: userRoles } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userData.user.id)
+        .eq('is_active', true)
+
+      const isAdmin = userRoles?.some(role => ['admin', 'super_admin'].includes(role.role))
+
+      if (!isAdmin) {
+        throw new Error('Permissions insuffisantes pour supprimer une formation')
+      }
+
+      // Supprimer la formation (soft delete recommandé en production)
+      const { error: deleteError } = await supabase
+        .from('trainings')
+        .delete()
+        .eq('id', trainingId)
+
+      if (deleteError) throw deleteError
+
+      // Mettre à jour l'état local en supprimant l'élément
+      const itemIndex = items.value.findIndex(item => item.id === trainingId)
+      if (itemIndex !== -1) {
+        items.value.splice(itemIndex, 1)
+      }
+
+      return true
+
+    } catch (err) {
+      console.error('Error deleting training:', err)
+      throw err
+    }
+  }
+
   return {
     items,
     loading,
@@ -286,6 +327,7 @@ export function useEventsAndTrainings() {
     fetchItems,
     registerToItem,
     unregisterFromItem,
-    getItemById
+    getItemById,
+    deleteTraining
   }
 }

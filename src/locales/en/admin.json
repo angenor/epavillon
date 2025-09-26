@@ -281,6 +281,17 @@
     "platform": "Platform",
     "accessUrl": "Access URL",
     "accessUrlPlaceholder": "https://moodle.example.com/course/123",
-    "other": "Other"
+    "other": "Other",
+    "trainings": {
+      "title": "Training Management",
+      "subtitle": "Administration of trainings and educational programs",
+      "delete": "Delete",
+      "confirmDelete": "Are you sure you want to delete this training?",
+      "deleteWarning": "This action will permanently delete the training and all associated data (participants, chapters, etc.). This action is irreversible.",
+      "deleteSuccess": "Training successfully deleted",
+      "deleteError": "Error deleting training",
+      "deleteButton": "Delete permanently",
+      "cancel": "Cancel"
+    }
   }
 }

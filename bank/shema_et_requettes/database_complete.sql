@@ -1134,6 +1134,7 @@ ALTER TABLE public.connections ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.countries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.activity_registrations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.activity_questions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.trainings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.training_participants ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.comments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_testimonials ENABLE ROW LEVEL SECURITY;
@@ -1495,6 +1496,72 @@ CREATE POLICY "Users can view activity questions" ON public.activity_questions
 
 CREATE POLICY "Users can ask questions" ON public.activity_questions
     FOR INSERT WITH CHECK (user_id = auth.uid());
+
+-- Politiques pour les formations
+CREATE POLICY "Active trainings are publicly viewable" ON public.trainings
+    FOR SELECT
+    USING (is_active = true);
+
+CREATE POLICY "Admins can view all trainings" ON public.trainings
+    FOR SELECT
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
+            AND (valid_until IS NULL OR valid_until > NOW())
+        )
+    );
+
+CREATE POLICY "Admins can create trainings" ON public.trainings
+    FOR INSERT
+    WITH CHECK (
+        auth.uid() IS NOT NULL
+        AND created_by = auth.uid()
+        AND EXISTS (
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
+            AND role IN ('admin', 'super_admin', 'trainer')
+            AND is_active = true
+            AND (valid_until IS NULL OR valid_until > NOW())
+        )
+    );
+
+CREATE POLICY "Admins and creators can update trainings" ON public.trainings
+    FOR UPDATE
+    USING (
+        created_by = auth.uid()
+        OR EXISTS (
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
+            AND (valid_until IS NULL OR valid_until > NOW())
+        )
+    )
+    WITH CHECK (
+        created_by = auth.uid()
+        OR EXISTS (
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
+            AND (valid_until IS NULL OR valid_until > NOW())
+        )
+    );
+
+CREATE POLICY "Admins can delete trainings" ON public.trainings
+    FOR DELETE
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
+            AND (valid_until IS NULL OR valid_until > NOW())
+        )
+    );
 
 -- Politiques pour les participants aux formations
 CREATE POLICY "Users can view their own training participation" ON public.training_participants

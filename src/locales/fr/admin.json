@@ -373,6 +373,17 @@
         "rejected": "Rejetée",
         "cancelled": "Annulée"
       }
+    },
+    "trainings": {
+      "title": "Gestion des Formations",
+      "subtitle": "Administration des formations et parcours pédagogiques",
+      "delete": "Supprimer",
+      "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette formation ?",
+      "deleteWarning": "Cette action supprimera définitivement la formation et toutes les données associées (participants, chapitres, etc.). Cette action est irréversible.",
+      "deleteSuccess": "Formation supprimée avec succès",
+      "deleteError": "Erreur lors de la suppression de la formation",
+      "deleteButton": "Supprimer définitivement",
+      "cancel": "Annuler"
     }
   }
 }
