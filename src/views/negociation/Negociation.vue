@@ -102,7 +102,12 @@
 
         <!-- Réunions de la Francophonie -->
         <div v-if="activeSection === 'meetings'">
-          <FrancophonieMeetingsSection :category="currentCategory" />
+          <EventsAndTrainingsSection :category="currentCategory" type="francophonie_meetings" />
+        </div>
+
+        <!-- Formations -->
+        <div v-if="activeSection === 'trainings'">
+          <EventsAndTrainingsSection :category="currentCategory" type="trainings" />
         </div>
       </div>
     </div>
@@ -115,7 +120,7 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import SessionSection from '@/components/negotiations/SessionSection.vue'
 import DocumentsSection from '@/components/negotiations/DocumentsSection.vue'
-import FrancophonieMeetingsSection from '@/components/negotiations/FrancophonieMeetingsSection.vue'
+import EventsAndTrainingsSection from '@/components/negotiations/EventsAndTrainingsSection.vue'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -139,6 +144,11 @@ const sections = [
     value: 'meetings',
     label: 'Réunions Francophonie',
     icon: ['fas', 'users'] // Icône de réunion
+  },
+  {
+    value: 'trainings',
+    label: 'Formations',
+    icon: ['fas', 'graduation-cap'] // Icône de formation
   }
 ]
 

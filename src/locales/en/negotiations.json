@@ -117,6 +117,36 @@
       "upcoming": "Upcoming",
       "ongoing": "Ongoing",
       "past": "Past"
+    },
+    "trainings": {
+      "title": "Trainings",
+      "subtitle": "Training and capacity building workshops",
+      "noTrainings": "No trainings available",
+      "noTrainingsDesc": "No trainings are scheduled for this category",
+      "views": {
+        "list": "List",
+        "calendar": "Calendar"
+      },
+      "filters": {
+        "allTypes": "All formats",
+        "allStatuses": "All statuses",
+        "upcoming": "Upcoming",
+        "ongoing": "Ongoing",
+        "past": "Past"
+      },
+      "register": "Register",
+      "registered": "Registered",
+      "unregister": "Unregister",
+      "participants": "participants",
+      "viewDetails": "View details",
+      "registerSuccess": "Registration successful",
+      "registerError": "Registration error",
+      "unregisterSuccess": "Unregistration successful",
+      "unregisterError": "Unregistration error"
+    },
+    "trainingTypes": {
+      "online": "Online",
+      "hybrid": "Hybrid"
     }
   }
 }

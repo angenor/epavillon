@@ -117,6 +117,36 @@
       "upcoming": "À venir",
       "ongoing": "En cours",
       "past": "Passée"
+    },
+    "trainings": {
+      "title": "Formations",
+      "subtitle": "Formations et ateliers de renforcement de capacités",
+      "noTrainings": "Aucune formation disponible",
+      "noTrainingsDesc": "Aucune formation n'est programmée pour cette catégorie",
+      "views": {
+        "list": "Liste",
+        "calendar": "Calendrier"
+      },
+      "filters": {
+        "allTypes": "Tous les formats",
+        "allStatuses": "Tous les statuts",
+        "upcoming": "À venir",
+        "ongoing": "En cours",
+        "past": "Terminées"
+      },
+      "register": "S'inscrire",
+      "registered": "Inscrit",
+      "unregister": "Se désinscrire",
+      "participants": "participants",
+      "viewDetails": "Voir détails",
+      "registerSuccess": "Inscription réussie",
+      "registerError": "Erreur lors de l'inscription",
+      "unregisterSuccess": "Désinscription réussie",
+      "unregisterError": "Erreur lors de la désinscription"
+    },
+    "trainingTypes": {
+      "online": "En ligne",
+      "hybrid": "Hybride"
     }
   }
 }
