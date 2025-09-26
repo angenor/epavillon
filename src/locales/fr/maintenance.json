@@ -1,0 +1,11 @@
+{
+  "maintenance": {
+    "title": "Page en maintenance",
+    "message": "Cette page est actuellement en cours de maintenance. Nous nous excusons pour la gêne occasionnée.",
+    "training": {
+      "title": "Session de formation en cours",
+      "description": "Vous pouvez rejoindre la session de formation des Négociatrices qui se déroule actuellement au Ghana :",
+      "joinButton": "Rejoindre la session Zoom"
+    }
+  }
+}

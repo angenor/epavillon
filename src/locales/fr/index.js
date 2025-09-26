@@ -10,6 +10,7 @@ import negotiations from './negotiations.json' with { type: 'json' };
 import directory from './directory.json' with { type: 'json' };
 import appointments from './appointments.json' with { type: 'json' };
 import organizations from './organizations.json' with { type: 'json' };
+import maintenance from './maintenance.json' with { type: 'json' };
 
 export default {
   ...common,
@@ -23,4 +24,5 @@ export default {
   ...directory,
   ...appointments,
   ...organizations,
+  ...maintenance,
 };

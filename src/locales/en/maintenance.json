@@ -1,0 +1,11 @@
+{
+  "maintenance": {
+    "title": "Page under maintenance",
+    "message": "This page is currently under maintenance. We apologize for any inconvenience.",
+    "training": {
+      "title": "Ongoing training session",
+      "description": "You can join the Negotiators training session currently taking place in Ghana:",
+      "joinButton": "Join Zoom session"
+    }
+  }
+}
