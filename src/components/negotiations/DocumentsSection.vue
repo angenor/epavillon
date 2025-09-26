@@ -55,15 +55,30 @@
       </div>
 
       <!-- Documents Grid -->
-      <div v-else-if="filteredDocuments.length > 0" class="space-y-4">
-        <DocumentCard
+      <div
+        v-else-if="filteredDocuments.length > 0"
+        class="grid gap-6"
+        :class="{
+          'grid-cols-1': filteredDocuments.length === 1,
+          'grid-cols-1 sm:grid-cols-2': filteredDocuments.length === 2,
+          'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3': filteredDocuments.length >= 3
+        }"
+      >
+        <div
           v-for="document in filteredDocuments"
           :key="document.id"
-          :document="document"
-          @view="handleViewDocument"
-          @download="handleDownloadDocument"
-          @favorite="handleToggleFavorite"
-        />
+          :class="{
+            'max-w-md mx-auto': filteredDocuments.length === 1,
+            'max-w-sm mx-auto': filteredDocuments.length === 2
+          }"
+        >
+          <DocumentCard
+            :document="document"
+            @view="handleViewDocument"
+            @download="handleDownloadDocument"
+            @favorite="handleToggleFavorite"
+          />
+        </div>
       </div>
 
       <!-- Empty State -->
