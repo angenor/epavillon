@@ -52,6 +52,19 @@
     "refreshError": "Error while refreshing",
     "optional": "optional",
     "create": "Create",
+    "creating": "Creating...",
+    "title": "Title",
+    "description": "Description",
+    "date": "Date",
+    "time": "Time",
+    "duration": "Duration",
+    "minutes": "minutes",
+    "location": "Location",
+    "status": "Status",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "hours": "hours",
+    "currency": "USD",
     "edit": "Edit",
     "view": "View",
     "delete": "Delete",
@@ -278,5 +291,16 @@
         "description": "You don't have permission to edit this event."
       }
     }
+  },
+  "status": {
+    "draft": "Draft",
+    "published": "Published",
+    "active": "Active",
+    "completed": "Completed",
+    "archived": "Archived",
+    "registrationOpen": "Registration open",
+    "registrationClosed": "Registration closed",
+    "cancelled": "Cancelled",
+    "inProgress": "In progress"
   }
 }

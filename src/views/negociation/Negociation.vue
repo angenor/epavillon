@@ -87,6 +87,50 @@
       </div>
     </div>
 
+    <!-- Admin Panel -->
+    <div v-if="isSuperAdmin" class="bg-orange-50 dark:bg-orange-900/20 border-b border-orange-200 dark:border-orange-800">
+      <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-2 h-2 bg-orange-500 rounded-full"></div>
+            <h3 class="text-sm font-medium text-orange-800 dark:text-orange-200">
+              {{ $t('admin.panel') }}
+            </h3>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button
+              @click="showCreateSession = true"
+              class="px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-md hover:bg-blue-700 transition-colors cursor-pointer"
+            >
+              <font-awesome-icon icon="plus" class="mr-1" />
+              {{ $t('admin.createSession') }}
+            </button>
+            <button
+              @click="showCreateDocument = true"
+              class="px-3 py-1.5 bg-green-600 text-white text-xs font-medium rounded-md hover:bg-green-700 transition-colors cursor-pointer"
+            >
+              <font-awesome-icon icon="plus" class="mr-1" />
+              {{ $t('admin.createDocument') }}
+            </button>
+            <button
+              @click="showCreateMeeting = true"
+              class="px-3 py-1.5 bg-purple-600 text-white text-xs font-medium rounded-md hover:bg-purple-700 transition-colors cursor-pointer"
+            >
+              <font-awesome-icon icon="plus" class="mr-1" />
+              {{ $t('admin.createMeeting') }}
+            </button>
+            <button
+              @click="showCreateTraining = true"
+              class="px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-md hover:bg-indigo-700 transition-colors cursor-pointer"
+            >
+              <font-awesome-icon icon="plus" class="mr-1" />
+              {{ $t('admin.createTraining') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-8">
       <div class="space-y-8">
@@ -111,6 +155,38 @@
         </div>
       </div>
     </div>
+
+    <!-- Create Session Modal -->
+    <CreateSessionModal
+      v-if="showCreateSession"
+      :category="currentCategory"
+      @close="showCreateSession = false"
+      @created="onSessionCreated"
+    />
+
+    <!-- Create Document Modal -->
+    <CreateDocumentModal
+      v-if="showCreateDocument"
+      :category="currentCategory"
+      @close="showCreateDocument = false"
+      @created="onDocumentCreated"
+    />
+
+    <!-- Create Meeting Modal -->
+    <CreateMeetingModal
+      v-if="showCreateMeeting"
+      :category="currentCategory"
+      @close="showCreateMeeting = false"
+      @created="onMeetingCreated"
+    />
+
+    <!-- Create Training Modal -->
+    <CreateTrainingModal
+      v-if="showCreateTraining"
+      :category="currentCategory"
+      @close="showCreateTraining = false"
+      @created="onTrainingCreated"
+    />
   </div>
 </template>
 
@@ -118,15 +194,30 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useAuthStore } from '@/stores/auth'
 import SessionSection from '@/components/negotiations/SessionSection.vue'
 import DocumentsSection from '@/components/negotiations/DocumentsSection.vue'
 import EventsAndTrainingsSection from '@/components/negotiations/EventsAndTrainingsSection.vue'
+import CreateSessionModal from '@/components/negotiations/modals/CreateSessionModal.vue'
+import CreateDocumentModal from '@/components/negotiations/modals/CreateDocumentModal.vue'
+import CreateMeetingModal from '@/components/negotiations/modals/CreateMeetingModal.vue'
+import CreateTrainingModal from '@/components/negotiations/modals/CreateTrainingModal.vue'
 
 const { t } = useI18n()
 const route = useRoute()
+const authStore = useAuthStore()
+
+// Auth
+const { isSuperAdmin } = authStore
 
 // Section active (négociations par défaut)
 const activeSection = ref('negotiations')
+
+// Modal states
+const showCreateSession = ref(false)
+const showCreateDocument = ref(false)
+const showCreateMeeting = ref(false)
+const showCreateTraining = ref(false)
 
 // Définition des sections avec leurs icônes
 const sections = [
@@ -173,6 +264,31 @@ const getCategoryLabel = (category) => {
     'climate_finance': 'Finance Climat'
   }
   return labels[category] || 'Climat'
+}
+
+// Event handlers for created items
+const onSessionCreated = (session) => {
+  showCreateSession.value = false
+  // Optionally refresh the session section or show success message
+  console.log('Session created:', session)
+}
+
+const onDocumentCreated = (document) => {
+  showCreateDocument.value = false
+  // Optionally refresh the documents section or show success message
+  console.log('Document created:', document)
+}
+
+const onMeetingCreated = (meeting) => {
+  showCreateMeeting.value = false
+  // Optionally refresh the meetings section or show success message
+  console.log('Meeting created:', meeting)
+}
+
+const onTrainingCreated = (training) => {
+  showCreateTraining.value = false
+  // Optionally refresh the trainings section or show success message
+  console.log('Training created:', training)
 }
 
 onMounted(() => {

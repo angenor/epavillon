@@ -66,6 +66,19 @@
     "refreshError": "Erreur lors de l'actualisation",
     "optional": "optionnel",
     "create": "Créer",
+    "creating": "Création...",
+    "title": "Titre",
+    "description": "Description",
+    "date": "Date",
+    "time": "Heure",
+    "duration": "Durée",
+    "minutes": "minutes",
+    "location": "Lieu",
+    "status": "Statut",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "hours": "heures",
+    "currency": "USD",
     "saving": "Enregistrement...",
     "saveSuccess": "Enregistrement effectué avec succès",
     "saveError": "Erreur lors de l'enregistrement",
@@ -339,5 +352,16 @@
       "submit": "Créer l'événement",
       "submitting": "Création en cours..."
     }
+  },
+  "status": {
+    "draft": "Brouillon",
+    "published": "Publié",
+    "active": "Actif",
+    "completed": "Terminé",
+    "archived": "Archivé",
+    "registrationOpen": "Inscriptions ouvertes",
+    "registrationClosed": "Inscriptions fermées",
+    "cancelled": "Annulé",
+    "inProgress": "En cours"
   }
 }
