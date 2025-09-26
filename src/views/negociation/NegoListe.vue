@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-white dark:bg-gray-900">
     <!-- Header avec titre -->
-    <div class="relative bg-gradient-to-r from-orange-600 to-orange-700 dark:from-orange-700 dark:to-orange-800">
+    <div class="relative bg-gradient-to-r from-orange-600 to-orange-700 dark:from-blue-900 dark:to-orange-900">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h1 class="text-4xl md:text-5xl font-bold text-white text-center">
           {{ t('negotiations.title') }}

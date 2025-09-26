@@ -18,6 +18,11 @@ export const useAuthStore = defineStore('auth', () => {
     const lastName = profile.value.last_name || ''
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
   })
+
+  const isSuperAdmin = computed(() => {
+    if (!profile.value?.user_roles) return false
+    return profile.value.user_roles.some(role => role.role === 'super_admin' && role.is_active)
+  })
   
   // Actions
   const fetchUser = async () => {
@@ -110,6 +115,7 @@ export const useAuthStore = defineStore('auth', () => {
     // Getters
     isAuthenticated,
     userInitials,
+    isSuperAdmin,
     // Actions
     fetchUser,
     fetchProfile,

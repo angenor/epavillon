@@ -218,6 +218,10 @@
                   <font-awesome-icon :icon="['fas', 'th-list']" class="w-4 h-4 mr-3 text-gray-400 group-hover/item:text-ifdd-bleu transition-colors" />
                   {{ t('events.myActivities') }}
                 </router-link>
+                <router-link v-if="authStore.isSuperAdmin" to="/admin" class="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 group/item">
+                  <font-awesome-icon :icon="['fas', 'cogs']" class="w-4 h-4 mr-3 text-gray-400 group-hover/item:text-ifdd-bleu transition-colors" />
+                  {{ t('common.administration') }}
+                </router-link>
                 <router-link to="/profile" class="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 group/item">
                   <font-awesome-icon :icon="['fas', 'user']" class="w-4 h-4 mr-3 text-gray-400 group-hover/item:text-ifdd-bleu transition-colors" />
                   {{ t('common.profile') }}

@@ -31,7 +31,7 @@ const handleCloseSidebar = () => {
     <FooterSection />
     <SideBar :is-open="sidebarOpen" @close="handleCloseSidebar" />
     <ToastContainer />
-    <MaintenanceModal />
+    <!-- <MaintenanceModal /> -->
     <!-- <MessagingSystem /> -->
   </div>
 </template>
