@@ -210,12 +210,6 @@
         "biodiversity": "Biodiversité",
         "desertification": "Désertification"
       },
-      "documentTypes": {
-        "negotiation_guide": "Guide de négociation",
-        "technical_note": "Note technique",
-        "relevant_document": "Document pertinent",
-        "other": "Autre"
-      },
       "sessionTitle": "Titre de la session",
       "documentTitle": "Titre du document",
       "description": "Description",
@@ -231,6 +225,8 @@
       "selectDocumentType": "Sélectionnez un type de document",
       "fileUrl": "URL du fichier",
       "coverImage": "Image de couverture",
+      "uploadCoverImage": "Télécharger une image de couverture",
+      "supportedImageFormats": "JPG, PNG, WEBP jusqu'à 5MB",
       "meetingType": "Type de réunion",
       "selectMeetingType": "Sélectionnez un type de réunion",
       "meetingTypes": {
@@ -243,6 +239,17 @@
     "panel": "Panneau d'administration",
     "createSession": "Créer une session",
     "createDocument": "Créer un document",
+    "documentType": "Type de document",
+    "selectDocumentType": "Sélectionnez un type de document",
+    "coverImage": "Image de couverture",
+    "uploadCoverImage": "Télécharger une image de couverture",
+    "supportedImageFormats": "JPG, PNG, WEBP jusqu'à 5MB",
+    "documentTypes": {
+      "negotiationGuide": "Guide de négociation",
+      "technicalNote": "Note technique",
+      "relevantDocument": "Document pertinent",
+      "other": "Autre"
+    },
     "createMeeting": "Créer une réunion",
     "createTraining": "Créer une formation",
     "sessionTitlePlaceholder": "Ex: Négociation sur le financement climatique",
@@ -251,14 +258,6 @@
     "documentTitlePlaceholder": "Ex: Guide des meilleures pratiques",
     "documentDescriptionPlaceholder": "Décrivez le contenu et l'utilité de ce document...",
     "selectDocumentType": "Sélectionnez un type",
-    "documentTypes": {
-      "guide": "Guide",
-      "template": "Modèle",
-      "bestPractices": "Meilleures pratiques",
-      "caseStudy": "Étude de cas",
-      "research": "Recherche",
-      "policy": "Politique"
-    },
     "documentFile": "Fichier du document",
     "uploadFile": "Télécharger un fichier",
     "orDragAndDrop": "ou glissez-déposez",

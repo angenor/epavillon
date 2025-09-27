@@ -54,13 +54,45 @@
             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white cursor-pointer"
           >
             <option value="">{{ $t('admin.selectDocumentType') }}</option>
-            <option value="guide">{{ $t('admin.documentTypes.guide') }}</option>
-            <option value="template">{{ $t('admin.documentTypes.template') }}</option>
-            <option value="best_practices">{{ $t('admin.documentTypes.bestPractices') }}</option>
-            <option value="case_study">{{ $t('admin.documentTypes.caseStudy') }}</option>
-            <option value="research">{{ $t('admin.documentTypes.research') }}</option>
-            <option value="policy">{{ $t('admin.documentTypes.policy') }}</option>
+            <option value="negotiation_guide">{{ $t('admin.documentTypes.negotiationGuide') }}</option>
+            <option value="technical_note">{{ $t('admin.documentTypes.technicalNote') }}</option>
+            <option value="relevant_document">{{ $t('admin.documentTypes.relevantDocument') }}</option>
+            <option value="other">{{ $t('admin.documentTypes.other') }}</option>
           </select>
+        </div>
+
+        <!-- Cover Image Upload -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            {{ $t('admin.coverImage') }}
+          </label>
+          <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+            <div class="space-y-1 text-center">
+              <font-awesome-icon
+                icon="image"
+                class="mx-auto h-12 w-12 text-gray-400"
+              />
+              <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                <label class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                  <span>{{ $t('admin.uploadCoverImage') }}</span>
+                  <input
+                    @change="handleCoverImageChange"
+                    type="file"
+                    class="sr-only"
+                    accept="image/*"
+                  />
+                </label>
+                <p class="pl-1">{{ $t('admin.orDragAndDrop') }}</p>
+              </div>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                {{ $t('admin.supportedImageFormats') }}
+              </p>
+              <div v-if="selectedCoverImage" class="mt-2 text-sm text-green-600">
+                <font-awesome-icon icon="check" class="mr-1" />
+                {{ selectedCoverImage.name }}
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- File Upload -->
@@ -160,6 +192,7 @@ const authStore = useAuthStore()
 // State
 const loading = ref(false)
 const selectedFile = ref(null)
+const selectedCoverImage = ref(null)
 const form = reactive({
   title: '',
   description: '',
@@ -172,6 +205,13 @@ const handleFileChange = (event) => {
   const file = event.target.files[0]
   if (file) {
     selectedFile.value = file
+  }
+}
+
+const handleCoverImageChange = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    selectedCoverImage.value = file
   }
 }
 
@@ -198,15 +238,44 @@ const uploadFile = async (file) => {
   return urlData.publicUrl
 }
 
+const uploadCoverImage = async (file) => {
+  // Clean filename: remove special characters, spaces, and normalize
+  const cleanName = file.name
+    .toLowerCase()
+    .replace(/[^a-z0-9.-]/g, '_') // Replace special chars with underscore
+    .replace(/_+/g, '_') // Replace multiple underscores with single
+    .replace(/^_|_$/g, '') // Remove leading/trailing underscores
+
+  const fileName = `doc_nego_covers/${Date.now()}_${cleanName}`
+  const { data, error } = await storage
+    .from('epavillonp')
+    .upload(fileName, file)
+
+  if (error) throw error
+
+  // Get public URL
+  const { data: urlData } = storage
+    .from('epavillonp')
+    .getPublicUrl(fileName)
+
+  return urlData.publicUrl
+}
+
 const handleSubmit = async () => {
   try {
     loading.value = true
 
     let fileUrl = form.url
+    let coverImageUrl = null
 
     // Upload file if selected
     if (selectedFile.value) {
       fileUrl = await uploadFile(selectedFile.value)
+    }
+
+    // Upload cover image if selected
+    if (selectedCoverImage.value) {
+      coverImageUrl = await uploadCoverImage(selectedCoverImage.value)
     }
 
     // Validate that we have a file URL
@@ -221,23 +290,22 @@ const handleSubmit = async () => {
       'desertification': 'desertification'
     }
 
-    // Map document type to database enum values
-    const documentTypeMapping = {
-      'guide': 'negotiation_guide',
-      'template': 'relevant_document',
-      'bestPractices': 'relevant_document',
-      'caseStudy': 'relevant_document',
-      'research': 'technical_note',
-      'policy': 'relevant_document'
+    // Form already uses correct enum values for document_type
+    // Validate document_type is correct enum value
+    const validDocumentTypes = ['negotiation_guide', 'technical_note', 'relevant_document', 'other']
+    if (!validDocumentTypes.includes(form.document_type)) {
+      throw new Error('Type de document invalide')
     }
 
     const documentData = {
       title: form.title,
       description: form.description || null,
       category: categoryMapping[props.category] || 'climate',
-      document_type: documentTypeMapping[form.document_type] || 'other',
+      document_type: form.document_type,
       file_url: fileUrl,
-      uploaded_by: authStore.user?.id || null
+      cover_image_url: coverImageUrl,
+      uploaded_by: authStore.user?.id || null,
+      is_migrate: false // Nouveau document, pas une migration
     }
 
     console.log('Attempting to create document with data:', documentData)

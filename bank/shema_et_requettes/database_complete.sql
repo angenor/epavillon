@@ -483,6 +483,9 @@ CREATE TABLE public.negotiation_documents (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- pouvoir ajouter negotiation_documents en vavorie
+
+
 -- =============================================
 -- 6. SYSTÈME DE RÉSEAUTAGE ET MESSAGERIE
 -- =============================================

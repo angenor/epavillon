@@ -40,7 +40,7 @@
         <nav class="flex" aria-label="Breadcrumb">
           <ol class="inline-flex items-center space-x-1 md:space-x-3">
             <li class="inline-flex items-center">
-              <router-link to="/" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+              <router-link to="/" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:underline">
                 {{ $t('common.home') }}
               </router-link>
             </li>
@@ -49,7 +49,9 @@
                 <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <span class="ml-1 text-gray-500 dark:text-gray-400">{{ $t('nav.negotiations') }}</span>
+                <router-link to="/nego">
+                  <span class="ml-1 text-gray-500 dark:text-gray-400 hover:underline">{{ $t('nav.negotiations') }}</span>
+                </router-link>
               </div>
             </li>
             <li v-if="currentCategory">

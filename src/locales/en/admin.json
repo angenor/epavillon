@@ -167,12 +167,6 @@
         "biodiversity": "Biodiversity",
         "desertification": "Desertification"
       },
-      "documentTypes": {
-        "negotiation_guide": "Negotiation guide",
-        "technical_note": "Technical note",
-        "relevant_document": "Relevant document",
-        "other": "Other"
-      },
       "sessionTitle": "Session title",
       "documentTitle": "Document title",
       "description": "Description",
@@ -188,6 +182,8 @@
       "selectDocumentType": "Select a document type",
       "fileUrl": "File URL",
       "coverImage": "Cover image",
+      "uploadCoverImage": "Upload cover image",
+      "supportedImageFormats": "JPG, PNG, WEBP up to 5MB",
       "meetingType": "Meeting type",
       "selectMeetingType": "Select a meeting type",
       "meetingTypes": {
@@ -200,6 +196,17 @@
     "panel": "Administration panel",
     "createSession": "Create session",
     "createDocument": "Create document",
+    "documentType": "Document type",
+    "selectDocumentType": "Select a document type",
+    "coverImage": "Cover image",
+    "uploadCoverImage": "Upload cover image",
+    "supportedImageFormats": "JPG, PNG, WEBP up to 5MB",
+    "documentTypes": {
+      "negotiationGuide": "Negotiation guide",
+      "technicalNote": "Technical note",
+      "relevantDocument": "Relevant document",
+      "other": "Other"
+    },
     "createMeeting": "Create meeting",
     "createTraining": "Create training",
     "sessionTitlePlaceholder": "Ex: Climate finance negotiation",
@@ -208,14 +215,6 @@
     "documentTitlePlaceholder": "Ex: Best practices guide",
     "documentDescriptionPlaceholder": "Describe the content and usefulness of this document...",
     "selectDocumentType": "Select a type",
-    "documentTypes": {
-      "guide": "Guide",
-      "template": "Template",
-      "bestPractices": "Best practices",
-      "caseStudy": "Case study",
-      "research": "Research",
-      "policy": "Policy"
-    },
     "documentFile": "Document file",
     "uploadFile": "Upload file",
     "orDragAndDrop": "or drag and drop",
