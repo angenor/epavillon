@@ -7,7 +7,7 @@
       <p class="text-gray-600 dark:text-gray-400 mt-1 text-sm">
         {{ $t('negotiations.documents.subtitle') }}
       </p>
-      
+
       <!-- Search Bar -->
       <div class="mt-4">
         <div class="relative">
@@ -36,7 +36,7 @@
             {{ $t(type.label) }}
           </option>
         </select>
-        
+
         <select
           v-model="sortBy"
           class="text-xs border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -61,7 +61,7 @@
         :class="{
           'grid-cols-1': filteredDocuments.length === 1,
           'grid-cols-1 sm:grid-cols-2': filteredDocuments.length === 2,
-          'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3': filteredDocuments.length >= 3
+          'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4': filteredDocuments.length >= 3
         }"
       >
         <div
@@ -77,6 +77,7 @@
             @view="handleViewDocument"
             @download="handleDownloadDocument"
             @favorite="handleToggleFavorite"
+            @view-details="handleViewDetails"
           />
         </div>
       </div>
@@ -111,6 +112,17 @@
         </button>
       </div>
     </div>
+
+    <!-- Document Modal -->
+    <DocumentModal
+      v-if="showModal && selectedDocument"
+      :document="selectedDocument"
+      @close="closeModal"
+      @view="handleViewDocument"
+      @download="handleDownloadDocument"
+      @favorite="handleToggleFavorite"
+      @share="handleShareDocument"
+    />
   </div>
 </template>
 
@@ -118,6 +130,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import DocumentCard from './DocumentCard.vue'
+import DocumentModal from './modals/DocumentModal.vue'
 import { useNegotiationDocuments } from '@/composables/useNegotiationDocuments'
 import { useToast } from '@/composables/useToast'
 
@@ -131,12 +144,12 @@ const props = defineProps({
 
 const { t } = useI18n()
 const { showToast } = useToast()
-const { 
-  documents, 
-  loading, 
-  loadingMore, 
-  hasMore, 
-  fetchDocuments, 
+const {
+  documents,
+  loading,
+  loadingMore,
+  hasMore,
+  fetchDocuments,
   loadMoreDocuments,
   viewDocument,
   downloadDocument,
@@ -146,6 +159,10 @@ const {
 const searchQuery = ref('')
 const selectedType = ref('all')
 const sortBy = ref('recent')
+
+// Modal state
+const showModal = ref(false)
+const selectedDocument = ref(null)
 
 const documentTypes = [
   { value: 'negotiation_guide', label: 'negotiations.documents.types.negotiationGuide' },
@@ -162,14 +179,14 @@ const categoryMap = {
 }
 
 const filteredDocuments = computed(() => {
-  let filtered = documents.value.filter(doc => 
+  let filtered = documents.value.filter(doc =>
     doc.category === categoryMap[props.category]
   )
 
   // Filter by search query
   if (searchQuery.value.trim()) {
     const query = searchQuery.value.toLowerCase()
-    filtered = filtered.filter(doc => 
+    filtered = filtered.filter(doc =>
       doc.title.toLowerCase().includes(query) ||
       (doc.description && doc.description.toLowerCase().includes(query))
     )
@@ -231,6 +248,76 @@ const loadMore = async () => {
   } catch (error) {
     showToast(t('negotiations.documents.loadMoreError'), 'error')
   }
+}
+
+const handleViewDetails = (documentId) => {
+  const document = documents.value.find(doc => doc.id === documentId)
+  if (document) {
+    selectedDocument.value = document
+    showModal.value = true
+  }
+}
+
+const closeModal = () => {
+  showModal.value = false
+  selectedDocument.value = null
+}
+
+const handleShareDocument = async (documentId) => {
+  const document = documents.value.find(doc => doc.id === documentId)
+  if (!document) return
+
+  const documentUrl = document.file_url || window.location.href
+  const shareData = {
+    title: document.title,
+    text: document.description || 'Document de négociation',
+    url: documentUrl
+  }
+
+  if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+    try {
+      await navigator.share(shareData)
+      showToast(t('negotiations.documents.shared'), 'success')
+    } catch (error) {
+      if (error.name !== 'AbortError') {
+        fallbackShare(documentUrl)
+      }
+    }
+  } else {
+    fallbackShare(documentUrl)
+  }
+}
+
+const fallbackShare = (url) => {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast(t('negotiations.documents.linkCopied'), 'success')
+    }).catch(() => {
+      fallbackCopyToClipboard(url)
+    })
+  } else {
+    fallbackCopyToClipboard(url)
+  }
+}
+
+const fallbackCopyToClipboard = (text) => {
+  const textArea = document.createElement('textarea')
+  textArea.value = text
+  textArea.style.position = 'fixed'
+  textArea.style.left = '-999999px'
+  textArea.style.top = '-999999px'
+  document.body.appendChild(textArea)
+  textArea.focus()
+  textArea.select()
+
+  try {
+    document.execCommand('copy')
+    showToast(t('negotiations.documents.linkCopied'), 'success')
+  } catch (error) {
+    showToast(t('negotiations.documents.shareError'), 'error')
+  }
+
+  document.body.removeChild(textArea)
 }
 
 // Watch for category changes

@@ -1,7 +1,10 @@
 <template>
   <div class="bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 overflow-hidden hover:shadow-md transition-shadow duration-200">
     <!-- Document Image/Icon -->
-    <div class="relative aspect-[9/16] bg-gradient-to-br from-blue-500 to-blue-600">
+    <div
+      class="relative aspect-[9/16] bg-gradient-to-br from-blue-500 to-blue-600 cursor-pointer"
+      @click="$emit('view-details', document.id)"
+    >
       <img
         v-if="document.cover_image_url"
         :src="document.cover_image_url"
@@ -49,7 +52,10 @@
     <!-- Document Content -->
     <div class="p-4">
       <!-- Title -->
-      <h3 class="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+      <h3
+        class="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+        @click="$emit('view-details', document.id)"
+      >
         {{ document.title }}
       </h3>
 
@@ -131,7 +137,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['view', 'download', 'favorite'])
+const emit = defineEmits(['view', 'download', 'favorite', 'view-details'])
 
 const { t, locale } = useI18n()
 
