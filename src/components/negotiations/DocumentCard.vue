@@ -1,7 +1,7 @@
 <template>
   <div class="bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 overflow-hidden hover:shadow-md transition-shadow duration-200">
     <!-- Document Image/Icon -->
-    <div class="relative h-32 bg-gradient-to-br from-blue-500 to-blue-600">
+    <div class="relative aspect-[9/16] bg-gradient-to-br from-blue-500 to-blue-600">
       <img
         v-if="document.cover_image_url"
         :src="document.cover_image_url"
