@@ -450,7 +450,7 @@ CREATE TABLE public.francophonie_meetings (
     end_datetime TIMESTAMPTZ NOT NULL,
     location TEXT,
     country_id UUID REFERENCES public.countries(id) NOT NULL,
-    category session_category NOT NULL,
+    category session_category_v2 NOT NULL,
     meeting_type meeting_type NOT NULL,
     zoom_meeting_id UUID REFERENCES public.zoom_meetings(id),
     created_by UUID REFERENCES public.users(id),
@@ -474,7 +474,7 @@ CREATE TABLE public.negotiation_documents (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     title TEXT NOT NULL,
     document_type document_type NOT NULL,
-    category session_category NOT NULL,
+    category session_category_v2 NOT NULL,
     is_migrate BOOLEAN, -- est TRUE lorsque la donnée provient d'une migration
     description TEXT,
     cover_image_url TEXT,
