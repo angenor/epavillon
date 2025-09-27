@@ -1,0 +1,1 @@
+`id`, `nego_reunion_id`, `titre`, `description`, `couvertureUrl`, `docUrl`, `type`(correspond à la catégorie dans la nouvelle plateforme), `categorie`(correspond au type dans la nouvelle plateforme), `created_at`, `updated_at`

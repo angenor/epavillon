@@ -475,6 +475,7 @@ CREATE TABLE public.negotiation_documents (
     title TEXT NOT NULL,
     document_type document_type NOT NULL,
     category session_category NOT NULL,
+    is_migrate BOOLEAN, -- est TRUE lorsque la donnée provient d'une migration
     description TEXT,
     cover_image_url TEXT,
     file_url TEXT NOT NULL,

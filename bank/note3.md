@@ -1,40 +1,19 @@
-Error creating document:
-Object {  }
-CreateDocumentModal.vue:259:13
-    handleSubmit CreateDocumentModal.vue:259
-    cacheKey runtime-dom.esm-bundler.js:1712
-    callWithErrorHandling runtime-core.esm-bundler.js:199
-    callWithAsyncErrorHandling runtime-core.esm-bundler.js:206
-    invoker runtime-dom.esm-bundler.js:729
-    (Asynchrone : EventListener.handleEvent)
-    addEventListener runtime-dom.esm-bundler.js:680
-    patchEvent runtime-dom.esm-bundler.js:698
-    patchProp runtime-dom.esm-bundler.js:775
-    mountElement runtime-core.esm-bundler.js:4900
-    processElement runtime-core.esm-bundler.js:4847
-    patch runtime-core.esm-bundler.js:4715
-    mountChildren runtime-core.esm-bundler.js:4959
-    mountElement runtime-core.esm-bundler.js:4882
-    processElement runtime-core.esm-bundler.js:4847
-    patch runtime-core.esm-bundler.js:4715
-    mountChildren runtime-core.esm-bundler.js:4959
-    mountElement runtime-core.esm-bundler.js:4882
-    processElement runtime-core.esm-bundler.js:4847
-    patch runtime-core.esm-bundler.js:4715
-    componentUpdateFn runtime-core.esm-bundler.js:5353
-    run reactivity.esm-bundler.js:237
-    setupRenderEffect runtime-core.esm-bundler.js:5481
-    mountComponent runtime-core.esm-bundler.js:5256
-    processComponent runtime-core.esm-bundler.js:5209
-    patch runtime-core.esm-bundler.js:4727
-    patchBlockChildren runtime-core.esm-bundler.js:5081
-    patchElement runtime-core.esm-bundler.js:4999
-    processElement runtime-core.esm-bundler.js:4858
-    patch runtime-core.esm-bundler.js:4715
-    componentUpdateFn runtime-core.esm-bundler.js:5433
-    run reactivity.esm-bundler.js:237
-    runIfDirty reactivity.esm-bundler.js:275
-    callWithErrorHandling runtime-core.esm-bundler.js:199
-    flushJobs runtime-core.esm-bundler.js:408
-    (Asynchrone : promise callback)
-    queueFlush runtime-core.esm-bundler.js:322
+l'ancienne structure de ma base de donnée est @migration/ancienne_plateforme/old_doc.md les données peuvent fetcher via api à l'adress https://epavillonclimatique.francophonie.org/api/getdocs je veux faire une migration vers la nouvelle plateforme dont la struction du document est:
+
+CREATE TABLE public.negotiation_documents (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    title TEXT NOT NULL,
+    document_type document_type NOT NULL,
+    category session_category NOT NULL,
+    is_migrate BOOLEAN,
+    description TEXT,
+    cover_image_url TEXT,
+    file_url TEXT NOT NULL,
+    uploaded_by UUID REFERENCES public.users(id),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+NB: categorie et type on été inversé
+
+je veux que tu crees une interface pour effectuer la migration, elle sera effectué au nom de l'utilisateur authentifié(uploaded_by), la migration démarre lorsqu'on clique sur un bouton. les données pdf, image de coverture reste sur l'ancien serveur(base url: https://epavillonclimatique.francophonie.org/).
+Je veux pouvoir revenir en arrière en cas de mauvaise migration.
