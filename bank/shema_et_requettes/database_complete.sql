@@ -56,6 +56,7 @@ CREATE TABLE public.users (
     suspended_until TIMESTAMPTZ,
     suspension_reason TEXT,
     is_migrate BOOLEAN, -- est TRUE lorsque la donnée provient d'une migration
+    laravel_user_id BIGINT UNIQUE -- id dans l'ancienne plateforme Laravel
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
