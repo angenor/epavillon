@@ -1,5 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-20 px-4 sm:px-6 lg:px-8">
+    <!-- Browser Recommendation -->
+    <BrowserRecommendation />
     <div class="max-w-7xl mx-auto">
       <!-- Loading State -->
       <div v-if="loading" class="animate-pulse space-y-4">
@@ -166,6 +168,7 @@ import ActivityTagsSection from '@/components/activity/ActivityTagsSection.vue'
 import AddSpeakerModal from '@/components/activity/AddSpeakerModal.vue'
 import AddDocumentModal from '@/components/activity/AddDocumentModal.vue'
 import SpeakerPhotoModal from '@/components/activity/SpeakerPhotoModal.vue'
+import BrowserRecommendation from '@/components/BrowserRecommendation.vue'
 
 
 const { t, locale } = useI18n()

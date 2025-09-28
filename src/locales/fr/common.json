@@ -135,6 +135,10 @@
       "mecanismes_de_cooperation": "Mécanismes de coopération",
       "bilan_mondial": "Bilan mondial",
       "droits_de_l_homme_et_climat": "Droits de l'homme et climat"
+    },
+    "browserRecommendation": {
+      "title": "Recommandation de navigateur",
+      "message": "Pour une expérience optimale, nous recommandons d'utiliser Google Chrome ou Mozilla Firefox. Certaines fonctionnalités pourraient être limitées sur Microsoft Edge en raison de contraintes de compatibilité."
     }
   },
   "community": {

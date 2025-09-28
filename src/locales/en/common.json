@@ -125,6 +125,10 @@
       "mecanismes_de_cooperation": "Cooperation Mechanisms",
       "bilan_mondial": "Global Stocktake",
       "droits_de_l_homme_et_climat": "Human Rights and Climate"
+    },
+    "browserRecommendation": {
+      "title": "Browser Recommendation",
+      "message": "For an optimal experience, we recommend using Google Chrome or Mozilla Firefox. Some features may be limited on Microsoft Edge due to compatibility constraints."
     }
   },
   "community": {
