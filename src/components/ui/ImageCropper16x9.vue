@@ -56,6 +56,7 @@
             :src="selectedImage"
             alt="Image à recadrer"
             class="max-w-full h-auto block border-2 border-gray-300"
+            crossorigin="anonymous"
             @load="onImageLoad"
             @error="onImageError"
           >
@@ -519,20 +520,33 @@ const confirmCrop = async () => {
     const sourceWidth = cropArea.value.width * scaleX
     const sourceHeight = cropArea.value.height * scaleY
 
-    ctx.drawImage(
-      img,
-      sourceX, sourceY, sourceWidth, sourceHeight,
-      0, 0, finalWidth, finalHeight
-    )
+    try {
+      ctx.drawImage(
+        img,
+        sourceX, sourceY, sourceWidth, sourceHeight,
+        0, 0, finalWidth, finalHeight
+      )
 
-    // Convertir en blob
-    canvas.toBlob((blob) => {
-      const croppedImageUrl = URL.createObjectURL(blob)
-      selectedImage.value = croppedImageUrl
-      showCropper.value = false
-      emit('imageProcessed', blob)
-      processing.value = false
-    }, 'image/jpeg', 0.9)
+      // Convertir en blob
+      canvas.toBlob((blob) => {
+        const croppedImageUrl = URL.createObjectURL(blob)
+        selectedImage.value = croppedImageUrl
+        showCropper.value = false
+        emit('imageProcessed', blob)
+        processing.value = false
+      }, 'image/jpeg', 0.9)
+    } catch (corsError) {
+      console.error('CORS error in confirmCrop:', corsError)
+      // Fallback : si erreur CORS, émettre le fichier original
+      if (originalFile.value) {
+        console.log('Utilisation du fichier original suite à une erreur CORS dans confirmCrop')
+        showCropper.value = false
+        emit('imageProcessed', originalFile.value)
+        processing.value = false
+      } else {
+        throw corsError
+      }
+    }
 
   } catch (error) {
     console.error('Error processing image:', error)
@@ -566,6 +580,10 @@ const finalizeImage = () => {
 
   // Créer un nouvel élément Image pour charger l'image depuis selectedImage
   const img = new Image()
+
+  // Ajouter l'attribut crossOrigin pour permettre l'utilisation avec canvas
+  img.crossOrigin = 'anonymous'
+
   img.onload = () => {
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
@@ -586,11 +604,21 @@ const finalizeImage = () => {
       }, 'image/jpeg', 0.9)
     } catch (error) {
       console.error('Error drawing image on canvas:', error)
+      // Fallback: Si l'erreur CORS persiste, émettre le fichier original s'il existe
+      if (originalFile.value) {
+        console.log('Erreur CORS détectée, émission du fichier original')
+        emit('imageProcessed', originalFile.value)
+      }
     }
   }
 
   img.onerror = () => {
     console.error('Failed to load image for finalization')
+    // Fallback: émettre le fichier original en cas d'erreur de chargement
+    if (originalFile.value) {
+      console.log('Erreur de chargement, émission du fichier original')
+      emit('imageProcessed', originalFile.value)
+    }
   }
 
   img.src = selectedImage.value
