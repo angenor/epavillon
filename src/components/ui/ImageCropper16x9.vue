@@ -557,32 +557,24 @@ const selectNewImage = () => {
 }
 
 const finalizeImage = () => {
-  // Si l'image est déjà au bon ratio
-  if (isCorrectRatio.value) {
-    const img = originalImage.value
+  // Si le fichier original fait moins de 160KB, l'émettre directement pour préserver la taille
+  if (originalFile.value && (originalFile.value.size / 1024) <= 160) {
+    console.log(`Image originale (${Math.round(originalFile.value.size / 1024)}KB) émise directement sans recompression`)
+    emit('imageProcessed', originalFile.value)
+    return
+  }
 
-    // Vérifier que l'élément image existe et est valide
-    if (!img || !(img instanceof HTMLImageElement) || !img.complete || img.naturalWidth === 0) {
-      console.error('Invalid or unloaded image element')
-      return
-    }
-
-    // Si le fichier original fait moins de 160KB, l'émettre directement pour préserver la taille
-    if (originalFile.value && (originalFile.value.size / 1024) <= 160) {
-      console.log(`Image originale (${Math.round(originalFile.value.size / 1024)}KB) émise directement sans recompression`)
-      emit('imageProcessed', originalFile.value)
-      return
-    }
-
-    // Sinon, convertir l'image en blob pour l'upload
+  // Créer un nouvel élément Image pour charger l'image depuis selectedImage
+  const img = new Image()
+  img.onload = () => {
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
 
-    canvas.width = imageWidth.value
-    canvas.height = imageHeight.value
+    canvas.width = img.naturalWidth
+    canvas.height = img.naturalHeight
 
     try {
-      ctx.drawImage(img, 0, 0, imageWidth.value, imageHeight.value)
+      ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight)
 
       canvas.toBlob((blob) => {
         if (blob) {
@@ -596,5 +588,11 @@ const finalizeImage = () => {
       console.error('Error drawing image on canvas:', error)
     }
   }
+
+  img.onerror = () => {
+    console.error('Failed to load image for finalization')
+  }
+
+  img.src = selectedImage.value
 }
 </script>
