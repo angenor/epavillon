@@ -169,14 +169,14 @@
       <div class="flex justify-end space-x-3">
         <button
           @click="selectNewImage"
-          class="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors"
+          class=" cursor-pointer px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors"
         >
           {{ t('events.selectOtherImage') }}
         </button>
         <button
           @click="finalizeImage"
           :disabled="processing"
-          class="px-4 py-2 bg-ifdd-bleu text-white rounded-lg hover:bg-ifdd-bleu-fonce disabled:opacity-50 transition-colors"
+          class="cursor-pointer px-4 py-2 bg-ifdd-bleu text-white rounded-lg hover:bg-ifdd-bleu-fonce disabled:opacity-50 transition-colors"
         >
           <font-awesome-icon v-if="processing" :icon="['fas', 'spinner']" class="animate-spin mr-2" />
           {{ t('events.useThisImage') }}
