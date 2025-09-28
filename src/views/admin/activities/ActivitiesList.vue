@@ -387,6 +387,7 @@ import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
 import { useAuth } from '@/composables/useAuth'
+import * as XLSX from 'xlsx'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -654,9 +655,72 @@ const closeValidationModal = () => {
   validationReason.value = ''
 }
 
-const exportActivities = () => {
-  // TODO: Implémenter l'export
-  console.log('Export des activités')
+const exportActivities = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('activities')
+      .select(`
+        *,
+        organization:organizations(
+          id,
+          name,
+          email,
+          organization_type,
+          country:countries(name_fr, name_en)
+        ),
+        event:events(id, title, year),
+        submitter:users!activities_submitted_by_fkey(
+          id,
+          email,
+          first_name,
+          last_name,
+          phone,
+          country:countries(name_fr, name_en)
+        )
+      `)
+      .eq('is_deleted', false)
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+
+    const exportData = data.map(activity => ({
+      'ID': activity.id,
+      'Titre': activity.title,
+      'Type': activity.activity_type,
+      'Format': activity.format,
+      'Statut': getStatusText(activity.validation_status),
+      'Thématiques': activity.main_themes?.join(', ') || '',
+      'Catégories': activity.categories?.join(', ') || '',
+      'Organisation': activity.organization?.name || '',
+      'Type d\'organisation': activity.organization?.organization_type || '',
+      'Pays organisation': activity.organization?.country?.name_fr || '',
+      'Email organisation': activity.organization?.email || '',
+      'Soumis par - Prénom': activity.submitter?.first_name || '',
+      'Soumis par - Nom': activity.submitter?.last_name || '',
+      'Soumis par - Email': activity.submitter?.email || '',
+      'Soumis par - Téléphone': activity.submitter?.phone || '',
+      'Soumis par - Pays': activity.submitter?.country?.name_fr || '',
+      'Événement': activity.event?.title || '',
+      'Année événement': activity.event?.year || '',
+      'Date de début proposée': activity.proposed_start_date ? new Date(activity.proposed_start_date).toLocaleString('fr-FR') : '',
+      'Date de fin proposée': activity.proposed_end_date ? new Date(activity.proposed_end_date).toLocaleString('fr-FR') : '',
+      'Date de début finale': activity.final_start_date ? new Date(activity.final_start_date).toLocaleString('fr-FR') : '',
+      'Date de fin finale': activity.final_end_date ? new Date(activity.final_end_date).toLocaleString('fr-FR') : '',
+      'Date de soumission': new Date(activity.created_at).toLocaleString('fr-FR'),
+      'Dernière mise à jour': new Date(activity.updated_at).toLocaleString('fr-FR')
+    }))
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Activités')
+
+    const date = new Date().toISOString().split('T')[0]
+    const filename = `activites_export_${date}.xlsx`
+
+    XLSX.writeFile(workbook, filename)
+  } catch (error) {
+    console.error('Erreur lors de l\'export des activités:', error)
+  }
 }
 
 const goToPage = (page) => {

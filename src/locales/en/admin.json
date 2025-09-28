@@ -281,6 +281,55 @@
     "accessUrl": "Access URL",
     "accessUrlPlaceholder": "https://moodle.example.com/course/123",
     "other": "Other",
+    "activities": {
+      "title": "Activity Validation",
+      "subtitle": "Management and validation of activity proposals",
+      "export": "Export",
+      "searchPlaceholder": "Search by title, organization or event...",
+      "allEvents": "All events",
+      "allThemes": "All themes",
+      "loading": "Loading activities...",
+      "noActivities": "No activities found",
+      "activity": "Activity",
+      "organization": "Organization",
+      "event": "Event",
+      "status": "Status",
+      "submittedAt": "Submitted on",
+      "actions": "Actions",
+      "view": "View",
+      "approve": "Approve",
+      "reject": "Reject",
+      "confirmApproval": "Confirm approval",
+      "confirmRejection": "Confirm rejection",
+      "rejectionReason": "Rejection reason...",
+      "showing": "Showing",
+      "to": "to",
+      "of": "of",
+      "results": "results",
+      "previous": "Previous",
+      "next": "Next",
+      "stats": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "total": "Total"
+      },
+      "tabs": {
+        "pending": "Pending",
+        "underReview": "Under Review",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "all": "All"
+      },
+      "statuses": {
+        "draft": "Draft",
+        "submitted": "Submitted",
+        "underReview": "Under Review",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled"
+      }
+    },
     "trainings": {
       "title": "Training Management",
       "subtitle": "Administration of trainings and educational programs",
@@ -291,6 +340,48 @@
       "deleteError": "Error deleting training",
       "deleteButton": "Delete permanently",
       "cancel": "Cancel"
+    },
+    "users": {
+      "title": "User Management",
+      "subtitle": "User account and role administration",
+      "export": "Export",
+      "search": "Search",
+      "searchPlaceholder": "Search by name, email or organization...",
+      "role": "Role",
+      "allRoles": "All roles",
+      "status": "Status",
+      "allStatuses": "All statuses",
+      "resetFilters": "Reset filters",
+      "loading": "Loading users...",
+      "noUsers": "No users found",
+      "user": "User",
+      "organization": "Organization",
+      "roles": {
+        "standard": "Standard",
+        "negotiator": "Negotiator",
+        "unfccc_focal_point": "UNFCCC Focal Point",
+        "trainer": "Trainer",
+        "admin": "Administrator",
+        "super_admin": "Super Administrator"
+      },
+      "joinedAt": "Joined",
+      "actions": "Actions",
+      "noOrganization": "No organization",
+      "view": "View",
+      "edit": "Edit",
+      "suspend": "Suspend",
+      "unsuspend": "Unsuspend",
+      "showing": "Showing",
+      "to": "to",
+      "of": "of",
+      "results": "results",
+      "previous": "Previous",
+      "next": "Next",
+      "statuses": {
+        "active": "Active",
+        "blocked": "Blocked",
+        "suspended": "Suspended"
+      }
     }
   }
 }
