@@ -55,6 +55,7 @@ CREATE TABLE public.users (
     suspended_at TIMESTAMPTZ,
     suspended_until TIMESTAMPTZ,
     suspension_reason TEXT,
+    is_migrate BOOLEAN, -- est TRUE lorsque la donnée provient d'une migration
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
