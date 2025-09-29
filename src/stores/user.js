@@ -42,7 +42,6 @@ export const useUserStore = defineStore('user', () => {
       // Vérifier si les rôles sont déjà dans authStore
       const authStore = await import('./auth').then(m => m.useAuthStore())
       if (authStore.profile?.user_roles) {
-        console.log('UserStore - Using roles from authStore:', authStore.profile.user_roles)
         userRoles.value = authStore.profile.user_roles
       } else {
         // Charger les rôles utilisateur depuis la base de données
@@ -52,7 +51,6 @@ export const useUserStore = defineStore('user', () => {
           .eq('user_id', userId)
           .eq('is_active', true)
 
-        console.log('UserStore - Loaded roles from database:', roles)
         userRoles.value = roles || []
       }
 
@@ -112,10 +110,8 @@ export const useUserStore = defineStore('user', () => {
 
       // Gérer l'upload de la photo si nécessaire
       if (profilePhoto) {
-        console.log('Upload de photo détecté, données photo:', profilePhoto) // Debug
         await uploadProfilePhoto(cleanedData.id, profilePhoto)
       } else {
-        console.log('Aucune photo à uploader') // Debug
       }
 
       // Recharger les données
@@ -133,13 +129,10 @@ export const useUserStore = defineStore('user', () => {
 
   const uploadProfilePhoto = async (userId, photoData) => {
     try {
-      console.log('uploadProfilePhoto appelé avec userId:', userId, 'photoData:', photoData) // Debug
       
       // Upload de la photo principale dans le bucket 'epavillonp' dossier 'profil'
       const photoFileName = `profil/${userId}/profile.jpg`
-      console.log('Upload vers:', photoFileName) // Debug
       
-      console.log('Tentative d\'upload, type de fichier:', photoData.processed?.type, 'taille:', photoData.processed?.size) // Debug
       
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('epavillonp')
@@ -148,7 +141,6 @@ export const useUserStore = defineStore('user', () => {
           contentType: photoData.processed?.type || 'image/jpeg'
         })
 
-      console.log('Résultat upload principal:', { uploadData, uploadError }) // Debug
       
       if (uploadError) {
         console.error('Erreur détaillée lors de l\'upload de la photo principale:', uploadError)
@@ -157,7 +149,6 @@ export const useUserStore = defineStore('user', () => {
 
       // Upload de la vignette
       const thumbnailFileName = `profil/${userId}/thumbnail.jpg`
-      console.log('Upload de la vignette vers:', thumbnailFileName) // Debug
       
       const { data: thumbnailData, error: thumbnailError } = await supabase.storage
         .from('epavillonp')
@@ -166,7 +157,6 @@ export const useUserStore = defineStore('user', () => {
           contentType: photoData.thumbnail?.type || 'image/jpeg'
         })
 
-      console.log('Résultat upload vignette:', { thumbnailData, thumbnailError }) // Debug
       
       if (thumbnailError) {
         console.error('Erreur détaillée lors de l\'upload de la vignette:', thumbnailError)
@@ -182,10 +172,6 @@ export const useUserStore = defineStore('user', () => {
         .from('epavillonp')
         .getPublicUrl(thumbnailFileName)
 
-      console.log('URLs générées:', { 
-        photoUrl: photoUrl.publicUrl, 
-        thumbnailUrl: thumbnailUrl.publicUrl 
-      }) // Debug
 
       const { data: updateData, error: updateError } = await supabase
         .from('users')
@@ -197,14 +183,12 @@ export const useUserStore = defineStore('user', () => {
         .select()
         .single()
 
-      console.log('Résultat mise à jour DB:', { updateData, updateError }) // Debug
 
       if (updateError) {
         console.error('Erreur détaillée lors de la mise à jour de la DB:', updateError)
         throw updateError
       }
       
-      console.log('Upload de photo terminé avec succès') // Debug
 
     } catch (err) {
       console.error('Error uploading profile photo:', err)
@@ -275,7 +259,6 @@ export const useUserStore = defineStore('user', () => {
 
   // Setter pour les rôles (pour synchroniser avec authStore)
   const setUserRoles = (roles) => {
-    console.log('UserStore - Setting roles:', roles)
     userRoles.value = roles || []
   }
 

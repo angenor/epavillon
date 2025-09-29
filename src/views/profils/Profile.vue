@@ -341,14 +341,12 @@ const getRoleBadgeClass = (role) => {
   return `${baseClasses} ${roleClasses[role] || roleClasses.standard}`
 }
 
-const handleUserUpdate = (updatedUser) => {
+const handleUserUpdate = () => {
   // Logique de mise à jour locale temporaire
-  console.log('User updated:', updatedUser)
 }
 
 const handleSaveProfile = async (updatedData) => {
   try {
-    console.log('Profile.vue - Sauvegarde avec données:', updatedData) // Debug
 
     await userStore.updateProfile({
       ...updatedData,
@@ -371,7 +369,6 @@ const handleSaveProfile = async (updatedData) => {
 const handleManageBlockedUsers = () => {
   // TODO: Implémenter la gestion des utilisateurs bloqués
   // Cela pourrait ouvrir une modal ou naviguer vers une page dédiée
-  console.log('Manage blocked users - à implémenter plus tard')
 }
 
 // Chargement initial
@@ -382,11 +379,7 @@ onMounted(async () => {
       await authStore.fetchProfile(authStore.user.id)
     }
 
-    // Synchroniser les rôles avec userStore
-    if (authStore.profile?.user_roles) {
-      console.log('Profile.vue - Synchronizing roles:', authStore.profile.user_roles)
-      userStore.setUserRoles(authStore.profile.user_roles)
-    }
+    // Les rôles seront synchronisés automatiquement par loadUserData
 
     await userStore.loadUserData(authStore.user.id)
 

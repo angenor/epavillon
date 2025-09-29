@@ -63,7 +63,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <button
-            @click="$emit('manage-users')"
+            @click="navigateToUsers"
             class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
           >
             <div class="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg mr-3">
@@ -83,7 +83,7 @@
           </button>
 
           <button
-            @click="$emit('manage-organizations')"
+            @click="navigateToOrganizations"
             class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
           >
             <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg mr-3">
@@ -103,7 +103,7 @@
           </button>
 
           <button
-            @click="$emit('view-reports')"
+            @click="navigateToReports"
             class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
           >
             <div class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg mr-3">
@@ -123,7 +123,7 @@
           </button>
 
           <button
-            @click="$emit('manage-content')"
+            @click="navigateToContent"
             class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
           >
             <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg mr-3">
@@ -144,7 +144,7 @@
 
           <button
             v-if="isSuperAdmin"
-            @click="$emit('system-settings')"
+            @click="navigateToSettings"
             class="flex items-center p-3 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
           >
             <div class="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg mr-3">
@@ -165,7 +165,7 @@
 
           <button
             v-if="isSuperAdmin"
-            @click="$emit('manage-roles')"
+            @click="navigateToRoles"
             class="flex items-center p-3 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
           >
             <div class="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg mr-3">
@@ -206,11 +206,14 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { supabase } from '@/composables/useSupabase'
 
 const { t } = useI18n()
+const router = useRouter()
 const userStore = useUserStore()
 
 defineProps({
@@ -220,17 +223,60 @@ defineProps({
   }
 })
 
-defineEmits([
-  'manage-users',
-  'manage-organizations',
-  'view-reports',
-  'manage-content',
-  'system-settings',
-  'manage-roles'
-])
+// Statistiques
+const totalUsers = ref(0)
+const activeEvents = ref(0)
+const activeTrainings = ref(0)
 
 // Vérifier si l'utilisateur est super admin
 const isSuperAdmin = computed(() => {
   return userStore.userRoles.some(r => r.role === 'super_admin' && r.is_active)
+})
+
+// Méthodes de navigation
+const navigateToUsers = () => router.push('/admin/users')
+const navigateToOrganizations = () => router.push('/admin/organizations')
+const navigateToReports = () => router.push('/admin/reports')
+const navigateToContent = () => router.push('/admin/content')
+const navigateToSettings = () => router.push('/admin')
+const navigateToRoles = () => router.push('/admin/roles')
+const navigateToDashboard = () => router.push('/admin')
+
+// Charger les statistiques
+const loadStatistics = async () => {
+  try {
+    // Compter le nombre total d'utilisateurs
+    const { count: usersCount } = await supabase
+      .from('users')
+      .select('*', { count: 'exact', head: true })
+
+    totalUsers.value = usersCount || 0
+
+    // Compter les événements actifs (événements futurs ou en cours)
+    const now = new Date().toISOString()
+    const { count: eventsCount } = await supabase
+      .from('events')
+      .select('*', { count: 'exact', head: true })
+      .gte('end_date', now)
+
+    activeEvents.value = eventsCount || 0
+
+    // Compter les formations actives
+    const { count: trainingsCount } = await supabase
+      .from('trainings')
+      .select('*', { count: 'exact', head: true })
+      .eq('is_active', true)
+      .gte('end_date', now)
+
+    activeTrainings.value = trainingsCount || 0
+
+  } catch (error) {
+    console.error('Erreur lors du chargement des statistiques:', error)
+  }
+}
+
+// Charger les statistiques au montage
+onMounted(() => {
+  loadStatistics()
 })
 </script>
