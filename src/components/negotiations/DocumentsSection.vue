@@ -153,8 +153,7 @@ const {
   fetchDocuments,
   loadMoreDocuments,
   viewDocument,
-  downloadDocument,
-  toggleFavorite
+  downloadDocument
 } = useNegotiationDocuments()
 
 const searchQuery = ref('')
@@ -235,14 +234,20 @@ const handleDownloadDocument = async (documentId) => {
 }
 
 // Get the favorites composable to update the count
-const { fetchFavorites } = useFavorites()
+const { toggleFavorite } = useFavorites()
 
 const handleToggleFavorite = async (documentId) => {
   try {
-    await toggleFavorite(documentId)
+    // Use the favorites composable toggle which updates global state
+    const result = await toggleFavorite(documentId)
+
+    // Update local document state
+    const docIndex = documents.value.findIndex(doc => doc.id === documentId)
+    if (docIndex !== -1) {
+      documents.value[docIndex].is_favorited = result.is_favorited
+    }
+
     showSuccess(t('negotiations.documents.favoriteToggled'))
-    // Refresh favorites count in the Hero Section
-    await fetchFavorites()
   } catch (error) {
     showError(t('negotiations.documents.favoriteError'))
   }

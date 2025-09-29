@@ -1,12 +1,24 @@
 import { ref, computed } from 'vue'
 import { useSupabase } from './useSupabase'
 
+// État global partagé pour les favoris
+const favorites = ref([])
+const loading = ref(false)
+const error = ref(null)
+
+// Nombre total de favoris (calculé globalement)
+const favoritesCount = computed(() => favorites.value.length)
+
+// Filtrer les favoris par catégorie (fonction globale)
+const favoritesByCategory = computed(() => {
+  return (category) => {
+    if (!category || category === 'all') return favorites.value
+    return favorites.value.filter(doc => doc.category === category)
+  }
+})
+
 export function useFavorites() {
   const { from: supabaseFrom, auth, rpc } = useSupabase()
-
-  const favorites = ref([])
-  const loading = ref(false)
-  const error = ref(null)
 
   // Récupérer tous les documents favoris de l'utilisateur
   const fetchFavorites = async () => {
@@ -138,17 +150,6 @@ export function useFavorites() {
       throw err
     }
   }
-
-  // Filtrer les favoris par catégorie
-  const favoritesByCategory = computed(() => {
-    return (category) => {
-      if (!category || category === 'all') return favorites.value
-      return favorites.value.filter(doc => doc.category === category)
-    }
-  })
-
-  // Nombre total de favoris
-  const favoritesCount = computed(() => favorites.value.length)
 
   return {
     favorites,
