@@ -45,7 +45,8 @@ if (!supabaseUrl || !supabaseAnonKey) {
     }),
     storage: {},
     functions: {},
-    realtime: {}
+    realtime: {},
+    rpc: () => Promise.reject(new Error('Supabase not configured'))
   }
 } else {
   supabase = createClient(supabaseUrl, supabaseAnonKey)
@@ -60,6 +61,7 @@ export function useSupabase() {
     from: supabase.from.bind(supabase),
     storage: supabase.storage,
     functions: supabase.functions,
-    realtime: supabase.realtime
+    realtime: supabase.realtime,
+    rpc: supabase.rpc.bind(supabase)
   }
 }

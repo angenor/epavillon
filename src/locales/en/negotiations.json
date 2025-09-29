@@ -81,7 +81,23 @@
       "downloadError": "Download error",
       "favoriteToggled": "Favorite updated",
       "favoriteError": "Error updating favorites",
-      "loadMoreError": "Loading error"
+      "loadMoreError": "Loading error",
+      "shared": "Document shared",
+      "linkCopied": "Link copied to clipboard",
+      "shareError": "Error sharing document"
+    },
+    "favorites": {
+      "myFavorites": "My favorites",
+      "subtitle": "Documents you've added to your favorites",
+      "filterByCategory": "Filter by category",
+      "noFavorites": "No documents in your favorites",
+      "noFavoritesInCategory": "No favorites in this category",
+      "addDocumentsToFavorites": "Add documents to your favorites to easily find them later",
+      "removeFromFavorites": "Remove from favorites",
+      "removedFromFavorites": "Document removed from favorites",
+      "removeError": "Error removing from favorites",
+      "addedOn": "Added on",
+      "documentsInFavorites": "documents in your favorites"
     },
     "francophonieMeetings": {
       "title": "Francophonie meetings",

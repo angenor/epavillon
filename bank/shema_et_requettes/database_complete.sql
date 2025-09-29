@@ -485,7 +485,19 @@ CREATE TABLE public.negotiation_documents (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- pouvoir ajouter negotiation_documents en vavorie
+-- Documents ajoutés aux favoris
+CREATE TABLE public.user_favorite_documents (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+    document_id UUID NOT NULL REFERENCES public.negotiation_documents(id) ON DELETE CASCADE,
+    favorited_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id, document_id)
+);
+
+-- Index pour optimiser les performances des favoris
+CREATE INDEX idx_user_favorite_documents_user_id ON public.user_favorite_documents(user_id);
+CREATE INDEX idx_user_favorite_documents_document_id ON public.user_favorite_documents(document_id);
+CREATE INDEX idx_user_favorite_documents_favorited_at ON public.user_favorite_documents(favorited_at DESC);
 
 
 -- =============================================

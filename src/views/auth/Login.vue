@@ -2,7 +2,7 @@
   <div class="min-h-screen relative flex items-center justify-center px-4 py-12">
     <!-- Image de fond avec repeat -->
     <div
-      class="absolute inset-0 z-0 dark:opacity-20"
+      class="absolute bg-fixed inset-0 z-0 dark:opacity-20"
       :style="{
         backgroundImage: 'url(/images/people-bg/people-bg-1.jpg)',
         backgroundSize: 'auto',
@@ -28,6 +28,20 @@
             {{ t('auth.login.createAccount') }}
           </router-link>
         </p>
+      </div>
+
+      <!-- Message d'information sur la réinitialisation du mot de passe -->
+      <div class="rounded-lg bg-blue-50 dark:bg-blue-900/30 p-4 mt-6">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <font-awesome-icon icon="circle-info" class="h-5 w-5 text-blue-400" />
+          </div>
+          <div class="ml-3">
+            <p class="text-sm text-blue-800 dark:text-blue-300">
+              {{ t('auth.login.passwordResetNotice') }}
+            </p>
+          </div>
+        </div>
       </div>
 
       <!-- Formulaire -->

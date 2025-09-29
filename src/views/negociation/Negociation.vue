@@ -11,9 +11,25 @@
             {{ $t('negotiations.subtitle') }}
           </p>
           <div class="flex flex-col items-center justify-center space-y-4">
-            <span class="px-3 py-1 bg-white/20 rounded-full text-sm">
-              {{ $t('negotiations.accessLevel.negotiatorsOnly') }}
-            </span>
+            <div class="flex items-center gap-4">
+              <span class="px-3 py-1 bg-white/20 rounded-full text-sm">
+                {{ $t('negotiations.accessLevel.negotiatorsOnly') }}
+              </span>
+
+              <!-- Favoris Button -->
+              <button
+                @click="showFavoritesModal = true"
+                class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-full text-sm font-medium transition-colors duration-200 cursor-pointer"
+              >
+                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                <span>{{ $t('negotiations.favorites.myFavorites') }}</span>
+                <span v-if="favoritesCount > 0" class="bg-white/30 px-2 py-0.5 rounded-full text-xs">
+                  {{ favoritesCount }}
+                </span>
+              </button>
+            </div>
 
             <!-- Liens vers les autres catégories -->
             <div class="flex items-center justify-center space-x-4 mt-4">
@@ -189,6 +205,11 @@
       @close="showCreateTraining = false"
       @created="onTrainingCreated"
     />
+
+    <!-- Favorites Modal -->
+    <FavoritesModal
+      v-model="showFavoritesModal"
+    />
   </div>
 </template>
 
@@ -204,6 +225,8 @@ import CreateSessionModal from '@/components/negotiations/modals/CreateSessionMo
 import CreateDocumentModal from '@/components/negotiations/modals/CreateDocumentModal.vue'
 import CreateMeetingModal from '@/components/negotiations/modals/CreateMeetingModal.vue'
 import CreateTrainingModal from '@/components/negotiations/modals/CreateTrainingModal.vue'
+import FavoritesModal from '@/components/negotiations/modals/FavoritesModal.vue'
+import { useFavorites } from '@/composables/useFavorites'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -220,6 +243,10 @@ const showCreateSession = ref(false)
 const showCreateDocument = ref(false)
 const showCreateMeeting = ref(false)
 const showCreateTraining = ref(false)
+const showFavoritesModal = ref(false)
+
+// Favorites composable
+const { favorites, fetchFavorites, favoritesCount } = useFavorites()
 
 // Définition des sections avec leurs icônes
 const sections = [
@@ -293,8 +320,11 @@ const onTrainingCreated = (training) => {
   console.log('Training created:', training)
 }
 
-onMounted(() => {
+onMounted(async () => {
   // Set document title
   document.title = `${t('nav.negotiations')} - ${getCategoryLabel(currentCategory.value)} | ePavilion`
+
+  // Fetch user's favorites
+  await fetchFavorites()
 })
 </script>

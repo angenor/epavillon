@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { useSupabase } from './useSupabase'
 
 export function useNegotiationDocuments() {
-  const { from: supabaseFrom, auth } = useSupabase()
+  const { from: supabaseFrom, auth, rpc } = useSupabase()
   
   const documents = ref([])
   const loading = ref(false)
@@ -44,7 +44,7 @@ export function useNegotiationDocuments() {
       let userFavorites = []
 
       if (userData?.user) {
-        const { data: favorites } = await supabaseFrom('document_favorites')
+        const { data: favorites } = await supabaseFrom('user_favorite_documents')
           .select('document_id')
           .eq('user_id', userData.user.id)
 
@@ -146,34 +146,20 @@ export function useNegotiationDocuments() {
     if (!userData?.user) throw new Error('User not authenticated')
 
     try {
+      // Use the RPC function to toggle favorite
+      const { data, error: toggleError } = await rpc('toggle_document_favorite', {
+        p_document_id: documentId
+      })
+
+      if (toggleError) throw toggleError
+
+      // Update local state
       const documentIndex = documents.value.findIndex(doc => doc.id === documentId)
-      if (documentIndex === -1) return
-
-      const doc = documents.value[documentIndex]
-      const isFavorited = doc.is_favorited
-
-      if (isFavorited) {
-        // Remove from favorites
-        const { error: removeError } = await supabaseFrom('document_favorites')
-          .delete()
-          .eq('document_id', documentId)
-          .eq('user_id', userData.user.id)
-
-        if (removeError) throw removeError
-
-        documents.value[documentIndex].is_favorited = false
-      } else {
-        // Add to favorites
-        const { error: addError } = await supabaseFrom('document_favorites')
-          .insert({
-            document_id: documentId,
-            user_id: userData.user.id
-          })
-
-        if (addError) throw addError
-
-        documents.value[documentIndex].is_favorited = true
+      if (documentIndex !== -1) {
+        documents.value[documentIndex].is_favorited = data.is_favorited
       }
+
+      return data
 
     } catch (err) {
       console.error('Error toggling favorite:', err)

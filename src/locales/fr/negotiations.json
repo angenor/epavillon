@@ -81,7 +81,23 @@
       "downloadError": "Erreur lors du téléchargement",
       "favoriteToggled": "Favori mis à jour",
       "favoriteError": "Erreur lors de la mise à jour des favoris",
-      "loadMoreError": "Erreur lors du chargement"
+      "loadMoreError": "Erreur lors du chargement",
+      "shared": "Document partagé",
+      "linkCopied": "Lien copié dans le presse-papiers",
+      "shareError": "Erreur lors du partage"
+    },
+    "favorites": {
+      "myFavorites": "Mes favoris",
+      "subtitle": "Documents que vous avez ajoutés à vos favoris",
+      "filterByCategory": "Filtrer par catégorie",
+      "noFavorites": "Aucun document dans vos favoris",
+      "noFavoritesInCategory": "Aucun favori dans cette catégorie",
+      "addDocumentsToFavorites": "Ajoutez des documents à vos favoris pour les retrouver facilement",
+      "removeFromFavorites": "Retirer des favoris",
+      "removedFromFavorites": "Document retiré des favoris",
+      "removeError": "Erreur lors du retrait des favoris",
+      "addedOn": "Ajouté le",
+      "documentsInFavorites": "documents dans vos favoris"
     },
     "francophonieMeetings": {
       "title": "Réunions de la Francophonie",
