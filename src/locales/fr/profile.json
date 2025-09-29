@@ -46,7 +46,8 @@
         "manageRoles": "Gérer les rôles",
         "manageRolesDesc": "Assigner et révoquer des rôles (Super Admin)",
         "recentAlerts": "Alertes récentes",
-        "noAlerts": "Aucune alerte pour le moment"
+        "noAlerts": "Aucune alerte pour le moment",
+        "goToDashboard": "Tableau de bord admin"
       }
     },
     "tabs": {

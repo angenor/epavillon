@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg">
-    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
       <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
         <div class="p-2 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg mr-3">
           <font-awesome-icon
@@ -10,6 +10,17 @@
         </div>
         {{ t('profile.roleSpecific.admin.title') || 'Administration' }}
       </h3>
+      <button
+        v-if="isSuperAdmin"
+        @click="navigateToDashboard"
+        class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 cursor-pointer"
+      >
+        <font-awesome-icon
+          icon="tachometer-alt"
+          class="mr-2"
+        />
+        {{ t('profile.roleSpecific.admin.goToDashboard') || 'Tableau de bord admin' }}
+      </button>
     </div>
 
     <div class="p-6">
@@ -25,7 +36,7 @@
               {{ t('profile.roleSpecific.admin.totalUsers') || 'Utilisateurs totaux' }}
             </span>
           </div>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">-</p>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ totalUsers }}</p>
         </div>
 
         <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
@@ -38,7 +49,7 @@
               {{ t('profile.roleSpecific.admin.activeEvents') || 'Événements actifs' }}
             </span>
           </div>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">-</p>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ activeEvents }}</p>
         </div>
 
         <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
@@ -51,7 +62,7 @@
               {{ t('profile.roleSpecific.admin.activeTrainings') || 'Formations actives' }}
             </span>
           </div>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">-</p>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ activeTrainings }}</p>
         </div>
       </div>
 

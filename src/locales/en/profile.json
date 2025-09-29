@@ -52,7 +52,8 @@
         "manageRoles": "Manage Roles",
         "manageRolesDesc": "Assign and revoke roles (Super Admin)",
         "recentAlerts": "Recent Alerts",
-        "noAlerts": "No alerts at the moment"
+        "noAlerts": "No alerts at the moment",
+        "goToDashboard": "Admin Dashboard"
       }
     },
     "sections": {
