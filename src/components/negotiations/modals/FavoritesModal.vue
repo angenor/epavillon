@@ -202,7 +202,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const { t, locale } = useI18n()
-const { showToast } = useToast()
+const { success: showSuccess, error: showError } = useToast()
 const { favorites, loading, fetchFavorites, removeFavorite, favoritesByCategory } = useFavorites()
 
 const selectedCategory = ref('all')
@@ -222,31 +222,31 @@ const close = () => {
   emit('update:modelValue', false)
 }
 
-const viewDocument = (document) => {
-  if (document.file_url) {
-    window.open(document.file_url, '_blank')
+const viewDocument = (doc) => {
+  if (doc.file_url) {
+    window.open(doc.file_url, '_blank')
   }
 }
 
-const downloadDocument = (document) => {
-  if (document.file_url) {
+const downloadDocument = (doc) => {
+  if (doc.file_url) {
     const link = document.createElement('a')
-    link.href = document.file_url
-    link.download = document.title || 'document'
+    link.href = doc.file_url
+    link.download = doc.title || 'document'
     link.target = '_blank'
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
-    showToast(t('negotiations.documents.downloadSuccess'), 'success')
+    showSuccess(t('negotiations.documents.downloadSuccess'))
   }
 }
 
 const removeFromFavorites = async (documentId) => {
   try {
     await removeFavorite(documentId)
-    showToast(t('negotiations.favorites.removedFromFavorites'), 'success')
+    showSuccess(t('negotiations.favorites.removedFromFavorites'))
   } catch (error) {
-    showToast(t('negotiations.favorites.removeError'), 'error')
+    showError(t('negotiations.favorites.removeError'))
   }
 }
 

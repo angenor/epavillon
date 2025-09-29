@@ -35,13 +35,13 @@
 
       <!-- Favorite Button -->
       <button
-        @click="$emit('favorite', document.id)"
-        class="absolute top-2 right-2 p-1.5 bg-white/20 hover:bg-white/30 rounded-full transition-colors duration-200"
+        @click.stop="$emit('favorite', document.id)"
+        class="absolute top-2 right-2 p-1.5 bg-white/20 hover:bg-white/30 rounded-full transition-colors duration-200 cursor-pointer"
       >
-        <svg 
-          class="w-4 h-4 text-white"
-          :class="document.is_favorited ? 'fill-current' : 'fill-none'"
-          stroke="currentColor" 
+        <svg
+          class="w-4 h-4"
+          :class="document.is_favorited ? 'text-red-500 fill-current' : 'text-white fill-none'"
+          stroke="currentColor"
           viewBox="0 0 24 24"
         >
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />

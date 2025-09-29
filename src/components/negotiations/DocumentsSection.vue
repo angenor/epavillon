@@ -133,6 +133,7 @@ import DocumentCard from './DocumentCard.vue'
 import DocumentModal from './modals/DocumentModal.vue'
 import { useNegotiationDocuments } from '@/composables/useNegotiationDocuments'
 import { useToast } from '@/composables/useToast'
+import { useFavorites } from '@/composables/useFavorites'
 
 const props = defineProps({
   category: {
@@ -143,7 +144,7 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const { showToast } = useToast()
+const { success: showSuccess, error: showError } = useToast()
 const {
   documents,
   loading,
@@ -219,26 +220,31 @@ const handleViewDocument = async (documentId) => {
   try {
     await viewDocument(documentId)
   } catch (error) {
-    showToast(t('negotiations.documents.viewError'), 'error')
+    showError(t('negotiations.documents.viewError'))
   }
 }
 
 const handleDownloadDocument = async (documentId) => {
   try {
     await downloadDocument(documentId)
-    showToast('Document téléchargé avec succès', 'success')
+    showSuccess(t('negotiations.documents.downloadSuccess'))
   } catch (error) {
     console.error('Download error:', error)
-    showToast('Erreur lors du téléchargement', 'error')
+    showError(t('negotiations.documents.downloadError'))
   }
 }
+
+// Get the favorites composable to update the count
+const { fetchFavorites } = useFavorites()
 
 const handleToggleFavorite = async (documentId) => {
   try {
     await toggleFavorite(documentId)
-    showToast(t('negotiations.documents.favoriteToggled'), 'success')
+    showSuccess(t('negotiations.documents.favoriteToggled'))
+    // Refresh favorites count in the Hero Section
+    await fetchFavorites()
   } catch (error) {
-    showToast(t('negotiations.documents.favoriteError'), 'error')
+    showError(t('negotiations.documents.favoriteError'))
   }
 }
 
@@ -246,7 +252,7 @@ const loadMore = async () => {
   try {
     await loadMoreDocuments(categoryMap[props.category])
   } catch (error) {
-    showToast(t('negotiations.documents.loadMoreError'), 'error')
+    showError(t('negotiations.documents.loadMoreError'))
   }
 }
 
@@ -277,7 +283,7 @@ const handleShareDocument = async (documentId) => {
   if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
     try {
       await navigator.share(shareData)
-      showToast(t('negotiations.documents.shared'), 'success')
+      showSuccess(t('negotiations.documents.shared'))
     } catch (error) {
       if (error.name !== 'AbortError') {
         fallbackShare(documentUrl)
@@ -291,7 +297,7 @@ const handleShareDocument = async (documentId) => {
 const fallbackShare = (url) => {
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(url).then(() => {
-      showToast(t('negotiations.documents.linkCopied'), 'success')
+      showSuccess(t('negotiations.documents.linkCopied'))
     }).catch(() => {
       fallbackCopyToClipboard(url)
     })
@@ -312,9 +318,9 @@ const fallbackCopyToClipboard = (text) => {
 
   try {
     document.execCommand('copy')
-    showToast(t('negotiations.documents.linkCopied'), 'success')
+    showSuccess(t('negotiations.documents.linkCopied'))
   } catch (error) {
-    showToast(t('negotiations.documents.shareError'), 'error')
+    showError(t('negotiations.documents.shareError'))
   }
 
   document.body.removeChild(textArea)
