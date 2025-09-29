@@ -328,6 +328,7 @@ CREATE TABLE public.activity_speakers (
     photo_url TEXT, -- URL de la photo haute définition
     photo_thumbnail_url TEXT, -- URL de la miniature de la photo
     has_confirmed_by_email BOOLEAN DEFAULT FALSE,
+    confirmation_email_sent_at TIMESTAMPTZ, -- Date d'envoi de l'email de confirmation
     position TEXT,
     organization TEXT,
     is_available_for_questions BOOLEAN DEFAULT TRUE, -- Disponibilité pour les questions
