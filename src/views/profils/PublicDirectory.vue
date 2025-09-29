@@ -27,7 +27,7 @@
               <div class="text-lg text-white text-opacity-80 mt-1">Membres actifs</div>
             </div>
             <div class="text-center">
-              <div class="text-3xl md:text-4xl font-bold text-white">{{ communityStats.countriesCount }}+</div>
+              <div class="text-3xl md:text-4xl font-bold text-white">Plusieurs</div>
               <div class="text-lg text-white text-opacity-80 mt-1">Pays représentés</div>
             </div>
             <router-link
