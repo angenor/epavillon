@@ -88,6 +88,7 @@
     },
     "favorites": {
       "myFavorites": "My favorites",
+      "myDocumentsFavorites": "My favorite documents",
       "subtitle": "Documents you've added to your favorites",
       "filterByCategory": "Filter by category",
       "noFavorites": "No documents in your favorites",

@@ -10,26 +10,25 @@
           <p class="text-xl opacity-90 mb-8">
             {{ $t('negotiations.subtitle') }}
           </p>
-          <div class="flex flex-col items-center justify-center space-y-4">
-            <div class="flex items-center gap-4">
-              <span class="px-3 py-1 bg-white/20 rounded-full text-sm">
-                {{ $t('negotiations.accessLevel.negotiatorsOnly') }}
-              </span>
 
-              <!-- Favoris Button -->
-              <button
-                @click="showFavoritesModal = true"
-                class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-full text-sm font-medium transition-colors duration-200 cursor-pointer"
-              >
-                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                </svg>
-                <span>{{ $t('negotiations.favorites.myFavorites') }}</span>
-                <span v-if="favoritesCount > 0" class="bg-white/30 px-2 py-0.5 rounded-full text-xs">
-                  {{ favoritesCount }}
-                </span>
-              </button>
-            </div>
+          <!-- Favoris Button - Floating top right -->
+          <button
+            @click="showFavoritesModal = true"
+            class="fixed top-20 right-4 z-50 inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer"
+          >
+            <svg class="w-6 h-6 fill-current animate-pulse" viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            <span class="font-semibold">{{ $t('negotiations.favorites.myDocumentsFavorites') }}</span>
+            <span v-if="favoritesCount > 0" class="bg-white/30 px-2.5 py-1 rounded-full text-sm font-bold">
+              {{ favoritesCount }}
+            </span>
+          </button>
+
+          <div class="flex flex-col items-center justify-center space-y-4">
+            <span class="px-3 py-1 bg-white/20 rounded-full text-sm">
+              {{ $t('negotiations.accessLevel.negotiatorsOnly') }}
+            </span>
 
             <!-- Liens vers les autres catégories -->
             <div class="flex items-center justify-center space-x-4 mt-4">
