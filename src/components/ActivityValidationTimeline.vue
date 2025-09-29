@@ -3,7 +3,7 @@
     <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">
       {{ t('events.validationTimeline') }}
     </h3>
-    <div class="relative">
+    <div class="relative mt-20">
       <!-- Conteneur principal du timeline -->
       <div class="relative min-h-[180px]">
 

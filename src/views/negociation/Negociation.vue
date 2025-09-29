@@ -14,9 +14,6 @@
           <div class="flex flex-col items-center justify-center space-y-4">
             <!-- Access Level and Favorites Button -->
             <div class="flex flex-wrap items-center justify-center gap-3">
-              <span class="px-3 py-1 bg-white/20 rounded-full text-sm">
-                {{ $t('negotiations.accessLevel.negotiatorsOnly') }}
-              </span>
 
               <!-- Favoris Button -->
               <button
