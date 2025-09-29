@@ -106,8 +106,8 @@
           <input
             type="date"
             v-model="activityDates.activityDate.value"
-            :min="eventData?.start_date?.split('T')[0]"
-            :max="eventData?.end_date?.split('T')[0]"
+            :min="eventDateRange.minDate"
+            :max="eventDateRange.maxDate"
             class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
           >
           <p v-if="eventData" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -160,13 +160,14 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import RichTextEditor from '@/components/ui/RichTextEditor.vue'
 import { formatEventPeriod } from '@/utils/activityHelpers'
 
 const { t } = useI18n()
 
-defineProps({
+const props = defineProps({
   activity: {
     type: Object,
     required: true
@@ -202,4 +203,24 @@ defineProps({
 })
 
 defineEmits(['start-edit', 'cancel-edit', 'field-change', 'save-field', 'save-dates', 'cancel-dates'])
+
+// Computed pour obtenir les dates min et max de l'événement
+const eventDateRange = computed(() => {
+  if (!props.eventData) return { minDate: null, maxDate: null }
+
+  let startDate, endDate
+  if (props.eventData.participation_mode === 'online') {
+    startDate = props.eventData.online_start_datetime
+    endDate = props.eventData.online_end_datetime
+  } else {
+    // in_person ou hybrid
+    startDate = props.eventData.in_person_start_date || props.eventData.online_start_datetime
+    endDate = props.eventData.in_person_end_date || props.eventData.online_end_datetime
+  }
+
+  return {
+    minDate: startDate ? startDate.split('T')[0] : '',
+    maxDate: endDate ? endDate.split('T')[0] : ''
+  }
+})
 </script>

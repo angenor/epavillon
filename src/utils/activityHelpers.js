@@ -24,8 +24,27 @@ export const getStatusClass = (status) => {
 export const formatEventPeriod = (eventData, locale = 'fr-FR') => {
   if (!eventData) return ''
 
-  const start = new Date(eventData.start_date)
-  const end = new Date(eventData.end_date)
+  // Déterminer les dates selon le mode de participation
+  let startDate, endDate
+  if (eventData.participation_mode === 'online') {
+    startDate = eventData.online_start_datetime
+    endDate = eventData.online_end_datetime
+  } else {
+    // in_person ou hybrid
+    startDate = eventData.in_person_start_date || eventData.online_start_datetime
+    endDate = eventData.in_person_end_date || eventData.online_end_datetime
+  }
+
+  if (!startDate || !endDate) return ''
+
+  const start = new Date(startDate)
+  const end = new Date(endDate)
+
+  // Vérifier que les dates sont valides
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+    return ''
+  }
+
   const options = {
     year: 'numeric',
     month: 'long',
