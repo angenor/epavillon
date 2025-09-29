@@ -39,14 +39,22 @@ export const useUserStore = defineStore('user', () => {
     error.value = null
 
     try {
-      // Charger les rôles utilisateur
-      const { data: roles } = await supabase
-        .from('user_roles')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('is_active', true)
+      // Vérifier si les rôles sont déjà dans authStore
+      const authStore = await import('./auth').then(m => m.useAuthStore())
+      if (authStore.profile?.user_roles) {
+        console.log('UserStore - Using roles from authStore:', authStore.profile.user_roles)
+        userRoles.value = authStore.profile.user_roles
+      } else {
+        // Charger les rôles utilisateur depuis la base de données
+        const { data: roles } = await supabase
+          .from('user_roles')
+          .select('*')
+          .eq('user_id', userId)
+          .eq('is_active', true)
 
-      userRoles.value = roles || []
+        console.log('UserStore - Loaded roles from database:', roles)
+        userRoles.value = roles || []
+      }
 
       // Charger les données utilisateur avec relations
       const { data: userData } = await supabase
@@ -265,6 +273,12 @@ export const useUserStore = defineStore('user', () => {
     userOrganization.value = organization
   }
 
+  // Setter pour les rôles (pour synchroniser avec authStore)
+  const setUserRoles = (roles) => {
+    console.log('UserStore - Setting roles:', roles)
+    userRoles.value = roles || []
+  }
+
   // Reset store
   const resetUserStore = () => {
     userRoles.value = []
@@ -296,6 +310,7 @@ export const useUserStore = defineStore('user', () => {
     searchOrganizations,
     requestNewOrganization,
     setUserOrganization,
+    setUserRoles,
     resetUserStore
   }
 })

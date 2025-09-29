@@ -1,40 +1,22 @@
-Uncaught (in promise) TypeError: showToast is not a function
-    handleToggleFavorite DocumentsSection.vue:241
-    callWithErrorHandling runtime-core.esm-bundler.js:199
-    callWithAsyncErrorHandling runtime-core.esm-bundler.js:206
-    emit runtime-core.esm-bundler.js:6439
-    0 DocumentCard.vue:38
-    callWithErrorHandling runtime-core.esm-bundler.js:199
-    callWithAsyncErrorHandling runtime-core.esm-bundler.js:206
-    invoker runtime-dom.esm-bundler.js:729
-    addEventListener runtime-dom.esm-bundler.js:680
-    patchEvent runtime-dom.esm-bundler.js:698
-    patchProp runtime-dom.esm-bundler.js:775
-    mountElement runtime-core.esm-bundler.js:4900
-    processElement runtime-core.esm-bundler.js:4847
-    patch runtime-core.esm-bundler.js:4715
-    mountChildren runtime-core.esm-bundler.js:4959
-    mountElement runtime-core.esm-bundler.js:4882
-    processElement runtime-core.esm-bundler.js:4847
-    patch runtime-core.esm-bundler.js:4715
-    mountChildren runtime-core.esm-bundler.js:4959
-    mountElement runtime-core.esm-bundler.js:4882
-    processElement runtime-core.esm-bundler.js:4847
-    patch runtime-core.esm-bundler.js:4715
-    componentUpdateFn runtime-core.esm-bundler.js:5353
-    run reactivity.esm-bundler.js:237
-    setupRenderEffect runtime-core.esm-bundler.js:5481
-    mountComponent runtime-core.esm-bundler.js:5256
-    processComponent runtime-core.esm-bundler.js:5209
-    patch runtime-core.esm-bundler.js:4727
-    mountChildren runtime-core.esm-bundler.js:4959
-    mountElement runtime-core.esm-bundler.js:4882
-    processElement runtime-core.esm-bundler.js:4847
-    patch runtime-core.esm-bundler.js:4715
-    mountChildren runtime-core.esm-bundler.js:4959
-    processFragment runtime-core.esm-bundler.js:5139
-    patch runtime-core.esm-bundler.js:4701
-    mountChildren runtime-core.esm-bundler.js:4959
-    mountElement runtime-core.esm-bundler.js:4882
-    processElement runtime-core.esm-bundler.js:4847
-DocumentsSection.vue:241:14
+[intlify] Not found 'profile.roleSpecific.debug.currentRoles' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.title' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.totalUsers' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.activeEvents' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.activeTrainings' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.quickActions' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.manageUsers' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.manageUsersDesc' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.manageOrganizations' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.manageOrganizationsDesc' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.viewReports' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.viewReportsDesc' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.manageContent' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.manageContentDesc' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.systemSettings' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.systemSettingsDesc' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.manageRoles' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.manageRolesDesc' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.recentAlerts' key in 'fr' locale messages. shared.mjs:8:17
+[intlify] Not found 'profile.roleSpecific.admin.noAlerts' key in 'fr' locale messages. shared.mjs:8:17
+RoleSpecificSection - User ID: 9a9ec732-7daf-4bec-8c4a-17d8109e06a8 RoleSpecificSection.vue:197:11
+RoleSpecificSection - User Roles from userStore BEFORE sync:

@@ -22,7 +22,37 @@
         "createFormation": "Training creation to be implemented",
         "manageFormations": "Training management to be implemented",
         "viewAnalytics": "Analytics to be implemented",
-        "requestRole": "Role request for {role} sent"
+        "requestRole": "Role request for {role} sent",
+        "manageUsers": "User management",
+        "manageOrganizations": "Organization management",
+        "viewAdminReports": "View reports",
+        "manageContent": "Content management",
+        "systemSettings": "System settings (Super Admin)",
+        "manageRoles": "Role management (Super Admin)"
+      },
+      "debug": {
+        "currentRoles": "Debug: Current roles"
+      },
+      "admin": {
+        "title": "Administration",
+        "totalUsers": "Total Users",
+        "activeEvents": "Active Events",
+        "activeTrainings": "Active Trainings",
+        "quickActions": "Quick Actions",
+        "manageUsers": "Manage Users",
+        "manageUsersDesc": "Manage accounts and permissions",
+        "manageOrganizations": "Manage Organizations",
+        "manageOrganizationsDesc": "Validate and manage organizations",
+        "viewReports": "View Reports",
+        "viewReportsDesc": "Statistics and analytics",
+        "manageContent": "Manage Content",
+        "manageContentDesc": "Moderate activities and trainings",
+        "systemSettings": "System Settings",
+        "systemSettingsDesc": "Advanced configuration (Super Admin)",
+        "manageRoles": "Manage Roles",
+        "manageRolesDesc": "Assign and revoke roles (Super Admin)",
+        "recentAlerts": "Recent Alerts",
+        "noAlerts": "No alerts at the moment"
       }
     },
     "sections": {

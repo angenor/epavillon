@@ -16,7 +16,37 @@
         "createFormation": "Création de formation à implémenter",
         "manageFormations": "Gestion des formations à implémenter",
         "viewAnalytics": "Analytiques à implémenter",
-        "requestRole": "Demande de rôle {role} envoyée"
+        "requestRole": "Demande de rôle {role} envoyée",
+        "manageUsers": "Gestion des utilisateurs",
+        "manageOrganizations": "Gestion des organisations",
+        "viewAdminReports": "Consultation des rapports",
+        "manageContent": "Gestion du contenu",
+        "systemSettings": "Paramètres système (Super Admin)",
+        "manageRoles": "Gestion des rôles (Super Admin)"
+      },
+      "debug": {
+        "currentRoles": "Debug: Rôles actuels"
+      },
+      "admin": {
+        "title": "Administration",
+        "totalUsers": "Utilisateurs totaux",
+        "activeEvents": "Événements actifs",
+        "activeTrainings": "Formations actives",
+        "quickActions": "Actions rapides",
+        "manageUsers": "Gérer les utilisateurs",
+        "manageUsersDesc": "Gérer les comptes et permissions",
+        "manageOrganizations": "Gérer les organisations",
+        "manageOrganizationsDesc": "Valider et gérer les organisations",
+        "viewReports": "Voir les rapports",
+        "viewReportsDesc": "Statistiques et analyses",
+        "manageContent": "Gérer le contenu",
+        "manageContentDesc": "Modérer les activités et formations",
+        "systemSettings": "Paramètres système",
+        "systemSettingsDesc": "Configuration avancée (Super Admin)",
+        "manageRoles": "Gérer les rôles",
+        "manageRolesDesc": "Assigner et révoquer des rôles (Super Admin)",
+        "recentAlerts": "Alertes récentes",
+        "noAlerts": "Aucune alerte pour le moment"
       }
     },
     "tabs": {

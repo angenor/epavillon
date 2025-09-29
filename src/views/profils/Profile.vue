@@ -90,7 +90,7 @@
               <span
                 v-for="role in userRoles"
                 :key="role.role"
-                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                class="inline-flex text-white items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                 :class="getRoleBadgeClass(role.role)"
               >
                 {{ t(`profile.roles.${role.role}`) }}
@@ -216,7 +216,7 @@
         <div class="space-y-6">
           <!-- Demandes de connexion -->
           <ConnectionRequestsSection />
-          
+
           <!-- Statistiques rapides -->
           <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
@@ -349,16 +349,16 @@ const handleUserUpdate = (updatedUser) => {
 const handleSaveProfile = async (updatedData) => {
   try {
     console.log('Profile.vue - Sauvegarde avec données:', updatedData) // Debug
-    
+
     await userStore.updateProfile({
       ...updatedData,
       id: authStore.user?.id
     })
-    
+
     // Recharger le profil
     await authStore.fetchProfile(authStore.user?.id)
     isEditing.value = false
-    
+
     // Afficher un message de succès
     success(t('common.saveSuccess'))
   } catch (err) {
@@ -377,7 +377,19 @@ const handleManageBlockedUsers = () => {
 // Chargement initial
 onMounted(async () => {
   if (authStore.user?.id) {
+    // S'assurer que le profil est chargé dans authStore
+    if (!authStore.profile) {
+      await authStore.fetchProfile(authStore.user.id)
+    }
+
+    // Synchroniser les rôles avec userStore
+    if (authStore.profile?.user_roles) {
+      console.log('Profile.vue - Synchronizing roles:', authStore.profile.user_roles)
+      userStore.setUserRoles(authStore.profile.user_roles)
+    }
+
     await userStore.loadUserData(authStore.user.id)
+
     // Charger l'organisation si elle existe
     if (authStore.profile?.organization_id) {
       await loadOrganizationData()
@@ -404,12 +416,12 @@ const loadOrganizationData = async () => {
         .select('id, name, email, organization_type, is_active')
         .eq('id', authStore.profile.organization_id)
         .single()
-      
+
       if (error) {
         console.error('Erreur lors du chargement de l\'organisation:', error)
         return
       }
-      
+
       userStore.setUserOrganization(data)
     } catch (error) {
       console.error('Erreur lors du chargement des données de l\'organisation:', error)
