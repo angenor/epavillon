@@ -8,17 +8,10 @@
     </div>
 
     <div class="p-6 space-y-4">
-      <div class="flex justify-between items-center mb-4">
+      <div class="mb-4">
         <h3 class="text-lg font-medium text-gray-900 dark:text-white">
           {{ t('events.speakers') }}
         </h3>
-        <button
-          @click="addNewSpeaker"
-          class="px-4 py-2 bg-ifdd-bleu text-white rounded-lg hover:bg-ifdd-bleu-fonce transition-colors cursor-pointer"
-        >
-          <font-awesome-icon :icon="['fas', 'plus']" class="mr-2" />
-          {{ t('events.addSpeaker') }}
-        </button>
       </div>
 
       <!-- Avertissement pour photos manquantes -->
@@ -278,7 +271,6 @@ const emit = defineEmits([
   'cancel-edit-speaker',
   'speaker-field-change',
   'save-speaker-field',
-  'add-new-speaker',
   'remove-speaker',
   'upload-speaker-photo',
   'show-speaker-photo-modal',
@@ -300,10 +292,6 @@ const onSpeakerFieldChange = (speakerId, field) => {
 
 const saveSpeakerField = (speakerId, field) => {
   emit('save-speaker-field', speakerId, field)
-}
-
-const addNewSpeaker = () => {
-  emit('add-new-speaker')
 }
 
 const removeSpeaker = (speakerId) => {

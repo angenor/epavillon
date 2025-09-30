@@ -1,11 +1,10 @@
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useUserActivities from '@/composables/useUserActivities'
 
 export function useSpeakerManagement(activityId) {
   const { t } = useI18n()
   const {
-    addSpeaker,
     updateSpeaker,
     deleteSpeaker,
     uploadSpeakerPhoto,
@@ -13,8 +12,6 @@ export function useSpeakerManagement(activityId) {
   } = useUserActivities()
 
   const speakers = ref([])
-  const showAddSpeakerModal = ref(false)
-  const savingNewSpeaker = ref(false)
   const uploadingPhoto = ref({})
   const uploadProgress = ref({})
   const showPhotoModal = ref(false)
@@ -25,15 +22,6 @@ export function useSpeakerManagement(activityId) {
   const tempSpeakerValue = ref({})
   const hasUnsavedSpeakerChanges = ref({})
   const savingSpeakerField = ref({})
-
-  const newSpeakerForm = reactive({
-    civility: 'M.',
-    first_name: '',
-    last_name: '',
-    position: '',
-    organization: '',
-    email: ''
-  })
 
   // Speaker field editing
   const startEditSpeaker = (speakerId, field) => {
@@ -180,52 +168,7 @@ export function useSpeakerManagement(activityId) {
     }
   }
 
-  // Speaker CRUD operations
-  const addNewSpeaker = () => {
-    Object.assign(newSpeakerForm, {
-      civility: 'M.',
-      first_name: '',
-      last_name: '',
-      position: '',
-      organization: '',
-      email: ''
-    })
-    showAddSpeakerModal.value = true
-  }
-
-  const validateNewSpeaker = () => {
-    validateSpeakerField('first_name', newSpeakerForm.first_name)
-    validateSpeakerField('last_name', newSpeakerForm.last_name)
-    validateSpeakerField('email', newSpeakerForm.email)
-    validateSpeakerField('position', newSpeakerForm.position)
-    validateSpeakerField('organization', newSpeakerForm.organization)
-  }
-
-  const submitNewSpeaker = async () => {
-    try {
-      validateNewSpeaker()
-
-      savingNewSpeaker.value = true
-      const speakerData = {
-        ...newSpeakerForm,
-        has_confirmed_by_email: false
-      }
-
-      const newSpeaker = await addSpeaker(activityId, speakerData)
-      speakers.value.push(newSpeaker)
-      showAddSpeakerModal.value = false
-    } catch (error) {
-      console.error('Error adding speaker:', error)
-      throw error
-    } finally {
-      savingNewSpeaker.value = false
-    }
-  }
-
-  const cancelAddSpeaker = () => {
-    showAddSpeakerModal.value = false
-  }
-
+  // Speaker operations
   const removeSpeaker = async (speakerId) => {
     if (!confirm(t('events.confirmDeleteSpeaker'))) return
 
@@ -307,9 +250,6 @@ export function useSpeakerManagement(activityId) {
   return {
     // Data
     speakers,
-    newSpeakerForm,
-    showAddSpeakerModal,
-    savingNewSpeaker,
     uploadingPhoto,
     uploadProgress,
     showPhotoModal,
@@ -324,9 +264,6 @@ export function useSpeakerManagement(activityId) {
     cancelEditSpeaker,
     onSpeakerFieldChange,
     saveSpeakerField,
-    addNewSpeaker,
-    submitNewSpeaker,
-    cancelAddSpeaker,
     removeSpeaker,
     uploadSpeakerPhotoHandler,
     showSpeakerPhotoModal,

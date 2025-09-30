@@ -72,7 +72,6 @@
             @cancel-edit-speaker="speakerManagement.cancelEditSpeaker"
             @speaker-field-change="speakerManagement.onSpeakerFieldChange"
             @save-speaker-field="handleSaveSpeakerField"
-            @add-new-speaker="speakerManagement.addNewSpeaker"
             @remove-speaker="handleRemoveSpeaker"
             @upload-speaker-photo="handleUploadSpeakerPhoto"
             @show-speaker-photo-modal="speakerManagement.showSpeakerPhotoModal"
@@ -112,15 +111,6 @@
     </div>
 
     <!-- Modals -->
-    <AddSpeakerModal
-      :show="speakerManagement.showAddSpeakerModal.value"
-      :form="speakerManagement.newSpeakerForm"
-      :saving="speakerManagement.savingNewSpeaker.value"
-      @submit="handleSubmitNewSpeaker"
-      @cancel="speakerManagement.cancelAddSpeaker"
-      @update:form="updateSpeakerForm"
-    />
-
     <AddDocumentModal
       :show="documentManagement.showAddDocumentModal.value"
       :form="documentManagement.newDocumentForm"
@@ -165,7 +155,6 @@ import ActivityGeneralInfoSection from '@/components/activity/ActivityGeneralInf
 import ActivitySpeakersSection from '@/components/activity/ActivitySpeakersSection.vue'
 import ActivityDocumentsSection from '@/components/activity/ActivityDocumentsSection.vue'
 import ActivityTagsSection from '@/components/activity/ActivityTagsSection.vue'
-import AddSpeakerModal from '@/components/activity/AddSpeakerModal.vue'
 import AddDocumentModal from '@/components/activity/AddDocumentModal.vue'
 import SpeakerPhotoModal from '@/components/activity/SpeakerPhotoModal.vue'
 import BrowserRecommendation from '@/components/BrowserRecommendation.vue'
@@ -275,18 +264,6 @@ const handleSendConfirmationEmail = async (speakerId) => {
   } catch (error) {
     alert(`Erreur lors de l'envoi de l'email: ${error.message}`)
   }
-}
-
-const handleSubmitNewSpeaker = async () => {
-  try {
-    await speakerManagement.submitNewSpeaker()
-  } catch (error) {
-    alert(error.message)
-  }
-}
-
-const updateSpeakerForm = (newForm) => {
-  Object.assign(speakerManagement.newSpeakerForm, newForm)
 }
 
 // Document management handlers
