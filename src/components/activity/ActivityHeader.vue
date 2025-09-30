@@ -28,7 +28,8 @@
       <div class="flex space-x-3">
         <router-link
           :to="`/activities/preview/${activity.id}`"
-          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          target="_blank"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
         >
           <font-awesome-icon :icon="['fas', 'eye']" class="mr-2" />
           {{ t('activity.preview.button') }}
@@ -37,7 +38,8 @@
         <router-link
           v-if="activity.validation_status === 'approved'"
           :to="`/activities/${activity.id}`"
-          class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+          target="_blank"
+          class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors cursor-pointer"
         >
           <font-awesome-icon :icon="['fas', 'external-link-alt']" class="mr-2" />
           {{ t('events.viewPublic') }}
