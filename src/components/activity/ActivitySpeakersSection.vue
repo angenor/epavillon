@@ -8,10 +8,17 @@
     </div>
 
     <div class="p-6 space-y-4">
-      <div class="mb-4">
+      <div class="mb-4 flex items-center justify-between">
         <h3 class="text-lg font-medium text-gray-900 dark:text-white">
           {{ t('events.speakers') }}
         </h3>
+        <button
+          @click="$emit('add-speaker')"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-ifdd-bleu hover:bg-ifdd-bleu-fonce focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ifdd-bleu cursor-pointer"
+        >
+          <font-awesome-icon :icon="['fas', 'plus']" class="mr-2" />
+          {{ t('events.addSpeaker') }}
+        </button>
       </div>
 
       <!-- Avertissement pour photos manquantes -->
@@ -29,7 +36,23 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Message si aucun intervenant -->
+      <div
+        v-if="speakers.length === 0"
+        class="text-center py-12 bg-gray-50 dark:bg-gray-700 rounded-lg"
+      >
+        <font-awesome-icon :icon="['fas', 'users']" class="text-4xl text-gray-400 mb-4" />
+        <p class="text-gray-500 dark:text-gray-400 mb-4">{{ t('events.noSpeakers') }}</p>
+        <button
+          @click="$emit('add-speaker')"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-ifdd-bleu hover:bg-ifdd-bleu-fonce focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ifdd-bleu cursor-pointer"
+        >
+          <font-awesome-icon :icon="['fas', 'plus']" class="mr-2" />
+          {{ t('events.addFirstSpeaker') }}
+        </button>
+      </div>
+
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
           v-for="speaker in speakers"
           :key="speaker.id"
@@ -274,7 +297,8 @@ const emit = defineEmits([
   'remove-speaker',
   'upload-speaker-photo',
   'show-speaker-photo-modal',
-  'send-confirmation-email'
+  'send-confirmation-email',
+  'add-speaker'
 ])
 
 // Proxy methods to emit events

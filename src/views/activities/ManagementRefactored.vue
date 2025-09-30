@@ -76,6 +76,7 @@
             @upload-speaker-photo="handleUploadSpeakerPhoto"
             @show-speaker-photo-modal="speakerManagement.showSpeakerPhotoModal"
             @send-confirmation-email="handleSendConfirmationEmail"
+            @add-speaker="speakerManagement.openAddSpeakerModal"
           />
 
           <!-- Documents Section -->
@@ -128,6 +129,14 @@
       :selected-photo="speakerManagement.selectedSpeakerPhoto.value"
       @close="speakerManagement.closePhotoModal"
     />
+
+    <!-- Add Speaker Modal -->
+    <AddSpeakerModal
+      :isOpen="speakerManagement.showAddSpeakerModal.value"
+      :activityId="route.params.id"
+      @close="speakerManagement.closeAddSpeakerModal"
+      @save="handleAddNewSpeaker"
+    />
   </div>
 </template>
 
@@ -157,6 +166,7 @@ import ActivityDocumentsSection from '@/components/activity/ActivityDocumentsSec
 import ActivityTagsSection from '@/components/activity/ActivityTagsSection.vue'
 import AddDocumentModal from '@/components/activity/AddDocumentModal.vue'
 import SpeakerPhotoModal from '@/components/activity/SpeakerPhotoModal.vue'
+import AddSpeakerModal from '@/components/activity/AddSpeakerModal.vue'
 import BrowserRecommendation from '@/components/BrowserRecommendation.vue'
 
 
@@ -263,6 +273,14 @@ const handleSendConfirmationEmail = async (speakerId) => {
     await speakerManagement.sendConfirmationEmailHandler(speakerId)
   } catch (error) {
     alert(`Erreur lors de l'envoi de l'email: ${error.message}`)
+  }
+}
+
+const handleAddNewSpeaker = async (speakerData) => {
+  try {
+    await speakerManagement.addNewSpeaker(speakerData)
+  } catch (error) {
+    alert(`Erreur lors de l'ajout de l'intervenant: ${error.message}`)
   }
 }
 

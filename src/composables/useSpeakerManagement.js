@@ -5,6 +5,7 @@ import useUserActivities from '@/composables/useUserActivities'
 export function useSpeakerManagement(activityId) {
   const { t } = useI18n()
   const {
+    addSpeaker,
     updateSpeaker,
     deleteSpeaker,
     uploadSpeakerPhoto,
@@ -16,6 +17,7 @@ export function useSpeakerManagement(activityId) {
   const uploadProgress = ref({})
   const showPhotoModal = ref(false)
   const selectedSpeakerPhoto = ref(null)
+  const showAddSpeakerModal = ref(false)
 
   // Form states
   const editingField = ref({})
@@ -247,6 +249,27 @@ export function useSpeakerManagement(activityId) {
     }
   }
 
+  // Add new speaker
+  const addNewSpeaker = async (speakerData) => {
+    try {
+      const newSpeaker = await addSpeaker(activityId, speakerData)
+      speakers.value.push(newSpeaker)
+      showAddSpeakerModal.value = false
+      return newSpeaker
+    } catch (error) {
+      console.error('Error adding new speaker:', error)
+      throw error
+    }
+  }
+
+  const openAddSpeakerModal = () => {
+    showAddSpeakerModal.value = true
+  }
+
+  const closeAddSpeakerModal = () => {
+    showAddSpeakerModal.value = false
+  }
+
   return {
     // Data
     speakers,
@@ -254,6 +277,7 @@ export function useSpeakerManagement(activityId) {
     uploadProgress,
     showPhotoModal,
     selectedSpeakerPhoto,
+    showAddSpeakerModal,
     editingField,
     tempSpeakerValue,
     hasUnsavedSpeakerChanges,
@@ -268,6 +292,9 @@ export function useSpeakerManagement(activityId) {
     uploadSpeakerPhotoHandler,
     showSpeakerPhotoModal,
     closePhotoModal,
-    sendConfirmationEmailHandler
+    sendConfirmationEmailHandler,
+    addNewSpeaker,
+    openAddSpeakerModal,
+    closeAddSpeakerModal
   }
 }
