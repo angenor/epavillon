@@ -99,109 +99,95 @@
       </div>
 
       <div v-else>
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead class="bg-gray-50 dark:bg-gray-900">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                {{ t('admin.users.user') }}
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                {{ t('admin.users.organization') }}
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                {{ t('admin.users.roles') }}
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                {{ t('admin.users.status') }}
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                {{ t('admin.users.joinedAt') }}
-              </th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                {{ t('admin.users.actions') }}
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-            <tr v-for="user in displayedUsers" :key="user.id" class="hover:bg-gray-50 dark:hover:bg-gray-700">
-              <!-- Utilisateur -->
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center">
-                  <img :src="user.profile_photo_thumbnail_url || '/images/default-avatar.png'"
-                       :alt="user.first_name"
-                       class="h-10 w-10 rounded-full">
-                  <div class="ml-4">
-                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+        <!-- Vue en cartes pour une meilleure lisibilité -->
+        <div class="divide-y divide-gray-200 dark:divide-gray-700">
+          <div v-for="user in displayedUsers"
+               :key="user.id"
+               class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+            <div class="flex items-start space-x-4">
+              <!-- Avatar avec initiales -->
+              <div class="flex-shrink-0">
+                <img v-if="user.profile_photo_thumbnail_url"
+                     :src="user.profile_photo_thumbnail_url"
+                     :alt="`${user.first_name} ${user.last_name}`"
+                     class="h-12 w-12 rounded-full object-cover">
+                <div v-else
+                     :class="getAvatarColor(user)"
+                     class="h-12 w-12 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                  {{ getInitials(user) }}
+                </div>
+              </div>
+
+              <!-- Informations principales -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between">
+                  <div class="flex-1 min-w-0">
+                    <!-- Nom et email -->
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-white truncate">
                       {{ user.first_name }} {{ user.last_name }}
-                    </div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                    </h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
                       {{ user.email }}
+                    </p>
+
+                    <!-- Organisation et date -->
+                    <div class="flex items-center space-x-3 mt-2 text-xs">
+                      <div v-if="user.organization" class="flex items-center text-gray-600 dark:text-gray-400">
+                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                        <span class="truncate max-w-[150px]">{{ user.organization.name }}</span>
+                      </div>
+                      <div class="flex items-center text-gray-500 dark:text-gray-400">
+                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        {{ formatDate(user.created_at) }}
+                      </div>
+                    </div>
+
+                    <!-- Rôles et statut -->
+                    <div class="flex flex-wrap items-center gap-1.5 mt-2">
+                      <!-- Statut -->
+                      <span :class="getStatusClass(user)"
+                            class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium">
+                        {{ getUserStatus(user) }}
+                      </span>
+                      <!-- Rôles -->
+                      <span v-for="role in user.user_roles"
+                            :key="role.id"
+                            :class="getRoleClass(role.role)"
+                            class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium">
+                        {{ t(`admin.users.roles.${role.role}`) }}
+                      </span>
                     </div>
                   </div>
-                </div>
-              </td>
 
-              <!-- Organisation -->
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div v-if="user.organization" class="text-sm text-gray-900 dark:text-white">
-                  {{ user.organization.name }}
+                  <!-- Actions -->
+                  <div class="flex flex-col space-y-1 ml-4">
+                    <button @click="viewUser(user)"
+                            class="px-3 py-1 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded cursor-pointer">
+                      Voir
+                    </button>
+                    <button @click="editUser(user)"
+                            class="px-3 py-1 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded cursor-pointer">
+                      Modifier
+                    </button>
+                    <button v-if="!user.is_blocked && !user.is_suspended"
+                            @click="suspendUser(user)"
+                            class="px-3 py-1 text-xs font-medium text-white bg-yellow-600 hover:bg-yellow-700 rounded cursor-pointer">
+                      Suspendre
+                    </button>
+                    <button v-if="user.is_suspended"
+                            @click="unsuspendUser(user)"
+                            class="px-3 py-1 text-xs font-medium text-white bg-green-600 hover:bg-green-700 rounded cursor-pointer">
+                      Activer
+                    </button>
+                  </div>
                 </div>
-                <div v-else class="text-sm text-gray-500 dark:text-gray-400">
-                  {{ t('admin.users.noOrganization') }}
-                </div>
-              </td>
-
-              <!-- Rôles -->
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex flex-wrap gap-1">
-                  <span v-for="role in user.user_roles" :key="role.id"
-                        :class="getRoleClass(role.role)"
-                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
-                    {{ t(`admin.users.roles.${role.role}`) }}
-                  </span>
-                </div>
-              </td>
-
-              <!-- Statut -->
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span :class="getStatusClass(user)"
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
-                  {{ getUserStatus(user) }}
-                </span>
-              </td>
-
-              <!-- Date d'inscription -->
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                {{ formatDate(user.created_at) }}
-              </td>
-
-              <!-- Actions -->
-              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <div class="flex items-center justify-end space-x-2">
-                  <button @click="viewUser(user)"
-                          class="text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300">
-                    {{ t('admin.users.view') }}
-                  </button>
-                  <button @click="editUser(user)"
-                          class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
-                    {{ t('admin.users.edit') }}
-                  </button>
-                  <button v-if="!user.is_blocked && !user.is_suspended"
-                          @click="suspendUser(user)"
-                          class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300">
-                    {{ t('admin.users.suspend') }}
-                  </button>
-                  <button v-if="user.is_suspended"
-                          @click="unsuspendUser(user)"
-                          class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300">
-                    {{ t('admin.users.unsuspend') }}
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Infinite scroll loader -->
@@ -276,6 +262,28 @@ const loadUsers = async (reset = false) => {
       isLoadingMore.value = true
     }
 
+    // Si un filtre de rôle est appliqué, récupérer d'abord les IDs des utilisateurs avec ce rôle
+    let userIdsWithRole = null
+    if (filters.value.role) {
+      const { data: roleData, error: roleError } = await supabase
+        .from('user_roles')
+        .select('user_id')
+        .eq('role', filters.value.role)
+        .eq('is_active', true)
+
+      if (roleError) throw roleError
+
+      userIdsWithRole = (roleData || []).map(r => r.user_id)
+
+      // Si aucun utilisateur n'a ce rôle, arrêter ici
+      if (userIdsWithRole.length === 0) {
+        hasMore.value = false
+        isLoading.value = false
+        isLoadingMore.value = false
+        return
+      }
+    }
+
     // Construction de la requête de base
     let query = supabase
       .from('users')
@@ -293,6 +301,11 @@ const loadUsers = async (reset = false) => {
       `, { count: 'exact' })
       .order('created_at', { ascending: false })
       .range(currentPage.value * pageSize, (currentPage.value + 1) * pageSize - 1)
+
+    // Filtrer par les IDs des utilisateurs avec le rôle
+    if (userIdsWithRole) {
+      query = query.in('id', userIdsWithRole)
+    }
 
     // Appliquer les filtres de recherche
     if (filters.value.search) {
@@ -346,12 +359,7 @@ const loadUsers = async (reset = false) => {
             .eq('user_id', user.id)
             .eq('is_active', true)
 
-          // Filtrer par rôle si nécessaire
-          if (filters.value.role) {
-            user_roles = (rolesData || []).filter(r => r.role === filters.value.role)
-          } else {
-            user_roles = rolesData || []
-          }
+          user_roles = rolesData || []
         } catch (roleError) {
           console.warn('Erreur rôles:', roleError)
         }
@@ -364,16 +372,11 @@ const loadUsers = async (reset = false) => {
       })
     )
 
-    // Filtrer les utilisateurs sans rôles si un filtre de rôle est appliqué
-    const filteredEnrichedUsers = filters.value.role
-      ? enrichedUsers.filter(user => user.user_roles.length > 0)
-      : enrichedUsers
-
-    displayedUsers.value = [...displayedUsers.value, ...filteredEnrichedUsers]
+    displayedUsers.value = [...displayedUsers.value, ...enrichedUsers]
     currentPage.value++
 
     // Vérifier s'il y a plus d'utilisateurs à charger
-    hasMore.value = filteredEnrichedUsers.length === pageSize
+    hasMore.value = enrichedUsers.length === pageSize
 
   } catch (error) {
     console.error('Erreur lors du chargement des utilisateurs:', error)
@@ -468,6 +471,39 @@ const unsuspendUser = (user) => {
 const exportUsers = () => {
   // TODO: Implémenter l'export
   console.log('Export des utilisateurs')
+}
+
+// Fonction pour générer les initiales
+const getInitials = (user) => {
+  const firstInitial = user.first_name?.charAt(0)?.toUpperCase() || ''
+  const lastInitial = user.last_name?.charAt(0)?.toUpperCase() || ''
+  return `${firstInitial}${lastInitial}` || '?'
+}
+
+// Fonction pour générer une couleur d'avatar basée sur le nom
+const getAvatarColor = (user) => {
+  const colors = [
+    'bg-blue-500',
+    'bg-green-500',
+    'bg-yellow-500',
+    'bg-red-500',
+    'bg-purple-500',
+    'bg-pink-500',
+    'bg-indigo-500',
+    'bg-teal-500',
+    'bg-orange-500',
+    'bg-cyan-500'
+  ]
+
+  // Générer un index basé sur le nom pour avoir une couleur cohérente
+  const fullName = `${user.first_name}${user.last_name}`.toLowerCase()
+  let hash = 0
+  for (let i = 0; i < fullName.length; i++) {
+    hash = fullName.charCodeAt(i) + ((hash << 5) - hash)
+  }
+
+  const index = Math.abs(hash) % colors.length
+  return colors[index]
 }
 
 // Watchers
