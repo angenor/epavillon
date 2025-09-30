@@ -130,16 +130,24 @@
                       {{ user.email }}
                     </p>
 
-                    <!-- Organisation et date -->
-                    <div class="flex items-center space-x-3 mt-2 text-xs">
+                    <!-- Organisation, pays et date -->
+                    <div class="flex items-center flex-wrap gap-x-3 gap-y-1 mt-2 text-xs">
                       <div v-if="user.organization" class="flex items-center text-gray-600 dark:text-gray-400">
-                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-3 h-3 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                         </svg>
                         <span class="truncate max-w-[150px]">{{ user.organization.name }}</span>
                       </div>
+                      <div v-if="user.country" class="flex items-center text-gray-600 dark:text-gray-400">
+                        <img v-if="user.country.code"
+                             :src="`https://flagcdn.com/w20/${user.country.code.toLowerCase()}.png`"
+                             :alt="user.country.name_fr"
+                             class="w-4 h-3 mr-1 object-cover rounded-sm flex-shrink-0"
+                             loading="lazy">
+                        <span class="truncate max-w-[120px]">{{ user.country.name_fr }}</span>
+                      </div>
                       <div class="flex items-center text-gray-500 dark:text-gray-400">
-                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-3 h-3 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
                         {{ formatDate(user.created_at) }}
@@ -332,7 +340,7 @@ const loadUsers = async (reset = false) => {
 
     if (usersError) throw usersError
 
-    // Enrichir les données avec organisations et rôles
+    // Enrichir les données avec organisations, pays et rôles
     const enrichedUsers = await Promise.all(
       (usersData || []).map(async (user) => {
         // Récupérer l'organisation si elle existe
@@ -347,6 +355,21 @@ const loadUsers = async (reset = false) => {
             organization = orgData
           } catch (orgError) {
             console.warn('Erreur organisation:', orgError)
+          }
+        }
+
+        // Récupérer le pays si existe
+        let country = null
+        if (user.country_id) {
+          try {
+            const { data: countryData } = await supabase
+              .from('countries')
+              .select('id, name_fr, code')
+              .eq('id', user.country_id)
+              .single()
+            country = countryData
+          } catch (countryError) {
+            console.warn('Erreur pays:', countryError)
           }
         }
 
@@ -367,6 +390,7 @@ const loadUsers = async (reset = false) => {
         return {
           ...user,
           organization,
+          country,
           user_roles
         }
       })

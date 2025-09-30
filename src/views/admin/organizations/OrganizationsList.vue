@@ -87,7 +87,15 @@
               </div>
               <div class="flex items-center text-xs">
                 <span class="text-gray-500 dark:text-gray-400 w-16">Pays:</span>
-                <span class="text-gray-900 dark:text-white">{{ org.country?.name_fr || 'Non renseigné' }}</span>
+                <div v-if="org.country" class="flex items-center text-gray-900 dark:text-white">
+                  <img v-if="org.country.code"
+                       :src="`https://flagcdn.com/w20/${org.country.code.toLowerCase()}.png`"
+                       :alt="org.country.name_fr"
+                       class="w-4 h-3 mr-1.5 object-cover rounded-sm"
+                       loading="lazy">
+                  <span>{{ org.country.name_fr }}</span>
+                </div>
+                <span v-else class="text-gray-900 dark:text-white">Non renseigné</span>
               </div>
               <div class="flex items-center text-xs">
                 <span class="text-gray-500 dark:text-gray-400 w-16">Activités:</span>
@@ -195,7 +203,7 @@ const loadOrganizations = async () => {
       .from('organizations')
       .select(`
         *,
-        country:countries(id, name_fr),
+        country:countries(id, name_fr, code),
         creator:created_by(
           id,
           first_name,
