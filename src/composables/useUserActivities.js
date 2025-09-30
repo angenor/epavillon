@@ -411,6 +411,36 @@ export default function useUserActivities() {
 
       if (updateError) throw updateError
 
+      // Tracer les modifications de bannière dans activity_modifications
+      try {
+        const modifications = [
+          {
+            activity_id: activityId,
+            field_name: 'cover_image_high_url',
+            old_value: currentActivity?.cover_image_high_url ? { value: currentActivity.cover_image_high_url } : null,
+            new_value: { value: hqUrlData.publicUrl },
+            old_value_type: 'text',
+            new_value_type: 'text',
+            modified_by: authStore.user.id
+          },
+          {
+            activity_id: activityId,
+            field_name: 'cover_image_low_url',
+            old_value: currentActivity?.cover_image_low_url ? { value: currentActivity.cover_image_low_url } : null,
+            new_value: { value: lqUrlData.publicUrl },
+            old_value_type: 'text',
+            new_value_type: 'text',
+            modified_by: authStore.user.id
+          }
+        ]
+
+        await supabase
+          .from('activity_modifications')
+          .insert(modifications)
+      } catch (trackError) {
+        console.warn('Could not track banner modifications:', trackError)
+      }
+
       // Supprimer les anciennes bannières si elles existent
       if (currentActivity?.cover_image_high_url) {
         try {
