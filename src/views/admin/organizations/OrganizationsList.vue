@@ -50,88 +50,85 @@
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto"></div>
       </div>
 
-      <div v-else class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead class="bg-gray-50 dark:bg-gray-900">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                Organisation
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                Type
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                Statut
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                Pays
-              </th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-            <tr v-for="org in filteredOrganizations" :key="org.id">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center">
-                  <div class="flex-shrink-0 h-10 w-10">
-                    <img v-if="org.logo_url"
-                         :src="org.logo_url"
-                         :alt="`Logo ${org.name}`"
-                         class="h-10 w-10 rounded-lg object-contain bg-gray-100 dark:bg-gray-700 p-1">
-                    <div v-else
-                         class="h-10 w-10 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                      <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                      </svg>
-                    </div>
-                  </div>
-                  <div class="ml-4">
-                    <div class="text-sm font-medium text-gray-900 dark:text-white">
-                      {{ org.name }}
-                    </div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">
-                      {{ org.email }}
-                    </div>
-                  </div>
+      <div v-else class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div v-for="org in filteredOrganizations"
+               :key="org.id"
+               class="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:shadow-lg transition-shadow">
+            <!-- En-tête avec logo et nom -->
+            <div class="flex items-start space-x-3 mb-3">
+              <div class="flex-shrink-0">
+                <img v-if="org.logo_url"
+                     :src="org.logo_url"
+                     :alt="`Logo ${org.name}`"
+                     class="h-12 w-12 rounded-lg object-contain bg-gray-100 dark:bg-gray-600 p-1">
+                <div v-else
+                     class="h-12 w-12 rounded-lg bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
+                  <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                  </svg>
                 </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                {{ org.organization_type }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex space-x-2">
-                  <span v-if="org.is_verified"
-                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Vérifiée
-                  </span>
-                  <span v-if="org.is_duplicate"
-                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                    Doublon
-                  </span>
-                  <span v-if="!org.is_active"
-                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                    Inactive
-                  </span>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                {{ org.country?.name_fr || 'Non renseigné' }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <router-link :to="`/admin/organizations/${org.id}`"
-                           class="text-orange-600 hover:text-orange-900">
-                  Voir
-                </router-link>
-                <button @click="openEditModal(org)"
-                        class="ml-3 text-blue-600 hover:text-blue-900 cursor-pointer">
-                  Modifier
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                  {{ org.name }}
+                </h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
+                  {{ org.email }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Informations -->
+            <div class="space-y-2 mb-3">
+              <div class="flex items-center text-xs">
+                <span class="text-gray-500 dark:text-gray-400 w-16">Type:</span>
+                <span class="text-gray-900 dark:text-white font-medium">{{ org.organization_type }}</span>
+              </div>
+              <div class="flex items-center text-xs">
+                <span class="text-gray-500 dark:text-gray-400 w-16">Pays:</span>
+                <span class="text-gray-900 dark:text-white">{{ org.country?.name_fr || 'Non renseigné' }}</span>
+              </div>
+              <div class="flex items-center text-xs">
+                <span class="text-gray-500 dark:text-gray-400 w-16">Activités:</span>
+                <span class="text-gray-900 dark:text-white font-semibold">{{ org.activities_count || 0 }}</span>
+              </div>
+            </div>
+
+            <!-- Badges de statut -->
+            <div class="flex flex-wrap gap-2 mb-3">
+              <span v-if="org.is_verified"
+                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                Vérifiée
+              </span>
+              <span v-if="org.is_duplicate"
+                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                Doublon
+              </span>
+              <span v-if="!org.is_active"
+                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                Inactive
+              </span>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex space-x-2 pt-3 border-t border-gray-200 dark:border-gray-600">
+              <router-link :to="`/admin/organizations/${org.id}`"
+                         class="flex-1 text-center px-3 py-1.5 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg cursor-pointer">
+                Voir
+              </router-link>
+              <button @click="openEditModal(org)"
+                      class="flex-1 px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg cursor-pointer">
+                Modifier
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message si aucun résultat -->
+        <div v-if="filteredOrganizations.length === 0" class="text-center py-8">
+          <p class="text-gray-500 dark:text-gray-400">Aucune organisation trouvée</p>
+        </div>
       </div>
     </div>
 
@@ -193,6 +190,7 @@ const filteredOrganizations = computed(() => {
 
 const loadOrganizations = async () => {
   try {
+    // Charger les organisations avec le comptage des activités
     const { data, error } = await supabase
       .from('organizations')
       .select(`
@@ -210,8 +208,25 @@ const loadOrganizations = async () => {
 
     if (error) throw error
 
-    organizations.value = data || []
-    allOrganizations.value = data || []
+    // Compter les activités pour chaque organisation
+    const orgsWithActivities = await Promise.all(
+      (data || []).map(async (org) => {
+        const { count, error: countError } = await supabase
+          .from('activities')
+          .select('*', { count: 'exact', head: true })
+          .eq('organization_id', org.id)
+
+        if (countError) {
+          console.error('Erreur lors du comptage des activités:', countError)
+          return { ...org, activities_count: 0 }
+        }
+
+        return { ...org, activities_count: count || 0 }
+      })
+    )
+
+    organizations.value = orgsWithActivities
+    allOrganizations.value = orgsWithActivities
     calculateStats()
   } catch (error) {
     console.error('Erreur lors du chargement des organisations:', error)
