@@ -7,6 +7,42 @@
       </h2>
     </div>
     <div class="p-6 space-y-6">
+      <!-- Title -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          {{ t('activity.submit.fields.title') }}
+        </label>
+        <div v-if="!editingField.title" class="relative">
+          <div @click="$emit('start-edit', 'title')"
+               class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600">
+            <span class="text-lg font-medium">{{ activity.title }}</span>
+            <font-awesome-icon :icon="['fas', 'edit']" class="ml-2 text-gray-400" />
+          </div>
+        </div>
+        <div v-else class="relative">
+          <input v-model="tempValue.title"
+                 @input="$emit('field-change', 'title')"
+                 @keyup.escape="$emit('cancel-edit', 'title')"
+                 @keyup.enter="$emit('save-field', 'title')"
+                 type="text"
+                 class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 pr-24 text-lg"
+                 ref="titleInput">
+          <div class="absolute bottom-2 right-2 flex space-x-2">
+            <button v-if="hasUnsavedChanges.title"
+                    @click="$emit('save-field', 'title')"
+                    :disabled="savingField.title"
+                    class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 cursor-pointer">
+              <font-awesome-icon v-if="savingField.title" :icon="['fas', 'spinner']" class="animate-spin" />
+              <font-awesome-icon v-else :icon="['fas', 'save']" />
+            </button>
+            <button @click="$emit('cancel-edit', 'title')"
+                    class="px-3 py-1 bg-gray-400 text-white rounded hover:bg-gray-500 cursor-pointer">
+              <font-awesome-icon :icon="['fas', 'times']" />
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Objectives -->
       <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -78,109 +114,18 @@
         </div>
       </div>
 
-      <!-- Dates et heures -->
-      <div class="space-y-4">
-        <!-- Timezone Info -->
-        <div v-if="eventData?.timezone" class="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
-          <div class="flex items-start">
-            <font-awesome-icon :icon="['fas', 'clock']" class="w-5 h-5 text-blue-500 dark:text-blue-400 mt-0.5" />
-            <div class="ml-3">
-              <h4 class="text-sm font-medium text-blue-900 dark:text-blue-200">
-                {{ t('events.timezoneInfo') }}
-              </h4>
-              <p class="mt-1 text-sm text-blue-800 dark:text-blue-300">
-                {{ eventTimezone }}
-              </p>
-              <p class="mt-2 text-xs text-blue-700 dark:text-blue-400">
-                {{ t('events.timezoneDescription') }}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Date de l'activité -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            {{ t('events.activityDate') }}
-          </label>
-          <input
-            type="date"
-            v-model="activityDates.activityDate.value"
-            :min="eventDateRange.minDate"
-            :max="eventDateRange.maxDate"
-            class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
-          >
-          <p v-if="eventData" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-            {{ t('events.eventPeriod') }}: {{ formatEventPeriod(eventData) }}
-          </p>
-        </div>
-
-        <!-- Heures de début et fin -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {{ t('events.startTime') }}
-            </label>
-            <input
-              type="time"
-              v-model="activityDates.startTime.value"
-              class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
-            >
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {{ t('events.endTime') }}
-            </label>
-            <input
-              type="time"
-              v-model="activityDates.endTime.value"
-              class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
-            >
-          </div>
-        </div>
-
-        <!-- Boutons d'enregistrement pour les dates -->
-        <div v-if="activityDates.hasPendingDateChanges.value" class="mt-4 flex justify-end space-x-2">
-          <button @click="$emit('cancel-dates')"
-                  class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition-colors cursor-pointer">
-            <font-awesome-icon :icon="['fas', 'times']" class="mr-2" />
-            {{ t('common.cancel') }}
-          </button>
-          <button @click="$emit('save-dates')"
-                  :disabled="activityDates.savingDates.value"
-                  class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors cursor-pointer">
-            <font-awesome-icon v-if="activityDates.savingDates.value" :icon="['fas', 'spinner']" class="animate-spin mr-2" />
-            <font-awesome-icon v-else :icon="['fas', 'save']" class="mr-2" />
-            {{ t('common.save') }}
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import RichTextEditor from '@/components/ui/RichTextEditor.vue'
-import { formatEventPeriod } from '@/utils/activityHelpers'
 
 const { t } = useI18n()
 
-const props = defineProps({
+defineProps({
   activity: {
-    type: Object,
-    required: true
-  },
-  eventData: {
-    type: Object,
-    default: null
-  },
-  eventTimezone: {
-    type: String,
-    default: ''
-  },
-  activityDates: {
     type: Object,
     required: true
   },
@@ -202,25 +147,5 @@ const props = defineProps({
   }
 })
 
-defineEmits(['start-edit', 'cancel-edit', 'field-change', 'save-field', 'save-dates', 'cancel-dates'])
-
-// Computed pour obtenir les dates min et max de l'événement
-const eventDateRange = computed(() => {
-  if (!props.eventData) return { minDate: null, maxDate: null }
-
-  let startDate, endDate
-  if (props.eventData.participation_mode === 'online') {
-    startDate = props.eventData.online_start_datetime
-    endDate = props.eventData.online_end_datetime
-  } else {
-    // in_person ou hybrid
-    startDate = props.eventData.in_person_start_date || props.eventData.online_start_datetime
-    endDate = props.eventData.in_person_end_date || props.eventData.online_end_datetime
-  }
-
-  return {
-    minDate: startDate ? startDate.split('T')[0] : '',
-    maxDate: endDate ? endDate.split('T')[0] : ''
-  }
-})
+defineEmits(['start-edit', 'cancel-edit', 'field-change', 'save-field'])
 </script>

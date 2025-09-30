@@ -1,6 +1,31 @@
 {
   "activities": {
     "title": "Activités à venir",
+    "navigation": "Navigation",
+    "sections": {
+      "banner": "Bannière",
+      "generalInfo": "Informations générales",
+      "dates": "Dates et horaires",
+      "speakers": "Intervenants",
+      "documents": "Documents",
+      "tags": "Tags"
+    },
+    "quickActions": "Actions rapides",
+    "preview": "Prévisualiser",
+    "submitForValidation": "Soumettre pour validation",
+    "statusLabel": "Statut",
+    "completion": "Complétude",
+    "submittedForValidation": "Activité soumise pour validation avec succès",
+    "errorSubmittingValidation": "Erreur lors de la soumission pour validation",
+    "validationStatus": {
+      "draft": "Brouillon",
+      "submitted": "Soumise",
+      "pending": "En attente de validation",
+      "approved": "Approuvée",
+      "rejected": "Rejetée",
+      "live": "En direct",
+      "completed": "Terminée"
+    },
     "events": "Événements",
     "trainings": "Formations",
     "upcoming": "À venir",

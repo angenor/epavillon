@@ -2,106 +2,135 @@
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-20 px-4 sm:px-6 lg:px-8">
     <!-- Browser Recommendation -->
     <BrowserRecommendation />
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-[1400px] mx-auto">
       <!-- Loading State -->
       <div v-if="loading" class="animate-pulse space-y-4">
         <div class="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
         <div class="h-64 bg-gray-200 dark:bg-gray-700 rounded"></div>
       </div>
 
-      <!-- Main Content -->
-      <div v-else-if="activity">
-        <!-- Header -->
-        <ActivityHeader
-          :activity="activity"
-          :editingField="activityEditing.editingField.value"
-          :tempValue="activityEditing.tempValue.value"
-          :hasUnsavedChanges="activityEditing.hasUnsavedChanges.value"
-          :savingField="activityEditing.savingField.value"
-          @start-edit="startEditActivity"
-          @cancel-edit="cancelEditActivity"
-          @field-change="onActivityFieldChange"
-          @save-field="saveActivityField"
-        />
-
-        <!-- Timeline de validation -->
-        <ActivityValidationTimeline
-          v-if="activity"
-          :current-status="activity.validation_status"
-          class="mb-8"
-        />
-
-        <!-- Sections -->
-        <div class="space-y-8">
-          <!-- Bannières Section -->
-          <ActivityBannerSection
+      <!-- Main Content with Sidebar -->
+      <div v-else-if="activity" class="flex gap-8">
+        <!-- Sidebar Navigation -->
+        <aside class="hidden lg:block w-64 flex-shrink-0">
+          <ActivityManagementSidebar
             :activity="activity"
-            :editingBanner="editingBanner"
-            @toggle-editing="editingBanner = !editingBanner"
-            @banner-processed="onBannerImageProcessed"
+            :speakers-count="speakerManagement.speakers.value.length"
+            :documents-count="documentManagement.documents.value.length"
+            :tags-count="tagManagement.tags.value.length"
+            :validation-status="activity.validation_status"
+            :can-edit="!isActivityApproved"
+            @scroll-to="handleScrollTo"
+            @preview="handlePreview"
+            @submit-validation="handleSubmitValidation"
           />
+        </aside>
 
-          <!-- Informations générales Section -->
-          <ActivityGeneralInfoSection
+        <!-- Main Content Area -->
+        <div class="flex-1 min-w-0">
+          <!-- Header -->
+          <ActivityHeader
             :activity="activity"
-            :eventData="eventData"
-            :eventTimezone="eventTimezone"
-            :activityDates="activityDates"
-            :editingField="activityEditing.editingField.value"
-            :tempValue="activityEditing.tempValue.value"
-            :hasUnsavedChanges="activityEditing.hasUnsavedChanges.value"
-            :savingField="activityEditing.savingField.value"
-            @start-edit="startEditActivity"
-            @cancel-edit="cancelEditActivity"
-            @field-change="onActivityFieldChange"
-            @save-field="saveActivityField"
-            @save-dates="activityDates.saveDates"
-            @cancel-dates="activityDates.cancelDateChanges"
           />
 
-          <!-- Intervenants Section -->
-          <ActivitySpeakersSection
-            :speakers="speakerManagement.speakers.value"
-            :editingField="speakerManagement.editingField.value"
-            :tempSpeakerValue="speakerManagement.tempSpeakerValue.value"
-            :hasUnsavedSpeakerChanges="speakerManagement.hasUnsavedSpeakerChanges.value"
-            :savingSpeakerField="speakerManagement.savingSpeakerField.value"
-            :uploadingPhoto="speakerManagement.uploadingPhoto.value"
-            :uploadProgress="speakerManagement.uploadProgress.value"
-            @start-edit-speaker="speakerManagement.startEditSpeaker"
-            @cancel-edit-speaker="speakerManagement.cancelEditSpeaker"
-            @speaker-field-change="speakerManagement.onSpeakerFieldChange"
-            @save-speaker-field="handleSaveSpeakerField"
-            @remove-speaker="handleRemoveSpeaker"
-            @upload-speaker-photo="handleUploadSpeakerPhoto"
-            @show-speaker-photo-modal="speakerManagement.showSpeakerPhotoModal"
-            @send-confirmation-email="handleSendConfirmationEmail"
-            @add-speaker="speakerManagement.openAddSpeakerModal"
+          <!-- Timeline de validation -->
+          <ActivityValidationTimeline
+            v-if="activity"
+            :current-status="activity.validation_status"
+            class="mb-8"
           />
 
-          <!-- Documents Section -->
-          <ActivityDocumentsSection
-            :documents="documentManagement.documents.value"
-            :getDocumentIcon="documentManagement.getDocumentIcon"
-            :getDocumentIconColor="documentManagement.getDocumentIconColor"
-            :isActivityApproved="isActivityApproved"
-            @add-new-document="documentManagement.addNewDocument"
-            @remove-document="handleRemoveDocument"
-          />
+          <!-- Sections -->
+          <div class="space-y-8">
+            <!-- Bannières Section -->
+            <ActivityBannerSection
+              id="banner"
+              :activity="activity"
+              :editingBanner="editingBanner"
+              @toggle-editing="editingBanner = !editingBanner"
+              @banner-processed="onBannerImageProcessed"
+            />
 
-          <!-- Tags Section -->
-          <ActivityTagsSection
-            :tags="tagManagement.tags.value"
-            :newTag="tagManagement.newTag.value"
-            :canAddMoreTags="tagManagement.canAddMoreTags.value"
-            :remainingTags="tagManagement.remainingTags.value"
-            :maxTags="tagManagement.maxTags"
-            :isActivityApproved="isActivityApproved"
-            @add-tag="handleAddTag"
-            @remove-tag="handleRemoveTag"
-            @update:newTag="tagManagement.newTag.value = $event"
-            @key-press="handleTagKeyPress"
-          />
+            <!-- Informations générales Section -->
+            <ActivityGeneralInfoSection
+              id="general-info"
+              :activity="activity"
+              :editingField="activityEditing.editingField.value"
+              :tempValue="activityEditing.tempValue.value"
+              :hasUnsavedChanges="activityEditing.hasUnsavedChanges.value"
+              :savingField="activityEditing.savingField.value"
+              @start-edit="startEditActivity"
+              @cancel-edit="cancelEditActivity"
+              @field-change="onActivityFieldChange"
+              @save-field="saveActivityField"
+            />
+
+            <!-- Section Dates -->
+            <ActivityDatesSection
+              id="dates"
+              :activity="activity"
+              :eventData="eventData"
+              :eventTimezone="eventTimezone"
+              :activityDates="activityDates"
+              :editingField="activityEditing.editingField.value"
+              :tempValue="activityEditing.tempValue.value"
+              :hasUnsavedChanges="activityEditing.hasUnsavedChanges.value"
+              :savingField="activityEditing.savingField.value"
+              @start-edit="startEditActivity"
+              @cancel-edit="cancelEditActivity"
+              @field-change="onActivityFieldChange"
+              @save-field="saveActivityField"
+              @save-dates="activityDates.saveDates"
+              @cancel-dates="activityDates.cancelDateChanges"
+            />
+
+            <!-- Intervenants Section -->
+            <ActivitySpeakersSection
+              id="speakers"
+              :speakers="speakerManagement.speakers.value"
+              :editingField="speakerManagement.editingField.value"
+              :tempSpeakerValue="speakerManagement.tempSpeakerValue.value"
+              :hasUnsavedSpeakerChanges="speakerManagement.hasUnsavedSpeakerChanges.value"
+              :savingSpeakerField="speakerManagement.savingSpeakerField.value"
+              :uploadingPhoto="speakerManagement.uploadingPhoto.value"
+              :uploadProgress="speakerManagement.uploadProgress.value"
+              @start-edit-speaker="speakerManagement.startEditSpeaker"
+              @cancel-edit-speaker="speakerManagement.cancelEditSpeaker"
+              @speaker-field-change="speakerManagement.onSpeakerFieldChange"
+              @save-speaker-field="handleSaveSpeakerField"
+              @remove-speaker="handleRemoveSpeaker"
+              @upload-speaker-photo="handleUploadSpeakerPhoto"
+              @show-speaker-photo-modal="speakerManagement.showSpeakerPhotoModal"
+              @send-confirmation-email="handleSendConfirmationEmail"
+              @add-speaker="speakerManagement.openAddSpeakerModal"
+            />
+
+            <!-- Documents Section -->
+            <ActivityDocumentsSection
+              id="documents"
+              :documents="documentManagement.documents.value"
+              :getDocumentIcon="documentManagement.getDocumentIcon"
+              :getDocumentIconColor="documentManagement.getDocumentIconColor"
+              :isActivityApproved="isActivityApproved"
+              @add-new-document="documentManagement.addNewDocument"
+              @remove-document="handleRemoveDocument"
+            />
+
+            <!-- Tags Section -->
+            <ActivityTagsSection
+              id="tags"
+              :tags="tagManagement.tags.value"
+              :newTag="tagManagement.newTag.value"
+              :canAddMoreTags="tagManagement.canAddMoreTags.value"
+              :remainingTags="tagManagement.remainingTags.value"
+              :maxTags="tagManagement.maxTags"
+              :isActivityApproved="isActivityApproved"
+              @add-tag="handleAddTag"
+              @remove-tag="handleRemoveTag"
+              @update:newTag="tagManagement.newTag.value = $event"
+              @key-press="handleTagKeyPress"
+            />
+          </div>
         </div>
       </div>
 
@@ -161,12 +190,14 @@ import ActivityValidationTimeline from '@/components/ActivityValidationTimeline.
 import ActivityHeader from '@/components/activity/ActivityHeader.vue'
 import ActivityBannerSection from '@/components/activity/ActivityBannerSection.vue'
 import ActivityGeneralInfoSection from '@/components/activity/ActivityGeneralInfoSection.vue'
+import ActivityDatesSection from '@/components/activity/ActivityDatesSection.vue'
 import ActivitySpeakersSection from '@/components/activity/ActivitySpeakersSection.vue'
 import ActivityDocumentsSection from '@/components/activity/ActivityDocumentsSection.vue'
 import ActivityTagsSection from '@/components/activity/ActivityTagsSection.vue'
 import AddDocumentModal from '@/components/activity/AddDocumentModal.vue'
 import SpeakerPhotoModal from '@/components/activity/SpeakerPhotoModal.vue'
 import AddSpeakerModal from '@/components/activity/AddSpeakerModal.vue'
+import ActivityManagementSidebar from '@/components/activity/ActivityManagementSidebar.vue'
 import BrowserRecommendation from '@/components/BrowserRecommendation.vue'
 
 
@@ -400,6 +431,28 @@ const trackActivityView = async () => {
     }
   } catch (error) {
     console.error('Error tracking activity view:', error)
+  }
+}
+
+// Sidebar handlers
+const handleScrollTo = (sectionId) => {
+  // Géré directement par le composant sidebar
+}
+
+const handlePreview = () => {
+  // Ouvrir la page de prévisualisation de l'activité
+  router.push(`/activities/${route.params.id}/preview`)
+}
+
+const handleSubmitValidation = async () => {
+  try {
+    // Soumettre l'activité pour validation
+    await updateActivity(activity.value.id, { validation_status: 'pending' })
+    activity.value.validation_status = 'pending'
+    alert(t('activities.submittedForValidation'))
+  } catch (error) {
+    console.error('Error submitting for validation:', error)
+    alert(t('activities.errorSubmittingValidation'))
   }
 }
 

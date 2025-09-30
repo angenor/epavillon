@@ -1,6 +1,31 @@
 {
   "activities": {
     "title": "Upcoming Activities",
+    "navigation": "Navigation",
+    "sections": {
+      "banner": "Banner",
+      "generalInfo": "General Information",
+      "dates": "Dates and Times",
+      "speakers": "Speakers",
+      "documents": "Documents",
+      "tags": "Tags"
+    },
+    "quickActions": "Quick Actions",
+    "preview": "Preview",
+    "submitForValidation": "Submit for Validation",
+    "statusLabel": "Status",
+    "completion": "Completion",
+    "submittedForValidation": "Activity successfully submitted for validation",
+    "errorSubmittingValidation": "Error submitting for validation",
+    "validationStatus": {
+      "draft": "Draft",
+      "submitted": "Submitted",
+      "pending": "Pending validation",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "live": "Live",
+      "completed": "Completed"
+    },
     "events": "Events",
     "trainings": "Trainings",
     "upcoming": "Upcoming",

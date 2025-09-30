@@ -10,34 +10,9 @@
 
     <div class="flex items-start justify-between">
       <div class="flex-1">
-        <div v-if="!editingField.title" class="relative">
-          <h1 @click="$emit('start-edit', 'title')"
-              class="text-3xl font-bold text-gray-900 dark:text-white mb-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 -ml-2 rounded">
-            {{ activity.title }}
-            <font-awesome-icon :icon="['fas', 'edit']" class="ml-2 text-lg text-gray-400" />
-          </h1>
-        </div>
-        <div v-else class="relative">
-          <input v-model="tempValue.title"
-                 @input="$emit('field-change', 'title')"
-                 @keyup.enter="$emit('save-field', 'title')"
-                 @keyup.escape="$emit('cancel-edit', 'title')"
-                 class="text-3xl font-bold bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 w-full pr-24"
-                 ref="titleInput">
-          <div class="absolute right-0 top-1/2 -translate-y-1/2 flex space-x-2">
-            <button v-if="hasUnsavedChanges.title"
-                    @click="$emit('save-field', 'title')"
-                    :disabled="savingField.title"
-                    class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 cursor-pointer">
-              <font-awesome-icon v-if="savingField.title" :icon="['fas', 'spinner']" class="animate-spin" />
-              <font-awesome-icon v-else :icon="['fas', 'save']" />
-            </button>
-            <button @click="$emit('cancel-edit', 'title')"
-                    class="px-3 py-1 bg-gray-400 text-white rounded hover:bg-gray-500 cursor-pointer">
-              <font-awesome-icon :icon="['fas', 'times']" />
-            </button>
-          </div>
-        </div>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          {{ activity.title }}
+        </h1>
 
         <div class="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
           <span
@@ -82,24 +57,6 @@ defineProps({
   activity: {
     type: Object,
     required: true
-  },
-  editingField: {
-    type: Object,
-    required: true
-  },
-  tempValue: {
-    type: Object,
-    required: true
-  },
-  hasUnsavedChanges: {
-    type: Object,
-    required: true
-  },
-  savingField: {
-    type: Object,
-    required: true
   }
 })
-
-defineEmits(['start-edit', 'cancel-edit', 'field-change', 'save-field'])
 </script>
