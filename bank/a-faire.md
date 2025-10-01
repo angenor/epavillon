@@ -15,10 +15,12 @@ exemple:
   - Sélection multiple possible
   - Je rédige mon email (avec des variables dynamiques comme {event_name}, {event_date}, {event_time}, {recipient_name}, etc.)
   - J'envoie l'email
+  - je reçois une confirmation d'envoi
 
 
 # NB:
 - Pour les mails groués, il faut envoyer en BCC pour protéger la vie privée des destinataires.
-- Il faut garder une trace des emails envoyés (qui, quand, à qui, quel contenu)
+- pas besoin de garder une trace des emails envoyés (qui, quand, à qui, quel contenu)
 - Il faut un système de template pour les emails d'événements, avec des variables dynamiques.
 - Il faut une interface utilisateur simple et intuitive pour gérer tout ça.
+- l'envoi sera effectué à travers un edge function superbase. Je veux une seule route d'envoie. Tu personnaliser en fonction des donnée que tu reçois dans le controller Laravel(laravel 8.x)
