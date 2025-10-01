@@ -85,7 +85,6 @@
               type="search"
               :placeholder="$t('organizations.search.placeholder')"
               class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              @input="applyFilters"
             />
           </div>
         </div>
@@ -100,7 +99,6 @@
             <select
               v-model="selectedCountry"
               class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              @change="applyFilters"
             >
               <option value="">{{ $t('organizations.filters.allCountries') }}</option>
               <option v-for="country in countries" :key="country.id" :value="country.id">
@@ -117,7 +115,6 @@
             <select
               v-model="selectedType"
               class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              @change="applyFilters"
             >
               <option value="">{{ $t('organizations.filters.allTypes') }}</option>
               <option v-for="type in organizationTypes" :key="type.value" :value="type.value">
@@ -134,7 +131,6 @@
             <select
               v-model="selectedVerificationStatus"
               class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              @change="applyFilters"
             >
               <option value="">{{ $t('organizations.filters.allStatuses') }}</option>
               <option value="verified">{{ $t('organizations.filters.verified') }}</option>
@@ -151,7 +147,6 @@
               <select
                 v-model="sortBy"
                 class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                @change="applyFilters"
               >
                 <option v-for="option in sortOptions" :key="option.value" :value="option.value">
                   {{ option.label }}
@@ -255,71 +250,17 @@
           </div>
         </div>
 
-        <!-- Pagination -->
-        <div v-if="totalPages > 1" class="mt-8 flex items-center justify-between">
-          <div class="flex-1 flex justify-between sm:hidden">
-            <button
-              @click="prevPage"
-              :disabled="!hasPrevPage"
-              class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {{ $t('common.previous') }}
-            </button>
-            <button
-              @click="nextPage"
-              :disabled="!hasNextPage"
-              class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {{ $t('common.next') }}
-            </button>
+        <!-- Infinite scroll loader -->
+        <div ref="infiniteScrollTrigger" class="mt-8 p-4 text-center">
+          <div v-if="isLoadingMore" class="flex items-center justify-center">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+            <span class="ml-3 text-gray-500 dark:text-gray-400">{{ $t('common.loading') }}...</span>
           </div>
-          <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-            <div>
-              <p class="text-sm text-gray-700 dark:text-gray-300">
-                {{ $t('organizations.pagination.showing', {
-                  start: (currentPage - 1) * itemsPerPage + 1,
-                  end: Math.min(currentPage * itemsPerPage, totalItems),
-                  total: totalItems
-                }) }}
-              </p>
-            </div>
-            <div>
-              <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                <button
-                  @click="prevPage"
-                  :disabled="!hasPrevPage"
-                  class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                  </svg>
-                </button>
-
-                <button
-                  v-for="page in visiblePages"
-                  :key="page"
-                  @click="goToPage(page)"
-                  :class="[
-                    'relative inline-flex items-center px-4 py-2 border text-sm font-medium',
-                    page === currentPage
-                      ? 'z-10 bg-blue-50 dark:bg-blue-900 border-blue-500 text-blue-600 dark:text-blue-400'
-                      : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
-                  ]"
-                >
-                  {{ page }}
-                </button>
-
-                <button
-                  @click="nextPage"
-                  :disabled="!hasNextPage"
-                  class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                  </svg>
-                </button>
-              </nav>
-            </div>
+          <div v-else-if="hasMore" class="text-gray-400 dark:text-gray-500 text-sm">
+            {{ $t('organizations.scrollToLoadMore') }}
+          </div>
+          <div v-else class="text-gray-400 dark:text-gray-500 text-sm">
+            {{ $t('organizations.allLoaded', { count: organizations.length }) }}
           </div>
         </div>
       </div>
@@ -341,7 +282,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useOrganizations } from '@/composables/useOrganizations'
 import OrganizationCard from '@/components/organization/OrganizationCard.vue'
 import OrganizationListItem from '@/components/organization/OrganizationListItem.vue'
@@ -349,13 +290,10 @@ import OrganizationListItem from '@/components/organization/OrganizationListItem
 const {
   organizations,
   loading,
+  isLoadingMore,
   error,
-  currentPage,
-  itemsPerPage,
   totalItems,
-  totalPages,
-  hasNextPage,
-  hasPrevPage,
+  hasMore,
   searchQuery,
   selectedCountry,
   selectedType,
@@ -368,9 +306,6 @@ const {
   fetchCountries,
   fetchUniqueCountriesFromOrganizations,
   validateOrganization,
-  goToPage,
-  nextPage,
-  prevPage,
   resetFilters,
   applyFilters
 } = useOrganizations()
@@ -378,36 +313,28 @@ const {
 const countries = ref([])
 const viewMode = ref('grid')
 const uniqueCountriesCount = ref(0)
+const infiniteScrollTrigger = ref(null)
+const observer = ref(null)
 
-const visiblePages = computed(() => {
-  const delta = 2
-  const range = []
-  const rangeWithDots = []
+const setupIntersectionObserver = () => {
+  observer.value = new IntersectionObserver(
+    (entries) => {
+      const [entry] = entries
+      if (entry.isIntersecting && hasMore.value && !isLoadingMore.value) {
+        fetchOrganizations()
+      }
+    },
+    {
+      root: null,
+      rootMargin: '100px',
+      threshold: 0.1
+    }
+  )
 
-  for (
-    let i = Math.max(2, currentPage.value - delta);
-    i <= Math.min(totalPages.value - 1, currentPage.value + delta);
-    i++
-  ) {
-    range.push(i)
+  if (infiniteScrollTrigger.value) {
+    observer.value.observe(infiniteScrollTrigger.value)
   }
-
-  if (currentPage.value - delta > 2) {
-    rangeWithDots.push(1, '...')
-  } else {
-    rangeWithDots.push(1)
-  }
-
-  rangeWithDots.push(...range)
-
-  if (currentPage.value + delta < totalPages.value - 1) {
-    rangeWithDots.push('...', totalPages.value)
-  } else {
-    rangeWithDots.push(totalPages.value)
-  }
-
-  return rangeWithDots.filter((page, index, array) => array.indexOf(page) === index)
-})
+}
 
 function toggleSortOrder() {
   sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
@@ -424,11 +351,33 @@ async function handleValidateOrganization(organizationId) {
   }
 }
 
+// Watcher pour les filtres
+watch(
+  () => [searchQuery.value, selectedCountry.value, selectedType.value, selectedVerificationStatus.value, sortBy.value, sortOrder.value],
+  async () => {
+    await applyFilters()
+    await nextTick()
+    if (infiniteScrollTrigger.value && observer.value) {
+      observer.value.disconnect()
+      setupIntersectionObserver()
+    }
+  }
+)
+
 onMounted(async () => {
   await Promise.all([
-    fetchOrganizations(),
+    fetchOrganizations(true),
     fetchCountries().then(data => countries.value = data),
     fetchUniqueCountriesFromOrganizations().then(count => uniqueCountriesCount.value = count)
   ])
+
+  await nextTick()
+  setupIntersectionObserver()
+})
+
+onUnmounted(() => {
+  if (observer.value) {
+    observer.value.disconnect()
+  }
 })
 </script>

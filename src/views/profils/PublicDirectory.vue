@@ -78,30 +78,12 @@
               </div>
 
               <div class="flex items-center space-x-4">
-                <!-- Sélecteur de nombre par page avec style premium -->
-                <div class="relative">
-                  <select
-                    v-model="pagination.perPage"
-                    @change="handlePerPageChange"
-                    class="appearance-none bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-3 pr-10 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-ifdd-vert focus:border-transparent"
-                  >
-                    <option value="20">20 par page</option>
-                    <option value="50">50 par page</option>
-                    <option value="100">100 par page</option>
-                  </select>
-                  <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                    <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                    </svg>
-                  </div>
-                </div>
-
                 <!-- Toggle grille/liste avec design premium -->
                 <div class="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1 shadow-inner">
                   <button
                     @click="viewMode = 'grid'"
                     :class="[
-                      'relative p-2 rounded-md transition-all duration-200 transform',
+                      'relative p-2 rounded-md transition-all duration-200 transform cursor-pointer',
                       viewMode === 'grid'
                         ? 'bg-white dark:bg-gray-600 text-ifdd-vert dark:text-ifdd-vert-light shadow-md scale-105'
                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:scale-105'
@@ -114,7 +96,7 @@
                   <button
                     @click="viewMode = 'list'"
                     :class="[
-                      'relative p-2 rounded-md transition-all duration-200 transform',
+                      'relative p-2 rounded-md transition-all duration-200 transform cursor-pointer',
                       viewMode === 'list'
                         ? 'bg-white dark:bg-gray-600 text-ifdd-vert dark:text-ifdd-vert-light shadow-md scale-105'
                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:scale-105'
@@ -130,7 +112,7 @@
           </div>
 
           <!-- État de chargement premium -->
-          <div v-if="loading" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-12">
+          <div v-if="isLoading" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-12">
             <div class="text-center">
               <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-ifdd-vert-light/20 to-ifdd-vert/20 dark:from-ifdd-vert-dark/20 dark:to-ifdd-violet-dark/20 rounded-full mb-4">
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-ifdd-vert"></div>
@@ -141,7 +123,7 @@
           </div>
 
           <!-- Aucun résultat avec design premium -->
-          <div v-else-if="profiles.length === 0" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-12">
+          <div v-else-if="displayedProfiles.length === 0 && !isLoadingMore" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-12">
             <div class="text-center">
               <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-full mb-6">
                 <svg class="w-10 h-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -152,7 +134,7 @@
               <p class="text-gray-500 dark:text-gray-400 max-w-md mx-auto leading-relaxed">{{ $t('directory.no_results_message') }}</p>
               <button
                 @click="resetFilters"
-                class="mt-6 inline-flex items-center px-6 py-3 bg-ifdd-vert hover:bg-ifdd-vert-dark text-white font-medium rounded-lg transition-colors duration-200"
+                class="mt-6 inline-flex items-center px-6 py-3 bg-ifdd-vert hover:bg-ifdd-vert-dark text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer"
               >
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
@@ -163,114 +145,40 @@
           </div>
 
           <!-- Grille des profils avec animations -->
-          <div
-            v-else
-            :class="[
-              'grid gap-8 transition-all duration-300',
-              viewMode === 'grid'
-                ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'
-                : 'grid-cols-1'
-            ]"
-          >
+          <div v-else>
             <div
-              v-for="(profile, index) in profiles"
-              :key="profile.id"
-              :style="{ animationDelay: `${index * 50}ms` }"
-              class="animate-fade-in-up"
+              :class="[
+                'grid gap-6 transition-all duration-300',
+                viewMode === 'grid'
+                  ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'
+                  : 'grid-cols-1'
+              ]"
             >
-              <PublicUserCard
-                :profile="profile"
-                :view-mode="viewMode"
-                @connection-request="handleConnectionRequest"
-              />
-            </div>
-          </div>
-
-          <!-- Pagination premium -->
-          <div v-if="totalPages > 1" class="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <div class="flex items-center justify-between">
-              <!-- Info pagination -->
-              <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                <span>Page {{ pagination.currentPage }} sur {{ totalPages }}</span>
+              <div
+                v-for="(profile, index) in displayedProfiles"
+                :key="profile.id"
+                :style="{ animationDelay: `${index * 50}ms` }"
+                class="animate-fade-in-up"
+              >
+                <PublicUserCard
+                  :profile="profile"
+                  :view-mode="viewMode"
+                  @connection-request="handleConnectionRequest"
+                />
               </div>
+            </div>
 
-              <!-- Navigation -->
-              <nav class="flex items-center space-x-2" aria-label="Pagination">
-                <!-- Bouton précédent -->
-                <button
-                  @click="changePage(pagination.currentPage - 1)"
-                  :disabled="pagination.currentPage === 1"
-                  :class="[
-                    'relative inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
-                    pagination.currentPage === 1
-                      ? 'bg-gray-100 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
-                      : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-ifdd-vert-light hover:text-ifdd-vert transform hover:scale-105'
-                  ]"
-                >
-                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                  </svg>
-                  Précédent
-                </button>
-
-                <!-- Pages -->
-                <div class="flex items-center space-x-1">
-                  <template v-for="page in visiblePages" :key="page">
-                    <button
-                      v-if="page !== '...'"
-                      @click="changePage(page)"
-                      :class="[
-                        'relative inline-flex items-center justify-center w-10 h-10 rounded-lg text-sm font-medium transition-all duration-200 transform',
-                        page === pagination.currentPage
-                          ? 'bg-green-500 text-white shadow-lg scale-110'
-                          : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-ifdd-vert-light hover:text-ifdd-vert hover:scale-105'
-                      ]"
-                    >
-                      {{ page }}
-                    </button>
-                    <span
-                      v-else
-                      class="relative inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-400"
-                    >
-                      ...
-                    </span>
-                  </template>
-                </div>
-
-                <!-- Bouton suivant -->
-                <button
-                  @click="changePage(pagination.currentPage + 1)"
-                  :disabled="pagination.currentPage === totalPages"
-                  :class="[
-                    'relative inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
-                    pagination.currentPage === totalPages
-                      ? 'bg-gray-100 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
-                      : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-ifdd-vert-light hover:text-ifdd-vert transform hover:scale-105'
-                  ]"
-                >
-                  Suivant
-                  <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                  </svg>
-                </button>
-              </nav>
-
-              <!-- Navigation rapide -->
-              <div class="flex items-center space-x-2">
-                <button
-                  v-if="pagination.currentPage > 1"
-                  @click="changePage(1)"
-                  class="text-sm text-gray-500 dark:text-gray-400 hover:text-ifdd-vert transition-colors duration-200"
-                >
-                  Première
-                </button>
-                <button
-                  v-if="pagination.currentPage < totalPages"
-                  @click="changePage(totalPages)"
-                  class="text-sm text-gray-500 dark:text-gray-400 hover:text-ifdd-vert transition-colors duration-200"
-                >
-                  Dernière
-                </button>
+            <!-- Infinite scroll loader -->
+            <div ref="infiniteScrollTrigger" class="mt-8 p-6 text-center">
+              <div v-if="isLoadingMore" class="flex items-center justify-center">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-ifdd-vert"></div>
+                <span class="ml-3 text-gray-500 dark:text-gray-400">Chargement...</span>
+              </div>
+              <div v-else-if="hasMore" class="text-gray-400 dark:text-gray-500 text-sm">
+                Faites défiler pour charger plus de profils
+              </div>
+              <div v-else class="text-gray-400 dark:text-gray-500 text-sm">
+                Tous les profils ont été chargés ({{ displayedProfiles.length }} au total)
               </div>
             </div>
           </div>
@@ -281,20 +189,29 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import PublicUserCard from '@/components/profils/PublicUserCard.vue'
 import PublicFilters from '@/components/profils/PublicFilters.vue'
 import { usePublicProfiles } from '@/composables/usePublicProfiles'
+import { useSupabase } from '@/composables/useSupabase'
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
+const { supabase } = useSupabase()
 
 // État local
 const viewMode = ref('grid')
-const loading = ref(true)
+const isLoading = ref(true)
+const isLoadingMore = ref(false)
+const displayedProfiles = ref([])
+const currentPage = ref(0)
+const pageSize = 20
+const hasMore = ref(true)
+const infiniteScrollTrigger = ref(null)
+const observer = ref(null)
 
 // Filtres
 const filters = ref({
@@ -304,18 +221,9 @@ const filters = ref({
   expertise: route.query.expertise || ''
 })
 
-// Pagination
-const pagination = ref({
-  currentPage: parseInt(route.query.page) || 1,
-  perPage: parseInt(route.query.perPage) || 20
-})
-
 // Composable pour récupérer les données
 const {
-  profiles,
   totalResults,
-  totalPages,
-  searchProfiles,
   getCommunityStats
 } = usePublicProfiles()
 
@@ -327,85 +235,196 @@ const communityStats = ref({
   activitiesCount: 0
 })
 
-// Computed
-const visiblePages = computed(() => {
-  const current = pagination.value.currentPage
-  const total = totalPages.value
-  const delta = 2
-  const range = []
-  const rangeWithDots = []
-
-  for (let i = Math.max(2, current - delta); i <= Math.min(total - 1, current + delta); i++) {
-    range.push(i)
-  }
-
-  if (current - delta > 2) {
-    rangeWithDots.push(1, '...')
-  } else {
-    rangeWithDots.push(1)
-  }
-
-  rangeWithDots.push(...range)
-
-  if (current + delta < total - 1) {
-    rangeWithDots.push('...', total)
-  } else if (total > 1) {
-    rangeWithDots.push(total)
-  }
-
-  return rangeWithDots
-})
-
 // Méthodes
-const handleFilterChange = () => {
-  pagination.value.currentPage = 1
-  updateURLParams()
-  loadProfiles()
-}
-
-const handlePerPageChange = () => {
-  pagination.value.currentPage = 1
-  updateURLParams()
-  loadProfiles()
-}
-
-const changePage = (page) => {
-  if (page >= 1 && page <= totalPages.value) {
-    pagination.value.currentPage = page
-    updateURLParams()
-    loadProfiles()
-  }
-}
-
-const updateURLParams = () => {
-  const query = {
-    ...filters.value,
-    page: pagination.value.currentPage,
-    perPage: pagination.value.perPage
+const loadProfiles = async (reset = false) => {
+  if (reset) {
+    currentPage.value = 0
+    displayedProfiles.value = []
+    hasMore.value = true
   }
 
-  // Supprimer les paramètres vides
-  Object.keys(query).forEach(key => {
-    if (!query[key] || (typeof query[key] === 'string' && !query[key].trim())) {
-      delete query[key]
-    }
-  })
+  if (!hasMore.value || isLoadingMore.value) return
 
-  router.replace({ query })
-}
-
-const loadProfiles = async () => {
-  loading.value = true
   try {
-    await searchProfiles({
-      ...filters.value,
-      page: pagination.value.currentPage,
-      perPage: pagination.value.perPage
-    })
+    if (reset) {
+      isLoading.value = true
+    } else {
+      isLoadingMore.value = true
+    }
+
+    // Construction de la requête de base
+    let query = supabase
+      .from('users')
+      .select(`
+        id,
+        first_name,
+        last_name,
+        biography,
+        profile_photo_url,
+        profile_photo_thumbnail_url,
+        address,
+        networking_visibility,
+        created_at,
+        country_id,
+        organization_id
+      `, { count: 'exact' })
+      .eq('is_blocked', false)
+      .eq('is_suspended', false)
+      .order('created_at', { ascending: false })
+      .range(currentPage.value * pageSize, (currentPage.value + 1) * pageSize - 1)
+
+    // Appliquer les filtres de recherche
+    if (filters.value.search) {
+      const search = `%${filters.value.search}%`
+      query = query.or(`first_name.ilike.${search},last_name.ilike.${search}`)
+    }
+
+    if (filters.value.organization) {
+      query = query.eq('organization_id', filters.value.organization)
+    }
+
+    if (filters.value.country) {
+      query = query.eq('country_id', filters.value.country)
+    }
+
+    const { data: profilesData, error: profilesError, count } = await query
+
+    if (profilesError) throw profilesError
+
+    // Enrichir les données avec organisations, pays et rôles
+    const enrichedProfiles = await Promise.all(
+      (profilesData || []).map(async (profile) => {
+        // Récupérer l'organisation si elle existe
+        let organization = null
+        if (profile.organization_id) {
+          try {
+            const { data: orgData } = await supabase
+              .from('organizations')
+              .select('id, name, is_verified')
+              .eq('id', profile.organization_id)
+              .single()
+            organization = orgData
+          } catch (orgError) {
+            console.warn('Erreur organisation:', orgError)
+          }
+        }
+
+        // Récupérer le pays si existe
+        let country = null
+        if (profile.country_id) {
+          try {
+            const { data: countryData } = await supabase
+              .from('countries')
+              .select('id, name_fr, name_en')
+              .eq('id', profile.country_id)
+              .single()
+            country = countryData
+          } catch (countryError) {
+            console.warn('Erreur pays:', countryError)
+          }
+        }
+
+        // Récupérer les rôles
+        let roles = []
+        try {
+          const { data: rolesData } = await supabase
+            .from('user_roles')
+            .select('role, is_active')
+            .eq('user_id', profile.id)
+            .eq('is_active', true)
+
+          roles = rolesData?.map(r => r.role) || []
+        } catch (roleError) {
+          console.warn('Erreur rôles:', roleError)
+        }
+
+        // Récupérer les statistiques d'activités
+        let activities_count = 0
+        try {
+          const { count: activitiesCount } = await supabase
+            .from('activities')
+            .select('id', { count: 'exact', head: true })
+            .eq('submitted_by', profile.id)
+            .eq('validation_status', 'approved')
+            .eq('is_deleted', false)
+
+          activities_count = activitiesCount || 0
+        } catch (activitiesError) {
+          console.warn('Erreur activités:', activitiesError)
+        }
+
+        // Filtrer par expertise si spécifié
+        if (filters.value.expertise) {
+          const hasMatchingExpertise =
+            (filters.value.expertise === 'negotiator' && roles.includes('negotiator')) ||
+            (filters.value.expertise === 'trainer' && roles.includes('trainer')) ||
+            (filters.value.expertise === 'sustainable_development' && roles.includes('standard'))
+
+          if (!hasMatchingExpertise) {
+            return null
+          }
+        }
+
+        return {
+          ...profile,
+          organization,
+          country,
+          roles,
+          stats: {
+            member_since: new Date(profile.created_at).getFullYear(),
+            activities_count
+          }
+        }
+      })
+    )
+
+    // Filtrer les profils null
+    const filteredProfiles = enrichedProfiles.filter(profile => profile !== null)
+
+    displayedProfiles.value = [...displayedProfiles.value, ...filteredProfiles]
+    currentPage.value++
+
+    // Vérifier s'il y a plus de profils à charger
+    hasMore.value = profilesData.length === pageSize
+
+    // Mettre à jour totalResults seulement lors du premier chargement
+    if (reset && count !== null) {
+      totalResults.value = count
+    }
+
   } catch (error) {
     console.error('Erreur lors du chargement des profils:', error)
   } finally {
-    loading.value = false
+    isLoading.value = false
+    isLoadingMore.value = false
+  }
+}
+
+const setupIntersectionObserver = () => {
+  observer.value = new IntersectionObserver(
+    (entries) => {
+      const [entry] = entries
+      if (entry.isIntersecting && hasMore.value && !isLoadingMore.value) {
+        loadProfiles()
+      }
+    },
+    {
+      root: null,
+      rootMargin: '100px',
+      threshold: 0.1
+    }
+  )
+
+  if (infiniteScrollTrigger.value) {
+    observer.value.observe(infiniteScrollTrigger.value)
+  }
+}
+
+const handleFilterChange = async () => {
+  await loadProfiles(true)
+  await nextTick()
+  if (infiniteScrollTrigger.value && observer.value) {
+    observer.value.observe(infiniteScrollTrigger.value)
   }
 }
 
@@ -414,16 +433,18 @@ const handleConnectionRequest = (profileId) => {
   console.log('Demande de connexion pour:', profileId)
 }
 
-const resetFilters = () => {
+const resetFilters = async () => {
   filters.value = {
     search: '',
     organization: '',
     country: '',
     expertise: ''
   }
-  pagination.value.currentPage = 1
-  updateURLParams()
-  loadProfiles()
+  await loadProfiles(true)
+  await nextTick()
+  if (infiniteScrollTrigger.value && observer.value) {
+    observer.value.observe(infiniteScrollTrigger.value)
+  }
 }
 
 const loadCommunityStats = async () => {
@@ -436,14 +457,26 @@ const loadCommunityStats = async () => {
 }
 
 // Watchers
-watch([filters], () => {
-  handleFilterChange()
+watch(() => filters.value, async () => {
+  await handleFilterChange()
 }, { deep: true })
 
 // Lifecycle
-onMounted(() => {
-  loadProfiles()
-  loadCommunityStats()
+onMounted(async () => {
+  await loadProfiles(true)
+  await loadCommunityStats()
+
+  // Attendre que le DOM soit mis à jour
+  await nextTick()
+
+  // Configurer l'infinite scroll
+  setupIntersectionObserver()
+})
+
+onUnmounted(() => {
+  if (observer.value) {
+    observer.value.disconnect()
+  }
 })
 </script>
 

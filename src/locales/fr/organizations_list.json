@@ -1,0 +1,39 @@
+{
+  "organizations": {
+    "title": "Organisations",
+    "subtitle": "{count} organisation | {count} organisations",
+    "categoriesCount": "catégories",
+    "countriesCount": "pays",
+    "results": "{count} résultat | {count} résultats",
+    "viewAs": "Afficher comme",
+    "scrollToLoadMore": "Faites défiler pour charger plus d'organisations",
+    "allLoaded": "Toutes les organisations ont été chargées ({count} au total)",
+    "verified": "Vérifiée",
+    "validate": "Valider",
+    "viewDetails": "Voir les détails",
+    "activitiesCount": "activité | activités",
+    "website": "Site web",
+    "search": {
+      "placeholder": "Rechercher une organisation..."
+    },
+    "filters": {
+      "country": "Pays",
+      "allCountries": "Tous les pays",
+      "type": "Type",
+      "allTypes": "Tous les types",
+      "verification": "Vérification",
+      "allStatuses": "Tous les statuts",
+      "verified": "Vérifiées",
+      "unverified": "Non vérifiées",
+      "sortBy": "Trier par",
+      "reset": "Réinitialiser les filtres"
+    },
+    "empty": {
+      "title": "Aucune organisation trouvée",
+      "description": "Essayez de modifier vos critères de recherche ou d'affiner vos filtres."
+    },
+    "pagination": {
+      "showing": "Affichage de {start} à {end} sur {total} résultats"
+    }
+  }
+}

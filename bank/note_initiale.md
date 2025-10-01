@@ -30,10 +30,10 @@ email_rappel_15min
 dans le dashboad, je veux utiliser @amcharts/amcharts5@5.10.7 qui est déjà istallé pour affchicher le graphe de "nombre de soumission en fonction des jours" et un autre graphe qui montre la proportion de 'public_national_institution', 'international_organization', 'regional_organization', 'ngo_association' et 'private_sector' la documentation se trouve à https://www.amcharts.com/docs/v5/
 
 
-je veux que l'envoie de notification soit plus flexible, s'adate l'orsque le statut de l'évènement est "Soumise",
+je veux que l'envoie de notification soit plus flexible, s'adapte lorsque le statut de l'évènement est "Soumise",
 
 
 galerie photo activité
 
 
-management) ) Période de l'événement: Invalid Date - Invalid Date
+management) Période de l'événement: Invalid Date - Invalid Date

@@ -9,6 +9,7 @@ import community from './community.json' with { type: 'json' };
 import negotiations from './negotiations.json' with { type: 'json' };
 import directory from './directory.json' with { type: 'json' };
 import organizations from './organizations.json' with { type: 'json' };
+import organizations_list from './organizations_list.json' with { type: 'json' };
 import maintenance from './maintenance.json' with { type: 'json' };
 
 export default {
@@ -23,5 +24,6 @@ export default {
   ...negotiations,
   ...directory,
   ...organizations,
+  ...organizations_list,
   ...maintenance,
 };

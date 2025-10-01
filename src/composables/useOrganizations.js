@@ -6,12 +6,14 @@ export function useOrganizations() {
   
   const organizations = ref([])
   const loading = ref(false)
+  const isLoadingMore = ref(false)
   const error = ref(null)
 
   // Pagination
-  const currentPage = ref(1)
-  const itemsPerPage = ref(12)
+  const currentPage = ref(0)
+  const itemsPerPage = ref(20)
   const totalItems = ref(0)
+  const hasMore = ref(true)
 
   // Filtres
   const searchQuery = ref('')
@@ -43,9 +45,21 @@ export function useOrganizations() {
   const hasPrevPage = computed(() => currentPage.value > 1)
 
   // Méthodes
-  async function fetchOrganizations() {
+  async function fetchOrganizations(reset = false) {
+    if (reset) {
+      currentPage.value = 0
+      organizations.value = []
+      hasMore.value = true
+    }
+
+    if (!hasMore.value || isLoadingMore.value) return
+
     try {
-      loading.value = true
+      if (reset) {
+        loading.value = true
+      } else {
+        isLoadingMore.value = true
+      }
       error.value = null
 
       let query = from('organizations')
@@ -93,8 +107,10 @@ export function useOrganizations() {
       query = query.order(sortColumn, { ascending: sortOrder.value === 'asc' })
 
       // Pagination
-      const startIndex = (currentPage.value - 1) * itemsPerPage.value
-      query = query.range(startIndex, startIndex + itemsPerPage.value - 1)
+      query = query.range(
+        currentPage.value * itemsPerPage.value,
+        (currentPage.value + 1) * itemsPerPage.value - 1
+      )
 
       const { data, error: queryError, count } = await query
 
@@ -116,19 +132,19 @@ export function useOrganizations() {
             }
           })
         )
-        organizations.value = orgWithCounts
-      } else {
-        organizations.value = data || []
+        organizations.value = [...organizations.value, ...orgWithCounts]
       }
 
       totalItems.value = count || 0
+      currentPage.value++
+      hasMore.value = data && data.length === itemsPerPage.value
 
     } catch (err) {
       console.error('Erreur lors de la récupération des organisations:', err)
       error.value = err.message
-      organizations.value = []
     } finally {
       loading.value = false
+      isLoadingMore.value = false
     }
   }
 
@@ -218,14 +234,12 @@ export function useOrganizations() {
     selectedCountry.value = ''
     selectedType.value = ''
     selectedVerificationStatus.value = ''
-    currentPage.value = 1
-    fetchOrganizations()
+    fetchOrganizations(true)
   }
 
-  // Appliquer les filtres (réinitialise à la page 1)
+  // Appliquer les filtres (réinitialise)
   function applyFilters() {
-    currentPage.value = 1
-    fetchOrganizations()
+    fetchOrganizations(true)
   }
 
   // Nouvelle méthode pour charger les organisations avec options
@@ -266,8 +280,9 @@ export function useOrganizations() {
     // State
     organizations,
     loading,
+    isLoadingMore,
     error,
-    
+
     // Pagination
     currentPage,
     itemsPerPage,
@@ -275,7 +290,8 @@ export function useOrganizations() {
     totalPages,
     hasNextPage,
     hasPrevPage,
-    
+    hasMore,
+
     // Filtres
     searchQuery,
     selectedCountry,
@@ -283,11 +299,11 @@ export function useOrganizations() {
     selectedVerificationStatus,
     sortBy,
     sortOrder,
-    
+
     // Options
     organizationTypes,
     sortOptions,
-    
+
     // Méthodes
     fetchOrganizations,
     fetchCountries,
