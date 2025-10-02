@@ -20,7 +20,8 @@
       "Bash(npm run preview:*)",
       "Bash(firebase deploy:*)",
       "Bash(pkill:*)",
-      "WebFetch(domain:www.amcharts.com)"
+      "WebFetch(domain:www.amcharts.com)",
+      "Bash(chmod:*)"
     ],
     "deny": [],
     "ask": []

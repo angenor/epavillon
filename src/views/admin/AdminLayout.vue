@@ -225,6 +225,11 @@ const navigation = [
   {
     name: 'admin.nav.communications',
     href: '/admin/communications',
+    icon: ['fas', 'bullhorn']
+  },
+  {
+    name: 'admin.nav.emails',
+    href: '/admin/emails',
     icon: ['fas', 'envelope']
   },
   {

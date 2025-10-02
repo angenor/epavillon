@@ -308,6 +308,11 @@ const router = createRouter({
           path: 'negotiations/sessions/:id',
           name: 'admin-session-detail',
           component: () => import('../views/admin/negotiations/SessionDetail.vue')
+        },
+        {
+          path: 'emails',
+          name: 'admin-emails',
+          component: () => import('../views/admin/EmailManager.vue')
         }
       ]
     },

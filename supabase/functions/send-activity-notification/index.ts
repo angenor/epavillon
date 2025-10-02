@@ -1,12 +1,10 @@
 // supabase/functions/send-activity-notification/index.ts
 // Edge Function for sending activity received notifications via Laravel endpoint
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.43.5';
-
 const LARAVEL_NOTIFICATION_URL = Deno.env.get('LARAVEL_ACTIVITY_NOTIFICATION_URL') ?? 'https://epavillonclimatique.francophonie.org/send_activites_recu_email';
 const LARAVEL_KEY = Deno.env.get('SUPABASE_CUSTOM_AUTH_LARAVEL_KEY') ?? '';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-
 console.info('send-activity-notification function started');
 console.info('Environment check:', {
   hasSupabaseUrl: !!SUPABASE_URL,
@@ -28,7 +26,6 @@ Deno.serve(async (req)=>{
   }
   try {
     console.log('Request method:', req.method);
-
     if (req.method !== 'POST') {
       return new Response(JSON.stringify({
         error: 'Method not allowed'
@@ -40,7 +37,6 @@ Deno.serve(async (req)=>{
         }
       });
     }
-
     let payload;
     try {
       payload = await req.json();
@@ -78,7 +74,6 @@ Deno.serve(async (req)=>{
       organization_name,
       event_title
     });
-
     // Incrémenter le compteur d'emails dans Supabase AVANT l'envoi
     if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
       try {
@@ -90,21 +85,13 @@ Deno.serve(async (req)=>{
           }
         });
         console.log('Supabase client created, fetching activity...');
-
         // D'abord récupérer le compteur actuel
-        const { data: currentActivity, error: fetchError } = await supabaseClient
-          .from('activities')
-          .select('send_activites_recu_email_count')
-          .eq('id', activity_id)
-          .single();
-
+        const { data: currentActivity, error: fetchError } = await supabaseClient.from('activities').select('send_activites_recu_email_count').eq('id', activity_id).single();
         if (!fetchError && currentActivity) {
           const newCount = (currentActivity.send_activites_recu_email_count || 0) + 1;
-          const { error: updateError } = await supabaseClient
-            .from('activities')
-            .update({ send_activites_recu_email_count: newCount })
-            .eq('id', activity_id);
-
+          const { error: updateError } = await supabaseClient.from('activities').update({
+            send_activites_recu_email_count: newCount
+          }).eq('id', activity_id);
           if (updateError) {
             console.error('Failed to increment email count:', updateError);
           } else {
@@ -120,7 +107,6 @@ Deno.serve(async (req)=>{
     } else {
       console.warn('Supabase credentials not available, skipping email count increment');
     }
-
     try {
       // Créer un AbortController pour timeout de 10 secondes
       const controller = new AbortController();

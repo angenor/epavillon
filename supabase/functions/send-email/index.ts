@@ -1,0 +1,307 @@
+// supabase/functions/send-email/index.ts
+// Edge Function polyvalente pour l'envoi d'emails via Laravel endpoint
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.43.5';
+
+const LARAVEL_EMAIL_URL = Deno.env.get('LARAVEL_POLIVALENT_EMAIL_URL') ?? 'https://epavillonclimatique.francophonie.org/send_polivalent_email';
+const LARAVEL_KEY = Deno.env.get('SUPABASE_CUSTOM_AUTH_LARAVEL_KEY') ?? '';
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+
+console.info('send-email function started');
+console.info('Environment check:', {
+  hasSupabaseUrl: !!SUPABASE_URL,
+  hasServiceRoleKey: !!SUPABASE_SERVICE_ROLE_KEY,
+  laravelUrl: LARAVEL_EMAIL_URL
+});
+
+Deno.serve(async (req) => {
+  // Configuration CORS
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+  };
+
+  // Gérer les requêtes OPTIONS (preflight)
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', {
+      headers: corsHeaders
+    });
+  }
+
+  try {
+    console.log('Request method:', req.method);
+
+    if (req.method !== 'POST') {
+      return new Response(JSON.stringify({
+        error: 'Method not allowed'
+      }), {
+        status: 405,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders
+        }
+      });
+    }
+
+    let payload;
+    try {
+      payload = await req.json();
+      console.log('Email payload received:', JSON.stringify(payload, null, 2));
+    } catch (parseError) {
+      console.error('Error parsing JSON payload:', parseError);
+      return new Response(JSON.stringify({
+        error: 'Invalid JSON payload'
+      }), {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders
+        }
+      });
+    }
+
+    // Extraire les données de l'email
+    const {
+      email_type = 'simple',
+      subject,
+      content,
+      recipients,
+      variables = {},
+      template = 'simple_email',
+      event_id,
+      activity_status,
+      recipient_roles
+    } = payload;
+
+    // Validation des données requises
+    if (!subject || !content || !recipients) {
+      return new Response(JSON.stringify({
+        error: 'Missing required fields: subject, content, recipients'
+      }), {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders
+        }
+      });
+    }
+
+    // Validation des destinataires
+    if (!recipients.to && !recipients.cc && !recipients.bcc) {
+      return new Response(JSON.stringify({
+        error: 'At least one recipient is required (to, cc, or bcc)'
+      }), {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders
+        }
+      });
+    }
+
+    // Si c'est un email d'événement, enrichir avec les données de l'événement
+    let enrichedVariables = { ...variables };
+
+    if (email_type === 'event' && event_id && SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
+      try {
+        console.log('Fetching event data for event_id:', event_id);
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+          auth: {
+            persistSession: false,
+            autoRefreshToken: false
+          }
+        });
+
+        // Récupérer les données de l'événement
+        const { data: eventData, error: eventError } = await supabaseClient
+          .from('events')
+          .select(`
+            id,
+            title,
+            display_name,
+            type,
+            status,
+            start_date,
+            end_date,
+            location_type,
+            address,
+            city,
+            country,
+            postal_code,
+            time_zone,
+            event_timezone,
+            created_by
+          `)
+          .eq('id', event_id)
+          .single();
+
+        if (!eventError && eventData) {
+          // Ajouter les variables de l'événement
+          enrichedVariables['{event_name}'] = eventData.display_name || eventData.title;
+          enrichedVariables['{event_title}'] = eventData.title;
+          enrichedVariables['{event_date}'] = eventData.start_date;
+          enrichedVariables['{event_time}'] = eventData.start_date;
+          enrichedVariables['{event_city}'] = eventData.city || '';
+          enrichedVariables['{event_country}'] = eventData.country || '';
+          enrichedVariables['{event_address}'] = eventData.address || '';
+
+          console.log('Event variables enriched:', enrichedVariables);
+        } else {
+          console.error('Failed to fetch event data:', eventError);
+        }
+
+        // Si on a des critères de statut d'activité, récupérer les destinataires
+        if (activity_status && recipient_roles && recipient_roles.length > 0) {
+          console.log('Fetching recipients based on activity status and roles');
+
+          // Récupérer les activités avec le statut spécifié
+          const { data: activities, error: activitiesError } = await supabaseClient
+            .from('activities')
+            .select(`
+              id,
+              coordinator_email,
+              coordinator_name,
+              organization_name
+            `)
+            .eq('event_id', event_id)
+            .eq('validation_status', activity_status);
+
+          if (!activitiesError && activities) {
+            // Collecter les emails selon les rôles demandés
+            const emailList: string[] = [];
+
+            if (recipient_roles.includes('coordinators')) {
+              activities.forEach(activity => {
+                if (activity.coordinator_email) {
+                  emailList.push(activity.coordinator_email);
+                }
+              });
+            }
+
+            // Ajouter les emails collectés en BCC pour protéger la vie privée
+            if (emailList.length > 0) {
+              recipients.bcc = [...(recipients.bcc || []), ...emailList];
+              console.log(`Added ${emailList.length} recipients from activity criteria`);
+            }
+          } else {
+            console.error('Failed to fetch activities:', activitiesError);
+          }
+        }
+      } catch (enrichError) {
+        console.error('Error enriching event data:', enrichError);
+        // Continuer même si l'enrichissement échoue
+      }
+    }
+
+    console.log('Sending email via Laravel:', {
+      email_type,
+      subject,
+      recipient_count: {
+        to: recipients.to?.length || 0,
+        cc: recipients.cc?.length || 0,
+        bcc: recipients.bcc?.length || 0
+      }
+    });
+
+    try {
+      // Créer un AbortController pour timeout de 15 secondes
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+      const response = await fetch(LARAVEL_EMAIL_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...LARAVEL_KEY ? {
+            'Authorization': `Bearer ${LARAVEL_KEY}`
+          } : {}
+        },
+        body: JSON.stringify({
+          email_type,
+          subject,
+          content,
+          recipients,
+          variables: enrichedVariables,
+          template,
+          event_id,
+          activity_status,
+          recipient_roles
+        }),
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const text = await response.text().catch(() => '');
+        console.error('Laravel API returned error', response.status, text);
+        return new Response(JSON.stringify({
+          error: 'Failed to send email via Laravel',
+          details: text
+        }), {
+          status: 500,
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders
+          }
+        });
+      }
+
+      const responseData = await response.json().catch(() => ({}));
+      console.info('Email sent successfully via Laravel', responseData);
+
+      return new Response(JSON.stringify({
+        success: true,
+        message: 'Email sent successfully',
+        data: responseData
+      }), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders
+        }
+      });
+
+    } catch (err) {
+      console.error('Error sending email:', err);
+
+      // Si c'est un timeout, retourner un succès pour éviter l'erreur côté client
+      if (err.name === 'AbortError') {
+        console.warn('Laravel API timeout, but email might still be sent');
+        return new Response(JSON.stringify({
+          success: true,
+          message: 'Email processing initiated (timeout occurred)'
+        }), {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders
+          }
+        });
+      }
+
+      // Pour les autres erreurs
+      return new Response(JSON.stringify({
+        error: String(err)
+      }), {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders
+        }
+      });
+    }
+  } catch (err) {
+    console.error('Unhandled error in send-email function:', err);
+    return new Response(JSON.stringify({
+      error: 'Internal server error'
+    }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        ...corsHeaders
+      }
+    });
+  }
+});
