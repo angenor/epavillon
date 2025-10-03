@@ -21,7 +21,8 @@
       "Bash(firebase deploy:*)",
       "Bash(pkill:*)",
       "WebFetch(domain:www.amcharts.com)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(supabase functions deploy:*)"
     ],
     "deny": [],
     "ask": []

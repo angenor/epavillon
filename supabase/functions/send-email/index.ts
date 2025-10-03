@@ -14,6 +14,65 @@ console.info('Environment check:', {
   laravelUrl: LARAVEL_EMAIL_URL
 });
 
+/**
+ * Enrichit les données d'un destinataire avec les informations de la base Supabase
+ */
+async function enrichRecipientData(email: string, supabaseClient: any): Promise<Record<string, string>> {
+  try {
+    // Récupérer les informations de l'utilisateur depuis Supabase
+    const { data: userData, error } = await supabaseClient
+      .from('users')
+      .select(`
+        id,
+        email,
+        first_name,
+        last_name,
+        organization_id,
+        country_id,
+        countries (
+          name_fr,
+          name_en
+        )
+      `)
+      .eq('email', email.toLowerCase().trim())
+      .single();
+
+    if (error || !userData) {
+      console.warn(`User not found for email: ${email}`);
+      return {
+        '{recipient_email}': email,
+        '{recipient_name}': email,
+        '{recipient_first_name}': '',
+        '{recipient_last_name}': '',
+        '{organization_name}': 'IFDD'
+      };
+    }
+
+    // Construire les variables du destinataire
+    const recipientVariables: Record<string, string> = {
+      '{recipient_email}': userData.email || email,
+      '{recipient_name}': `${userData.first_name || ''} ${userData.last_name || ''}`.trim() || email,
+      '{recipient_first_name}': userData.first_name || '',
+      '{recipient_last_name}': userData.last_name || '',
+      '{organization_name}': 'IFDD' // TODO: Enrichir avec les données de l'organisation
+    };
+
+    console.log(`Enriched data for ${email}:`, recipientVariables);
+    return recipientVariables;
+
+  } catch (err) {
+    console.error(`Error enriching recipient data for ${email}:`, err);
+    // Retourner des valeurs par défaut en cas d'erreur
+    return {
+      '{recipient_email}': email,
+      '{recipient_name}': email,
+      '{recipient_first_name}': '',
+      '{recipient_last_name}': '',
+      '{organization_name}': ''
+    };
+  }
+}
+
 Deno.serve(async (req) => {
   // Configuration CORS
   const corsHeaders = {
@@ -100,18 +159,22 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Si c'est un email d'événement, enrichir avec les données de l'événement
-    let enrichedVariables = { ...variables };
-
-    if (email_type === 'event' && event_id && SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
-      try {
-        console.log('Fetching event data for event_id:', event_id);
-        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+    // Créer le client Supabase pour enrichir les données
+    const supabaseClient = SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY
+      ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
           auth: {
             persistSession: false,
             autoRefreshToken: false
           }
-        });
+        })
+      : null;
+
+    // Si c'est un email d'événement, enrichir avec les données de l'événement
+    let enrichedVariables = { ...variables };
+
+    if (email_type === 'event' && event_id && supabaseClient) {
+      try {
+        console.log('Fetching event data for event_id:', event_id);
 
         // Récupérer les données de l'événement
         const { data: eventData, error: eventError } = await supabaseClient
@@ -205,63 +268,165 @@ Deno.serve(async (req) => {
     });
 
     try {
-      // Créer un AbortController pour timeout de 15 secondes
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      // Vérifier si on a besoin d'enrichir les données des destinataires
+      const needsRecipientEnrichment = supabaseClient && (
+        content.includes('{recipient_name}') ||
+        content.includes('{recipient_first_name}') ||
+        content.includes('{recipient_last_name}') ||
+        subject.includes('{recipient_name}') ||
+        subject.includes('{recipient_first_name}') ||
+        subject.includes('{recipient_last_name}')
+      );
 
-      const response = await fetch(LARAVEL_EMAIL_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...LARAVEL_KEY ? {
-            'Authorization': `Bearer ${LARAVEL_KEY}`
-          } : {}
-        },
-        body: JSON.stringify({
-          email_type,
-          subject,
-          content,
-          recipients,
-          variables: enrichedVariables,
-          template,
-          event_id,
-          activity_status,
-          recipient_roles
-        }),
-        signal: controller.signal
-      });
+      if (needsRecipientEnrichment && recipients.to && recipients.to.length > 0) {
+        console.log('Sending personalized emails to each recipient...');
 
-      clearTimeout(timeoutId);
+        // Envoyer un email personnalisé à chaque destinataire TO
+        const sendPromises = recipients.to.map(async (recipientEmail: string, index: number) => {
+          // Enrichir les données du destinataire
+          const recipientVariables = await enrichRecipientData(recipientEmail, supabaseClient);
 
-      if (!response.ok) {
-        const text = await response.text().catch(() => '');
-        console.error('Laravel API returned error', response.status, text);
+          // Fusionner avec les variables globales
+          const personalizedVariables = {
+            ...enrichedVariables,
+            ...recipientVariables
+          };
+
+          // Créer un AbortController pour timeout de 15 secondes
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+          try {
+            const response = await fetch(LARAVEL_EMAIL_URL, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                ...LARAVEL_KEY ? {
+                  'Authorization': `Bearer ${LARAVEL_KEY}`
+                } : {}
+              },
+              body: JSON.stringify({
+                email_type,
+                subject,
+                content,
+                recipients: {
+                  to: [recipientEmail],
+                  // Chaque destinataire TO reçoit son email sans CC/BCC des autres TO
+                  // Les CC et BCC originaux sont ajoutés à tous les emails
+                  cc: recipients.cc || [],
+                  bcc: recipients.bcc || []
+                },
+                variables: personalizedVariables,
+                template,
+                event_id,
+                activity_status,
+                recipient_roles
+              }),
+              signal: controller.signal
+            });
+
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+              const text = await response.text().catch(() => '');
+              console.error(`Failed to send email to ${recipientEmail}:`, response.status, text);
+              return { success: false, email: recipientEmail, error: text };
+            }
+
+            const responseData = await response.json().catch(() => ({}));
+            console.log(`Email sent successfully to ${recipientEmail}`);
+            return { success: true, email: recipientEmail, data: responseData };
+          } catch (err) {
+            console.error(`Error sending email to ${recipientEmail}:`, err);
+            return { success: false, email: recipientEmail, error: String(err) };
+          }
+        });
+
+        // Attendre que tous les envois soient terminés
+        const results = await Promise.all(sendPromises);
+        const successCount = results.filter(r => r.success).length;
+        const failureCount = results.filter(r => !r.success).length;
+
+        console.info(`Personalized emails sent: ${successCount} succeeded, ${failureCount} failed`);
+
         return new Response(JSON.stringify({
-          error: 'Failed to send email via Laravel',
-          details: text
+          success: successCount > 0,
+          message: `${successCount} email(s) envoyé(s) avec succès${failureCount > 0 ? `, ${failureCount} échec(s)` : ''}`,
+          data: {
+            total: results.length,
+            succeeded: successCount,
+            failed: failureCount,
+            results: results
+          }
         }), {
-          status: 500,
+          status: successCount > 0 ? 200 : 500,
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders
+          }
+        });
+
+      } else {
+        // Mode standard : envoyer un email groupé sans personnalisation
+        console.log('Sending standard email (no personalization)...');
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+        const response = await fetch(LARAVEL_EMAIL_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...LARAVEL_KEY ? {
+              'Authorization': `Bearer ${LARAVEL_KEY}`
+            } : {}
+          },
+          body: JSON.stringify({
+            email_type,
+            subject,
+            content,
+            recipients,
+            variables: enrichedVariables,
+            template,
+            event_id,
+            activity_status,
+            recipient_roles
+          }),
+          signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          const text = await response.text().catch(() => '');
+          console.error('Laravel API returned error', response.status, text);
+          return new Response(JSON.stringify({
+            error: 'Failed to send email via Laravel',
+            details: text
+          }), {
+            status: 500,
+            headers: {
+              'Content-Type': 'application/json',
+              ...corsHeaders
+            }
+          });
+        }
+
+        const responseData = await response.json().catch(() => ({}));
+        console.info('Email sent successfully via Laravel', responseData);
+
+        return new Response(JSON.stringify({
+          success: true,
+          message: 'Email sent successfully',
+          data: responseData
+        }), {
+          status: 200,
           headers: {
             'Content-Type': 'application/json',
             ...corsHeaders
           }
         });
       }
-
-      const responseData = await response.json().catch(() => ({}));
-      console.info('Email sent successfully via Laravel', responseData);
-
-      return new Response(JSON.stringify({
-        success: true,
-        message: 'Email sent successfully',
-        data: responseData
-      }), {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          ...corsHeaders
-        }
-      });
 
     } catch (err) {
       console.error('Error sending email:', err);

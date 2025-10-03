@@ -131,14 +131,24 @@ export default {
 
 #### Variables dynamiques disponibles:
 
-- `{recipient_name}` - Nom complet du destinataire
-- `{recipient_first_name}` - Prénom
-- `{recipient_last_name}` - Nom de famille
-- `{recipient_email}` - Email
-- `{organization_name}` - Organisation
-- `{current_date}` - Date actuelle
-- `{current_time}` - Heure actuelle
-- `{dashboard_url}` - URL du tableau de bord
+**Variables destinataire (personnalisées automatiquement pour chaque email):**
+- `{recipient_name}` - Nom complet du destinataire (récupéré depuis la table `users` de Supabase)
+- `{recipient_first_name}` - Prénom (récupéré depuis la table `users`)
+- `{recipient_last_name}` - Nom de famille (récupéré depuis la table `users`)
+- `{recipient_email}` - Email du destinataire
+
+**Variables globales:**
+- `{organization_name}` - Organisation (IFDD par défaut)
+- `{current_date}` - Date actuelle (auto-générée)
+- `{current_time}` - Heure actuelle (auto-générée)
+- `{dashboard_url}` - URL du tableau de bord (auto-générée)
+
+**💡 Personnalisation automatique:**
+Lorsque vous utilisez des variables destinataire (`{recipient_name}`, `{recipient_first_name}`, `{recipient_last_name}`) dans votre contenu ou sujet, le système :
+1. Détecte automatiquement la présence de ces variables
+2. Récupère les informations de chaque destinataire depuis la base Supabase
+3. Envoie un email **personnalisé individuellement** à chaque destinataire avec ses propres données
+4. Si un destinataire n'existe pas dans la base, utilise des valeurs par défaut (email comme nom)
 
 ### Email d'Événement (À implémenter)
 

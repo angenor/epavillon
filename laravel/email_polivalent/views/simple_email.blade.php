@@ -1,23 +1,16 @@
 @component('mail::message')
 
-{{-- Salutation personnalisée --}}
-@if(isset($details['recipient_name']) && $details['recipient_name'])
-Bonjour {{ $details['recipient_name'] }},
-@else
-Bonjour,
-@endif
-
-{{-- Contenu principal --}}
+{{-- Contenu principal (inclut déjà la salutation si l'utilisateur l'a ajoutée) --}}
 @if($details['rawHtml'] ?? false)
 {!! $details['content'] !!}
 @else
 {!! nl2br(e($details['content'])) !!}
 @endif
 
-{{-- Bouton d'action optionnel --}}
-@if(isset($details['dashboard_url']) && !empty($details['dashboard_url']))
+{{-- Bouton d'action optionnel (uniquement si show_button est true) --}}
+@if(($details['show_button'] ?? false) && isset($details['dashboard_url']) && !empty($details['dashboard_url']))
 @component('mail::button', ['url' => $details['dashboard_url']])
-Accéder au tableau de bord
+{{ $details['button_text'] ?? 'Accéder au tableau de bord' }}
 @endcomponent
 @endif
 
