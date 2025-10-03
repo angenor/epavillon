@@ -27,8 +27,11 @@ class EmailService
         '{organization_name}' => 'Nom de l\'organisation',
         '{organization_email}' => 'Email de l\'organisation',
 
-        // Variables d'événement (pour future implémentation)
+        // Variables d'événement
         '{event_name}' => 'Nom de l\'événement',
+        '{event_description}' => 'Description de l\'événement',
+        '{event_start_date}' => 'Date de début de l\'événement',
+        '{event_end_date}' => 'Date de fin de l\'événement',
         '{event_title}' => 'Titre de l\'événement',
         '{event_date}' => 'Date de l\'événement',
         '{event_time}' => 'Heure de l\'événement',
@@ -37,6 +40,10 @@ class EmailService
         '{event_address}' => 'Adresse de l\'événement',
 
         // Variables d'activité
+        '{activity_name}' => 'Nom de l\'activité',
+        '{activity_description}' => 'Description de l\'activité',
+        '{activity_start_date}' => 'Date de début de l\'activité',
+        '{activity_end_date}' => 'Date de fin de l\'activité',
         '{activity_title}' => 'Titre de l\'activité',
         '{activity_status}' => 'Statut de l\'activité',
         '{activity_date}' => 'Date de l\'activité',

@@ -17,6 +17,14 @@ export function useEmailSender() {
     { key: '{current_date}', description: 'Date actuelle' },
     { key: '{current_time}', description: 'Heure actuelle' },
     { key: '{dashboard_url}', description: 'URL du tableau de bord' },
+    { key: '{event_name}', description: "Nom de l'événement" },
+    { key: '{event_description}', description: "Description de l'événement" },
+    { key: '{event_start_date}', description: "Date de début de l'événement" },
+    { key: '{event_end_date}', description: "Date de fin de l'événement" },
+    { key: '{activity_name}', description: "Nom de l'activité" },
+    { key: '{activity_description}', description: "Description de l'activité" },
+    { key: '{activity_start_date}', description: "Date de début de l'activité" },
+    { key: '{activity_end_date}', description: "Date de fin de l'activité" },
   ])
 
   // Templates d'email prédéfinis
@@ -158,6 +166,64 @@ L'équipe IFDD`
   }
 
   /**
+   * Récupérer les informations d'un événement et d'une activité
+   */
+  const fetchEventActivityData = async (eventId, activityId) => {
+    const eventActivityVars = {}
+
+    try {
+      // Récupérer les informations de l'événement
+      if (eventId) {
+        const { data: eventData, error: eventError } = await supabase
+          .from('events')
+          .select('title, description, in_person_start_date, in_person_end_date')
+          .eq('id', eventId)
+          .single()
+
+        if (eventError) throw eventError
+
+        if (eventData) {
+          eventActivityVars['{event_name}'] = eventData.title || ''
+          eventActivityVars['{event_description}'] = eventData.description || ''
+          eventActivityVars['{event_start_date}'] = eventData.in_person_start_date
+            ? new Date(eventData.in_person_start_date).toLocaleDateString('fr-FR')
+            : ''
+          eventActivityVars['{event_end_date}'] = eventData.in_person_end_date
+            ? new Date(eventData.in_person_end_date).toLocaleDateString('fr-FR')
+            : ''
+        }
+      }
+
+      // Récupérer les informations de l'activité
+      if (activityId) {
+        const { data: activityData, error: activityError } = await supabase
+          .from('activities')
+          .select('title, detailed_presentation, proposed_start_date, proposed_end_date, final_start_date, final_end_date')
+          .eq('id', activityId)
+          .single()
+
+        if (activityError) throw activityError
+
+        if (activityData) {
+          eventActivityVars['{activity_name}'] = activityData.title || ''
+          eventActivityVars['{activity_description}'] = activityData.detailed_presentation || ''
+          // Utiliser les dates finales si disponibles, sinon les dates proposées
+          eventActivityVars['{activity_start_date}'] = (activityData.final_start_date || activityData.proposed_start_date)
+            ? new Date(activityData.final_start_date || activityData.proposed_start_date).toLocaleDateString('fr-FR')
+            : ''
+          eventActivityVars['{activity_end_date}'] = (activityData.final_end_date || activityData.proposed_end_date)
+            ? new Date(activityData.final_end_date || activityData.proposed_end_date).toLocaleDateString('fr-FR')
+            : ''
+        }
+      }
+    } catch (err) {
+      console.error('Erreur lors de la récupération des données événement/activité:', err)
+    }
+
+    return eventActivityVars
+  }
+
+  /**
    * Envoyer un email simple
    */
   const sendSimpleEmail = async ({
@@ -165,7 +231,9 @@ L'équipe IFDD`
     content,
     recipients,
     variables = {},
-    template = 'simple_email'
+    template = 'simple_email',
+    event_id = null,
+    activity_id = null
   }) => {
     loading.value = true
     error.value = null
@@ -185,6 +253,11 @@ L'équipe IFDD`
 
       sendingProgress.value = 20
 
+      // Récupérer les données de l'événement et de l'activité si présents
+      const eventActivityVars = await fetchEventActivityData(event_id, activity_id)
+
+      sendingProgress.value = 30
+
       // Préparer les données
       const emailData = {
         email_type: 'simple',
@@ -195,8 +268,10 @@ L'équipe IFDD`
           cc: recipients.cc || [],
           bcc: recipients.bcc || []
         },
-        variables: prepareVariables(variables),
-        template
+        variables: { ...prepareVariables(variables), ...eventActivityVars },
+        template,
+        event_id,
+        activity_id
       }
 
       sendingProgress.value = 50

@@ -39,8 +39,10 @@ class PolivalentEmailController extends Controller
                 'recipients.bcc.*' => 'email',
                 'variables' => 'array',
                 'template' => 'string',
+                // Pour associer un événement ou une activité
+                'event_id' => 'nullable|string',
+                'activity_id' => 'nullable|string',
                 // Pour les emails d'événement (future implémentation)
-                'event_id' => 'string|uuid',
                 'activity_status' => 'in:submitted,approved,rejected,cancelled',
                 'recipient_roles' => 'array',
             ]);
@@ -204,6 +206,8 @@ class PolivalentEmailController extends Controller
                 'type' => 'simple',
                 'subject' => $subject,
                 'sent_count' => $sentCount,
+                'event_id' => $data['event_id'] ?? null,
+                'activity_id' => $data['activity_id'] ?? null,
                 'recipients_count' => [
                     'to' => count($toEmails),
                     'cc' => count($ccEmails),
@@ -217,6 +221,8 @@ class PolivalentEmailController extends Controller
                 'data' => [
                     'type' => 'simple',
                     'sent_count' => $sentCount,
+                    'event_id' => $data['event_id'] ?? null,
+                    'activity_id' => $data['activity_id'] ?? null,
                     'recipients_count' => [
                         'to' => count($toEmails),
                         'cc' => count($ccEmails),

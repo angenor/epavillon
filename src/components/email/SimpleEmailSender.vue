@@ -81,6 +81,43 @@
       </div>
     </div>
 
+    <!-- Event and Activity Selection -->
+    <div class="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Event Selection -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          {{ t('email.select_event') }}
+        </label>
+        <select
+          v-model="emailData.event_id"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          @change="onEventChange"
+        >
+          <option value="">{{ t('email.no_event') }}</option>
+          <option v-for="event in events" :key="event.id" :value="event.id">
+            {{ event.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Activity Selection -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          {{ t('email.select_activity') }}
+        </label>
+        <select
+          v-model="emailData.activity_id"
+          :disabled="!emailData.event_id || activities.length === 0"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200 dark:disabled:bg-gray-600 disabled:cursor-not-allowed"
+        >
+          <option value="">{{ t('email.no_activity') }}</option>
+          <option v-for="activity in activities" :key="activity.id" :value="activity.id">
+            {{ activity.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+
     <!-- Subject -->
     <div class="mb-6">
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -208,9 +245,10 @@
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useEmailSender } from '@/composables/useEmailSender'
+import { useSupabase } from '@/composables/useSupabase'
 import EmailAutocompleteInput from '@/components/EmailAutocompleteInput.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
@@ -249,6 +287,7 @@ export default {
   },
   setup() {
     const { t } = useI18n()
+    const { supabase } = useSupabase()
     const {
       loading,
       error,
@@ -269,7 +308,9 @@ export default {
 
     const emailData = ref({
       subject: '',
-      content: ''
+      content: '',
+      event_id: '',
+      activity_id: ''
     })
 
     const recipients = ref({
@@ -277,6 +318,10 @@ export default {
       cc: [],
       bcc: []
     })
+
+    // Events and Activities state
+    const events = ref([])
+    const activities = ref([])
 
     // Computed
     const canSend = computed(() => {
@@ -297,6 +342,74 @@ export default {
     })
 
     // Methods
+
+    const fetchEvents = async () => {
+      try {
+        console.log('Début du chargement des événements...')
+        const { data, error } = await supabase
+          .from('events')
+          .select('id, title, year, acronym')
+          .order('year', { ascending: false })
+          .order('created_at', { ascending: false })
+
+        if (error) {
+          console.error('Erreur Supabase:', error)
+          throw error
+        }
+
+        console.log('Événements chargés:', data)
+
+        // Mapper les données pour avoir un format cohérent
+        events.value = (data || []).map(event => ({
+          id: event.id,
+          name: event.title + (event.year ? ` (${event.year})` : '') + (event.acronym ? ` - ${event.acronym}` : '')
+        }))
+
+        console.log('Événements formatés:', events.value)
+      } catch (err) {
+        console.error('Erreur lors du chargement des événements:', err)
+        events.value = []
+      }
+    }
+
+    const fetchActivities = async (eventId) => {
+      if (!eventId) {
+        activities.value = []
+        return
+      }
+
+      try {
+        console.log('Chargement des activités pour l\'événement:', eventId)
+        const { data, error } = await supabase
+          .from('activities')
+          .select('id, title, activity_type')
+          .eq('event_id', eventId)
+          .order('created_at', { ascending: false })
+
+        if (error) {
+          console.error('Erreur Supabase activités:', error)
+          throw error
+        }
+
+        console.log('Activités chargées:', data)
+
+        // Mapper les données pour avoir un format cohérent
+        activities.value = (data || []).map(activity => ({
+          id: activity.id,
+          name: activity.title + (activity.activity_type ? ` (${activity.activity_type})` : '')
+        }))
+
+        console.log('Activités formatées:', activities.value)
+      } catch (err) {
+        console.error('Erreur lors du chargement des activités:', err)
+        activities.value = []
+      }
+    }
+
+    const onEventChange = () => {
+      emailData.value.activity_id = ''
+      fetchActivities(emailData.value.event_id)
+    }
 
     const loadTemplate = (template) => {
       emailData.value.subject = template.subject
@@ -327,7 +440,9 @@ export default {
           to: recipients.value.to,
           cc: recipients.value.cc,
           bcc: recipients.value.bcc
-        }
+        },
+        event_id: emailData.value.event_id || null,
+        activity_id: emailData.value.activity_id || null
       })
 
       if (result.success) {
@@ -341,18 +456,26 @@ export default {
     const resetForm = () => {
       emailData.value = {
         subject: '',
-        content: ''
+        content: '',
+        event_id: '',
+        activity_id: ''
       }
       recipients.value = {
         to: [],
         cc: [],
         bcc: []
       }
+      activities.value = []
       reset()
       showPreview.value = false
       showTemplates.value = false
       showVariables.value = false
     }
+
+    // Load events on mount
+    onMounted(() => {
+      fetchEvents()
+    })
 
     return {
       // État
@@ -365,6 +488,8 @@ export default {
       showVariables,
       emailData,
       recipients,
+      events,
+      activities,
 
       // Computed
       canSend,
@@ -380,6 +505,7 @@ export default {
       insertVariable,
       sendEmail,
       resetForm,
+      onEventChange,
 
       // i18n
       t

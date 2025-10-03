@@ -115,8 +115,8 @@ export default {
 ```json
 {
   "email_type": "simple",
-  "subject": "Objet de l'email",
-  "content": "Contenu avec {recipient_name}",
+  "subject": "Objet de l'email - {event_name}",
+  "content": "Bonjour {recipient_name},\n\nCeci concerne l'événement {event_name} du {event_start_date} au {event_end_date}.\n\nActivité : {activity_name}",
   "recipients": {
     "to": ["email1@example.com"],
     "cc": ["email2@example.com"],
@@ -125,9 +125,13 @@ export default {
   "variables": {
     "{recipient_name}": "Jean Dupont",
     "{organization_name}": "IFDD"
-  }
+  },
+  "event_id": "uuid-de-evenement",
+  "activity_id": "uuid-de-activite"
 }
 ```
+
+**Note:** Les champs `event_id` et `activity_id` sont optionnels. Lorsqu'ils sont fournis, le système récupère automatiquement les informations de l'événement et/ou de l'activité depuis la base de données Supabase et les rend disponibles comme variables dans le contenu et le sujet de l'email.
 
 #### Variables dynamiques disponibles:
 
@@ -142,6 +146,18 @@ export default {
 - `{current_date}` - Date actuelle (auto-générée)
 - `{current_time}` - Heure actuelle (auto-générée)
 - `{dashboard_url}` - URL du tableau de bord (auto-générée)
+
+**Variables d'événement (disponibles si `event_id` est fourni):**
+- `{event_name}` - Nom de l'événement
+- `{event_description}` - Description de l'événement
+- `{event_start_date}` - Date de début de l'événement (format: JJ/MM/AAAA)
+- `{event_end_date}` - Date de fin de l'événement (format: JJ/MM/AAAA)
+
+**Variables d'activité (disponibles si `activity_id` est fourni):**
+- `{activity_name}` - Nom de l'activité
+- `{activity_description}` - Description de l'activité
+- `{activity_start_date}` - Date de début de l'activité (format: JJ/MM/AAAA)
+- `{activity_end_date}` - Date de fin de l'activité (format: JJ/MM/AAAA)
 
 **💡 Personnalisation automatique:**
 Lorsque vous utilisez des variables destinataire (`{recipient_name}`, `{recipient_first_name}`, `{recipient_last_name}`) dans votre contenu ou sujet, le système :
@@ -171,9 +187,11 @@ Cette fonctionnalité sera disponible dans la phase 2 et permettra:
 - Personnalisé
 
 ### Interface utilisateur
+- Sélection d'événement et d'activité via des menus déroulants
 - Prévisualisation en temps réel
 - Insertion facile de variables
 - Support multi-langue (FR/EN)
+- Variables d'événement et d'activité automatiquement chargées
 
 ## API Endpoints
 
@@ -192,6 +210,9 @@ Authorization: Bearer {token}
   "message": "Email envoyé avec succès",
   "data": {
     "type": "simple",
+    "sent_count": 2,
+    "event_id": "uuid-de-evenement",
+    "activity_id": "uuid-de-activite",
     "recipients_count": {
       "to": 2,
       "cc": 1,
