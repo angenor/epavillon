@@ -9,7 +9,7 @@ exemple:
   - Je rédige mon email
   - J'envoie l'email
 - Je sélectionne "email d'evenement"
-  - Je sélectionne l'événement (dans une liste de mes événements)
+  - Je sélectionne l'événement (dans le menu déroulant de mes événements)
   - Je sélectionne le statut des activités cibles (soumis, validé, annulé, etc.)
   - Je sélectionne le(s) destinataire(s) (organisateurs, participants, panélistes, etc.)
   - Sélection multiple possible
