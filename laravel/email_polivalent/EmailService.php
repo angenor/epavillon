@@ -57,7 +57,7 @@ class EmailService
         $data['variables']['{current_date}'] = Carbon::now()->format('d/m/Y');
         $data['variables']['{current_time}'] = Carbon::now()->format('H:i');
         $data['variables']['{current_year}'] = Carbon::now()->format('Y');
-        $data['variables']['{dashboard_url}'] = config('app.frontend_url', 'https://epavillonclimatique.francophonie.org');
+        $data['variables']['{dashboard_url}'] = config('app.frontend_url', 'https://epavillonclimatique.francophonie.org') . '/events/dashboard';
 
         return $data;
     }

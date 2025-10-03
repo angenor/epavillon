@@ -68,7 +68,7 @@ async function enrichRecipientData(email: string, supabaseClient: any): Promise<
       '{recipient_name}': email,
       '{recipient_first_name}': '',
       '{recipient_last_name}': '',
-      '{organization_name}': ''
+      '{organization_name}': 'IFDD'
     };
   }
 }

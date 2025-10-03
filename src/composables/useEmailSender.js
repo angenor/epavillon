@@ -144,10 +144,14 @@ L'équipe IFDD`
    */
   const prepareVariables = (variables = {}) => {
     const now = new Date()
+
+    // Utiliser l'URL de production si définie, sinon l'URL actuelle
+    const appUrl = import.meta.env.VITE_APP_URL || window.location.origin
+
     const defaultVariables = {
       '{current_date}': now.toLocaleDateString('fr-FR'),
       '{current_time}': now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
-      '{dashboard_url}': window.location.origin + '/dashboard'
+      '{dashboard_url}': appUrl + '/events/dashboard'
     }
 
     return { ...defaultVariables, ...variables }
