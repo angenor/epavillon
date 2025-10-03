@@ -91,8 +91,8 @@
 
       <!-- Event Recipients -->
       <div v-if="emailData.event_id" class="mb-3">
-        <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">
-          {{ t('email.event_recipients') || 'Participants de l\'événement' }}:
+        <p class="text-xs text-gray-600 dark:text-gray-400 mb-2 truncate">
+          {{ t('email.event_coordinators') || 'Tous les coordonnateurs de l\'événement' }}{{ selectedEventTitle ? ` (${selectedEventTitle})` : '' }}:
         </p>
         <div class="flex flex-wrap gap-2">
           <button
@@ -115,8 +115,8 @@
 
       <!-- Activity Recipients -->
       <div v-if="emailData.activity_id" class="mb-3">
-        <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">
-          {{ t('email.activity_recipients') || 'Participants de l\'activité' }}:
+        <p class="text-xs text-gray-600 dark:text-gray-400 mb-2 truncate">
+          {{ t('email.activity_participants') || 'Participants de l\'activité' }}{{ selectedActivityTitle ? ` (${selectedActivityTitle})` : '' }}:
         </p>
         <div class="flex flex-wrap gap-2">
           <!-- Submitter -->
@@ -587,6 +587,26 @@ export default {
 
     const displayedActivities = computed(() => {
       return activitySearchQuery.value ? filteredActivities.value : activities.value
+    })
+
+    const selectedEventTitle = computed(() => {
+      const event = events.value.find((e) => e.id === emailData.value.event_id)
+      if (event && event.name) {
+        // Extraire seulement le titre de l'événement (avant l'année et l'acronyme)
+        const match = event.name.match(/^(.+?)(\s*\(\d{4}\))?(\s*-\s*.+)?$/)
+        return match ? match[1] : event.name
+      }
+      return ''
+    })
+
+    const selectedActivityTitle = computed(() => {
+      const activity = selectedActivity.value
+      if (activity && activity.name) {
+        // Extraire seulement le titre de l'activité (avant le type)
+        const match = activity.name.match(/^(.+?)(\s*\(.+?\))?$/)
+        return match ? match[1] : activity.name
+      }
+      return ''
     })
 
     // Check if groups are already added
@@ -1146,6 +1166,8 @@ export default {
       previewContent,
       previewSubject,
       selectedActivity,
+      selectedEventTitle,
+      selectedActivityTitle,
       displayedActivities,
       isEventParticipantsAdded,
       isActivitySubmitterAdded,
