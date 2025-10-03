@@ -14,6 +14,7 @@ export function useOrganizations() {
   const itemsPerPage = ref(20)
   const totalItems = ref(0)
   const hasMore = ref(true)
+  const verifiedCount = ref(0)
 
   // Filtres
   const searchQuery = ref('')
@@ -186,6 +187,24 @@ export function useOrganizations() {
     }
   }
 
+  async function fetchVerifiedCount() {
+    try {
+      const { count, error: queryError } = await from('organizations')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_active', true)
+        .eq('is_duplicate', false)
+        .eq('is_verified', true)
+
+      if (queryError) throw queryError
+
+      verifiedCount.value = count || 0
+      return count || 0
+    } catch (err) {
+      console.error('Erreur lors de la récupération du nombre d\'organisations vérifiées:', err)
+      return 0
+    }
+  }
+
   async function validateOrganization(organizationId) {
     try {
       const { error: insertError } = await from('organization_validations')
@@ -291,6 +310,7 @@ export function useOrganizations() {
     hasNextPage,
     hasPrevPage,
     hasMore,
+    verifiedCount,
 
     // Filtres
     searchQuery,
@@ -308,6 +328,7 @@ export function useOrganizations() {
     fetchOrganizations,
     fetchCountries,
     fetchUniqueCountriesFromOrganizations,
+    fetchVerifiedCount,
     validateOrganization,
     goToPage,
     nextPage,
