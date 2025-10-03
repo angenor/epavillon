@@ -92,6 +92,9 @@
     "speakers": "Panélistes",
     "speakers_tooltip": "Ajouter tous les panélistes/intervenants",
     "registrants": "Inscrits",
-    "registrants_tooltip": "Ajouter tous les inscrits à l'activité"
+    "registrants_tooltip": "Ajouter tous les inscrits à l'activité",
+    "select_destination": "Sélectionner la destination des emails groupés",
+    "select_destination_first": "Veuillez d'abord sélectionner une destination (À, Cc ou Cci)",
+    "add_all_event_participants": "Ajouter tous les participants"
   }
 }

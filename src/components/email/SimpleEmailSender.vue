@@ -47,6 +47,48 @@
         {{ t('email.quick_add_recipients') || 'Ajout rapide de destinataires' }}
       </label>
 
+      <!-- Destination Selection (Radio buttons) -->
+      <div class="mb-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <p class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+          {{ t('email.select_destination') || 'Sélectionner la destination des emails groupés' }}:
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <label class="flex items-center cursor-pointer">
+            <input
+              type="radio"
+              v-model="bulkDestination"
+              value="to"
+              class="mr-2 text-blue-600 focus:ring-blue-500"
+            />
+            <span class="text-sm text-gray-700 dark:text-gray-300">
+              {{ t('email.to') }} ({{ t('email.to_description') }})
+            </span>
+          </label>
+          <label class="flex items-center cursor-pointer">
+            <input
+              type="radio"
+              v-model="bulkDestination"
+              value="cc"
+              class="mr-2 text-blue-600 focus:ring-blue-500"
+            />
+            <span class="text-sm text-gray-700 dark:text-gray-300">
+              {{ t('email.cc') }} ({{ t('email.cc_description') }})
+            </span>
+          </label>
+          <label class="flex items-center cursor-pointer">
+            <input
+              type="radio"
+              v-model="bulkDestination"
+              value="bcc"
+              class="mr-2 text-blue-600 focus:ring-blue-500"
+            />
+            <span class="text-sm text-gray-700 dark:text-gray-300">
+              {{ t('email.bcc') }} ({{ t('email.bcc_description') }})
+            </span>
+          </label>
+        </div>
+      </div>
+
       <!-- Event Recipients -->
       <div v-if="emailData.event_id" class="mb-3">
         <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">
@@ -54,28 +96,13 @@
         </p>
         <div class="flex flex-wrap gap-2">
           <button
-            @click="addEventParticipants('to')"
-            :disabled="loadingEventParticipants"
+            @click="addEventParticipants()"
+            :disabled="loadingEventParticipants || !bulkDestination"
             class="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
+            :title="!bulkDestination ? t('email.select_destination_first') || 'Sélectionnez d\'abord une destination' : ''"
           >
             <font-awesome-icon icon="user-plus" class="mr-1" />
-            {{ t('email.add_to_primary') || 'Ajouter à "À"' }}
-          </button>
-          <button
-            @click="addEventParticipants('cc')"
-            :disabled="loadingEventParticipants"
-            class="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
-          >
-            <font-awesome-icon icon="user-plus" class="mr-1" />
-            {{ t('email.add_to_cc') || 'Ajouter à "Cc"' }}
-          </button>
-          <button
-            @click="addEventParticipants('bcc')"
-            :disabled="loadingEventParticipants"
-            class="px-3 py-1 text-xs bg-orange-500 text-white rounded hover:bg-orange-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
-          >
-            <font-awesome-icon icon="user-plus" class="mr-1" />
-            {{ t('email.add_to_bcc') || 'Ajouter à "Cci"' }}
+            {{ t('email.add_all_event_participants') || 'Ajouter tous les participants' }}
           </button>
         </div>
       </div>
@@ -86,62 +113,38 @@
           {{ t('email.activity_recipients') || 'Participants de l\'activité' }}:
         </p>
         <div class="flex flex-wrap gap-2">
-          <!-- Submitter with dropdown -->
-          <div class="relative inline-block">
-            <button
-              @click="toggleActivityMenu('submitter')"
-              :disabled="loadingActivityData"
-              class="px-3 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
-              :title="t('email.submitter_tooltip') || 'Ajouter le soumissionnaire de l\'activité'"
-            >
-              <font-awesome-icon icon="user-tie" class="mr-1" />
-              {{ t('email.submitter') || 'Soumissionnaire' }}
-              <font-awesome-icon icon="chevron-down" class="ml-1" />
-            </button>
-            <div v-if="showActivityMenu === 'submitter'" class="absolute z-10 mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded shadow-lg">
-              <button @click="addActivitySubmitter('to'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">À</button>
-              <button @click="addActivitySubmitter('cc'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">Cc</button>
-              <button @click="addActivitySubmitter('bcc'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">Cci</button>
-            </div>
-          </div>
+          <!-- Submitter -->
+          <button
+            @click="addActivitySubmitter()"
+            :disabled="loadingActivityData || !bulkDestination"
+            class="px-3 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
+            :title="!bulkDestination ? t('email.select_destination_first') || 'Sélectionnez d\'abord une destination' : t('email.submitter_tooltip') || 'Ajouter le soumissionnaire de l\'activité'"
+          >
+            <font-awesome-icon icon="user-tie" class="mr-1" />
+            {{ t('email.submitter') || 'Soumissionnaire' }}
+          </button>
 
-          <!-- Speakers/Panelists with dropdown -->
-          <div class="relative inline-block">
-            <button
-              @click="toggleActivityMenu('speakers')"
-              :disabled="loadingActivityData"
-              class="px-3 py-1 text-xs bg-indigo-500 text-white rounded hover:bg-indigo-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
-              :title="t('email.speakers_tooltip') || 'Ajouter tous les panélistes/intervenants'"
-            >
-              <font-awesome-icon icon="users" class="mr-1" />
-              {{ t('email.speakers') || 'Panélistes' }}
-              <font-awesome-icon icon="chevron-down" class="ml-1" />
-            </button>
-            <div v-if="showActivityMenu === 'speakers'" class="absolute z-10 mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded shadow-lg">
-              <button @click="addActivitySpeakers('to'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">À</button>
-              <button @click="addActivitySpeakers('cc'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">Cc</button>
-              <button @click="addActivitySpeakers('bcc'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">Cci</button>
-            </div>
-          </div>
+          <!-- Speakers/Panelists -->
+          <button
+            @click="addActivitySpeakers()"
+            :disabled="loadingActivityData || !bulkDestination"
+            class="px-3 py-1 text-xs bg-indigo-500 text-white rounded hover:bg-indigo-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
+            :title="!bulkDestination ? t('email.select_destination_first') || 'Sélectionnez d\'abord une destination' : t('email.speakers_tooltip') || 'Ajouter tous les panélistes/intervenants'"
+          >
+            <font-awesome-icon icon="users" class="mr-1" />
+            {{ t('email.speakers') || 'Panélistes' }}
+          </button>
 
-          <!-- Registered participants with dropdown -->
-          <div class="relative inline-block">
-            <button
-              @click="toggleActivityMenu('registrants')"
-              :disabled="loadingActivityData"
-              class="px-3 py-1 text-xs bg-teal-500 text-white rounded hover:bg-teal-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
-              :title="t('email.registrants_tooltip') || 'Ajouter tous les inscrits à l\'activité'"
-            >
-              <font-awesome-icon icon="user-check" class="mr-1" />
-              {{ t('email.registrants') || 'Inscrits' }}
-              <font-awesome-icon icon="chevron-down" class="ml-1" />
-            </button>
-            <div v-if="showActivityMenu === 'registrants'" class="absolute z-10 mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded shadow-lg">
-              <button @click="addActivityRegistrants('to'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">À</button>
-              <button @click="addActivityRegistrants('cc'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">Cc</button>
-              <button @click="addActivityRegistrants('bcc'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">Cci</button>
-            </div>
-          </div>
+          <!-- Registered participants -->
+          <button
+            @click="addActivityRegistrants()"
+            :disabled="loadingActivityData || !bulkDestination"
+            class="px-3 py-1 text-xs bg-teal-500 text-white rounded hover:bg-teal-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
+            :title="!bulkDestination ? t('email.select_destination_first') || 'Sélectionnez d\'abord une destination' : t('email.registrants_tooltip') || 'Ajouter tous les inscrits à l\'activité'"
+          >
+            <font-awesome-icon icon="user-check" class="mr-1" />
+            {{ t('email.registrants') || 'Inscrits' }}
+          </button>
         </div>
       </div>
     </div>
@@ -521,6 +524,7 @@ export default {
     const loadingEventParticipants = ref(false)
     const loadingActivityData = ref(false)
     const showActivityMenu = ref(null)
+    const bulkDestination = ref('to') // Default to 'to'
 
     // Computed
     const canSend = computed(() => {
@@ -710,9 +714,11 @@ export default {
         showActivityMenu.value = menu
       }
     }
-    const addEventParticipants = async (targetField) => {
-      if (!emailData.value.event_id) return
 
+    const addEventParticipants = async () => {
+      if (!emailData.value.event_id || !bulkDestination.value) return
+
+      const targetField = bulkDestination.value
       loadingEventParticipants.value = true
       try {
         // Récupérer tous les utilisateurs liés à l'événement
@@ -777,9 +783,10 @@ export default {
       }
     }
 
-    const addActivitySubmitter = async (targetField) => {
-      if (!emailData.value.activity_id) return
+    const addActivitySubmitter = async () => {
+      if (!emailData.value.activity_id || !bulkDestination.value) return
 
+      const targetField = bulkDestination.value
       loadingActivityData.value = true
       try {
         const { data, error } = await supabase
@@ -805,9 +812,10 @@ export default {
       }
     }
 
-    const addActivitySpeakers = async (targetField) => {
-      if (!emailData.value.activity_id) return
+    const addActivitySpeakers = async () => {
+      if (!emailData.value.activity_id || !bulkDestination.value) return
 
+      const targetField = bulkDestination.value
       loadingActivityData.value = true
       try {
         const { data, error } = await supabase
@@ -833,9 +841,10 @@ export default {
       }
     }
 
-    const addActivityRegistrants = async (targetField) => {
-      if (!emailData.value.activity_id) return
+    const addActivityRegistrants = async () => {
+      if (!emailData.value.activity_id || !bulkDestination.value) return
 
+      const targetField = bulkDestination.value
       loadingActivityData.value = true
       try {
         const { data, error } = await supabase
@@ -970,6 +979,7 @@ export default {
       loadingEventParticipants,
       loadingActivityData,
       showActivityMenu,
+      bulkDestination,
 
       // Computed
       canSend,
