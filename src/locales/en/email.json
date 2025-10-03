@@ -95,6 +95,10 @@
     "registrants_tooltip": "Add all activity registrants",
     "select_destination": "Select destination for bulk emails",
     "select_destination_first": "Please select a destination first (To, Cc or Bcc)",
-    "add_all_event_participants": "Add all participants"
+    "add_all_event_participants": "Add all participants",
+    "remove_all_event_participants": "Remove all participants",
+    "remove_submitter": "Remove",
+    "remove_speakers": "Remove",
+    "remove_registrants": "Remove"
   }
 }

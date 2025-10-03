@@ -96,13 +96,19 @@
         </p>
         <div class="flex flex-wrap gap-2">
           <button
-            @click="addEventParticipants()"
+            @click="toggleEventParticipants()"
             :disabled="loadingEventParticipants || !bulkDestination"
-            class="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
+            :class="[
+              'px-3 py-1 text-xs rounded cursor-pointer transition-colors',
+              isEventParticipantsAdded
+                ? 'bg-red-500 text-white hover:bg-red-600'
+                : 'bg-blue-500 text-white hover:bg-blue-600',
+              'disabled:bg-gray-400 disabled:cursor-not-allowed'
+            ]"
             :title="!bulkDestination ? t('email.select_destination_first') || 'Sélectionnez d\'abord une destination' : ''"
           >
-            <font-awesome-icon icon="user-plus" class="mr-1" />
-            {{ t('email.add_all_event_participants') || 'Ajouter tous les participants' }}
+            <font-awesome-icon :icon="isEventParticipantsAdded ? 'user-minus' : 'user-plus'" class="mr-1" />
+            {{ isEventParticipantsAdded ? t('email.remove_all_event_participants') || 'Retirer tous les participants' : t('email.add_all_event_participants') || 'Ajouter tous les participants' }}
           </button>
         </div>
       </div>
@@ -115,35 +121,53 @@
         <div class="flex flex-wrap gap-2">
           <!-- Submitter -->
           <button
-            @click="addActivitySubmitter()"
+            @click="toggleActivitySubmitter()"
             :disabled="loadingActivityData || !bulkDestination"
-            class="px-3 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
-            :title="!bulkDestination ? t('email.select_destination_first') || 'Sélectionnez d\'abord une destination' : t('email.submitter_tooltip') || 'Ajouter le soumissionnaire de l\'activité'"
+            :class="[
+              'px-3 py-1 text-xs rounded cursor-pointer transition-colors',
+              isActivitySubmitterAdded
+                ? 'bg-red-500 text-white hover:bg-red-600'
+                : 'bg-purple-500 text-white hover:bg-purple-600',
+              'disabled:bg-gray-400 disabled:cursor-not-allowed'
+            ]"
+            :title="!bulkDestination ? t('email.select_destination_first') || 'Sélectionnez d\'abord une destination' : t('email.submitter_tooltip') || 'Ajouter/Retirer le soumissionnaire de l\'activité'"
           >
-            <font-awesome-icon icon="user-tie" class="mr-1" />
-            {{ t('email.submitter') || 'Soumissionnaire' }}
+            <font-awesome-icon :icon="isActivitySubmitterAdded ? 'minus' : 'user-tie'" class="mr-1" />
+            {{ isActivitySubmitterAdded ? t('email.remove_submitter') || 'Retirer' : t('email.submitter') || 'Soumissionnaire' }}
           </button>
 
           <!-- Speakers/Panelists -->
           <button
-            @click="addActivitySpeakers()"
+            @click="toggleActivitySpeakers()"
             :disabled="loadingActivityData || !bulkDestination"
-            class="px-3 py-1 text-xs bg-indigo-500 text-white rounded hover:bg-indigo-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
-            :title="!bulkDestination ? t('email.select_destination_first') || 'Sélectionnez d\'abord une destination' : t('email.speakers_tooltip') || 'Ajouter tous les panélistes/intervenants'"
+            :class="[
+              'px-3 py-1 text-xs rounded cursor-pointer transition-colors',
+              isActivitySpeakersAdded
+                ? 'bg-red-500 text-white hover:bg-red-600'
+                : 'bg-indigo-500 text-white hover:bg-indigo-600',
+              'disabled:bg-gray-400 disabled:cursor-not-allowed'
+            ]"
+            :title="!bulkDestination ? t('email.select_destination_first') || 'Sélectionnez d\'abord une destination' : t('email.speakers_tooltip') || 'Ajouter/Retirer tous les panélistes/intervenants'"
           >
-            <font-awesome-icon icon="users" class="mr-1" />
-            {{ t('email.speakers') || 'Panélistes' }}
+            <font-awesome-icon :icon="isActivitySpeakersAdded ? 'minus' : 'users'" class="mr-1" />
+            {{ isActivitySpeakersAdded ? t('email.remove_speakers') || 'Retirer' : t('email.speakers') || 'Panélistes' }}
           </button>
 
           <!-- Registered participants -->
           <button
-            @click="addActivityRegistrants()"
+            @click="toggleActivityRegistrants()"
             :disabled="loadingActivityData || !bulkDestination"
-            class="px-3 py-1 text-xs bg-teal-500 text-white rounded hover:bg-teal-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
-            :title="!bulkDestination ? t('email.select_destination_first') || 'Sélectionnez d\'abord une destination' : t('email.registrants_tooltip') || 'Ajouter tous les inscrits à l\'activité'"
+            :class="[
+              'px-3 py-1 text-xs rounded cursor-pointer transition-colors',
+              isActivityRegistrantsAdded
+                ? 'bg-red-500 text-white hover:bg-red-600'
+                : 'bg-teal-500 text-white hover:bg-teal-600',
+              'disabled:bg-gray-400 disabled:cursor-not-allowed'
+            ]"
+            :title="!bulkDestination ? t('email.select_destination_first') || 'Sélectionnez d\'abord une destination' : t('email.registrants_tooltip') || 'Ajouter/Retirer tous les inscrits à l\'activité'"
           >
-            <font-awesome-icon icon="user-check" class="mr-1" />
-            {{ t('email.registrants') || 'Inscrits' }}
+            <font-awesome-icon :icon="isActivityRegistrantsAdded ? 'minus' : 'user-check'" class="mr-1" />
+            {{ isActivityRegistrantsAdded ? t('email.remove_registrants') || 'Retirer' : t('email.registrants') || 'Inscrits' }}
           </button>
         </div>
       </div>
@@ -444,7 +468,9 @@ import {
   faUserPlus,
   faUserTie,
   faUsers,
-  faUserCheck
+  faUserCheck,
+  faUserMinus,
+  faMinus
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -467,7 +493,9 @@ library.add(
   faUserPlus,
   faUserTie,
   faUsers,
-  faUserCheck
+  faUserCheck,
+  faUserMinus,
+  faMinus
 )
 
 export default {
@@ -526,6 +554,14 @@ export default {
     const showActivityMenu = ref(null)
     const bulkDestination = ref('to') // Default to 'to'
 
+    // Track added email groups
+    const addedGroups = ref({
+      eventParticipants: { to: [], cc: [], bcc: [] },
+      activitySubmitter: { to: [], cc: [], bcc: [] },
+      activitySpeakers: { to: [], cc: [], bcc: [] },
+      activityRegistrants: { to: [], cc: [], bcc: [] }
+    })
+
     // Computed
     const canSend = computed(() => {
       const hasRecipients =
@@ -551,6 +587,23 @@ export default {
 
     const displayedActivities = computed(() => {
       return activitySearchQuery.value ? filteredActivities.value : activities.value
+    })
+
+    // Check if groups are already added
+    const isEventParticipantsAdded = computed(() => {
+      return addedGroups.value.eventParticipants[bulkDestination.value].length > 0
+    })
+
+    const isActivitySubmitterAdded = computed(() => {
+      return addedGroups.value.activitySubmitter[bulkDestination.value].length > 0
+    })
+
+    const isActivitySpeakersAdded = computed(() => {
+      return addedGroups.value.activitySpeakers[bulkDestination.value].length > 0
+    })
+
+    const isActivityRegistrantsAdded = computed(() => {
+      return addedGroups.value.activityRegistrants[bulkDestination.value].length > 0
     })
 
     // Methods
@@ -715,6 +768,17 @@ export default {
       }
     }
 
+    const toggleEventParticipants = async () => {
+      if (!emailData.value.event_id || !bulkDestination.value) return
+
+      // Si déjà ajouté, retirer
+      if (isEventParticipantsAdded.value) {
+        removeEventParticipants()
+      } else {
+        await addEventParticipants()
+      }
+    }
+
     const addEventParticipants = async () => {
       if (!emailData.value.event_id || !bulkDestination.value) return
 
@@ -774,12 +838,39 @@ export default {
         const uniqueEmails = [...new Set([...currentEmails, ...allEmails])]
         recipients.value[targetField] = uniqueEmails
 
+        // Stocker les emails ajoutés pour pouvoir les retirer plus tard
+        addedGroups.value.eventParticipants[targetField] = [...new Set(allEmails)]
+
         console.log(`Added ${uniqueEmails.length - currentEmails.length} event participants to ${targetField}`)
       } catch (err) {
         console.error('Erreur lors du chargement des participants:', err)
         error.value = 'Erreur lors du chargement des participants de l\'événement'
       } finally {
         loadingEventParticipants.value = false
+      }
+    }
+
+    const removeEventParticipants = () => {
+      const targetField = bulkDestination.value
+      const emailsToRemove = addedGroups.value.eventParticipants[targetField]
+
+      if (emailsToRemove.length > 0) {
+        recipients.value[targetField] = recipients.value[targetField].filter(
+          email => !emailsToRemove.includes(email)
+        )
+        addedGroups.value.eventParticipants[targetField] = []
+        console.log(`Removed ${emailsToRemove.length} event participants from ${targetField}`)
+      }
+    }
+
+    const toggleActivitySubmitter = async () => {
+      if (!emailData.value.activity_id || !bulkDestination.value) return
+
+      // Si déjà ajouté, retirer
+      if (isActivitySubmitterAdded.value) {
+        removeActivitySubmitter()
+      } else {
+        await addActivitySubmitter()
       }
     }
 
@@ -801,6 +892,8 @@ export default {
           const currentEmails = recipients.value[targetField] || []
           if (!currentEmails.includes(data.users.email)) {
             recipients.value[targetField] = [...currentEmails, data.users.email]
+            // Stocker l'email ajouté
+            addedGroups.value.activitySubmitter[targetField] = [data.users.email]
           }
           console.log(`Added submitter to ${targetField}`)
         }
@@ -809,6 +902,30 @@ export default {
         error.value = 'Erreur lors du chargement du soumissionnaire'
       } finally {
         loadingActivityData.value = false
+      }
+    }
+
+    const removeActivitySubmitter = () => {
+      const targetField = bulkDestination.value
+      const emailsToRemove = addedGroups.value.activitySubmitter[targetField]
+
+      if (emailsToRemove.length > 0) {
+        recipients.value[targetField] = recipients.value[targetField].filter(
+          email => !emailsToRemove.includes(email)
+        )
+        addedGroups.value.activitySubmitter[targetField] = []
+        console.log(`Removed submitter from ${targetField}`)
+      }
+    }
+
+    const toggleActivitySpeakers = async () => {
+      if (!emailData.value.activity_id || !bulkDestination.value) return
+
+      // Si déjà ajouté, retirer
+      if (isActivitySpeakersAdded.value) {
+        removeActivitySpeakers()
+      } else {
+        await addActivitySpeakers()
       }
     }
 
@@ -832,12 +949,39 @@ export default {
         const uniqueEmails = [...new Set([...currentEmails, ...emails])]
         recipients.value[targetField] = uniqueEmails
 
+        // Stocker les emails ajoutés
+        addedGroups.value.activitySpeakers[targetField] = emails
+
         console.log(`Added ${emails.length} speakers to ${targetField}`)
       } catch (err) {
         console.error('Erreur lors du chargement des panélistes:', err)
         error.value = 'Erreur lors du chargement des panélistes'
       } finally {
         loadingActivityData.value = false
+      }
+    }
+
+    const removeActivitySpeakers = () => {
+      const targetField = bulkDestination.value
+      const emailsToRemove = addedGroups.value.activitySpeakers[targetField]
+
+      if (emailsToRemove.length > 0) {
+        recipients.value[targetField] = recipients.value[targetField].filter(
+          email => !emailsToRemove.includes(email)
+        )
+        addedGroups.value.activitySpeakers[targetField] = []
+        console.log(`Removed ${emailsToRemove.length} speakers from ${targetField}`)
+      }
+    }
+
+    const toggleActivityRegistrants = async () => {
+      if (!emailData.value.activity_id || !bulkDestination.value) return
+
+      // Si déjà ajouté, retirer
+      if (isActivityRegistrantsAdded.value) {
+        removeActivityRegistrants()
+      } else {
+        await addActivityRegistrants()
       }
     }
 
@@ -861,12 +1005,28 @@ export default {
         const uniqueEmails = [...new Set([...currentEmails, ...emails])]
         recipients.value[targetField] = uniqueEmails
 
+        // Stocker les emails ajoutés
+        addedGroups.value.activityRegistrants[targetField] = emails
+
         console.log(`Added ${emails.length} registrants to ${targetField}`)
       } catch (err) {
         console.error('Erreur lors du chargement des inscrits:', err)
         error.value = 'Erreur lors du chargement des inscrits'
       } finally {
         loadingActivityData.value = false
+      }
+    }
+
+    const removeActivityRegistrants = () => {
+      const targetField = bulkDestination.value
+      const emailsToRemove = addedGroups.value.activityRegistrants[targetField]
+
+      if (emailsToRemove.length > 0) {
+        recipients.value[targetField] = recipients.value[targetField].filter(
+          email => !emailsToRemove.includes(email)
+        )
+        addedGroups.value.activityRegistrants[targetField] = []
+        console.log(`Removed ${emailsToRemove.length} registrants from ${targetField}`)
       }
     }
 
@@ -987,6 +1147,10 @@ export default {
       previewSubject,
       selectedActivity,
       displayedActivities,
+      isEventParticipantsAdded,
+      isActivitySubmitterAdded,
+      isActivitySpeakersAdded,
+      isActivityRegistrantsAdded,
 
       // Données
       availableVariables,
@@ -1010,10 +1174,10 @@ export default {
 
       // Bulk recipient methods
       toggleActivityMenu,
-      addEventParticipants,
-      addActivitySubmitter,
-      addActivitySpeakers,
-      addActivityRegistrants,
+      toggleEventParticipants,
+      toggleActivitySubmitter,
+      toggleActivitySpeakers,
+      toggleActivityRegistrants,
 
       // i18n
       t

@@ -95,6 +95,10 @@
     "registrants_tooltip": "Ajouter tous les inscrits à l'activité",
     "select_destination": "Sélectionner la destination des emails groupés",
     "select_destination_first": "Veuillez d'abord sélectionner une destination (À, Cc ou Cci)",
-    "add_all_event_participants": "Ajouter tous les participants"
+    "add_all_event_participants": "Ajouter tous les participants",
+    "remove_all_event_participants": "Retirer tous les participants",
+    "remove_submitter": "Retirer",
+    "remove_speakers": "Retirer",
+    "remove_registrants": "Retirer"
   }
 }
