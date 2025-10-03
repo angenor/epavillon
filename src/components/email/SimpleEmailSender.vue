@@ -504,7 +504,22 @@ export default {
     FontAwesomeIcon,
     EmailAutocompleteInput
   },
-  setup() {
+  props: {
+    initialRecipients: {
+      type: Object,
+      default: () => ({ to: [], cc: [], bcc: [] })
+    },
+    initialEvent: {
+      type: String,
+      default: null
+    },
+    initialActivity: {
+      type: String,
+      default: null
+    }
+  },
+  emits: ['email-sent'],
+  setup(props, { emit }) {
     const { t } = useI18n()
     const { supabase } = useSupabase()
     const {
@@ -528,14 +543,14 @@ export default {
     const emailData = ref({
       subject: '',
       content: '',
-      event_id: '',
-      activity_id: ''
+      event_id: props.initialEvent || '',
+      activity_id: props.initialActivity || ''
     })
 
     const recipients = ref({
-      to: [],
-      cc: [],
-      bcc: []
+      to: props.initialRecipients?.to || [],
+      cc: props.initialRecipients?.cc || [],
+      bcc: props.initialRecipients?.bcc || []
     })
 
     // Events and Activities state
@@ -1085,6 +1100,14 @@ export default {
       })
 
       if (result.success) {
+        // Émettre l'événement de succès
+        emit('email-sent', {
+          subject: emailData.value.subject,
+          recipients: recipients.value,
+          event_id: emailData.value.event_id,
+          activity_id: emailData.value.activity_id
+        })
+
         // Réinitialiser le formulaire après un envoi réussi
         setTimeout(() => {
           resetForm()
@@ -1118,6 +1141,11 @@ export default {
     // Load events on mount
     onMounted(() => {
       fetchEvents()
+
+      // Si un événement initial est fourni, charger ses activités
+      if (props.initialEvent) {
+        fetchActivities(props.initialEvent)
+      }
 
       // Fermer le dropdown en cliquant en dehors
       const handleClickOutside = (event) => {

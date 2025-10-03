@@ -5,6 +5,7 @@ import SideBar from './components/SideBar.vue'
 import FooterSection from './components/FooterSection.vue'
 import ToastContainer from './components/ui/ToastContainer.vue'
 import MaintenanceModal from './components/MaintenanceModal.vue'
+import EmailManagerModal from './components/email/EmailManagerModal.vue'
 // import MessagingSystem from './components/messaging/MessagingSystem.vue'
 import { ref, computed } from 'vue'
 
@@ -31,6 +32,7 @@ const handleCloseSidebar = () => {
     <FooterSection />
     <SideBar :is-open="sidebarOpen" @close="handleCloseSidebar" />
     <ToastContainer />
+    <EmailManagerModal />
     <!-- <MaintenanceModal /> -->
     <!-- <MessagingSystem /> -->
   </div>

@@ -7,20 +7,20 @@
     </div>
   </div>
 
-  <div v-else class="admin-activities">
+  <div v-else class="admin-activities max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Header avec actions -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-10">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
           {{ t('admin.activities.title') }}
         </h1>
-        <p class="mt-2 text-gray-600 dark:text-gray-300">
+        <p class="mt-2 text-base text-gray-600 dark:text-gray-400">
           {{ t('admin.activities.subtitle') }}
         </p>
       </div>
       <div class="mt-4 sm:mt-0 flex items-center space-x-3">
-        <button @click="exportActivities" 
-                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700">
+        <button @click="exportActivities"
+                class="cursor-pointer px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 transition-colors duration-200 shadow-sm">
           <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
           </svg>
@@ -30,36 +30,36 @@
     </div>
 
     <!-- Statistiques rapides -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-        <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 p-6 border border-gray-100 dark:border-gray-700">
+        <div class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
           {{ t('admin.activities.stats.pending') }}
         </div>
-        <div class="mt-1 text-2xl font-bold text-orange-600 dark:text-orange-400">
+        <div class="mt-2 text-3xl font-bold text-orange-600 dark:text-orange-400">
           {{ stats.pending }}
         </div>
       </div>
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-        <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 p-6 border border-gray-100 dark:border-gray-700">
+        <div class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
           {{ t('admin.activities.stats.approved') }}
         </div>
-        <div class="mt-1 text-2xl font-bold text-green-600 dark:text-green-400">
+        <div class="mt-2 text-3xl font-bold text-green-600 dark:text-green-400">
           {{ stats.approved }}
         </div>
       </div>
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-        <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 p-6 border border-gray-100 dark:border-gray-700">
+        <div class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
           {{ t('admin.activities.stats.rejected') }}
         </div>
-        <div class="mt-1 text-2xl font-bold text-red-600 dark:text-red-400">
+        <div class="mt-2 text-3xl font-bold text-red-600 dark:text-red-400">
           {{ stats.rejected }}
         </div>
       </div>
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-        <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 p-6 border border-gray-100 dark:border-gray-700">
+        <div class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
           {{ t('admin.activities.stats.total') }}
         </div>
-        <div class="mt-1 text-2xl font-bold text-blue-600 dark:text-blue-400">
+        <div class="mt-2 text-3xl font-bold text-blue-600 dark:text-blue-400">
           {{ stats.total }}
         </div>
       </div>
@@ -130,191 +130,185 @@
       </div>
     </div>
 
-    <!-- Liste des activités -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-      <div v-if="isLoading" class="p-8 text-center">
+    <!-- Liste des activités en cartes -->
+    <div v-if="isLoading" class="flex justify-center py-16">
+      <div class="text-center">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto"></div>
         <p class="mt-4 text-gray-500 dark:text-gray-400">{{ t('admin.activities.loading') }}</p>
       </div>
+    </div>
 
-      <div v-else-if="filteredActivities.length === 0" class="p-8 text-center">
-        <svg class="w-12 h-12 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-        </svg>
-        <p class="text-gray-500 dark:text-gray-400">{{ t('admin.activities.noActivities') }}</p>
+    <div v-else-if="filteredActivities.length === 0" class="text-center py-16">
+      <svg class="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+      </svg>
+      <p class="text-gray-500 dark:text-gray-400 text-lg">{{ t('admin.activities.noActivities') }}</p>
+    </div>
+
+    <div v-else>
+      <!-- Grille de cartes -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div v-for="activity in paginatedActivities" :key="activity.id"
+             class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 group">
+
+          <!-- Image de couverture -->
+          <div class="h-48 relative overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600">
+            <img v-if="activity.cover_image_low_url"
+                 :src="activity.cover_image_low_url"
+                 :alt="activity.title"
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            <div v-else class="w-full h-full flex items-center justify-center">
+              <svg class="w-16 h-16 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+              </svg>
+            </div>
+
+            <!-- Badge de statut -->
+            <div class="absolute top-4 right-4">
+              <span :class="getStatusClass(activity.validation_status)"
+                    class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg">
+                {{ getStatusText(activity.validation_status) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Contenu de la carte -->
+          <div class="p-6">
+            <!-- Titre avec troncature sur 3 lignes -->
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white line-clamp-3 mb-3"
+                :title="activity.title">
+              {{ activity.title }}
+            </h3>
+
+            <!-- Métadonnées -->
+            <div class="space-y-2 mb-4">
+              <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+                <span class="truncate">{{ activity.organization?.name || '-' }}</span>
+              </div>
+
+              <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                <span>{{ activity.event?.title }} ({{ activity.event?.year }})</span>
+              </div>
+
+              <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span>{{ formatDate(activity.created_at) }}</span>
+              </div>
+            </div>
+
+            <!-- Types et format -->
+            <div class="flex items-center gap-2 mb-4 text-xs">
+              <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
+                {{ activity.activity_type }}
+              </span>
+              <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
+                {{ activity.format }}
+              </span>
+            </div>
+
+            <!-- Thématiques -->
+            <div v-if="activity.main_themes?.length" class="flex flex-wrap gap-1.5 mb-4">
+              <span v-for="theme in activity.main_themes.slice(0, 2)" :key="theme"
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
+                {{ t(`activities.themes.${theme}`) }}
+              </span>
+              <span v-if="activity.main_themes.length > 2"
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">
+                +{{ activity.main_themes.length - 2 }}
+              </span>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+              <button @click="viewActivity(activity)"
+                      class="cursor-pointer text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 font-medium text-sm transition-colors duration-150">
+                {{ t('admin.activities.view') }}
+              </button>
+
+              <div class="flex items-center gap-2">
+                <button v-if="['submitted', 'under_review'].includes(activity.validation_status)"
+                        @click="approveActivity(activity)"
+                        class="cursor-pointer p-2 text-green-600 hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/20 rounded-lg transition-colors duration-150"
+                        :title="t('admin.activities.approve')">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </button>
+                <button v-if="['submitted', 'under_review'].includes(activity.validation_status)"
+                        @click="rejectActivity(activity)"
+                        class="cursor-pointer p-2 text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-150"
+                        :title="t('admin.activities.reject')">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div v-else class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead class="bg-gray-50 dark:bg-gray-900">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                {{ t('admin.activities.activity') }}
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                {{ t('admin.activities.organization') }}
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                {{ t('admin.activities.event') }}
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                {{ t('admin.activities.status') }}
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                {{ t('admin.activities.submittedAt') }}
-              </th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                {{ t('admin.activities.actions') }}
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-            <tr v-for="activity in paginatedActivities" :key="activity.id" class="hover:bg-gray-50 dark:hover:bg-gray-700">
-              <!-- Activité -->
-              <td class="px-6 py-4">
-                <div class="flex items-center">
-                  <div class="flex-shrink-0 h-12 w-12">
-                    <img v-if="activity.cover_image_low_url"
-                         :src="activity.cover_image_low_url"
-                         :alt="activity.title"
-                         class="h-12 w-12 rounded-lg object-cover">
-                    <div v-else class="h-12 w-12 bg-gray-200 dark:bg-gray-600 rounded-lg flex items-center justify-center">
-                      <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                      </svg>
-                    </div>
-                  </div>
-                  <div class="ml-4">
-                    <div class="text-sm font-medium text-gray-900 dark:text-white">
-                      {{ activity.title }}
-                    </div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">
-                      {{ activity.activity_type }} - {{ activity.format }}
-                    </div>
-                    <div v-if="activity.main_themes?.length" class="flex flex-wrap gap-1 mt-1">
-                      <span v-for="theme in activity.main_themes.slice(0, 2)" :key="theme"
-                            class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                        {{ t(`activities.themes.${theme}`) }}
-                      </span>
-                      <span v-if="activity.main_themes.length > 2"
-                            class="text-xs text-gray-500 dark:text-gray-400">
-                        +{{ activity.main_themes.length - 2 }}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </td>
-
-              <!-- Organisation -->
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-900 dark:text-white">
-                  {{ activity.organization?.name }}
-                </div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">
-                  {{ activity.organization?.organization_type }}
-                </div>
-              </td>
-
-              <!-- Événement -->
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-900 dark:text-white">
-                  {{ activity.event?.title }}
-                </div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">
-                  {{ activity.event?.year }}
-                </div>
-              </td>
-
-              <!-- Statut -->
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span :class="getStatusClass(activity.validation_status)"
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
-                  {{ getStatusText(activity.validation_status) }}
-                </span>
-              </td>
-
-              <!-- Date de soumission -->
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                {{ formatDate(activity.created_at) }}
-              </td>
-
-              <!-- Actions -->
-              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <div class="flex items-center justify-end space-x-2">
-                  <button @click="viewActivity(activity)"
-                          class="text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300">
-                    {{ t('admin.activities.view') }}
-                  </button>
-                  <button v-if="['submitted', 'under_review'].includes(activity.validation_status)"
-                          @click="approveActivity(activity)"
-                          class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300">
-                    {{ t('admin.activities.approve') }}
-                  </button>
-                  <button v-if="['submitted', 'under_review'].includes(activity.validation_status)"
-                          @click="rejectActivity(activity)"
-                          class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
-                    {{ t('admin.activities.reject') }}
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <!-- Pagination -->
-        <div class="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6">
-          <div class="flex-1 flex justify-between sm:hidden">
-            <button @click="previousPage" 
-                    :disabled="currentPage === 1"
-                    class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 disabled:opacity-50">
-              {{ t('admin.activities.previous') }}
-            </button>
-            <button @click="nextPage" 
-                    :disabled="currentPage === totalPages"
-                    class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 disabled:opacity-50">
-              {{ t('admin.activities.next') }}
-            </button>
+      <!-- Pagination -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm px-6 py-4 flex items-center justify-between border border-gray-100 dark:border-gray-700">
+        <div class="flex-1 flex justify-between sm:hidden">
+          <button @click="previousPage"
+                  :disabled="currentPage === 1"
+                  class="cursor-pointer relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150">
+            {{ t('admin.activities.previous') }}
+          </button>
+          <button @click="nextPage"
+                  :disabled="currentPage === totalPages"
+                  class="cursor-pointer ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150">
+            {{ t('admin.activities.next') }}
+          </button>
+        </div>
+        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+          <div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              {{ t('admin.activities.showing') }}
+              <span class="font-semibold text-gray-900 dark:text-white">{{ (currentPage - 1) * pageSize + 1 }}</span>
+              {{ t('admin.activities.to') }}
+              <span class="font-semibold text-gray-900 dark:text-white">{{ Math.min(currentPage * pageSize, filteredActivities.length) }}</span>
+              {{ t('admin.activities.of') }}
+              <span class="font-semibold text-gray-900 dark:text-white">{{ filteredActivities.length }}</span>
+              {{ t('admin.activities.results') }}
+            </p>
           </div>
-          <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-            <div>
-              <p class="text-sm text-gray-700 dark:text-gray-300">
-                {{ t('admin.activities.showing') }}
-                <span class="font-medium">{{ (currentPage - 1) * pageSize + 1 }}</span>
-                {{ t('admin.activities.to') }}
-                <span class="font-medium">{{ Math.min(currentPage * pageSize, filteredActivities.length) }}</span>
-                {{ t('admin.activities.of') }}
-                <span class="font-medium">{{ filteredActivities.length }}</span>
-                {{ t('admin.activities.results') }}
-              </p>
-            </div>
-            <div>
-              <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                <button @click="previousPage" 
-                        :disabled="currentPage === 1"
-                        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 disabled:opacity-50">
-                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
-                </button>
-                <button v-for="page in visiblePages" :key="page"
-                        @click="goToPage(page)"
-                        :class="[
-                          'relative inline-flex items-center px-4 py-2 border text-sm font-medium',
-                          page === currentPage
-                            ? 'z-10 bg-orange-50 border-orange-500 text-orange-600 dark:bg-orange-900 dark:text-orange-300'
-                            : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400'
-                        ]">
-                  {{ page }}
-                </button>
-                <button @click="nextPage" 
-                        :disabled="currentPage === totalPages"
-                        class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 disabled:opacity-50">
-                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                  </svg>
-                </button>
-              </nav>
-            </div>
+          <div>
+            <nav class="relative z-0 inline-flex rounded-lg shadow-sm -space-x-px">
+              <button @click="previousPage"
+                      :disabled="currentPage === 1"
+                      class="cursor-pointer relative inline-flex items-center px-3 py-2 rounded-l-lg border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150">
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                </svg>
+              </button>
+              <button v-for="page in visiblePages" :key="page"
+                      @click="goToPage(page)"
+                      :class="[
+                        'cursor-pointer relative inline-flex items-center px-4 py-2 border text-sm font-medium transition-colors duration-150',
+                        page === currentPage
+                          ? 'z-10 bg-orange-50 border-orange-500 text-orange-600 dark:bg-orange-900/30 dark:border-orange-600 dark:text-orange-400'
+                          : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700'
+                      ]">
+                {{ page }}
+              </button>
+              <button @click="nextPage"
+                      :disabled="currentPage === totalPages"
+                      class="cursor-pointer relative inline-flex items-center px-3 py-2 rounded-r-lg border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150">
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                </svg>
+              </button>
+            </nav>
           </div>
         </div>
       </div>

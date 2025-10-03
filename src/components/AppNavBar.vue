@@ -114,6 +114,18 @@
             </div>
           </div>
 
+          <!-- Email Modal Test -->
+          <button
+            v-if="authStore.isAuthenticated"
+            @click="openEmailModal()"
+            class="relative p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 cursor-pointer"
+            :title="t('email.send_email') || 'Envoyer un email'"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </button>
+
           <!-- Messagerie -->
           <!-- <router-link
             v-if="authStore.isAuthenticated"
@@ -257,6 +269,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
+import { useEmailModal } from '@/composables/useEmailModal'
 import NotificationDropdown from '@/components/notifications/NotificationDropdown.vue'
 
 // Émission d'événements
@@ -268,6 +281,7 @@ const { t, locale } = useI18n()
 const authStore = useAuthStore()
 const router = useRouter()
 const { supabase } = useSupabase()
+const { openEmailModal } = useEmailModal()
 
 // Refs
 const showLanguageMenu = ref(false)
