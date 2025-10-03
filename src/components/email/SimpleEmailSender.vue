@@ -52,36 +52,10 @@
         <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">
           {{ t('email.to') }} ({{ t('email.to_description') }})
         </label>
-        <div class="flex flex-wrap gap-2 mb-2">
-          <span
-            v-for="(email, index) in recipients.to"
-            :key="`to-${index}`"
-            class="inline-flex items-center px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm"
-          >
-            {{ email }}
-            <button
-              @click="removeRecipient('to', index)"
-              class="ml-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 cursor-pointer"
-            >
-              <font-awesome-icon icon="times" />
-            </button>
-          </span>
-        </div>
-        <div class="flex">
-          <input
-            v-model="newRecipient.to"
-            @keyup.enter="addRecipient('to')"
-            type="email"
-            :placeholder="t('email.add_recipient_placeholder')"
-            class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-l-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            @click="addRecipient('to')"
-            class="px-4 py-2 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700 cursor-pointer transition-colors"
-          >
-            <font-awesome-icon icon="plus" />
-          </button>
-        </div>
+        <EmailAutocompleteInput
+          v-model="recipients.to"
+          :placeholder="t('email.add_recipient_placeholder')"
+        />
       </div>
 
       <!-- CC Recipients -->
@@ -89,36 +63,10 @@
         <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">
           {{ t('email.cc') }} ({{ t('email.cc_description') }})
         </label>
-        <div class="flex flex-wrap gap-2 mb-2">
-          <span
-            v-for="(email, index) in recipients.cc"
-            :key="`cc-${index}`"
-            class="inline-flex items-center px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm"
-          >
-            {{ email }}
-            <button
-              @click="removeRecipient('cc', index)"
-              class="ml-2 text-green-600 dark:text-green-400 hover:text-green-800 cursor-pointer"
-            >
-              <font-awesome-icon icon="times" />
-            </button>
-          </span>
-        </div>
-        <div class="flex">
-          <input
-            v-model="newRecipient.cc"
-            @keyup.enter="addRecipient('cc')"
-            type="email"
-            :placeholder="t('email.add_cc_placeholder')"
-            class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-l-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-          <button
-            @click="addRecipient('cc')"
-            class="px-4 py-2 bg-green-600 text-white rounded-r-lg hover:bg-green-700 cursor-pointer transition-colors"
-          >
-            <font-awesome-icon icon="plus" />
-          </button>
-        </div>
+        <EmailAutocompleteInput
+          v-model="recipients.cc"
+          :placeholder="t('email.add_cc_placeholder')"
+        />
       </div>
 
       <!-- BCC Recipients -->
@@ -126,36 +74,10 @@
         <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">
           {{ t('email.bcc') }} ({{ t('email.bcc_description') }})
         </label>
-        <div class="flex flex-wrap gap-2 mb-2">
-          <span
-            v-for="(email, index) in recipients.bcc"
-            :key="`bcc-${index}`"
-            class="inline-flex items-center px-3 py-1 bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 rounded-full text-sm"
-          >
-            {{ email }}
-            <button
-              @click="removeRecipient('bcc', index)"
-              class="ml-2 text-orange-600 dark:text-orange-400 hover:text-orange-800 cursor-pointer"
-            >
-              <font-awesome-icon icon="times" />
-            </button>
-          </span>
-        </div>
-        <div class="flex">
-          <input
-            v-model="newRecipient.bcc"
-            @keyup.enter="addRecipient('bcc')"
-            type="email"
-            :placeholder="t('email.add_bcc_placeholder')"
-            class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-l-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-          <button
-            @click="addRecipient('bcc')"
-            class="px-4 py-2 bg-orange-600 text-white rounded-r-lg hover:bg-orange-700 cursor-pointer transition-colors"
-          >
-            <font-awesome-icon icon="plus" />
-          </button>
-        </div>
+        <EmailAutocompleteInput
+          v-model="recipients.bcc"
+          :placeholder="t('email.add_bcc_placeholder')"
+        />
       </div>
     </div>
 
@@ -289,6 +211,7 @@
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useEmailSender } from '@/composables/useEmailSender'
+import EmailAutocompleteInput from '@/components/EmailAutocompleteInput.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   faFileAlt,
@@ -321,7 +244,8 @@ library.add(
 export default {
   name: 'SimpleEmailSender',
   components: {
-    FontAwesomeIcon
+    FontAwesomeIcon,
+    EmailAutocompleteInput
   },
   setup() {
     const { t } = useI18n()
@@ -354,12 +278,6 @@ export default {
       bcc: []
     })
 
-    const newRecipient = ref({
-      to: '',
-      cc: '',
-      bcc: ''
-    })
-
     // Computed
     const canSend = computed(() => {
       const hasRecipients =
@@ -379,29 +297,6 @@ export default {
     })
 
     // Methods
-    const addRecipient = (type) => {
-      const email = newRecipient.value[type].trim()
-
-      if (!email) return
-
-      if (!validateEmail(email)) {
-        error.value = t('email.invalid_email', { email })
-        return
-      }
-
-      if (recipients.value[type].includes(email)) {
-        error.value = t('email.duplicate_email', { email })
-        return
-      }
-
-      recipients.value[type].push(email)
-      newRecipient.value[type] = ''
-      error.value = null
-    }
-
-    const removeRecipient = (type, index) => {
-      recipients.value[type].splice(index, 1)
-    }
 
     const loadTemplate = (template) => {
       emailData.value.subject = template.subject
@@ -453,11 +348,6 @@ export default {
         cc: [],
         bcc: []
       }
-      newRecipient.value = {
-        to: '',
-        cc: '',
-        bcc: ''
-      }
       reset()
       showPreview.value = false
       showTemplates.value = false
@@ -475,7 +365,6 @@ export default {
       showVariables,
       emailData,
       recipients,
-      newRecipient,
 
       // Computed
       canSend,
@@ -487,8 +376,6 @@ export default {
       emailTemplates,
 
       // Méthodes
-      addRecipient,
-      removeRecipient,
       loadTemplate,
       insertVariable,
       sendEmail,
