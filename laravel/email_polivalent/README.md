@@ -227,19 +227,14 @@ Les logs sont disponibles dans `storage/logs/laravel.log`
 ### Debug
 En mode debug (`APP_DEBUG=true`), les messages d'erreur détaillés sont inclus dans les réponses JSON.
 
-## Prochaines étapes
+<!-- ## Prochaines étapes
 
 1. **Phase 2 - Email d'événement:**
    - Intégration avec la base de données Supabase
-   - Sélection dynamique des destinataires
    - Templates spécifiques aux événements
 
 2. **Améliorations futures:**
    - Système de files d'attente pour envois massifs
    - Statistiques d'envoi
-   - Templates HTML avancés
-   - Pièces jointes
+   - Pièces jointes -->
 
-## Support
-
-Pour toute question ou problème, consultez la documentation principale du projet ou contactez l'équipe de développement.
