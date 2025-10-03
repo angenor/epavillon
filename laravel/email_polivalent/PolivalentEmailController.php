@@ -112,17 +112,6 @@ class PolivalentEmailController extends Controller
             // Préparer les destinataires
             $recipients = $this->emailService->prepareRecipients($data['recipients']);
 
-            // Créer le Mailable
-            $mailable = new SimpleEmail([
-                'subject' => $subject,
-                'content' => $content,
-                'template' => $data['template'] ?? 'simple_email',
-                'variables' => $data['variables'] ?? []
-            ]);
-
-            // Envoyer l'email avec la syntaxe exacte de SendSuperbaseEmailController
-            // Utiliser directement Mail::to()->send() sans boucles complexes
-
             // Extraire les emails (gérer les formats array et string)
             $toEmails = [];
             if (!empty($recipients['to'])) {
@@ -145,26 +134,67 @@ class PolivalentEmailController extends Controller
                 }
             }
 
-            // Envoyer l'email
+            // Compteur d'emails envoyés
+            $sentCount = 0;
+
+            // CORRECTION: Envoyer un email séparé à chaque destinataire TO
             if (!empty($toEmails)) {
-                // Envoyer avec TO (et optionnellement CC/BCC)
-                $mail = Mail::to($toEmails);
+                foreach ($toEmails as $toEmail) {
+                    // Créer un nouveau Mailable pour chaque destinataire
+                    $mailable = new SimpleEmail([
+                        'subject' => $subject,
+                        'content' => $content,
+                        'template' => $data['template'] ?? 'simple_email',
+                        'variables' => $data['variables'] ?? []
+                    ]);
 
-                if (!empty($ccEmails)) {
-                    $mail->cc($ccEmails);
+                    $mail = Mail::to($toEmail);
+
+                    // Ajouter CC si présent (tous reçoivent les mêmes CC)
+                    if (!empty($ccEmails)) {
+                        $mail->cc($ccEmails);
+                    }
+
+                    // Ajouter BCC si présent (tous reçoivent les mêmes BCC)
+                    if (!empty($bccEmails)) {
+                        $mail->bcc($bccEmails);
+                    }
+
+                    $mail->send($mailable);
+                    $sentCount++;
                 }
+            } elseif (!empty($ccEmails)) {
+                // Si seulement CC, envoyer un email à chaque CC
+                foreach ($ccEmails as $ccEmail) {
+                    $mailable = new SimpleEmail([
+                        'subject' => $subject,
+                        'content' => $content,
+                        'template' => $data['template'] ?? 'simple_email',
+                        'variables' => $data['variables'] ?? []
+                    ]);
 
-                if (!empty($bccEmails)) {
-                    $mail->bcc($bccEmails);
+                    $mail = Mail::to($ccEmail);
+
+                    if (!empty($bccEmails)) {
+                        $mail->bcc($bccEmails);
+                    }
+
+                    $mail->send($mailable);
+                    $sentCount++;
                 }
-
-                $mail->send($mailable);
-
             } elseif (!empty($bccEmails)) {
                 // Si seulement BCC (envoi groupé), utiliser l'adresse de l'expéditeur comme destinataire principal
+                $mailable = new SimpleEmail([
+                    'subject' => $subject,
+                    'content' => $content,
+                    'template' => $data['template'] ?? 'simple_email',
+                    'variables' => $data['variables'] ?? []
+                ]);
+
                 Mail::to(config('mail.from.address'))
                     ->bcc($bccEmails)
                     ->send($mailable);
+                $sentCount = count($bccEmails);
             } else {
                 throw new \Exception('Aucun destinataire spécifié');
             }
@@ -173,10 +203,11 @@ class PolivalentEmailController extends Controller
             Log::info('Email polyvalent envoyé avec succès', [
                 'type' => 'simple',
                 'subject' => $subject,
+                'sent_count' => $sentCount,
                 'recipients_count' => [
-                    'to' => count($recipients['to'] ?? []),
-                    'cc' => count($recipients['cc'] ?? []),
-                    'bcc' => count($recipients['bcc'] ?? [])
+                    'to' => count($toEmails),
+                    'cc' => count($ccEmails),
+                    'bcc' => count($bccEmails)
                 ]
             ]);
 
@@ -185,10 +216,11 @@ class PolivalentEmailController extends Controller
                 'message' => 'Email envoyé avec succès',
                 'data' => [
                     'type' => 'simple',
+                    'sent_count' => $sentCount,
                     'recipients_count' => [
-                        'to' => count($recipients['to'] ?? []),
-                        'cc' => count($recipients['cc'] ?? []),
-                        'bcc' => count($recipients['bcc'] ?? [])
+                        'to' => count($toEmails),
+                        'cc' => count($ccEmails),
+                        'bcc' => count($bccEmails)
                     ]
                 ]
             ], 200);
