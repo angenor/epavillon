@@ -101,20 +101,87 @@
       </div>
 
       <!-- Activity Selection -->
-      <div>
+      <div class="relative">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           {{ t('email.select_activity') }}
         </label>
-        <select
-          v-model="emailData.activity_id"
-          :disabled="!emailData.event_id || activities.length === 0"
-          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200 dark:disabled:bg-gray-600 disabled:cursor-not-allowed"
-        >
-          <option value="">{{ t('email.no_activity') }}</option>
-          <option v-for="activity in activities" :key="activity.id" :value="activity.id">
-            {{ activity.name }}
-          </option>
-        </select>
+
+        <!-- Searchable dropdown -->
+        <div class="relative activity-dropdown-container">
+          <!-- Input avec icône dropdown -->
+          <div class="relative">
+            <input
+              v-model="activitySearchQuery"
+              @input="filterActivities"
+              @focus="openActivityDropdown"
+              @keydown.down.prevent="navigateDown"
+              @keydown.up.prevent="navigateUp"
+              @keydown.enter.prevent="selectHighlighted"
+              @keydown.escape="closeActivityDropdown"
+              :disabled="!emailData.event_id || activities.length === 0"
+              :placeholder="selectedActivity ? selectedActivity.name : (t('email.search_activity_placeholder') || 'Rechercher ou sélectionner une activité...')"
+              class="w-full pl-3 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200 dark:disabled:bg-gray-600 disabled:cursor-not-allowed"
+            />
+
+            <!-- Icône dropdown -->
+            <button
+              type="button"
+              @click="toggleActivityDropdown"
+              :disabled="!emailData.event_id || activities.length === 0"
+              class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer disabled:cursor-not-allowed"
+            >
+              <font-awesome-icon
+                :icon="showActivityDropdown ? 'chevron-up' : 'chevron-down'"
+                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              />
+            </button>
+          </div>
+
+          <!-- Dropdown des activités -->
+          <transition
+            enter-active-class="transition ease-out duration-100"
+            enter-from-class="transform opacity-0 scale-95"
+            enter-to-class="transform opacity-100 scale-100"
+            leave-active-class="transition ease-in duration-75"
+            leave-from-class="transform opacity-100 scale-100"
+            leave-to-class="transform opacity-0 scale-95"
+          >
+            <div
+              v-if="showActivityDropdown && (filteredActivities.length > 0 || !activitySearchQuery)"
+              class="absolute z-50 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto"
+            >
+              <!-- Option "Aucune activité" -->
+              <div
+                @click="clearActivity"
+                class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm border-b border-gray-200 dark:border-gray-600"
+                :class="{ 'bg-blue-50 dark:bg-blue-900': !emailData.activity_id }"
+              >
+                <div class="text-gray-500 dark:text-gray-400 italic">{{ t('email.no_activity') || 'Aucune activité' }}</div>
+              </div>
+
+              <!-- Liste des activités -->
+              <div
+                v-for="(activity, index) in displayedActivities"
+                :key="activity.id"
+                @click="selectActivity(activity)"
+                @mouseenter="highlightedIndex = index"
+                class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm"
+                :class="{
+                  'bg-blue-50 dark:bg-blue-900': emailData.activity_id === activity.id,
+                  'bg-gray-100 dark:bg-gray-600': highlightedIndex === index
+                }"
+              >
+                <div class="text-gray-900 dark:text-white">{{ activity.name }}</div>
+                <div v-if="activity.type" class="text-xs text-gray-500 dark:text-gray-400">Type: {{ activity.type }}</div>
+              </div>
+
+              <!-- Message si aucun résultat -->
+              <div v-if="activitySearchQuery && filteredActivities.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 italic">
+                Aucune activité trouvée
+              </div>
+            </div>
+          </transition>
+        </div>
       </div>
     </div>
 
@@ -245,7 +312,7 @@
 </template>
 
 <script>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useEmailSender } from '@/composables/useEmailSender'
 import { useSupabase } from '@/composables/useSupabase'
@@ -261,7 +328,11 @@ import {
   faCheckCircle,
   faRedo,
   faPaperPlane,
-  faSpinner
+  faSpinner,
+  faSearch,
+  faList,
+  faChevronUp,
+  faChevronDown
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -276,7 +347,11 @@ library.add(
   faCheckCircle,
   faRedo,
   faPaperPlane,
-  faSpinner
+  faSpinner,
+  faSearch,
+  faList,
+  faChevronUp,
+  faChevronDown
 )
 
 export default {
@@ -323,6 +398,12 @@ export default {
     const events = ref([])
     const activities = ref([])
 
+    // Activity search state
+    const activitySearchQuery = ref('')
+    const showActivityDropdown = ref(false)
+    const filteredActivities = ref([])
+    const highlightedIndex = ref(-1)
+
     // Computed
     const canSend = computed(() => {
       const hasRecipients =
@@ -339,6 +420,15 @@ export default {
 
     const previewSubject = computed(() => {
       return previewEmail(emailData.value.subject)
+    })
+
+    const selectedActivity = computed(() => {
+      if (!emailData.value.activity_id) return null
+      return activities.value.find(a => a.id === emailData.value.activity_id)
+    })
+
+    const displayedActivities = computed(() => {
+      return activitySearchQuery.value ? filteredActivities.value : activities.value
     })
 
     // Methods
@@ -396,7 +486,8 @@ export default {
         // Mapper les données pour avoir un format cohérent
         activities.value = (data || []).map(activity => ({
           id: activity.id,
-          name: activity.title + (activity.activity_type ? ` (${activity.activity_type})` : '')
+          name: activity.title + (activity.activity_type ? ` (${activity.activity_type})` : ''),
+          type: activity.activity_type
         }))
 
         console.log('Activités formatées:', activities.value)
@@ -408,7 +499,89 @@ export default {
 
     const onEventChange = () => {
       emailData.value.activity_id = ''
+      activitySearchQuery.value = ''
+      filteredActivities.value = []
+      highlightedIndex.value = -1
       fetchActivities(emailData.value.event_id)
+    }
+
+    // Méthodes pour la recherche d'activité
+    const filterActivities = () => {
+      const query = activitySearchQuery.value.toLowerCase().trim()
+
+      if (!query) {
+        filteredActivities.value = []
+        highlightedIndex.value = -1
+        return
+      }
+
+      filteredActivities.value = activities.value.filter(activity =>
+        activity.name.toLowerCase().includes(query)
+      )
+      highlightedIndex.value = -1
+    }
+
+    const selectActivity = (activity) => {
+      emailData.value.activity_id = activity.id
+      activitySearchQuery.value = ''
+      filteredActivities.value = []
+      showActivityDropdown.value = false
+      highlightedIndex.value = -1
+    }
+
+    const clearActivity = () => {
+      emailData.value.activity_id = ''
+      activitySearchQuery.value = ''
+      filteredActivities.value = []
+      showActivityDropdown.value = false
+      highlightedIndex.value = -1
+    }
+
+    const openActivityDropdown = () => {
+      showActivityDropdown.value = true
+      if (!activitySearchQuery.value) {
+        filteredActivities.value = []
+      }
+    }
+
+    const closeActivityDropdown = () => {
+      setTimeout(() => {
+        showActivityDropdown.value = false
+        highlightedIndex.value = -1
+      }, 200)
+    }
+
+    const toggleActivityDropdown = () => {
+      if (showActivityDropdown.value) {
+        closeActivityDropdown()
+      } else {
+        openActivityDropdown()
+      }
+    }
+
+    // Navigation au clavier
+    const navigateDown = () => {
+      const maxIndex = displayedActivities.value.length - 1
+      if (highlightedIndex.value < maxIndex) {
+        highlightedIndex.value++
+      } else {
+        highlightedIndex.value = 0
+      }
+    }
+
+    const navigateUp = () => {
+      const maxIndex = displayedActivities.value.length - 1
+      if (highlightedIndex.value > 0) {
+        highlightedIndex.value--
+      } else {
+        highlightedIndex.value = maxIndex
+      }
+    }
+
+    const selectHighlighted = () => {
+      if (highlightedIndex.value >= 0 && highlightedIndex.value < displayedActivities.value.length) {
+        selectActivity(displayedActivities.value[highlightedIndex.value])
+      }
     }
 
     const loadTemplate = (template) => {
@@ -466,6 +639,10 @@ export default {
         bcc: []
       }
       activities.value = []
+      activitySearchQuery.value = ''
+      filteredActivities.value = []
+      showActivityDropdown.value = false
+      highlightedIndex.value = -1
       reset()
       showPreview.value = false
       showTemplates.value = false
@@ -475,6 +652,21 @@ export default {
     // Load events on mount
     onMounted(() => {
       fetchEvents()
+
+      // Fermer le dropdown en cliquant en dehors
+      const handleClickOutside = (event) => {
+        const activityDropdown = document.querySelector('.activity-dropdown-container')
+        if (activityDropdown && !activityDropdown.contains(event.target)) {
+          showActivityDropdown.value = false
+        }
+      }
+
+      document.addEventListener('click', handleClickOutside)
+
+      // Cleanup
+      onUnmounted(() => {
+        document.removeEventListener('click', handleClickOutside)
+      })
     })
 
     return {
@@ -491,10 +683,18 @@ export default {
       events,
       activities,
 
+      // Activity search
+      activitySearchQuery,
+      showActivityDropdown,
+      filteredActivities,
+      highlightedIndex,
+
       // Computed
       canSend,
       previewContent,
       previewSubject,
+      selectedActivity,
+      displayedActivities,
 
       // Données
       availableVariables,
@@ -506,6 +706,15 @@ export default {
       sendEmail,
       resetForm,
       onEventChange,
+      filterActivities,
+      selectActivity,
+      clearActivity,
+      openActivityDropdown,
+      closeActivityDropdown,
+      toggleActivityDropdown,
+      navigateDown,
+      navigateUp,
+      selectHighlighted,
 
       // i18n
       t
