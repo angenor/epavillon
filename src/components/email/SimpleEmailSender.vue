@@ -41,6 +41,111 @@
       </div>
     </div>
 
+    <!-- Quick Add Recipients Buttons -->
+    <div v-if="emailData.event_id || emailData.activity_id" class="mb-6">
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        {{ t('email.quick_add_recipients') || 'Ajout rapide de destinataires' }}
+      </label>
+
+      <!-- Event Recipients -->
+      <div v-if="emailData.event_id" class="mb-3">
+        <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">
+          {{ t('email.event_recipients') || 'Participants de l\'événement' }}:
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <button
+            @click="addEventParticipants('to')"
+            :disabled="loadingEventParticipants"
+            class="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
+          >
+            <font-awesome-icon icon="user-plus" class="mr-1" />
+            {{ t('email.add_to_primary') || 'Ajouter à "À"' }}
+          </button>
+          <button
+            @click="addEventParticipants('cc')"
+            :disabled="loadingEventParticipants"
+            class="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
+          >
+            <font-awesome-icon icon="user-plus" class="mr-1" />
+            {{ t('email.add_to_cc') || 'Ajouter à "Cc"' }}
+          </button>
+          <button
+            @click="addEventParticipants('bcc')"
+            :disabled="loadingEventParticipants"
+            class="px-3 py-1 text-xs bg-orange-500 text-white rounded hover:bg-orange-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
+          >
+            <font-awesome-icon icon="user-plus" class="mr-1" />
+            {{ t('email.add_to_bcc') || 'Ajouter à "Cci"' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Activity Recipients -->
+      <div v-if="emailData.activity_id" class="mb-3">
+        <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">
+          {{ t('email.activity_recipients') || 'Participants de l\'activité' }}:
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <!-- Submitter with dropdown -->
+          <div class="relative inline-block">
+            <button
+              @click="toggleActivityMenu('submitter')"
+              :disabled="loadingActivityData"
+              class="px-3 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
+              :title="t('email.submitter_tooltip') || 'Ajouter le soumissionnaire de l\'activité'"
+            >
+              <font-awesome-icon icon="user-tie" class="mr-1" />
+              {{ t('email.submitter') || 'Soumissionnaire' }}
+              <font-awesome-icon icon="chevron-down" class="ml-1" />
+            </button>
+            <div v-if="showActivityMenu === 'submitter'" class="absolute z-10 mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded shadow-lg">
+              <button @click="addActivitySubmitter('to'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">À</button>
+              <button @click="addActivitySubmitter('cc'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">Cc</button>
+              <button @click="addActivitySubmitter('bcc'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">Cci</button>
+            </div>
+          </div>
+
+          <!-- Speakers/Panelists with dropdown -->
+          <div class="relative inline-block">
+            <button
+              @click="toggleActivityMenu('speakers')"
+              :disabled="loadingActivityData"
+              class="px-3 py-1 text-xs bg-indigo-500 text-white rounded hover:bg-indigo-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
+              :title="t('email.speakers_tooltip') || 'Ajouter tous les panélistes/intervenants'"
+            >
+              <font-awesome-icon icon="users" class="mr-1" />
+              {{ t('email.speakers') || 'Panélistes' }}
+              <font-awesome-icon icon="chevron-down" class="ml-1" />
+            </button>
+            <div v-if="showActivityMenu === 'speakers'" class="absolute z-10 mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded shadow-lg">
+              <button @click="addActivitySpeakers('to'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">À</button>
+              <button @click="addActivitySpeakers('cc'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">Cc</button>
+              <button @click="addActivitySpeakers('bcc'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">Cci</button>
+            </div>
+          </div>
+
+          <!-- Registered participants with dropdown -->
+          <div class="relative inline-block">
+            <button
+              @click="toggleActivityMenu('registrants')"
+              :disabled="loadingActivityData"
+              class="px-3 py-1 text-xs bg-teal-500 text-white rounded hover:bg-teal-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
+              :title="t('email.registrants_tooltip') || 'Ajouter tous les inscrits à l\'activité'"
+            >
+              <font-awesome-icon icon="user-check" class="mr-1" />
+              {{ t('email.registrants') || 'Inscrits' }}
+              <font-awesome-icon icon="chevron-down" class="ml-1" />
+            </button>
+            <div v-if="showActivityMenu === 'registrants'" class="absolute z-10 mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded shadow-lg">
+              <button @click="addActivityRegistrants('to'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">À</button>
+              <button @click="addActivityRegistrants('cc'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">Cc</button>
+              <button @click="addActivityRegistrants('bcc'); showActivityMenu = null" class="block w-full px-3 py-1 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-600">Cci</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Recipients Section -->
     <div class="mb-6">
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -332,7 +437,11 @@ import {
   faSearch,
   faList,
   faChevronUp,
-  faChevronDown
+  faChevronDown,
+  faUserPlus,
+  faUserTie,
+  faUsers,
+  faUserCheck
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -351,7 +460,11 @@ library.add(
   faSearch,
   faList,
   faChevronUp,
-  faChevronDown
+  faChevronDown,
+  faUserPlus,
+  faUserTie,
+  faUsers,
+  faUserCheck
 )
 
 export default {
@@ -403,6 +516,11 @@ export default {
     const showActivityDropdown = ref(false)
     const filteredActivities = ref([])
     const highlightedIndex = ref(-1)
+
+    // Loading states for bulk actions
+    const loadingEventParticipants = ref(false)
+    const loadingActivityData = ref(false)
+    const showActivityMenu = ref(null)
 
     // Computed
     const canSend = computed(() => {
@@ -584,6 +702,165 @@ export default {
       }
     }
 
+    // Bulk recipient functions
+    const toggleActivityMenu = (menu) => {
+      if (showActivityMenu.value === menu) {
+        showActivityMenu.value = null
+      } else {
+        showActivityMenu.value = menu
+      }
+    }
+    const addEventParticipants = async (targetField) => {
+      if (!emailData.value.event_id) return
+
+      loadingEventParticipants.value = true
+      try {
+        // Récupérer tous les utilisateurs liés à l'événement
+        // 1. Les soumissionnaires d'activités
+        const { data: submitters, error: submittersError } = await supabase
+          .from('activities')
+          .select('submitted_by, users!submitted_by(email)')
+          .eq('event_id', emailData.value.event_id)
+
+        if (submittersError) throw submittersError
+
+        // 2. Les inscrits à toutes les activités de l'événement
+        const { data: allActivities, error: activitiesError } = await supabase
+          .from('activities')
+          .select('id')
+          .eq('event_id', emailData.value.event_id)
+
+        if (activitiesError) throw activitiesError
+
+        let registrantEmails = []
+        if (allActivities && allActivities.length > 0) {
+          const activityIds = allActivities.map(a => a.id)
+          const { data: registrants, error: registrantsError } = await supabase
+            .from('activity_registrations')
+            .select('user_id, users!inner(email)')
+            .in('activity_id', activityIds)
+
+          if (!registrantsError && registrants) {
+            registrantEmails = registrants.map(r => r.users?.email).filter(Boolean)
+          }
+        }
+
+        // 3. Les panélistes de toutes les activités
+        let speakerEmails = []
+        if (allActivities && allActivities.length > 0) {
+          const activityIds = allActivities.map(a => a.id)
+          const { data: speakers, error: speakersError } = await supabase
+            .from('activity_speakers')
+            .select('email')
+            .in('activity_id', activityIds)
+
+          if (!speakersError && speakers) {
+            speakerEmails = speakers.map(s => s.email).filter(Boolean)
+          }
+        }
+
+        // Combiner tous les emails
+        const submitterEmails = submitters?.map(s => s.users?.email).filter(Boolean) || []
+        const allEmails = [...submitterEmails, ...registrantEmails, ...speakerEmails]
+
+        // Ajouter les emails uniques au champ cible
+        const currentEmails = recipients.value[targetField] || []
+        const uniqueEmails = [...new Set([...currentEmails, ...allEmails])]
+        recipients.value[targetField] = uniqueEmails
+
+        console.log(`Added ${uniqueEmails.length - currentEmails.length} event participants to ${targetField}`)
+      } catch (err) {
+        console.error('Erreur lors du chargement des participants:', err)
+        error.value = 'Erreur lors du chargement des participants de l\'événement'
+      } finally {
+        loadingEventParticipants.value = false
+      }
+    }
+
+    const addActivitySubmitter = async (targetField) => {
+      if (!emailData.value.activity_id) return
+
+      loadingActivityData.value = true
+      try {
+        const { data, error } = await supabase
+          .from('activities')
+          .select('submitted_by, users!submitted_by(email, first_name, last_name)')
+          .eq('id', emailData.value.activity_id)
+          .single()
+
+        if (error) throw error
+
+        if (data?.users?.email) {
+          const currentEmails = recipients.value[targetField] || []
+          if (!currentEmails.includes(data.users.email)) {
+            recipients.value[targetField] = [...currentEmails, data.users.email]
+          }
+          console.log(`Added submitter to ${targetField}`)
+        }
+      } catch (err) {
+        console.error('Erreur lors du chargement du soumissionnaire:', err)
+        error.value = 'Erreur lors du chargement du soumissionnaire'
+      } finally {
+        loadingActivityData.value = false
+      }
+    }
+
+    const addActivitySpeakers = async (targetField) => {
+      if (!emailData.value.activity_id) return
+
+      loadingActivityData.value = true
+      try {
+        const { data, error } = await supabase
+          .from('activity_speakers')
+          .select('email')
+          .eq('activity_id', emailData.value.activity_id)
+
+        if (error) throw error
+
+        const emails = data?.map(s => s.email).filter(Boolean) || []
+
+        // Ajouter les emails uniques au champ cible
+        const currentEmails = recipients.value[targetField] || []
+        const uniqueEmails = [...new Set([...currentEmails, ...emails])]
+        recipients.value[targetField] = uniqueEmails
+
+        console.log(`Added ${emails.length} speakers to ${targetField}`)
+      } catch (err) {
+        console.error('Erreur lors du chargement des panélistes:', err)
+        error.value = 'Erreur lors du chargement des panélistes'
+      } finally {
+        loadingActivityData.value = false
+      }
+    }
+
+    const addActivityRegistrants = async (targetField) => {
+      if (!emailData.value.activity_id) return
+
+      loadingActivityData.value = true
+      try {
+        const { data, error } = await supabase
+          .from('activity_registrations')
+          .select('user_id, users!inner(email)')
+          .eq('activity_id', emailData.value.activity_id)
+
+        if (error) throw error
+
+        const emails = data?.map(r => r.users.email).filter(Boolean) || []
+
+        // Ajouter les emails uniques au champ cible
+        const currentEmails = recipients.value[targetField] || []
+        const uniqueEmails = [...new Set([...currentEmails, ...emails])]
+        recipients.value[targetField] = uniqueEmails
+
+        console.log(`Added ${emails.length} registrants to ${targetField}`)
+      } catch (err) {
+        console.error('Erreur lors du chargement des inscrits:', err)
+        error.value = 'Erreur lors du chargement des inscrits'
+      } finally {
+        loadingActivityData.value = false
+      }
+    }
+
     const loadTemplate = (template) => {
       emailData.value.subject = template.subject
       emailData.value.content = template.content
@@ -689,6 +966,11 @@ export default {
       filteredActivities,
       highlightedIndex,
 
+      // Loading states
+      loadingEventParticipants,
+      loadingActivityData,
+      showActivityMenu,
+
       // Computed
       canSend,
       previewContent,
@@ -715,6 +997,13 @@ export default {
       navigateDown,
       navigateUp,
       selectHighlighted,
+
+      // Bulk recipient methods
+      toggleActivityMenu,
+      addEventParticipants,
+      addActivitySubmitter,
+      addActivitySpeakers,
+      addActivityRegistrants,
 
       // i18n
       t

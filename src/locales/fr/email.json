@@ -80,6 +80,18 @@
     "processing": "Traitement...",
     "draft_saved": "Brouillon enregistré",
     "load_draft": "Charger le brouillon",
-    "discard_draft": "Supprimer le brouillon"
+    "discard_draft": "Supprimer le brouillon",
+    "quick_add_recipients": "Ajout rapide de destinataires",
+    "event_recipients": "Participants de l'événement",
+    "add_to_primary": "Ajouter à \"À\"",
+    "add_to_cc": "Ajouter à \"Cc\"",
+    "add_to_bcc": "Ajouter à \"Cci\"",
+    "activity_recipients": "Participants de l'activité",
+    "submitter": "Soumissionnaire",
+    "submitter_tooltip": "Ajouter le soumissionnaire de l'activité",
+    "speakers": "Panélistes",
+    "speakers_tooltip": "Ajouter tous les panélistes/intervenants",
+    "registrants": "Inscrits",
+    "registrants_tooltip": "Ajouter tous les inscrits à l'activité"
   }
 }
