@@ -129,6 +129,7 @@ Deno.serve(async (req) => {
       variables = {},
       template = 'simple_email',
       event_id,
+      activity_id,
       activity_status,
       recipient_roles
     } = payload;
@@ -169,10 +170,11 @@ Deno.serve(async (req) => {
         })
       : null;
 
-    // Si c'est un email d'événement, enrichir avec les données de l'événement
+    // Enrichir avec les données de l'événement et/ou de l'activité
     let enrichedVariables = { ...variables };
 
-    if (email_type === 'event' && event_id && supabaseClient) {
+    // Récupérer les données de l'événement si event_id est fourni
+    if (event_id && supabaseClient) {
       try {
         console.log('Fetching event data for event_id:', event_id);
 
@@ -182,29 +184,33 @@ Deno.serve(async (req) => {
           .select(`
             id,
             title,
-            display_name,
-            type,
-            status,
-            start_date,
-            end_date,
-            location_type,
-            address,
+            description,
+            in_person_start_date,
+            in_person_end_date,
             city,
             country,
-            postal_code,
-            time_zone,
-            event_timezone,
-            created_by
+            address
           `)
           .eq('id', event_id)
           .single();
 
         if (!eventError && eventData) {
           // Ajouter les variables de l'événement
-          enrichedVariables['{event_name}'] = eventData.display_name || eventData.title;
-          enrichedVariables['{event_title}'] = eventData.title;
-          enrichedVariables['{event_date}'] = eventData.start_date;
-          enrichedVariables['{event_time}'] = eventData.start_date;
+          enrichedVariables['{event_name}'] = eventData.title || '';
+          enrichedVariables['{event_title}'] = eventData.title || '';
+          enrichedVariables['{event_description}'] = eventData.description || '';
+          enrichedVariables['{event_start_date}'] = eventData.in_person_start_date
+            ? new Date(eventData.in_person_start_date).toLocaleDateString('fr-FR')
+            : '';
+          enrichedVariables['{event_end_date}'] = eventData.in_person_end_date
+            ? new Date(eventData.in_person_end_date).toLocaleDateString('fr-FR')
+            : '';
+          enrichedVariables['{event_date}'] = eventData.in_person_start_date
+            ? new Date(eventData.in_person_start_date).toLocaleDateString('fr-FR')
+            : '';
+          enrichedVariables['{event_time}'] = eventData.in_person_start_date
+            ? new Date(eventData.in_person_start_date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+            : '';
           enrichedVariables['{event_city}'] = eventData.city || '';
           enrichedVariables['{event_country}'] = eventData.country || '';
           enrichedVariables['{event_address}'] = eventData.address || '';
@@ -213,6 +219,65 @@ Deno.serve(async (req) => {
         } else {
           console.error('Failed to fetch event data:', eventError);
         }
+      } catch (error) {
+        console.error('Error fetching event data:', error);
+      }
+    }
+
+    // Récupérer les données de l'activité si activity_id est fourni
+    if (activity_id && supabaseClient) {
+      try {
+        console.log('Fetching activity data for activity_id:', activity_id);
+
+        // Récupérer les données de l'activité
+        const { data: activityData, error: activityError } = await supabaseClient
+          .from('activities')
+          .select(`
+            id,
+            title,
+            detailed_presentation,
+            proposed_start_date,
+            proposed_end_date,
+            final_start_date,
+            final_end_date,
+            activity_type
+          `)
+          .eq('id', activity_id)
+          .single();
+
+        if (!activityError && activityData) {
+          // Ajouter les variables de l'activité
+          enrichedVariables['{activity_name}'] = activityData.title || '';
+          enrichedVariables['{activity_title}'] = activityData.title || '';
+          enrichedVariables['{activity_description}'] = activityData.detailed_presentation || '';
+
+          // Utiliser les dates finales si disponibles, sinon les dates proposées
+          const startDate = activityData.final_start_date || activityData.proposed_start_date;
+          const endDate = activityData.final_end_date || activityData.proposed_end_date;
+
+          enrichedVariables['{activity_start_date}'] = startDate
+            ? new Date(startDate).toLocaleDateString('fr-FR')
+            : '';
+          enrichedVariables['{activity_end_date}'] = endDate
+            ? new Date(endDate).toLocaleDateString('fr-FR')
+            : '';
+          enrichedVariables['{activity_date}'] = startDate
+            ? new Date(startDate).toLocaleDateString('fr-FR')
+            : '';
+          enrichedVariables['{activity_type}'] = activityData.activity_type || '';
+
+          console.log('Activity variables enriched:', enrichedVariables);
+        } else {
+          console.error('Failed to fetch activity data:', activityError);
+        }
+      } catch (error) {
+        console.error('Error fetching activity data:', error);
+      }
+    }
+
+    // Si c'est un email d'événement avec des critères spécifiques
+    if (email_type === 'event' && event_id && supabaseClient) {
+      try {
 
         // Si on a des critères de statut d'activité, récupérer les destinataires
         if (activity_status && recipient_roles && recipient_roles.length > 0) {

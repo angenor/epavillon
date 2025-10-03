@@ -22,7 +22,8 @@
       "Bash(pkill:*)",
       "WebFetch(domain:www.amcharts.com)",
       "Bash(chmod:*)",
-      "Bash(supabase functions deploy:*)"
+      "Bash(supabase functions deploy:*)",
+      "Bash(npx supabase functions deploy:*)"
     ],
     "deny": [],
     "ask": []
