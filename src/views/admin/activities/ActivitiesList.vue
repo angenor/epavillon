@@ -152,7 +152,7 @@
              class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden">
 
           <div class="flex">
-            <!-- Image miniature -->
+            <!-- Image miniature avec logo organisation -->
             <div class="w-32 h-32 flex-shrink-0 relative overflow-hidden bg-gradient-to-br from-orange-50 to-orange-100 dark:from-gray-700 dark:to-gray-600">
               <img v-if="activity.cover_image_low_url"
                    :src="activity.cover_image_low_url"
@@ -162,6 +162,13 @@
                 <svg class="w-10 h-10 text-orange-300 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
+              </div>
+
+              <!-- Logo de l'organisation en overlay -->
+              <div v-if="activity.organization?.logo_url" class="absolute bottom-2 right-2 w-10 h-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-1 border border-gray-200 dark:border-gray-600">
+                <img :src="activity.organization.logo_url"
+                     :alt="activity.organization.name"
+                     class="w-full h-full object-contain">
               </div>
             </div>
 
@@ -178,9 +185,16 @@
                   <!-- Métadonnées sur une ligne -->
                   <div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
                     <div class="flex items-center">
-                      <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/>
-                      </svg>
+                      <!-- Logo de l'organisation ou icône par défaut -->
+                      <div class="w-5 h-5 mr-2 flex-shrink-0">
+                        <img v-if="activity.organization?.logo_url"
+                             :src="activity.organization.logo_url"
+                             :alt="activity.organization.name"
+                             class="w-full h-full object-contain rounded">
+                        <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/>
+                        </svg>
+                      </div>
                       <span class="truncate max-w-[200px]">{{ activity.organization?.name || '-' }}</span>
                     </div>
                     <div class="flex items-center">
@@ -533,7 +547,7 @@ const loadActivities = async () => {
       .from('activities')
       .select(`
         *,
-        organization:organizations(id, name, organization_type),
+        organization:organizations(id, name, organization_type, logo_url),
         event:events(id, title, year)
       `)
       .eq('is_deleted', false)
