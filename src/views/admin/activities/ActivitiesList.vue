@@ -234,6 +234,15 @@
               </button>
 
               <div class="flex items-center gap-2">
+                <!-- Bouton Email (Super Admin seulement) -->
+                <button v-if="canSendEmails"
+                        @click="openForActivity(activity.id, activity.event_id)"
+                        class="cursor-pointer p-2 text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20 rounded-lg transition-colors duration-150"
+                        :title="t('email.send_email') || 'Envoyer un email'">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                  </svg>
+                </button>
                 <button v-if="['submitted', 'under_review'].includes(activity.validation_status)"
                         @click="approveActivity(activity)"
                         class="cursor-pointer p-2 text-green-600 hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/20 rounded-lg transition-colors duration-150"
@@ -381,6 +390,7 @@ import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
 import { useAuth } from '@/composables/useAuth'
+import { useEmailModal } from '@/composables/useEmailModal'
 import * as XLSX from 'xlsx'
 
 const { t } = useI18n()
@@ -388,6 +398,7 @@ const router = useRouter()
 const { supabase } = useSupabase()
 const { hasAdminRole, isLoadingRoles, loadUserRoles, validateActivity } = useAdmin()
 const { currentUser } = useAuth()
+const { openForActivity, canSendEmails } = useEmailModal()
 
 // État
 const isLoading = ref(true)

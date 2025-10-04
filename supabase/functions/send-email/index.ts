@@ -103,6 +103,73 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Vérifier l'authentification
+    const authorization = req.headers.get('Authorization');
+    if (!authorization) {
+      return new Response(JSON.stringify({
+        error: 'Authorization header required'
+      }), {
+        status: 401,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders
+        }
+      });
+    }
+
+    // Créer le client Supabase avec le token de l'utilisateur
+    const supabaseClient = createClient(
+      SUPABASE_URL!,
+      SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      }
+    );
+
+    // Vérifier le token et récupérer l'utilisateur
+    const token = authorization.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser(token);
+
+    if (authError || !user) {
+      console.error('Authentication error:', authError);
+      return new Response(JSON.stringify({
+        error: 'Invalid authentication token'
+      }), {
+        status: 401,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders
+        }
+      });
+    }
+
+    // Vérifier le rôle super_admin dans la table user_roles
+    const { data: userRoles, error: rolesError } = await supabaseClient
+      .from('user_roles')
+      .select('role, is_active')
+      .eq('user_id', user.id)
+      .eq('role', 'super_admin')
+      .eq('is_active', true)
+      .single();
+
+    if (rolesError || !userRoles) {
+      console.error('Unauthorized: User is not super_admin', { userId: user.id, error: rolesError });
+      return new Response(JSON.stringify({
+        error: 'Unauthorized: Only super administrators can send bulk emails'
+      }), {
+        status: 403,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders
+        }
+      });
+    }
+
+    console.log('Authenticated super_admin:', user.id);
+
     let payload;
     try {
       payload = await req.json();
@@ -160,15 +227,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Créer le client Supabase pour enrichir les données
-    const supabaseClient = SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY
-      ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
-          auth: {
-            persistSession: false,
-            autoRefreshToken: false
-          }
-        })
-      : null;
+    // Le client Supabase a déjà été créé au début pour l'authentification
 
     // Enrichir avec les données de l'événement et/ou de l'activité
     let enrichedVariables = { ...variables };

@@ -114,9 +114,9 @@
             </div>
           </div>
 
-          <!-- Email Modal Test -->
+          <!-- Email Modal Test (Super Admin Only) -->
           <button
-            v-if="authStore.isAuthenticated"
+            v-if="authStore.isAuthenticated && canSendEmails"
             @click="openEmailModal()"
             class="relative p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 cursor-pointer"
             :title="t('email.send_email') || 'Envoyer un email'"
@@ -281,7 +281,12 @@ const { t, locale } = useI18n()
 const authStore = useAuthStore()
 const router = useRouter()
 const { supabase } = useSupabase()
-const { openEmailModal } = useEmailModal()
+const { openEmailModal, canSendEmails } = useEmailModal()
+
+// Debug - vérifier le statut super_admin (à supprimer en production)
+console.log('AuthStore isSuperAdmin:', authStore.isSuperAdmin)
+console.log('AuthStore profile:', authStore.profile)
+console.log('Can send emails:', canSendEmails.value)
 
 // Refs
 const showLanguageMenu = ref(false)

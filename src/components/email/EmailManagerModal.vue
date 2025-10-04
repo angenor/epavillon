@@ -97,11 +97,15 @@ export default {
   setup() {
     const { t } = useI18n()
     const emailModalStore = useEmailModalStore()
+    const authStore = useAuthStore()
 
     const isOpen = computed(() => emailModalStore.isOpen)
     const initialRecipients = computed(() => emailModalStore.initialRecipients)
     const initialEvent = computed(() => emailModalStore.initialEvent)
     const initialActivity = computed(() => emailModalStore.initialActivity)
+
+    // Vérifier si l'utilisateur est super_admin
+    const isSuperAdmin = computed(() => authStore.isSuperAdmin)
 
     const close = () => {
       emailModalStore.close()
@@ -133,6 +137,7 @@ export default {
     return {
       t,
       isOpen,
+      isSuperAdmin,
       initialRecipients,
       initialEvent,
       initialActivity,

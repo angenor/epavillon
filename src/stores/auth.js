@@ -62,7 +62,9 @@ export const useAuthStore = defineStore('auth', () => {
         .select('role, is_active, valid_until')
         .eq('user_id', userId)
         .eq('is_active', true)
-      
+
+      console.log('User roles data:', rolesData) // Debug
+
       if (rolesError) {
         console.error('Error fetching user roles:', rolesError)
         // Continue même si les rôles ne peuvent pas être récupérés
@@ -74,6 +76,9 @@ export const useAuthStore = defineStore('auth', () => {
           user_roles: rolesData || []
         }
       }
+
+      console.log('Profile with roles:', profile.value) // Debug
+      console.log('Is super admin?:', isSuperAdmin.value) // Debug
       
     } catch (error) {
       console.error('Error fetching profile:', error)

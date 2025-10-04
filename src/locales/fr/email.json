@@ -101,6 +101,8 @@
     "remove_all_event_participants": "Retirer tous les participants",
     "remove_submitter": "Retirer",
     "remove_speakers": "Retirer",
-    "remove_registrants": "Retirer"
+    "remove_registrants": "Retirer",
+    "access_denied": "Accès refusé",
+    "super_admin_only": "Seuls les super-administrateurs peuvent envoyer des emails groupés."
   }
 }

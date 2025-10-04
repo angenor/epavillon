@@ -101,6 +101,8 @@
     "remove_all_event_participants": "Remove all participants",
     "remove_submitter": "Remove",
     "remove_speakers": "Remove",
-    "remove_registrants": "Remove"
+    "remove_registrants": "Remove",
+    "access_denied": "Access Denied",
+    "super_admin_only": "Only super administrators can send bulk emails."
   }
 }
