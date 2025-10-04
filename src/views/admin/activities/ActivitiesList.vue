@@ -146,119 +146,117 @@
     </div>
 
     <div v-else>
-      <!-- Grille de cartes -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <!-- Liste des activités -->
+      <div class="space-y-4 mb-8">
         <div v-for="activity in paginatedActivities" :key="activity.id"
-             class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 group">
+             class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden">
 
-          <!-- Image de couverture -->
-          <div class="h-48 relative overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600">
-            <img v-if="activity.cover_image_low_url"
-                 :src="activity.cover_image_low_url"
-                 :alt="activity.title"
-                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-            <div v-else class="w-full h-full flex items-center justify-center">
-              <svg class="w-16 h-16 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-              </svg>
-            </div>
-
-            <!-- Badge de statut -->
-            <div class="absolute top-4 right-4">
-              <span :class="getStatusClass(activity.validation_status)"
-                    class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg">
-                {{ getStatusText(activity.validation_status) }}
-              </span>
-            </div>
-          </div>
-
-          <!-- Contenu de la carte -->
-          <div class="p-6">
-            <!-- Titre avec troncature sur 3 lignes -->
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white line-clamp-3 mb-3"
-                :title="activity.title">
-              {{ activity.title }}
-            </h3>
-
-            <!-- Métadonnées -->
-            <div class="space-y-2 mb-4">
-              <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+          <div class="flex">
+            <!-- Image miniature -->
+            <div class="w-32 h-32 flex-shrink-0 relative overflow-hidden bg-gradient-to-br from-orange-50 to-orange-100 dark:from-gray-700 dark:to-gray-600">
+              <img v-if="activity.cover_image_low_url"
+                   :src="activity.cover_image_low_url"
+                   :alt="activity.title"
+                   class="w-full h-full object-cover">
+              <div v-else class="w-full h-full flex items-center justify-center">
+                <svg class="w-10 h-10 text-orange-300 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
-                <span class="truncate">{{ activity.organization?.name || '-' }}</span>
-              </div>
-
-              <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-                <span>{{ activity.event?.title }} ({{ activity.event?.year }})</span>
-              </div>
-
-              <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <span>{{ formatDate(activity.created_at) }}</span>
               </div>
             </div>
 
-            <!-- Types et format -->
-            <div class="flex items-center gap-2 mb-4 text-xs">
-              <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
-                {{ activity.activity_type }}
-              </span>
-              <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
-                {{ activity.format }}
-              </span>
-            </div>
+            <!-- Contenu principal -->
+            <div class="flex-1 p-5">
+              <div class="flex items-start justify-between">
+                <div class="flex-1 mr-4">
+                  <!-- Titre -->
+                  <h3 class="text-base font-semibold text-gray-900 dark:text-white line-clamp-2 mb-2"
+                      :title="activity.title">
+                    {{ activity.title }}
+                  </h3>
 
-            <!-- Thématiques -->
-            <div v-if="activity.main_themes?.length" class="flex flex-wrap gap-1.5 mb-4">
-              <span v-for="theme in activity.main_themes.slice(0, 2)" :key="theme"
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
-                {{ t(`activities.themes.${theme}`) }}
-              </span>
-              <span v-if="activity.main_themes.length > 2"
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">
-                +{{ activity.main_themes.length - 2 }}
-              </span>
-            </div>
+                  <!-- Métadonnées sur une ligne -->
+                  <div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    <div class="flex items-center">
+                      <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/>
+                      </svg>
+                      <span class="truncate max-w-[200px]">{{ activity.organization?.name || '-' }}</span>
+                    </div>
+                    <div class="flex items-center">
+                      <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                      </svg>
+                      <span>{{ activity.event?.title }}</span>
+                    </div>
+                    <div class="flex items-center">
+                      <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                      <span>{{ formatDate(activity.created_at) }}</span>
+                    </div>
+                  </div>
 
-            <!-- Actions -->
-            <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-              <button @click="viewActivity(activity)"
-                      class="cursor-pointer text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 font-medium text-sm transition-colors duration-150">
-                {{ t('admin.activities.view') }}
-              </button>
+                  <!-- Tags en ligne -->
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <!-- Badge de statut -->
+                    <span :class="getStatusClass(activity.validation_status)"
+                          class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold">
+                      {{ getStatusText(activity.validation_status) }}
+                    </span>
 
-              <div class="flex items-center gap-2">
-                <!-- Bouton Email (Super Admin seulement) -->
-                <button v-if="canSendEmails"
-                        @click="openForActivity(activity.id, activity.event_id)"
-                        class="cursor-pointer p-2 text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20 rounded-lg transition-colors duration-150"
-                        :title="t('email.send_email') || 'Envoyer un email'">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                  </svg>
-                </button>
-                <button v-if="['submitted', 'under_review'].includes(activity.validation_status)"
-                        @click="approveActivity(activity)"
-                        class="cursor-pointer p-2 text-green-600 hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/20 rounded-lg transition-colors duration-150"
-                        :title="t('admin.activities.approve')">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                  </svg>
-                </button>
-                <button v-if="['submitted', 'under_review'].includes(activity.validation_status)"
-                        @click="rejectActivity(activity)"
-                        class="cursor-pointer p-2 text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-150"
-                        :title="t('admin.activities.reject')">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                  </svg>
-                </button>
+                    <!-- Type et format -->
+                    <span class="px-2.5 py-1 bg-gray-50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 rounded-md text-xs border border-gray-200 dark:border-gray-600">
+                      {{ activity.activity_type }}
+                    </span>
+                    <span class="px-2.5 py-1 bg-gray-50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 rounded-md text-xs border border-gray-200 dark:border-gray-600">
+                      {{ activity.format }}
+                    </span>
+
+                    <!-- Thématiques -->
+                    <span v-for="theme in activity.main_themes?.slice(0, 2)" :key="theme"
+                          class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-orange-50 text-orange-700 dark:bg-orange-900/20 dark:text-orange-400">
+                      {{ t(`activities.themes.${theme}`) }}
+                    </span>
+                    <span v-if="activity.main_themes?.length > 2"
+                          class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">
+                      +{{ activity.main_themes.length - 2 }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-2 ml-4">
+                  <button @click="viewActivity(activity)"
+                          class="cursor-pointer px-3 py-1.5 text-orange-600 hover:bg-orange-50 dark:text-orange-400 dark:hover:bg-orange-900/10 font-medium text-sm rounded-lg transition-all duration-150">
+                    {{ t('admin.activities.view') }}
+                  </button>
+                  <!-- Bouton Email (Super Admin seulement) -->
+                  <button v-if="canSendEmails"
+                          @click="openForActivity(activity.id, activity.event_id)"
+                          class="cursor-pointer p-1.5 text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-150"
+                          :title="t('email.send_email') || 'Envoyer un email'">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                  </button>
+                  <button v-if="['submitted', 'under_review'].includes(activity.validation_status)"
+                          @click="approveActivity(activity)"
+                          class="cursor-pointer p-1.5 text-green-600 hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/20 rounded-lg transition-all duration-150"
+                          :title="t('admin.activities.approve')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                  </button>
+                  <button v-if="['submitted', 'under_review'].includes(activity.validation_status)"
+                          @click="rejectActivity(activity)"
+                          class="cursor-pointer p-1.5 text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 rounded-lg transition-all duration-150"
+                          :title="t('admin.activities.reject')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -578,12 +576,12 @@ const calculateStats = () => {
 
 const getStatusClass = (status) => {
   const classes = {
-    draft: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-    submitted: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-    under_review: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-    approved: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-    rejected: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
-    cancelled: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+    draft: 'bg-gray-100/90 text-gray-700 dark:bg-gray-700/80 dark:text-gray-300',
+    submitted: 'bg-blue-100/90 text-blue-700 dark:bg-blue-900/80 dark:text-blue-300',
+    under_review: 'bg-amber-100/90 text-amber-700 dark:bg-amber-900/80 dark:text-amber-300',
+    approved: 'bg-emerald-100/90 text-emerald-700 dark:bg-emerald-900/80 dark:text-emerald-300',
+    rejected: 'bg-red-100/90 text-red-700 dark:bg-red-900/80 dark:text-red-300',
+    cancelled: 'bg-gray-100/90 text-gray-700 dark:bg-gray-700/80 dark:text-gray-300'
   }
   return classes[status] || classes.draft
 }
