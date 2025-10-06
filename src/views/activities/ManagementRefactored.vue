@@ -440,8 +440,8 @@ const handleScrollTo = (sectionId) => {
 }
 
 const handlePreview = () => {
-  // Ouvrir la page de prévisualisation dans un nouvel onglet
-  window.open(`/activities/${route.params.id}/preview`, '_blank')
+  // Ouvrir la page de prévisualisation dans un nouvel onglet: `/activities/preview/${activity.id}`
+  window.open(`/activities/preview/${route.params.id}`, '_blank')
 }
 
 const handleSubmitValidation = async () => {
