@@ -172,11 +172,22 @@
 
           <!-- Soumissionnaire -->
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 flex items-center">
-              <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-              </svg>
-              Soumis par
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 flex items-center justify-between">
+              <div class="flex items-center">
+                <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                Soumis par
+              </div>
+              <button
+                @click="showChangeSubmitterModal = true"
+                class="text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 cursor-pointer"
+                title="Changer le soumissionnaire"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                </svg>
+              </button>
             </dt>
             <dd class="space-y-2">
               <div class="flex items-center space-x-2">
@@ -527,6 +538,15 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal de changement de soumissionnaire -->
+    <ChangeSubmitterModal
+      :show="showChangeSubmitterModal"
+      :current-submitter="activity?.submitted_user"
+      :activity-id="activity?.id"
+      @close="showChangeSubmitterModal = false"
+      @update="handleSubmitterUpdate"
+    />
   </div>
 </template>
 
@@ -537,6 +557,7 @@ import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
 import { useAuth } from '@/composables/useAuth'
 import { useTimezone } from '@/composables/useTimezone'
+import ChangeSubmitterModal from '@/components/admin/ChangeSubmitterModal.vue'
 
 const route = useRoute()
 const { supabase } = useSupabase()
@@ -562,6 +583,7 @@ const notificationSuccess = ref(null)
 const speakers = ref([])
 const documents = ref([])
 const registrations = ref([])
+const showChangeSubmitterModal = ref(false)
 
 const checkAccess = async () => {
   await loadUserRoles()
@@ -976,6 +998,22 @@ const sendActivityReceivedNotification = async () => {
   } finally {
     isSendingNotification.value = false
   }
+}
+
+// Fonction pour gérer la mise à jour du soumissionnaire
+const handleSubmitterUpdate = async (newSubmitter) => {
+  if (!activity.value) return
+
+  // Mettre à jour l'objet activity avec le nouveau soumissionnaire
+  activity.value.submitted_user = {
+    id: newSubmitter.id,
+    first_name: newSubmitter.first_name,
+    last_name: newSubmitter.last_name,
+    email: newSubmitter.email,
+    profile_photo_url: newSubmitter.profile_photo_url
+  }
+
+  console.log('Soumissionnaire mis à jour avec succès')
 }
 
 onMounted(async () => {
