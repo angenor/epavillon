@@ -3,7 +3,7 @@
     <!-- Sidebar de navigation des activités -->
     <ActivityReviewSidebar
       :is-open="isReviewSidebarOpen"
-      :current-activity-id="activityId"
+      :current-activity-id="route.params.id"
       @close="closeReviewSidebar"
       @select="handleActivitySelect"
     />

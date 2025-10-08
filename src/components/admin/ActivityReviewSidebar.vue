@@ -43,7 +43,7 @@
     </div>
 
     <!-- Liste des activités avec scroll -->
-    <div class="overflow-y-auto h-[calc(100%-140px)] p-2">
+    <div class="overflow-y-auto h-[calc(100%-140px)] p-2" id="activity-list-container">
       <div v-if="isLoading && activities.length === 0" class="flex justify-center py-8">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
       </div>
@@ -60,7 +60,7 @@
           @click="selectActivity(activity.id)"
           :class="[
             'relative p-3 rounded-lg cursor-pointer transition-all duration-200 border',
-            activity.id === currentActivityId
+            String(activity.id) === String(currentActivityId)
               ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-300 dark:border-orange-700 shadow-md'
               : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:shadow-sm'
           ]"
@@ -115,7 +115,7 @@
 
           <!-- Indicateur d'activité courante -->
           <div
-            v-if="activity.id === currentActivityId"
+            v-if="String(activity.id) === String(currentActivityId)"
             class="absolute inset-y-0 left-0 w-1 bg-orange-500 rounded-l-lg"
           ></div>
         </div>
@@ -194,11 +194,13 @@ const pageSize = 50
 const hasMore = ref(true)
 const infiniteScrollTrigger = ref(null)
 const observer = ref(null)
+const activityId = ref(null) // Ajout de activityId pour le fallback
 
 // Références aux éléments DOM
 const setActivityRef = (id, el) => {
   if (el) {
-    activityRefs.value[id] = el
+    // S'assurer que l'ID est une chaîne de caractères
+    activityRefs.value[String(id)] = el
   }
 }
 
@@ -217,7 +219,7 @@ const filteredActivities = computed(() => {
 })
 
 const currentIndex = computed(() => {
-  return filteredActivities.value.findIndex(a => a.id === props.currentActivityId)
+  return filteredActivities.value.findIndex(a => String(a.id) === String(props.currentActivityId))
 })
 
 const canNavigatePrevious = computed(() => {
@@ -305,14 +307,67 @@ const navigateToNext = () => {
 }
 
 const scrollToCurrentActivity = async () => {
-  await nextTick()
+  // Attendre que les activités soient chargées
+  let retries = 0
+  const maxRetries = 10
 
-  if (props.currentActivityId && activityRefs.value[props.currentActivityId]) {
-    activityRefs.value[props.currentActivityId].scrollIntoView({
-      behavior: 'smooth',
-      block: 'center'
-    })
+  const tryScroll = async () => {
+    await nextTick()
+
+    const currentId = String(props.currentActivityId)
+    console.log('Tentative de scroll vers l\'activité:', currentId)
+    console.log('Activités chargées:', activities.value.length)
+    console.log('Refs disponibles:', Object.keys(activityRefs.value))
+
+    // Vérifier si l'activité est dans la liste
+    const activityExists = activities.value.some(a => String(a.id) === currentId)
+
+    if (!activityExists && retries < maxRetries) {
+      console.log('Activité non trouvée, rechargement...')
+      retries++
+      setTimeout(tryScroll, 500)
+      return
+    }
+
+    if (currentId && activityRefs.value[currentId]) {
+      const element = activityRefs.value[currentId]
+      const container = document.getElementById('activity-list-container')
+
+      console.log('Element trouvé:', element)
+      console.log('Container trouvé:', container)
+
+      if (container && element) {
+        // Forcer le scroll immédiatement sans animation pour le debug
+        const elementTop = element.offsetTop
+        const containerHeight = container.clientHeight
+        const elementHeight = element.clientHeight
+
+        // Calculer la position pour centrer l'élément
+        const scrollTop = elementTop - (containerHeight / 2) + (elementHeight / 2)
+
+        console.log('ScrollTop calculé:', scrollTop)
+        console.log('Element offsetTop:', elementTop)
+
+        // Forcer le scroll
+        container.scrollTop = Math.max(0, scrollTop)
+
+        // Ensuite faire un scroll smooth pour l'ajustement
+        setTimeout(() => {
+          container.scrollTo({
+            top: Math.max(0, scrollTop),
+            behavior: 'smooth'
+          })
+        }, 50)
+      }
+    } else if (retries < maxRetries) {
+      console.log(`Ref non trouvée pour l'ID ${currentId}, retry ${retries}/${maxRetries}`)
+      retries++
+      setTimeout(tryScroll, 500)
+    }
   }
+
+  // Lancer la première tentative
+  tryScroll()
 }
 
 // Fonctions utilitaires
@@ -368,14 +423,26 @@ const setupIntersectionObserver = () => {
 }
 
 // Watchers
-watch(() => props.currentActivityId, () => {
-  if (props.isOpen) {
+watch(() => props.currentActivityId, async (newId, oldId) => {
+  console.log('Watch currentActivityId:', newId, 'old:', oldId)
+  if (props.isOpen && newId) {
+    // Attendre que les activités soient chargées si nécessaire
+    if (activities.value.length === 0) {
+      console.log('Chargement des activités...')
+      await loadActivities(true)
+    }
+    await nextTick()
     scrollToCurrentActivity()
   }
 })
 
-watch(() => props.isOpen, (newValue) => {
+watch(() => props.isOpen, async (newValue) => {
   if (newValue) {
+    // Attendre que les activités soient chargées
+    if (activities.value.length === 0) {
+      await loadActivities(true)
+    }
+    await nextTick()
     scrollToCurrentActivity()
   }
 })
@@ -391,9 +458,17 @@ watch(filterStatus, async () => {
 
 // Lifecycle
 onMounted(async () => {
+  console.log('ActivityReviewSidebar mounted, currentActivityId:', props.currentActivityId)
   await loadActivities(true)
   await nextTick()
   setupIntersectionObserver()
+  // Scroll initial vers l'activité courante avec un délai
+  if (props.currentActivityId) {
+    setTimeout(() => {
+      console.log('Appel initial de scrollToCurrentActivity')
+      scrollToCurrentActivity()
+    }, 1000) // Attendre 1 seconde pour être sûr que tout est chargé
+  }
 })
 
 onUnmounted(() => {
