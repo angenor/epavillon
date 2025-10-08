@@ -43,7 +43,7 @@
     </div>
 
     <!-- Liste des activités avec scroll -->
-    <div class="overflow-y-auto h-[calc(100%-140px)] p-2" id="activity-list-container">
+    <div class="overflow-y-auto h-[calc(100vh-16rem)] p-2" id="activity-list-container">
       <div v-if="isLoading && activities.length === 0" class="flex justify-center py-8">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
       </div>
@@ -120,12 +120,6 @@
           ></div>
         </div>
 
-        <!-- Infinite scroll trigger -->
-        <div ref="infiniteScrollTrigger" class="py-2">
-          <div v-if="isLoadingMore" class="flex justify-center">
-            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-500"></div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -163,7 +157,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
 
@@ -186,15 +180,8 @@ const { supabase } = useSupabase()
 // État
 const activities = ref([])
 const isLoading = ref(false)
-const isLoadingMore = ref(false)
 const filterStatus = ref('')
 const activityRefs = ref({})
-const currentPage = ref(0)
-const pageSize = 50
-const hasMore = ref(true)
-const infiniteScrollTrigger = ref(null)
-const observer = ref(null)
-const activityId = ref(null) // Ajout de activityId pour le fallback
 
 // Références aux éléments DOM
 const setActivityRef = (id, el) => {
@@ -231,23 +218,11 @@ const canNavigateNext = computed(() => {
 })
 
 // Méthodes
-const loadActivities = async (reset = false) => {
-  if (reset) {
-    currentPage.value = 0
-    activities.value = []
-    hasMore.value = true
-  }
-
-  if (!hasMore.value || isLoadingMore.value) return
+const loadActivities = async () => {
+  isLoading.value = true
 
   try {
-    if (reset || activities.value.length === 0) {
-      isLoading.value = true
-    } else {
-      isLoadingMore.value = true
-    }
-
-    // Construction de la requête avec pagination
+    // Construction de la requête pour charger TOUTES les activités
     let query = supabase
       .from('activities')
       .select(`
@@ -260,30 +235,25 @@ const loadActivities = async (reset = false) => {
           name,
           logo_url
         )
-      `, { count: 'exact' })
+      `)
       .order('created_at', { ascending: true })
-      .range(currentPage.value * pageSize, (currentPage.value + 1) * pageSize - 1)
 
     // Appliquer le filtre de statut si nécessaire
     if (filterStatus.value) {
       query = query.eq('validation_status', filterStatus.value)
     }
 
-    const { data, error, count } = await query
+    const { data, error } = await query
 
     if (error) throw error
 
-    activities.value = [...activities.value, ...(data || [])]
-    currentPage.value++
-
-    // Vérifier s'il y a plus d'activités à charger
-    hasMore.value = (data || []).length === pageSize
+    activities.value = data || []
+    console.log(`${activities.value.length} activités chargées`)
 
   } catch (error) {
     console.error('Erreur lors du chargement des activités:', error)
   } finally {
     isLoading.value = false
-    isLoadingMore.value = false
   }
 }
 
@@ -306,68 +276,51 @@ const navigateToNext = () => {
   }
 }
 
-const scrollToCurrentActivity = async () => {
-  // Attendre que les activités soient chargées
-  let retries = 0
-  const maxRetries = 10
+const scrollToCurrentActivity = () => {
+  const currentId = String(props.currentActivityId)
 
-  const tryScroll = async () => {
-    await nextTick()
-
-    const currentId = String(props.currentActivityId)
-    console.log('Tentative de scroll vers l\'activité:', currentId)
-    console.log('Activités chargées:', activities.value.length)
-    console.log('Refs disponibles:', Object.keys(activityRefs.value))
-
-    // Vérifier si l'activité est dans la liste
-    const activityExists = activities.value.some(a => String(a.id) === currentId)
-
-    if (!activityExists && retries < maxRetries) {
-      console.log('Activité non trouvée, rechargement...')
-      retries++
-      setTimeout(tryScroll, 500)
-      return
-    }
-
-    if (currentId && activityRefs.value[currentId]) {
-      const element = activityRefs.value[currentId]
-      const container = document.getElementById('activity-list-container')
-
-      console.log('Element trouvé:', element)
-      console.log('Container trouvé:', container)
-
-      if (container && element) {
-        // Forcer le scroll immédiatement sans animation pour le debug
-        const elementTop = element.offsetTop
-        const containerHeight = container.clientHeight
-        const elementHeight = element.clientHeight
-
-        // Calculer la position pour centrer l'élément
-        const scrollTop = elementTop - (containerHeight / 2) + (elementHeight / 2)
-
-        console.log('ScrollTop calculé:', scrollTop)
-        console.log('Element offsetTop:', elementTop)
-
-        // Forcer le scroll
-        container.scrollTop = Math.max(0, scrollTop)
-
-        // Ensuite faire un scroll smooth pour l'ajustement
-        setTimeout(() => {
-          container.scrollTo({
-            top: Math.max(0, scrollTop),
-            behavior: 'smooth'
-          })
-        }, 50)
-      }
-    } else if (retries < maxRetries) {
-      console.log(`Ref non trouvée pour l'ID ${currentId}, retry ${retries}/${maxRetries}`)
-      retries++
-      setTimeout(tryScroll, 500)
-    }
+  if (!currentId) {
+    console.log('Pas d\'ID d\'activité courante')
+    return
   }
 
-  // Lancer la première tentative
-  tryScroll()
+  console.log('Scroll vers l\'activité:', currentId)
+  console.log('Activités disponibles:', activities.value.map(a => a.id))
+
+  // Trouver l'élément dans les refs
+  const element = activityRefs.value[currentId]
+  const container = document.getElementById('activity-list-container')
+
+  if (!element) {
+    console.log('Element non trouvé pour l\'ID:', currentId)
+    return
+  }
+
+  if (!container) {
+    console.log('Container non trouvé')
+    return
+  }
+
+  // Calculer la position pour centrer l'élément
+  const elementTop = element.offsetTop
+  const elementHeight = element.offsetHeight
+  const containerHeight = container.clientHeight
+
+  // Position pour centrer l'élément dans le container
+  const targetScrollTop = elementTop - (containerHeight / 2) + (elementHeight / 2)
+
+  console.log('Position de scroll calculée:', {
+    elementTop,
+    elementHeight,
+    containerHeight,
+    targetScrollTop
+  })
+
+  // Effectuer le scroll
+  container.scrollTo({
+    top: Math.max(0, targetScrollTop),
+    behavior: 'smooth'
+  })
 }
 
 // Fonctions utilitaires
@@ -401,36 +354,11 @@ const getStatusLabel = (status) => {
   return labels[status] || status
 }
 
-// Configuration de l'IntersectionObserver pour l'infinite scroll
-const setupIntersectionObserver = () => {
-  observer.value = new IntersectionObserver(
-    (entries) => {
-      const [entry] = entries
-      if (entry.isIntersecting && hasMore.value && !isLoadingMore.value && !isLoading.value) {
-        loadActivities()
-      }
-    },
-    {
-      root: null,
-      rootMargin: '100px',
-      threshold: 0.1
-    }
-  )
-
-  if (infiniteScrollTrigger.value) {
-    observer.value.observe(infiniteScrollTrigger.value)
-  }
-}
 
 // Watchers
 watch(() => props.currentActivityId, async (newId, oldId) => {
   console.log('Watch currentActivityId:', newId, 'old:', oldId)
   if (props.isOpen && newId) {
-    // Attendre que les activités soient chargées si nécessaire
-    if (activities.value.length === 0) {
-      console.log('Chargement des activités...')
-      await loadActivities(true)
-    }
     await nextTick()
     scrollToCurrentActivity()
   }
@@ -438,10 +366,6 @@ watch(() => props.currentActivityId, async (newId, oldId) => {
 
 watch(() => props.isOpen, async (newValue) => {
   if (newValue) {
-    // Attendre que les activités soient chargées
-    if (activities.value.length === 0) {
-      await loadActivities(true)
-    }
     await nextTick()
     scrollToCurrentActivity()
   }
@@ -449,31 +373,22 @@ watch(() => props.isOpen, async (newValue) => {
 
 // Watcher pour recharger quand le filtre change
 watch(filterStatus, async () => {
-  await loadActivities(true)
+  await loadActivities()
   await nextTick()
-  if (infiniteScrollTrigger.value && observer.value) {
-    observer.value.observe(infiniteScrollTrigger.value)
-  }
+  scrollToCurrentActivity()
 })
 
 // Lifecycle
 onMounted(async () => {
   console.log('ActivityReviewSidebar mounted, currentActivityId:', props.currentActivityId)
-  await loadActivities(true)
+  await loadActivities()
   await nextTick()
-  setupIntersectionObserver()
   // Scroll initial vers l'activité courante avec un délai
   if (props.currentActivityId) {
     setTimeout(() => {
       console.log('Appel initial de scrollToCurrentActivity')
       scrollToCurrentActivity()
-    }, 1000) // Attendre 1 seconde pour être sûr que tout est chargé
-  }
-})
-
-onUnmounted(() => {
-  if (observer.value) {
-    observer.value.disconnect()
+    }, 500) // Attendre 500ms pour être sûr que tout est rendu
   }
 })
 </script>
