@@ -65,13 +65,13 @@
               : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:shadow-sm'
           ]"
         >
-          <!-- Numéro -->
-          <div class="absolute -left-1 -top-1 bg-orange-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow">
-            {{ index + 1 }}
+          <!-- Date de soumission -->
+          <div class="absolute -left-2 -top-2 bg-orange-600 text-white text-xs font-semibold rounded-lg px-2 py-1 shadow-sm">
+            {{ formatDate(activity.created_at) }}
           </div>
 
           <!-- Contenu -->
-          <div class="flex items-start space-x-3 ml-2">
+          <div class="flex items-start space-x-3 mt-1">
             <!-- Logo de l'organisation -->
             <div class="flex-shrink-0">
               <img
@@ -138,7 +138,7 @@
         </button>
 
         <span class="text-sm text-gray-600 dark:text-gray-400">
-          {{ currentIndex + 1 }} / {{ filteredActivities.length }}
+          {{ currentIndex !== -1 ? currentIndex + 1 : '-' }} / {{ filteredActivities.length }}
         </span>
 
         <button
@@ -199,8 +199,8 @@ const filteredActivities = computed(() => {
     result = result.filter(a => a.validation_status === filterStatus.value)
   }
 
-  // Trier du plus ancien au plus récent
-  result.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+  // Trier du plus récent au plus ancien
+  result.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
 
   return result
 })
@@ -236,7 +236,7 @@ const loadActivities = async () => {
           logo_url
         )
       `)
-      .order('created_at', { ascending: true })
+      .order('created_at', { ascending: false })
 
     // Appliquer le filtre de statut si nécessaire
     if (filterStatus.value) {
@@ -327,9 +327,9 @@ const scrollToCurrentActivity = () => {
 const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('fr-FR', {
     day: '2-digit',
-    month: '2-digit',
+    month: 'short',
     year: 'numeric'
-  })
+  }).replace('.', '')
 }
 
 const getStatusClass = (status) => {
