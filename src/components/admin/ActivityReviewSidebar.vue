@@ -279,13 +279,10 @@ const navigateToNext = () => {
 const scrollToCurrentActivity = () => {
   const currentId = String(props.currentActivityId)
 
-  if (!currentId) {
+  if (!currentId || currentId === 'undefined') {
     console.log('Pas d\'ID d\'activité courante')
     return
   }
-
-  console.log('Scroll vers l\'activité:', currentId)
-  console.log('Activités disponibles:', activities.value.map(a => a.id))
 
   // Trouver l'élément dans les refs
   const element = activityRefs.value[currentId]
@@ -301,25 +298,72 @@ const scrollToCurrentActivity = () => {
     return
   }
 
-  // Calculer la position pour centrer l'élément
+  // Calculer les positions avec précision
   const elementTop = element.offsetTop
   const elementHeight = element.offsetHeight
   const containerHeight = container.clientHeight
+  const containerScrollTop = container.scrollTop
+  const containerScrollHeight = container.scrollHeight
 
-  // Position pour centrer l'élément dans le container
-  const targetScrollTop = elementTop - (containerHeight / 2) + (elementHeight / 2)
+  // Vérifier si l'élément est déjà visible
+  const elementVisibleTop = elementTop - containerScrollTop
+  const elementVisibleBottom = elementVisibleTop + elementHeight
+  const padding = 30 // Padding pour s'assurer que l'élément est bien visible
 
-  console.log('Position de scroll calculée:', {
+  // Si l'élément est déjà complètement visible avec padding, ne pas scroller
+  if (elementVisibleTop >= padding && elementVisibleBottom <= (containerHeight - padding)) {
+    console.log('L\'élément est déjà bien visible')
+    return
+  }
+
+  // Calculer la position cible pour centrer l'élément
+  let targetScrollTop = elementTop - (containerHeight / 2) + (elementHeight / 2)
+
+  // S'assurer de ne pas dépasser les limites
+  const minScroll = 0
+  const maxScroll = containerScrollHeight - containerHeight
+  targetScrollTop = Math.max(minScroll, Math.min(targetScrollTop, maxScroll))
+
+  // Pour les longues distances, utiliser une approche en deux étapes
+  const scrollDistance = Math.abs(targetScrollTop - containerScrollTop)
+
+  if (scrollDistance > containerHeight * 2) {
+    // Pour les grandes distances, d'abord un scroll rapide sans animation
+    console.log('Grande distance détectée, scroll en deux étapes')
+
+    // Étape 1: Scroll instantané proche de la cible
+    const intermediatePosition = targetScrollTop
+    container.scrollTop = intermediatePosition
+
+    // Étape 2: Attendre un peu puis ajuster finement avec animation
+    setTimeout(() => {
+      // Recalculer après le scroll instantané
+      const newElementTop = element.offsetTop
+      const finalTargetScrollTop = newElementTop - (containerHeight / 2) + (elementHeight / 2)
+      const finalTarget = Math.max(minScroll, Math.min(finalTargetScrollTop, maxScroll))
+
+      container.scrollTo({
+        top: finalTarget,
+        behavior: 'smooth'
+      })
+    }, 50)
+  } else {
+    // Pour les courtes distances, scroll smooth direct
+    console.log('Scroll normal vers la position:', targetScrollTop)
+    container.scrollTo({
+      top: targetScrollTop,
+      behavior: 'smooth'
+    })
+  }
+
+  console.log('Détails du scroll:', {
     elementTop,
     elementHeight,
     containerHeight,
-    targetScrollTop
-  })
-
-  // Effectuer le scroll
-  container.scrollTo({
-    top: Math.max(0, targetScrollTop),
-    behavior: 'smooth'
+    currentScrollTop: containerScrollTop,
+    targetScrollTop,
+    scrollDistance,
+    maxScroll
   })
 }
 
