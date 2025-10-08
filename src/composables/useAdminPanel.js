@@ -4,6 +4,7 @@ import { ref, computed } from 'vue'
 const isCollapsed = ref(localStorage.getItem('adminSidebarCollapsed') === 'true')
 const isActivityReviewMode = ref(false)
 const activeActivityId = ref(null)
+const isReviewSidebarOpen = ref(false)
 
 export function useAdminPanel() {
   // Fonction pour basculer l'état du panel
@@ -28,6 +29,7 @@ export function useAdminPanel() {
   const enableActivityReviewMode = (activityId = null) => {
     isActivityReviewMode.value = true
     activeActivityId.value = activityId
+    isReviewSidebarOpen.value = true
     collapsePanel()
   }
 
@@ -35,7 +37,23 @@ export function useAdminPanel() {
   const disableActivityReviewMode = () => {
     isActivityReviewMode.value = false
     activeActivityId.value = null
+    isReviewSidebarOpen.value = false
     expandPanel()
+  }
+
+  // Fonction pour toggler la sidebar de révision
+  const toggleReviewSidebar = () => {
+    isReviewSidebarOpen.value = !isReviewSidebarOpen.value
+  }
+
+  // Fonction pour ouvrir la sidebar de révision
+  const openReviewSidebar = () => {
+    isReviewSidebarOpen.value = true
+  }
+
+  // Fonction pour fermer la sidebar de révision
+  const closeReviewSidebar = () => {
+    isReviewSidebarOpen.value = false
   }
 
   // Largeur du panel selon son état
@@ -54,11 +72,15 @@ export function useAdminPanel() {
     isCollapsed,
     isActivityReviewMode,
     activeActivityId,
+    isReviewSidebarOpen,
     toggleCollapsed,
     collapsePanel,
     expandPanel,
     enableActivityReviewMode,
     disableActivityReviewMode,
+    toggleReviewSidebar,
+    openReviewSidebar,
+    closeReviewSidebar,
     panelWidth,
     mainMargin
   }

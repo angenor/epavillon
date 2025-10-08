@@ -578,7 +578,7 @@ const { supabase } = useSupabase()
 const { hasAdminRole, isLoadingRoles, loadUserRoles, validateActivity } = useAdmin()
 const { currentUser } = useAuth()
 const { getCityFromTimezone, formatDateTimeWithTimezone, getTimezoneLabel } = useTimezone()
-const { enableActivityReviewMode, disableActivityReviewMode } = useAdminPanel()
+const { enableActivityReviewMode, disableActivityReviewMode, closeReviewSidebar: closeReviewSidebarState, isReviewSidebarOpen } = useAdminPanel()
 
 const isLoading = ref(true)
 const activity = ref(null)
@@ -599,7 +599,6 @@ const speakers = ref([])
 const documents = ref([])
 const registrations = ref([])
 const showChangeSubmitterModal = ref(false)
-const isReviewSidebarOpen = ref(true) // Sidebar ouverte par défaut
 const activityId = computed(() => route.params.id)
 
 const checkAccess = async () => {
@@ -1035,7 +1034,7 @@ const handleSubmitterUpdate = async (newSubmitter) => {
 
 // Fonctions pour gérer la sidebar de révision
 const closeReviewSidebar = () => {
-  isReviewSidebarOpen.value = false
+  closeReviewSidebarState()
 }
 
 const handleActivitySelect = (selectedActivityId) => {
