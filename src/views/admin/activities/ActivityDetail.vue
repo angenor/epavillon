@@ -1,6 +1,16 @@
 <template>
   <div class="admin-activity-detail">
-    <div v-if="isLoadingRoles || isLoading" class="flex items-center justify-center min-h-screen">
+    <!-- Sidebar de navigation des activités -->
+    <ActivityReviewSidebar
+      :is-open="isReviewSidebarOpen"
+      :current-activity-id="activityId"
+      @close="closeReviewSidebar"
+      @select="handleActivitySelect"
+    />
+
+    <!-- Contenu principal avec marge ajustée -->
+    <div :class="['transition-all duration-300', isReviewSidebarOpen ? 'ml-80' : 'ml-0']">
+      <div v-if="isLoadingRoles || isLoading" class="flex items-center justify-center min-h-screen">
       <div class="text-center">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
         <p class="text-gray-600 dark:text-gray-300">Chargement...</p>
@@ -547,23 +557,28 @@
       @close="showChangeSubmitterModal = false"
       @update="handleSubmitterUpdate"
     />
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, onMounted, computed, onBeforeUnmount, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
 import { useAuth } from '@/composables/useAuth'
 import { useTimezone } from '@/composables/useTimezone'
+import { useAdminPanel } from '@/composables/useAdminPanel'
 import ChangeSubmitterModal from '@/components/admin/ChangeSubmitterModal.vue'
+import ActivityReviewSidebar from '@/components/admin/ActivityReviewSidebar.vue'
 
 const route = useRoute()
+const router = useRouter()
 const { supabase } = useSupabase()
 const { hasAdminRole, isLoadingRoles, loadUserRoles, validateActivity } = useAdmin()
 const { currentUser } = useAuth()
 const { getCityFromTimezone, formatDateTimeWithTimezone, getTimezoneLabel } = useTimezone()
+const { enableActivityReviewMode, disableActivityReviewMode } = useAdminPanel()
 
 const isLoading = ref(true)
 const activity = ref(null)
@@ -584,6 +599,8 @@ const speakers = ref([])
 const documents = ref([])
 const registrations = ref([])
 const showChangeSubmitterModal = ref(false)
+const isReviewSidebarOpen = ref(true) // Sidebar ouverte par défaut
+const activityId = computed(() => route.params.id)
 
 const checkAccess = async () => {
   await loadUserRoles()
@@ -1016,15 +1033,41 @@ const handleSubmitterUpdate = async (newSubmitter) => {
   console.log('Soumissionnaire mis à jour avec succès')
 }
 
+// Fonctions pour gérer la sidebar de révision
+const closeReviewSidebar = () => {
+  isReviewSidebarOpen.value = false
+}
+
+const handleActivitySelect = (selectedActivityId) => {
+  // Navigation gérée par le composant sidebar
+  // Le router change automatiquement l'activité
+}
+
+// Watcher pour recharger l'activité quand l'ID change
+watch(() => route.params.id, async (newId) => {
+  if (newId) {
+    await loadActivity()
+    enableActivityReviewMode(newId)
+  }
+})
+
 onMounted(async () => {
   try {
     await checkAccess()
     await loadActivity()
+
+    // Activer le mode révision d'activités et rétracter le panel admin
+    enableActivityReviewMode(route.params.id)
   } catch (error) {
     if (error.message === 'Accès non autorisé') {
       throw error
     }
     console.error('Erreur lors de l\'initialisation:', error)
   }
+})
+
+// Désactiver le mode révision quand on quitte la page
+onBeforeUnmount(() => {
+  disableActivityReviewMode()
 })
 </script>

@@ -25,19 +25,20 @@
     <aside :class="[
       'fixed inset-y-0 left-0 z-50 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform transition-all duration-300 ease-in-out lg:translate-x-0',
       sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
-      collapsed ? 'lg:w-20' : 'lg:w-64',
+      isActivityReviewMode || collapsed ? 'lg:w-20' : 'lg:w-64',
       'w-64'
     ]">
       <!-- Logo and Toggle Button -->
-      <div class="relative flex items-center h-16 bg-orange-600 dark:bg-orange-700" :class="collapsed ? 'justify-center px-2' : 'justify-between px-6'">
+      <div class="relative flex items-center h-16 bg-orange-600 dark:bg-orange-700" :class="isActivityReviewMode || collapsed ? 'justify-center px-2' : 'justify-between px-6'">
         <div class="flex items-center">
           <img src="/logo-ifdd.png" alt="IFDD" class="h-8 w-auto flex-shrink-0">
-          <span v-if="!collapsed" class="ml-3 text-white font-semibold text-lg transition-opacity duration-300">
+          <span v-if="!isActivityReviewMode && !collapsed" class="ml-3 text-white font-semibold text-lg transition-opacity duration-300">
             {{ t('admin.layout.adminPanel') }}
           </span>
         </div>
-        <!-- Collapse/Expand Button - Desktop Only -->
-        <button @click="toggleCollapsed"
+        <!-- Collapse/Expand Button - Desktop Only (caché en mode révision) -->
+        <button v-if="!isActivityReviewMode"
+                @click="toggleCollapsed"
                 class="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full p-1.5 hover:bg-gray-50 dark:hover:bg-gray-700 shadow-sm transition-colors">
           <svg class="w-4 h-4 text-gray-600 dark:text-gray-400 transition-transform duration-300"
                :class="collapsed ? 'rotate-180' : ''"
@@ -48,7 +49,7 @@
       </div>
 
       <!-- Navigation -->
-      <nav class="mt-8 space-y-2" :class="collapsed ? 'px-2' : 'px-4'">
+      <nav class="mt-8 space-y-2" :class="isActivityReviewMode || collapsed ? 'px-2' : 'px-4'">
         <router-link
           v-for="item in navigation"
           :key="item.name"
@@ -58,20 +59,20 @@
             isActiveRoute(item.href)
               ? 'bg-orange-100 dark:bg-orange-900 text-orange-900 dark:text-orange-100'
               : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700',
-            collapsed ? 'justify-center' : ''
+            isActivityReviewMode || collapsed ? 'justify-center' : ''
           ]"
-          :title="collapsed ? t(item.name) : null"
+          :title="isActivityReviewMode || collapsed ? t(item.name) : null"
         >
           <font-awesome-icon
             :icon="item.icon"
             :class="[
               'h-5 w-5 flex-shrink-0',
-              !collapsed ? 'mr-3' : '',
+              !isActivityReviewMode && !collapsed ? 'mr-3' : '',
               isActiveRoute(item.href)
                 ? 'text-orange-600 dark:text-orange-400'
                 : 'text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300'
             ]" />
-          <span v-if="!collapsed" class="transition-opacity duration-300">
+          <span v-if="!isActivityReviewMode && !collapsed" class="transition-opacity duration-300">
             {{ t(item.name) }}
           </span>
         </router-link>
@@ -81,12 +82,12 @@
       <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
         <div :class="[
           'flex items-center',
-          collapsed ? 'justify-center' : ''
+          isActivityReviewMode || collapsed ? 'justify-center' : ''
         ]">
           <img :src="currentUser?.profile_photo_thumbnail_url || '/images/default-avatar.png'"
                :alt="currentUser?.first_name"
                class="h-8 w-8 rounded-full flex-shrink-0">
-          <div v-if="!collapsed" class="ml-3 flex-1 min-w-0 transition-opacity duration-300">
+          <div v-if="!isActivityReviewMode && !collapsed" class="ml-3 flex-1 min-w-0 transition-opacity duration-300">
             <p class="text-sm font-medium text-gray-700 dark:text-gray-200 truncate">
               {{ currentUser?.first_name }} {{ currentUser?.last_name }}
             </p>
@@ -101,7 +102,7 @@
     <!-- Contenu principal -->
     <main :class="[
       'min-h-screen transition-all duration-300 ease-in-out',
-      collapsed ? 'lg:ml-20' : 'lg:ml-64'
+      isActivityReviewMode || collapsed ? 'lg:ml-20' : 'lg:ml-64'
     ]">
       <!-- Header -->
       <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
@@ -173,16 +174,17 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 import { useAdmin } from '@/composables/useAdmin'
+import { useAdminPanel } from '@/composables/useAdminPanel'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 const { t } = useI18n()
 const route = useRoute()
 const { currentUser } = useAuth()
 const { getUserRole, loadUserRoles, canAccessAdmin, isLoadingRoles } = useAdmin()
+const { isCollapsed: collapsed, isActivityReviewMode, toggleCollapsed: toggleCollapsedState } = useAdminPanel()
 
 // État
 const sidebarOpen = ref(false)
-const collapsed = ref(localStorage.getItem('adminSidebarCollapsed') === 'true')
 const unreadNotifications = ref(0)
 
 // Navigation
@@ -276,8 +278,7 @@ const isActiveRoute = (href) => {
 }
 
 const toggleCollapsed = () => {
-  collapsed.value = !collapsed.value
-  localStorage.setItem('adminSidebarCollapsed', collapsed.value.toString())
+  toggleCollapsedState()
 }
 
 // Watchers
