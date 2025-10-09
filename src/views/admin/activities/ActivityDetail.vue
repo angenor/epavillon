@@ -27,9 +27,9 @@
             <div v-if="activity.organization?.logo_url" class="flex-shrink-0">
               <img :src="activity.organization.logo_url"
                    :alt="activity.organization.name"
-                   class="w-12 h-12 rounded-lg object-contain bg-white dark:bg-gray-800 p-1">
+                   class="min-w-16 h-16 rounded-lg object-contain bg-white dark:bg-gray-800 p-1.5">
             </div>
-            <div v-else class="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-semibold">
+            <div v-else class="w-16 h-16 rounded-lg bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-semibold text-lg">
               {{ activity.organization?.name?.[0]?.toUpperCase() }}
             </div>
 
