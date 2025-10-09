@@ -139,14 +139,34 @@
                 </span>
               </p>
 
-              <!-- Date et statut -->
+              <!-- Date, pays et statut sur une ligne -->
               <div class="flex items-center justify-between mt-2">
-                <span class="text-xs text-gray-500 dark:text-gray-400">
-                  {{ formatDate(activity.created_at) }}
-                </span>
+                <div class="flex items-center space-x-2">
+                  <!-- Date -->
+                  <span class="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                    {{ formatDate(activity.created_at) }}
+                  </span>
+
+                  <!-- Pays avec drapeau -->
+                  <div v-if="activity.organization?.country" class="flex items-center">
+                    <span class="text-xs text-gray-400 dark:text-gray-500">•</span>
+                    <img
+                      v-if="activity.organization.country.code"
+                      :src="`https://flagcdn.com/w20/${activity.organization.country.code.toLowerCase()}.png`"
+                      :alt="activity.organization.country.name_fr"
+                      class="w-4 h-3 ml-2 mr-1 object-cover rounded-sm"
+                      loading="lazy"
+                    >
+                    <span class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[60px]">
+                      {{ activity.organization.country.name_fr }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Statut -->
                 <span
                   :class="[
-                    'px-2 py-0.5 text-xs font-medium rounded-full',
+                    'px-2 py-0.5 text-xs font-medium rounded-full flex-shrink-0',
                     getStatusClass(activity.validation_status)
                   ]"
                 >
