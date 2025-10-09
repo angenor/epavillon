@@ -33,19 +33,35 @@
         </div>
       </div>
 
-      <!-- Filtre de statut -->
-      <div class="mt-2">
-        <select
-          v-model="filterStatus"
-          class="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-        >
-          <option value="">Tous les statuts</option>
-          <option value="submitted">Soumises</option>
-          <option value="under_review">En examen</option>
-          <option value="approved">Approuvées</option>
-          <option value="rejected">Rejetées</option>
-          <option value="draft">Brouillons</option>
-        </select>
+      <!-- Filtres de statut et pays -->
+      <div class="mt-2 grid grid-cols-2 gap-2">
+        <!-- Filtre de statut -->
+        <div>
+          <select
+            v-model="filterStatus"
+            class="w-full px-2 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+          >
+            <option value="">Tous les statuts</option>
+            <option value="submitted">Soumises</option>
+            <option value="under_review">En examen</option>
+            <option value="approved">Approuvées</option>
+            <option value="rejected">Rejetées</option>
+            <option value="draft">Brouillons</option>
+          </select>
+        </div>
+
+        <!-- Filtre de pays -->
+        <div>
+          <select
+            v-model="filterCountry"
+            class="w-full px-2 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+          >
+            <option value="">Tous les pays</option>
+            <option v-for="country in countries" :key="country.id" :value="country.id">
+              {{ country.name_fr }}
+            </option>
+          </select>
+        </div>
       </div>
 
       <!-- Compteur -->
@@ -68,7 +84,7 @@
           {{ searchQuery ? 'Aucun résultat pour votre recherche' : 'Aucune activité trouvée' }}
         </p>
         <button
-          v-if="searchQuery || filterStatus"
+          v-if="searchQuery || filterStatus || filterCountry"
           @click="clearFilters"
           class="mt-4 px-4 py-2 bg-orange-600 text-white text-sm rounded-lg hover:bg-orange-700 transition-colors cursor-pointer"
         >
@@ -206,8 +222,10 @@ const { supabase } = useSupabase()
 
 // État
 const activities = ref([])
+const countries = ref([])
 const isLoading = ref(false)
 const filterStatus = ref('')
+const filterCountry = ref('')
 const searchQuery = ref('')
 const activityRefs = ref({})
 
@@ -226,6 +244,11 @@ const filteredActivities = computed(() => {
   // Filtrer par statut
   if (filterStatus.value) {
     result = result.filter(a => a.validation_status === filterStatus.value)
+  }
+
+  // Filtrer par pays
+  if (filterCountry.value) {
+    result = result.filter(a => a.organization?.country_id === filterCountry.value)
   }
 
   // Filtrer par recherche (nom d'activité, organisation ou sigle)
@@ -276,7 +299,13 @@ const loadActivities = async () => {
           id,
           name,
           acronym,
-          logo_url
+          logo_url,
+          country_id,
+          country:countries(
+            id,
+            name_fr,
+            code
+          )
         )
       `)
       .order('created_at', { ascending: false })
@@ -297,6 +326,21 @@ const loadActivities = async () => {
     console.error('Erreur lors du chargement des activités:', error)
   } finally {
     isLoading.value = false
+  }
+}
+
+const loadCountries = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('countries')
+      .select('id, name_fr, code')
+      .order('name_fr', { ascending: true })
+
+    if (error) throw error
+
+    countries.value = data || []
+  } catch (error) {
+    console.error('Erreur lors du chargement des pays:', error)
   }
 }
 
@@ -322,6 +366,7 @@ const navigateToNext = () => {
 const clearFilters = () => {
   searchQuery.value = ''
   filterStatus.value = ''
+  filterCountry.value = ''
 }
 
 const scrollToCurrentActivity = () => {
@@ -473,6 +518,15 @@ watch(filterStatus, async () => {
   }
 })
 
+// Watcher pour le filtre de pays
+watch(filterCountry, async () => {
+  await nextTick()
+  // Ne pas scroller automatiquement lors du filtrage
+  if (props.currentActivityId && filteredActivities.value.some(a => String(a.id) === String(props.currentActivityId))) {
+    scrollToCurrentActivity()
+  }
+})
+
 // Watcher pour la recherche (avec debounce)
 let searchTimeout = null
 watch(searchQuery, () => {
@@ -491,7 +545,10 @@ watch(searchQuery, () => {
 // Lifecycle
 onMounted(async () => {
   console.log('ActivityReviewSidebar mounted, currentActivityId:', props.currentActivityId)
-  await loadActivities()
+  await Promise.all([
+    loadActivities(),
+    loadCountries()
+  ])
   await nextTick()
   // Scroll initial vers l'activité courante avec un délai
   if (props.currentActivityId) {
