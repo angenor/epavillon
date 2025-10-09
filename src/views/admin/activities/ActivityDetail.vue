@@ -145,134 +145,43 @@
         </div>
       </div>
 
-      <!-- Section Informations importantes mise en valeur -->
-      <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl shadow-lg p-6 mb-6 border-2 border-blue-200 dark:border-blue-700">
-        <h2 class="text-xl font-bold mb-4 text-blue-900 dark:text-blue-100 flex items-center">
-          <svg class="h-6 w-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          Informations essentielles
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Date et heure - MISE EN ÉVIDENCE -->
-          <div class="md:col-span-2 bg-gradient-to-br from-orange-500 to-orange-600 dark:from-orange-600 dark:to-orange-700 rounded-lg p-6 shadow-xl border-2 border-orange-400 dark:border-orange-500">
-            <dt class="text-sm font-bold text-white mb-3 flex items-center">
-              <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <!-- Section Date et heure mise en valeur (simplifiée) -->
+      <div class="mb-8 bg-gradient-to-r from-orange-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow p-6 border border-orange-200 dark:border-orange-800">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <!-- Date et heure principale -->
+          <div class="flex-1">
+            <div class="flex items-center mb-3">
+              <svg class="h-5 w-5 mr-2 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
               </svg>
-              {{ activity.final_start_date ? '📅 DATE ET HEURE CONFIRMÉES' : '📅 DATE ET HEURE PROPOSÉES' }}
-            </dt>
-            <dd class="text-white">
-              <div class="flex items-start space-x-3">
-                <div class="flex-1">
-                  <div class="text-2xl font-bold mb-2">{{ formatDateWithDay(activity.final_start_date || activity.proposed_start_date) }}</div>
-                  <div class="text-lg font-semibold text-orange-100 mb-2">
-                    {{ formatTimeRange(activity.final_start_date || activity.proposed_start_date, activity.final_end_date || activity.proposed_end_date) }}
-                  </div>
-                  <div v-if="activity.event?.timezone" class="text-sm text-orange-100 flex items-center">
-                    <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    {{ getTimezoneLabel(activity.event.timezone, 'fr') }}
-                  </div>
-                </div>
-              </div>
-            </dd>
-          </div>
-
-          <!-- Soumissionnaire -->
-          <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 flex items-center justify-between">
-              <div class="flex items-center">
-                <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                </svg>
-                Soumis par
-              </div>
-              <button
-                @click="showChangeSubmitterModal = true"
-                class="text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 cursor-pointer"
-                title="Changer le soumissionnaire"
-              >
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                </svg>
-              </button>
-            </dt>
-            <dd class="space-y-2">
-              <div class="flex items-center space-x-2">
-                <img v-if="activity.submitted_user?.profile_photo_url"
-                     :src="activity.submitted_user.profile_photo_url"
-                     :alt="`${activity.submitted_user.first_name} ${activity.submitted_user.last_name}`"
-                     class="h-10 w-10 rounded-full object-cover">
-                <div v-else class="h-10 w-10 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center">
-                  <span class="text-sm font-semibold text-gray-600 dark:text-gray-300">
-                    {{ activity.submitted_user?.first_name?.[0] }}{{ activity.submitted_user?.last_name?.[0] }}
-                  </span>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                    {{ activity.submitted_user?.first_name }} {{ activity.submitted_user?.last_name }}
-                  </p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
-                    {{ activity.submitted_user?.email }}
-                  </p>
-                </div>
-              </div>
-            </dd>
-          </div>
-
-          <!-- Type d'activité -->
-          <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Type d'activité</dt>
-            <dd>
-              <span class="px-3 py-1.5 text-sm font-medium rounded-full inline-flex items-center"
-                    :class="getActivityTypeClass(activity.activity_type)">
-                <svg class="h-4 w-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
-                  <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 1 1 0 000 2H6a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 00-2-2V5z" clip-rule="evenodd"/>
-                </svg>
-                {{ getActivityTypeLabel(activity.activity_type) }}
+              <span class="text-sm font-medium text-orange-600 dark:text-orange-400">
+                {{ activity.final_start_date ? 'DATE ET HEURE CONFIRMÉES' : 'DATE ET HEURE PROPOSÉES' }}
               </span>
-            </dd>
-          </div>
-
-          <!-- Format -->
-          <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Format</dt>
-            <dd>
-              <span class="px-3 py-1.5 text-sm font-medium rounded-full inline-flex items-center"
-                    :class="getFormatClass(activity.format)">
-                <svg class="h-4 w-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clip-rule="evenodd"/>
-                </svg>
-                {{ getFormatLabel(activity.format) }}
-              </span>
-            </dd>
-          </div>
-
-          <!-- Intervenants -->
-          <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Intervenants</dt>
-            <dd class="flex items-center">
-              <svg class="h-5 w-5 mr-1.5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+            </div>
+            <div class="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+              {{ formatDateWithDay(activity.final_start_date || activity.proposed_start_date) }}
+            </div>
+            <div class="text-lg font-semibold text-gray-700 dark:text-gray-300">
+              {{ formatTimeRange(activity.final_start_date || activity.proposed_start_date, activity.final_end_date || activity.proposed_end_date) }}
+            </div>
+            <div v-if="activity.event?.timezone" class="text-sm text-gray-500 dark:text-gray-400 flex items-center mt-2">
+              <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
-              <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ speakers.length }}</span>
-              <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">panéliste{{ speakers.length > 1 ? 's' : '' }}</span>
-            </dd>
+              {{ getTimezoneLabel(activity.event.timezone, 'fr') }}
+            </div>
           </div>
 
-          <!-- Documents -->
-          <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Documents</dt>
-            <dd class="flex items-center">
-              <svg class="h-5 w-5 mr-1.5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/>
-              </svg>
-              <span class="text-2xl font-bold text-green-600 dark:text-green-400">{{ documents.length }}</span>
-              <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">support{{ documents.length > 1 ? 's' : '' }}</span>
-            </dd>
+          <!-- Format et Type (badges compacts) -->
+          <div class="flex flex-wrap gap-2">
+            <span class="px-3 py-1.5 text-sm font-medium rounded-full inline-flex items-center"
+                  :class="getActivityTypeClass(activity.activity_type)">
+              {{ getActivityTypeLabel(activity.activity_type) }}
+            </span>
+            <span class="px-3 py-1.5 text-sm font-medium rounded-full inline-flex items-center"
+                  :class="getFormatClass(activity.format)">
+              {{ getFormatLabel(activity.format) }}
+            </span>
           </div>
         </div>
       </div>
@@ -508,6 +417,56 @@
                 </dd>
               </div>
             </dl>
+          </div>
+
+          <!-- Soumissionnaire -->
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold mb-4 flex items-center justify-between">
+              <span>Soumis par</span>
+              <button
+                @click="showChangeSubmitterModal = true"
+                class="text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 cursor-pointer"
+                title="Changer le soumissionnaire"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                </svg>
+              </button>
+            </h3>
+            <div class="flex items-center space-x-3">
+              <img v-if="activity.submitted_user?.profile_photo_url"
+                   :src="activity.submitted_user.profile_photo_url"
+                   :alt="`${activity.submitted_user.first_name} ${activity.submitted_user.last_name}`"
+                   class="h-12 w-12 rounded-full object-cover">
+              <div v-else class="h-12 w-12 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center">
+                <span class="text-sm font-semibold text-gray-600 dark:text-gray-300">
+                  {{ activity.submitted_user?.first_name?.[0] }}{{ activity.submitted_user?.last_name?.[0] }}
+                </span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                  {{ activity.submitted_user?.first_name }} {{ activity.submitted_user?.last_name }}
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                  {{ activity.submitted_user?.email }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Nombre d'intervenants et documents -->
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold mb-4">Vue d'ensemble</h3>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-500 dark:text-gray-400">Intervenants</span>
+                <span class="text-lg font-bold text-blue-600 dark:text-blue-400">{{ speakers.length }}</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-500 dark:text-gray-400">Documents</span>
+                <span class="text-lg font-bold text-green-600 dark:text-green-400">{{ documents.length }}</span>
+              </div>
+            </div>
           </div>
 
           <div v-if="activity.main_themes?.length" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
