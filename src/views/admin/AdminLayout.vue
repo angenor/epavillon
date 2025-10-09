@@ -105,10 +105,13 @@
       isActivityReviewMode || collapsed ? 'lg:ml-20' : 'lg:ml-64'
     ]">
       <!-- Header -->
-      <header :class="[
-        'bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 transition-all duration-300',
-        isReviewSidebarOpen && isActivityReviewMode ? 'lg:ml-80' : ''
-      ]">
+      <header
+        :class="[
+          'bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700',
+          isReviewSidebarOpen && isActivityReviewMode ? '' : ''
+        ]"
+        :style="isReviewSidebarOpen && isActivityReviewMode ? { marginLeft: reviewSidebarWidth + 'px', transition: 'margin-left 0.3s' } : { transition: 'margin-left 0.3s' }"
+      >
         <div class="flex items-center justify-between px-6 py-4">
           <!-- Breadcrumbs -->
           <nav class="flex" aria-label="Breadcrumb">
@@ -184,7 +187,7 @@ const { t } = useI18n()
 const route = useRoute()
 const { currentUser } = useAuth()
 const { getUserRole, loadUserRoles, canAccessAdmin, isLoadingRoles } = useAdmin()
-const { isCollapsed: collapsed, isActivityReviewMode, isReviewSidebarOpen, toggleCollapsed: toggleCollapsedState } = useAdminPanel()
+const { isCollapsed: collapsed, isActivityReviewMode, isReviewSidebarOpen, reviewSidebarWidth, toggleCollapsed: toggleCollapsedState } = useAdminPanel()
 
 // État
 const sidebarOpen = ref(false)

@@ -1,10 +1,18 @@
 <template>
   <aside
     :class="[
-      'fixed left-20 top-0 h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-lg z-30 transition-all duration-300 overflow-hidden',
-      isOpen ? 'w-80' : 'w-0'
+      'fixed left-20 top-0 h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-lg z-30 overflow-hidden',
+      isOpen ? '' : 'w-0'
     ]"
+    :style="isOpen ? { width: sidebarWidth + 'px', transition: isResizing ? 'none' : 'all 0.3s' } : { transition: 'all 0.3s' }"
   >
+    <!-- Resize handle -->
+    <div
+      v-if="isOpen"
+      @mousedown="startResize"
+      class="absolute right-0 top-0 bottom-0 w-1 hover:w-1.5 bg-transparent hover:bg-orange-500 cursor-col-resize transition-all z-50"
+      title="Redimensionner"
+    ></div>
     <!-- Header -->
     <div class="sticky mt-10 top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 z-10">
 
@@ -223,6 +231,7 @@
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
+import { useAdminPanel } from '@/composables/useAdminPanel'
 
 const props = defineProps({
   isOpen: {
@@ -239,6 +248,7 @@ const emit = defineEmits(['close', 'select'])
 
 const router = useRouter()
 const { supabase } = useSupabase()
+const { setReviewSidebarWidth } = useAdminPanel()
 
 // État
 const activities = ref([])
@@ -248,6 +258,12 @@ const filterStatus = ref('')
 const filterCountry = ref('')
 const searchQuery = ref('')
 const activityRefs = ref({})
+
+// État pour le redimensionnement
+const MIN_WIDTH = 320 // 80 en Tailwind = 320px
+const DEFAULT_WIDTH = 320
+const sidebarWidth = ref(DEFAULT_WIDTH)
+const isResizing = ref(false)
 
 // Références aux éléments DOM
 const setActivityRef = (id, el) => {
@@ -387,6 +403,34 @@ const clearFilters = () => {
   searchQuery.value = ''
   filterStatus.value = ''
   filterCountry.value = ''
+}
+
+// Gestion du redimensionnement
+const startResize = (e) => {
+  isResizing.value = true
+  const startX = e.clientX
+  const startWidth = sidebarWidth.value
+
+  const handleMouseMove = (e) => {
+    const deltaX = e.clientX - startX
+    const newWidth = Math.max(MIN_WIDTH, startWidth + deltaX)
+    sidebarWidth.value = newWidth
+    // Mettre à jour la largeur globale en temps réel
+    setReviewSidebarWidth(newWidth)
+  }
+
+  const handleMouseUp = () => {
+    isResizing.value = false
+    document.removeEventListener('mousemove', handleMouseMove)
+    document.removeEventListener('mouseup', handleMouseUp)
+    // Sauvegarder la largeur dans localStorage
+    localStorage.setItem('activitySidebarWidth', sidebarWidth.value.toString())
+    // Mettre à jour la largeur globale une dernière fois
+    setReviewSidebarWidth(sidebarWidth.value)
+  }
+
+  document.addEventListener('mousemove', handleMouseMove)
+  document.addEventListener('mouseup', handleMouseUp)
 }
 
 const scrollToCurrentActivity = () => {
@@ -565,6 +609,13 @@ watch(searchQuery, () => {
 // Lifecycle
 onMounted(async () => {
   console.log('ActivityReviewSidebar mounted, currentActivityId:', props.currentActivityId)
+
+  // Restaurer la largeur sauvegardée
+  const savedWidth = localStorage.getItem('activitySidebarWidth')
+  if (savedWidth) {
+    sidebarWidth.value = Math.max(MIN_WIDTH, parseInt(savedWidth))
+  }
+
   await Promise.all([
     loadActivities(),
     loadCountries()

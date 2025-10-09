@@ -5,6 +5,7 @@ const isCollapsed = ref(localStorage.getItem('adminSidebarCollapsed') === 'true'
 const isActivityReviewMode = ref(false)
 const activeActivityId = ref(null)
 const isReviewSidebarOpen = ref(false)
+const reviewSidebarWidth = ref(parseInt(localStorage.getItem('activitySidebarWidth')) || 320)
 
 export function useAdminPanel() {
   // Fonction pour basculer l'état du panel
@@ -56,6 +57,11 @@ export function useAdminPanel() {
     isReviewSidebarOpen.value = false
   }
 
+  // Fonction pour mettre à jour la largeur de la sidebar de révision
+  const setReviewSidebarWidth = (width) => {
+    reviewSidebarWidth.value = width
+  }
+
   // Largeur du panel selon son état
   const panelWidth = computed(() => {
     if (isActivityReviewMode.value) return 'w-20'
@@ -73,6 +79,7 @@ export function useAdminPanel() {
     isActivityReviewMode,
     activeActivityId,
     isReviewSidebarOpen,
+    reviewSidebarWidth,
     toggleCollapsed,
     collapsePanel,
     expandPanel,
@@ -81,6 +88,7 @@ export function useAdminPanel() {
     toggleReviewSidebar,
     openReviewSidebar,
     closeReviewSidebar,
+    setReviewSidebarWidth,
     panelWidth,
     mainMargin
   }
