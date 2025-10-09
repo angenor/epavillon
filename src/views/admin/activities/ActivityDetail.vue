@@ -329,8 +329,16 @@
           </div>
 
           <!-- Autres activités de l'organisation -->
-          <div v-if="organizationActivities.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h2 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+          <div v-if="organizationActivities.length > 0" class="bg-gray-50/50 dark:bg-gray-800/50 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 p-6 relative">
+            <!-- Badge indicateur optionnel -->
+            <div class="absolute -top-3 left-6 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">
+              <span class="text-xs font-medium text-gray-500 dark:text-gray-400 italic">Information complémentaire</span>
+            </div>
+
+            <h2 class="text-base font-medium mb-4 text-gray-700 dark:text-gray-300 flex items-center">
+              <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
               Autres activités soumises par {{ activity.organization?.name }} ({{ organizationActivities.length }})
             </h2>
 
@@ -338,9 +346,9 @@
               <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
             </div>
 
-            <div v-else class="space-y-4">
+            <div v-else class="space-y-3">
               <div v-for="otherActivity in organizationActivities" :key="otherActivity.id"
-                   class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                   class="bg-white/70 dark:bg-gray-900/30 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-white dark:hover:bg-gray-900/50 transition-all duration-200">
                 <div class="flex items-start justify-between">
                   <div class="flex-1">
                     <h3 class="font-semibold text-gray-900 dark:text-white mb-2">
@@ -392,8 +400,8 @@
                   </div>
 
                   <router-link :to="`/admin/activities/${otherActivity.id}`"
-                               class="ml-4 px-3 py-1.5 bg-orange-600 text-white text-sm rounded-lg hover:bg-orange-700 cursor-pointer">
-                    Voir détails
+                               class="ml-4 px-3 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 cursor-pointer transition-colors">
+                    Consulter
                   </router-link>
                 </div>
               </div>
