@@ -1156,6 +1156,9 @@ const handleActivitySelect = (selectedActivityId) => {
 // Watcher pour recharger l'activité quand l'ID change
 watch(() => route.params.id, async (newId) => {
   if (newId) {
+    // Faire défiler vers le haut de la page
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+
     await loadActivity()
 
     // Recharger les autres activités de l'organisation
