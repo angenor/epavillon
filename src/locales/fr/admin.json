@@ -63,6 +63,7 @@
         "negotiator": "Négociateur",
         "unfccc_focal_point": "Point Focal UNFCCC",
         "trainer": "Formateur",
+        "revisionniste": "Révisionniste",
         "admin": "Administrateur",
         "super_admin": "Super Administrateur"
       },
@@ -156,6 +157,7 @@
         "unfccc_focal_point": "Point Focal CCNUCC",
         "negotiator": "Négociateur",
         "trainer": "Formateur",
+        "revisionniste": "Révisionniste",
         "admin": "Administrateur",
         "super_admin": "Super Administrateur"
       },
@@ -164,6 +166,7 @@
         "unfccc_focal_point": "Point focal national pour la CCNUCC",
         "negotiator": "Négociateur climat participant aux COP",
         "trainer": "Formateur autorisé à créer et animer des formations",
+        "revisionniste": "Révisionniste autorisé à examiner et noter les activités non validées",
         "admin": "Administrateur avec accès aux fonctions de gestion",
         "super_admin": "Super administrateur avec tous les droits"
       }

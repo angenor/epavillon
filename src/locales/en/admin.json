@@ -113,6 +113,7 @@
         "unfccc_focal_point": "UNFCCC Focal Point",
         "negotiator": "Negotiator",
         "trainer": "Trainer",
+        "revisionniste": "Reviewer",
         "admin": "Administrator",
         "super_admin": "Super Administrator"
       },
@@ -121,6 +122,7 @@
         "unfccc_focal_point": "National focal point for UNFCCC",
         "negotiator": "Climate negotiator participating in COPs",
         "trainer": "Authorized trainer to create and lead training sessions",
+        "revisionniste": "Reviewer authorized to examine and rate unvalidated activities",
         "admin": "Administrator with access to management functions",
         "super_admin": "Super administrator with all rights"
       }
