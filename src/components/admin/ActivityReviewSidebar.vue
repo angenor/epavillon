@@ -6,8 +6,8 @@
     ]"
   >
     <!-- Header -->
-    <div class="sticky mt-16 top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 z-10">
-      
+    <div class="sticky mt-10 top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 z-10">
+
 
       <!-- Barre de recherche -->
       <div class="mt-3">
@@ -90,9 +90,9 @@
           ]"
         >
           <!-- Date de soumission -->
-          <div class="absolute -left-2 -top-2 bg-orange-600 text-white text-xs font-semibold rounded-lg px-2 py-1 shadow-sm">
+          <!-- <div class="absolute -left-2 -top-2 bg-orange-600 text-white text-xs font-semibold rounded-lg px-2 py-1 shadow-sm">
             {{ formatDate(activity.created_at) }}
-          </div>
+          </div> -->
 
           <!-- Contenu -->
           <div class="flex items-start space-x-3 mt-1">

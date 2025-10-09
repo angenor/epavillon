@@ -288,6 +288,7 @@
       "export": "Export",
       "searchPlaceholder": "Search by title, organization or event...",
       "allEvents": "All events",
+      "allCountries": "All countries",
       "allThemes": "All themes",
       "loading": "Loading activities...",
       "noActivities": "No activities found",

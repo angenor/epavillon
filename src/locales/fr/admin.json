@@ -331,6 +331,7 @@
       "export": "Exporter",
       "searchPlaceholder": "Rechercher par titre, organisation ou événement...",
       "allEvents": "Tous les événements",
+      "allCountries": "Tous les pays",
       "allThemes": "Toutes les thématiques",
       "loading": "Chargement des activités...",
       "noActivities": "Aucune activité trouvée",

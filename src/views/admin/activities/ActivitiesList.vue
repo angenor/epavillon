@@ -78,7 +78,7 @@
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                   ]">
             {{ t(tab.label) }}
-            <span v-if="tab.count !== undefined" 
+            <span v-if="tab.count !== undefined"
                   :class="[
                     'ml-2 py-0.5 px-2 rounded-full text-xs',
                     activeTab === tab.key
@@ -93,7 +93,7 @@
 
       <!-- Filtres -->
       <div class="p-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
           <!-- Recherche -->
           <div class="lg:col-span-2">
             <input v-model="filters.search"
@@ -109,6 +109,17 @@
               <option value="">{{ t('admin.activities.allEvents') }}</option>
               <option v-for="event in events" :key="event.id" :value="event.id">
                 {{ event.title }} ({{ event.year }})
+              </option>
+            </select>
+          </div>
+
+          <!-- Filtre par pays -->
+          <div>
+            <select v-model="filters.country"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+              <option value="">{{ t('admin.activities.allCountries') }}</option>
+              <option v-for="country in countries" :key="country.id" :value="country.id">
+                {{ country.name_fr }}
               </option>
             </select>
           </div>
@@ -153,7 +164,7 @@
 
           <div class="flex">
             <!-- Image miniature avec logo organisation -->
-            <div class="w-32 h-32 flex-shrink-0 relative overflow-hidden bg-gradient-to-br from-orange-50 to-orange-100 dark:from-gray-700 dark:to-gray-600">
+            <div @click="viewActivity(activity)" class="w-32 h-32 cursor-pointer flex-shrink-0 relative overflow-hidden bg-gradient-to-br from-orange-50 to-orange-100 dark:from-gray-700 dark:to-gray-600">
               <img v-if="activity.cover_image_low_url"
                    :src="activity.cover_image_low_url"
                    :alt="activity.title"
@@ -177,7 +188,7 @@
               <div class="flex items-start justify-between">
                 <div class="flex-1 mr-4">
                   <!-- Titre -->
-                  <h3 class="text-base font-semibold text-gray-900 dark:text-white line-clamp-2 mb-2"
+                  <h3 @click="viewActivity(activity)" class="text-base cursor-pointer font-semibold text-gray-900 dark:text-white line-clamp-2 mb-2"
                       :title="activity.title">
                     {{ activity.title }}
                   </h3>
@@ -227,15 +238,15 @@
                       {{ activity.format }}
                     </span>
 
-                    <!-- Thématiques -->
-                    <span v-for="theme in activity.main_themes?.slice(0, 2)" :key="theme"
-                          class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-orange-50 text-orange-700 dark:bg-orange-900/20 dark:text-orange-400">
-                      {{ t(`activities.themes.${theme}`) }}
-                    </span>
-                    <span v-if="activity.main_themes?.length > 2"
-                          class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">
-                      +{{ activity.main_themes.length - 2 }}
-                    </span>
+                    <!-- Pays avec drapeau -->
+                    <div v-if="activity.organization?.country" class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400">
+                      <img v-if="activity.organization.country.code"
+                           :src="`https://flagcdn.com/w20/${activity.organization.country.code.toLowerCase()}.png`"
+                           :alt="activity.organization.country.name_fr"
+                           class="w-4 h-3 mr-1.5 object-cover rounded-sm"
+                           loading="lazy">
+                      <span>{{ activity.organization.country.name_fr }}</span>
+                    </div>
                   </div>
                 </div>
 
@@ -416,6 +427,7 @@ const { openForActivity, canSendEmails } = useEmailModal()
 const isLoading = ref(true)
 const activities = ref([])
 const events = ref([])
+const countries = ref([])
 const currentPage = ref(1)
 const pageSize = ref(20)
 const activeTab = ref('pending')
@@ -429,6 +441,7 @@ const validationReason = ref('')
 const filters = ref({
   search: '',
   event: '',
+  country: '',
   theme: ''
 })
 
@@ -442,7 +455,7 @@ const stats = ref({
 // Vérification des permissions (attendre le chargement des rôles)
 const checkAccess = async () => {
   await loadUserRoles()
-  
+
   if (!hasAdminRole.value) {
     throw new Error('Accès non autorisé')
   }
@@ -483,11 +496,11 @@ const filteredActivities = computed(() => {
   // Filtrer par onglet actif
   if (activeTab.value !== 'all') {
     if (activeTab.value === 'pending') {
-      filtered = filtered.filter(activity => 
+      filtered = filtered.filter(activity =>
         ['submitted', 'under_review'].includes(activity.validation_status)
       )
     } else {
-      filtered = filtered.filter(activity => 
+      filtered = filtered.filter(activity =>
         activity.validation_status === activeTab.value
       )
     }
@@ -496,7 +509,7 @@ const filteredActivities = computed(() => {
   // Filtrer par recherche
   if (filters.value.search) {
     const search = filters.value.search.toLowerCase()
-    filtered = filtered.filter(activity => 
+    filtered = filtered.filter(activity =>
       activity.title?.toLowerCase().includes(search) ||
       activity.organization?.name?.toLowerCase().includes(search) ||
       activity.event?.title?.toLowerCase().includes(search)
@@ -505,14 +518,21 @@ const filteredActivities = computed(() => {
 
   // Filtrer par événement
   if (filters.value.event) {
-    filtered = filtered.filter(activity => 
+    filtered = filtered.filter(activity =>
       activity.event_id === filters.value.event
+    )
+  }
+
+  // Filtrer par pays
+  if (filters.value.country) {
+    filtered = filtered.filter(activity =>
+      activity.organization?.country?.id === filters.value.country
     )
   }
 
   // Filtrer par thématique
   if (filters.value.theme) {
-    filtered = filtered.filter(activity => 
+    filtered = filtered.filter(activity =>
       activity.main_themes?.includes(filters.value.theme)
     )
   }
@@ -532,11 +552,11 @@ const visiblePages = computed(() => {
   const pages = []
   const start = Math.max(1, currentPage.value - 2)
   const end = Math.min(totalPages.value, currentPage.value + 2)
-  
+
   for (let i = start; i <= end; i++) {
     pages.push(i)
   }
-  
+
   return pages
 })
 
@@ -547,7 +567,13 @@ const loadActivities = async () => {
       .from('activities')
       .select(`
         *,
-        organization:organizations(id, name, organization_type, logo_url),
+        organization:organizations(
+          id,
+          name,
+          organization_type,
+          logo_url,
+          country:countries(id, name_fr, code)
+        ),
         event:events(id, title, year)
       `)
       .eq('is_deleted', false)
@@ -576,6 +602,21 @@ const loadEvents = async () => {
     events.value = data || []
   } catch (error) {
     console.error('Erreur lors du chargement des événements:', error)
+  }
+}
+
+const loadCountries = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('countries')
+      .select('id, name_fr, code')
+      .order('name_fr', { ascending: true })
+
+    if (error) throw error
+
+    countries.value = data || []
+  } catch (error) {
+    console.error('Erreur lors du chargement des pays:', error)
   }
 }
 
@@ -651,10 +692,10 @@ const confirmValidation = async () => {
       if (activityIndex !== -1) {
         activities.value[activityIndex].validation_status = status
       }
-      
+
       calculateStats()
       closeValidationModal()
-      
+
       // TODO: Afficher une notification de succès
     } else {
       console.error('Erreur lors de la validation:', result.error)
@@ -767,7 +808,8 @@ onMounted(async () => {
     await checkAccess()
     await Promise.all([
       loadActivities(),
-      loadEvents()
+      loadEvents(),
+      loadCountries()
     ])
   } catch (error) {
     console.error('Erreur:', error)
