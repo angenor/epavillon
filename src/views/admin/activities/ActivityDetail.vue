@@ -19,132 +19,6 @@
 
 
       <div v-else-if="activity" class="space-y-6">
-        <!-- Banner de l'activité si disponible -->
-        <div v-if="activity.banner_url || activity.cover_image_high_url" class="relative h-64 rounded-lg overflow-hidden shadow-lg">
-          <img :src="activity.banner_url || activity.cover_image_high_url"
-              :alt="activity.title"
-              class="w-full h-full object-cover">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-          <div class="absolute bottom-0 left-0 right-0 p-6">
-            <h1 class="text-3xl font-bold text-white mb-2">{{ activity.title }}</h1>
-            <p class="text-white/90">{{ activity.organization?.name }}</p>
-          </div>
-        </div>
-
-        <!-- Header avec actions -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div class="flex justify-between items-start">
-            <div class="flex items-start space-x-4">
-              <!-- Logo de l'organisation -->
-              <div v-if="activity.organization?.logo_url" class="flex-shrink-0">
-                <img :src="activity.organization.logo_url"
-                    :alt="activity.organization.name"
-                    class="w-16 h-16 rounded-lg object-contain bg-gray-100 dark:bg-gray-700 p-2">
-              </div>
-              <div>
-                <h1 v-if="!activity.banner_url && !activity.cover_image_high_url" class="text-2xl font-bold text-gray-900 dark:text-white">
-                  {{ activity.title }}
-                </h1>
-                <div class="mt-1">
-                  <p class="text-lg text-gray-700 dark:text-gray-300">
-                    {{ activity.organization?.name }}
-                  </p>
-                  <!-- Pays de l'organisation avec drapeau -->
-                  <div v-if="activity.organization?.country" class="flex items-center mt-1">
-                    <svg class="h-4 w-4 text-gray-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
-                    <span class="text-sm text-gray-600 dark:text-gray-400 mr-2">
-                      {{ activity.organization.country.name_fr || 'Pays non spécifié' }}
-                    </span>
-                    <img
-                      v-if="activity.organization.country?.code"
-                      :src="`https://flagcdn.com/w20/${activity.organization.country.code.toLowerCase()}.png`"
-                      :alt="activity.organization.country.name_fr"
-                      class="h-4 w-6 object-cover border border-gray-200 dark:border-gray-600"
-                    />
-                  </div>
-                </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                  {{ activity.event?.title }} - {{ activity.event?.year }}
-                </p>
-              </div>
-            </div>
-            <div class="flex items-center space-x-3">
-              <!-- Dropdown de statut -->
-              <div class="relative">
-                <select v-model="activity.validation_status"
-                        @focus="previousStatusValue = activity.validation_status"
-                        @change="handleStatusChange"
-                        :disabled="isUpdatingStatus"
-                        :class="[
-                          'appearance-none rounded-full px-4 py-2 text-sm font-medium border-0 cursor-pointer focus:ring-2 focus:ring-orange-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed',
-                          getStatusClass(activity.validation_status)
-                        ]">
-                  <option value="draft">Brouillon</option>
-                  <option value="submitted">Soumise</option>
-                  <option value="under_review">En examen</option>
-                  <option value="approved">Approuvée</option>
-                  <option value="rejected">Rejetée</option>
-                </select>
-                <!-- Icône dropdown -->
-                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                  <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
-                </div>
-              </div>
-
-              <!-- Bouton notification activité reçue -->
-              <button @click="sendActivityReceivedNotification"
-                      :disabled="isSendingNotification"
-                      class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
-                <div v-if="isSendingNotification" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                <svg v-else class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                </svg>
-                {{ isSendingNotification ? 'Envoi...' : 'Notifier réception' }}
-              </button>
-
-              <!-- Indicateur de chargement -->
-              <div v-if="isUpdatingStatus" class="flex items-center text-gray-500">
-                <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-500 mr-2"></div>
-                <span class="text-sm">Mise à jour...</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Message d'erreur pour le changement de statut -->
-          <div v-if="statusError" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-            {{ statusError }}
-            <button @click="statusError = null" class="ml-2 text-red-900 hover:text-red-700">
-              <svg class="h-4 w-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
-          </div>
-
-          <!-- Messages pour la notification -->
-          <div v-if="notificationError" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-            {{ notificationError }}
-            <button @click="notificationError = null" class="ml-2 text-red-900 hover:text-red-700">
-              <svg class="h-4 w-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
-          </div>
-
-          <div v-if="notificationSuccess" class="mt-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
-            {{ notificationSuccess }}
-            <button @click="notificationSuccess = null" class="ml-2 text-green-900 hover:text-green-700">
-              <svg class="h-4 w-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-
         <!-- Section Date et heure mise en valeur (simplifiée) -->
         <div class="mb-8 bg-gradient-to-r from-orange-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow p-6 border border-orange-200 dark:border-orange-800">
           <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -184,12 +58,103 @@
               </span>
             </div>
           </div>
+
+          <!-- Actions -->
+          <div class="mt-6 pt-6 border-t border-orange-200 dark:border-orange-700">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <!-- Dropdown de statut -->
+              <div class="relative">
+                <select v-model="activity.validation_status"
+                        @focus="previousStatusValue = activity.validation_status"
+                        @change="handleStatusChange"
+                        :disabled="isUpdatingStatus"
+                        :class="[
+                          'appearance-none rounded-full px-4 py-2 text-sm font-medium border-0 cursor-pointer focus:ring-2 focus:ring-orange-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed',
+                          getStatusClass(activity.validation_status)
+                        ]">
+                  <option value="draft">Brouillon</option>
+                  <option value="submitted">Soumise</option>
+                  <option value="under_review">En examen</option>
+                  <option value="approved">Approuvée</option>
+                  <option value="rejected">Rejetée</option>
+                </select>
+                <!-- Icône dropdown -->
+                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                  <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-3">
+                <!-- Bouton notification activité reçue -->
+                <button @click="sendActivityReceivedNotification"
+                        :disabled="isSendingNotification"
+                        class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
+                  <div v-if="isSendingNotification" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  <svg v-else class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  </svg>
+                  {{ isSendingNotification ? 'Envoi...' : 'Notifier réception' }}
+                </button>
+
+                <!-- Indicateur de chargement -->
+                <div v-if="isUpdatingStatus" class="flex items-center text-gray-500">
+                  <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-500 mr-2"></div>
+                  <span class="text-sm">Mise à jour...</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Message d'erreur pour le changement de statut -->
+            <div v-if="statusError" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+              {{ statusError }}
+              <button @click="statusError = null" class="ml-2 text-red-900 hover:text-red-700">
+                <svg class="h-4 w-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Messages pour la notification -->
+            <div v-if="notificationError" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+              {{ notificationError }}
+              <button @click="notificationError = null" class="ml-2 text-red-900 hover:text-red-700">
+                <svg class="h-4 w-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+
+            <div v-if="notificationSuccess" class="mt-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+              {{ notificationSuccess }}
+              <button @click="notificationSuccess = null" class="ml-2 text-green-900 hover:text-green-700">
+                <svg class="h-4 w-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- Détails de l'activité -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <!-- Informations principales -->
           <div class="lg:col-span-2 space-y-6">
+            <!-- Titre et bannière -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+              <div class="p-6">
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{{ activity.title }}</h1>
+
+                <!-- Bannière 16:9 -->
+                <div v-if="activity.banner_url || activity.cover_image_high_url" class="relative aspect-[16/9] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
+                  <img :src="activity.banner_url || activity.cover_image_high_url"
+                       :alt="activity.title"
+                       class="w-full h-full object-cover">
+                </div>
+              </div>
+            </div>
+
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <h2 class="text-lg font-semibold mb-4">Description détaillée</h2>
               <div class="prose dark:prose-invert max-w-none" v-html="activity.detailed_presentation"></div>
