@@ -9,7 +9,7 @@
     />
 
     <!-- Contenu principal avec marge ajustée -->
-    <div :class="['transition-all duration-300', isReviewSidebarOpen ? 'ml-80' : 'ml-0']">
+    <div :style="isReviewSidebarOpen ? { marginLeft: reviewSidebarWidth + 'px', transition: 'margin-left 0.3s' } : { marginLeft: '0', transition: 'margin-left 0.3s' }">
       <div v-if="isLoadingRoles || isLoading" class="flex items-center justify-center min-h-screen">
         <div class="text-center">
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
@@ -635,7 +635,7 @@ const { supabase } = useSupabase()
 const { hasAdminRole, isLoadingRoles, loadUserRoles, validateActivity } = useAdmin()
 const { currentUser } = useAuth()
 const { getCityFromTimezone, formatDateTimeWithTimezone, getTimezoneLabel } = useTimezone()
-const { enableActivityReviewMode, disableActivityReviewMode, closeReviewSidebar: closeReviewSidebarState, isReviewSidebarOpen } = useAdminPanel()
+const { enableActivityReviewMode, disableActivityReviewMode, closeReviewSidebar: closeReviewSidebarState, isReviewSidebarOpen, reviewSidebarWidth } = useAdminPanel()
 
 const isLoading = ref(true)
 const activity = ref(null)
