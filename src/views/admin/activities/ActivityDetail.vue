@@ -328,6 +328,78 @@
             </div>
           </div>
 
+          <!-- Autres activités de l'organisation -->
+          <div v-if="organizationActivities.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <h2 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+              Autres activités soumises par {{ activity.organization?.name }} ({{ organizationActivities.length }})
+            </h2>
+
+            <div v-if="isLoadingOrgActivities" class="flex items-center justify-center h-32">
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+            </div>
+
+            <div v-else class="space-y-4">
+              <div v-for="otherActivity in organizationActivities" :key="otherActivity.id"
+                   class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                <div class="flex items-start justify-between">
+                  <div class="flex-1">
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">
+                      {{ otherActivity.title }}
+                    </h3>
+                    <div class="flex flex-wrap gap-2 mb-3">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                            :class="{
+                              'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300': otherActivity.validation_status === 'draft',
+                              'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300': otherActivity.validation_status === 'submitted',
+                              'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300': otherActivity.validation_status === 'under_review',
+                              'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300': otherActivity.validation_status === 'approved',
+                              'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300': otherActivity.validation_status === 'rejected',
+                              'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300': otherActivity.validation_status === 'live',
+                              'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300': otherActivity.validation_status === 'completed'
+                            }">
+                        {{ getValidationStatusLabel(otherActivity.validation_status) }}
+                      </span>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                        {{ getActivityTypeLabel(otherActivity.activity_type) }}
+                      </span>
+                    </div>
+
+                    <!-- Informations du soumissionnaire -->
+                    <div class="flex items-center space-x-3 mt-3 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+                      <img v-if="otherActivity.submitted_user?.profile_photo_thumbnail_url || otherActivity.submitted_user?.profile_photo_url"
+                           :src="otherActivity.submitted_user.profile_photo_thumbnail_url || otherActivity.submitted_user.profile_photo_url"
+                           :alt="`${otherActivity.submitted_user.first_name} ${otherActivity.submitted_user.last_name}`"
+                           class="h-10 w-10 rounded-full object-cover">
+                      <div v-else class="h-10 w-10 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                      </div>
+                      <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900 dark:text-white">
+                          Soumis par : {{ otherActivity.submitted_user?.first_name }} {{ otherActivity.submitted_user?.last_name }}
+                        </p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ otherActivity.submitted_user?.email }}</p>
+                      </div>
+                    </div>
+
+                    <div class="mt-3 text-xs text-gray-500 dark:text-gray-400">
+                      <p>Créée le {{ formatDate(otherActivity.created_at) }}</p>
+                      <p v-if="otherActivity.proposed_start_date">
+                        Date proposée : {{ formatDate(otherActivity.proposed_start_date) }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <router-link :to="`/admin/activities/${otherActivity.id}`"
+                               class="ml-4 px-3 py-1.5 bg-orange-600 text-white text-sm rounded-lg hover:bg-orange-700 cursor-pointer">
+                    Voir détails
+                  </router-link>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Documents supports -->
           <div v-if="documents.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <h2 class="text-lg font-semibold mb-4">Documents supports ({{ documents.length }})</h2>
@@ -600,6 +672,8 @@ const documents = ref([])
 const registrations = ref([])
 const showChangeSubmitterModal = ref(false)
 const activityId = computed(() => route.params.id)
+const organizationActivities = ref([])
+const isLoadingOrgActivities = ref(false)
 
 const checkAccess = async () => {
   await loadUserRoles()
@@ -634,6 +708,11 @@ const loadActivity = async () => {
 
     // Charger les inscriptions
     await loadRegistrations()
+
+    // Charger les autres activités de l'organisation
+    if (data.organization?.id) {
+      await loadOrganizationActivities(data.organization.id)
+    }
 
   } catch (error) {
     console.error('Erreur lors du chargement de l\'activité:', error)
@@ -696,6 +775,38 @@ const loadRegistrations = async () => {
   }
 }
 
+const loadOrganizationActivities = async (organizationId) => {
+  if (!organizationId) return
+
+  isLoadingOrgActivities.value = true
+  try {
+    const { data, error } = await supabase
+      .from('activities')
+      .select(`
+        *,
+        submitted_user:users!submitted_by(
+          id,
+          first_name,
+          last_name,
+          email,
+          profile_photo_url,
+          profile_photo_thumbnail_url
+        )
+      `)
+      .eq('organization_id', organizationId)
+      .neq('id', route.params.id) // Exclure l'activité actuelle
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+    organizationActivities.value = data || []
+  } catch (error) {
+    console.error('Erreur lors du chargement des autres activités:', error)
+    organizationActivities.value = []
+  } finally {
+    isLoadingOrgActivities.value = false
+  }
+}
+
 const getStatusClass = (status) => {
   const classes = {
     draft: 'bg-gray-100 text-gray-800',
@@ -708,6 +819,21 @@ const getStatusClass = (status) => {
     completed: 'bg-indigo-100 text-indigo-800'
   }
   return classes[status] || classes.draft
+}
+
+// Labels pour les statuts de validation
+const getValidationStatusLabel = (status) => {
+  const labels = {
+    draft: 'Brouillon',
+    submitted: 'Soumise',
+    under_review: 'En examen',
+    approved: 'Approuvée',
+    rejected: 'Rejetée',
+    cancelled: 'Annulée',
+    live: 'En ligne',
+    completed: 'Complétée'
+  }
+  return labels[status] || status
 }
 
 // Labels pour les types d'activité
@@ -1046,6 +1172,12 @@ const handleActivitySelect = (selectedActivityId) => {
 watch(() => route.params.id, async (newId) => {
   if (newId) {
     await loadActivity()
+
+    // Recharger les autres activités de l'organisation
+    if (activity.value?.organization?.id) {
+      await loadOrganizationActivities(activity.value.organization.id)
+    }
+
     enableActivityReviewMode(newId)
   }
 })
