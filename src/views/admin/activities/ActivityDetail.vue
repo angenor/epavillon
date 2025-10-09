@@ -21,6 +21,44 @@
       <div v-else-if="activity" class="space-y-6">
         <!-- Section Date et heure mise en valeur (simplifiée) -->
         <div class="mb-8 bg-gradient-to-r from-orange-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow p-6 border border-orange-200 dark:border-orange-800">
+          <!-- Organisation -->
+          <div class="flex items-center space-x-3 mb-4 pb-4 border-b border-orange-200 dark:border-orange-700">
+            <!-- Logo de l'organisation -->
+            <div v-if="activity.organization?.logo_url" class="flex-shrink-0">
+              <img :src="activity.organization.logo_url"
+                   :alt="activity.organization.name"
+                   class="w-12 h-12 rounded-lg object-contain bg-white dark:bg-gray-800 p-1">
+            </div>
+            <div v-else class="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-semibold">
+              {{ activity.organization?.name?.[0]?.toUpperCase() }}
+            </div>
+
+            <div class="flex-1">
+              <p class="font-semibold text-gray-900 dark:text-white">
+                {{ activity.organization?.name }}
+              </p>
+              <!-- Pays avec drapeau -->
+              <div v-if="activity.organization?.country" class="flex items-center mt-1">
+                <svg class="h-3 w-3 text-gray-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span class="text-sm text-gray-600 dark:text-gray-400 mr-2">
+                  {{ activity.organization.country.name_fr || 'Pays non spécifié' }}
+                </span>
+                <img
+                  v-if="activity.organization.country?.code"
+                  :src="`https://flagcdn.com/w20/${activity.organization.country.code.toLowerCase()}.png`"
+                  :alt="activity.organization.country.name_fr"
+                  class="h-3 w-5 object-cover border border-gray-200 dark:border-gray-600"
+                />
+              </div>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                {{ activity.event?.title }} - {{ activity.event?.year }}
+              </p>
+            </div>
+          </div>
+
           <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <!-- Date et heure principale -->
             <div class="flex-1">
