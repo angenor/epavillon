@@ -8,3 +8,4 @@ gerer les messages
 
 google analytics
 
+la page @src/views/admin/activities/ActivityDetail.vue permet aux administrateurs et

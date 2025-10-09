@@ -378,7 +378,7 @@ const { assignUserRole, revokeUserRole } = useRoles()
 const isLoading = ref(true)
 const isAssigning = ref(false)
 const roleAssignments = ref([])
-const availableRoles = ref(['standard', 'unfccc_focal_point', 'negotiator', 'trainer', 'admin', 'super_admin'])
+const availableRoles = ref(['standard', 'unfccc_focal_point', 'negotiator', 'trainer', 'revisionniste', 'admin', 'super_admin'])
 const selectedRoleFilter = ref('')
 const currentPage = ref(1)
 const pageSize = ref(20)
@@ -481,6 +481,7 @@ const getRoleClass = (role) => {
     negotiator: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
     unfccc_focal_point: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
     trainer: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+    revisionniste: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
     admin: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
     super_admin: 'bg-red-200 text-red-900 dark:bg-red-800 dark:text-red-200'
   }
