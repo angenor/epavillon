@@ -11,591 +11,591 @@
     <!-- Contenu principal avec marge ajustée -->
     <div :class="['transition-all duration-300', isReviewSidebarOpen ? 'ml-80' : 'ml-0']">
       <div v-if="isLoadingRoles || isLoading" class="flex items-center justify-center min-h-screen">
-      <div class="text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
-        <p class="text-gray-600 dark:text-gray-300">Chargement...</p>
-      </div>
-    </div>
-
-
-    <div v-else-if="activity" class="space-y-6">
-      <!-- Banner de l'activité si disponible -->
-      <div v-if="activity.banner_url || activity.cover_image_high_url" class="relative h-64 rounded-lg overflow-hidden shadow-lg">
-        <img :src="activity.banner_url || activity.cover_image_high_url"
-             :alt="activity.title"
-             class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-        <div class="absolute bottom-0 left-0 right-0 p-6">
-          <h1 class="text-3xl font-bold text-white mb-2">{{ activity.title }}</h1>
-          <p class="text-white/90">{{ activity.organization?.name }}</p>
+        <div class="text-center">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+          <p class="text-gray-600 dark:text-gray-300">Chargement...</p>
         </div>
       </div>
 
-      <!-- Header avec actions -->
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <div class="flex justify-between items-start">
-          <div class="flex items-start space-x-4">
-            <!-- Logo de l'organisation -->
-            <div v-if="activity.organization?.logo_url" class="flex-shrink-0">
-              <img :src="activity.organization.logo_url"
-                   :alt="activity.organization.name"
-                   class="w-16 h-16 rounded-lg object-contain bg-gray-100 dark:bg-gray-700 p-2">
-            </div>
-            <div>
-              <h1 v-if="!activity.banner_url && !activity.cover_image_high_url" class="text-2xl font-bold text-gray-900 dark:text-white">
-                {{ activity.title }}
-              </h1>
-              <div class="mt-1">
-                <p class="text-lg text-gray-700 dark:text-gray-300">
-                  {{ activity.organization?.name }}
+
+      <div v-else-if="activity" class="space-y-6">
+        <!-- Banner de l'activité si disponible -->
+        <div v-if="activity.banner_url || activity.cover_image_high_url" class="relative h-64 rounded-lg overflow-hidden shadow-lg">
+          <img :src="activity.banner_url || activity.cover_image_high_url"
+              :alt="activity.title"
+              class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-6">
+            <h1 class="text-3xl font-bold text-white mb-2">{{ activity.title }}</h1>
+            <p class="text-white/90">{{ activity.organization?.name }}</p>
+          </div>
+        </div>
+
+        <!-- Header avec actions -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div class="flex justify-between items-start">
+            <div class="flex items-start space-x-4">
+              <!-- Logo de l'organisation -->
+              <div v-if="activity.organization?.logo_url" class="flex-shrink-0">
+                <img :src="activity.organization.logo_url"
+                    :alt="activity.organization.name"
+                    class="w-16 h-16 rounded-lg object-contain bg-gray-100 dark:bg-gray-700 p-2">
+              </div>
+              <div>
+                <h1 v-if="!activity.banner_url && !activity.cover_image_high_url" class="text-2xl font-bold text-gray-900 dark:text-white">
+                  {{ activity.title }}
+                </h1>
+                <div class="mt-1">
+                  <p class="text-lg text-gray-700 dark:text-gray-300">
+                    {{ activity.organization?.name }}
+                  </p>
+                  <!-- Pays de l'organisation avec drapeau -->
+                  <div v-if="activity.organization?.country" class="flex items-center mt-1">
+                    <svg class="h-4 w-4 text-gray-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span class="text-sm text-gray-600 dark:text-gray-400 mr-2">
+                      {{ activity.organization.country.name_fr || 'Pays non spécifié' }}
+                    </span>
+                    <img
+                      v-if="activity.organization.country?.code"
+                      :src="`https://flagcdn.com/w20/${activity.organization.country.code.toLowerCase()}.png`"
+                      :alt="activity.organization.country.name_fr"
+                      class="h-4 w-6 object-cover border border-gray-200 dark:border-gray-600"
+                    />
+                  </div>
+                </div>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                  {{ activity.event?.title }} - {{ activity.event?.year }}
                 </p>
-                <!-- Pays de l'organisation avec drapeau -->
-                <div v-if="activity.organization?.country" class="flex items-center mt-1">
-                  <svg class="h-4 w-4 text-gray-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </div>
+            </div>
+            <div class="flex items-center space-x-3">
+              <!-- Dropdown de statut -->
+              <div class="relative">
+                <select v-model="activity.validation_status"
+                        @focus="previousStatusValue = activity.validation_status"
+                        @change="handleStatusChange"
+                        :disabled="isUpdatingStatus"
+                        :class="[
+                          'appearance-none rounded-full px-4 py-2 text-sm font-medium border-0 cursor-pointer focus:ring-2 focus:ring-orange-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed',
+                          getStatusClass(activity.validation_status)
+                        ]">
+                  <option value="draft">Brouillon</option>
+                  <option value="submitted">Soumise</option>
+                  <option value="under_review">En examen</option>
+                  <option value="approved">Approuvée</option>
+                  <option value="rejected">Rejetée</option>
+                </select>
+                <!-- Icône dropdown -->
+                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                  <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                   </svg>
-                  <span class="text-sm text-gray-600 dark:text-gray-400 mr-2">
-                    {{ activity.organization.country.name_fr || 'Pays non spécifié' }}
-                  </span>
-                  <img
-                    v-if="activity.organization.country?.code"
-                    :src="`https://flagcdn.com/w20/${activity.organization.country.code.toLowerCase()}.png`"
-                    :alt="activity.organization.country.name_fr"
-                    class="h-4 w-6 object-cover border border-gray-200 dark:border-gray-600"
-                  />
                 </div>
               </div>
-              <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                {{ activity.event?.title }} - {{ activity.event?.year }}
-              </p>
+
+              <!-- Bouton notification activité reçue -->
+              <button @click="sendActivityReceivedNotification"
+                      :disabled="isSendingNotification"
+                      class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
+                <div v-if="isSendingNotification" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                <svg v-else class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+                {{ isSendingNotification ? 'Envoi...' : 'Notifier réception' }}
+              </button>
+
+              <!-- Indicateur de chargement -->
+              <div v-if="isUpdatingStatus" class="flex items-center text-gray-500">
+                <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-500 mr-2"></div>
+                <span class="text-sm">Mise à jour...</span>
+              </div>
             </div>
           </div>
-          <div class="flex items-center space-x-3">
-            <!-- Dropdown de statut -->
-            <div class="relative">
-              <select v-model="activity.validation_status"
-                      @focus="previousStatusValue = activity.validation_status"
-                      @change="handleStatusChange"
-                      :disabled="isUpdatingStatus"
-                      :class="[
-                        'appearance-none rounded-full px-4 py-2 text-sm font-medium border-0 cursor-pointer focus:ring-2 focus:ring-orange-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed',
-                        getStatusClass(activity.validation_status)
-                      ]">
-                <option value="draft">Brouillon</option>
-                <option value="submitted">Soumise</option>
-                <option value="under_review">En examen</option>
-                <option value="approved">Approuvée</option>
-                <option value="rejected">Rejetée</option>
-              </select>
-              <!-- Icône dropdown -->
-              <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+
+          <!-- Message d'erreur pour le changement de statut -->
+          <div v-if="statusError" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            {{ statusError }}
+            <button @click="statusError = null" class="ml-2 text-red-900 hover:text-red-700">
+              <svg class="h-4 w-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Messages pour la notification -->
+          <div v-if="notificationError" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            {{ notificationError }}
+            <button @click="notificationError = null" class="ml-2 text-red-900 hover:text-red-700">
+              <svg class="h-4 w-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+
+          <div v-if="notificationSuccess" class="mt-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+            {{ notificationSuccess }}
+            <button @click="notificationSuccess = null" class="ml-2 text-green-900 hover:text-green-700">
+              <svg class="h-4 w-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Section Date et heure mise en valeur (simplifiée) -->
+        <div class="mb-8 bg-gradient-to-r from-orange-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow p-6 border border-orange-200 dark:border-orange-800">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <!-- Date et heure principale -->
+            <div class="flex-1">
+              <div class="flex items-center mb-3">
+                <svg class="h-5 w-5 mr-2 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
+                <span class="text-sm font-medium text-orange-600 dark:text-orange-400">
+                  {{ activity.final_start_date ? 'DATE ET HEURE CONFIRMÉES' : 'DATE ET HEURE PROPOSÉES' }}
+                </span>
+              </div>
+              <div class="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+                {{ formatDateWithDay(activity.final_start_date || activity.proposed_start_date) }}
+              </div>
+              <div class="text-lg font-semibold text-gray-700 dark:text-gray-300">
+                {{ formatTimeRange(activity.final_start_date || activity.proposed_start_date, activity.final_end_date || activity.proposed_end_date) }}
+              </div>
+              <div v-if="activity.event?.timezone" class="text-sm text-gray-500 dark:text-gray-400 flex items-center mt-2">
+                <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                {{ getTimezoneLabel(activity.event.timezone, 'fr') }}
               </div>
             </div>
 
-            <!-- Bouton notification activité reçue -->
-            <button @click="sendActivityReceivedNotification"
-                    :disabled="isSendingNotification"
-                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
-              <div v-if="isSendingNotification" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-              <svg v-else class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-              </svg>
-              {{ isSendingNotification ? 'Envoi...' : 'Notifier réception' }}
-            </button>
-
-            <!-- Indicateur de chargement -->
-            <div v-if="isUpdatingStatus" class="flex items-center text-gray-500">
-              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-500 mr-2"></div>
-              <span class="text-sm">Mise à jour...</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Message d'erreur pour le changement de statut -->
-        <div v-if="statusError" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-          {{ statusError }}
-          <button @click="statusError = null" class="ml-2 text-red-900 hover:text-red-700">
-            <svg class="h-4 w-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-        </div>
-
-        <!-- Messages pour la notification -->
-        <div v-if="notificationError" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-          {{ notificationError }}
-          <button @click="notificationError = null" class="ml-2 text-red-900 hover:text-red-700">
-            <svg class="h-4 w-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-        </div>
-
-        <div v-if="notificationSuccess" class="mt-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
-          {{ notificationSuccess }}
-          <button @click="notificationSuccess = null" class="ml-2 text-green-900 hover:text-green-700">
-            <svg class="h-4 w-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Section Date et heure mise en valeur (simplifiée) -->
-      <div class="mb-8 bg-gradient-to-r from-orange-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow p-6 border border-orange-200 dark:border-orange-800">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <!-- Date et heure principale -->
-          <div class="flex-1">
-            <div class="flex items-center mb-3">
-              <svg class="h-5 w-5 mr-2 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-              </svg>
-              <span class="text-sm font-medium text-orange-600 dark:text-orange-400">
-                {{ activity.final_start_date ? 'DATE ET HEURE CONFIRMÉES' : 'DATE ET HEURE PROPOSÉES' }}
+            <!-- Format et Type (badges compacts) -->
+            <div class="flex flex-wrap gap-2">
+              <span class="px-3 py-1.5 text-sm font-medium rounded-full inline-flex items-center"
+                    :class="getActivityTypeClass(activity.activity_type)">
+                {{ getActivityTypeLabel(activity.activity_type) }}
+              </span>
+              <span class="px-3 py-1.5 text-sm font-medium rounded-full inline-flex items-center"
+                    :class="getFormatClass(activity.format)">
+                {{ getFormatLabel(activity.format) }}
               </span>
             </div>
-            <div class="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-              {{ formatDateWithDay(activity.final_start_date || activity.proposed_start_date) }}
-            </div>
-            <div class="text-lg font-semibold text-gray-700 dark:text-gray-300">
-              {{ formatTimeRange(activity.final_start_date || activity.proposed_start_date, activity.final_end_date || activity.proposed_end_date) }}
-            </div>
-            <div v-if="activity.event?.timezone" class="text-sm text-gray-500 dark:text-gray-400 flex items-center mt-2">
-              <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              {{ getTimezoneLabel(activity.event.timezone, 'fr') }}
-            </div>
-          </div>
-
-          <!-- Format et Type (badges compacts) -->
-          <div class="flex flex-wrap gap-2">
-            <span class="px-3 py-1.5 text-sm font-medium rounded-full inline-flex items-center"
-                  :class="getActivityTypeClass(activity.activity_type)">
-              {{ getActivityTypeLabel(activity.activity_type) }}
-            </span>
-            <span class="px-3 py-1.5 text-sm font-medium rounded-full inline-flex items-center"
-                  :class="getFormatClass(activity.format)">
-              {{ getFormatLabel(activity.format) }}
-            </span>
           </div>
         </div>
-      </div>
 
-      <!-- Détails de l'activité -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Informations principales -->
-        <div class="lg:col-span-2 space-y-6">
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h2 class="text-lg font-semibold mb-4">Description détaillée</h2>
-            <div class="prose dark:prose-invert max-w-none" v-html="activity.detailed_presentation"></div>
-          </div>
+        <!-- Détails de l'activité -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Informations principales -->
+          <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <h2 class="text-lg font-semibold mb-4">Description détaillée</h2>
+              <div class="prose dark:prose-invert max-w-none" v-html="activity.detailed_presentation"></div>
+            </div>
 
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h2 class="text-lg font-semibold mb-4">Objectifs</h2>
-            <div class="prose dark:prose-invert max-w-none" v-html="activity.objectives"></div>
-          </div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <h2 class="text-lg font-semibold mb-4">Objectifs</h2>
+              <div class="prose dark:prose-invert max-w-none" v-html="activity.objectives"></div>
+            </div>
 
-          <!-- Intervenants / Panelistes -->
-          <div v-if="speakers.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h2 class="text-lg font-semibold mb-4">Intervenants / Panélistes ({{ speakers.length }})</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div v-for="speaker in speakers" :key="speaker.id"
-                   class="flex items-start space-x-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
-                <img v-if="speaker.photo_url"
-                     :src="speaker.photo_thumbnail_url || speaker.photo_url"
-                     :alt="`${speaker.first_name} ${speaker.last_name}`"
-                     class="w-12 h-12 rounded-full object-cover">
-                <div v-else class="w-12 h-12 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
-                  <span class="text-lg font-semibold text-gray-600 dark:text-gray-300">
-                    {{ speaker.first_name[0] }}{{ speaker.last_name[0] }}
-                  </span>
-                </div>
-                <div class="flex-1">
-                  <p class="font-medium text-gray-900 dark:text-white">
-                    {{ speaker.civility }} {{ speaker.first_name }} {{ speaker.last_name }}
-                  </p>
-                  <p class="text-sm text-gray-600 dark:text-gray-300">{{ speaker.position }}</p>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">{{ speaker.organization }}</p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ speaker.email }}</p>
-                  <div class="mt-1 flex items-center space-x-2">
-                    <span v-if="speaker.has_confirmed_by_email"
-                          class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                      Email confirmé
+            <!-- Intervenants / Panelistes -->
+            <div v-if="speakers.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <h2 class="text-lg font-semibold mb-4">Intervenants / Panélistes ({{ speakers.length }})</h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div v-for="speaker in speakers" :key="speaker.id"
+                    class="flex items-start space-x-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
+                  <img v-if="speaker.photo_url"
+                      :src="speaker.photo_thumbnail_url || speaker.photo_url"
+                      :alt="`${speaker.first_name} ${speaker.last_name}`"
+                      class="w-12 h-12 rounded-full object-cover">
+                  <div v-else class="w-12 h-12 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                    <span class="text-lg font-semibold text-gray-600 dark:text-gray-300">
+                      {{ speaker.first_name[0] }}{{ speaker.last_name[0] }}
                     </span>
-                    <span v-if="speaker.is_available_for_questions"
-                          class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
-                      Disponible pour Q&R
-                    </span>
+                  </div>
+                  <div class="flex-1">
+                    <p class="font-medium text-gray-900 dark:text-white">
+                      {{ speaker.civility }} {{ speaker.first_name }} {{ speaker.last_name }}
+                    </p>
+                    <p class="text-sm text-gray-600 dark:text-gray-300">{{ speaker.position }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ speaker.organization }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ speaker.email }}</p>
+                    <div class="mt-1 flex items-center space-x-2">
+                      <span v-if="speaker.has_confirmed_by_email"
+                            class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                        Email confirmé
+                      </span>
+                      <span v-if="speaker.is_available_for_questions"
+                            class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                        Disponible pour Q&R
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Autres activités de l'organisation -->
-          <div v-if="organizationActivities.length > 0" class="bg-gray-50/50 dark:bg-gray-800/50 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 p-6 relative">
-            <!-- Badge indicateur optionnel -->
-            <div class="absolute -top-3 left-6 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">
-              <span class="text-xs font-medium text-gray-500 dark:text-gray-400 italic">Information complémentaire</span>
-            </div>
+            <!-- Autres activités de l'organisation -->
+            <div v-if="organizationActivities.length > 0" class="bg-gray-50/50 dark:bg-gray-800/50 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 p-6 relative">
+              <!-- Badge indicateur optionnel -->
+              <div class="absolute -top-3 left-6 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">
+                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 italic">Information complémentaire</span>
+              </div>
 
-            <h2 class="text-base font-medium mb-4 text-gray-700 dark:text-gray-300 flex items-center">
-              <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              Autres activités soumises par {{ activity.organization?.name }} ({{ organizationActivities.length }})
-            </h2>
+              <h2 class="text-base font-medium mb-4 text-gray-700 dark:text-gray-300 flex items-center">
+                <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Autres activités soumises par {{ activity.organization?.name }} ({{ organizationActivities.length }})
+              </h2>
 
-            <div v-if="isLoadingOrgActivities" class="flex items-center justify-center h-32">
-              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
-            </div>
+              <div v-if="isLoadingOrgActivities" class="flex items-center justify-center h-32">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+              </div>
 
-            <div v-else class="space-y-3">
-              <div v-for="otherActivity in organizationActivities" :key="otherActivity.id"
-                   class="bg-white/70 dark:bg-gray-900/30 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-white dark:hover:bg-gray-900/50 transition-all duration-200">
-                <div class="flex items-start justify-between">
-                  <div class="flex-1">
-                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">
-                      {{ otherActivity.title }}
-                    </h3>
-                    <div class="flex flex-wrap gap-2 mb-3">
-                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                            :class="{
-                              'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300': otherActivity.validation_status === 'draft',
-                              'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300': otherActivity.validation_status === 'submitted',
-                              'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300': otherActivity.validation_status === 'under_review',
-                              'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300': otherActivity.validation_status === 'approved',
-                              'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300': otherActivity.validation_status === 'rejected',
-                              'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300': otherActivity.validation_status === 'live',
-                              'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300': otherActivity.validation_status === 'completed'
-                            }">
-                        {{ getValidationStatusLabel(otherActivity.validation_status) }}
-                      </span>
-                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
-                        {{ getActivityTypeLabel(otherActivity.activity_type) }}
-                      </span>
-                    </div>
-
-                    <!-- Informations du soumissionnaire -->
-                    <div class="flex items-center space-x-3 mt-3 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
-                      <img v-if="otherActivity.submitted_user?.profile_photo_thumbnail_url || otherActivity.submitted_user?.profile_photo_url"
-                           :src="otherActivity.submitted_user.profile_photo_thumbnail_url || otherActivity.submitted_user.profile_photo_url"
-                           :alt="`${otherActivity.submitted_user.first_name} ${otherActivity.submitted_user.last_name}`"
-                           class="h-10 w-10 rounded-full object-cover">
-                      <div v-else class="h-10 w-10 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center">
-                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
+              <div v-else class="space-y-3">
+                <div v-for="otherActivity in organizationActivities" :key="otherActivity.id"
+                    class="bg-white/70 dark:bg-gray-900/30 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-white dark:hover:bg-gray-900/50 transition-all duration-200">
+                  <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                      <h3 class="font-semibold text-gray-900 dark:text-white mb-2">
+                        {{ otherActivity.title }}
+                      </h3>
+                      <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                              :class="{
+                                'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300': otherActivity.validation_status === 'draft',
+                                'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300': otherActivity.validation_status === 'submitted',
+                                'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300': otherActivity.validation_status === 'under_review',
+                                'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300': otherActivity.validation_status === 'approved',
+                                'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300': otherActivity.validation_status === 'rejected',
+                                'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300': otherActivity.validation_status === 'live',
+                                'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300': otherActivity.validation_status === 'completed'
+                              }">
+                          {{ getValidationStatusLabel(otherActivity.validation_status) }}
+                        </span>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                          {{ getActivityTypeLabel(otherActivity.activity_type) }}
+                        </span>
                       </div>
-                      <div class="flex-1">
-                        <p class="text-sm font-medium text-gray-900 dark:text-white">
-                          Soumis par : {{ otherActivity.submitted_user?.first_name }} {{ otherActivity.submitted_user?.last_name }}
+
+                      <!-- Informations du soumissionnaire -->
+                      <div class="flex items-center space-x-3 mt-3 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+                        <img v-if="otherActivity.submitted_user?.profile_photo_thumbnail_url || otherActivity.submitted_user?.profile_photo_url"
+                            :src="otherActivity.submitted_user.profile_photo_thumbnail_url || otherActivity.submitted_user.profile_photo_url"
+                            :alt="`${otherActivity.submitted_user.first_name} ${otherActivity.submitted_user.last_name}`"
+                            class="h-10 w-10 rounded-full object-cover">
+                        <div v-else class="h-10 w-10 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center">
+                          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                          </svg>
+                        </div>
+                        <div class="flex-1">
+                          <p class="text-sm font-medium text-gray-900 dark:text-white">
+                            Soumis par : {{ otherActivity.submitted_user?.first_name }} {{ otherActivity.submitted_user?.last_name }}
+                          </p>
+                          <p class="text-xs text-gray-500 dark:text-gray-400">{{ otherActivity.submitted_user?.email }}</p>
+                        </div>
+                      </div>
+
+                      <div class="mt-3 text-xs text-gray-500 dark:text-gray-400">
+                        <p>Créée le {{ formatDate(otherActivity.created_at) }}</p>
+                        <p v-if="otherActivity.proposed_start_date">
+                          Date proposée : {{ formatDate(otherActivity.proposed_start_date) }}
                         </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ otherActivity.submitted_user?.email }}</p>
                       </div>
                     </div>
 
-                    <div class="mt-3 text-xs text-gray-500 dark:text-gray-400">
-                      <p>Créée le {{ formatDate(otherActivity.created_at) }}</p>
-                      <p v-if="otherActivity.proposed_start_date">
-                        Date proposée : {{ formatDate(otherActivity.proposed_start_date) }}
+                    <router-link :to="`/admin/activities/${otherActivity.id}`"
+                                class="ml-4 px-3 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 cursor-pointer transition-colors">
+                      Consulter
+                    </router-link>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Documents supports -->
+            <div v-if="documents.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <h2 class="text-lg font-semibold mb-4">Documents supports ({{ documents.length }})</h2>
+              <div class="space-y-2">
+                <div v-for="doc in documents" :key="doc.id"
+                    class="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                  <div class="flex items-center space-x-3">
+                    <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    <div>
+                      <p class="font-medium text-gray-900 dark:text-white">{{ doc.title }}</p>
+                      <p class="text-sm text-gray-500 dark:text-gray-400">
+                        Types: {{ doc.types?.join(', ') || 'Document' }}
                       </p>
                     </div>
                   </div>
-
-                  <router-link :to="`/admin/activities/${otherActivity.id}`"
-                               class="ml-4 px-3 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 cursor-pointer transition-colors">
-                    Consulter
-                  </router-link>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Documents supports -->
-          <div v-if="documents.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h2 class="text-lg font-semibold mb-4">Documents supports ({{ documents.length }})</h2>
-            <div class="space-y-2">
-              <div v-for="doc in documents" :key="doc.id"
-                   class="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                <div class="flex items-center space-x-3">
-                  <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                  </svg>
-                  <div>
-                    <p class="font-medium text-gray-900 dark:text-white">{{ doc.title }}</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">
-                      Types: {{ doc.types?.join(', ') || 'Document' }}
-                    </p>
-                  </div>
-                </div>
-                <a :href="doc.file_url" target="_blank"
-                   class="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-blue-600 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800 cursor-pointer">
-                  <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                  </svg>
-                  Télécharger
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Sidebar avec métadonnées -->
-        <div class="space-y-6">
-          <!-- Statistiques -->
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold mb-4">Statistiques d'engagement</h3>
-            <div class="grid grid-cols-2 gap-4">
-              <div class="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                  {{ activity.activites_dashboard_view_count || 0 }}
-                </p>
-                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Vues dashboard</p>
-              </div>
-              <div class="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                <p class="text-2xl font-bold text-green-600 dark:text-green-400">
-                  {{ activity.send_activites_recu_email_count || 0 }}
-                </p>
-                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Emails envoyés</p>
-              </div>
-              <div class="text-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                  {{ registrations.length }}
-                </p>
-                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Inscriptions</p>
-              </div>
-              <div class="text-center p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
-                <p class="text-2xl font-bold text-orange-600 dark:text-orange-400">
-                  {{ speakers.length }}
-                </p>
-                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Intervenants</p>
-              </div>
-            </div>
-            <div v-if="activity.last_viewed_at" class="mt-3 text-xs text-gray-500 dark:text-gray-400 text-center">
-              Dernière vue: {{ formatDateTime(activity.last_viewed_at) }}
-            </div>
-          </div>
-
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold mb-4">Détails complémentaires</h3>
-            <dl class="space-y-3">
-              <div v-if="activity.youtube_link">
-                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Lien YouTube</dt>
-                <dd class="mt-1">
-                  <a :href="activity.youtube_link" target="_blank"
-                     class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline cursor-pointer">
-                    Voir sur YouTube
+                  <a :href="doc.file_url" target="_blank"
+                    class="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-blue-600 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800 cursor-pointer">
+                    <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Télécharger
                   </a>
-                </dd>
+                </div>
               </div>
-              <div v-if="activity.zoom_meeting_id">
-                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Réunion Zoom</dt>
-                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
-                  ID: {{ activity.zoom_meeting_id }}
-                </dd>
+            </div>
+          </div>
+
+          <!-- Sidebar avec métadonnées -->
+          <div class="space-y-6">
+            <!-- Statistiques -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <h3 class="text-lg font-semibold mb-4">Statistiques d'engagement</h3>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                    {{ activity.activites_dashboard_view_count || 0 }}
+                  </p>
+                  <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Vues dashboard</p>
+                </div>
+                <div class="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                  <p class="text-2xl font-bold text-green-600 dark:text-green-400">
+                    {{ activity.send_activites_recu_email_count || 0 }}
+                  </p>
+                  <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Emails envoyés</p>
+                </div>
+                <div class="text-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                  <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                    {{ registrations.length }}
+                  </p>
+                  <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Inscriptions</p>
+                </div>
+                <div class="text-center p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+                  <p class="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                    {{ speakers.length }}
+                  </p>
+                  <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Intervenants</p>
+                </div>
               </div>
-              <div>
-                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Soumis par</dt>
-                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
-                  {{ activity.submitted_user?.first_name }} {{ activity.submitted_user?.last_name }}
-                  <div class="text-xs text-gray-500 dark:text-gray-400">
+              <div v-if="activity.last_viewed_at" class="mt-3 text-xs text-gray-500 dark:text-gray-400 text-center">
+                Dernière vue: {{ formatDateTime(activity.last_viewed_at) }}
+              </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <h3 class="text-lg font-semibold mb-4">Détails complémentaires</h3>
+              <dl class="space-y-3">
+                <div v-if="activity.youtube_link">
+                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Lien YouTube</dt>
+                  <dd class="mt-1">
+                    <a :href="activity.youtube_link" target="_blank"
+                      class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline cursor-pointer">
+                      Voir sur YouTube
+                    </a>
+                  </dd>
+                </div>
+                <div v-if="activity.zoom_meeting_id">
+                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Réunion Zoom</dt>
+                  <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                    ID: {{ activity.zoom_meeting_id }}
+                  </dd>
+                </div>
+                <div>
+                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Soumis par</dt>
+                  <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                    {{ activity.submitted_user?.first_name }} {{ activity.submitted_user?.last_name }}
+                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                      {{ activity.submitted_user?.email }}
+                    </div>
+                  </dd>
+                </div>
+                <div>
+                  <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Soumis le</dt>
+                  <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                    {{ formatDate(activity.created_at) }}
+                  </dd>
+                </div>
+              </dl>
+            </div>
+
+            <!-- Soumissionnaire -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <h3 class="text-lg font-semibold mb-4 flex items-center justify-between">
+                <span>Soumis par</span>
+                <button
+                  @click="showChangeSubmitterModal = true"
+                  class="text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 cursor-pointer"
+                  title="Changer le soumissionnaire"
+                >
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                  </svg>
+                </button>
+              </h3>
+              <div class="flex items-center space-x-3">
+                <img v-if="activity.submitted_user?.profile_photo_url"
+                    :src="activity.submitted_user.profile_photo_url"
+                    :alt="`${activity.submitted_user.first_name} ${activity.submitted_user.last_name}`"
+                    class="h-12 w-12 rounded-full object-cover">
+                <div v-else class="h-12 w-12 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center">
+                  <span class="text-sm font-semibold text-gray-600 dark:text-gray-300">
+                    {{ activity.submitted_user?.first_name?.[0] }}{{ activity.submitted_user?.last_name?.[0] }}
+                  </span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                    {{ activity.submitted_user?.first_name }} {{ activity.submitted_user?.last_name }}
+                  </p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">
                     {{ activity.submitted_user?.email }}
-                  </div>
-                </dd>
-              </div>
-              <div>
-                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Soumis le</dt>
-                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
-                  {{ formatDate(activity.created_at) }}
-                </dd>
-              </div>
-            </dl>
-          </div>
-
-          <!-- Soumissionnaire -->
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold mb-4 flex items-center justify-between">
-              <span>Soumis par</span>
-              <button
-                @click="showChangeSubmitterModal = true"
-                class="text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 cursor-pointer"
-                title="Changer le soumissionnaire"
-              >
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                </svg>
-              </button>
-            </h3>
-            <div class="flex items-center space-x-3">
-              <img v-if="activity.submitted_user?.profile_photo_url"
-                   :src="activity.submitted_user.profile_photo_url"
-                   :alt="`${activity.submitted_user.first_name} ${activity.submitted_user.last_name}`"
-                   class="h-12 w-12 rounded-full object-cover">
-              <div v-else class="h-12 w-12 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center">
-                <span class="text-sm font-semibold text-gray-600 dark:text-gray-300">
-                  {{ activity.submitted_user?.first_name?.[0] }}{{ activity.submitted_user?.last_name?.[0] }}
-                </span>
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-semibold text-gray-900 dark:text-white">
-                  {{ activity.submitted_user?.first_name }} {{ activity.submitted_user?.last_name }}
-                </p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">
-                  {{ activity.submitted_user?.email }}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Nombre d'intervenants et documents -->
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold mb-4">Vue d'ensemble</h3>
-            <div class="space-y-3">
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-500 dark:text-gray-400">Intervenants</span>
-                <span class="text-lg font-bold text-blue-600 dark:text-blue-400">{{ speakers.length }}</span>
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-500 dark:text-gray-400">Documents</span>
-                <span class="text-lg font-bold text-green-600 dark:text-green-400">{{ documents.length }}</span>
-              </div>
-            </div>
-          </div>
-
-          <div v-if="activity.main_themes?.length" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold mb-4">Thématiques</h3>
-            <div class="flex flex-wrap gap-2">
-              <span v-for="theme in activity.main_themes" :key="theme"
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
-                {{ getThemeLabel(theme) }}
-              </span>
-            </div>
-          </div>
-
-          <div v-if="activity.categories?.length" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold mb-4">Catégories</h3>
-            <div class="flex flex-wrap gap-2">
-              <span v-for="category in activity.categories" :key="category"
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
-                {{ getCategoryLabel(category) }}
-              </span>
-            </div>
-          </div>
-
-          <div v-if="activity.tags?.length" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold mb-4">Tags</h3>
-            <div class="flex flex-wrap gap-2">
-              <span v-for="tag in activity.tags" :key="tag"
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300">
-                #{{ tag }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div v-else class="text-center py-12">
-      <p class="text-gray-500 dark:text-gray-400">Activité non trouvée</p>
-    </div>
-
-    <!-- Modal de validation -->
-    <div v-if="showValidationModal" class="fixed inset-0 z-50 overflow-y-auto">
-      <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="closeModal"></div>
-
-        <div class="relative bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all max-w-lg w-full mx-4 z-10">
-          <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">
-              Motif du rejet
-            </h3>
-
-            <!-- Message d'erreur -->
-            <div v-if="validationError" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-              {{ validationError }}
-            </div>
-
-            <textarea v-model="validationReason"
-                     placeholder="Expliquez brièvement pourquoi cette activité est rejetée..."
-                     rows="4"
-                     :disabled="isValidating"
-                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed">
-            </textarea>
-          </div>
-          <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-            <button @click="confirmValidation"
-                    :disabled="isValidating"
-                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed bg-red-600 hover:bg-red-700">
-              <div v-if="isValidating" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-              {{ isValidating ? 'En cours...' : 'Confirmer le rejet' }}
-            </button>
-            <button @click="closeModal"
-                    :disabled="isValidating"
-                    class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
-              Annuler
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal de confirmation générale pour changement de statut -->
-    <div v-if="showStatusConfirmModal" class="fixed inset-0 z-50 overflow-y-auto">
-      <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="closeStatusConfirmModal"></div>
-
-        <div class="relative bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all max-w-md w-full mx-4 z-10">
-          <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-            <div class="flex">
-              <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-orange-100 sm:mx-0 sm:h-10 sm:w-10">
-                <svg class="h-6 w-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                </svg>
-              </div>
-              <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
-                  Confirmer le changement de statut
-                </h3>
-                <div class="mt-2">
-                  <p class="text-sm text-gray-500 dark:text-gray-300">
-                    {{ getStatusChangeMessage() }}
                   </p>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-            <button @click="confirmStatusChange"
-                    :disabled="isUpdatingStatus"
-                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-orange-600 text-base font-medium text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed">
-              <div v-if="isUpdatingStatus" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-              {{ isUpdatingStatus ? 'En cours...' : 'Confirmer' }}
-            </button>
-            <button @click="closeStatusConfirmModal"
-                    :disabled="isUpdatingStatus"
-                    class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
-              Annuler
-            </button>
+
+            <!-- Nombre d'intervenants et documents -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <h3 class="text-lg font-semibold mb-4">Vue d'ensemble</h3>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-gray-500 dark:text-gray-400">Intervenants</span>
+                  <span class="text-lg font-bold text-blue-600 dark:text-blue-400">{{ speakers.length }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-gray-500 dark:text-gray-400">Documents</span>
+                  <span class="text-lg font-bold text-green-600 dark:text-green-400">{{ documents.length }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="activity.main_themes?.length" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <h3 class="text-lg font-semibold mb-4">Thématiques</h3>
+              <div class="flex flex-wrap gap-2">
+                <span v-for="theme in activity.main_themes" :key="theme"
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                  {{ getThemeLabel(theme) }}
+                </span>
+              </div>
+            </div>
+
+            <div v-if="activity.categories?.length" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <h3 class="text-lg font-semibold mb-4">Catégories</h3>
+              <div class="flex flex-wrap gap-2">
+                <span v-for="category in activity.categories" :key="category"
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
+                  {{ getCategoryLabel(category) }}
+                </span>
+              </div>
+            </div>
+
+            <div v-if="activity.tags?.length" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <h3 class="text-lg font-semibold mb-4">Tags</h3>
+              <div class="flex flex-wrap gap-2">
+                <span v-for="tag in activity.tags" :key="tag"
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300">
+                  #{{ tag }}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Modal de changement de soumissionnaire -->
-    <ChangeSubmitterModal
-      :show="showChangeSubmitterModal"
-      :current-submitter="activity?.submitted_user"
-      :activity-id="activity?.id"
-      @close="showChangeSubmitterModal = false"
-      @update="handleSubmitterUpdate"
-    />
+      <div v-else class="text-center py-12">
+        <p class="text-gray-500 dark:text-gray-400">Activité non trouvée</p>
+      </div>
+
+      <!-- Modal de validation -->
+      <div v-if="showValidationModal" class="fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20">
+          <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="closeModal"></div>
+
+          <div class="relative bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all max-w-lg w-full mx-4 z-10">
+            <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+              <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">
+                Motif du rejet
+              </h3>
+
+              <!-- Message d'erreur -->
+              <div v-if="validationError" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                {{ validationError }}
+              </div>
+
+              <textarea v-model="validationReason"
+                      placeholder="Expliquez brièvement pourquoi cette activité est rejetée..."
+                      rows="4"
+                      :disabled="isValidating"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed">
+              </textarea>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+              <button @click="confirmValidation"
+                      :disabled="isValidating"
+                      class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed bg-red-600 hover:bg-red-700">
+                <div v-if="isValidating" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                {{ isValidating ? 'En cours...' : 'Confirmer le rejet' }}
+              </button>
+              <button @click="closeModal"
+                      :disabled="isValidating"
+                      class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                Annuler
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal de confirmation générale pour changement de statut -->
+      <div v-if="showStatusConfirmModal" class="fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20">
+          <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="closeStatusConfirmModal"></div>
+
+          <div class="relative bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all max-w-md w-full mx-4 z-10">
+            <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+              <div class="flex">
+                <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-orange-100 sm:mx-0 sm:h-10 sm:w-10">
+                  <svg class="h-6 w-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                  </svg>
+                </div>
+                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                  <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+                    Confirmer le changement de statut
+                  </h3>
+                  <div class="mt-2">
+                    <p class="text-sm text-gray-500 dark:text-gray-300">
+                      {{ getStatusChangeMessage() }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+              <button @click="confirmStatusChange"
+                      :disabled="isUpdatingStatus"
+                      class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-orange-600 text-base font-medium text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                <div v-if="isUpdatingStatus" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                {{ isUpdatingStatus ? 'En cours...' : 'Confirmer' }}
+              </button>
+              <button @click="closeStatusConfirmModal"
+                      :disabled="isUpdatingStatus"
+                      class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                Annuler
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal de changement de soumissionnaire -->
+      <ChangeSubmitterModal
+        :show="showChangeSubmitterModal"
+        :current-submitter="activity?.submitted_user"
+        :activity-id="activity?.id"
+        @close="showChangeSubmitterModal = false"
+        @update="handleSubmitterUpdate"
+      />
     </div>
   </div>
 </template>
