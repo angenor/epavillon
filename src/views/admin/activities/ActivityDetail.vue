@@ -276,7 +276,10 @@
                   <div class="flex items-start justify-between">
                     <div class="flex-1">
                       <h3 class="font-semibold text-gray-900 dark:text-white mb-2">
-                        {{ otherActivity.title }}
+                        <router-link :to="{ name: 'admin-activity-detail', params: { id: otherActivity.id } }"
+                                     class="hover:text-orange-600 dark:hover:text-orange-400 transition-colors cursor-pointer">
+                          {{ otherActivity.title }}
+                        </router-link>
                       </h3>
                       <div class="flex flex-wrap gap-2 mb-3">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
