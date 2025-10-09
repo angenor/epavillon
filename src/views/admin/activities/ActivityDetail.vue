@@ -185,10 +185,22 @@
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{{ activity.title }}</h1>
 
                 <!-- Bannière 16:9 -->
-                <div v-if="activity.banner_url || activity.cover_image_high_url" class="relative aspect-[16/9] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
-                  <img :src="activity.banner_url || activity.cover_image_high_url"
+                <div class="relative aspect-[16/9] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
+                  <img v-if="activity.banner_url || activity.cover_image_high_url"
+                       :src="activity.banner_url || activity.cover_image_high_url"
                        :alt="activity.title"
                        class="w-full h-full object-cover">
+
+                  <!-- Image par défaut si pas de bannière -->
+                  <div v-else class="w-full h-full bg-gradient-to-br from-orange-100 to-blue-100 dark:from-orange-900 dark:to-blue-900 flex flex-col items-center justify-center">
+                    <svg class="w-24 h-24 text-orange-400 dark:text-orange-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 text-center px-4">
+                      <span class="font-medium">Image par défaut</span><br>
+                      <span class="text-xs">Aucune bannière définie par le soumissionnaire</span>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
