@@ -120,17 +120,38 @@
 
           <!-- Contenu -->
           <div class="flex items-start space-x-3 mt-1">
-            <!-- Logo de l'organisation -->
-            <div class="flex-shrink-0">
+            <!-- Logo de l'organisation avec indicateur de vue -->
+            <div class="flex-shrink-0 relative">
               <img
                 v-if="activity.organization?.logo_url"
                 :src="activity.organization.logo_url"
                 :alt="activity.organization.name"
-                class="w-10 h-10 rounded object-contain bg-gray-100 dark:bg-gray-700 p-1"
+                :class="[
+                  'w-10 h-10 rounded object-contain bg-gray-100 dark:bg-gray-700 p-1',
+                  hasViewedActivity(activity.id) ? 'opacity-60' : ''
+                ]"
               >
-              <div v-else class="w-10 h-10 rounded bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
+              <div
+                v-else
+                :class="[
+                  'w-10 h-10 rounded bg-gray-200 dark:bg-gray-600 flex items-center justify-center',
+                  hasViewedActivity(activity.id) ? 'opacity-60' : ''
+                ]"
+              >
                 <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+              </div>
+
+              <!-- Badge "vue" -->
+              <div
+                v-if="hasViewedActivity(activity.id)"
+                class="absolute -top-1 -right-1 bg-blue-500 dark:bg-blue-600 rounded-full p-0.5"
+                title="Activité déjà vue"
+              >
+                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                 </svg>
               </div>
             </div>
@@ -232,6 +253,7 @@ import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdminPanel } from '@/composables/useAdminPanel'
+import { useRevisionViews } from '@/composables/useRevisionViews'
 
 const props = defineProps({
   isOpen: {
@@ -249,6 +271,7 @@ const emit = defineEmits(['close', 'select'])
 const router = useRouter()
 const { supabase } = useSupabase()
 const { setReviewSidebarWidth } = useAdminPanel()
+const { viewedActivities, loadViewedActivities, recordActivityView, hasViewedActivity } = useRevisionViews()
 
 // État
 const activities = ref([])
@@ -380,7 +403,10 @@ const loadCountries = async () => {
   }
 }
 
-const selectActivity = (activityId) => {
+const selectActivity = async (activityId) => {
+  // Enregistrer que le révisionniste a vu cette activité
+  await recordActivityView(activityId)
+
   router.push(`/admin/activities/${activityId}`)
   emit('select', activityId)
 }
@@ -618,7 +644,8 @@ onMounted(async () => {
 
   await Promise.all([
     loadActivities(),
-    loadCountries()
+    loadCountries(),
+    loadViewedActivities() // Charger les activités déjà vues par le révisionniste
   ])
   await nextTick()
   // Scroll initial vers l'activité courante avec un délai
