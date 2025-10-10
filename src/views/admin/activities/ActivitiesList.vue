@@ -203,7 +203,7 @@
               <div class="flex items-start justify-between">
                 <div class="flex-1 mr-4">
                   <!-- Titre -->
-                  <h3 @click="viewActivity(activity)" class="text-base cursor-pointer font-semibold text-gray-900 dark:text-white line-clamp-2 mb-2"
+                  <h3 @click="viewActivity(activity)" class="text-base cursor-pointer hover:text-amber-500 font-semibold text-gray-900 dark:text-white line-clamp-2 mb-2"
                       :title="activity.title">
                     {{ activity.title }}
                   </h3>
