@@ -76,11 +76,11 @@
           <div
             v-for="comment in comments"
             :key="comment.id"
-            class="flex"
-            :class="comment.created_by === currentUser?.id ? 'justify-end' : 'justify-start'"
+            class="flex flex-col"
+            :class="comment.created_by === currentUser?.id ? 'items-end' : 'items-start'"
           >
             <div
-              class="max-w-[75%] rounded-2xl px-4 py-2"
+              class="max-w-[85%] rounded-2xl px-4 py-2 relative group"
               :class="
                 comment.created_by === currentUser?.id
                   ? 'bg-purple-500 text-white rounded-br-none'
@@ -88,19 +88,136 @@
               "
             >
               <!-- Author info for other users -->
-              <div v-if="comment.created_by !== currentUser?.id" class="text-xs opacity-75 mb-1">
+              <div v-if="comment.created_by !== currentUser?.id" class="text-xs opacity-75 mb-1 font-medium">
                 {{ comment.author_name || 'Révisionniste' }}
               </div>
 
-              <!-- Comment text -->
-              <p class="text-sm break-words">{{ comment.comment_text }}</p>
+              <!-- Edit mode -->
+              <div v-if="editingCommentId === comment.id && comment.created_by === currentUser?.id" class="space-y-2">
+                <textarea
+                  v-model="editCommentText"
+                  rows="3"
+                  class="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded text-gray-800 dark:text-white dark:bg-gray-600 focus:ring-2 focus:ring-purple-400"
+                  @keydown.esc="cancelEdit"
+                ></textarea>
 
-              <!-- Timestamp and sharing info -->
-              <div class="flex items-center justify-between mt-1 text-xs opacity-75">
-                <span>{{ formatTime(comment.created_at) }}</span>
-                <div v-if="comment.created_by === currentUser?.id" class="ml-2">
-                  <span v-if="comment.shared_with_submitter" title="Partagé avec le soumissionnaire">👤</span>
-                  <span v-if="comment.shared_with_revisionists?.length" :title="`Partagé avec ${comment.shared_with_revisionists.length} révisionniste(s)`">👥</span>
+                <!-- Edit sharing options -->
+                <div class="text-xs space-y-1">
+                  <p class="font-medium opacity-90 mb-1">Partager avec:</p>
+                  <label class="flex items-center space-x-2 cursor-pointer opacity-90 hover:opacity-100">
+                    <input
+                      v-model="editShareMode"
+                      type="radio"
+                      value="submitter"
+                      class="text-purple-300 focus:ring-purple-300"
+                    />
+                    <span>Soumissionnaire uniquement</span>
+                  </label>
+                  <label class="flex items-center space-x-2 cursor-pointer opacity-90 hover:opacity-100">
+                    <input
+                      v-model="editShareMode"
+                      type="radio"
+                      value="all_revisionists"
+                      class="text-purple-300 focus:ring-purple-300"
+                    />
+                    <span>Tous les révisionnistes</span>
+                  </label>
+                  <label class="flex items-center space-x-2 cursor-pointer opacity-90 hover:opacity-100">
+                    <input
+                      v-model="editShareMode"
+                      type="radio"
+                      value="specific_revisionists"
+                      class="text-purple-300 focus:ring-purple-300"
+                    />
+                    <span>Révisionnistes spécifiques</span>
+                  </label>
+                  <label class="flex items-center space-x-2 cursor-pointer opacity-90 hover:opacity-100">
+                    <input
+                      v-model="editShareMode"
+                      type="radio"
+                      value="all"
+                      class="text-purple-300 focus:ring-purple-300"
+                    />
+                    <span>Soumissionnaire + tous</span>
+                  </label>
+
+                  <!-- Specific revisionists selection for edit mode -->
+                  <div v-if="editShareMode === 'specific_revisionists'" class="mt-2 p-2 bg-white/10 rounded">
+                    <div class="max-h-24 overflow-y-auto space-y-1">
+                      <label
+                        v-for="revisionist in revisionists"
+                        :key="revisionist.id"
+                        class="flex items-center space-x-2 cursor-pointer hover:bg-white/10 rounded px-1 py-0.5"
+                      >
+                        <input
+                          v-model="editSelectedRevisionists"
+                          :value="revisionist.id"
+                          type="checkbox"
+                          class="rounded text-purple-300 focus:ring-purple-300"
+                        />
+                        <span class="text-xs">{{ revisionist.first_name }} {{ revisionist.last_name }}</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex space-x-2 pt-1">
+                  <button
+                    @click="saveEdit(comment)"
+                    class="px-3 py-1 bg-white/20 hover:bg-white/30 rounded text-xs cursor-pointer transition-colors"
+                  >
+                    Enregistrer
+                  </button>
+                  <button
+                    @click="cancelEdit"
+                    class="px-3 py-1 bg-white/10 hover:bg-white/20 rounded text-xs cursor-pointer transition-colors"
+                  >
+                    Annuler
+                  </button>
+                </div>
+              </div>
+
+              <!-- View mode -->
+              <div v-else>
+                <!-- Comment text -->
+                <p class="text-sm break-words whitespace-pre-wrap">{{ comment.comment_text }}</p>
+
+                <!-- Recipients info -->
+                <div class="mt-2 pt-2 border-t border-white/20 dark:border-gray-600/50 text-xs opacity-80">
+                  <div class="flex items-start space-x-1">
+                    <svg class="w-3 h-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                      <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                    </svg>
+                    <div class="flex-1">
+                      <span class="font-medium">Destinataires:</span>
+                      <div class="mt-1 space-y-0.5">
+                        <div v-if="comment.shared_with_submitter" class="flex items-center space-x-1">
+                          <span>• Soumissionnaire</span>
+                        </div>
+                        <div v-if="comment.shared_with_revisionists && comment.shared_with_revisionists.length > 0">
+                          <span>• {{ getRevisionistsNames(comment.shared_with_revisionists) }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Timestamp and actions -->
+                <div class="flex items-center justify-between mt-2 text-xs opacity-75">
+                  <span>{{ formatTime(comment.created_at) }}</span>
+                  <!-- Edit button for own comments -->
+                  <button
+                    v-if="comment.created_by === currentUser?.id"
+                    @click="startEdit(comment)"
+                    class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer hover:opacity-100 flex items-center space-x-1"
+                    title="Modifier"
+                  >
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                    <span>Modifier</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -281,6 +398,12 @@ const isSending = ref(false)
 const errorMessage = ref('')
 const unreadCount = ref(0)
 const messagesContainer = ref(null)
+
+// Edit mode variables
+const editingCommentId = ref(null)
+const editCommentText = ref('')
+const editShareMode = ref('all_revisionists')
+const editSelectedRevisionists = ref([])
 
 const toggleWidget = () => {
   isOpen.value = !isOpen.value
@@ -509,6 +632,145 @@ const formatTime = (dateString) => {
     day: 'numeric',
     month: 'short'
   })
+}
+
+// Fonction pour obtenir les noms des révisionnistes à partir de leurs IDs
+const getRevisionistsNames = (revisionistIds) => {
+  if (!revisionistIds || revisionistIds.length === 0) return ''
+
+  // Exclure l'utilisateur actuel de la liste
+  const otherRevisionists = revisionistIds.filter(id => id !== currentUser.value?.id)
+
+  if (otherRevisionists.length === 0) {
+    // Si seul l'utilisateur actuel est dans la liste
+    return 'Vous uniquement'
+  }
+
+  const names = otherRevisionists
+    .map(id => {
+      const rev = revisionists.value.find(r => r.id === id)
+      return rev ? `${rev.first_name} ${rev.last_name}` : null
+    })
+    .filter(name => name !== null)
+
+  // Ajouter "vous" si l'utilisateur actuel est dans la liste
+  if (revisionistIds.includes(currentUser.value?.id)) {
+    names.push('vous')
+  }
+
+  if (names.length === 0) return 'Révisionnistes sélectionnés'
+  if (names.length === 1) return names[0]
+  if (names.length === 2) return names.join(' et ')
+
+  return `${names.slice(0, -1).join(', ')} et ${names[names.length - 1]}`
+}
+
+// Démarrer l'édition d'un commentaire
+const startEdit = (comment) => {
+  editingCommentId.value = comment.id
+  editCommentText.value = comment.comment_text
+
+  // Déterminer le mode de partage actuel
+  const hasSubmitter = comment.shared_with_submitter
+  const hasRevisionists = comment.shared_with_revisionists && comment.shared_with_revisionists.length > 0
+  const allRevisionistsIds = revisionists.value.map(r => r.id)
+  const allSelected = hasRevisionists &&
+    allRevisionistsIds.every(id => comment.shared_with_revisionists.includes(id))
+
+  if (hasSubmitter && allSelected) {
+    editShareMode.value = 'all'
+    editSelectedRevisionists.value = [...allRevisionistsIds]
+  } else if (hasSubmitter && !hasRevisionists) {
+    editShareMode.value = 'submitter'
+    editSelectedRevisionists.value = []
+  } else if (!hasSubmitter && allSelected) {
+    editShareMode.value = 'all_revisionists'
+    editSelectedRevisionists.value = [...allRevisionistsIds]
+  } else if (!hasSubmitter && hasRevisionists) {
+    editShareMode.value = 'specific_revisionists'
+    editSelectedRevisionists.value = [...comment.shared_with_revisionists]
+  } else {
+    editShareMode.value = 'all_revisionists'
+    editSelectedRevisionists.value = [...allRevisionistsIds]
+  }
+}
+
+// Annuler l'édition
+const cancelEdit = () => {
+  editingCommentId.value = null
+  editCommentText.value = ''
+  editShareMode.value = 'all_revisionists'
+  editSelectedRevisionists.value = []
+}
+
+// Sauvegarder l'édition
+const saveEdit = async (comment) => {
+  if (!editCommentText.value.trim()) {
+    errorMessage.value = 'Le commentaire ne peut pas être vide'
+    return
+  }
+
+  if (editShareMode.value === 'specific_revisionists' && editSelectedRevisionists.value.length === 0) {
+    errorMessage.value = 'Veuillez sélectionner au moins un révisionniste'
+    return
+  }
+
+  try {
+    // Déterminer les destinataires selon le mode d'édition
+    let shareWithSubmitter = false
+    let shareWithRevisionistsList = null
+
+    switch(editShareMode.value) {
+      case 'submitter':
+        shareWithSubmitter = true
+        break
+      case 'all_revisionists':
+        shareWithRevisionistsList = revisionists.value.map(r => r.id)
+        if (!shareWithRevisionistsList.includes(currentUser.value.id)) {
+          shareWithRevisionistsList.push(currentUser.value.id)
+        }
+        break
+      case 'specific_revisionists':
+        shareWithRevisionistsList = [...editSelectedRevisionists.value]
+        if (!shareWithRevisionistsList.includes(currentUser.value.id)) {
+          shareWithRevisionistsList.push(currentUser.value.id)
+        }
+        break
+      case 'all':
+        shareWithSubmitter = true
+        shareWithRevisionistsList = revisionists.value.map(r => r.id)
+        if (!shareWithRevisionistsList.includes(currentUser.value.id)) {
+          shareWithRevisionistsList.push(currentUser.value.id)
+        }
+        break
+    }
+
+    const { error } = await supabase
+      .from('revision_comments')
+      .update({
+        comment_text: editCommentText.value.trim(),
+        shared_with_submitter: shareWithSubmitter,
+        shared_with_revisionists: shareWithRevisionistsList,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', comment.id)
+
+    if (error) throw error
+
+    // Mettre à jour localement
+    const commentIndex = comments.value.findIndex(c => c.id === comment.id)
+    if (commentIndex !== -1) {
+      comments.value[commentIndex].comment_text = editCommentText.value.trim()
+      comments.value[commentIndex].shared_with_submitter = shareWithSubmitter
+      comments.value[commentIndex].shared_with_revisionists = shareWithRevisionistsList
+    }
+
+    // Fermer le mode édition
+    cancelEdit()
+  } catch (error) {
+    console.error('Erreur lors de la modification du commentaire:', error)
+    errorMessage.value = error.message || 'Erreur lors de la modification'
+  }
 }
 
 // Subscription for real-time updates
