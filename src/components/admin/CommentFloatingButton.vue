@@ -343,25 +343,34 @@ const loadRevisionists = async () => {
       .from('user_roles')
       .select(`
         user_id,
-        user:users(id, first_name, last_name, email)
+        users!user_id(id, first_name, last_name, email)
       `)
       .eq('role', 'revisionniste')
       .eq('is_active', true)
-      .neq('user_id', currentUser.value?.id)
 
-    if (error) throw error
+    if (error) {
+      console.error('Erreur Supabase:', error)
+      throw error
+    }
 
-    revisionists.value = data?.map(r => ({
-      id: r.user.id,
-      first_name: r.user.first_name,
-      last_name: r.user.last_name,
-      email: r.user.email
-    })) || []
+    console.log('Données des révisionnistes récupérées:', data)
+
+    // Filtrer pour exclure l'utilisateur actuel et mapper les données
+    revisionists.value = data?.filter(r => r.user_id !== currentUser.value?.id)
+      .map(r => ({
+        id: r.users.id,
+        first_name: r.users.first_name,
+        last_name: r.users.last_name,
+        email: r.users.email
+      })) || []
+
+    console.log('Révisionnistes chargés:', revisionists.value.length, 'révisionniste(s)')
 
     // Initialiser selon le mode de partage par défaut
     updateSharingMode()
   } catch (error) {
     console.error('Erreur lors du chargement des révisionnistes:', error)
+    revisionists.value = []
   }
 }
 
@@ -420,13 +429,25 @@ const sendComment = async () => {
         break
       case 'all_revisionists':
         shareWithRevisionistsList = revisionists.value.map(r => r.id)
+        // Ajouter l'utilisateur actuel pour qu'il voie aussi son propre commentaire
+        if (!shareWithRevisionistsList.includes(currentUser.value.id)) {
+          shareWithRevisionistsList.push(currentUser.value.id)
+        }
         break
       case 'specific_revisionists':
-        shareWithRevisionistsList = selectedRevisionists.value
+        shareWithRevisionistsList = [...selectedRevisionists.value]
+        // Ajouter l'utilisateur actuel pour qu'il voie aussi son propre commentaire
+        if (!shareWithRevisionistsList.includes(currentUser.value.id)) {
+          shareWithRevisionistsList.push(currentUser.value.id)
+        }
         break
       case 'all':
         shareWithSubmitter = true
         shareWithRevisionistsList = revisionists.value.map(r => r.id)
+        // Ajouter l'utilisateur actuel pour qu'il voie aussi son propre commentaire
+        if (!shareWithRevisionistsList.includes(currentUser.value.id)) {
+          shareWithRevisionistsList.push(currentUser.value.id)
+        }
         break
     }
 
