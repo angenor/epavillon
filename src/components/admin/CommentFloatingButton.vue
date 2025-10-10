@@ -21,12 +21,12 @@
             d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
           />
         </svg>
-        <!-- Badge pour les nouveaux commentaires -->
+        <!-- Badge pour le nombre de commentaires -->
         <span
-          v-if="unreadCount > 0"
-          class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold"
+          v-if="comments.length > 0"
+          class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full min-w-6 h-6 px-1.5 flex items-center justify-center font-bold shadow-lg border-2 border-white"
         >
-          {{ unreadCount > 9 ? '9+' : unreadCount }}
+          {{ comments.length > 99 ? '99+' : comments.length }}
         </span>
       </div>
     </button>
@@ -408,7 +408,7 @@ const editSelectedRevisionists = ref([])
 const toggleWidget = () => {
   isOpen.value = !isOpen.value
   if (isOpen.value) {
-    resetState() // Réinitialiser l'état quand on ouvre
+    resetState(false) // Réinitialiser l'état quand on ouvre (sans effacer les commentaires)
     loadComments()
     loadRevisionists()
     unreadCount.value = 0
@@ -451,8 +451,10 @@ const toggleAllSpecificRevisionists = () => {
   }
 }
 
-const resetState = () => {
-  comments.value = []
+const resetState = (resetComments = false) => {
+  if (resetComments) {
+    comments.value = []
+  }
   newComment.value = ''
   shareMode.value = 'all_revisionists'
   selectedRevisionists.value = []
@@ -802,6 +804,8 @@ const subscribeToComments = () => {
 
 onMounted(() => {
   if (hasRole('revisionniste')) {
+    // Charger les commentaires au démarrage pour afficher le compteur
+    loadComments()
     subscribeToComments()
   }
 })
@@ -815,17 +819,19 @@ watch(() => props.activityId, (newId, oldId) => {
       subscription = null
     }
 
-    // Reset state when changing activity
-    resetState()
+    // Reset state when changing activity (ne pas effacer les commentaires, ils seront rechargés)
+    resetState(false)
 
-    // If widget is open, reload data for new activity
-    if (isOpen.value) {
-      loadComments()
-      loadRevisionists()
-    }
-
-    // Setup new subscription
+    // Setup new subscription and reload data
     if (hasRole('revisionniste')) {
+      // Toujours charger les commentaires pour afficher le compteur
+      loadComments()
+
+      // Si le widget est ouvert, charger aussi les révisionnistes
+      if (isOpen.value) {
+        loadRevisionists()
+      }
+
       subscribeToComments()
     }
   }
