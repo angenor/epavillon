@@ -175,11 +175,26 @@
                 </svg>
               </div>
 
-              <!-- Logo de l'organisation en overlay -->
+              <!-- Logo de l'organisation en overlay avec indicateur de vue -->
               <div v-if="activity.organization?.logo_url" class="absolute bottom-2 right-2 w-10 h-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-1 border border-gray-200 dark:border-gray-600">
                 <img :src="activity.organization.logo_url"
                      :alt="activity.organization.name"
-                     class="w-full h-full object-contain">
+                     :class="[
+                       'w-full h-full object-contain',
+                       hasViewedActivity(activity.id) ? 'opacity-60' : ''
+                     ]">
+
+                <!-- Badge "vue" -->
+                <div
+                  v-if="hasViewedActivity(activity.id)"
+                  class="absolute -top-1 -right-1 bg-blue-500 dark:bg-blue-600 rounded-full p-0.5"
+                  title="Activité déjà vue"
+                >
+                  <svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                  </svg>
+                </div>
               </div>
             </div>
 
@@ -423,7 +438,7 @@ const { supabase } = useSupabase()
 const { hasAdminRole, isLoadingRoles, loadUserRoles, validateActivity } = useAdmin()
 const { currentUser } = useAuth()
 const { openForActivity, canSendEmails } = useEmailModal()
-const { recordActivityView } = useRevisionViews()
+const { recordActivityView, loadViewedActivities, hasViewedActivity } = useRevisionViews()
 
 // État
 const isLoading = ref(true)
@@ -814,7 +829,8 @@ onMounted(async () => {
     await Promise.all([
       loadActivities(),
       loadEvents(),
-      loadCountries()
+      loadCountries(),
+      loadViewedActivities() // Charger les activités déjà vues par le révisionniste
     ])
   } catch (error) {
     console.error('Erreur:', error)
