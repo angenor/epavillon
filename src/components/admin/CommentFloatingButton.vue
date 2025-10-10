@@ -111,39 +111,70 @@
       <!-- Input area -->
       <div class="border-t dark:border-gray-700 p-4 flex-shrink-0">
         <!-- Sharing options -->
-        <div class="mb-3 space-y-2">
-          <label class="text-sm font-medium text-gray-700 dark:text-gray-300 block">
+        <div class="mb-3">
+          <label class="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-2">
             Partager avec:
           </label>
 
-          <!-- Share with submitter -->
-          <label class="flex items-center space-x-2 cursor-pointer">
-            <input
-              v-model="shareWithSubmitter"
-              type="checkbox"
-              class="rounded border-gray-300 text-purple-500 focus:ring-purple-500"
-            />
-            <span class="text-sm text-gray-700 dark:text-gray-300">Soumissionnaire</span>
-          </label>
-
-          <!-- Share with revisionists -->
-          <div>
-            <label class="flex items-center space-x-2 mb-2 cursor-pointer">
+          <!-- Radio buttons for main choice -->
+          <div class="space-y-2">
+            <!-- Option 1: Soumissionnaire seulement -->
+            <label class="flex items-center space-x-2 cursor-pointer">
               <input
-                v-model="shareWithAllRevisionists"
-                type="checkbox"
-                class="rounded border-gray-300 text-purple-500 focus:ring-purple-500"
-                @change="toggleAllRevisionists"
+                v-model="shareMode"
+                type="radio"
+                value="submitter"
+                class="border-gray-300 text-purple-500 focus:ring-purple-500"
+                @change="updateSharingMode"
+              />
+              <span class="text-sm text-gray-700 dark:text-gray-300">Soumissionnaire uniquement</span>
+            </label>
+
+            <!-- Option 2: Tous les révisionnistes -->
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input
+                v-model="shareMode"
+                type="radio"
+                value="all_revisionists"
+                class="border-gray-300 text-purple-500 focus:ring-purple-500"
+                @change="updateSharingMode"
               />
               <span class="text-sm text-gray-700 dark:text-gray-300">Tous les révisionnistes</span>
             </label>
 
-            <!-- Individual revisionists selection -->
-            <div v-if="!shareWithAllRevisionists && revisionists.length > 0" class="ml-6 space-y-1 max-h-24 overflow-y-auto">
+            <!-- Option 3: Révisionnistes spécifiques -->
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input
+                v-model="shareMode"
+                type="radio"
+                value="specific_revisionists"
+                class="border-gray-300 text-purple-500 focus:ring-purple-500"
+                @change="updateSharingMode"
+              />
+              <span class="text-sm text-gray-700 dark:text-gray-300">Révisionnistes spécifiques</span>
+            </label>
+
+            <!-- Option 4: Soumissionnaire et tous les révisionnistes -->
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input
+                v-model="shareMode"
+                type="radio"
+                value="all"
+                class="border-gray-300 text-purple-500 focus:ring-purple-500"
+                @change="updateSharingMode"
+              />
+              <span class="text-sm text-gray-700 dark:text-gray-300">Soumissionnaire et tous les révisionnistes</span>
+            </label>
+          </div>
+
+          <!-- Liste des révisionnistes spécifiques -->
+          <div v-if="shareMode === 'specific_revisionists' && revisionists.length > 0" class="mt-3 ml-6 p-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+            <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">Sélectionnez les révisionnistes:</p>
+            <div class="space-y-1 max-h-32 overflow-y-auto">
               <label
                 v-for="revisionist in revisionists"
                 :key="revisionist.id"
-                class="flex items-center space-x-2 cursor-pointer"
+                class="flex items-center space-x-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600/50 rounded px-2 py-1"
               >
                 <input
                   v-model="selectedRevisionists"
@@ -151,10 +182,13 @@
                   type="checkbox"
                   class="rounded border-gray-300 text-purple-500 focus:ring-purple-500"
                 />
-                <span class="text-xs text-gray-600 dark:text-gray-400">
+                <span class="text-xs text-gray-700 dark:text-gray-300">
                   {{ revisionist.first_name }} {{ revisionist.last_name }}
                 </span>
               </label>
+              <div v-if="selectedRevisionists.length === 0" class="text-xs text-orange-600 dark:text-orange-400 px-2 py-1">
+                ⚠️ Veuillez sélectionner au moins un révisionniste
+              </div>
             </div>
           </div>
         </div>
@@ -171,9 +205,9 @@
           ></textarea>
           <button
             @click="sendComment"
-            :disabled="!newComment.trim() || isSending || (!shareWithSubmitter && selectedRevisionists.length === 0)"
+            :disabled="!newComment.trim() || isSending || (shareMode === 'specific_revisionists' && selectedRevisionists.length === 0)"
             class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
-            :title="!shareWithSubmitter && selectedRevisionists.length === 0 ? 'Sélectionnez au moins un destinataire' : ''"
+            :title="shareMode === 'specific_revisionists' && selectedRevisionists.length === 0 ? 'Sélectionnez au moins un révisionniste' : ''"
           >
             <svg v-if="isSending" class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -214,8 +248,7 @@ const { hasRole } = useAdmin()
 const isOpen = ref(false)
 const comments = ref([])
 const newComment = ref('')
-const shareWithSubmitter = ref(false)
-const shareWithAllRevisionists = ref(true)
+const shareMode = ref('all_revisionists') // Mode de partage par défaut
 const selectedRevisionists = ref([])
 const revisionists = ref([])
 const isLoadingComments = ref(false)
@@ -227,18 +260,38 @@ const messagesContainer = ref(null)
 const toggleWidget = () => {
   isOpen.value = !isOpen.value
   if (isOpen.value) {
+    resetState() // Réinitialiser l'état quand on ouvre
     loadComments()
     loadRevisionists()
     unreadCount.value = 0
   }
 }
 
-const toggleAllRevisionists = () => {
-  if (shareWithAllRevisionists.value) {
-    selectedRevisionists.value = revisionists.value.map(r => r.id)
-  } else {
-    selectedRevisionists.value = []
+const updateSharingMode = () => {
+  errorMessage.value = '' // Clear error when changing mode
+
+  switch(shareMode.value) {
+    case 'all_revisionists':
+      selectedRevisionists.value = revisionists.value.map(r => r.id)
+      break
+    case 'specific_revisionists':
+      selectedRevisionists.value = []
+      break
+    case 'submitter':
+      selectedRevisionists.value = []
+      break
+    case 'all':
+      selectedRevisionists.value = revisionists.value.map(r => r.id)
+      break
   }
+}
+
+const resetState = () => {
+  comments.value = []
+  newComment.value = ''
+  shareMode.value = 'all_revisionists'
+  selectedRevisionists.value = []
+  errorMessage.value = ''
 }
 
 const loadRevisionists = async () => {
@@ -263,10 +316,8 @@ const loadRevisionists = async () => {
       email: r.user.email
     })) || []
 
-    // Par défaut, sélectionner tous les révisionnistes
-    if (shareWithAllRevisionists.value) {
-      selectedRevisionists.value = revisionists.value.map(r => r.id)
-    }
+    // Initialiser selon le mode de partage par défaut
+    updateSharingMode()
   } catch (error) {
     console.error('Erreur lors du chargement des révisionnistes:', error)
   }
@@ -306,8 +357,10 @@ const loadComments = async () => {
 
 const sendComment = async () => {
   if (!newComment.value.trim() || !currentUser.value) return
-  if (!shareWithSubmitter.value && selectedRevisionists.value.length === 0) {
-    errorMessage.value = 'Veuillez sélectionner au moins un destinataire'
+
+  // Validation selon le mode de partage
+  if (shareMode.value === 'specific_revisionists' && selectedRevisionists.value.length === 0) {
+    errorMessage.value = 'Veuillez sélectionner au moins un révisionniste'
     return
   }
 
@@ -315,12 +368,32 @@ const sendComment = async () => {
   errorMessage.value = ''
 
   try {
+    // Déterminer les destinataires selon le mode
+    let shareWithSubmitter = false
+    let shareWithRevisionistsList = null
+
+    switch(shareMode.value) {
+      case 'submitter':
+        shareWithSubmitter = true
+        break
+      case 'all_revisionists':
+        shareWithRevisionistsList = revisionists.value.map(r => r.id)
+        break
+      case 'specific_revisionists':
+        shareWithRevisionistsList = selectedRevisionists.value
+        break
+      case 'all':
+        shareWithSubmitter = true
+        shareWithRevisionistsList = revisionists.value.map(r => r.id)
+        break
+    }
+
     const commentData = {
       activity_id: props.activityId,
       created_by: currentUser.value.id,
       comment_text: newComment.value.trim(),
-      shared_with_submitter: shareWithSubmitter.value,
-      shared_with_revisionists: selectedRevisionists.value.length > 0 ? selectedRevisionists.value : null
+      shared_with_submitter: shareWithSubmitter,
+      shared_with_revisionists: shareWithRevisionistsList
     }
 
     const { error } = await supabase
@@ -408,13 +481,28 @@ onMounted(() => {
   }
 })
 
-// Cleanup subscription
-watch(() => props.activityId, () => {
-  if (subscription) {
-    supabase.removeChannel(subscription)
-  }
-  if (hasRole('revisionniste')) {
-    subscribeToComments()
+// Cleanup subscription and reload data when activity changes
+watch(() => props.activityId, (newId, oldId) => {
+  if (newId !== oldId) {
+    // Cleanup old subscription
+    if (subscription) {
+      supabase.removeChannel(subscription)
+      subscription = null
+    }
+
+    // Reset state when changing activity
+    resetState()
+
+    // If widget is open, reload data for new activity
+    if (isOpen.value) {
+      loadComments()
+      loadRevisionists()
+    }
+
+    // Setup new subscription
+    if (hasRole('revisionniste')) {
+      subscribeToComments()
+    }
   }
 })
 </script>

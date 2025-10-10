@@ -134,7 +134,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAuth } from '@/composables/useAuth'
 
@@ -241,6 +241,27 @@ const saveRating = async () => {
     isSaving.value = false
   }
 }
+
+// Watch for activity changes
+watch(() => props.activityId, (newId, oldId) => {
+  if (newId !== oldId) {
+    // Reset state when activity changes
+    rating.value = null
+    comment.value = ''
+    currentRating.value = null
+    hasRating.value = false
+    successMessage.value = ''
+    errorMessage.value = ''
+
+    // Close widget if open
+    if (isOpen.value) {
+      isOpen.value = false
+    }
+
+    // Load rating for new activity
+    loadExistingRating()
+  }
+})
 
 onMounted(() => {
   loadExistingRating()
