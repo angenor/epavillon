@@ -262,6 +262,14 @@
                            loading="lazy">
                       <span>{{ activity.organization.country.name_fr }}</span>
                     </div>
+
+                    <!-- Nombre de commentaires -->
+                    <div v-if="activity.comments_count > 0" class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-red-500 text-white">
+                      <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                      </svg>
+                      {{ activity.comments_count }}
+                    </div>
                   </div>
                 </div>
 
@@ -598,7 +606,22 @@ const loadActivities = async () => {
 
     if (error) throw error
 
-    activities.value = data || []
+    // Charger le nombre de commentaires pour chaque activité
+    const activitiesWithComments = await Promise.all(
+      (data || []).map(async (activity) => {
+        const { count } = await supabase
+          .from('revision_comments')
+          .select('*', { count: 'exact', head: true })
+          .eq('activity_id', activity.id)
+
+        return {
+          ...activity,
+          comments_count: count || 0
+        }
+      })
+    )
+
+    activities.value = activitiesWithComments
     calculateStats()
   } catch (error) {
     console.error('Erreur lors du chargement des activités:', error)
