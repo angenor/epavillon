@@ -50,9 +50,11 @@
 
       <!-- Navigation -->
       <nav class="mt-8 space-y-2" :class="isActivityReviewMode || collapsed ? 'px-2' : 'px-4'">
+        <!-- Liens accessibles (router-link) -->
         <router-link
           v-for="item in navigation"
-          :key="item.name"
+          v-show="isLinkAccessible(item)"
+          :key="item.name + '-link'"
           :to="item.href"
           :class="[
             'group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 relative',
@@ -76,6 +78,29 @@
             {{ t(item.name) }}
           </span>
         </router-link>
+
+        <!-- Liens verrouillés (div) -->
+        <div
+          v-for="item in navigation"
+          v-show="isLinkLocked(item)"
+          :key="item.name + '-locked'"
+          :class="[
+            'group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 relative',
+            'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400',
+            isActivityReviewMode || collapsed ? 'justify-center' : ''
+          ]"
+          :title="isActivityReviewMode || collapsed ? t(item.name) + ' (Verrouillé)' : 'Accès restreint aux administrateurs'"
+        >
+          <font-awesome-icon
+            :icon="['fas', 'lock']"
+            :class="[
+              'h-5 w-5 flex-shrink-0 text-gray-400',
+              !isActivityReviewMode && !collapsed ? 'mr-3' : ''
+            ]" />
+          <span v-if="!isActivityReviewMode && !collapsed" class="transition-opacity duration-300">
+            {{ t(item.name) }}
+          </span>
+        </div>
       </nav>
 
       <!-- User Info -->
@@ -186,7 +211,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 const { t } = useI18n()
 const route = useRoute()
 const { currentUser } = useAuth()
-const { getUserRole, loadUserRoles, canAccessAdmin, isLoadingRoles } = useAdmin()
+const { getUserRole, loadUserRoles, canAccessAdmin, isLoadingRoles, hasAdminRole, hasReviewerRole } = useAdmin()
 const { isCollapsed: collapsed, isActivityReviewMode, isReviewSidebarOpen, reviewSidebarWidth, toggleCollapsed: toggleCollapsedState } = useAdminPanel()
 
 // État
@@ -198,62 +223,74 @@ const navigation = [
   {
     name: 'admin.nav.dashboard',
     href: '/admin',
-    icon: ['fas', 'tachometer-alt']
+    icon: ['fas', 'tachometer-alt'],
+    requiresAdmin: true
   },
   {
     name: 'admin.nav.users',
     href: '/admin/users',
-    icon: ['fas', 'users']
+    icon: ['fas', 'users'],
+    requiresAdmin: true
   },
   {
     name: 'admin.nav.activities',
     href: '/admin/activities',
-    icon: ['fas', 'calendar-check']
+    icon: ['fas', 'calendar-check'],
+    requiresAdmin: false // Accessible aux révisionnistes
   },
   {
     name: 'admin.nav.organizations',
     href: '/admin/organizations',
-    icon: ['fas', 'building']
+    icon: ['fas', 'building'],
+    requiresAdmin: true
   },
   {
     name: 'admin.nav.events',
     href: '/admin/events',
-    icon: ['fas', 'calendar-alt']
+    icon: ['fas', 'calendar-alt'],
+    requiresAdmin: true
   },
   {
     name: 'admin.nav.trainings',
     href: '/admin/trainings',
-    icon: ['fas', 'graduation-cap']
+    icon: ['fas', 'graduation-cap'],
+    requiresAdmin: true
   },
   {
     name: 'admin.nav.content',
     href: '/admin/content',
-    icon: ['fas', 'file-alt']
+    icon: ['fas', 'file-alt'],
+    requiresAdmin: true
   },
   {
     name: 'admin.nav.communications',
     href: '/admin/communications',
-    icon: ['fas', 'bullhorn']
+    icon: ['fas', 'bullhorn'],
+    requiresAdmin: true
   },
   {
     name: 'admin.nav.emails',
     href: '/admin/emails',
-    icon: ['fas', 'envelope']
+    icon: ['fas', 'envelope'],
+    requiresAdmin: true
   },
   {
     name: 'admin.nav.reports',
     href: '/admin/reports',
-    icon: ['fas', 'chart-bar']
+    icon: ['fas', 'chart-bar'],
+    requiresAdmin: true
   },
   {
     name: 'admin.nav.roles',
     href: '/admin/roles',
-    icon: ['fas', 'user-shield']
+    icon: ['fas', 'user-shield'],
+    requiresAdmin: true
   },
   {
     name: 'admin.nav.negotiations',
     href: '/admin/negotiations',
-    icon: ['fas', 'handshake']
+    icon: ['fas', 'handshake'],
+    requiresAdmin: true
   }
 ]
 
@@ -274,6 +311,21 @@ const breadcrumbs = computed(() => {
 
   return breadcrumbs
 })
+
+// Fonction pour vérifier si un lien est accessible
+const isLinkAccessible = (item) => {
+  // Si le lien ne nécessite pas d'être admin, il est accessible à tous (révisionnistes et admins)
+  if (!item.requiresAdmin) {
+    return true
+  }
+  // Sinon, seuls les admins/super_admins y ont accès
+  return hasAdminRole.value
+}
+
+// Fonction pour vérifier si un lien est verrouillé
+const isLinkLocked = (item) => {
+  return item.requiresAdmin && !hasAdminRole.value
+}
 
 // Méthodes
 const isActiveRoute = (href) => {

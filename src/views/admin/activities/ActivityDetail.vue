@@ -662,7 +662,7 @@ import CommentFloatingButton from '@/components/admin/CommentFloatingButton.vue'
 const route = useRoute()
 const router = useRouter()
 const { supabase } = useSupabase()
-const { hasAdminRole, isLoadingRoles, loadUserRoles, validateActivity, hasRole } = useAdmin()
+const { hasReviewerOrAdminRole, isLoadingRoles, loadUserRoles, validateActivity, hasRole } = useAdmin()
 const { currentUser } = useAuth()
 const { getCityFromTimezone, formatDateTimeWithTimezone, getTimezoneLabel } = useTimezone()
 const { enableActivityReviewMode, disableActivityReviewMode, closeReviewSidebar: closeReviewSidebarState, isReviewSidebarOpen, reviewSidebarWidth } = useAdminPanel()
@@ -700,7 +700,7 @@ const isResettingView = ref(false)
 
 const checkAccess = async () => {
   await loadUserRoles()
-  if (!hasAdminRole.value) {
+  if (!hasReviewerOrAdminRole.value) {
     throw new Error('Accès non autorisé')
   }
 }

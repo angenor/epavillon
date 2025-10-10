@@ -217,102 +217,121 @@ const router = createRouter({
     {
       path: '/admin',
       component: () => import('../views/admin/AdminLayout.vue'),
-      meta: { requiresAuth: true, requiresRole: ['admin', 'super_admin'] },
+      meta: { requiresAuth: true, requiresRole: ['admin', 'super_admin', 'revisionniste'] },
       children: [
         {
           path: '',
           name: 'admin-dashboard',
-          component: () => import('../views/admin/Dashboard.vue')
+          component: () => import('../views/admin/Dashboard.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         },
         {
           path: 'users',
           name: 'admin-users',
-          component: () => import('../views/admin/users/UsersList.vue')
+          component: () => import('../views/admin/users/UsersList.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         },
         {
           path: 'users/:id',
           name: 'admin-user-detail',
-          component: () => import('../views/admin/users/UserDetail.vue')
+          component: () => import('../views/admin/users/UserDetail.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         },
         {
           path: 'users/:id/edit',
           name: 'admin-user-edit',
-          component: () => import('../views/admin/users/UserEdit.vue')
+          component: () => import('../views/admin/users/UserEdit.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         },
         {
           path: 'activities',
           name: 'admin-activities',
-          component: () => import('../views/admin/activities/ActivitiesList.vue')
+          component: () => import('../views/admin/activities/ActivitiesList.vue'),
+          meta: { requiresRole: ['admin', 'super_admin', 'revisionniste'] }
         },
         {
           path: 'activities/:id',
           name: 'admin-activity-detail',
-          component: () => import('../views/admin/activities/ActivityDetail.vue')
+          component: () => import('../views/admin/activities/ActivityDetail.vue'),
+          meta: { requiresRole: ['admin', 'super_admin', 'revisionniste'] }
         },
         {
           path: 'organizations',
           name: 'admin-organizations',
-          component: () => import('../views/admin/organizations/OrganizationsList.vue')
+          component: () => import('../views/admin/organizations/OrganizationsList.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         },
         {
           path: 'organizations/:id',
           name: 'admin-organization-detail',
-          component: () => import('../views/admin/organizations/OrganizationDetail.vue')
+          component: () => import('../views/admin/organizations/OrganizationDetail.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         },
         {
           path: 'events',
           name: 'admin-events',
-          component: () => import('../views/admin/events/EventsList.vue')
+          component: () => import('../views/admin/events/EventsList.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         },
         {
           path: 'events/create',
           name: 'admin-event-create',
-          component: () => import('../views/admin/events/EventCreate.vue')
+          component: () => import('../views/admin/events/EventCreate.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         },
         {
           path: 'events/:id',
           name: 'admin-event-detail',
-          component: () => import('../views/admin/events/EventDetail.vue')
+          component: () => import('../views/admin/events/EventDetail.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         },
         {
           path: 'trainings',
           name: 'admin-trainings',
-          component: () => import('../views/admin/trainings/TrainingsList.vue')
+          component: () => import('../views/admin/trainings/TrainingsList.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         },
         {
           path: 'content',
           name: 'admin-content',
-          component: () => import('../views/admin/content/ContentModeration.vue')
+          component: () => import('../views/admin/content/ContentModeration.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         },
         {
           path: 'communications',
           name: 'admin-communications',
-          component: () => import('../views/admin/communications/Communications.vue')
+          component: () => import('../views/admin/communications/Communications.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         },
         {
           path: 'reports',
           name: 'admin-reports',
-          component: () => import('../views/admin/reports/Reports.vue')
+          component: () => import('../views/admin/reports/Reports.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         },
         {
           path: 'roles',
           name: 'admin-roles',
-          component: () => import('../views/admin/roles/RolesList.vue')
+          component: () => import('../views/admin/roles/RolesList.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         },
         {
           path: 'negotiations',
           name: 'admin-negotiations',
-          component: () => import('../views/admin/negotiations/NegotiationsList.vue')
+          component: () => import('../views/admin/negotiations/NegotiationsList.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         },
         {
           path: 'negotiations/sessions/:id',
           name: 'admin-session-detail',
-          component: () => import('../views/admin/negotiations/SessionDetail.vue')
+          component: () => import('../views/admin/negotiations/SessionDetail.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         },
         {
           path: 'emails',
           name: 'admin-emails',
-          component: () => import('../views/admin/EmailManager.vue')
+          component: () => import('../views/admin/EmailManager.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         }
       ]
     },

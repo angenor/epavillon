@@ -435,7 +435,7 @@ import * as XLSX from 'xlsx'
 const { t } = useI18n()
 const router = useRouter()
 const { supabase } = useSupabase()
-const { hasAdminRole, isLoadingRoles, loadUserRoles, validateActivity } = useAdmin()
+const { hasReviewerOrAdminRole, isLoadingRoles, loadUserRoles, validateActivity } = useAdmin()
 const { currentUser } = useAuth()
 const { openForActivity, canSendEmails } = useEmailModal()
 const { recordActivityView, loadViewedActivities, hasViewedActivity } = useRevisionViews()
@@ -473,7 +473,7 @@ const stats = ref({
 const checkAccess = async () => {
   await loadUserRoles()
 
-  if (!hasAdminRole.value) {
+  if (!hasReviewerOrAdminRole.value) {
     throw new Error('Accès non autorisé')
   }
 }

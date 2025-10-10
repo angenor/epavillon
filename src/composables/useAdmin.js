@@ -12,19 +12,31 @@ const isLoadingRoles = ref(true)
 export const useAdmin = () => {
   // Computed pour vérifier les rôles
   const hasAdminRole = computed(() => {
-    return userRoles.value.some(role => 
+    return userRoles.value.some(role =>
       ['admin', 'super_admin'].includes(role.role) && role.is_active
     )
   })
 
   const hasSuperAdminRole = computed(() => {
-    return userRoles.value.some(role => 
+    return userRoles.value.some(role =>
       role.role === 'super_admin' && role.is_active
     )
   })
 
+  const hasReviewerRole = computed(() => {
+    return userRoles.value.some(role =>
+      role.role === 'revisionniste' && role.is_active
+    )
+  })
+
+  const hasReviewerOrAdminRole = computed(() => {
+    return userRoles.value.some(role =>
+      ['admin', 'super_admin', 'revisionniste'].includes(role.role) && role.is_active
+    )
+  })
+
   const hasRole = (roleName) => {
-    return userRoles.value.some(role => 
+    return userRoles.value.some(role =>
       role.role === roleName && role.is_active
     )
   }
@@ -355,6 +367,8 @@ export const useAdmin = () => {
     // Computed
     hasAdminRole,
     hasSuperAdminRole,
+    hasReviewerRole,
+    hasReviewerOrAdminRole,
     canAccessAdmin,
 
     // Méthodes de vérification
