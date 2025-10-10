@@ -8,6 +8,12 @@
       @select="handleActivitySelect"
     />
 
+    <!-- Boutons flottants pour les révisionnistes -->
+    <template v-if="isRevisionist && activity">
+      <RatingFloatingButton :activity-id="activity.id" />
+      <CommentFloatingButton :activity-id="activity.id" />
+    </template>
+
     <!-- Contenu principal avec marge ajustée -->
     <div :style="isReviewSidebarOpen ? { marginLeft: reviewSidebarWidth + 'px', transition: 'margin-left 0.3s' } : { marginLeft: '0', transition: 'margin-left 0.3s' }">
       <div v-if="isLoadingRoles || isLoading" class="flex items-center justify-center min-h-screen">
@@ -628,11 +634,13 @@ import { useTimezone } from '@/composables/useTimezone'
 import { useAdminPanel } from '@/composables/useAdminPanel'
 import ChangeSubmitterModal from '@/components/admin/ChangeSubmitterModal.vue'
 import ActivityReviewSidebar from '@/components/admin/ActivityReviewSidebar.vue'
+import RatingFloatingButton from '@/components/admin/RatingFloatingButton.vue'
+import CommentFloatingButton from '@/components/admin/CommentFloatingButton.vue'
 
 const route = useRoute()
 const router = useRouter()
 const { supabase } = useSupabase()
-const { hasAdminRole, isLoadingRoles, loadUserRoles, validateActivity } = useAdmin()
+const { hasAdminRole, isLoadingRoles, loadUserRoles, validateActivity, hasRole } = useAdmin()
 const { currentUser } = useAuth()
 const { getCityFromTimezone, formatDateTimeWithTimezone, getTimezoneLabel } = useTimezone()
 const { enableActivityReviewMode, disableActivityReviewMode, closeReviewSidebar: closeReviewSidebarState, isReviewSidebarOpen, reviewSidebarWidth } = useAdminPanel()
@@ -659,6 +667,9 @@ const showChangeSubmitterModal = ref(false)
 const activityId = computed(() => route.params.id)
 const organizationActivities = ref([])
 const isLoadingOrgActivities = ref(false)
+
+// Computed pour vérifier si l'utilisateur est révisionniste
+const isRevisionist = computed(() => hasRole('revisionniste'))
 
 const checkAccess = async () => {
   await loadUserRoles()
