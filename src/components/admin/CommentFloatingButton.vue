@@ -168,27 +168,52 @@
           </div>
 
           <!-- Liste des révisionnistes spécifiques -->
-          <div v-if="shareMode === 'specific_revisionists' && revisionists.length > 0" class="mt-3 ml-6 p-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-            <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">Sélectionnez les révisionnistes:</p>
-            <div class="space-y-1 max-h-32 overflow-y-auto">
+          <div v-if="shareMode === 'specific_revisionists'" class="mt-3 ml-6 p-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg border-2 border-purple-300 dark:border-purple-600">
+            <div class="flex items-center justify-between mb-2">
+              <p class="text-xs font-medium text-gray-700 dark:text-gray-300">
+                Sélectionnez les révisionnistes :
+              </p>
+              <button
+                v-if="revisionists.length > 0"
+                @click="toggleAllSpecificRevisionists"
+                type="button"
+                class="text-xs text-purple-600 dark:text-purple-400 hover:underline cursor-pointer"
+              >
+                {{ selectedRevisionists.length === revisionists.length ? 'Désélectionner tout' : 'Sélectionner tout' }}
+              </button>
+            </div>
+
+            <div v-if="revisionists.length === 0" class="text-xs text-gray-500 dark:text-gray-400 italic py-2">
+              Aucun autre révisionniste disponible
+            </div>
+
+            <div v-else class="space-y-1 max-h-32 overflow-y-auto">
               <label
                 v-for="revisionist in revisionists"
                 :key="revisionist.id"
-                class="flex items-center space-x-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600/50 rounded px-2 py-1"
+                class="flex items-center space-x-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600/50 rounded px-2 py-1 transition-colors"
               >
                 <input
                   v-model="selectedRevisionists"
                   :value="revisionist.id"
                   type="checkbox"
-                  class="rounded border-gray-300 text-purple-500 focus:ring-purple-500"
+                  class="rounded border-gray-300 text-purple-500 focus:ring-purple-500 cursor-pointer"
                 />
-                <span class="text-xs text-gray-700 dark:text-gray-300">
+                <span class="text-xs text-gray-700 dark:text-gray-300 select-none">
                   {{ revisionist.first_name }} {{ revisionist.last_name }}
                 </span>
               </label>
-              <div v-if="selectedRevisionists.length === 0" class="text-xs text-orange-600 dark:text-orange-400 px-2 py-1">
-                ⚠️ Veuillez sélectionner au moins un révisionniste
-              </div>
+            </div>
+
+            <div v-if="revisionists.length > 0 && selectedRevisionists.length === 0" class="mt-2 p-2 bg-orange-100 dark:bg-orange-900/30 rounded text-xs text-orange-700 dark:text-orange-300 flex items-center">
+              <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+              </svg>
+              Veuillez sélectionner au moins un révisionniste
+            </div>
+
+            <div v-else-if="selectedRevisionists.length > 0" class="mt-2 text-xs text-green-600 dark:text-green-400">
+              ✓ {{ selectedRevisionists.length }} révisionniste(s) sélectionné(s)
             </div>
           </div>
         </div>
@@ -275,7 +300,14 @@ const updateSharingMode = () => {
       selectedRevisionists.value = revisionists.value.map(r => r.id)
       break
     case 'specific_revisionists':
-      selectedRevisionists.value = []
+      // Ne pas vider la sélection, laisser l'utilisateur choisir
+      // Si aucun n'est sélectionné, on peut pré-sélectionner le premier ou laisser vide
+      if (selectedRevisionists.value.length === 0 && revisionists.value.length > 0) {
+        // Option: pré-sélectionner le premier révisionniste pour éviter la confusion
+        // selectedRevisionists.value = [revisionists.value[0].id]
+        // Ou laisser vide et l'utilisateur doit sélectionner
+        selectedRevisionists.value = []
+      }
       break
     case 'submitter':
       selectedRevisionists.value = []
@@ -283,6 +315,16 @@ const updateSharingMode = () => {
     case 'all':
       selectedRevisionists.value = revisionists.value.map(r => r.id)
       break
+  }
+}
+
+const toggleAllSpecificRevisionists = () => {
+  if (selectedRevisionists.value.length === revisionists.value.length) {
+    // Tout désélectionner
+    selectedRevisionists.value = []
+  } else {
+    // Tout sélectionner
+    selectedRevisionists.value = revisionists.value.map(r => r.id)
   }
 }
 
