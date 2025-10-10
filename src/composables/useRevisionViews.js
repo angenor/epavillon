@@ -1,13 +1,16 @@
 import { ref } from 'vue'
 import { useSupabase } from '@/composables/useSupabase'
 
+// État partagé (singleton) pour tous les composants
+const viewedActivities = ref(new Set())
+const isLoading = ref(false)
+
 /**
  * Composable pour gérer le suivi des activités vues par les révisionnistes
+ * Utilise un état singleton partagé entre tous les composants
  */
 export function useRevisionViews() {
   const { supabase } = useSupabase()
-  const viewedActivities = ref(new Set())
-  const isLoading = ref(false)
 
   /**
    * Enregistre qu'un révisionniste a vu une activité
@@ -102,12 +105,105 @@ export function useRevisionViews() {
     }
   }
 
+  /**
+   * Récupère le nombre de vues du révisionniste actuel pour une activité
+   * @param {string|number} activityId - ID de l'activité
+   * @returns {Promise<number>} - Nombre de vues
+   */
+  const getCurrentUserViewCount = async (activityId) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return 0
+
+      const { data, error } = await supabase
+        .from('revisionniste_activity_views')
+        .select('view_count')
+        .eq('activity_id', activityId)
+        .eq('revisionniste_id', user.id)
+        .single()
+
+      if (error) {
+        // Si aucune vue n'existe, retourner 0
+        if (error.code === 'PGRST116') return 0
+        throw error
+      }
+
+      return data?.view_count || 0
+    } catch (error) {
+      console.error('Erreur lors du chargement du compteur de vues:', error)
+      return 0
+    }
+  }
+
+  /**
+   * Réinitialise les vues d'une activité pour le révisionniste actuel (marquer comme non-lu)
+   * @param {string|number} activityId - ID de l'activité
+   */
+  const resetActivityView = async (activityId) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        const errorMsg = 'Aucun utilisateur connecté pour réinitialiser la vue'
+        console.warn(errorMsg)
+        throw new Error(errorMsg)
+      }
+
+      console.log('🔄 Réinitialisation de la vue pour:', {
+        activityId: activityId,
+        userId: user.id
+      })
+
+      const { data, error } = await supabase
+        .from('revisionniste_activity_views')
+        .delete()
+        .eq('activity_id', activityId)
+        .eq('revisionniste_id', user.id)
+        .select()
+
+      if (error) {
+        console.error('❌ Erreur Supabase lors de la suppression:', {
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint
+        })
+
+        // Vérifier si c'est un problème de permissions RLS
+        if (error.code === '42501' || error.message?.includes('policy')) {
+          throw new Error('Permission refusée. La politique RLS pour supprimer les vues n\'est pas configurée. Veuillez exécuter la migration add_delete_policy_activity_views.sql')
+        }
+
+        throw error
+      }
+
+      if (!data || data.length === 0) {
+        console.warn('⚠️ Aucune ligne supprimée. L\'enregistrement n\'existait peut-être pas.')
+      } else {
+        console.log('✅ Suppression réussie, lignes supprimées:', data)
+      }
+
+      // Retirer de la liste locale des activités vues
+      const activityIdStr = String(activityId)
+      const wasDeleted = viewedActivities.value.delete(activityIdStr)
+      console.log(`🗑️ Activité ${activityIdStr} retirée du Set local:`, wasDeleted)
+      console.log('📋 État actuel du Set:', Array.from(viewedActivities.value))
+
+      return { success: true, deletedRows: data?.length || 0 }
+
+    } catch (error) {
+      console.error('💥 Erreur lors de la réinitialisation de la vue:', error)
+      throw error
+    }
+  }
+
   return {
     viewedActivities,
     isLoading,
     recordActivityView,
     loadViewedActivities,
     hasViewedActivity,
-    getActivityViewStats
+    getActivityViewStats,
+    getCurrentUserViewCount,
+    resetActivityView
   }
 }

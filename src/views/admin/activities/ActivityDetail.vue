@@ -188,7 +188,28 @@
             <!-- Titre et bannière -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
               <div class="p-6">
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{{ activity.title }}</h1>
+                <div class="flex items-start justify-between mb-4">
+                  <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex-1">{{ activity.title }}</h1>
+
+                  <!-- Compteur de vues du révisionniste (discret) -->
+                  <button
+                    v-if="isRevisionist && myViewCount > 0"
+                    @click="handleResetView"
+                    :disabled="isResettingView"
+                    class="ml-4 flex items-center space-x-1.5 px-2.5 py-1 text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    title="Marquer comme non-lu"
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                    <span>{{ myViewCount }}×</span>
+                    <svg v-if="!isResettingView" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                    <div v-else class="animate-spin rounded-full h-3 w-3 border-b border-gray-500"></div>
+                  </button>
+                </div>
 
                 <!-- Bannière 16:9 -->
                 <div class="relative aspect-[16/9] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
@@ -632,6 +653,7 @@ import { useAdmin } from '@/composables/useAdmin'
 import { useAuth } from '@/composables/useAuth'
 import { useTimezone } from '@/composables/useTimezone'
 import { useAdminPanel } from '@/composables/useAdminPanel'
+import { useRevisionViews } from '@/composables/useRevisionViews'
 import ChangeSubmitterModal from '@/components/admin/ChangeSubmitterModal.vue'
 import ActivityReviewSidebar from '@/components/admin/ActivityReviewSidebar.vue'
 import RatingFloatingButton from '@/components/admin/RatingFloatingButton.vue'
@@ -644,6 +666,7 @@ const { hasAdminRole, isLoadingRoles, loadUserRoles, validateActivity, hasRole }
 const { currentUser } = useAuth()
 const { getCityFromTimezone, formatDateTimeWithTimezone, getTimezoneLabel } = useTimezone()
 const { enableActivityReviewMode, disableActivityReviewMode, closeReviewSidebar: closeReviewSidebarState, isReviewSidebarOpen, reviewSidebarWidth } = useAdminPanel()
+const { getCurrentUserViewCount, resetActivityView, recordActivityView } = useRevisionViews()
 
 const isLoading = ref(true)
 const activity = ref(null)
@@ -670,6 +693,10 @@ const isLoadingOrgActivities = ref(false)
 
 // Computed pour vérifier si l'utilisateur est révisionniste
 const isRevisionist = computed(() => hasRole('revisionniste'))
+
+// État pour le compteur de vues du révisionniste
+const myViewCount = ref(0)
+const isResettingView = ref(false)
 
 const checkAccess = async () => {
   await loadUserRoles()
@@ -708,6 +735,11 @@ const loadActivity = async () => {
     // Charger les autres activités de l'organisation
     if (data.organization?.id) {
       await loadOrganizationActivities(data.organization.id)
+    }
+
+    // Charger le compteur de vues si l'utilisateur est révisionniste
+    if (isRevisionist.value) {
+      myViewCount.value = await getCurrentUserViewCount(route.params.id)
     }
 
   } catch (error) {
@@ -1152,6 +1184,37 @@ const handleSubmitterUpdate = async (newSubmitter) => {
   }
 
   console.log('Soumissionnaire mis à jour avec succès')
+}
+
+// Fonction pour marquer comme non-lu (réinitialiser les vues)
+const handleResetView = async () => {
+  if (!activity.value || !isRevisionist.value) return
+
+  isResettingView.value = true
+  try {
+    const result = await resetActivityView(activity.value.id)
+    myViewCount.value = 0
+
+    console.log('✅ Activité marquée comme non-lue avec succès')
+
+    // Afficher un message de confirmation à l'utilisateur
+    if (result.deletedRows > 0) {
+      alert(`✅ Activité marquée comme non-lue (${result.deletedRows} vue(s) supprimée(s))`)
+    } else {
+      alert('⚠️ Aucune vue à supprimer')
+    }
+  } catch (error) {
+    console.error('❌ Erreur lors de la réinitialisation:', error)
+
+    // Afficher l'erreur à l'utilisateur
+    if (error.message?.includes('politique RLS')) {
+      alert(`❌ Erreur : ${error.message}\n\nContactez l'administrateur pour exécuter la migration nécessaire.`)
+    } else {
+      alert(`❌ Erreur lors de la suppression : ${error.message}`)
+    }
+  } finally {
+    isResettingView.value = false
+  }
 }
 
 // Fonctions pour gérer la sidebar de révision
