@@ -414,6 +414,7 @@ import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
 import { useAuth } from '@/composables/useAuth'
 import { useEmailModal } from '@/composables/useEmailModal'
+import { useRevisionViews } from '@/composables/useRevisionViews'
 import * as XLSX from 'xlsx'
 
 const { t } = useI18n()
@@ -422,6 +423,7 @@ const { supabase } = useSupabase()
 const { hasAdminRole, isLoadingRoles, loadUserRoles, validateActivity } = useAdmin()
 const { currentUser } = useAuth()
 const { openForActivity, canSendEmails } = useEmailModal()
+const { recordActivityView } = useRevisionViews()
 
 // État
 const isLoading = ref(true)
@@ -657,7 +659,10 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('fr-FR')
 }
 
-const viewActivity = (activity) => {
+const viewActivity = async (activity) => {
+  // Enregistrer que le révisionniste a vu cette activité
+  await recordActivityView(activity.id)
+
   router.push(`/admin/activities/${activity.id}`)
 }
 
