@@ -402,7 +402,7 @@
                   <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">
                     {{ activity.activites_dashboard_view_count || 0 }}
                   </p>
-                  <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Vues dashboard</p>
+                  <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Consultation soumissionnaire</p>
                 </div>
                 <div class="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                   <p class="text-2xl font-bold text-green-600 dark:text-green-400">
