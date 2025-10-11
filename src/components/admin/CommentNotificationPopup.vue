@@ -1,9 +1,15 @@
 <template>
-  <Transition name="slide-fade">
-    <div
-      v-if="notifications.length > 0"
-      class="fixed top-20 right-6 z-50 space-y-3 max-w-sm"
-    >
+  <div>
+    <!-- Debug: montrer que le composant est chargé -->
+    <div class="fixed top-4 right-4 bg-red-500 text-white px-2 py-1 text-xs z-[9999]">
+      Popup Component Loaded - Notifications: {{ notifications.length }}
+    </div>
+
+    <Transition name="slide-fade">
+      <div
+        v-if="notifications.length > 0"
+        class="fixed top-20 right-6 z-50 space-y-3 max-w-sm"
+      >
       <div
         v-for="notification in notifications"
         :key="notification.id"
@@ -46,13 +52,14 @@
             </svg>
           </button>
         </div>
+        </div>
       </div>
-    </div>
-  </Transition>
+    </Transition>
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAuth } from '@/composables/useAuth'
@@ -63,6 +70,9 @@ const { currentUser } = useAuth()
 
 const notifications = ref([])
 let realtimeSubscription = null
+
+console.log('CommentNotificationPopup - Script setup executed')
+console.log('CommentNotificationPopup - Initial currentUser:', currentUser.value)
 
 // Ajouter une notification
 const addNotification = (notification) => {
@@ -104,7 +114,7 @@ const subscribeToComments = () => {
   console.log('CommentNotificationPopup - Subscription activée pour:', currentUser.value.id)
 
   realtimeSubscription = supabase
-    .channel('comment-notifications')
+    .channel(`comment-notifications-${currentUser.value.id}`)
     .on('postgres_changes', {
       event: 'INSERT',
       schema: 'public',
@@ -160,7 +170,12 @@ const subscribeToComments = () => {
         console.log('CommentNotificationPopup - Je ne suis pas destinataire, pas de notification')
       }
     })
-    .subscribe()
+    .subscribe((status, err) => {
+      console.log('CommentNotificationPopup - Subscription status:', status)
+      if (err) {
+        console.error('CommentNotificationPopup - Subscription error:', err)
+      }
+    })
 }
 
 // Jouer un son de notification
@@ -176,11 +191,28 @@ const playNotificationSound = () => {
   }
 }
 
+// Watcher pour attendre que currentUser soit disponible
+watch(currentUser, (newUser) => {
+  console.log('CommentNotificationPopup - currentUser changed:', newUser)
+  if (newUser && !realtimeSubscription) {
+    console.log('CommentNotificationPopup - Initializing subscription from watch')
+    subscribeToComments()
+  }
+}, { immediate: true })
+
 onMounted(() => {
-  subscribeToComments()
+  console.log('CommentNotificationPopup - Component mounted')
+  console.log('CommentNotificationPopup - currentUser in onMounted:', currentUser.value)
+
+  // Tenter de souscrire si l'utilisateur est déjà disponible
+  if (currentUser.value && !realtimeSubscription) {
+    console.log('CommentNotificationPopup - Subscribing from onMounted')
+    subscribeToComments()
+  }
 })
 
 onBeforeUnmount(() => {
+  console.log('CommentNotificationPopup - Component unmounting')
   if (realtimeSubscription) {
     supabase.removeChannel(realtimeSubscription)
   }
