@@ -259,12 +259,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick, watch } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAuth } from '@/composables/useAuth'
 import { useAdminPanel } from '@/composables/useAdminPanel'
 import { useRevisionViews } from '@/composables/useRevisionViews'
+import { useCommentBroadcast } from '@/composables/useCommentBroadcast'
 
 const props = defineProps({
   isOpen: {
@@ -284,6 +285,7 @@ const { supabase } = useSupabase()
 const { currentUser } = useAuth()
 const { setReviewSidebarWidth } = useAdminPanel()
 const { viewedActivities, loadViewedActivities, recordActivityView, hasViewedActivity } = useRevisionViews()
+const { addListener, removeListener } = useCommentBroadcast()
 
 // État
 const activities = ref([])
@@ -293,6 +295,7 @@ const filterStatus = ref('')
 const filterCountry = ref('')
 const searchQuery = ref('')
 const activityRefs = ref({})
+const LISTENER_ID = 'activity-review-sidebar' // ID unique pour ce composant
 
 // État pour le redimensionnement
 const MIN_WIDTH = 320 // 80 en Tailwind = 320px
@@ -459,6 +462,47 @@ const clearFilters = () => {
   searchQuery.value = ''
   filterStatus.value = ''
   filterCountry.value = ''
+}
+
+// Fonction pour mettre à jour le compteur de commentaires non lus d'une activité spécifique
+const updateActivityUnreadCount = async (activityId) => {
+  if (!currentUser.value) return
+
+  try {
+    const { data, error } = await supabase
+      .from('v_unread_comments_by_activity')
+      .select('unread_count')
+      .eq('activity_id', activityId)
+      .eq('revisionniste_id', currentUser.value.id)
+      .maybeSingle()
+
+    if (error) throw error
+
+    // Mettre à jour le compteur dans la liste des activités
+    const activityIndex = activities.value.findIndex(a => a.id === activityId)
+    if (activityIndex !== -1) {
+      activities.value[activityIndex].comments_count = data?.unread_count || 0
+    }
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du compteur non lu:', error)
+  }
+}
+
+// S'abonner aux changements de lecture de commentaires via le composable partagé
+const subscribeToCommentReads = () => {
+  if (!currentUser.value) return
+
+  // Ajouter un listener pour recevoir les broadcasts
+  addListener(LISTENER_ID, async (payload) => {
+    console.log('ActivityReviewSidebar - Broadcast reçu:', payload)
+
+    if (payload?.activity_id) {
+      // Mettre à jour le compteur pour cette activité
+      await updateActivityUnreadCount(payload.activity_id)
+    }
+  })
+
+  console.log('ActivityReviewSidebar - Listener ajouté')
 }
 
 // Gestion du redimensionnement
@@ -677,6 +721,10 @@ onMounted(async () => {
     loadCountries(),
     loadViewedActivities() // Charger les activités déjà vues par le révisionniste
   ])
+
+  // S'abonner aux changements de lecture de commentaires
+  subscribeToCommentReads()
+
   await nextTick()
   // Scroll initial vers l'activité courante avec un délai
   if (props.currentActivityId) {
@@ -685,6 +733,12 @@ onMounted(async () => {
       scrollToCurrentActivity()
     }, 500) // Attendre 500ms pour être sûr que tout est rendu
   }
+})
+
+onBeforeUnmount(() => {
+  // Retirer le listener
+  removeListener(LISTENER_ID)
+  console.log('ActivityReviewSidebar - Listener retiré')
 })
 </script>
 

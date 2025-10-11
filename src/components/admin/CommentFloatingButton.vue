@@ -371,10 +371,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAuth } from '@/composables/useAuth'
 import { useAdmin } from '@/composables/useAdmin'
+import { useCommentBroadcast } from '@/composables/useCommentBroadcast'
 
 const props = defineProps({
   activityId: {
@@ -386,6 +387,7 @@ const props = defineProps({
 const { supabase } = useSupabase()
 const { currentUser } = useAuth()
 const { hasRole } = useAdmin()
+const { sendBroadcast } = useCommentBroadcast()
 
 const isOpen = ref(false)
 const comments = ref([])
@@ -430,6 +432,10 @@ const markActivityCommentsAsRead = async () => {
 
     // Recharger le nombre de commentaires non lus après marquage
     await loadUnreadCommentsCount()
+
+    // Envoyer un broadcast pour notifier les autres composants
+    await sendBroadcast(props.activityId)
+    console.log('CommentFloatingButton - Broadcast envoyé pour l\'activité', props.activityId)
   } catch (error) {
     console.error('Erreur lors du marquage des commentaires comme lus:', error)
   }
