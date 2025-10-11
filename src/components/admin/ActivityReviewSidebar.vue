@@ -488,6 +488,32 @@ const updateActivityUnreadCount = async (activityId) => {
   }
 }
 
+// Subscription realtime pour les nouveaux commentaires
+let realtimeSubscription = null
+
+const subscribeToRealtimeComments = () => {
+  if (!currentUser.value) return
+
+  realtimeSubscription = supabase
+    .channel('activity-sidebar-comments')
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'revision_comments'
+    }, async (payload) => {
+      console.log('ActivityReviewSidebar - Nouveau commentaire détecté:', payload.new)
+
+      // Si l'utilisateur est destinataire, recharger le compteur pour cette activité
+      if (payload.new.shared_with_revisionists?.includes(currentUser.value.id) ||
+          payload.new.created_by === currentUser.value.id) {
+        await updateActivityUnreadCount(payload.new.activity_id)
+      }
+    })
+    .subscribe()
+
+  console.log('ActivityReviewSidebar - Subscription realtime activée')
+}
+
 // S'abonner aux changements de lecture de commentaires via le composable partagé
 const subscribeToCommentReads = () => {
   if (!currentUser.value) return
@@ -724,6 +750,8 @@ onMounted(async () => {
 
   // S'abonner aux changements de lecture de commentaires
   subscribeToCommentReads()
+  // S'abonner aux nouveaux commentaires en temps réel
+  subscribeToRealtimeComments()
 
   await nextTick()
   // Scroll initial vers l'activité courante avec un délai
@@ -739,6 +767,12 @@ onBeforeUnmount(() => {
   // Retirer le listener
   removeListener(LISTENER_ID)
   console.log('ActivityReviewSidebar - Listener retiré')
+
+  // Nettoyer la subscription realtime
+  if (realtimeSubscription) {
+    supabase.removeChannel(realtimeSubscription)
+    console.log('ActivityReviewSidebar - Subscription realtime nettoyée')
+  }
 })
 </script>
 

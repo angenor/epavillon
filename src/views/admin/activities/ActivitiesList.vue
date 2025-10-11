@@ -430,7 +430,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
@@ -438,6 +438,7 @@ import { useAdmin } from '@/composables/useAdmin'
 import { useAuth } from '@/composables/useAuth'
 import { useEmailModal } from '@/composables/useEmailModal'
 import { useRevisionViews } from '@/composables/useRevisionViews'
+import { useCommentBroadcast } from '@/composables/useCommentBroadcast'
 import * as XLSX from 'xlsx'
 
 const { t } = useI18n()
@@ -447,6 +448,9 @@ const { hasReviewerOrAdminRole, isLoadingRoles, loadUserRoles, validateActivity 
 const { currentUser } = useAuth()
 const { openForActivity, canSendEmails } = useEmailModal()
 const { recordActivityView, loadViewedActivities, hasViewedActivity } = useRevisionViews()
+const { addListener, removeListener } = useCommentBroadcast()
+
+const LISTENER_ID = 'activities-list' // ID unique pour ce composant
 
 // État
 const isLoading = ref(true)
@@ -843,6 +847,73 @@ const nextPage = () => {
   }
 }
 
+// Fonction pour mettre à jour le compteur de commentaires non lus d'une activité spécifique
+const updateActivityUnreadCount = async (activityId) => {
+  if (!currentUser.value) return
+
+  try {
+    const { data, error } = await supabase
+      .from('v_unread_comments_by_activity')
+      .select('unread_count')
+      .eq('activity_id', activityId)
+      .eq('revisionniste_id', currentUser.value.id)
+      .maybeSingle()
+
+    if (error) throw error
+
+    // Mettre à jour le compteur dans la liste des activités
+    const activityIndex = activities.value.findIndex(a => a.id === activityId)
+    if (activityIndex !== -1) {
+      activities.value[activityIndex].comments_count = data?.unread_count || 0
+    }
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du compteur non lu:', error)
+  }
+}
+
+// Subscription realtime pour les nouveaux commentaires
+let realtimeSubscription = null
+
+const subscribeToRealtimeComments = () => {
+  if (!currentUser.value) return
+
+  realtimeSubscription = supabase
+    .channel('activities-list-comments')
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'revision_comments'
+    }, async (payload) => {
+      console.log('ActivitiesList - Nouveau commentaire détecté:', payload.new)
+
+      // Si l'utilisateur est destinataire, recharger le compteur pour cette activité
+      if (payload.new.shared_with_revisionists?.includes(currentUser.value.id) ||
+          payload.new.created_by === currentUser.value.id) {
+        await updateActivityUnreadCount(payload.new.activity_id)
+      }
+    })
+    .subscribe()
+
+  console.log('ActivitiesList - Subscription realtime activée')
+}
+
+// S'abonner aux changements de lecture de commentaires via le composable partagé
+const subscribeToCommentReads = () => {
+  if (!currentUser.value) return
+
+  // Ajouter un listener pour recevoir les broadcasts
+  addListener(LISTENER_ID, async (payload) => {
+    console.log('ActivitiesList - Broadcast reçu:', payload)
+
+    if (payload?.activity_id) {
+      // Mettre à jour le compteur pour cette activité
+      await updateActivityUnreadCount(payload.activity_id)
+    }
+  })
+
+  console.log('ActivitiesList - Listener ajouté')
+}
+
 // Watchers
 watch([() => filters.value, activeTab], () => {
   currentPage.value = 1
@@ -858,11 +929,27 @@ onMounted(async () => {
       loadCountries(),
       loadViewedActivities() // Charger les activités déjà vues par le révisionniste
     ])
+
+    // S'abonner aux changements de commentaires
+    subscribeToCommentReads()
+    subscribeToRealtimeComments()
   } catch (error) {
     console.error('Erreur:', error)
     if (error.message === 'Accès non autorisé') {
       throw error
     }
+  }
+})
+
+onBeforeUnmount(() => {
+  // Retirer le listener
+  removeListener(LISTENER_ID)
+  console.log('ActivitiesList - Listener retiré')
+
+  // Nettoyer la subscription realtime
+  if (realtimeSubscription) {
+    supabase.removeChannel(realtimeSubscription)
+    console.log('ActivitiesList - Subscription realtime nettoyée')
   }
 })
 </script>
