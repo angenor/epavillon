@@ -1,15 +1,9 @@
 <template>
-  <div>
-    <!-- Debug: montrer que le composant est chargé -->
-    <div class="fixed top-4 right-4 bg-red-500 text-white px-2 py-1 text-xs z-[9999]">
-      Popup Component Loaded - Notifications: {{ notifications.length }}
-    </div>
-
-    <Transition name="slide-fade">
-      <div
-        v-if="notifications.length > 0"
-        class="fixed top-20 right-6 z-50 space-y-3 max-w-sm"
-      >
+  <Transition name="slide-fade">
+    <div
+      v-if="notifications.length > 0"
+      class="fixed top-20 right-6 z-50 space-y-3 max-w-sm"
+    >
       <div
         v-for="notification in notifications"
         :key="notification.id"
@@ -52,10 +46,9 @@
             </svg>
           </button>
         </div>
-        </div>
       </div>
-    </Transition>
-  </div>
+    </div>
+  </Transition>
 </template>
 
 <script setup>
@@ -70,9 +63,6 @@ const { currentUser } = useAuth()
 
 const notifications = ref([])
 let realtimeSubscription = null
-
-console.log('CommentNotificationPopup - Script setup executed')
-console.log('CommentNotificationPopup - Initial currentUser:', currentUser.value)
 
 // Ajouter une notification
 const addNotification = (notification) => {
@@ -106,12 +96,7 @@ const handleNotificationClick = (notification) => {
 
 // Subscription realtime pour les nouveaux commentaires
 const subscribeToComments = () => {
-  if (!currentUser.value) {
-    console.log('CommentNotificationPopup - Pas d\'utilisateur connecté')
-    return
-  }
-
-  console.log('CommentNotificationPopup - Subscription activée pour:', currentUser.value.id)
+  if (!currentUser.value) return
 
   realtimeSubscription = supabase
     .channel(`comment-notifications-${currentUser.value.id}`)
@@ -120,25 +105,14 @@ const subscribeToComments = () => {
       schema: 'public',
       table: 'revision_comments'
     }, async (payload) => {
-      console.log('CommentNotificationPopup - Nouveau commentaire détecté:', payload.new)
-
-      // Vérifier si l'utilisateur est destinataire
       const isRecipient = payload.new.shared_with_revisionists?.includes(currentUser.value.id)
       const isMyComment = payload.new.created_by === currentUser.value.id
 
-      console.log('CommentNotificationPopup - isRecipient:', isRecipient)
-      console.log('CommentNotificationPopup - isMyComment:', isMyComment)
-
       // Ne pas afficher de notification pour ses propres commentaires
-      if (isMyComment) {
-        console.log('CommentNotificationPopup - C\'est mon propre commentaire, pas de notification')
-        return
-      }
+      if (isMyComment) return
 
       // Afficher la notification si l'utilisateur est destinataire
       if (isRecipient) {
-        console.log('CommentNotificationPopup - Chargement des détails pour la notification')
-
         // Charger les détails de l'activité et de l'auteur
         const { data: activityData } = await supabase
           .from('activities')
@@ -152,9 +126,6 @@ const subscribeToComments = () => {
           .eq('id', payload.new.created_by)
           .single()
 
-        console.log('CommentNotificationPopup - Activité:', activityData)
-        console.log('CommentNotificationPopup - Auteur:', authorData)
-
         addNotification({
           activity_id: payload.new.activity_id,
           activity_title: activityData?.title || 'Activité',
@@ -162,20 +133,11 @@ const subscribeToComments = () => {
           comment_text: payload.new.comment_text
         })
 
-        console.log('CommentNotificationPopup - Notification ajoutée, total:', notifications.value.length)
-
         // Jouer un son de notification
         playNotificationSound()
-      } else {
-        console.log('CommentNotificationPopup - Je ne suis pas destinataire, pas de notification')
       }
     })
-    .subscribe((status, err) => {
-      console.log('CommentNotificationPopup - Subscription status:', status)
-      if (err) {
-        console.error('CommentNotificationPopup - Subscription error:', err)
-      }
-    })
+    .subscribe()
 }
 
 // Jouer un son de notification
@@ -193,26 +155,18 @@ const playNotificationSound = () => {
 
 // Watcher pour attendre que currentUser soit disponible
 watch(currentUser, (newUser) => {
-  console.log('CommentNotificationPopup - currentUser changed:', newUser)
   if (newUser && !realtimeSubscription) {
-    console.log('CommentNotificationPopup - Initializing subscription from watch')
     subscribeToComments()
   }
 }, { immediate: true })
 
 onMounted(() => {
-  console.log('CommentNotificationPopup - Component mounted')
-  console.log('CommentNotificationPopup - currentUser in onMounted:', currentUser.value)
-
-  // Tenter de souscrire si l'utilisateur est déjà disponible
   if (currentUser.value && !realtimeSubscription) {
-    console.log('CommentNotificationPopup - Subscribing from onMounted')
     subscribeToComments()
   }
 })
 
 onBeforeUnmount(() => {
-  console.log('CommentNotificationPopup - Component unmounting')
   if (realtimeSubscription) {
     supabase.removeChannel(realtimeSubscription)
   }
