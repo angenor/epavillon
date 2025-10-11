@@ -625,8 +625,15 @@ const loadRevisionists = async () => {
   }
 }
 
-const loadComments = async () => {
+const loadComments = async (shouldScroll = true) => {
   if (!currentUser.value) return
+
+  // Sauvegarder la position du scroll actuelle si on ne doit pas scroller
+  let savedScrollPosition = 0
+  if (!shouldScroll && messagesContainer.value) {
+    savedScrollPosition = messagesContainer.value.scrollTop
+    console.log('Position scroll sauvegardée:', savedScrollPosition)
+  }
 
   isLoadingComments.value = true
   try {
@@ -669,14 +676,28 @@ const loadComments = async () => {
       console.log('Première ouverture de la fenêtre, pas de séparation')
     }
 
-    // TOUJOURS scroller vers le bas pour voir les derniers messages
-    // La ligne "Nouveaux messages" sera visible si l'utilisateur scroll vers le haut
-    await nextTick()
+    // Scroller uniquement si shouldScroll est true (ouverture initiale)
+    if (shouldScroll) {
+      await nextTick()
 
-    // Utiliser setTimeout pour s'assurer que le DOM est complètement rendu
-    setTimeout(() => {
-      scrollToBottom()
-    }, 100)
+      // Utiliser setTimeout pour s'assurer que le DOM est complètement rendu
+      setTimeout(() => {
+        if (firstNewMessageIndex.value >= 0) {
+          scrollToNewMessages()
+        } else {
+          scrollToBottom()
+        }
+      }, 100)
+    } else {
+      // Restaurer la position du scroll après le rendu
+      await nextTick()
+      setTimeout(() => {
+        if (messagesContainer.value) {
+          messagesContainer.value.scrollTop = savedScrollPosition
+          console.log('Position scroll restaurée:', savedScrollPosition)
+        }
+      }, 50)
+    }
   } catch (error) {
     console.error('Erreur lors du chargement des commentaires:', error)
   } finally {
@@ -996,10 +1017,12 @@ const subscribeToComments = () => {
       console.log('isRecipient:', isRecipient)
       console.log('isMyComment:', isMyComment)
 
-      // Si c'est mon propre commentaire, PAS besoin de recharger
-      // Il est déjà ajouté localement dans sendComment()
+      // Si c'est mon propre commentaire, recharger pour avoir le vrai ID
       if (isMyComment) {
-        console.log('C\'est mon propre commentaire - Déjà ajouté localement')
+        console.log('C\'est mon propre commentaire - Rechargement pour avoir le vrai ID')
+        if (isOpen.value) {
+          await loadComments(false) // Recharger sans scroller
+        }
         console.log('=========================================')
         return
       }
@@ -1016,8 +1039,8 @@ const subscribeToComments = () => {
           console.log('Widget ouvert - Affichage notification')
           hasNewMessageNotification.value = true
 
-          // Recharger les commentaires SANS toucher au lastViewTimestamp
-          await loadComments()
+          // Recharger les commentaires SANS scroller (shouldScroll = false)
+          await loadComments(false)
 
           // Masquer la notification après 5 secondes
           setTimeout(() => {
