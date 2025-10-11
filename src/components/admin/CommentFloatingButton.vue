@@ -85,14 +85,6 @@
 
         <!-- Comments list -->
         <div v-else class="space-y-3">
-          <!-- DEBUG INFO -->
-          <div class="text-xs bg-blue-50 dark:bg-blue-900/20 p-2 rounded mb-2">
-            <div><strong>DEBUG:</strong></div>
-            <div>lastViewTimestamp: {{ lastViewTimestamp }}</div>
-            <div>firstNewMessageIndex: {{ firstNewMessageIndex }}</div>
-            <div>Total messages: {{ comments.length }}</div>
-          </div>
-
           <template v-for="(comment, index) in comments" :key="comment.id">
             <!-- Ligne "Nouveaux messages" style WhatsApp -->
             <div
@@ -105,14 +97,6 @@
                 Nouveaux messages
               </span>
               <div class="flex-1 h-px bg-gradient-to-l from-transparent via-green-400 to-green-400 dark:via-green-500 dark:to-green-500"></div>
-            </div>
-
-            <!-- DEBUG: Info sur chaque message -->
-            <div class="text-xs text-gray-400 px-2 mb-1">
-              [{{ index }}] Créé le: {{ new Date(comment.created_at).toLocaleString() }}
-              <span v-if="lastViewTimestamp" class="ml-2">
-                ({{ new Date(comment.created_at) > lastViewTimestamp ? 'NOUVEAU' : 'ANCIEN' }})
-              </span>
             </div>
 
             <!-- Message -->
@@ -459,37 +443,29 @@ const toggleWidget = async () => {
 
   if (isOpen.value) {
     // Ouverture du widget
-    resetState(false) // Réinitialiser l'état quand on ouvre (sans effacer les commentaires)
+    resetState(false)
 
     // Récupérer le timestamp de la dernière vue depuis localStorage
     const storageKey = `last_comment_view_${props.activityId}_${currentUser.value?.id}`
     const savedTimestamp = localStorage.getItem(storageKey)
     lastViewTimestamp.value = savedTimestamp ? new Date(savedTimestamp) : null
 
-    console.log('=== OUVERTURE WIDGET ===')
-    console.log('Dernière vue:', lastViewTimestamp.value)
-    console.log('=======================')
-
     await loadComments()
     loadRevisionists()
 
     hasNewMessageNotification.value = false
 
-    // NE PAS sauvegarder le timestamp immédiatement
-    // Attendre que l'utilisateur ait vu les messages pendant quelques secondes
+    // Sauvegarder le timestamp après 3 secondes
     setTimeout(async () => {
       if (isOpen.value) {
-        // Sauvegarder le timestamp maintenant (après avoir vu les nouveaux messages)
         const now = new Date().toISOString()
         localStorage.setItem(storageKey, now)
-
-        // Marquer comme lus
         await markActivityCommentsAsRead()
         unreadCount.value = 0
       }
-    }, 3000) // 3 secondes pour laisser le temps de voir la ligne
+    }, 3000)
   } else if (wasOpen) {
-    // Fermeture du widget - sauvegarder le timestamp et marquer comme lus
+    // Fermeture du widget
     const storageKey = `last_comment_view_${props.activityId}_${currentUser.value?.id}`
     const now = new Date().toISOString()
     localStorage.setItem(storageKey, now)
@@ -507,12 +483,8 @@ const markActivityCommentsAsRead = async () => {
       p_revisionniste_id: currentUser.value.id
     })
 
-    // Recharger le nombre de commentaires non lus après marquage
     await loadUnreadCommentsCount()
-
-    // Envoyer un broadcast pour notifier les autres composants
     await sendBroadcast(props.activityId)
-    console.log('CommentFloatingButton - Broadcast envoyé pour l\'activité', props.activityId)
   } catch (error) {
     console.error('Erreur lors du marquage des commentaires comme lus:', error)
   }
@@ -589,7 +561,6 @@ const resetState = (resetComments = false) => {
 
 const loadRevisionists = async () => {
   try {
-    // Charger tous les révisionnistes sauf l'utilisateur actuel
     const { data, error } = await supabase
       .from('user_roles')
       .select(`
@@ -599,14 +570,8 @@ const loadRevisionists = async () => {
       .eq('role', 'revisionniste')
       .eq('is_active', true)
 
-    if (error) {
-      console.error('Erreur Supabase:', error)
-      throw error
-    }
+    if (error) throw error
 
-    console.log('Données des révisionnistes récupérées:', data)
-
-    // Filtrer pour exclure l'utilisateur actuel et mapper les données
     revisionists.value = data?.filter(r => r.user_id !== currentUser.value?.id)
       .map(r => ({
         id: r.users.id,
@@ -615,9 +580,6 @@ const loadRevisionists = async () => {
         email: r.users.email
       })) || []
 
-    console.log('Révisionnistes chargés:', revisionists.value.length, 'révisionniste(s)')
-
-    // Initialiser selon le mode de partage par défaut
     updateSharingMode()
   } catch (error) {
     console.error('Erreur lors du chargement des révisionnistes:', error)
@@ -632,7 +594,6 @@ const loadComments = async (shouldScroll = true) => {
   let savedScrollPosition = 0
   if (!shouldScroll && messagesContainer.value) {
     savedScrollPosition = messagesContainer.value.scrollTop
-    console.log('Position scroll sauvegardée:', savedScrollPosition)
   }
 
   isLoadingComments.value = true
@@ -660,20 +621,9 @@ const loadComments = async (shouldScroll = true) => {
         const commentDate = new Date(c.created_at)
         return commentDate > lastViewTimestamp.value
       })
-
-      console.log('=== DEBUG NOUVEAUX MESSAGES ===')
-      console.log('Nombre total de commentaires:', comments.value.length)
-      console.log('Dernière vue:', lastViewTimestamp.value)
-      console.log('Index du premier nouveau message:', firstNewMessageIndex.value)
-      if (firstNewMessageIndex.value >= 0) {
-        console.log('Premier nouveau message:', comments.value[firstNewMessageIndex.value])
-        console.log('Date du message:', comments.value[firstNewMessageIndex.value].created_at)
-      }
-      console.log('================================')
     } else {
       // Pas de timestamp sauvegardé = première ouverture, tous les messages sont "anciens"
       firstNewMessageIndex.value = -1
-      console.log('Première ouverture de la fenêtre, pas de séparation')
     }
 
     // Scroller uniquement si shouldScroll est true (ouverture initiale)
@@ -694,7 +644,6 @@ const loadComments = async (shouldScroll = true) => {
       setTimeout(() => {
         if (messagesContainer.value) {
           messagesContainer.value.scrollTop = savedScrollPosition
-          console.log('Position scroll restaurée:', savedScrollPosition)
         }
       }, 50)
     }
@@ -788,37 +737,20 @@ const sendComment = async () => {
 }
 
 const scrollToBottom = () => {
-  console.log('=== SCROLL TO BOTTOM ===')
-  console.log('messagesContainer.value:', messagesContainer.value)
-
   if (messagesContainer.value) {
-    console.log('scrollHeight:', messagesContainer.value.scrollHeight)
-    console.log('clientHeight:', messagesContainer.value.clientHeight)
-    console.log('scrollTop AVANT:', messagesContainer.value.scrollTop)
-
     messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
-
-    console.log('scrollTop APRES:', messagesContainer.value.scrollTop)
-  } else {
-    console.log('messagesContainer.value est NULL!')
   }
-  console.log('========================')
 }
 
 const scrollToNewMessages = () => {
   if (!messagesContainer.value) return
 
-  // Trouver l'élément avec la ligne "Nouveaux messages"
-  // On utilise un sélecteur pour trouver le span qui contient "Nouveaux messages"
   const newMessagesLine = messagesContainer.value.querySelector('[data-new-messages-line]')
 
   if (newMessagesLine) {
-    // Scroller vers cet élément avec un petit offset pour le voir correctement
-    const offsetTop = newMessagesLine.offsetTop - 100 // 100px d'offset pour ne pas être collé en haut
+    const offsetTop = newMessagesLine.offsetTop - 100
     messagesContainer.value.scrollTop = offsetTop
-    console.log('Scroll vers les nouveaux messages, offset:', offsetTop)
   } else {
-    console.log('Ligne "Nouveaux messages" non trouvée, scroll vers le bas')
     scrollToBottom()
   }
 }
@@ -1003,57 +935,32 @@ const subscribeToComments = () => {
       table: 'revision_comments',
       filter: `activity_id=eq.${props.activityId}`
     }, async (payload) => {
-      console.log('=== REALTIME: Nouveau commentaire reçu ===')
-      console.log('Payload:', payload.new)
-      console.log('Créé par:', payload.new.created_by)
-      console.log('User actuel:', currentUser.value?.id)
-      console.log('Partagé avec:', payload.new.shared_with_revisionists)
-      console.log('Widget ouvert?:', isOpen.value)
-
-      // Déterminer si l'utilisateur est destinataire du commentaire
       const isRecipient = payload.new.shared_with_revisionists?.includes(currentUser.value.id)
       const isMyComment = payload.new.created_by === currentUser.value.id
 
-      console.log('isRecipient:', isRecipient)
-      console.log('isMyComment:', isMyComment)
-
       // Si c'est mon propre commentaire, recharger pour avoir le vrai ID
       if (isMyComment) {
-        console.log('C\'est mon propre commentaire - Rechargement pour avoir le vrai ID')
         if (isOpen.value) {
-          await loadComments(false) // Recharger sans scroller
+          await loadComments(false)
         }
-        console.log('=========================================')
         return
       }
 
       // Si je suis destinataire
       if (isRecipient) {
-        console.log('Je suis dans les destinataires - Mise à jour')
-
-        // Recharger le compteur de commentaires non lus
         await loadUnreadCommentsCount()
 
-        // Si le widget est ouvert, afficher la notification et recharger les commentaires
         if (isOpen.value) {
-          console.log('Widget ouvert - Affichage notification')
           hasNewMessageNotification.value = true
-
-          // Recharger les commentaires SANS scroller (shouldScroll = false)
           await loadComments(false)
 
-          // Masquer la notification après 5 secondes
           setTimeout(() => {
             hasNewMessageNotification.value = false
           }, 5000)
         } else {
-          console.log('Widget fermé - Incrémentation badge')
           unreadCount.value++
         }
-      } else {
-        console.log('Je ne suis PAS dans les destinataires - Ignoré')
       }
-      console.log('=========================================')
     })
     .subscribe()
 }
