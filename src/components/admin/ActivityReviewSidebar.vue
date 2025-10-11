@@ -72,9 +72,17 @@
         </div>
       </div>
 
-      <!-- Compteur -->
-      <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        {{ filteredActivities.length }} activité{{ filteredActivities.length > 1 ? 's' : '' }}
+      <div class="flex">
+        <!-- Compteur -->
+        <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          {{ filteredActivities.length }} activité{{ filteredActivities.length > 1 ? 's' : '' }}
+        </div>
+        <!-- Commentaires -->
+         <div>
+
+         </div>
+
+         <!-- Notés -->
       </div>
     </div>
 
