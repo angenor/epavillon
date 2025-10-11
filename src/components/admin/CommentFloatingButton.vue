@@ -21,12 +21,12 @@
             d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
           />
         </svg>
-        <!-- Badge pour le nombre de commentaires -->
+        <!-- Badge pour le nombre de commentaires non lus -->
         <span
-          v-if="comments.length > 0"
+          v-if="unreadCommentsCount > 0"
           class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full min-w-6 h-6 px-1.5 flex items-center justify-center font-bold shadow-lg border-2 border-white"
         >
-          {{ comments.length > 99 ? '99+' : comments.length }}
+          {{ unreadCommentsCount > 99 ? '99+' : unreadCommentsCount }}
         </span>
       </div>
     </button>
@@ -397,6 +397,7 @@ const isLoadingComments = ref(false)
 const isSending = ref(false)
 const errorMessage = ref('')
 const unreadCount = ref(0)
+const unreadCommentsCount = ref(0) // Nombre de commentaires non lus pour le badge
 const messagesContainer = ref(null)
 
 // Edit mode variables
@@ -405,13 +406,55 @@ const editCommentText = ref('')
 const editShareMode = ref('all_revisionists')
 const editSelectedRevisionists = ref([])
 
-const toggleWidget = () => {
+const toggleWidget = async () => {
   isOpen.value = !isOpen.value
   if (isOpen.value) {
     resetState(false) // Réinitialiser l'état quand on ouvre (sans effacer les commentaires)
-    loadComments()
+    await loadComments()
     loadRevisionists()
+
+    // Marquer tous les commentaires de l'activité comme lus
+    await markActivityCommentsAsRead()
+
     unreadCount.value = 0
+  }
+}
+
+// Fonction pour marquer tous les commentaires de l'activité comme lus
+const markActivityCommentsAsRead = async () => {
+  try {
+    await supabase.rpc('mark_activity_comments_as_read', {
+      p_activity_id: props.activityId,
+      p_revisionniste_id: currentUser.value.id
+    })
+
+    // Recharger le nombre de commentaires non lus après marquage
+    await loadUnreadCommentsCount()
+  } catch (error) {
+    console.error('Erreur lors du marquage des commentaires comme lus:', error)
+  }
+}
+
+// Fonction pour charger le nombre de commentaires non lus
+const loadUnreadCommentsCount = async () => {
+  if (!currentUser.value) return
+
+  try {
+    const { data, error } = await supabase
+      .from('v_unread_comments_by_activity')
+      .select('unread_count')
+      .eq('activity_id', props.activityId)
+      .eq('revisionniste_id', currentUser.value.id)
+      .single()
+
+    if (error && error.code !== 'PGRST116') { // Ignorer l'erreur "no rows returned"
+      throw error
+    }
+
+    unreadCommentsCount.value = data?.unread_count || 0
+  } catch (error) {
+    console.error('Erreur lors du chargement du nombre de commentaires non lus:', error)
+    unreadCommentsCount.value = 0
   }
 }
 
@@ -789,11 +832,16 @@ const subscribeToComments = () => {
       table: 'revision_comments',
       filter: `activity_id=eq.${props.activityId}`
     }, (payload) => {
-      // Ajouter le nouveau commentaire si l'utilisateur est destinataire
+      // Recharger le compteur de non lus si l'utilisateur est destinataire
       if (payload.new.created_by !== currentUser.value.id) {
         if (payload.new.shared_with_revisionists?.includes(currentUser.value.id)) {
-          loadComments() // Recharger pour obtenir les détails de l'auteur
-          if (!isOpen.value) {
+          // Recharger le compteur de commentaires non lus
+          loadUnreadCommentsCount()
+
+          // Si le widget est ouvert, recharger aussi les commentaires
+          if (isOpen.value) {
+            loadComments()
+          } else {
             unreadCount.value++
           }
         }
@@ -804,8 +852,8 @@ const subscribeToComments = () => {
 
 onMounted(() => {
   if (hasRole('revisionniste')) {
-    // Charger les commentaires au démarrage pour afficher le compteur
-    loadComments()
+    // Charger le nombre de commentaires non lus au démarrage
+    loadUnreadCommentsCount()
     subscribeToComments()
   }
 })
@@ -824,11 +872,12 @@ watch(() => props.activityId, (newId, oldId) => {
 
     // Setup new subscription and reload data
     if (hasRole('revisionniste')) {
-      // Toujours charger les commentaires pour afficher le compteur
-      loadComments()
+      // Charger le nombre de commentaires non lus
+      loadUnreadCommentsCount()
 
-      // Si le widget est ouvert, charger aussi les révisionnistes
+      // Si le widget est ouvert, charger aussi les commentaires et révisionnistes
       if (isOpen.value) {
+        loadComments()
         loadRevisionists()
       }
 

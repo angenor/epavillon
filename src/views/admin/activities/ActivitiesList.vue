@@ -606,17 +606,20 @@ const loadActivities = async () => {
 
     if (error) throw error
 
-    // Charger le nombre de commentaires pour chaque activité
+    // Charger le nombre de commentaires non lus pour chaque activité
     const activitiesWithComments = await Promise.all(
       (data || []).map(async (activity) => {
-        const { count } = await supabase
-          .from('revision_comments')
-          .select('*', { count: 'exact', head: true })
+        // Charger le nombre de commentaires non lus pour cet utilisateur
+        const { data: unreadData } = await supabase
+          .from('v_unread_comments_by_activity')
+          .select('unread_count')
           .eq('activity_id', activity.id)
+          .eq('revisionniste_id', currentUser.value?.id)
+          .maybeSingle()
 
         return {
           ...activity,
-          comments_count: count || 0
+          comments_count: unreadData?.unread_count || 0
         }
       })
     )

@@ -262,6 +262,7 @@
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
+import { useAuth } from '@/composables/useAuth'
 import { useAdminPanel } from '@/composables/useAdminPanel'
 import { useRevisionViews } from '@/composables/useRevisionViews'
 
@@ -280,6 +281,7 @@ const emit = defineEmits(['close', 'select'])
 
 const router = useRouter()
 const { supabase } = useSupabase()
+const { currentUser } = useAuth()
 const { setReviewSidebarWidth } = useAdminPanel()
 const { viewedActivities, loadViewedActivities, recordActivityView, hasViewedActivity } = useRevisionViews()
 
@@ -388,17 +390,20 @@ const loadActivities = async () => {
 
     if (error) throw error
 
-    // Charger le nombre de commentaires pour chaque activité
+    // Charger le nombre de commentaires non lus pour chaque activité
     const activitiesWithComments = await Promise.all(
       (data || []).map(async (activity) => {
-        const { count } = await supabase
-          .from('revision_comments')
-          .select('*', { count: 'exact', head: true })
+        // Charger le nombre de commentaires non lus pour cet utilisateur
+        const { data: unreadData } = await supabase
+          .from('v_unread_comments_by_activity')
+          .select('unread_count')
           .eq('activity_id', activity.id)
+          .eq('revisionniste_id', currentUser.value?.id)
+          .maybeSingle()
 
         return {
           ...activity,
-          comments_count: count || 0
+          comments_count: unreadData?.unread_count || 0
         }
       })
     )
