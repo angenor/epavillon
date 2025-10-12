@@ -402,6 +402,7 @@ import { useSupabase } from '@/composables/useSupabase'
 import { useAuth } from '@/composables/useAuth'
 import { useAdmin } from '@/composables/useAdmin'
 import { useCommentBroadcast } from '@/composables/useCommentBroadcast'
+import { useNotifications } from '@/composables/useNotifications'
 
 const props = defineProps({
   activityId: {
@@ -414,6 +415,7 @@ const { supabase } = useSupabase()
 const { currentUser } = useAuth()
 const { hasRole } = useAdmin()
 const { sendBroadcast } = useCommentBroadcast()
+const { markRevisionCommentNotificationsAsRead } = useNotifications()
 
 const isOpen = ref(false)
 const comments = ref([])
@@ -454,6 +456,9 @@ const toggleWidget = async () => {
     loadRevisionists()
 
     hasNewMessageNotification.value = false
+
+    // Marquer immédiatement les notifications de commentaires de révision comme lues
+    await markRevisionCommentNotificationsAsRead(props.activityId)
 
     // Sauvegarder le timestamp après 3 secondes
     setTimeout(async () => {
@@ -965,16 +970,20 @@ const subscribeToComments = () => {
     .subscribe()
 }
 
-onMounted(() => {
+onMounted(async () => {
   if (hasRole('revisionniste')) {
     // Charger le nombre de commentaires non lus au démarrage
     loadUnreadCommentsCount()
     subscribeToComments()
+
+    // Marquer automatiquement les notifications de commentaires comme lues
+    // dès que l'utilisateur arrive sur la page (même sans ouvrir le widget)
+    await markRevisionCommentNotificationsAsRead(props.activityId)
   }
 })
 
 // Cleanup subscription and reload data when activity changes
-watch(() => props.activityId, (newId, oldId) => {
+watch(() => props.activityId, async (newId, oldId) => {
   if (newId !== oldId) {
     // Cleanup old subscription
     if (subscription) {
@@ -989,6 +998,9 @@ watch(() => props.activityId, (newId, oldId) => {
     if (hasRole('revisionniste')) {
       // Charger le nombre de commentaires non lus
       loadUnreadCommentsCount()
+
+      // Marquer automatiquement les notifications de commentaires comme lues pour la nouvelle activité
+      await markRevisionCommentNotificationsAsRead(newId)
 
       // Si le widget est ouvert, charger aussi les commentaires et révisionnistes
       if (isOpen.value) {

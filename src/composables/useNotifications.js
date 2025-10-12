@@ -171,6 +171,44 @@ export function useNotifications() {
   }
 
   /**
+   * Marque toutes les notifications de commentaires de révision pour une activité comme lues
+   */
+  const markRevisionCommentNotificationsAsRead = async (activityId) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (!user) {
+        throw new Error('Utilisateur non connecté')
+      }
+
+      const { error: updateError } = await supabase
+        .from('notifications')
+        .update({ is_read: true })
+        .eq('user_id', user.id)
+        .eq('notification_type', 'revision_comment')
+        .eq('related_entity_id', activityId)
+        .eq('is_read', false)
+
+      if (updateError) {
+        throw updateError
+      }
+
+      // Mettre à jour localement
+      notifications.value.forEach(notification => {
+        if (notification.notification_type === 'revision_comment' &&
+            notification.related_entity_id === activityId) {
+          notification.is_read = true
+        }
+      })
+
+      return { success: true }
+    } catch (err) {
+      console.error('Erreur lors du marquage des notifications de commentaires comme lues:', err)
+      return { success: false, error: err.message }
+    }
+  }
+
+  /**
    * Écoute les nouvelles notifications en temps réel
    */
   const subscribeToNotifications = (userId) => {
@@ -243,6 +281,7 @@ export function useNotifications() {
     markAsRead,
     markAllAsRead,
     deleteNotification,
+    markRevisionCommentNotificationsAsRead,
     subscribeToNotifications
   }
 }
