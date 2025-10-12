@@ -214,6 +214,7 @@ export function useNotifications() {
   const subscribeToNotifications = (userId) => {
     const subscription = supabase
       .channel('notifications')
+      // Écouter les nouvelles notifications (INSERT)
       .on('postgres_changes', {
         event: 'INSERT',
         schema: 'public',
@@ -221,7 +222,7 @@ export function useNotifications() {
         filter: `user_id=eq.${userId}`
       }, async (payload) => {
         const newNotification = payload.new
-        
+
         // Si c'est une notification de connexion, récupérer les détails
         if (newNotification.notification_type === 'connection_request' && newNotification.related_entity_id) {
           try {
@@ -240,7 +241,7 @@ export function useNotifications() {
               `)
               .eq('id', newNotification.related_entity_id)
               .single()
-            
+
             if (connectionData) {
               newNotification.connections = connectionData
             }
@@ -248,9 +249,29 @@ export function useNotifications() {
             console.error('Erreur lors de la récupération des détails de connexion:', error)
           }
         }
-        
+
         // Ajouter la nouvelle notification en haut de la liste
         notifications.value.unshift(newNotification)
+      })
+      // Écouter les mises à jour de notifications (UPDATE) pour la synchronisation en temps réel
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'notifications',
+        filter: `user_id=eq.${userId}`
+      }, (payload) => {
+        const updatedNotification = payload.new
+
+        // Mettre à jour la notification dans la liste locale
+        const index = notifications.value.findIndex(n => n.id === updatedNotification.id)
+        if (index !== -1) {
+          // Conserver les données de connexion si elles existent
+          const existingConnections = notifications.value[index].connections
+          notifications.value[index] = {
+            ...updatedNotification,
+            connections: existingConnections
+          }
+        }
       })
       .subscribe()
 
