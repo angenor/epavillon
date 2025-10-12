@@ -547,8 +547,27 @@
         </div>
       </div>
 
-      <div v-else class="text-center py-12">
-        <p class="text-gray-500 dark:text-gray-400">Activité non trouvée</p>
+      <div v-else class="flex items-center justify-center min-h-screen">
+        <div class="text-center max-w-md mx-auto p-6">
+          <div class="mb-4">
+            <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Activité non trouvée</h3>
+          <p class="text-gray-500 dark:text-gray-400 mb-6">
+            L'activité que vous recherchez n'existe pas ou vous n'avez pas les permissions nécessaires pour y accéder.
+          </p>
+          <button
+            @click="router.push('/admin/activities')"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 cursor-pointer"
+          >
+            <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Retour à la liste des activités
+          </button>
+        </div>
       </div>
 
       <!-- Modal de validation -->
@@ -706,6 +725,7 @@ const checkAccess = async () => {
 }
 
 const loadActivity = async () => {
+  isLoading.value = true
   try {
     // Charger l'activité avec toutes les relations
     const { data, error } = await supabase
@@ -737,13 +757,16 @@ const loadActivity = async () => {
       await loadOrganizationActivities(data.organization.id)
     }
 
-    // Charger le compteur de vues si l'utilisateur est révisionniste
+    // Charger le compteur de vues et enregistrer la vue si l'utilisateur est révisionniste
     if (isRevisionist.value) {
       myViewCount.value = await getCurrentUserViewCount(route.params.id)
+      // Enregistrer la vue de cette activité
+      await recordActivityView(route.params.id)
     }
 
   } catch (error) {
     console.error('Erreur lors du chargement de l\'activité:', error)
+    activity.value = null
   } finally {
     isLoading.value = false
   }
@@ -1228,17 +1251,12 @@ const handleActivitySelect = (selectedActivityId) => {
 }
 
 // Watcher pour recharger l'activité quand l'ID change
-watch(() => route.params.id, async (newId) => {
-  if (newId) {
+watch(() => route.params.id, async (newId, oldId) => {
+  if (newId && newId !== oldId) {
     // Faire défiler vers le haut de la page
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
     await loadActivity()
-
-    // Recharger les autres activités de l'organisation
-    if (activity.value?.organization?.id) {
-      await loadOrganizationActivities(activity.value.organization.id)
-    }
 
     enableActivityReviewMode(newId)
   }
@@ -1253,9 +1271,13 @@ onMounted(async () => {
     enableActivityReviewMode(route.params.id)
   } catch (error) {
     if (error.message === 'Accès non autorisé') {
-      throw error
+      // Rediriger vers la page 403
+      router.push({ path: '/403', query: { from: route.path } })
+      return
     }
     console.error('Erreur lors de l\'initialisation:', error)
+    isLoading.value = false
+    isLoadingRoles.value = false
   }
 })
 
