@@ -23,10 +23,10 @@
           <!-- Contenu -->
           <div class="flex-1 min-w-0">
             <p class="text-sm font-semibold text-gray-900 dark:text-white">
-              Nouveau commentaire
+              Nouveau commentaire de révision
             </p>
             <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
-              {{ notification.author_name }} a commenté l'activité
+              {{ notification.author_name }} a ajouté un commentaire de révision
             </p>
             <p class="text-xs text-gray-700 dark:text-gray-300 mt-1 line-clamp-2 font-medium">
               {{ notification.activity_title }}
@@ -126,10 +126,26 @@ const subscribeToComments = () => {
           .eq('id', payload.new.created_by)
           .single()
 
+        const authorName = authorData ? `${authorData.first_name} ${authorData.last_name}` : 'Un révisionniste'
+        const activityTitle = activityData?.title || 'Activité'
+
+        // Enregistrer dans la table notifications
+        await supabase
+          .from('notifications')
+          .insert({
+            user_id: currentUser.value.id,
+            notification_type: 'revision_comment',
+            title: 'Nouveau commentaire de révision',
+            content: `${authorName} a ajouté un commentaire de révision sur l'activité "${activityTitle}"`,
+            related_entity_id: payload.new.activity_id,
+            is_read: false
+          })
+
+        // Ajouter au popup
         addNotification({
           activity_id: payload.new.activity_id,
-          activity_title: activityData?.title || 'Activité',
-          author_name: authorData ? `${authorData.first_name} ${authorData.last_name}` : 'Un révisionniste',
+          activity_title: activityTitle,
+          author_name: authorName,
           comment_text: payload.new.comment_text
         })
 

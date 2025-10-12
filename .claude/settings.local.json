@@ -24,7 +24,8 @@
       "Bash(chmod:*)",
       "Bash(supabase functions deploy:*)",
       "Bash(npx supabase functions deploy:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []
