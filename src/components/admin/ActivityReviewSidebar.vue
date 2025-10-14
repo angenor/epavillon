@@ -80,6 +80,18 @@
 
         <!-- Boutons de tri -->
         <div class="flex items-center gap-2">
+          <!-- Bouton Réinitialiser -->
+          <button
+            v-if="hasActiveFilters"
+            @click="clearFilters"
+            class="flex items-center gap-1 px-2 py-1 text-xs rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors cursor-pointer"
+            title="Réinitialiser tous les filtres"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+
           <!-- Bouton Commentaires -->
           <button
             @click="toggleCommentsFilter"
@@ -451,6 +463,17 @@ const totalUnreadComments = computed(() => {
 
 const totalRatedActivities = computed(() => {
   return activities.value.filter(a => a.user_rating !== null && a.user_rating !== undefined).length
+})
+
+const hasActiveFilters = computed(() => {
+  return !!(
+    searchQuery.value ||
+    filterStatus.value ||
+    filterCountry.value ||
+    filterRevisionist.value ||
+    filterByComments.value ||
+    filterByRating.value
+  )
 })
 
 const currentIndex = computed(() => {
