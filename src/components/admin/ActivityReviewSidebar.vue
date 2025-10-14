@@ -121,8 +121,9 @@
           v-model="filterRevisionist"
           class="w-full px-2 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
         >
-          <option value="">Voir note de...</option>
-          <option v-for="revisionist in revisionists" :key="revisionist.id" :value="revisionist.id">
+          <option value="">Voir notes de...</option>
+          <option v-if="currentUser" :value="currentUser.id">Mes notes</option>
+          <option v-for="revisionist in revisionists.filter(r => r.id !== currentUser?.id)" :key="revisionist.id" :value="revisionist.id">
             Notes de {{ revisionist.full_name }}
           </option>
         </select>
@@ -641,6 +642,10 @@ const toggleRatedFilter = () => {
   // Désactiver les autres filtres si celui-ci est activé
   if (filterByRating.value) {
     filterByComments.value = false
+    // Synchroniser avec le dropdown : sélectionner "Mes notes"
+    filterRevisionist.value = currentUser.value?.id || ''
+  } else {
+    // Réinitialiser le dropdown si on désactive le filtre
     filterRevisionist.value = ''
   }
 }
@@ -903,6 +908,15 @@ watch(filterRevisionist, async (newValue) => {
   // Désactiver les autres filtres si celui-ci est activé
   if (newValue) {
     filterByComments.value = false
+    // Si l'utilisateur sélectionne "Mes notes", activer aussi le bouton "Notés"
+    if (newValue === currentUser.value?.id) {
+      filterByRating.value = true
+    } else {
+      // Si c'est un autre révisionniste, désactiver le bouton "Notés"
+      filterByRating.value = false
+    }
+  } else {
+    // Si on désélectionne le filtre, désactiver aussi le bouton "Notés"
     filterByRating.value = false
   }
 
