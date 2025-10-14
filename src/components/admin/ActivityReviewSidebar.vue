@@ -10,9 +10,15 @@
     <div
       v-if="isOpen"
       @mousedown="startResize"
-      class="absolute right-0 top-0 bottom-0 w-1 hover:w-1.5 bg-transparent hover:bg-orange-500 cursor-col-resize transition-all z-50"
+      class="absolute right-0 top-0 bottom-0 w-1.5 bg-gray-300 dark:bg-gray-600 hover:bg-orange-500 dark:hover:bg-orange-500 cursor-col-resize transition-all z-50 group"
       title="Redimensionner"
-    ></div>
+    >
+      <!-- Indicateur visuel au centre -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-1 opacity-50 group-hover:opacity-100 transition-opacity pointer-events-none">
+        <div class="w-0.5 h-8 bg-gray-500 dark:bg-gray-400 group-hover:bg-white rounded-full"></div>
+        <div class="w-0.5 h-8 bg-gray-500 dark:bg-gray-400 group-hover:bg-white rounded-full"></div>
+      </div>
+    </div>
     <!-- Header -->
     <div class="sticky mt-10 top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 z-10">
 
