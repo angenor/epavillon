@@ -173,18 +173,325 @@
       </div>
 
       <div v-else class="space-y-2">
-        <div
-          v-for="(activity, index) in filteredActivities"
-          :key="activity.id"
-          :ref="el => setActivityRef(activity.id, el)"
-          @click="selectActivity(activity.id)"
-          :class="[
-            'relative p-3 rounded-lg cursor-pointer transition-all duration-200 border',
-            String(activity.id) === String(currentActivityId)
-              ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-300 dark:border-orange-700 shadow-md'
-              : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:shadow-sm'
-          ]"
-        >
+        <!-- Affichage avec sections si filtre par révisionniste est activé -->
+        <template v-if="filterRevisionist">
+          <!-- Section "Proposées à valider" -->
+          <div v-if="activitiesToValidate.length > 0">
+            <div class="sticky top-0 bg-gradient-to-r from-green-600 to-green-700 dark:from-green-700 dark:to-green-800 text-white px-4 py-2.5 mb-2 rounded-lg shadow-md z-10 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span class="font-semibold text-sm uppercase tracking-wide">Proposées à valider</span>
+              </div>
+              <span class="bg-white/20 text-white px-2 py-0.5 rounded-full text-xs font-bold">{{ activitiesToValidate.length }}</span>
+            </div>
+            <div class="space-y-2 mb-4">
+              <div
+                v-for="activity in activitiesToValidate"
+                :key="activity.id"
+                :ref="el => setActivityRef(activity.id, el)"
+                @click="selectActivity(activity.id)"
+                :class="[
+                  'relative p-3 rounded-lg cursor-pointer transition-all duration-200 border-l-4 border-green-500',
+                  String(activity.id) === String(currentActivityId)
+                    ? 'bg-orange-50 dark:bg-orange-900/20 border-r border-t border-b border-orange-300 dark:border-orange-700 shadow-md'
+                    : 'bg-white dark:bg-gray-800 border-r border-t border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:shadow-sm'
+                ]"
+              >
+                <!-- Contenu -->
+                <div class="flex items-start space-x-3 mt-1">
+                  <!-- Logo de l'organisation avec indicateur de vue et badge de commentaires -->
+                  <div class="flex-shrink-0 flex flex-col items-center gap-1">
+                    <div class="relative">
+                      <img
+                        v-if="activity.organization?.logo_url"
+                        :src="activity.organization.logo_url"
+                        :alt="activity.organization.name"
+                        :class="[
+                          'w-10 h-10 rounded object-contain bg-gray-100 dark:bg-gray-700 p-1',
+                          hasViewedActivity(activity.id) ? 'opacity-60' : ''
+                        ]"
+                      >
+                      <div
+                        v-else
+                        :class="[
+                          'w-10 h-10 rounded bg-gray-200 dark:bg-gray-600 flex items-center justify-center',
+                          hasViewedActivity(activity.id) ? 'opacity-60' : ''
+                        ]"
+                      >
+                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                      </div>
+
+                      <!-- Badge "vue" -->
+                      <div
+                        v-if="hasViewedActivity(activity.id)"
+                        class="absolute -top-1 -right-1 bg-blue-500 dark:bg-blue-600 rounded-full p-0.5"
+                        title="Activité déjà vue"
+                      >
+                        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                      </div>
+                    </div>
+
+                    <!-- Badges sous le logo -->
+                    <div class="flex flex-col gap-1">
+                      <!-- Badge de commentaires -->
+                      <div v-if="activity.comments_count > 0" class="flex items-center bg-red-500 text-white rounded-full px-1.5 py-0.5">
+                        <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                        </svg>
+                        <span class="text-xs font-semibold">{{ activity.comments_count }}</span>
+                      </div>
+
+                      <!-- Badge de note du révisionniste sélectionné -->
+                      <div
+                        v-if="filterRevisionist && activity.selected_revisionist_rating"
+                        class="flex items-center text-white rounded-full px-1.5 py-0.5 transition-colors"
+                        :class="activity.selected_revisionist_rating < 10
+                          ? 'bg-red-600 dark:bg-red-700'
+                          : 'bg-green-600 dark:bg-green-700'"
+                        :title="activity.selected_revisionist_rating < 10 ? 'À rejeter' : 'À valider'"
+                      >
+                        <svg v-if="activity.selected_revisionist_rating < 10" class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                        <svg v-else class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        <span class="text-xs font-semibold">{{ activity.selected_revisionist_rating }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Informations -->
+                  <div class="flex-1 min-w-0">
+                    <h3 class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">
+                      {{ activity.title }}
+                    </h3>
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 truncate">
+                      {{ activity.organization?.name || 'Organisation inconnue' }}
+                      <span v-if="activity.organization?.acronym" class="text-gray-500">
+                        ({{ activity.organization.acronym }})
+                      </span>
+                    </p>
+
+                    <!-- Date, pays et statut sur une ligne -->
+                    <div class="flex items-center justify-between mt-2">
+                      <div class="flex items-center space-x-2">
+                        <!-- Date -->
+                        <span class="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                          {{ formatDate(activity.created_at) }}
+                        </span>
+
+                        <!-- Pays avec drapeau -->
+                        <div v-if="activity.organization?.country" class="flex items-center">
+                          <span class="text-xs text-gray-400 dark:text-gray-500">•</span>
+                          <img
+                            v-if="activity.organization.country.code"
+                            :src="`https://flagcdn.com/w20/${activity.organization.country.code.toLowerCase()}.png`"
+                            :alt="activity.organization.country.name_fr"
+                            class="w-4 h-3 ml-2 mr-1 object-cover rounded-sm"
+                            loading="lazy"
+                          >
+                          <span class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[60px]">
+                            {{ activity.organization.country.name_fr }}
+                          </span>
+                        </div>
+                      </div>
+
+                      <!-- Statut -->
+                      <span
+                        :class="[
+                          'px-2 py-0.5 text-xs font-medium rounded-full flex-shrink-0',
+                          getStatusClass(activity.validation_status)
+                        ]"
+                      >
+                        {{ getStatusLabel(activity.validation_status) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Indicateur d'activité courante -->
+                <div
+                  v-if="String(activity.id) === String(currentActivityId)"
+                  class="absolute inset-y-0 left-0 w-1 bg-orange-500 rounded-l-lg"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section "Proposées à rejeter" -->
+          <div v-if="activitiesToReject.length > 0">
+            <div class="sticky top-0 bg-gradient-to-r from-red-600 to-red-700 dark:from-red-700 dark:to-red-800 text-white px-4 py-2.5 mb-2 rounded-lg shadow-md z-10 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span class="font-semibold text-sm uppercase tracking-wide">Proposées à rejeter</span>
+              </div>
+              <span class="bg-white/20 text-white px-2 py-0.5 rounded-full text-xs font-bold">{{ activitiesToReject.length }}</span>
+            </div>
+            <div class="space-y-2">
+              <div
+                v-for="activity in activitiesToReject"
+                :key="activity.id"
+                :ref="el => setActivityRef(activity.id, el)"
+                @click="selectActivity(activity.id)"
+                :class="[
+                  'relative p-3 rounded-lg cursor-pointer transition-all duration-200 border-l-4 border-red-500',
+                  String(activity.id) === String(currentActivityId)
+                    ? 'bg-orange-50 dark:bg-orange-900/20 border-r border-t border-b border-orange-300 dark:border-orange-700 shadow-md'
+                    : 'bg-white dark:bg-gray-800 border-r border-t border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:shadow-sm'
+                ]"
+              >
+                <!-- Contenu -->
+                <div class="flex items-start space-x-3 mt-1">
+                  <!-- Logo de l'organisation avec indicateur de vue et badge de commentaires -->
+                  <div class="flex-shrink-0 flex flex-col items-center gap-1">
+                    <div class="relative">
+                      <img
+                        v-if="activity.organization?.logo_url"
+                        :src="activity.organization.logo_url"
+                        :alt="activity.organization.name"
+                        :class="[
+                          'w-10 h-10 rounded object-contain bg-gray-100 dark:bg-gray-700 p-1',
+                          hasViewedActivity(activity.id) ? 'opacity-60' : ''
+                        ]"
+                      >
+                      <div
+                        v-else
+                        :class="[
+                          'w-10 h-10 rounded bg-gray-200 dark:bg-gray-600 flex items-center justify-center',
+                          hasViewedActivity(activity.id) ? 'opacity-60' : ''
+                        ]"
+                      >
+                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                      </div>
+
+                      <!-- Badge "vue" -->
+                      <div
+                        v-if="hasViewedActivity(activity.id)"
+                        class="absolute -top-1 -right-1 bg-blue-500 dark:bg-blue-600 rounded-full p-0.5"
+                        title="Activité déjà vue"
+                      >
+                        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                      </div>
+                    </div>
+
+                    <!-- Badges sous le logo -->
+                    <div class="flex flex-col gap-1">
+                      <!-- Badge de commentaires -->
+                      <div v-if="activity.comments_count > 0" class="flex items-center bg-red-500 text-white rounded-full px-1.5 py-0.5">
+                        <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                        </svg>
+                        <span class="text-xs font-semibold">{{ activity.comments_count }}</span>
+                      </div>
+
+                      <!-- Badge de note du révisionniste sélectionné -->
+                      <div
+                        v-if="filterRevisionist && activity.selected_revisionist_rating"
+                        class="flex items-center text-white rounded-full px-1.5 py-0.5 transition-colors"
+                        :class="activity.selected_revisionist_rating < 10
+                          ? 'bg-red-600 dark:bg-red-700'
+                          : 'bg-green-600 dark:bg-green-700'"
+                        :title="activity.selected_revisionist_rating < 10 ? 'À rejeter' : 'À valider'"
+                      >
+                        <svg v-if="activity.selected_revisionist_rating < 10" class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                        <svg v-else class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        <span class="text-xs font-semibold">{{ activity.selected_revisionist_rating }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Informations -->
+                  <div class="flex-1 min-w-0">
+                    <h3 class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">
+                      {{ activity.title }}
+                    </h3>
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 truncate">
+                      {{ activity.organization?.name || 'Organisation inconnue' }}
+                      <span v-if="activity.organization?.acronym" class="text-gray-500">
+                        ({{ activity.organization.acronym }})
+                      </span>
+                    </p>
+
+                    <!-- Date, pays et statut sur une ligne -->
+                    <div class="flex items-center justify-between mt-2">
+                      <div class="flex items-center space-x-2">
+                        <!-- Date -->
+                        <span class="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                          {{ formatDate(activity.created_at) }}
+                        </span>
+
+                        <!-- Pays avec drapeau -->
+                        <div v-if="activity.organization?.country" class="flex items-center">
+                          <span class="text-xs text-gray-400 dark:text-gray-500">•</span>
+                          <img
+                            v-if="activity.organization.country.code"
+                            :src="`https://flagcdn.com/w20/${activity.organization.country.code.toLowerCase()}.png`"
+                            :alt="activity.organization.country.name_fr"
+                            class="w-4 h-3 ml-2 mr-1 object-cover rounded-sm"
+                            loading="lazy"
+                          >
+                          <span class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[60px]">
+                            {{ activity.organization.country.name_fr }}
+                          </span>
+                        </div>
+                      </div>
+
+                      <!-- Statut -->
+                      <span
+                        :class="[
+                          'px-2 py-0.5 text-xs font-medium rounded-full flex-shrink-0',
+                          getStatusClass(activity.validation_status)
+                        ]"
+                      >
+                        {{ getStatusLabel(activity.validation_status) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Indicateur d'activité courante -->
+                <div
+                  v-if="String(activity.id) === String(currentActivityId)"
+                  class="absolute inset-y-0 left-0 w-1 bg-orange-500 rounded-l-lg"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- Affichage classique sans sections -->
+        <template v-else>
+          <div
+            v-for="activity in filteredActivities"
+            :key="activity.id"
+            :ref="el => setActivityRef(activity.id, el)"
+            @click="selectActivity(activity.id)"
+            :class="[
+              'relative p-3 rounded-lg cursor-pointer transition-all duration-200 border',
+              String(activity.id) === String(currentActivityId)
+                ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-300 dark:border-orange-700 shadow-md'
+                : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:shadow-sm'
+            ]"
+          >
           <!-- Date de soumission -->
           <!-- <div class="absolute -left-2 -top-2 bg-orange-600 text-white text-xs font-semibold rounded-lg px-2 py-1 shadow-sm">
             {{ formatDate(activity.created_at) }}
@@ -307,14 +614,8 @@
               </div>
             </div>
           </div>
-
-          <!-- Indicateur d'activité courante -->
-          <div
-            v-if="String(activity.id) === String(currentActivityId)"
-            class="absolute inset-y-0 left-0 w-1 bg-orange-500 rounded-l-lg"
-          ></div>
         </div>
-
+        </template>
       </div>
     </div>
 
@@ -491,6 +792,18 @@ const hasActiveFilters = computed(() => {
     filterByComments.value ||
     filterByRating.value
   )
+})
+
+// Computed pour les activités à valider (note >= 10)
+const activitiesToValidate = computed(() => {
+  if (!filterRevisionist.value) return []
+  return filteredActivities.value.filter(a => a.selected_revisionist_rating >= 10)
+})
+
+// Computed pour les activités à rejeter (note < 10)
+const activitiesToReject = computed(() => {
+  if (!filterRevisionist.value) return []
+  return filteredActivities.value.filter(a => a.selected_revisionist_rating < 10)
 })
 
 const currentIndex = computed(() => {
