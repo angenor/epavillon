@@ -13,5 +13,9 @@ En plus je veux un autre bouton flotant en bas à droite avec un couleur assez v
 Lorsqu'on clique sur les boutons, il se transforme en une sorte de chatbot(petit fenetre en bas à droite) et l'utilisateur peut saisir sa note d'une part et peu saisir son commentaire d'autre part avant de choisir qui peut voir le commentaire parmis les révisionnistes
 
 
-- il faut afficher en rouge les activités à rejeter et en vert les activités à valider
 - un révisionniste ne peut changer le statut d'une activité ni envoyer une notification
+
+
+je veux une page ActivityDatesManager.vue(à partir de ActivitiesList.vue) qui permet de gérer les dates des activités.
+Actuellement, les organisateurs on proposé des activités avec des dates qui ne sont pas forcement bonnes. Il peut y avoir des conflits de dates entre plusieurs activités.
+Je veux que cette page liste toutes les activités avec leurs dates sous forme de tableau dynamique et permette de modifier les dates par glisser-déposer et redimensionnement. les modifications seront sauvegardées automatiquement (aussi dans activity_modifications). Le tableau doit etre en fullscreen et avoir une vue par jour, par semaine et par mois.
