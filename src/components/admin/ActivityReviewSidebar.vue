@@ -113,8 +113,9 @@
             </svg>
             <span v-if="totalRatedActivities > 0" class="font-semibold">{{ totalRatedActivities }}</span>
           </button>
-
-          <!-- Filtre par révisionniste -->
+        </div>
+      </div>
+      <!-- Filtre par révisionniste -->
           <div v-if="revisionists.length > 0" class="mt-2">
             <select
               v-model="filterRevisionist"
@@ -126,9 +127,6 @@
               </option>
             </select>
           </div>
-        </div>
-      </div>
-
 
     </div>
 
