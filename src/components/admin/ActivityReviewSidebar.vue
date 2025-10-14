@@ -113,8 +113,23 @@
             </svg>
             <span v-if="totalRatedActivities > 0" class="font-semibold">{{ totalRatedActivities }}</span>
           </button>
+
+          <!-- Filtre par révisionniste -->
+          <div v-if="revisionists.length > 0" class="mt-2">
+            <select
+              v-model="filterRevisionist"
+              class="w-full px-2 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+            >
+              <option value="">Notes de tous les révisionnistes</option>
+              <option v-for="revisionist in revisionists" :key="revisionist.id" :value="revisionist.id">
+                Notes de {{ revisionist.full_name }}
+              </option>
+            </select>
+          </div>
         </div>
       </div>
+
+
     </div>
 
     <!-- Liste des activités avec scroll -->
@@ -196,12 +211,23 @@
                 </div>
               </div>
 
-              <!-- Badge de commentaires sous le logo -->
-              <div v-if="activity.comments_count > 0" class="flex items-center bg-red-500 text-white rounded-full px-1.5 py-0.5">
-                <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                </svg>
-                <span class="text-xs font-semibold">{{ activity.comments_count }}</span>
+              <!-- Badges sous le logo -->
+              <div class="flex flex-col gap-1">
+                <!-- Badge de commentaires -->
+                <div v-if="activity.comments_count > 0" class="flex items-center bg-red-500 text-white rounded-full px-1.5 py-0.5">
+                  <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                  </svg>
+                  <span class="text-xs font-semibold">{{ activity.comments_count }}</span>
+                </div>
+
+                <!-- Badge de note du révisionniste sélectionné -->
+                <div v-if="filterRevisionist && activity.selected_revisionist_rating" class="flex items-center bg-orange-500 text-white rounded-full px-1.5 py-0.5">
+                  <svg class="w-3 h-3 mr-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                  <span class="text-xs font-semibold">{{ activity.selected_revisionist_rating }}</span>
+                </div>
               </div>
             </div>
 
@@ -329,9 +355,11 @@ const { addListener, removeListener } = useCommentBroadcast()
 // État
 const activities = ref([])
 const countries = ref([])
+const revisionists = ref([])
 const isLoading = ref(false)
 const filterStatus = ref('')
 const filterCountry = ref('')
+const filterRevisionist = ref('')
 const searchQuery = ref('')
 const activityRefs = ref({})
 const LISTENER_ID = 'activity-review-sidebar' // ID unique pour ce composant
@@ -379,8 +407,27 @@ const filteredActivities = computed(() => {
     })
   }
 
+  // Filtrer par révisionniste
+  if (filterRevisionist.value) {
+    result = result.filter(a => {
+      // Vérifier si le révisionniste sélectionné a noté cette activité
+      return a.all_ratings?.some(rating => rating.revisionniste_id === filterRevisionist.value)
+    })
+    // Ajouter une propriété temporaire pour le tri
+    result = result.map(activity => {
+      const revisionistRating = activity.all_ratings?.find(
+        rating => rating.revisionniste_id === filterRevisionist.value
+      )
+      return {
+        ...activity,
+        selected_revisionist_rating: revisionistRating?.rating || 0
+      }
+    })
+    // Trier par note décroissante du révisionniste sélectionné
+    result.sort((a, b) => (b.selected_revisionist_rating || 0) - (a.selected_revisionist_rating || 0))
+  }
   // Filtrer par commentaires non lus
-  if (filterByComments.value) {
+  else if (filterByComments.value) {
     result = result.filter(a => a.comments_count > 0)
     // Trier par date de création du plus ancien au plus récent (premiers soumis en premier)
     result.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
@@ -456,7 +503,7 @@ const loadActivities = async () => {
 
     if (error) throw error
 
-    // Charger le nombre de commentaires non lus et la note pour chaque activité
+    // Charger le nombre de commentaires non lus et les notes pour chaque activité
     const activitiesWithData = await Promise.all(
       (data || []).map(async (activity) => {
         // Charger le nombre de commentaires non lus pour cet utilisateur
@@ -467,7 +514,7 @@ const loadActivities = async () => {
           .eq('revisionniste_id', currentUser.value?.id)
           .maybeSingle()
 
-        // Charger la note donnée par l'utilisateur (si existe)
+        // Charger la note donnée par l'utilisateur courant (si existe)
         const { data: ratingData } = await supabase
           .from('activity_ratings')
           .select('rating')
@@ -475,10 +522,17 @@ const loadActivities = async () => {
           .eq('revisionniste_id', currentUser.value?.id)
           .maybeSingle()
 
+        // Charger TOUTES les notes de tous les révisionnistes pour cette activité
+        const { data: allRatingsData } = await supabase
+          .from('activity_ratings')
+          .select('rating, revisionniste_id')
+          .eq('activity_id', activity.id)
+
         return {
           ...activity,
           comments_count: unreadData?.unread_count || 0,
-          user_rating: ratingData?.rating || null
+          user_rating: ratingData?.rating || null,
+          all_ratings: allRatingsData || []
         }
       })
     )
@@ -504,6 +558,43 @@ const loadCountries = async () => {
     countries.value = data || []
   } catch (error) {
     console.error('Erreur lors du chargement des pays:', error)
+  }
+}
+
+const loadRevisionists = async () => {
+  try {
+    // Charger les utilisateurs ayant le rôle 'revisionniste' depuis la table user_roles
+    const { data, error } = await supabase
+      .from('user_roles')
+      .select(`
+        user_id,
+        users!user_id(id, first_name, last_name, email)
+      `)
+      .eq('role', 'revisionniste')
+      .eq('is_active', true)
+
+    if (error) throw error
+
+    // Supprimer les doublons et créer la liste des révisionnistes
+    const uniqueRevisionists = new Map()
+
+    data?.forEach(item => {
+      if (item.users && !uniqueRevisionists.has(item.users.id)) {
+        uniqueRevisionists.set(item.users.id, {
+          id: item.users.id,
+          full_name: `${item.users.first_name} ${item.users.last_name}`
+        })
+      }
+    })
+
+    // Convertir en tableau et trier par nom
+    revisionists.value = Array.from(uniqueRevisionists.values()).sort((a, b) =>
+      a.full_name.localeCompare(b.full_name, 'fr')
+    )
+
+    console.log('Révisionnistes chargés:', revisionists.value.length, 'révisionniste(s)')
+  } catch (error) {
+    console.error('Erreur lors du chargement des révisionnistes:', error)
   }
 }
 
@@ -533,23 +624,26 @@ const clearFilters = () => {
   searchQuery.value = ''
   filterStatus.value = ''
   filterCountry.value = ''
+  filterRevisionist.value = ''
   filterByComments.value = false
   filterByRating.value = false
 }
 
 const toggleCommentsFilter = () => {
   filterByComments.value = !filterByComments.value
-  // Désactiver l'autre filtre si celui-ci est activé
+  // Désactiver les autres filtres si celui-ci est activé
   if (filterByComments.value) {
     filterByRating.value = false
+    filterRevisionist.value = ''
   }
 }
 
 const toggleRatedFilter = () => {
   filterByRating.value = !filterByRating.value
-  // Désactiver l'autre filtre si celui-ci est activé
+  // Désactiver les autres filtres si celui-ci est activé
   if (filterByRating.value) {
     filterByComments.value = false
+    filterRevisionist.value = ''
   }
 }
 
@@ -806,6 +900,21 @@ watch(filterCountry, async () => {
   }
 })
 
+// Watcher pour le filtre de révisionniste
+watch(filterRevisionist, async (newValue) => {
+  // Désactiver les autres filtres si celui-ci est activé
+  if (newValue) {
+    filterByComments.value = false
+    filterByRating.value = false
+  }
+
+  await nextTick()
+  // Ne pas scroller automatiquement lors du filtrage
+  if (props.currentActivityId && filteredActivities.value.some(a => String(a.id) === String(props.currentActivityId))) {
+    scrollToCurrentActivity()
+  }
+})
+
 // Watcher pour la recherche (avec debounce)
 let searchTimeout = null
 watch(searchQuery, () => {
@@ -834,6 +943,7 @@ onMounted(async () => {
   await Promise.all([
     loadActivities(),
     loadCountries(),
+    loadRevisionists(),
     loadViewedActivities() // Charger les activités déjà vues par le révisionniste
   ])
 
