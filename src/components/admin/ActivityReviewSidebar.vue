@@ -121,7 +121,7 @@
               v-model="filterRevisionist"
               class="w-full px-2 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
             >
-              <option value="">Notes de tous les révisionnistes</option>
+              <option value="">Voir note de...</option>
               <option v-for="revisionist in revisionists" :key="revisionist.id" :value="revisionist.id">
                 Notes de {{ revisionist.full_name }}
               </option>
