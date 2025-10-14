@@ -85,23 +85,48 @@
             </div>
           </div>
 
-          <!-- Slider de notation -->
+          <!-- Slider de notation avec zones colorées -->
           <div class="mb-4">
+            <!-- Zone de statut avec texte indicatif -->
+            <div v-if="rating" class="mb-3 p-3 rounded-lg border-2 transition-all duration-300" :class="ratingStatusClass">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <svg class="w-5 h-5 mr-2" :class="ratingStatusIconClass" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path v-if="rating < 10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  <span class="font-semibold" :class="ratingStatusTextClass">{{ ratingStatusText }}</span>
+                </div>
+                <span class="text-sm font-medium" :class="ratingStatusTextClass">{{ ratingPertinenceText }}</span>
+              </div>
+            </div>
+
+            <!-- Barre de gradient visuel -->
+            <div class="relative mb-2 h-3 rounded-full overflow-hidden bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 shadow-inner">
+              <!-- Marqueur de seuil à 10 -->
+              <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-white shadow-lg z-10"></div>
+            </div>
+
+            <!-- Slider de notation -->
             <input
               v-model="rating"
               type="range"
               min="0"
               max="20"
               step="0.5"
-              class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
+              class="w-full h-3 rounded-lg appearance-none cursor-pointer slider-custom"
               :disabled="isSaving"
             />
-            <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
-              <span>0</span>
-              <span>5</span>
-              <span>10</span>
-              <span>15</span>
-              <span>20</span>
+            <div class="flex justify-between text-xs mt-1">
+              <span class="text-red-600 dark:text-red-400 font-medium">0</span>
+              <span class="text-orange-600 dark:text-orange-400">5</span>
+              <span class="text-yellow-600 dark:text-yellow-400 font-semibold">10</span>
+              <span class="text-lime-600 dark:text-lime-400">15</span>
+              <span class="text-green-600 dark:text-green-400 font-medium">20</span>
+            </div>
+            <div class="flex justify-between text-xs mt-1">
+              <span class="text-red-600 dark:text-red-400 font-medium">À rejeter</span>
+              <span class="text-green-600 dark:text-green-400 font-medium">À valider</span>
             </div>
           </div>
 
@@ -261,6 +286,56 @@ const averageRating = computed(() => {
   if (allRatings.value.length === 0) return null
   const sum = allRatings.value.reduce((acc, r) => acc + r.rating, 0)
   return sum / allRatings.value.length
+})
+
+// Computed properties pour les indicateurs de statut
+const ratingStatusClass = computed(() => {
+  if (!rating.value) return ''
+  if (rating.value < 10) {
+    return 'bg-red-50 dark:bg-red-900/20 border-red-300 dark:border-red-700'
+  }
+  return 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700'
+})
+
+const ratingStatusIconClass = computed(() => {
+  if (!rating.value) return ''
+  if (rating.value < 10) {
+    return 'text-red-600 dark:text-red-400'
+  }
+  return 'text-green-600 dark:text-green-400'
+})
+
+const ratingStatusTextClass = computed(() => {
+  if (!rating.value) return ''
+  if (rating.value < 10) {
+    return 'text-red-700 dark:text-red-300'
+  }
+  return 'text-green-700 dark:text-green-300'
+})
+
+const ratingStatusText = computed(() => {
+  if (!rating.value) return ''
+  if (rating.value < 10) {
+    return 'Activité à rejeter'
+  }
+  return 'Activité à valider'
+})
+
+const ratingPertinenceText = computed(() => {
+  if (!rating.value) return ''
+  const ratingNum = parseFloat(rating.value)
+
+  if (ratingNum < 10) {
+    // Zone de rejet (0-9)
+    if (ratingNum <= 3) return 'Non pertinent'
+    if (ratingNum <= 6) return 'Peu pertinent'
+    return 'Faiblement pertinent'
+  } else {
+    // Zone de validation (10-20)
+    if (ratingNum <= 13) return 'Acceptable'
+    if (ratingNum <= 16) return 'Pertinent'
+    return 'Très pertinent'
+  }
 })
 
 const toggleWidget = () => {
@@ -450,23 +525,45 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.slider::-webkit-slider-thumb {
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  background: linear-gradient(135deg, #fbbf24 0%, #f97316 100%);
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+.slider-custom {
+  background: transparent;
 }
 
-.slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  background: linear-gradient(135deg, #fbbf24 0%, #f97316 100%);
+.slider-custom::-webkit-slider-thumb {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  background: white;
+  border: 3px solid #f97316;
   border-radius: 50%;
   cursor: pointer;
-  border: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.slider-custom::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.slider-custom::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  background: white;
+  border: 3px solid #f97316;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.slider-custom::-moz-range-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.slider-custom:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 </style>
