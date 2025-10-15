@@ -108,7 +108,7 @@
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <!-- Dropdown de statut -->
               <div class="relative">
-                <select v-model="activity.validation_status"
+                <!-- <select v-model="activity.validation_status"
                         @focus="previousStatusValue = activity.validation_status"
                         @change="handleStatusChange"
                         :disabled="isUpdatingStatus"
@@ -121,18 +121,18 @@
                   <option value="under_review">En examen</option>
                   <option value="approved">Approuvée</option>
                   <option value="rejected">Rejetée</option>
-                </select>
+                </select> -->
                 <!-- Icône dropdown -->
-                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                <!-- <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                   <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                   </svg>
-                </div>
+                </div> -->
               </div>
 
               <div class="flex items-center space-x-3">
                 <!-- Bouton notification activité reçue -->
-                <button @click="sendActivityReceivedNotification"
+                <!-- <button @click="sendActivityReceivedNotification"
                         :disabled="isSendingNotification"
                         class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
                   <div v-if="isSendingNotification" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -140,7 +140,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                   </svg>
                   {{ isSendingNotification ? 'Envoi...' : 'Notifier réception' }}
-                </button>
+                </button> -->
 
                 <!-- Indicateur de chargement -->
                 <div v-if="isUpdatingStatus" class="flex items-center text-gray-500">

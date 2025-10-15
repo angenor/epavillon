@@ -280,7 +280,7 @@
                     {{ t('admin.activities.view') }}
                   </button>
                   <!-- Bouton Email (Super Admin seulement) -->
-                  <button v-if="canSendEmails"
+                  <!-- <button v-if="canSendEmails"
                           @click="openForActivity(activity.id, activity.event_id)"
                           class="cursor-pointer p-1.5 text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-150"
                           :title="t('email.send_email') || 'Envoyer un email'">
@@ -303,7 +303,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
-                  </button>
+                  </button> -->
                 </div>
               </div>
             </div>
