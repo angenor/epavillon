@@ -22,6 +22,6 @@ Je veux que cette page liste toutes les activités avec leurs dates sous forme d
 Tu utiliseras vue-cal, déjà installé.
 les cards des activités dans le tableau doivent afficher le titre de l'activité, le nom & logo de l'organisation. leurs couleur de fond doit etre jaune si l'activité est en cours de révision, submitted. Elles doivent etre rouge si l'activité est rejetée, annulé, elle doit etre verte si l'activité est approuvée, en cours ou terminée.
 lorsqu'on modifie une date ou heure par glisser-déposer ou redimensionnement, il faut enregistrer la modification à la fois dans activity_modifications(date, auteur etc...) et dans activities(modifier proposed_start_date et proposed_end_date, ne surtout pas  mettre à jour le champ "final_start_date" et "final_end_date" de l'activité, ces dernier serons mise à jour une fois le comité d'accord) lorsque l'utilisateur clique sur le bouton "enregistrer"(ce bouton doit apparaitre dès qu'une modification est effectuée).
-voici un exemple de code pour le tableau dynamique avec vue-cal: @src/views/admin/activities/exempleDateManager.vue
+voici un exemple de code pour le tableau dynamique avec vue-cal: @src/views/admin/activities/exempleDateManager.vue (c'est un exemple, tu adapteras le code pour répondre aux besoins ci-dessus)
 
 CREATE TYPE validation_status AS ENUM ('draft', 'submitted', 'under_review', 'approved', 'rejected', 'cancelled', 'live', 'completed');
