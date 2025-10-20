@@ -254,6 +254,9 @@
     "organizedBy": "Organized by",
     "viewAllActivities": "View all activities",
     "viewAllProgramming": "View all programming",
+    "programmingComingSoon": "Programming coming soon",
+    "programmingComingSoonDescription": "The programming schedule for this event will be published shortly. Stay tuned!",
+    "stayTuned": "Stay tuned",
     "quickStats": "Quick Stats",
     "totalActivities": "Total Activities",
     "submissions": "Submissions",
@@ -263,7 +266,8 @@
       "upcoming": "Upcoming",
       "ongoing": "Ongoing",
       "completed": "Completed",
-      "suspended": "Suspended"
+      "suspended": "Suspended",
+      "cancelled": "Cancelled"
     },
     "submissionStatus": {
       "open": "Open",

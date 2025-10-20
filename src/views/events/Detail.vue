@@ -155,8 +155,16 @@
           <!-- Badges flottants -->
           <div class="flex flex-wrap gap-3 mb-6">
             <span class="backdrop-blur-md bg-white/10 border border-white/20 text-white px-4 py-2 rounded-full text-sm font-medium animate-fade-in-up">
-              <span class="inline-block w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-              {{ t(`event.status.${event.event_status || event.status}`) }}
+              <span
+                :class="[
+                  'inline-block w-2 h-2 rounded-full mr-2',
+                  actualEventStatus === 'ongoing' ? 'bg-green-400 animate-pulse' :
+                  actualEventStatus === 'upcoming' ? 'bg-blue-400 animate-pulse' :
+                  actualEventStatus === 'completed' ? 'bg-gray-400' :
+                  'bg-red-400'
+                ]"
+              ></span>
+              {{ t(`event.status.${actualEventStatus}`) }}
             </span>
 
             <span v-if="event.year" class="backdrop-blur-md bg-white/10 border border-white/20 text-white px-4 py-2 rounded-full text-sm font-medium animate-fade-in-up animation-delay-200">
@@ -309,7 +317,7 @@
     </div>
 
     <!-- Section Activités -->
-    <div v-if="isLoadingActivities || activities.length > 0" class="mt-16 py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
+    <div class="mt-16 py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -332,6 +340,29 @@
                 <div class="w-28 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
               </div>
               <div class="w-32 h-5 bg-gray-200 dark:bg-gray-700 rounded mt-4 animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message quand pas d'activités -->
+        <div v-else-if="!isLoadingActivities && activities.length === 0" class="text-center py-16">
+          <div class="max-w-md mx-auto">
+            <div class="mb-6">
+              <svg class="w-24 h-24 mx-auto text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              {{ t('event.programmingComingSoon') }}
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-6">
+              {{ t('event.programmingComingSoonDescription') }}
+            </p>
+            <div class="inline-flex items-center gap-2 px-6 py-3 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-full">
+              <svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span class="font-medium">{{ t('event.stayTuned') }}</span>
             </div>
           </div>
         </div>
@@ -408,7 +439,7 @@
         </div>
 
         <!-- Bouton voir toutes les activités -->
-        <div v-if="!isLoadingActivities" class="text-center mt-12">
+        <div v-if="!isLoadingActivities && activities.length > 0" class="text-center mt-12">
           <button
             @click="goToActivities"
             :disabled="!event.is_programmation_available"
@@ -435,7 +466,7 @@
         </div>
 
         <!-- Skeleton pour le bouton -->
-        <div v-else class="text-center mt-12">
+        <div v-if="isLoadingActivities" class="text-center mt-12">
           <div class="w-48 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl mx-auto animate-pulse"></div>
         </div>
       </div>
@@ -537,6 +568,57 @@ const actualSubmissionStatus = computed(() => {
   const today = new Date()
 
   return deadline > today ? 'open' : 'closed'
+})
+
+const actualEventStatus = computed(() => {
+  // Si l'événement est annulé, on respecte ce statut
+  if (event.value.event_status === 'cancelled' || event.value.status === 'cancelled') {
+    return 'cancelled'
+  }
+
+  const today = new Date()
+  today.setHours(0, 0, 0, 0) // Réinitialiser à minuit pour comparaison juste des dates
+
+  // Déterminer la date de début et de fin de l'événement
+  let startDate = null
+  let endDate = null
+
+  // Priorité aux dates online/in-person puis fallback sur start_date/end_date
+  if (event.value.online_start_datetime) {
+    startDate = new Date(event.value.online_start_datetime)
+  } else if (event.value.in_person_start_date) {
+    startDate = new Date(event.value.in_person_start_date)
+  } else if (event.value.start_date) {
+    startDate = new Date(event.value.start_date)
+  }
+
+  if (event.value.online_end_datetime) {
+    endDate = new Date(event.value.online_end_datetime)
+  } else if (event.value.in_person_end_date) {
+    endDate = new Date(event.value.in_person_end_date)
+  } else if (event.value.end_date) {
+    endDate = new Date(event.value.end_date)
+  }
+
+  // Si pas de dates, on garde le statut de la base
+  if (!startDate) {
+    return event.value.event_status || event.value.status || 'upcoming'
+  }
+
+  // Réinitialiser les heures pour comparaison
+  startDate.setHours(0, 0, 0, 0)
+  if (endDate) {
+    endDate.setHours(23, 59, 59, 999) // Fin de journée
+  }
+
+  // Calculer le statut en fonction des dates
+  if (endDate && today > endDate) {
+    return 'completed'
+  } else if (today >= startDate && (!endDate || today <= endDate)) {
+    return 'ongoing'
+  } else {
+    return 'upcoming'
+  }
 })
 
 // Méthodes

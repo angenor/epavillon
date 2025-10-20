@@ -265,6 +265,9 @@
     "viewAllProgramming": "Voir toute la programmation",
     "upcomingProgramming": "Programmation à venir",
     "programmingDescription": "Découvrez la programmation complète pour cet événement",
+    "programmingComingSoon": "Programmation bientôt disponible",
+    "programmingComingSoonDescription": "La programmation des activités pour cet événement sera publiée prochainement. Revenez bientôt !",
+    "stayTuned": "Restez à l'écoute",
     "quickStats": "Statistiques rapides",
     "totalActivities": "Activités totales",
     "submissions": "Soumissions",
@@ -273,7 +276,8 @@
       "upcoming": "À venir",
       "ongoing": "En cours",
       "completed": "Terminé",
-      "suspended": "Suspendu"
+      "suspended": "Suspendu",
+      "cancelled": "Annulé"
     },
     "submissionStatus": {
       "open": "Ouvertes",
