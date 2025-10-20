@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
+  <main class="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950" role="main">
     <!-- Skeleton loader -->
     <div v-if="isLoading">
       <!-- Hero Section avec image réelle (hors skeleton) -->
@@ -131,9 +131,9 @@
     </div>
 
     <!-- Contenu réel -->
-    <div v-else>
+    <article v-else itemscope itemtype="https://schema.org/Event">
     <!-- Hero Section avec ratio préservé 32:9 -->
-    <div class="relative w-full ">
+    <header class="relative w-full " role="banner">
       <!-- Container avec aspect ratio 32:9 pour préserver l'image complète -->
       <div class="relative w-full" style="aspect-ratio: 32/9">
         <!-- Container responsive avec hauteur min/max -->
@@ -144,6 +144,7 @@
             :alt="event.title"
             class="absolute inset-0 w-full h-full object-cover"
             loading="eager"
+            itemprop="image"
           >
           <!-- Overlay léger pour améliorer la lisibilité du texte -->
         </div>
@@ -177,37 +178,39 @@
           </div>
 
           <!-- Titre avec animation -->
-          <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4 animate-fade-in-up animation-delay-400 [text-shadow:_0_4px_8px_rgb(0_0_0_/_40%),_0_2px_4px_rgb(0_0_0_/_30%)]">
+          <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4 animate-fade-in-up animation-delay-400 [text-shadow:_0_4px_8px_rgb(0_0_0_/_40%),_0_2px_4px_rgb(0_0_0_/_30%)]" itemprop="name">
             {{ event.title }}
           </h1>
 
           <!-- Informations rapides -->
           <div class="flex flex-wrap items-center gap-6 text-white/90 animate-fade-in-up animation-delay-500 [text-shadow:_0_2px_4px_rgb(0_0_0_/_30%)]">
-            <div v-if="event.city" class="flex items-center gap-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div v-if="event.city" class="flex items-center gap-2" itemprop="location" itemscope itemtype="https://schema.org/Place">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              <span>{{ event.city }}<span v-if="country">, {{ country.name_fr }}</span></span>
+              <span itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+                <span itemprop="addressLocality">{{ event.city }}</span><span v-if="country">, <span itemprop="addressCountry">{{ country.name_fr }}</span></span>
+              </span>
             </div>
 
             <div v-if="getEventDate()" class="flex items-center gap-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <span>{{ formatShortDate(getEventDate()) }}</span>
+              <time :datetime="getEventDate()" itemprop="startDate">{{ formatShortDate(getEventDate()) }}</time>
             </div>
 
             <div class="flex items-center gap-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
               </svg>
-              <span>{{ t(`event.participationModes.${event.participation_mode || event.format}`) }}</span>
+              <span itemprop="eventAttendanceMode">{{ t(`event.participationModes.${event.participation_mode || event.format}`) }}</span>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </header>
 
     <!-- Actions flottantes -->
     <div class="relative -mt-8 mb-8">
@@ -271,16 +274,17 @@
         <!-- Description et détails -->
         <div class="lg:col-span-2 space-y-8">
           <!-- Description -->
-          <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-100 dark:border-gray-700">
+          <section class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-100 dark:border-gray-700">
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
-              <div class="w-1 h-8 bg-gradient-to-b from-orange-500 to-orange-600 rounded-full"></div>
+              <div class="w-1 h-8 bg-gradient-to-b from-orange-500 to-orange-600 rounded-full" aria-hidden="true"></div>
               {{ t('event.description') }}
             </h2>
             <div
               v-html="event.description"
               class="prose prose-lg prose-gray dark:prose-invert max-w-none text-gray-700 dark:text-gray-300"
+              itemprop="description"
             />
-          </div>
+          </section>
         </div>
 
         <!-- Sidebar avec informations complémentaires -->
@@ -317,16 +321,16 @@
     </div>
 
     <!-- Section Activités -->
-    <div class="mt-16 py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
+    <section class="mt-16 py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900" aria-label="Programme et activités">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
+        <header class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             {{ t('event.upcomingProgramming') }}
           </h2>
           <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             {{ t('event.programmingDescription') }}
           </p>
-        </div>
+        </header>
 
         <!-- Skeleton pour les activités -->
         <div v-if="isLoadingActivities" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -470,9 +474,9 @@
           <div class="w-48 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl mx-auto animate-pulse"></div>
         </div>
       </div>
-    </div>
-    </div>
-  </div>
+    </section>
+    </article>
+  </main>
 </template>
 
 <script setup>
@@ -482,8 +486,9 @@ import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAuthStore } from '@/stores/auth'
 import useUserEvents from '@/composables/useUserEvents'
+import { useSEO, generateEventStructuredData } from '@/composables/useSEO'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const { supabase } = useSupabase()
@@ -620,6 +625,70 @@ const actualEventStatus = computed(() => {
     return 'upcoming'
   }
 })
+
+// Données SEO dynamiques
+const seoData = computed(() => {
+  // Ne pas mettre à jour le SEO si l'événement n'est pas encore chargé
+  if (!event.value.id || !event.value.title) {
+    return {}
+  }
+
+  // Construire l'URL de la page
+  const pageUrl = `${window.location.origin}/events/${event.value.year}/${event.value.id}`
+
+  // Construire l'image de partage (priorité à l'image 16:9 pour les réseaux sociaux)
+  const shareImage = event.value.banner_high_quality_16_9_url ||
+                     event.value.banner_high_quality_32_9_url ||
+                     event.value.banner ||
+                     `${window.location.origin}/images/example/event_banniere_par_defaut_32_9_v3.jpg`
+
+  // Construire la description avec informations clés
+  let description = event.value.description || ''
+  if (event.value.city && country.value) {
+    description = `${event.value.city}, ${country.value.name_fr} - ${description}`
+  }
+
+  // Ajouter les dates si disponibles
+  const eventDate = getEventDate()
+  if (eventDate) {
+    description = `${formatShortDate(eventDate)} - ${description}`
+  }
+
+  // Générer les données structurées JSON-LD
+  const structuredData = generateEventStructuredData(
+    {
+      ...event.value,
+      url: pageUrl
+    },
+    country.value
+  )
+
+  return {
+    title: event.value.title,
+    description: description,
+    image: shareImage,
+    url: pageUrl,
+    type: 'event',
+    locale: locale.value === 'fr' ? 'fr_FR' : 'en_US',
+    structuredData: structuredData,
+    og: {
+      type: 'event'
+    },
+    twitter: {
+      card: 'summary_large_image'
+    }
+  }
+})
+
+// Initialiser le SEO
+const { updateSEO } = useSEO()
+
+// Watcher pour mettre à jour le SEO quand les données de l'événement changent
+watch(seoData, (newData) => {
+  if (newData && Object.keys(newData).length > 0) {
+    updateSEO(newData)
+  }
+}, { immediate: true })
 
 // Méthodes
 const formatDate = (dateString) => {

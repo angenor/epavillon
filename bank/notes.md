@@ -28,3 +28,5 @@ voici un exemple de code pour le tableau dynamique avec vue-cal: @src/views/admi
 - Il faut donner la possibilité de sélectionner l'évènement pour lequel on veut gérer les dates des activités. Par défaut, l'évènement sélectionné sera le dernier évènement créé.
 
 CREATE TYPE validation_status AS ENUM ('draft', 'submitted', 'under_review', 'approved', 'rejected', 'cancelled', 'live', 'completed');
+
+
