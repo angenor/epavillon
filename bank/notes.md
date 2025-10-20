@@ -16,7 +16,7 @@ Lorsqu'on clique sur les boutons, il se transforme en une sorte de chatbot(petit
 - un révisionniste ne peut changer le statut d'une activité ni envoyer une notification
 
 
-je veux une page ActivityDatesManager.vue(à partir de ActivitiesList.vue) qui permet de gérer les dates des activités.
+je veux une page ActivityDatesManager.vue (accéssible à partir de ActivitiesList.vue) qui permet de gérer les dates des activités.
 Actuellement, les organisateurs on proposé des activités avec des dates qui ne sont pas forcement bonnes. Il peut y avoir des conflits de dates entre plusieurs activités.
 Je veux que cette page liste toutes les activités avec leurs dates sous forme de tableau dynamique et permette de modifier les dates par glisser-déposer et redimensionnement. les modifications seront sauvegardées automatiquement (aussi dans activity_modifications). Le tableau doit etre en fullscreen et avoir une vue par jour, par semaine et par mois.
 Tu utiliseras vue-cal, déjà installé.
