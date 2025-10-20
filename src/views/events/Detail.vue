@@ -159,10 +159,6 @@
               {{ t(`event.status.${event.event_status || event.status}`) }}
             </span>
 
-            <span v-if="event.submission_status" class="backdrop-blur-md bg-white/10 border border-white/20 text-white px-4 py-2 rounded-full text-sm font-medium animate-fade-in-up animation-delay-100">
-              {{ t(`event.submissionStatus.${event.submission_status}`) }}
-            </span>
-
             <span v-if="event.year" class="backdrop-blur-md bg-white/10 border border-white/20 text-white px-4 py-2 rounded-full text-sm font-medium animate-fade-in-up animation-delay-200">
               {{ event.year }}
             </span>
@@ -302,9 +298,9 @@
                 <span class="text-white/80">{{ t('event.totalActivities') }}</span>
                 <span class="font-bold">{{ activities.length }}+</span>
               </div>
-              <div v-if="event.submission_status" class="flex justify-between items-center">
+              <div v-if="actualSubmissionStatus" class="flex justify-between items-center">
                 <span class="text-white/80">{{ t('event.submissions') }}</span>
-                <span class="font-bold">{{ t(`event.submissionStatus.${event.submission_status}`) }}</span>
+                <span class="font-bold">{{ t(`event.submissionStatus.${actualSubmissionStatus}`) }}</span>
               </div>
             </div>
           </div>
@@ -527,6 +523,20 @@ const remainingDays = computed(() => {
   const diffTime = deadline - today
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
   return diffDays > 0 ? diffDays : 0
+})
+
+const actualSubmissionStatus = computed(() => {
+  // Si le statut est explicitement fermé en base, on respecte
+  if (event.value.submission_status === 'closed') return 'closed'
+
+  // Si pas de deadline, on garde le statut de la base
+  if (!event.value.submission_deadline) return event.value.submission_status || 'closed'
+
+  // Sinon on calcule dynamiquement selon la date
+  const deadline = new Date(event.value.submission_deadline)
+  const today = new Date()
+
+  return deadline > today ? 'open' : 'closed'
 })
 
 // Méthodes
