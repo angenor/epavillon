@@ -150,6 +150,16 @@
               </div>
             </div>
 
+            <!-- Indicateur programmation bientôt disponible -->
+            <div v-if="!event.is_programmation_available" class="mt-4 p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+              <div class="flex items-center gap-2 text-orange-600 dark:text-orange-400">
+                <svg class="w-4 h-4 flex-shrink-0 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span class="text-xs font-medium">{{ t('event.programmingComingSoon') }}</span>
+              </div>
+            </div>
+
             <!-- Actions -->
             <div class="mt-6 flex gap-3">
               <button
