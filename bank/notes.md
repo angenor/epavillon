@@ -24,4 +24,7 @@ les cards des activités dans le tableau doivent afficher le titre de l'activit�
 lorsqu'on modifie une date ou heure par glisser-déposer ou redimensionnement, il faut enregistrer la modification à la fois dans activity_modifications(date, auteur etc...) et dans activities(modifier proposed_start_date et proposed_end_date, ne surtout pas  mettre à jour le champ "final_start_date" et "final_end_date" de l'activité, ces dernier serons mise à jour une fois le comité d'accord) lorsque l'utilisateur clique sur le bouton "enregistrer"(ce bouton doit apparaitre dès qu'une modification est effectuée).
 voici un exemple de code pour le tableau dynamique avec vue-cal: @src/views/admin/activities/exempleDateManager.vue (c'est un exemple, tu adapteras le code pour répondre aux besoins ci-dessus)
 
+- Les heures/dates dans la base de donnée sont en heure GMT. Il faut convertir les dates en heure de l'évènement avant affichage: @src/composables/useTimezone.js , il faut ensuite convertir les dates en heure GMT avant d'enregistrer dans la base de données.
+- Il faut donner la possibilité de sélectionner l'évènement pour lequel on veut gérer les dates des activités. Par défaut, l'évènement sélectionné sera le dernier évènement créé.
+
 CREATE TYPE validation_status AS ENUM ('draft', 'submitted', 'under_review', 'approved', 'rejected', 'cancelled', 'live', 'completed');
