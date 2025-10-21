@@ -18,9 +18,10 @@ Lorsqu'on clique sur les boutons, il se transforme en une sorte de chatbot(petit
 
 je veux une page ActivityDatesManager.vue (accéssible à partir de ActivitiesList.vue) qui permet de gérer les dates des activités.
 Actuellement, les organisateurs on proposé des activités avec des dates qui ne sont pas forcement bonnes. Il peut y avoir des conflits de dates entre plusieurs activités.
-Je veux que cette page liste toutes les activités avec leurs dates sous forme de tableau dynamique et permette de modifier les dates par glisser-déposer et redimensionnement. les modifications seront sauvegardées automatiquement (aussi dans activity_modifications). Le tableau doit etre en fullscreen et avoir une vue par jour, par semaine et par mois.
-Tu utiliseras vue-cal, déjà installé.
-les cards des activités dans le tableau doivent afficher le titre de l'activité, le nom & logo de l'organisation. leurs couleur de fond doit etre jaune si l'activité est en cours de révision, submitted. Elles doivent etre rouge si l'activité est rejetée, annulé, elle doit etre verte si l'activité est approuvée, en cours ou terminée.
+Je veux que cette page  permette de modifier les dates par glisser-déposer et redimensionnement. les modifications seront sauvegardées automatiquement non seulemnt dans les attibut proposed_start_date et proposed_end_date  mais aussi dans des table activity_modifications activity_modifications. La sauvegarde dans activity_modifications doit se faire uniquement si l'utilisateur clique sur le bouton enregistrer. Donc il va falloir détecter des modifications(déplacement, rédimentionnement).
+les cards des activités dans le tableau doivent afficher le titre de l'activité, le nom & logo de l'organisation.
+
+ leurs couleur de fond doit etre jaune si l'activité est en cours de révision, submitted. Elles doivent etre rouge si l'activité est rejetée, annulé, elle doit etre verte si l'activité est approuvée, en cours ou terminée.
 lorsqu'on modifie une date ou heure par glisser-déposer ou redimensionnement, il faut enregistrer la modification à la fois dans activity_modifications(date, auteur etc...) et dans activities(modifier proposed_start_date et proposed_end_date, ne surtout pas  mettre à jour le champ "final_start_date" et "final_end_date" de l'activité, ces dernier serons mise à jour une fois le comité d'accord) lorsque l'utilisateur clique sur le bouton "enregistrer"(ce bouton doit apparaitre dès qu'une modification est effectuée).
 voici un exemple de code pour le tableau dynamique avec vue-cal: @src/views/admin/activities/exempleDateManager.vue (c'est un exemple, tu adapteras le code pour répondre aux besoins ci-dessus)
 
