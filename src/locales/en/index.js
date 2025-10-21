@@ -22,6 +22,7 @@ export default {
   ...events,
   activities: activities.activities,
   activity: activities.activity,
+  activityDatesManager: activities.activityDatesManager,
   ...community,
   ...negotiations,
   ...directory,

@@ -607,5 +607,36 @@
         "message": "Unable to load the preview of this activity."
       }
     }
+  },
+  "activityDatesManager": {
+    "title": "Activity Dates Management",
+    "subtitle": "Manage activity dates and times using drag-and-drop and resizing",
+    "unsavedChanges": "unsaved change(s)",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes",
+    "filterByEvent": "Filter by event",
+    "allEvents": "All events",
+    "filterByStatus": "Filter by status",
+    "allStatuses": "All statuses",
+    "statuses": {
+      "submitted": "Submitted",
+      "under_review": "Under review",
+      "approved": "Approved"
+    },
+    "legend": {
+      "sideEvent": "Side event",
+      "countryDay": "Country day",
+      "modified": "Modified"
+    },
+    "messages": {
+      "eventMoved": "Activity moved successfully",
+      "eventResized": "Activity duration modified successfully",
+      "changesSaved": "All changes have been saved successfully"
+    },
+    "errors": {
+      "loadEvents": "Error loading events",
+      "loadActivities": "Error loading activities",
+      "saveChanges": "Error saving changes"
+    }
   }
 }

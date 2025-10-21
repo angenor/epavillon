@@ -263,6 +263,12 @@ const router = createRouter({
           meta: { requiresRole: ['admin', 'super_admin', 'revisionniste'] }
         },
         {
+          path: 'activities-dates-manager',
+          name: 'admin-activities-dates-manager',
+          component: () => import('../views/admin/activities/ActivityDatesManager.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
+        },
+        {
           path: 'organizations',
           name: 'admin-organizations',
           component: () => import('../views/admin/organizations/OrganizationsList.vue'),

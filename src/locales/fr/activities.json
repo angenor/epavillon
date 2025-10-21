@@ -655,5 +655,36 @@
         "message": "Impossible de charger la prévisualisation de cette activité."
       }
     }
+  },
+  "activityDatesManager": {
+    "title": "Gestion des dates d'activités",
+    "subtitle": "Gérez les dates et horaires des activités par glisser-déposer et redimensionnement",
+    "unsavedChanges": "modification(s) non sauvegardée(s)",
+    "saving": "Sauvegarde...",
+    "saveChanges": "Sauvegarder les modifications",
+    "filterByEvent": "Filtrer par événement",
+    "allEvents": "Tous les événements",
+    "filterByStatus": "Filtrer par statut",
+    "allStatuses": "Tous les statuts",
+    "statuses": {
+      "submitted": "Soumises",
+      "under_review": "En révision",
+      "approved": "Approuvées"
+    },
+    "legend": {
+      "sideEvent": "Événement parallèle",
+      "countryDay": "Journée pays",
+      "modified": "Modifié"
+    },
+    "messages": {
+      "eventMoved": "Activité déplacée avec succès",
+      "eventResized": "Durée de l'activité modifiée avec succès",
+      "changesSaved": "Toutes les modifications ont été sauvegardées avec succès"
+    },
+    "errors": {
+      "loadEvents": "Erreur lors du chargement des événements",
+      "loadActivities": "Erreur lors du chargement des activités",
+      "saveChanges": "Erreur lors de la sauvegarde des modifications"
+    }
   }
 }
