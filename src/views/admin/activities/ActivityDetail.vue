@@ -59,6 +59,15 @@
                   class="h-3 w-5 object-cover border border-gray-200 dark:border-gray-600"
                 />
               </div>
+              <!-- Type d'organisation -->
+              <div v-if="activity.organization?.organization_type" class="flex items-center mt-1">
+                <svg class="h-3 w-3 text-gray-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+                <span class="text-sm text-gray-600 dark:text-gray-400">
+                  {{ getOrganizationTypeLabel(activity.organization.organization_type) }}
+                </span>
+              </div>
               <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 {{ activity.event?.title }} - {{ activity.event?.year }}
               </p>
@@ -961,6 +970,18 @@ const getCategoryLabel = (category) => {
     'concertation': 'Concertation'
   }
   return labels[category] || category
+}
+
+// Labels pour les types d'organisation
+const getOrganizationTypeLabel = (type) => {
+  const labels = {
+    'public_national_institution': 'Institutions publiques nationales',
+    'international_organization': 'Organisations internationales',
+    'regional_organization': 'Organisations régionales',
+    'ngo_association': 'ONG/Associations',
+    'private_sector': 'Secteur privé'
+  }
+  return labels[type] || type
 }
 
 const getStatusText = (status) => {
