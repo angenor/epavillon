@@ -2,7 +2,10 @@ Je veux implémenter un chatbot LLM très polivalent:
 # Fonctionnalité 1: Negociation document (role obligatoire: négociateur ou admin ou superadmin)
 - Le chatbot devra répondre à des questions en s'appuyant sur les documents de négociation disponibles dans la base de données(negotiation_documents) en fornissant les référence possible(ducuments, pages, titres).
 
-# Fonctionnalité 2: Assistance utilisateur
+# Fonctionnalité 3: utilisation d'outils d'administration (role obligatoire: admin ou superadmin)
+- Chaque fonctionnalité
+
+# Fonctionnalité 3: Assistance utilisateur
 - Le chatbot devra être capable de comprendre le contexte des questions et d'y répondre de manière pertinente en se basant sur les données disponibles dans la base de données Supabase.
 - Le chatbot devra également être capable d'apprendre de nouvelles informations au fur et à mesure qu'il interagit avec les utilisateurs.
 - les questions concerneront l'utilisation de la plateforme, les fonctionnalités disponibles, les procédures à suivre, les activités, les évènements, les organisations, les utilisateurs, les rôles, les permissions, etc.
