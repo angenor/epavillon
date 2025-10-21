@@ -65,8 +65,14 @@
           <dl class="space-y-4">
             <div>
               <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Type d'organisation</dt>
-              <dd class="mt-1 text-sm text-gray-900 dark:text-white">
-                {{ getOrganizationTypeLabel(organization.organization_type) }}
+              <dd class="mt-1">
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium"
+                      :class="getOrganizationTypeClass(organization.organization_type)">
+                  <svg class="h-3 w-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                  </svg>
+                  {{ getOrganizationTypeLabel(organization.organization_type) }}
+                </span>
               </dd>
             </div>
             <div>
@@ -424,6 +430,18 @@ const getOrganizationTypeLabel = (type) => {
     'private_sector': 'Secteur privé'
   }
   return types[type] || type
+}
+
+// Classes CSS pour les types d'organisation (correspondant aux couleurs du graphique)
+const getOrganizationTypeClass = (type) => {
+  const classes = {
+    'public_national_institution': 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+    'international_organization': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+    'regional_organization': 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+    'ngo_association': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+    'private_sector': 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
+  }
+  return classes[type] || 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300'
 }
 
 const getValidationStatusLabel = (status) => {
