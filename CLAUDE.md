@@ -9,6 +9,7 @@ Il s'agit d'une application web **Vue 3** utilisant Vite comme outil de build, J
 **IMPORTANT** : Le projet doit être structuré de manière modulaire pour faciliter la maintenance :
 - **Composants réutilisables** : Créer des composants Vue modulaires et réutilisables dans `src/components/`
 - **Composables** : Organiser la logique métier dans des composables spécialisés dans `src/composables/`
+  - `src/composables/ai/` : **IMPORTANT** - Tous les composables liés au chatbot IA doivent être implémentés dans ce dossier
 - **Utils** : Fonctions utilitaires pures dans `src/utils/`
 - **Stores** : Gestion d'état avec Pinia dans `src/stores/`
 - **Views** : Pages de l'application organisées par domaine dans `src/views/`
