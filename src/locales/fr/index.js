@@ -13,6 +13,7 @@ import organizations from './organizations.json' with { type: 'json' };
 import organizations_list from './organizations_list.json' with { type: 'json' };
 import maintenance from './maintenance.json' with { type: 'json' };
 import email from './email.json' with { type: 'json' };
+import chatbot from './chatbot.json' with { type: 'json' };
 
 export default {
   ...common,
@@ -30,4 +31,5 @@ export default {
   ...organizations_list,
   ...maintenance,
   ...email,
+  ...chatbot,
 };

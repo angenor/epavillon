@@ -175,7 +175,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
 import VueCal from 'vue-cal'
-import 'vue-cal/dist/vuecal.css'
+import 'vue-cal/style.css'
 
 const { t } = useI18n()
 const router = useRouter()

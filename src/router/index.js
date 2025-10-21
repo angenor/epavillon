@@ -213,6 +213,13 @@ const router = createRouter({
         }
       }
     },
+    // Route du chatbot IA pour les négociations
+    {
+      path: '/ai/chatbot',
+      name: 'ai-chatbot',
+      component: () => import('../views/ai/NegotiationChatbot.vue'),
+      meta: { requiresAuth: true, requiresRole: ['negotiator', 'admin', 'super_admin'] }
+    },
     // Routes d'administration
     {
       path: '/admin',

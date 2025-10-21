@@ -314,9 +314,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 
-const VueCal = defineAsyncComponent(() => 
+const VueCal = defineAsyncComponent(() =>
   import('vue-cal').then(module => {
-    import('vue-cal/dist/vuecal.css')
+    import('vue-cal/style.css')
     return module.default
   })
 )

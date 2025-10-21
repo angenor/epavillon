@@ -82,7 +82,7 @@
 
 <script>
 import VueCal from 'vue-cal';
-import 'vue-cal/dist/vuecal.css';
+import 'vue-cal/style.css';
 import { inject } from 'vue';
 import { update } from 'lodash';
 

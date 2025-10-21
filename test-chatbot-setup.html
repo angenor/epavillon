@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Chatbot Setup</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .success { color: #10b981; }
+    .error { color: #ef4444; }
+    .warning { color: #f59e0b; }
+    button {
+      background: #3b82f6;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background: #2563eb;
+    }
+    pre {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+    .log {
+      padding: 5px;
+      margin: 2px 0;
+      font-family: monospace;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Test de Configuration du Chatbot</h1>
+
+  <div class="test-section">
+    <h2>1. Configuration</h2>
+    <p>Copiez vos variables d'environnement depuis .env.local :</p>
+    <input type="text" id="supabaseUrl" placeholder="VITE_SUPABASE_URL" style="width: 100%; padding: 8px; margin: 5px 0;">
+    <input type="text" id="supabaseKey" placeholder="VITE_SUPABASE_ANON_KEY" style="width: 100%; padding: 8px; margin: 5px 0;">
+    <button onclick="saveConfig()">💾 Enregistrer la Configuration</button>
+  </div>
+
+  <div class="test-section">
+    <h2>2. Test de Connexion Supabase</h2>
+    <button onclick="testConnection()">🔌 Tester la Connexion</button>
+    <div id="connectionResult"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>3. Vérifier les Tables</h2>
+    <button onclick="checkTables()">🗄️ Vérifier les Tables</button>
+    <div id="tablesResult"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>4. Test de Création de Session</h2>
+    <button onclick="testCreateSession()">➕ Créer une Session de Test</button>
+    <div id="sessionResult"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>5. Logs</h2>
+    <button onclick="clearLogs()">🗑️ Effacer les Logs</button>
+    <div id="logs"></div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+    let supabase = null
+
+    window.saveConfig = function() {
+      const url = document.getElementById('supabaseUrl').value
+      const key = document.getElementById('supabaseKey').value
+
+      if (!url || !key) {
+        log('⚠️ Veuillez remplir l\'URL et la clé Supabase', 'warning')
+        return
+      }
+
+      try {
+        supabase = createClient(url, key)
+        log('✅ Configuration enregistrée !', 'success')
+      } catch (error) {
+        log('❌ Erreur de configuration: ' + error.message, 'error')
+      }
+    }
+
+    window.testConnection = async function() {
+      if (!supabase) {
+        log('⚠️ Enregistrez d\'abord la configuration', 'warning')
+        return
+      }
+
+      const result = document.getElementById('connectionResult')
+      result.innerHTML = '<p>⏳ Test en cours...</p>'
+
+      try {
+        const { data, error } = await supabase.auth.getSession()
+
+        if (error) {
+          result.innerHTML = `<p class="error">❌ Erreur de connexion: ${error.message}</p>`
+          log('❌ Connexion échouée: ' + error.message, 'error')
+        } else {
+          result.innerHTML = `
+            <p class="success">✅ Connexion réussie !</p>
+            <p>Session: ${data.session ? 'Connecté' : 'Non connecté'}</p>
+          `
+          log('✅ Connexion Supabase réussie', 'success')
+        }
+      } catch (error) {
+        result.innerHTML = `<p class="error">❌ Erreur: ${error.message}</p>`
+        log('❌ Erreur: ' + error.message, 'error')
+      }
+    }
+
+    window.checkTables = async function() {
+      if (!supabase) {
+        log('⚠️ Enregistrez d\'abord la configuration', 'warning')
+        return
+      }
+
+      const result = document.getElementById('tablesResult')
+      result.innerHTML = '<p>⏳ Vérification en cours...</p>'
+
+      const tables = [
+        'ai_chat_sessions',
+        'ai_chat_messages',
+        'document_embeddings',
+        'ai_chat_feedback'
+      ]
+
+      let html = '<h3>État des Tables:</h3><ul>'
+
+      for (const table of tables) {
+        try {
+          const { data, error } = await supabase
+            .from(table)
+            .select('*', { count: 'exact', head: true })
+
+          if (error) {
+            html += `<li class="error">❌ ${table}: ${error.message}</li>`
+            log(`❌ Table ${table}: ${error.message}`, 'error')
+          } else {
+            html += `<li class="success">✅ ${table}: Existe</li>`
+            log(`✅ Table ${table} existe`, 'success')
+          }
+        } catch (error) {
+          html += `<li class="error">❌ ${table}: ${error.message}</li>`
+          log(`❌ Table ${table}: ${error.message}`, 'error')
+        }
+      }
+
+      html += '</ul>'
+      result.innerHTML = html
+    }
+
+    window.testCreateSession = async function() {
+      if (!supabase) {
+        log('⚠️ Enregistrez d\'abord la configuration', 'warning')
+        return
+      }
+
+      const result = document.getElementById('sessionResult')
+      result.innerHTML = '<p>⏳ Création de session en cours...</p>'
+
+      try {
+        // Obtenir l'utilisateur actuel
+        const { data: { user }, error: userError } = await supabase.auth.getUser()
+
+        if (userError || !user) {
+          result.innerHTML = `<p class="error">❌ Vous devez être connecté pour créer une session</p>`
+          log('❌ Utilisateur non connecté', 'error')
+          return
+        }
+
+        log(`👤 Utilisateur connecté: ${user.id}`, 'success')
+
+        // Créer une session de test
+        const sessionData = {
+          user_id: user.id,
+          title: 'Session de Test ' + new Date().toLocaleTimeString(),
+          feature_type: 'negotiation_documents',
+          is_active: true
+        }
+
+        log('📝 Tentative de création de session...', 'warning')
+        log('Données: ' + JSON.stringify(sessionData, null, 2), 'warning')
+
+        const { data, error } = await supabase
+          .from('ai_chat_sessions')
+          .insert(sessionData)
+          .select()
+          .single()
+
+        if (error) {
+          result.innerHTML = `<p class="error">❌ Erreur de création: ${error.message}</p>
+                             <pre>${JSON.stringify(error, null, 2)}</pre>`
+          log('❌ Erreur de création: ' + error.message, 'error')
+          log('Détails: ' + JSON.stringify(error, null, 2), 'error')
+        } else {
+          result.innerHTML = `
+            <p class="success">✅ Session créée avec succès !</p>
+            <pre>${JSON.stringify(data, null, 2)}</pre>
+          `
+          log('✅ Session créée: ' + data.id, 'success')
+        }
+      } catch (error) {
+        result.innerHTML = `<p class="error">❌ Erreur: ${error.message}</p>`
+        log('❌ Erreur: ' + error.message, 'error')
+      }
+    }
+
+    window.log = function(message, type = 'info') {
+      const logs = document.getElementById('logs')
+      const timestamp = new Date().toLocaleTimeString()
+      const className = type === 'success' ? 'success' : type === 'error' ? 'error' : type === 'warning' ? 'warning' : ''
+      logs.innerHTML += `<div class="log ${className}">[${timestamp}] ${message}</div>`
+      logs.scrollTop = logs.scrollHeight
+    }
+
+    window.clearLogs = function() {
+      document.getElementById('logs').innerHTML = ''
+    }
+
+    // Auto-load from localStorage
+    window.addEventListener('load', () => {
+      const savedUrl = localStorage.getItem('supabase_url')
+      const savedKey = localStorage.getItem('supabase_key')
+
+      if (savedUrl) document.getElementById('supabaseUrl').value = savedUrl
+      if (savedKey) document.getElementById('supabaseKey').value = savedKey
+
+      if (savedUrl && savedKey) {
+        log('ℹ️ Configuration chargée depuis localStorage', 'info')
+      }
+    })
+
+    // Auto-save to localStorage
+    document.getElementById('supabaseUrl').addEventListener('change', (e) => {
+      localStorage.setItem('supabase_url', e.target.value)
+    })
+
+    document.getElementById('supabaseKey').addEventListener('change', (e) => {
+      localStorage.setItem('supabase_key', e.target.value)
+    })
+  </script>
+</body>
+</html>

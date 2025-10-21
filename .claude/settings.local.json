@@ -25,7 +25,8 @@
       "Bash(supabase functions deploy:*)",
       "Bash(npx supabase functions deploy:*)",
       "Bash(cp:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(echo \"Vérifiez dans la console du navigateur (F12 > Console) s''il y a des erreurs.\")"
     ],
     "deny": [],
     "ask": []
