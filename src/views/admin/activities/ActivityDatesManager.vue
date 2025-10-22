@@ -532,78 +532,95 @@ watch(locale, () => {
 })
 </script>
 
-<style>
+<style scoped>
 /* Styles personnalisés pour vue-cal */
-.vuecal {
+:deep(.vuecal) {
   height: 100%;
   border-radius: 0.5rem;
 }
 
-.vuecal__cell {
-  @apply dark:bg-gray-700 dark:border-gray-600;
+/* Mode sombre pour vue-cal */
+.dark :deep(.vuecal__cell) {
+  background-color: rgb(55 65 81);
+  border-color: rgb(75 85 99);
 }
 
-.vuecal__title-bar {
-  @apply dark:bg-gray-800 dark:text-white;
+.dark :deep(.vuecal__title-bar) {
+  background-color: rgb(31 41 55);
+  color: white;
 }
 
-.vuecal__heading {
-  @apply dark:text-white;
+.dark :deep(.vuecal__heading) {
+  color: white;
 }
 
-.vuecal__time-cell {
-  @apply dark:text-gray-300 dark:border-gray-600;
+.dark :deep(.vuecal__time-cell) {
+  color: rgb(209 213 219);
+  border-color: rgb(75 85 99);
 }
 
-.vuecal__now-line {
-  @apply border-orange-500;
+:deep(.vuecal__now-line) {
+  border-color: rgb(249 115 22);
 }
 
 /* Classes pour les événements */
-.activity-event {
-  @apply rounded-lg shadow-sm border-2 cursor-move;
+:deep(.activity-event) {
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  border-width: 2px;
+  cursor: move;
   transition: all 0.2s ease;
 }
 
-.activity-event:hover {
-  @apply shadow-lg transform scale-105;
+:deep(.activity-event:hover) {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  transform: scale(1.05);
 }
 
-.activity-side-event {
-  @apply bg-blue-500 border-blue-600 text-white;
+:deep(.activity-side-event) {
+  background-color: rgb(59 130 246);
+  border-color: rgb(37 99 235);
+  color: white;
 }
 
-.activity-country-day {
-  @apply bg-green-500 border-green-600 text-white;
+:deep(.activity-country-day) {
+  background-color: rgb(34 197 94);
+  border-color: rgb(22 163 74);
+  color: white;
 }
 
-.activity-other {
-  @apply bg-gray-500 border-gray-600 text-white;
+:deep(.activity-other) {
+  background-color: rgb(107 114 128);
+  border-color: rgb(75 85 99);
+  color: white;
 }
 
-.activity-modified {
-  @apply bg-orange-500 border-orange-600 text-white;
+:deep(.activity-modified) {
+  background-color: rgb(249 115 22);
+  border-color: rgb(234 88 12);
+  color: white;
 }
 
-.vuecal__event {
-  @apply overflow-visible;
+:deep(.vuecal__event) {
+  overflow: visible;
 }
 
-.vuecal__event-resize-handle {
-  @apply bg-white/30;
+:deep(.vuecal__event-resize-handle) {
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 /* Mode sombre pour vue-cal */
-.dark .vuecal__menu,
-.dark .vuecal__cell-events-count {
-  @apply bg-gray-700 text-white;
+.dark :deep(.vuecal__menu),
+.dark :deep(.vuecal__cell-events-count) {
+  background-color: rgb(55 65 81);
+  color: white;
 }
 
-.dark .vuecal__arrow {
-  @apply text-white;
+.dark :deep(.vuecal__arrow) {
+  color: white;
 }
 
-.dark .vuecal__flex[class*="weekday-"] {
-  @apply border-gray-600;
+.dark :deep(.vuecal__flex[class*="weekday-"]) {
+  border-color: rgb(75 85 99);
 }
 </style>
