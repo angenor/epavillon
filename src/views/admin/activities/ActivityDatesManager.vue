@@ -174,7 +174,7 @@
                     {{ event.organization?.name }}
                   </p>
                   <p class="text-xs opacity-75 mt-1" :class="getEventTextClass(event)">
-                    {{ formatEventTime(event.start, event.end, event.eventTimezone) }}
+                    {{ formatEventTime(event.start, event.end) }}
                   </p>
                 </div>
               </div>
