@@ -685,7 +685,8 @@
     "errors": {
       "loadEvents": "Erreur lors du chargement des événements",
       "loadActivities": "Erreur lors du chargement des activités",
-      "saveChanges": "Erreur lors de la sauvegarde des modifications"
+      "saveChanges": "Erreur lors de la sauvegarde des modifications dans l'historique",
+      "autoSave": "Erreur lors de la sauvegarde automatique des dates"
     }
   }
 }

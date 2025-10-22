@@ -150,7 +150,7 @@
         >
           <!-- Template personnalisé pour les événements -->
           <template #event="{ event, view }">
-            <div class="p-2 h-full overflow-hidden">
+            <div class="p-2 h-full overflow-hidden" style="pointer-events: none;">
               <div class="flex items-start space-x-2">
                 <!-- Logo de l'organisation -->
                 <img
@@ -174,7 +174,7 @@
                     {{ event.organization?.name }}
                   </p>
                   <p class="text-xs opacity-75 mt-1" :class="getEventTextClass(event)">
-                    {{ formatEventTime(event.start, event.end) }}
+                    {{ formatEventTime(event.start, event.end, event.eventTimezone) }}
                   </p>
                 </div>
               </div>
@@ -269,95 +269,47 @@ const timezoneLabel = computed(() => {
   }
 })
 
-// Convertir une date UTC en date "locale" pour un fuseau horaire donné
-// Cette fonction crée un nouvel objet Date où les composants (année, mois, jour, heure, etc.)
-// correspondent à ce qu'ils seraient dans le fuseau horaire cible, mais interprétés comme heure locale
-const convertUTCToTimezone = (utcDate, timezone) => {
-  if (!timezone || timezone === 'UTC') return new Date(utcDate)
-
+// Obtenir le décalage horaire entre le navigateur et un fuseau horaire donné
+const getTimezoneOffset = (timezone, date = new Date()) => {
   try {
-    // Obtenir les composants de la date dans le fuseau horaire cible
-    const formatter = new Intl.DateTimeFormat('en-US', {
-      timeZone: timezone,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-    })
+    // Créer une date dans le fuseau horaire cible
+    const tzString = date.toLocaleString('en-US', { timeZone: timezone })
+    const tzDate = new Date(tzString)
 
-    const parts = formatter.formatToParts(new Date(utcDate))
-    const values = {}
-    parts.forEach(part => {
-      if (part.type !== 'literal') {
-        values[part.type] = part.value
-      }
-    })
+    // Créer la même date en UTC
+    const utcString = date.toLocaleString('en-US', { timeZone: 'UTC' })
+    const utcDate = new Date(utcString)
 
-    // Créer une nouvelle date avec ces composants en tant qu'heure locale
-    // Format: YYYY-MM-DDTHH:mm:ss (interprété comme heure locale du navigateur)
-    const localDateString = `${values.year}-${values.month}-${values.day}T${values.hour}:${values.minute}:${values.second}`
-    return new Date(localDateString)
+    // La différence donne le décalage en millisecondes
+    return tzDate.getTime() - utcDate.getTime()
   } catch (error) {
-    console.error('Error converting UTC to timezone:', error)
-    return new Date(utcDate)
-  }
-}
-
-// Convertir une date "locale" (affichée dans le calendrier) en UTC
-// Cette fonction fait l'inverse de convertUTCToTimezone
-const convertTimezoneToUTC = (localDate, timezone) => {
-  if (!timezone || timezone === 'UTC') return new Date(localDate)
-
-  try {
-    // Extraire les composants de la date locale
-    const year = localDate.getFullYear()
-    const month = String(localDate.getMonth() + 1).padStart(2, '0')
-    const day = String(localDate.getDate()).padStart(2, '0')
-    const hour = String(localDate.getHours()).padStart(2, '0')
-    const minute = String(localDate.getMinutes()).padStart(2, '0')
-    const second = String(localDate.getSeconds()).padStart(2, '0')
-
-    // Créer une string ISO dans le fuseau horaire cible
-    const dateString = `${year}-${month}-${day}T${hour}:${minute}:${second}`
-
-    // Obtenir le décalage en millisecondes et l'appliquer
-    const offset = getTimezoneOffset(timezone, new Date(dateString))
-    return new Date(new Date(dateString).getTime() - offset)
-  } catch (error) {
-    console.error('Error converting timezone to UTC:', error)
-    return new Date(localDate)
-  }
-}
-
-// Obtenir le décalage en millisecondes d'un fuseau horaire par rapport à UTC
-const getTimezoneOffset = (timezone, date) => {
-  try {
-    // Obtenir la date en UTC
-    const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }))
-    // Obtenir la même date dans le fuseau horaire cible
-    const tzDate = new Date(date.toLocaleString('en-US', { timeZone: timezone }))
-    // La différence donne le décalage
-    return utcDate.getTime() - tzDate.getTime()
-  } catch {
+    console.error('Error calculating timezone offset:', error)
     return 0
   }
 }
 
 // Convertir les activités en événements pour vue-cal
 const calendarEvents = computed(() => {
-  return activities.value.map(activity => {
+  const events = activities.value.map(activity => {
     const change = pendingChanges.value.find(c => c.activityId === activity.id)
     const startDate = change?.newStart || activity.proposed_start_date
     const endDate = change?.newEnd || activity.proposed_end_date
     const timezone = activity.event?.timezone || 'UTC'
 
-    // Convertir les dates UTC en dates dans le fuseau horaire de l'événement
-    // pour que la position dans le calendrier corresponde aux heures affichées
-    let start = convertUTCToTimezone(startDate, timezone)
-    let end = convertUTCToTimezone(endDate, timezone)
+    // Dates en UTC depuis la base de données
+    const startUTC = new Date(startDate)
+    const endUTC = new Date(endDate)
+
+    // Calculer le décalage entre le fuseau horaire du navigateur et celui de l'événement
+    const browserOffset = new Date().getTimezoneOffset() * 60 * 1000 // En millisecondes
+    const eventOffset = getTimezoneOffset(timezone, startUTC)
+
+    // Décaler les dates pour que Vue Cal les affiche dans le fuseau horaire de l'événement
+    // Formule : dateAffichée = dateUTC - offsetNavigateur + offsetEvent
+    const totalOffset = -browserOffset + eventOffset
+
+    const start = new Date(startUTC.getTime() + totalOffset)
+    const end = new Date(endUTC.getTime() + totalOffset)
 
     // Vérifier que les dates sont valides
     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
@@ -368,8 +320,7 @@ const calendarEvents = computed(() => {
     // Vérifier que la date de fin est après la date de début
     if (end <= start) {
       console.warn(`End date before start date for activity ${activity.id}:`, { start, end })
-      // Ajuster la date de fin pour qu'elle soit au moins 30 minutes après le début
-      end = new Date(start.getTime() + 30 * 60 * 1000)
+      return null
     }
 
     return {
@@ -386,6 +337,14 @@ const calendarEvents = computed(() => {
       draggable: true
     }
   }).filter(event => event !== null) // Filtrer les événements invalides
+
+  if (events.length > 0) {
+    console.log('Événements chargés:', events.length)
+    console.log('Premier événement - Start local:', events[0].start)
+    console.log('Timezone:', events[0].eventTimezone)
+  }
+
+  return events
 })
 
 // Charger les événements
@@ -469,8 +428,8 @@ const isEventModified = (activityId) => {
 
 // Formater l'heure de l'événement
 const formatEventTime = (start, end) => {
-  // Les dates sont déjà converties dans le fuseau horaire de l'événement
-  // On peut donc simplement afficher les heures sans conversion supplémentaire
+  // Les dates sont déjà décalées pour s'afficher dans le fuseau horaire de l'événement
+  // On peut simplement les formater sans conversion supplémentaire
   const startTime = start.toLocaleTimeString(currentLocale.value, {
     hour: '2-digit',
     minute: '2-digit'
@@ -485,9 +444,20 @@ const formatEventTime = (start, end) => {
 }
 
 // Gérer le déplacement d'un événement
-const handleEventDrop = (event, deleteEventFunction) => {
-  const activity = activities.value.find(a => a.id === event.activityId)
-  if (!activity) return
+const handleEventDrop = async (eventData) => {
+  console.log('handleEventDrop appelé - données complètes:', eventData)
+
+  const droppedEvent = eventData.event
+  if (!droppedEvent) {
+    console.error('Pas d\'événement dans les données')
+    return
+  }
+
+  const activity = activities.value.find(a => a.id === droppedEvent.activityId)
+  if (!activity) {
+    console.warn('Activité non trouvée:', droppedEvent.activityId)
+    return
+  }
 
   const timezone = activity.event?.timezone || 'UTC'
 
@@ -496,32 +466,63 @@ const handleEventDrop = (event, deleteEventFunction) => {
   const originalEnd = new Date(activity.proposed_end_date)
   const duration = originalEnd.getTime() - originalStart.getTime()
 
-  // Nouvelle fin = nouveau début + durée (dans le fuseau horaire de l'événement)
-  const newEnd = new Date(event.start.getTime() + duration)
+  // Les dates retournées par Vue Cal sont décalées pour l'affichage
+  // Il faut faire la conversion inverse pour revenir en UTC
+  const browserOffset = new Date().getTimezoneOffset() * 60 * 1000
+  const eventOffset = getTimezoneOffset(timezone, droppedEvent.start)
+  const totalOffset = -browserOffset + eventOffset
 
-  // Convertir les dates du fuseau horaire de l'événement vers UTC pour la sauvegarde
-  const newStartUTC = convertTimezoneToUTC(event.start, timezone)
-  const newEndUTC = convertTimezoneToUTC(newEnd, timezone)
+  // Convertir vers UTC
+  const newStartUTC = new Date(droppedEvent.start.getTime() - totalOffset)
+  const newEndUTC = new Date(newStartUTC.getTime() + duration)
 
-  // Enregistrer le changement en UTC
-  recordChange(event.activityId, newStartUTC, newEndUTC, activity)
+  console.log('Nouvelles dates (UTC):', {
+    newStartUTC: newStartUTC.toISOString(),
+    newEndUTC: newEndUTC.toISOString(),
+    timezone
+  })
+
+  // Enregistrer le changement pour la table activity_modifications (manuel)
+  recordChange(droppedEvent.activityId, newStartUTC, newEndUTC, activity)
+
+  // Sauvegarder automatiquement dans la table activities
+  await updateActivityDates(droppedEvent.activityId, newStartUTC, newEndUTC, activity)
 
   showSuccess(t('activityDatesManager.messages.eventMoved'))
 }
 
 // Gérer le redimensionnement d'un événement
-const handleEventDurationChange = ({ event, originalEvent }) => {
+const handleEventDurationChange = async ({ event }) => {
+  console.log('handleEventDurationChange appelé:', event)
   const activity = activities.value.find(a => a.id === event.activityId)
-  if (!activity) return
+  if (!activity) {
+    console.warn('Activité non trouvée:', event.activityId)
+    return
+  }
 
   const timezone = activity.event?.timezone || 'UTC'
 
-  // Convertir les dates du fuseau horaire de l'événement vers UTC pour la sauvegarde
-  const newStartUTC = convertTimezoneToUTC(event.start, timezone)
-  const newEndUTC = convertTimezoneToUTC(event.end, timezone)
+  // Les dates retournées par Vue Cal sont décalées pour l'affichage
+  // Il faut faire la conversion inverse pour revenir en UTC
+  const browserOffset = new Date().getTimezoneOffset() * 60 * 1000
+  const eventOffset = getTimezoneOffset(timezone, event.start)
+  const totalOffset = -browserOffset + eventOffset
 
-  // Enregistrer le changement en UTC
+  // Convertir vers UTC
+  const newStartUTC = new Date(event.start.getTime() - totalOffset)
+  const newEndUTC = new Date(event.end.getTime() - totalOffset)
+
+  console.log('Nouvelles dates après redimensionnement (UTC):', {
+    newStartUTC: newStartUTC.toISOString(),
+    newEndUTC: newEndUTC.toISOString(),
+    timezone
+  })
+
+  // Enregistrer le changement pour la table activity_modifications (manuel)
   recordChange(event.activityId, newStartUTC, newEndUTC, activity)
+
+  // Sauvegarder automatiquement dans la table activities
+  await updateActivityDates(event.activityId, newStartUTC, newEndUTC, activity)
 
   showSuccess(t('activityDatesManager.messages.eventResized'))
 }
@@ -536,7 +537,33 @@ const handleCellClick = () => {
   // Ne rien faire
 }
 
-// Enregistrer un changement
+// Sauvegarder automatiquement les dates dans la table activities
+const updateActivityDates = async (activityId, newStart, newEnd, activity) => {
+  try {
+    // Mettre à jour les dates dans la table activities
+    const { error } = await supabase
+      .from('activities')
+      .update({
+        proposed_start_date: newStart.toISOString(),
+        proposed_end_date: newEnd.toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', activityId)
+
+    if (error) throw error
+
+    // Mettre à jour l'activité locale
+    activity.proposed_start_date = newStart.toISOString()
+    activity.proposed_end_date = newEnd.toISOString()
+
+    console.log('Dates sauvegardées automatiquement pour l\'activité:', activityId)
+  } catch (error) {
+    console.error('Erreur lors de la sauvegarde automatique:', error)
+    showError(t('activityDatesManager.errors.autoSave'))
+  }
+}
+
+// Enregistrer un changement pour la sauvegarde manuelle dans activity_modifications
 const recordChange = (activityId, newStart, newEnd, activity) => {
   // Vérifier si un changement existe déjà pour cette activité
   const existingChangeIndex = pendingChanges.value.findIndex(c => c.activityId === activityId)
@@ -558,26 +585,15 @@ const recordChange = (activityId, newStart, newEnd, activity) => {
   }
 }
 
-// Sauvegarder toutes les modifications
+// Sauvegarder toutes les modifications dans activity_modifications
+// Note: Les dates dans activities sont déjà sauvegardées automatiquement lors du déplacement/redimensionnement
 const saveAllChanges = async () => {
   if (!hasUnsavedChanges.value || !currentUser.value) return
 
   isSaving.value = true
   try {
     for (const change of pendingChanges.value) {
-      // 1. Mettre à jour les dates dans la table activities
-      const { error: updateError } = await supabase
-        .from('activities')
-        .update({
-          proposed_start_date: change.newStart,
-          proposed_end_date: change.newEnd,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', change.activityId)
-
-      if (updateError) throw updateError
-
-      // 2. Enregistrer les modifications dans activity_modifications
+      // Enregistrer les modifications dans activity_modifications
       // Modification de la date de début
       const { error: startModError } = await supabase
         .from('activity_modifications')
@@ -609,13 +625,6 @@ const saveAllChanges = async () => {
         })
 
       if (endModError) throw endModError
-
-      // Mettre à jour l'activité locale
-      const activity = activities.value.find(a => a.id === change.activityId)
-      if (activity) {
-        activity.proposed_start_date = change.newStart
-        activity.proposed_end_date = change.newEnd
-      }
     }
 
     // Vider les changements en attente

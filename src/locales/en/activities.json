@@ -637,7 +637,8 @@
     "errors": {
       "loadEvents": "Error loading events",
       "loadActivities": "Error loading activities",
-      "saveChanges": "Error saving changes"
+      "saveChanges": "Error saving changes to modification history",
+      "autoSave": "Error automatically saving dates"
     }
   }
 }
