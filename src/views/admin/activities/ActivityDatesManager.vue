@@ -129,7 +129,7 @@
       <div v-else class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden" style="height: 700px;">
         <vue-cal
           :events="calendarEvents"
-          :time-from="8 * 60"
+          :time-from="6 * 60"
           :time-to="20 * 60"
           :disable-views="['years', 'year']"
           default-view="week"
