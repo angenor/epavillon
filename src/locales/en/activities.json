@@ -618,6 +618,7 @@
     "allEvents": "All events",
     "filterByStatus": "Filter by status",
     "allStatuses": "All statuses",
+    "timezoneInfo": "Displayed times are in the event's timezone",
     "statuses": {
       "submitted": "Submitted",
       "under_review": "Under review",

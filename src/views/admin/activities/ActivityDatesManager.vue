@@ -86,6 +86,16 @@
                 <option value="approved">{{ t('activityDatesManager.statuses.approved') }}</option>
               </select>
             </div>
+
+            <!-- Indicateur de fuseau horaire -->
+            <div v-if="activities.length > 0" class="flex items-center space-x-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg" :title="t('activityDatesManager.timezoneInfo')">
+              <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span class="text-xs font-medium text-blue-600 dark:text-blue-400">
+                {{ timezoneLabel }}
+              </span>
+            </div>
           </div>
 
           <!-- Légende -->
@@ -227,16 +237,127 @@ const currentLocale = computed(() => locale.value)
 // Vérifier s'il y a des modifications non sauvegardées
 const hasUnsavedChanges = computed(() => pendingChanges.value.length > 0)
 
+// Obtenir le fuseau horaire de l'événement sélectionné
+const currentTimezone = computed(() => {
+  if (selectedEventId.value) {
+    const event = events.value.find(e => e.id === selectedEventId.value)
+    return event?.timezone || 'UTC'
+  }
+  // Si aucun événement n'est sélectionné, on utilise le fuseau horaire de la première activité
+  if (activities.value.length > 0) {
+    return activities.value[0]?.event?.timezone || 'UTC'
+  }
+  return 'UTC'
+})
+
+// Obtenir le label du fuseau horaire pour l'affichage
+const timezoneLabel = computed(() => {
+  const tz = currentTimezone.value
+  if (!tz || tz === 'UTC') return 'UTC'
+
+  // Obtenir l'abréviation du fuseau horaire
+  try {
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: tz,
+      timeZoneName: 'short'
+    })
+    const parts = formatter.formatToParts(new Date())
+    const timeZonePart = parts.find(part => part.type === 'timeZoneName')
+    return timeZonePart ? `${tz} (${timeZonePart.value})` : tz
+  } catch {
+    return tz
+  }
+})
+
+// Convertir une date UTC en date "locale" pour un fuseau horaire donné
+// Cette fonction crée un nouvel objet Date où les composants (année, mois, jour, heure, etc.)
+// correspondent à ce qu'ils seraient dans le fuseau horaire cible, mais interprétés comme heure locale
+const convertUTCToTimezone = (utcDate, timezone) => {
+  if (!timezone || timezone === 'UTC') return new Date(utcDate)
+
+  try {
+    // Obtenir les composants de la date dans le fuseau horaire cible
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    })
+
+    const parts = formatter.formatToParts(new Date(utcDate))
+    const values = {}
+    parts.forEach(part => {
+      if (part.type !== 'literal') {
+        values[part.type] = part.value
+      }
+    })
+
+    // Créer une nouvelle date avec ces composants en tant qu'heure locale
+    // Format: YYYY-MM-DDTHH:mm:ss (interprété comme heure locale du navigateur)
+    const localDateString = `${values.year}-${values.month}-${values.day}T${values.hour}:${values.minute}:${values.second}`
+    return new Date(localDateString)
+  } catch (error) {
+    console.error('Error converting UTC to timezone:', error)
+    return new Date(utcDate)
+  }
+}
+
+// Convertir une date "locale" (affichée dans le calendrier) en UTC
+// Cette fonction fait l'inverse de convertUTCToTimezone
+const convertTimezoneToUTC = (localDate, timezone) => {
+  if (!timezone || timezone === 'UTC') return new Date(localDate)
+
+  try {
+    // Extraire les composants de la date locale
+    const year = localDate.getFullYear()
+    const month = String(localDate.getMonth() + 1).padStart(2, '0')
+    const day = String(localDate.getDate()).padStart(2, '0')
+    const hour = String(localDate.getHours()).padStart(2, '0')
+    const minute = String(localDate.getMinutes()).padStart(2, '0')
+    const second = String(localDate.getSeconds()).padStart(2, '0')
+
+    // Créer une string ISO dans le fuseau horaire cible
+    const dateString = `${year}-${month}-${day}T${hour}:${minute}:${second}`
+
+    // Obtenir le décalage en millisecondes et l'appliquer
+    const offset = getTimezoneOffset(timezone, new Date(dateString))
+    return new Date(new Date(dateString).getTime() - offset)
+  } catch (error) {
+    console.error('Error converting timezone to UTC:', error)
+    return new Date(localDate)
+  }
+}
+
+// Obtenir le décalage en millisecondes d'un fuseau horaire par rapport à UTC
+const getTimezoneOffset = (timezone, date) => {
+  try {
+    // Obtenir la date en UTC
+    const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }))
+    // Obtenir la même date dans le fuseau horaire cible
+    const tzDate = new Date(date.toLocaleString('en-US', { timeZone: timezone }))
+    // La différence donne le décalage
+    return utcDate.getTime() - tzDate.getTime()
+  } catch {
+    return 0
+  }
+}
+
 // Convertir les activités en événements pour vue-cal
 const calendarEvents = computed(() => {
   return activities.value.map(activity => {
     const change = pendingChanges.value.find(c => c.activityId === activity.id)
     const startDate = change?.newStart || activity.proposed_start_date
     const endDate = change?.newEnd || activity.proposed_end_date
+    const timezone = activity.event?.timezone || 'UTC'
 
-    // Convertir les dates en objets Date
-    const start = new Date(startDate)
-    const end = new Date(endDate)
+    // Convertir les dates UTC en dates dans le fuseau horaire de l'événement
+    // pour que la position dans le calendrier corresponde aux heures affichées
+    let start = convertUTCToTimezone(startDate, timezone)
+    let end = convertUTCToTimezone(endDate, timezone)
 
     // Vérifier que les dates sont valides
     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
@@ -248,7 +369,7 @@ const calendarEvents = computed(() => {
     if (end <= start) {
       console.warn(`End date before start date for activity ${activity.id}:`, { start, end })
       // Ajuster la date de fin pour qu'elle soit au moins 30 minutes après le début
-      end.setTime(start.getTime() + 30 * 60 * 1000)
+      end = new Date(start.getTime() + 30 * 60 * 1000)
     }
 
     return {
@@ -258,6 +379,7 @@ const calendarEvents = computed(() => {
       title: activity.title,
       organization: activity.organization,
       activityType: activity.activity_type,
+      eventTimezone: timezone,
       class: getEventClass(activity, !!change),
       deletable: false,
       resizable: true,
@@ -347,24 +469,16 @@ const isEventModified = (activityId) => {
 
 // Formater l'heure de l'événement
 const formatEventTime = (start, end) => {
-  const activity = activities.value.find(a => {
-    const change = pendingChanges.value.find(c => c.activityId === a.id)
-    const activityStart = change?.newStart || a.proposed_start_date
-    return new Date(activityStart).getTime() === start.getTime()
-  })
-
-  const timezone = activity?.event?.timezone || 'UTC'
-
+  // Les dates sont déjà converties dans le fuseau horaire de l'événement
+  // On peut donc simplement afficher les heures sans conversion supplémentaire
   const startTime = start.toLocaleTimeString(currentLocale.value, {
     hour: '2-digit',
-    minute: '2-digit',
-    timeZone: timezone
+    minute: '2-digit'
   })
 
   const endTime = end.toLocaleTimeString(currentLocale.value, {
     hour: '2-digit',
-    minute: '2-digit',
-    timeZone: timezone
+    minute: '2-digit'
   })
 
   return `${startTime} - ${endTime}`
@@ -375,16 +489,22 @@ const handleEventDrop = (event, deleteEventFunction) => {
   const activity = activities.value.find(a => a.id === event.activityId)
   if (!activity) return
 
+  const timezone = activity.event?.timezone || 'UTC'
+
   // Calculer la durée originale
   const originalStart = new Date(activity.proposed_start_date)
   const originalEnd = new Date(activity.proposed_end_date)
   const duration = originalEnd.getTime() - originalStart.getTime()
 
-  // Nouvelle fin = nouveau début + durée
+  // Nouvelle fin = nouveau début + durée (dans le fuseau horaire de l'événement)
   const newEnd = new Date(event.start.getTime() + duration)
 
-  // Enregistrer le changement
-  recordChange(event.activityId, event.start, newEnd, activity)
+  // Convertir les dates du fuseau horaire de l'événement vers UTC pour la sauvegarde
+  const newStartUTC = convertTimezoneToUTC(event.start, timezone)
+  const newEndUTC = convertTimezoneToUTC(newEnd, timezone)
+
+  // Enregistrer le changement en UTC
+  recordChange(event.activityId, newStartUTC, newEndUTC, activity)
 
   showSuccess(t('activityDatesManager.messages.eventMoved'))
 }
@@ -394,8 +514,14 @@ const handleEventDurationChange = ({ event, originalEvent }) => {
   const activity = activities.value.find(a => a.id === event.activityId)
   if (!activity) return
 
-  // Enregistrer le changement
-  recordChange(event.activityId, event.start, event.end, activity)
+  const timezone = activity.event?.timezone || 'UTC'
+
+  // Convertir les dates du fuseau horaire de l'événement vers UTC pour la sauvegarde
+  const newStartUTC = convertTimezoneToUTC(event.start, timezone)
+  const newEndUTC = convertTimezoneToUTC(event.end, timezone)
+
+  // Enregistrer le changement en UTC
+  recordChange(event.activityId, newStartUTC, newEndUTC, activity)
 
   showSuccess(t('activityDatesManager.messages.eventResized'))
 }

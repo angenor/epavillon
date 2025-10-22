@@ -666,6 +666,7 @@
     "allEvents": "Tous les événements",
     "filterByStatus": "Filtrer par statut",
     "allStatuses": "Tous les statuts",
+    "timezoneInfo": "Les heures affichées sont dans le fuseau horaire de l'événement",
     "statuses": {
       "submitted": "Soumises",
       "under_review": "En révision",
