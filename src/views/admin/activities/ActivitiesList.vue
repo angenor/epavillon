@@ -351,7 +351,7 @@
 
       <!-- Barre d'actions flottante pour la sélection multiple -->
       <Transition name="slide-up">
-        <div v-if="selectedActivityIds.length > 0" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40 max-w-5xl">
+        <div v-if="selectedActivityIds.length > 0" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40">
           <div class="bg-gray-900 dark:bg-gray-800 text-white rounded-xl shadow-2xl px-6 py-4 border border-gray-700">
             <div class="flex items-center space-x-4">
               <!-- Compteur de sélection -->
@@ -367,27 +367,43 @@
               <!-- Divider -->
               <div class="h-8 w-px bg-gray-600"></div>
 
-              <!-- Label -->
-              <span class="text-sm font-medium whitespace-nowrap">{{ t('admin.activities.changeStatusTo') }}</span>
-
-              <!-- Boutons de statut -->
-              <div class="flex items-center gap-2 flex-wrap">
-                <button v-for="status in availableStatuses" :key="status.value"
-                        @click="bulkChangeStatus(status.value)"
-                        :class="[
-                          'cursor-pointer px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150 flex items-center space-x-1.5 whitespace-nowrap',
-                          status.color === 'green' ? 'bg-green-600 hover:bg-green-700' :
-                          status.color === 'red' ? 'bg-red-600 hover:bg-red-700' :
-                          status.color === 'blue' ? 'bg-blue-600 hover:bg-blue-700' :
-                          status.color === 'amber' ? 'bg-amber-600 hover:bg-amber-700' :
-                          status.color === 'purple' ? 'bg-purple-600 hover:bg-purple-700' :
-                          status.color === 'indigo' ? 'bg-indigo-600 hover:bg-indigo-700' :
-                          'bg-gray-600 hover:bg-gray-700',
-                          'text-white'
-                        ]">
-                  <span>{{ status.icon }}</span>
-                  <span>{{ status.label }}</span>
+              <!-- Dropdown de sélection de statut -->
+              <div class="relative">
+                <button @click="showStatusDropdown = !showStatusDropdown"
+                        class="cursor-pointer flex items-center space-x-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium transition-all duration-150 whitespace-nowrap">
+                  <span>{{ t('admin.activities.changeStatusTo') }}</span>
+                  <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': showStatusDropdown }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
                 </button>
+
+                <!-- Menu dropdown -->
+                <Transition name="dropdown">
+                  <div v-if="showStatusDropdown"
+                       class="absolute bottom-full mb-2 left-0 w-56 bg-white dark:bg-gray-700 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-600 py-1 max-h-80 overflow-y-auto">
+                    <button v-for="status in availableStatuses" :key="status.value"
+                            @click="bulkChangeStatus(status.value); showStatusDropdown = false"
+                            :class="[
+                              'w-full px-4 py-2.5 text-left flex items-center space-x-3 transition-colors duration-150 cursor-pointer',
+                              'hover:bg-gray-50 dark:hover:bg-gray-600'
+                            ]">
+                      <span class="text-xl">{{ status.icon }}</span>
+                      <div class="flex-1">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{ status.label }}</div>
+                      </div>
+                      <span :class="[
+                        'w-2 h-2 rounded-full',
+                        status.color === 'green' ? 'bg-green-500' :
+                        status.color === 'red' ? 'bg-red-500' :
+                        status.color === 'blue' ? 'bg-blue-500' :
+                        status.color === 'amber' ? 'bg-amber-500' :
+                        status.color === 'purple' ? 'bg-purple-500' :
+                        status.color === 'indigo' ? 'bg-indigo-500' :
+                        'bg-gray-500'
+                      ]"></span>
+                    </button>
+                  </div>
+                </Transition>
               </div>
 
               <!-- Divider -->
@@ -600,6 +616,7 @@ const validationReason = ref('')
 const selectedActivityIds = ref([])
 const isBulkAction = ref(false)
 const bulkTargetStatus = ref('approved') // Statut cible pour l'action en masse
+const showStatusDropdown = ref(false) // État du dropdown de statut
 
 const filters = ref({
   search: '',
@@ -924,6 +941,7 @@ const toggleSelectActivity = (activityId) => {
 
 const clearSelection = () => {
   selectedActivityIds.value = []
+  showStatusDropdown.value = false
 }
 
 const bulkChangeStatus = (targetStatus) => {
@@ -1174,10 +1192,25 @@ const subscribeToCommentReads = () => {
   console.log('ActivitiesList - Listener ajouté')
 }
 
+// Fermer le dropdown quand on clique en dehors
+const handleClickOutside = (event) => {
+  const dropdownElement = event.target.closest('.relative')
+  if (!dropdownElement && showStatusDropdown.value) {
+    showStatusDropdown.value = false
+  }
+}
+
 // Watchers
 watch([() => filters.value, activeTab], () => {
   currentPage.value = 1
 }, { deep: true })
+
+// Fermer le dropdown quand la sélection change
+watch(selectedActivityIds, (newVal) => {
+  if (newVal.length === 0) {
+    showStatusDropdown.value = false
+  }
+})
 
 // Cycle de vie
 onMounted(async () => {
@@ -1193,6 +1226,9 @@ onMounted(async () => {
     // S'abonner aux changements de commentaires
     subscribeToCommentReads()
     subscribeToRealtimeComments()
+
+    // Ajouter le listener pour fermer le dropdown
+    document.addEventListener('click', handleClickOutside)
   } catch (error) {
     console.error('Erreur:', error)
     if (error.message === 'Accès non autorisé') {
@@ -1211,6 +1247,9 @@ onBeforeUnmount(() => {
     supabase.removeChannel(realtimeSubscription)
     console.log('ActivitiesList - Subscription realtime nettoyée')
   }
+
+  // Retirer le listener de clic
+  document.removeEventListener('click', handleClickOutside)
 })
 </script>
 
@@ -1229,5 +1268,21 @@ onBeforeUnmount(() => {
 .slide-up-leave-to {
   transform: translate(-50%, 100%);
   opacity: 0;
+}
+
+/* Animation pour le dropdown */
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: all 0.2s ease;
+}
+
+.dropdown-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
 }
 </style>
