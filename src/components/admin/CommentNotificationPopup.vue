@@ -56,10 +56,12 @@ import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAuth } from '@/composables/useAuth'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
 const { supabase } = useSupabase()
 const { currentUser } = useAuth()
+const authStore = useAuthStore()
 
 const notifications = ref([])
 let realtimeSubscription = null
@@ -88,8 +90,14 @@ const dismissNotification = (id) => {
 
 // Gérer le clic sur une notification
 const handleNotificationClick = (notification) => {
-  // Naviguer vers l'activité
-  router.push(`/admin/activities/${notification.activity_id}`)
+  // Naviguer vers l'activité selon le rôle de l'utilisateur
+  // Si l'utilisateur est admin/révisionniste, aller vers la page admin
+  // Sinon (soumissionnaire), aller vers la page de gestion
+  if (authStore.isSuperAdmin || authStore.profile?.roles?.includes('revisionniste')) {
+    router.push(`/admin/activities/${notification.activity_id}`)
+  } else {
+    router.push(`/activities/${notification.activity_id}/manage`)
+  }
   // Retirer la notification
   dismissNotification(notification.id)
 }
