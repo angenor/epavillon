@@ -166,6 +166,13 @@
       @close="speakerManagement.closeAddSpeakerModal"
       @save="handleAddNewSpeaker"
     />
+
+    <!-- Comment Floating Button for Submitters -->
+    <CommentFloatingButtonUser
+      v-if="activity"
+      :activityId="activity.id"
+      :submitterId="activity.submitted_by"
+    />
   </div>
 </template>
 
@@ -199,6 +206,7 @@ import SpeakerPhotoModal from '@/components/activity/SpeakerPhotoModal.vue'
 import AddSpeakerModal from '@/components/activity/AddSpeakerModal.vue'
 import ActivityManagementSidebar from '@/components/activity/ActivityManagementSidebar.vue'
 import BrowserRecommendation from '@/components/BrowserRecommendation.vue'
+import CommentFloatingButtonUser from '@/components/CommentFloatingButtonUser.vue'
 
 
 const { t, locale } = useI18n()

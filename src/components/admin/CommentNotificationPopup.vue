@@ -105,11 +105,27 @@ const subscribeToComments = () => {
       schema: 'public',
       table: 'revision_comments'
     }, async (payload) => {
-      const isRecipient = payload.new.shared_with_revisionists?.includes(currentUser.value.id)
       const isMyComment = payload.new.created_by === currentUser.value.id
 
       // Ne pas afficher de notification pour ses propres commentaires
       if (isMyComment) return
+
+      // Vérifier si l'utilisateur est un destinataire (révisionniste OU soumissionnaire)
+      const isRevisionistRecipient = payload.new.shared_with_revisionists?.includes(currentUser.value.id)
+
+      // Vérifier si l'utilisateur est le soumissionnaire et si le commentaire lui est destiné
+      let isSubmitterRecipient = false
+      if (payload.new.shared_with_submitter) {
+        const { data: activityCheck } = await supabase
+          .from('activities')
+          .select('submitted_by')
+          .eq('id', payload.new.activity_id)
+          .single()
+
+        isSubmitterRecipient = activityCheck?.submitted_by === currentUser.value.id
+      }
+
+      const isRecipient = isRevisionistRecipient || isSubmitterRecipient
 
       // Afficher la notification si l'utilisateur est destinataire
       if (isRecipient) {
@@ -126,7 +142,7 @@ const subscribeToComments = () => {
           .eq('id', payload.new.created_by)
           .single()
 
-        const authorName = authorData ? `${authorData.first_name} ${authorData.last_name}` : 'Un révisionniste'
+        const authorName = authorData ? `${authorData.first_name} ${authorData.last_name}` : (isSubmitterRecipient ? 'Un révisionniste' : 'Un soumissionnaire')
         const activityTitle = activityData?.title || 'Activité'
 
         // Enregistrer dans la table notifications

@@ -212,7 +212,13 @@ const handleNotificationClick = async (notification) => {
     closeDropdown()
   } else if (notification.notification_type === 'revision_comment' && notification.related_entity_id) {
     // Naviguer vers l'activité concernée
-    router.push(`/admin/activities/${notification.related_entity_id}`)
+    // Si l'utilisateur est admin/révisionniste, aller vers la page admin
+    // Sinon (soumissionnaire), aller vers la page de gestion
+    if (authStore.isSuperAdmin || authStore.profile?.roles?.includes('revisionniste')) {
+      router.push(`/admin/activities/${notification.related_entity_id}`)
+    } else {
+      router.push(`/activities/${notification.related_entity_id}/manage`)
+    }
     closeDropdown()
   }
 }

@@ -293,6 +293,13 @@
       </div>
     </div>
   </div>
+
+  <!-- Comment Floating Button for Submitters (only if user is the owner) -->
+  <CommentFloatingButtonUser
+    v-if="activity && authStore.user && activity.submitted_by === authStore.user.id"
+    :activityId="activity.id"
+    :submitterId="activity.submitted_by"
+  />
 </template>
 
 <script setup>
@@ -301,6 +308,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAuthStore } from '@/stores/auth'
+import CommentFloatingButtonUser from '@/components/CommentFloatingButtonUser.vue'
 
 const { t } = useI18n()
 const route = useRoute()
