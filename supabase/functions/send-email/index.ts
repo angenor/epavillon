@@ -495,7 +495,7 @@ Deno.serve(async (req) => {
         console.log('Sending standard email (no personalization)...');
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const timeoutId = setTimeout(() => controller.abort(), 60000);
 
         const response = await fetch(LARAVEL_EMAIL_URL, {
           method: 'POST',
