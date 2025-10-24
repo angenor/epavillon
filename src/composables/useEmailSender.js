@@ -73,6 +73,25 @@ Cordialement,
 L'équipe IFDD`
     },
     {
+      id: 'activity_under_review',
+      name: 'Activité en cours d\'examen',
+      subject: 'Votre activité "{activity_name}" est en cours d\'examen',
+      content: `Bonjour {recipient_name},
+
+Nous vous informons que votre proposition d'activité "{activity_name}" soumise pour l'événement "{event_name}" est actuellement en cours d'examen par notre comité d'évaluation.
+
+Votre proposition fait l'objet d'une analyse approfondie afin d'assurer sa cohérence avec les objectifs de l'événement et les critères de sélection établis.
+
+Nous vous tiendrons informé(e) du résultat de cette évaluation dans les meilleurs délais. Une notification vous sera envoyée dès qu'une décision aura été prise concernant l'acceptation ou le rejet de votre proposition.
+
+Nous vous remercions pour votre patience et votre contribution à l'événement.
+
+Pour toute question, n'hésitez pas à consulter votre tableau de bord : {dashboard_url}
+
+Cordialement,
+L'équipe IFDD - Organisation de {event_name}`
+    },
+    {
       id: 'custom',
       name: 'Personnalisé',
       subject: '',
