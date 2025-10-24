@@ -313,6 +313,15 @@
       "results": "results",
       "previous": "Previous",
       "next": "Next",
+      "selectAll": "Select all on this page",
+      "selected": "selected",
+      "oneSelected": "1 activity selected",
+      "multipleSelected": "{count} activities selected",
+      "changeStatusTo": "Change status to:",
+      "confirmStatusChange": "Confirm change",
+      "confirmBulkStatusChange": "Change status to \"{status}\"",
+      "bulkStatusChangeWarning": "You are about to change the status of {count} activities to \"{status}\". This action is irreversible.",
+      "bulkStatusChangeReason": "Reason or comment (optional, will be applied to all selected activities)...",
       "stats": {
         "pending": "Pending",
         "approved": "Approved",
@@ -332,7 +341,9 @@
         "underReview": "Under Review",
         "approved": "Approved",
         "rejected": "Rejected",
-        "cancelled": "Cancelled"
+        "cancelled": "Cancelled",
+        "live": "Live",
+        "completed": "Completed"
       }
     },
     "trainings": {

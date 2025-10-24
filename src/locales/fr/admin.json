@@ -357,6 +357,15 @@
       "results": "résultats",
       "previous": "Précédent",
       "next": "Suivant",
+      "selectAll": "Tout sélectionner sur cette page",
+      "selected": "sélectionnée(s)",
+      "oneSelected": "1 activité sélectionnée",
+      "multipleSelected": "{count} activités sélectionnées",
+      "changeStatusTo": "Changer le statut vers :",
+      "confirmStatusChange": "Confirmer le changement",
+      "confirmBulkStatusChange": "Changer le statut vers « {status} »",
+      "bulkStatusChangeWarning": "Vous êtes sur le point de changer le statut de {count} activités vers « {status} ». Cette action est irréversible.",
+      "bulkStatusChangeReason": "Raison ou commentaire (optionnel, sera appliqué à toutes les activités sélectionnées)...",
       "stats": {
         "pending": "En attente",
         "approved": "Approuvées",
@@ -376,7 +385,9 @@
         "underReview": "En examen",
         "approved": "Approuvée",
         "rejected": "Rejetée",
-        "cancelled": "Annulée"
+        "cancelled": "Annulée",
+        "live": "En cours",
+        "completed": "Terminée"
       }
     },
     "trainings": {

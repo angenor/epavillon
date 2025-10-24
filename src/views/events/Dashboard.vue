@@ -180,12 +180,25 @@
               <div class="flex-1 min-w-0">
                 <div class="flex items-start justify-between">
                   <div class="flex-1">
-                    <router-link
-                      :to="`/activities/${event.id}/manage`"
-                      class="text-lg font-semibold text-gray-900 dark:text-white hover:text-ifdd-bleu dark:hover:text-ifdd-bleu-clair transition-colors truncate block"
-                    >
-                      {{ event.title }}
-                    </router-link>
+                    <div class="flex items-center gap-2">
+                      <router-link
+                        :to="`/activities/${event.id}/manage`"
+                        class="text-lg font-semibold text-gray-900 dark:text-white hover:text-ifdd-bleu dark:hover:text-ifdd-bleu-clair transition-colors truncate block"
+                      >
+                        {{ event.title }}
+                      </router-link>
+                      <!-- Badge de commentaires non lus -->
+                      <div
+                        v-if="event.unread_comments_count > 0"
+                        class="flex items-center bg-red-500 text-white rounded-full px-2 py-1 flex-shrink-0"
+                        :title="`${event.unread_comments_count} commentaire${event.unread_comments_count > 1 ? 's' : ''} non lu${event.unread_comments_count > 1 ? 's' : ''}`"
+                      >
+                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                        </svg>
+                        <span class="text-xs font-semibold">{{ event.unread_comments_count }}</span>
+                      </div>
+                    </div>
                     <div class="flex items-center space-x-4 mt-1 text-sm text-gray-600 dark:text-gray-400">
                       <span class="flex items-center">
                         <font-awesome-icon :icon="['fas', 'calendar']" class="w-4 h-4 mr-1" />
@@ -233,18 +246,20 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import useUserActivities from '@/composables/useUserActivities'
 import useEvents from '@/composables/useEvents'
+import { useSupabase } from '@/composables/useSupabase'
 
 const { t } = useI18n()
 const authStore = useAuthStore()
 const router = useRouter()
 const { fetchUserActivities } = useUserActivities()
 const { fetchActiveEvents, events: availableEvents } = useEvents()
+const { supabase } = useSupabase()
 
 const loading = ref(true)
 const events = ref([])
@@ -325,6 +340,106 @@ const getStatusClass = (status) => {
   return classes[status] || classes.draft
 }
 
+// Fonction pour charger les commentaires non lus pour chaque activité
+const loadUnreadCommentsForActivities = async (activities) => {
+  if (!authStore.user || !activities || activities.length === 0) {
+    return activities
+  }
+
+  try {
+    const activitiesWithComments = await Promise.all(
+      activities.map(async (activity) => {
+        // Récupérer le timestamp de la dernière vue depuis localStorage
+        const storageKey = `last_comment_view_${activity.id}_${authStore.user.id}`
+        const lastView = localStorage.getItem(storageKey)
+
+        let unreadCount = 0
+
+        if (!lastView) {
+          // Si pas de dernière vue, compter tous les commentaires partagés avec le soumissionnaire
+          const { count, error } = await supabase
+            .from('revision_comments')
+            .select('*', { count: 'exact', head: true })
+            .eq('activity_id', activity.id)
+            .eq('shared_with_submitter', true)
+            .neq('created_by', authStore.user.id)
+
+          if (!error) {
+            unreadCount = count || 0
+          }
+        } else {
+          // Compter les commentaires créés après la dernière vue
+          const { count, error } = await supabase
+            .from('revision_comments')
+            .select('*', { count: 'exact', head: true })
+            .eq('activity_id', activity.id)
+            .eq('shared_with_submitter', true)
+            .neq('created_by', authStore.user.id)
+            .gt('created_at', lastView)
+
+          if (!error) {
+            unreadCount = count || 0
+          }
+        }
+
+        return {
+          ...activity,
+          unread_comments_count: unreadCount
+        }
+      })
+    )
+
+    return activitiesWithComments
+  } catch (error) {
+    console.error('Erreur lors du chargement des commentaires non lus:', error)
+    return activities
+  }
+}
+
+// Fonction pour mettre à jour le compteur d'une activité spécifique
+const updateActivityUnreadCount = async (activityId) => {
+  if (!authStore.user) return
+
+  const activityIndex = events.value.findIndex(e => e.id === activityId)
+  if (activityIndex === -1) return
+
+  const storageKey = `last_comment_view_${activityId}_${authStore.user.id}`
+  const lastView = localStorage.getItem(storageKey)
+
+  let unreadCount = 0
+
+  try {
+    if (!lastView) {
+      const { count, error } = await supabase
+        .from('revision_comments')
+        .select('*', { count: 'exact', head: true })
+        .eq('activity_id', activityId)
+        .eq('shared_with_submitter', true)
+        .neq('created_by', authStore.user.id)
+
+      if (!error) {
+        unreadCount = count || 0
+      }
+    } else {
+      const { count, error } = await supabase
+        .from('revision_comments')
+        .select('*', { count: 'exact', head: true })
+        .eq('activity_id', activityId)
+        .eq('shared_with_submitter', true)
+        .neq('created_by', authStore.user.id)
+        .gt('created_at', lastView)
+
+      if (!error) {
+        unreadCount = count || 0
+      }
+    }
+
+    events.value[activityIndex].unread_comments_count = unreadCount
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du compteur:', error)
+  }
+}
+
 const loadEvents = async () => {
   if (!authStore.user) {
     router.push('/login')
@@ -340,7 +455,10 @@ const loadEvents = async () => {
       sortOrder: 'desc',
       eventId: selectedEventId.value || null
     })
-    events.value = data || []
+
+    // Charger le nombre de commentaires non lus pour chaque activité
+    const eventsWithComments = await loadUnreadCommentsForActivities(data || [])
+    events.value = eventsWithComments
   } catch (error) {
     console.error('Error loading events:', error)
     events.value = []
@@ -361,8 +479,41 @@ const loadAvailableEvents = async () => {
   }
 }
 
+// Subscription pour les nouveaux commentaires en temps réel
+let realtimeSubscription = null
+
+const subscribeToRealtimeComments = () => {
+  if (!authStore.user) return
+
+  realtimeSubscription = supabase
+    .channel('dashboard-comments')
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'revision_comments'
+    }, async (payload) => {
+      // Vérifier si l'utilisateur est le soumissionnaire de l'activité et si le commentaire lui est destiné
+      if (payload.new.shared_with_submitter) {
+        const activity = events.value.find(e => e.id === payload.new.activity_id)
+
+        if (activity && activity.submitted_by === authStore.user.id && payload.new.created_by !== authStore.user.id) {
+          // Mettre à jour le compteur pour cette activité
+          await updateActivityUnreadCount(payload.new.activity_id)
+        }
+      }
+    })
+    .subscribe()
+}
+
 onMounted(async () => {
   await loadAvailableEvents()
   await loadEvents()
+  subscribeToRealtimeComments()
+})
+
+onBeforeUnmount(() => {
+  if (realtimeSubscription) {
+    supabase.removeChannel(realtimeSubscription)
+  }
 })
 </script>

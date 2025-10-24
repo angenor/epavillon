@@ -164,12 +164,43 @@
     </div>
 
     <div v-else>
+      <!-- En-tête de sélection -->
+      <div v-if="paginatedActivities.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm px-6 py-3 mb-4 flex items-center justify-between border border-gray-100 dark:border-gray-700">
+        <div class="flex items-center">
+          <input type="checkbox"
+                 :checked="isAllPageSelected"
+                 :indeterminate.prop="isSomePageSelected"
+                 @change="toggleSelectAll"
+                 class="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 dark:focus:ring-orange-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer">
+          <label class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">
+            {{ t('admin.activities.selectAll') || 'Tout sélectionner sur cette page' }}
+            <span v-if="selectedActivityIds.length > 0" class="text-orange-600 dark:text-orange-400">
+              ({{ selectedActivityIds.length }} {{ t('admin.activities.selected') || 'sélectionnée(s)' }})
+            </span>
+          </label>
+        </div>
+      </div>
+
       <!-- Liste des activités -->
       <div class="space-y-4 mb-8">
         <div v-for="activity in paginatedActivities" :key="activity.id"
-             class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden">
+             :class="[
+               'bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border overflow-hidden',
+               selectedActivityIds.includes(activity.id)
+                 ? 'border-orange-500 dark:border-orange-600 ring-2 ring-orange-200 dark:ring-orange-900/50'
+                 : 'border-gray-100 dark:border-gray-700'
+             ]">
 
           <div class="flex">
+            <!-- Checkbox de sélection -->
+            <div class="flex items-center justify-center w-12 bg-gray-50 dark:bg-gray-700/50">
+              <input type="checkbox"
+                     :checked="selectedActivityIds.includes(activity.id)"
+                     @change="toggleSelectActivity(activity.id)"
+                     @click.stop
+                     class="w-5 h-5 text-orange-600 bg-white border-gray-300 rounded focus:ring-orange-500 dark:focus:ring-orange-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer">
+            </div>
+
             <!-- Image miniature avec logo organisation -->
             <div @click="viewActivity(activity)" class="w-32 h-32 cursor-pointer flex-shrink-0 relative overflow-hidden bg-gradient-to-br from-orange-50 to-orange-100 dark:from-gray-700 dark:to-gray-600">
               <img v-if="activity.cover_image_low_url"
@@ -318,6 +349,60 @@
         </div>
       </div>
 
+      <!-- Barre d'actions flottante pour la sélection multiple -->
+      <Transition name="slide-up">
+        <div v-if="selectedActivityIds.length > 0" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40 max-w-5xl">
+          <div class="bg-gray-900 dark:bg-gray-800 text-white rounded-xl shadow-2xl px-6 py-4 border border-gray-700">
+            <div class="flex items-center space-x-4">
+              <!-- Compteur de sélection -->
+              <div class="flex items-center space-x-2">
+                <div class="bg-orange-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">
+                  {{ selectedActivityIds.length }}
+                </div>
+                <span class="text-sm font-medium whitespace-nowrap">
+                  {{ selectedActivityIds.length === 1 ? t('admin.activities.oneSelected') : t('admin.activities.multipleSelected', { count: selectedActivityIds.length }) }}
+                </span>
+              </div>
+
+              <!-- Divider -->
+              <div class="h-8 w-px bg-gray-600"></div>
+
+              <!-- Label -->
+              <span class="text-sm font-medium whitespace-nowrap">{{ t('admin.activities.changeStatusTo') }}</span>
+
+              <!-- Boutons de statut -->
+              <div class="flex items-center gap-2 flex-wrap">
+                <button v-for="status in availableStatuses" :key="status.value"
+                        @click="bulkChangeStatus(status.value)"
+                        :class="[
+                          'cursor-pointer px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150 flex items-center space-x-1.5 whitespace-nowrap',
+                          status.color === 'green' ? 'bg-green-600 hover:bg-green-700' :
+                          status.color === 'red' ? 'bg-red-600 hover:bg-red-700' :
+                          status.color === 'blue' ? 'bg-blue-600 hover:bg-blue-700' :
+                          status.color === 'amber' ? 'bg-amber-600 hover:bg-amber-700' :
+                          status.color === 'purple' ? 'bg-purple-600 hover:bg-purple-700' :
+                          status.color === 'indigo' ? 'bg-indigo-600 hover:bg-indigo-700' :
+                          'bg-gray-600 hover:bg-gray-700',
+                          'text-white'
+                        ]">
+                  <span>{{ status.icon }}</span>
+                  <span>{{ status.label }}</span>
+                </button>
+              </div>
+
+              <!-- Divider -->
+              <div class="h-8 w-px bg-gray-600"></div>
+
+              <!-- Bouton annuler -->
+              <button @click="clearSelection"
+                      class="cursor-pointer px-4 py-2 rounded-lg text-sm font-medium bg-gray-700 hover:bg-gray-600 text-white transition-all duration-150 whitespace-nowrap">
+                {{ t('common.cancel') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+
       <!-- Pagination -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm px-6 py-4 flex items-center justify-between border border-gray-100 dark:border-gray-700">
         <div class="flex-1 flex justify-between sm:hidden">
@@ -396,16 +481,44 @@
                 </svg>
               </div>
               <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
-                  {{ validationAction === 'approve' ? t('admin.activities.confirmApproval') : t('admin.activities.confirmRejection') }}
+                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white flex items-center">
+                  <template v-if="isBulkAction">
+                    <span class="mr-2">{{ targetStatusInfo.icon }}</span>
+                    <span>{{ t('admin.activities.confirmBulkStatusChange', { status: targetStatusInfo.label }) }}</span>
+                  </template>
+                  <template v-else>
+                    {{ validationAction === 'approve' ? t('admin.activities.confirmApproval') : t('admin.activities.confirmRejection') }}
+                  </template>
                 </h3>
                 <div class="mt-2">
-                  <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                    {{ selectedActivity?.title }}
-                  </p>
-                  <textarea v-if="validationAction === 'reject'"
+                  <!-- Mode action simple -->
+                  <template v-if="!isBulkAction">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                      {{ selectedActivity?.title }}
+                    </p>
+                  </template>
+
+                  <!-- Mode action en masse -->
+                  <template v-else>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                      {{ t('admin.activities.bulkStatusChangeWarning', { count: selectedActivityIds.length, status: targetStatusInfo.label }) }}
+                    </p>
+                    <div class="max-h-40 overflow-y-auto bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 mb-4">
+                      <ul class="space-y-1 text-xs">
+                        <li v-for="activity in selectedActivities" :key="activity.id" class="flex items-start">
+                          <svg class="w-4 h-4 mr-2 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                          </svg>
+                          <span class="text-gray-700 dark:text-gray-300">{{ activity.title }}</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </template>
+
+                  <!-- Champ de raison pour les statuts qui le nécessitent -->
+                  <textarea v-if="(isBulkAction && statusesRequiringReason.includes(bulkTargetStatus)) || (!isBulkAction && validationAction === 'reject')"
                            v-model="validationReason"
-                           :placeholder="t('admin.activities.rejectionReason')"
+                           :placeholder="isBulkAction ? t('admin.activities.bulkStatusChangeReason') : t('admin.activities.rejectionReason')"
                            rows="3"
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                   </textarea>
@@ -415,15 +528,24 @@
           </div>
           <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button @click="confirmValidation"
-                    :disabled="validationAction === 'reject' && !validationReason.trim()"
+                    :disabled="(isBulkAction && statusesRequiringReason.includes(bulkTargetStatus) && !validationReason.trim()) || (!isBulkAction && validationAction === 'reject' && !validationReason.trim())"
                     :class="[
-                      'w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm',
-                      validationAction === 'approve'
-                        ? 'bg-green-600 hover:bg-green-700 focus:ring-green-500'
-                        : 'bg-red-600 hover:bg-red-700 focus:ring-red-500',
+                      'w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm cursor-pointer',
+                      isBulkAction
+                        ? (targetStatusInfo.color === 'green' ? 'bg-green-600 hover:bg-green-700 focus:ring-green-500' :
+                           targetStatusInfo.color === 'red' ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500' :
+                           targetStatusInfo.color === 'blue' ? 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500' :
+                           targetStatusInfo.color === 'amber' ? 'bg-amber-600 hover:bg-amber-700 focus:ring-amber-500' :
+                           targetStatusInfo.color === 'purple' ? 'bg-purple-600 hover:bg-purple-700 focus:ring-purple-500' :
+                           targetStatusInfo.color === 'indigo' ? 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500' :
+                           'bg-gray-600 hover:bg-gray-700 focus:ring-gray-500')
+                        : (validationAction === 'approve'
+                          ? 'bg-green-600 hover:bg-green-700 focus:ring-green-500'
+                          : 'bg-red-600 hover:bg-red-700 focus:ring-red-500'),
                       'disabled:opacity-50 disabled:cursor-not-allowed'
                     ]">
-              {{ validationAction === 'approve' ? t('admin.activities.approve') : t('admin.activities.reject') }}
+              <span v-if="isBulkAction">{{ t('admin.activities.confirmStatusChange') }}</span>
+              <span v-else>{{ validationAction === 'approve' ? t('admin.activities.approve') : t('admin.activities.reject') }}</span>
             </button>
             <button @click="closeValidationModal"
                     class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700">
@@ -473,6 +595,11 @@ const showValidationModal = ref(false)
 const selectedActivity = ref(null)
 const validationAction = ref(null)
 const validationReason = ref('')
+
+// Sélection multiple
+const selectedActivityIds = ref([])
+const isBulkAction = ref(false)
+const bulkTargetStatus = ref('approved') // Statut cible pour l'action en masse
 
 const filters = ref({
   search: '',
@@ -595,6 +722,45 @@ const visiblePages = computed(() => {
 
   return pages
 })
+
+// Liste de tous les statuts disponibles
+const availableStatuses = computed(() => [
+  { value: 'draft', label: t('admin.activities.statuses.draft'), icon: '📝', color: 'gray' },
+  { value: 'submitted', label: t('admin.activities.statuses.submitted'), icon: '📤', color: 'blue' },
+  { value: 'under_review', label: t('admin.activities.statuses.underReview'), icon: '👁️', color: 'amber' },
+  { value: 'approved', label: t('admin.activities.statuses.approved'), icon: '✅', color: 'green' },
+  { value: 'rejected', label: t('admin.activities.statuses.rejected'), icon: '❌', color: 'red' },
+  { value: 'cancelled', label: t('admin.activities.statuses.cancelled'), icon: '🚫', color: 'gray' },
+  { value: 'live', label: t('admin.activities.statuses.live'), icon: '🔴', color: 'purple' },
+  { value: 'completed', label: t('admin.activities.statuses.completed'), icon: '🏁', color: 'indigo' }
+])
+
+// Computed properties pour la sélection multiple
+const selectedActivities = computed(() => {
+  return activities.value.filter(activity => selectedActivityIds.value.includes(activity.id))
+})
+
+const isAllPageSelected = computed(() => {
+  return paginatedActivities.value.length > 0 &&
+    paginatedActivities.value.every(activity => selectedActivityIds.value.includes(activity.id))
+})
+
+const isSomePageSelected = computed(() => {
+  return paginatedActivities.value.some(activity => selectedActivityIds.value.includes(activity.id)) &&
+    !isAllPageSelected.value
+})
+
+const canChangeStatus = computed(() => {
+  return selectedActivityIds.value.length > 0
+})
+
+// Informations sur le statut cible pour le changement en masse
+const targetStatusInfo = computed(() => {
+  return availableStatuses.value.find(s => s.value === bulkTargetStatus.value) || availableStatuses.value[0]
+})
+
+// Les statuts qui nécessitent une raison/commentaire
+const statusesRequiringReason = ['rejected', 'cancelled']
 
 // Méthodes
 const loadActivities = async () => {
@@ -721,6 +887,7 @@ const viewActivity = async (activity) => {
 const approveActivity = (activity) => {
   selectedActivity.value = activity
   validationAction.value = 'approve'
+  isBulkAction.value = false
   showValidationModal.value = true
 }
 
@@ -728,35 +895,120 @@ const rejectActivity = (activity) => {
   selectedActivity.value = activity
   validationAction.value = 'reject'
   validationReason.value = ''
+  isBulkAction.value = false
+  showValidationModal.value = true
+}
+
+// Méthodes de sélection multiple
+const toggleSelectAll = () => {
+  if (isAllPageSelected.value) {
+    // Désélectionner toutes les activités de la page
+    const pageIds = paginatedActivities.value.map(a => a.id)
+    selectedActivityIds.value = selectedActivityIds.value.filter(id => !pageIds.includes(id))
+  } else {
+    // Sélectionner toutes les activités de la page
+    const pageIds = paginatedActivities.value.map(a => a.id)
+    const newIds = pageIds.filter(id => !selectedActivityIds.value.includes(id))
+    selectedActivityIds.value = [...selectedActivityIds.value, ...newIds]
+  }
+}
+
+const toggleSelectActivity = (activityId) => {
+  const index = selectedActivityIds.value.indexOf(activityId)
+  if (index > -1) {
+    selectedActivityIds.value.splice(index, 1)
+  } else {
+    selectedActivityIds.value.push(activityId)
+  }
+}
+
+const clearSelection = () => {
+  selectedActivityIds.value = []
+}
+
+const bulkChangeStatus = (targetStatus) => {
+  if (selectedActivityIds.value.length === 0) return
+  bulkTargetStatus.value = targetStatus
+  validationAction.value = targetStatus === 'rejected' ? 'reject' : 'approve'
+  validationReason.value = ''
+  isBulkAction.value = true
   showValidationModal.value = true
 }
 
 const confirmValidation = async () => {
-  if (!selectedActivity.value || !currentUser.value) return
+  if (!currentUser.value) return
 
   try {
-    const status = validationAction.value === 'approve' ? 'approved' : 'rejected'
-    const result = await validateActivity(
-      selectedActivity.value.id,
-      status,
-      currentUser.value.id,
-      validationReason.value || null
-    )
+    // Déterminer le statut cible
+    let targetStatus
+    if (isBulkAction.value) {
+      targetStatus = bulkTargetStatus.value
+    } else {
+      targetStatus = validationAction.value === 'approve' ? 'approved' : 'rejected'
+    }
 
-    if (result.success) {
-      // Mettre à jour l'activité dans la liste
-      const activityIndex = activities.value.findIndex(a => a.id === selectedActivity.value.id)
-      if (activityIndex !== -1) {
-        activities.value[activityIndex].validation_status = status
+    if (isBulkAction.value) {
+      // Action en masse
+      if (selectedActivityIds.value.length === 0) return
+
+      let successCount = 0
+      let errorCount = 0
+
+      // Traiter chaque activité sélectionnée
+      for (const activityId of selectedActivityIds.value) {
+        const result = await validateActivity(
+          activityId,
+          targetStatus,
+          currentUser.value.id,
+          validationReason.value || null
+        )
+
+        if (result.success) {
+          successCount++
+          // Mettre à jour l'activité dans la liste
+          const activityIndex = activities.value.findIndex(a => a.id === activityId)
+          if (activityIndex !== -1) {
+            activities.value[activityIndex].validation_status = targetStatus
+          }
+        } else {
+          errorCount++
+          console.error(`Erreur lors de la validation de l'activité ${activityId}:`, result.error)
+        }
       }
 
+      // Nettoyer la sélection
+      selectedActivityIds.value = []
       calculateStats()
       closeValidationModal()
 
-      // TODO: Afficher une notification de succès
+      console.log(`Changement de statut en masse terminé: ${successCount} succès, ${errorCount} erreurs`)
+      // TODO: Afficher une notification avec le résumé
     } else {
-      console.error('Erreur lors de la validation:', result.error)
-      // TODO: Afficher une notification d'erreur
+      // Action simple
+      if (!selectedActivity.value) return
+
+      const result = await validateActivity(
+        selectedActivity.value.id,
+        targetStatus,
+        currentUser.value.id,
+        validationReason.value || null
+      )
+
+      if (result.success) {
+        // Mettre à jour l'activité dans la liste
+        const activityIndex = activities.value.findIndex(a => a.id === selectedActivity.value.id)
+        if (activityIndex !== -1) {
+          activities.value[activityIndex].validation_status = targetStatus
+        }
+
+        calculateStats()
+        closeValidationModal()
+
+        // TODO: Afficher une notification de succès
+      } else {
+        console.error('Erreur lors de la validation:', result.error)
+        // TODO: Afficher une notification d'erreur
+      }
     }
   } catch (error) {
     console.error('Erreur lors de la validation:', error)
@@ -768,6 +1020,7 @@ const closeValidationModal = () => {
   selectedActivity.value = null
   validationAction.value = null
   validationReason.value = ''
+  isBulkAction.value = false
 }
 
 const exportActivities = async () => {
@@ -960,3 +1213,21 @@ onBeforeUnmount(() => {
   }
 })
 </script>
+
+<style scoped>
+/* Animation pour la barre d'actions flottante */
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-up-enter-from {
+  transform: translate(-50%, 100%);
+  opacity: 0;
+}
+
+.slide-up-leave-to {
+  transform: translate(-50%, 100%);
+  opacity: 0;
+}
+</style>
