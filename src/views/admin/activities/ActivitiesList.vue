@@ -480,7 +480,7 @@
     <!-- Modal de validation -->
     <div v-if="showValidationModal" class="fixed inset-0 z-50 overflow-y-auto">
       <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="closeValidationModal"></div>
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="isSubmitting ? null : closeValidationModal()"></div>
 
         <!-- Spacer pour centrer verticalement sur mobile -->
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
@@ -539,17 +539,31 @@
                            v-model="validationReason"
                            :placeholder="isBulkAction ? t('admin.activities.bulkStatusChangeReason') : t('admin.activities.rejectionReason')"
                            rows="3"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                           :disabled="isSubmitting"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed">
                   </textarea>
+
+                  <!-- Barre de progression pour le traitement en masse -->
+                  <div v-if="isSubmitting && isBulkAction" class="mt-4">
+                    <div class="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
+                      <span>{{ t('admin.activities.processing') || 'Traitement en cours...' }}</span>
+                      <span class="font-semibold">{{ submissionProgress.current }} / {{ submissionProgress.total }}</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5 overflow-hidden">
+                      <div class="bg-orange-600 h-2.5 rounded-full transition-all duration-300"
+                           :style="{ width: `${(submissionProgress.current / submissionProgress.total) * 100}%` }">
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button @click="confirmValidation"
-                    :disabled="(isBulkAction && statusesRequiringReason.includes(bulkTargetStatus) && !validationReason.trim()) || (!isBulkAction && validationAction === 'reject' && !validationReason.trim())"
+                    :disabled="isSubmitting || (isBulkAction && statusesRequiringReason.includes(bulkTargetStatus) && !validationReason.trim()) || (!isBulkAction && validationAction === 'reject' && !validationReason.trim())"
                     :class="[
-                      'w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm cursor-pointer',
+                      'w-full inline-flex items-center justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm cursor-pointer',
                       isBulkAction
                         ? (targetStatusInfo.color === 'green' ? 'bg-green-600 hover:bg-green-700 focus:ring-green-500' :
                            targetStatusInfo.color === 'red' ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500' :
@@ -563,11 +577,19 @@
                           : 'bg-red-600 hover:bg-red-700 focus:ring-red-500'),
                       'disabled:opacity-50 disabled:cursor-not-allowed'
                     ]">
-              <span v-if="isBulkAction">{{ t('admin.activities.confirmStatusChange') }}</span>
+              <!-- Spinner de chargement -->
+              <svg v-if="isSubmitting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+
+              <span v-if="isSubmitting">{{ t('admin.activities.submitting') || 'En cours...' }}</span>
+              <span v-else-if="isBulkAction">{{ t('admin.activities.confirmStatusChange') }}</span>
               <span v-else>{{ validationAction === 'approve' ? t('admin.activities.approve') : t('admin.activities.reject') }}</span>
             </button>
             <button @click="closeValidationModal"
-                    class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700">
+                    :disabled="isSubmitting"
+                    class="cursor-pointer mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
               {{ t('common.cancel') }}
             </button>
           </div>
@@ -614,6 +636,8 @@ const showValidationModal = ref(false)
 const selectedActivity = ref(null)
 const validationAction = ref(null)
 const validationReason = ref('')
+const isSubmitting = ref(false)
+const submissionProgress = ref({ current: 0, total: 0 })
 
 // Sélection multiple
 const selectedActivityIds = ref([])
@@ -957,9 +981,11 @@ const bulkChangeStatus = (targetStatus) => {
 }
 
 const confirmValidation = async () => {
-  if (!currentUser.value) return
+  if (!currentUser.value || isSubmitting.value) return
 
   try {
+    isSubmitting.value = true
+
     // Déterminer le statut cible
     let targetStatus
     if (isBulkAction.value) {
@@ -975,8 +1001,14 @@ const confirmValidation = async () => {
       let successCount = 0
       let errorCount = 0
 
+      // Initialiser la progression
+      submissionProgress.value = { current: 0, total: selectedActivityIds.value.length }
+
       // Traiter chaque activité sélectionnée
-      for (const activityId of selectedActivityIds.value) {
+      for (let i = 0; i < selectedActivityIds.value.length; i++) {
+        const activityId = selectedActivityIds.value[i]
+        submissionProgress.value.current = i + 1
+
         const result = await validateActivity(
           activityId,
           targetStatus,
@@ -1033,6 +1065,9 @@ const confirmValidation = async () => {
     }
   } catch (error) {
     console.error('Erreur lors de la validation:', error)
+  } finally {
+    isSubmitting.value = false
+    submissionProgress.value = { current: 0, total: 0 }
   }
 }
 

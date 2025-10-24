@@ -366,6 +366,8 @@
       "confirmBulkStatusChange": "Changer le statut vers « {status} »",
       "bulkStatusChangeWarning": "Vous êtes sur le point de changer le statut de {count} activités vers « {status} ». Cette action est irréversible.",
       "bulkStatusChangeReason": "Raison ou commentaire (optionnel, sera appliqué à toutes les activités sélectionnées)...",
+      "processing": "Traitement en cours...",
+      "submitting": "En cours...",
       "stats": {
         "pending": "En attente",
         "approved": "Approuvées",
