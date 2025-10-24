@@ -118,7 +118,7 @@
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <!-- Dropdown de statut -->
               <div class="relative">
-                <!-- <select v-model="activity.validation_status"
+                <select v-model="activity.validation_status"
                         @focus="previousStatusValue = activity.validation_status"
                         @change="handleStatusChange"
                         :disabled="isUpdatingStatus"
@@ -131,13 +131,13 @@
                   <option value="under_review">En examen</option>
                   <option value="approved">Approuvée</option>
                   <option value="rejected">Rejetée</option>
-                </select> -->
+                </select>
                 <!-- Icône dropdown -->
-                <!-- <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                   <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                   </svg>
-                </div> -->
+                </div>
               </div>
 
               <div class="flex items-center space-x-3">
