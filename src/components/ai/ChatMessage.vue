@@ -37,11 +37,10 @@
       </div>
 
       <!-- Message content -->
-      <div class="prose prose-sm dark:prose-invert max-w-none">
-        <p class="whitespace-pre-wrap text-gray-800 dark:text-gray-200">
-          {{ message.content }}
-        </p>
-      </div>
+      <div
+        class="prose prose-sm dark:prose-invert max-w-none markdown-content"
+        v-html="renderedContent"
+      ></div>
 
       <!-- References (only for assistant messages) -->
       <div
@@ -135,6 +134,7 @@ import { fr, enUS } from 'date-fns/locale'
 import DocumentReference from './DocumentReference.vue'
 import { useChatbot } from '@/composables/ai/useChatbot'
 import { formatResponseTime, formatTokenCount } from '@/utils/ai/responseFormatter'
+import { useMarkdown } from '@/composables/ai/useMarkdown'
 
 const props = defineProps({
   message: {
@@ -145,11 +145,16 @@ const props = defineProps({
 
 const { t, locale } = useI18n()
 const { addFeedback } = useChatbot()
+const { renderMarkdown } = useMarkdown()
 
 const copied = ref(false)
 const feedbackGiven = ref(null)
 
 // Computed
+const renderedContent = computed(() => {
+  return renderMarkdown(props.message.content)
+})
+
 const references = computed(() => {
   return props.message.source_documents || []
 })
@@ -196,3 +201,139 @@ const sendFeedback = async (type) => {
   }
 }
 </script>
+
+<style scoped>
+@reference;
+
+/* Styles pour le contenu markdown */
+.markdown-content {
+  @apply text-gray-800 dark:text-gray-200;
+}
+
+/* Titres */
+.markdown-content :deep(h1),
+.markdown-content :deep(h2),
+.markdown-content :deep(h3),
+.markdown-content :deep(h4),
+.markdown-content :deep(h5),
+.markdown-content :deep(h6) {
+  @apply font-bold text-gray-900 dark:text-gray-100 mt-4 mb-2;
+}
+
+.markdown-content :deep(h1) {
+  @apply text-2xl;
+}
+
+.markdown-content :deep(h2) {
+  @apply text-xl;
+}
+
+.markdown-content :deep(h3) {
+  @apply text-lg;
+}
+
+/* Paragraphes */
+.markdown-content :deep(p) {
+  @apply mb-3 leading-relaxed;
+}
+
+/* Listes */
+.markdown-content :deep(ul),
+.markdown-content :deep(ol) {
+  @apply mb-3 ml-6;
+}
+
+.markdown-content :deep(ul) {
+  @apply list-disc;
+}
+
+.markdown-content :deep(ol) {
+  @apply list-decimal;
+}
+
+.markdown-content :deep(li) {
+  @apply mb-1;
+}
+
+/* Liens */
+.markdown-content :deep(a) {
+  @apply text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 underline;
+}
+
+/* Code inline */
+.markdown-content :deep(.inline-code) {
+  @apply px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded text-sm font-mono;
+}
+
+/* Blocs de code */
+.markdown-content :deep(.code-block-wrapper) {
+  @apply rounded-lg overflow-hidden border border-gray-300 dark:border-gray-700 my-4;
+}
+
+.markdown-content :deep(.code-block-header) {
+  @apply flex items-center justify-between px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700;
+}
+
+.markdown-content :deep(.code-block-language) {
+  @apply text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase;
+}
+
+.markdown-content :deep(.code-block-copy) {
+  @apply flex items-center gap-2 px-3 py-1 text-xs bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors cursor-pointer;
+}
+
+.markdown-content :deep(.code-block-content) {
+  @apply p-4 bg-gray-900 overflow-x-auto;
+}
+
+.markdown-content :deep(.code-block-content code) {
+  @apply text-sm font-mono;
+}
+
+/* Blockquotes */
+.markdown-content :deep(blockquote) {
+  @apply border-l-4 border-gray-300 dark:border-gray-600 pl-4 my-4 italic text-gray-700 dark:text-gray-300;
+}
+
+/* Tableaux */
+.markdown-content :deep(.table-wrapper) {
+  @apply overflow-x-auto my-4;
+}
+
+.markdown-content :deep(.markdown-table) {
+  @apply w-full border-collapse;
+}
+
+.markdown-content :deep(.markdown-table thead) {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+
+.markdown-content :deep(.markdown-table th),
+.markdown-content :deep(.markdown-table td) {
+  @apply px-4 py-2 border border-gray-300 dark:border-gray-700 text-left;
+}
+
+.markdown-content :deep(.markdown-table th) {
+  @apply font-semibold text-gray-900 dark:text-gray-100;
+}
+
+/* Séparateur horizontal */
+.markdown-content :deep(hr) {
+  @apply my-4 border-t border-gray-300 dark:border-gray-700;
+}
+
+/* Images */
+.markdown-content :deep(img) {
+  @apply max-w-full h-auto rounded-lg my-4;
+}
+
+/* Strong/Bold */
+.markdown-content :deep(strong) {
+  @apply font-semibold text-gray-900 dark:text-gray-100;
+}
+
+/* Italic */
+.markdown-content :deep(em) {
+  @apply italic;
+}
+</style>

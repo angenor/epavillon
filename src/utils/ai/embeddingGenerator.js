@@ -31,7 +31,10 @@ function getEmbeddingsInstance() {
   return new OpenAIEmbeddings({
     openAIApiKey: OPENAI_API_KEY,
     modelName: EMBEDDING_MODEL,
-    dimensions: EMBEDDING_DIMENSIONS
+    dimensions: EMBEDDING_DIMENSIONS,
+    configuration: {
+      apiKey: OPENAI_API_KEY // Forcer la clé API explicitement
+    }
   })
 }
 

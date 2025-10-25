@@ -149,6 +149,21 @@ VITE_SUPABASE_ANON_KEY=votre_clé_anon_supabase
 - **Skeleton loaders** : Utiliser des skeleton loaders pour améliorer l'expérience utilisateur pendant le chargement des données
 - **Font Awesome** : Utiliser `font-awesome-icon` pour les icônes dans l'interface utilisateur lorsque approprié
 
+## Installations et déploiements
+**IMPORTANT** : Ne JAMAIS exécuter automatiquement les commandes d'installation ou de déploiement
+- **Installations npm** : Fournir les instructions complètes pour que l'utilisateur installe manuellement les packages (certaines installations peuvent nécessiter un mot de passe root)
+- **Déploiements edge/functions** : Fournir les commandes exactes pour que l'utilisateur déploie manuellement (peut nécessiter des permissions spéciales)
+- **Exception** : Les commandes de build (`npm run build`, `npm run preview`, etc.) peuvent être exécutées librement car elles ne nécessitent pas de permissions spéciales
+- **Format des instructions** : Toujours fournir les commandes dans un bloc de code avec des explications claires
+- **Exemple** :
+  ```bash
+  # Installation d'une nouvelle dépendance
+  npm install nom-du-package
+
+  # Déploiement d'une fonction edge
+  supabase functions deploy nom-fonction
+  ```
+
 ## Notes de développement
 - Application Vue 3 avec Vite comme outil de build
 - Rendu côté client (SPA) par défaut

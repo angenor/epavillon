@@ -17,17 +17,12 @@
           </div>
         </div>
 
-        <!-- Category selector -->
-        <div v-if="currentSession" class="flex items-center gap-2">
-          <select
-            v-model="selectedCategory"
-            class="px-3 py-2 text-sm bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer"
-          >
-            <option :value="null">{{ t('chatbot.allCategories') }}</option>
-            <option value="climate">{{ t('chatbot.categories.climate') }}</option>
-            <option value="biodiversity">{{ t('chatbot.categories.biodiversity') }}</option>
-            <option value="desertification">{{ t('chatbot.categories.desertification') }}</option>
-          </select>
+        <!-- AI Assistant badge -->
+        <div v-if="currentSession" class="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+          <font-awesome-icon icon="sparkles" class="text-purple-500 dark:text-purple-400 text-sm" />
+          <span class="text-xs font-medium text-purple-700 dark:text-purple-300">
+            Assistant IA polyvalent
+          </span>
         </div>
       </div>
     </div>
@@ -141,14 +136,12 @@ const {
   messages,
   isSending,
   messageCount,
-  sendMessage,
-  createSession
+  sendMessage
 } = useChatbot()
 
 const messageInput = ref('')
 const messagesContainer = ref(null)
 const messageInputRef = ref(null)
-const selectedCategory = ref(null)
 
 // Computed
 const canSend = computed(() => {
@@ -164,7 +157,6 @@ const handleSendMessage = async () => {
 
   try {
     await sendMessage(message, {
-      category: selectedCategory.value,
       language: 'fr' // Peut être dynamique selon les préférences utilisateur
     })
 
@@ -187,13 +179,6 @@ const scrollToBottom = () => {
 watch(() => messages.value.length, async () => {
   await nextTick()
   scrollToBottom()
-})
-
-// Watch current session for category sync
-watch(currentSession, (newSession) => {
-  if (newSession) {
-    selectedCategory.value = newSession.category
-  }
 })
 
 // Focus input on mount

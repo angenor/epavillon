@@ -3,6 +3,7 @@
  * Gère les sessions, messages, et interactions avec l'utilisateur
  *
  * IMPORTANT: Utilise un singleton pour partager l'état entre les composants
+ * Support des outils Zoom pour les utilisateurs admin/super_admin
  */
 
 import { ref, computed } from 'vue'
@@ -10,6 +11,7 @@ import { useSupabase } from '@/composables/useSupabase'
 import { useAuth } from '@/composables/useAuth'
 import { useRAG } from './useRAG'
 import { generateSessionTitle } from '@/utils/ai/responseFormatter'
+import { useZoomToolsChat } from '@/composables/zoom/useZoomToolsChat'
 
 // États globaux partagés (singleton)
 const currentSession = ref(null)
@@ -23,6 +25,7 @@ export function useChatbot() {
   const { supabase } = useSupabase()
   const { user } = useAuth()
   const { generateFormattedResponse, generateSessionTitle: generateAITitle } = useRAG()
+  const { availableTools: zoomTools } = useZoomToolsChat()
 
   /**
    * Crée une nouvelle session de chat
@@ -189,7 +192,7 @@ export function useChatbot() {
         currentSession.value.title = title
       }
 
-      // Générer la réponse avec RAG
+      // Générer la réponse avec RAG (avec outils Zoom si disponibles)
       const conversationHistory = messages.value.map(m => ({
         role: m.role,
         content: m.content
@@ -200,7 +203,8 @@ export function useChatbot() {
         conversationHistory.slice(0, -1), // Exclure le message actuel
         {
           category: options.category || currentSession.value.category,
-          language: options.language || 'fr'
+          language: options.language || 'fr',
+          tools: zoomTools.value || [] // Passer les outils Zoom disponibles
         }
       )
 

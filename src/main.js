@@ -1,5 +1,8 @@
 import './assets/main.css'
 
+// Import du thème highlight.js pour la coloration syntaxique du code
+import 'highlight.js/styles/github-dark.css'
+
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { createI18n } from 'vue-i18n'

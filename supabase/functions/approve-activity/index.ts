@@ -1,5 +1,5 @@
-// supabase/functions/create-zoom-meeting/index.ts
-// Edge Function pour créer automatiquement une réunion Zoom lors de la validation d'une activité
+// supabase/functions/approve-activity/index.ts
+// Edge Function pour approuver une activité et créer automatiquement une réunion Zoom
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.43.5';
 
@@ -7,11 +7,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.43.5';
 const ZOOM_ACCOUNT_ID = Deno.env.get('ZOOM_ACCOUNT_ID') ?? '';
 const ZOOM_CLIENT_ID = Deno.env.get('ZOOM_CLIENT_ID') ?? '';
 const ZOOM_CLIENT_SECRET = Deno.env.get('ZOOM_CLIENT_SECRET') ?? '';
-const ZOOM_USER_ID = Deno.env.get('ZOOM_USER_ID') ?? 'me'; // ID de l'utilisateur Zoom qui créera les réunions
+const ZOOM_USER_ID = Deno.env.get('ZOOM_USER_ID') ?? 'me';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
-console.info('create-zoom-meeting function started');
+console.info('approve-activity function started');
 console.info('Environment check:', {
   hasZoomAccountId: !!ZOOM_ACCOUNT_ID,
   hasZoomClientId: !!ZOOM_CLIENT_ID,
@@ -60,31 +60,15 @@ function calculateDurationInMinutes(startDate: string, endDate: string): number 
   const start = new Date(startDate);
   const end = new Date(endDate);
   const durationMs = end.getTime() - start.getTime();
-  return Math.ceil(durationMs / (1000 * 60)); // Convertir en minutes
+  return Math.ceil(durationMs / (1000 * 60));
 }
 
 /**
  * Formate une date au format ISO 8601 requis par Zoom (YYYY-MM-DDTHH:mm:ss)
- *
- * IMPORTANT: Les dates en base de données sont déjà en UTC et représentent le bon moment.
- * On envoie directement l'heure UTC à Zoom avec timezone UTC.
- *
- * Exemple: Si l'activité doit avoir lieu à 14:00 heure de Paris
- * - Stocké en base: "2025-11-15T13:00:00.000Z" (13:00 UTC = 14:00 Paris)
- * - Envoyé à Zoom: "2025-11-15T13:00:00" avec timezone="UTC"
- * - Zoom affichera: 13:00 UTC (chaque utilisateur verra l'heure dans son fuseau local)
  */
 function formatDateForZoomUTC(dateString: string): string {
-  // Créer un objet Date à partir de la chaîne ISO (qui est en UTC)
   const date = new Date(dateString);
 
-  console.log('🕐 Formatting date for Zoom (UTC):', {
-    input_date: dateString,
-    input_date_utc: date.toISOString(),
-    timestamp_ms: date.getTime()
-  });
-
-  // Extraire directement les composants UTC sans conversion
   const year = date.getUTCFullYear();
   const month = String(date.getUTCMonth() + 1).padStart(2, '0');
   const day = String(date.getUTCDate()).padStart(2, '0');
@@ -92,20 +76,11 @@ function formatDateForZoomUTC(dateString: string): string {
   const minute = String(date.getUTCMinutes()).padStart(2, '0');
   const second = String(date.getUTCSeconds()).padStart(2, '0');
 
-  const formattedDate = `${year}-${month}-${day}T${hour}:${minute}:${second}`;
-
-  console.log('✅ Formatted date for Zoom (UTC):', {
-    output_date: formattedDate,
-    timezone: 'UTC',
-    components: { year, month, day, hour, minute, second }
-  });
-
-  return formattedDate;
+  return `${year}-${month}-${day}T${hour}:${minute}:${second}`;
 }
 
 /**
  * Crée une réunion Zoom via l'API
- * Utilise UTC comme timezone car les dates en base sont déjà en UTC
  */
 async function createZoomMeeting(
   accessToken: string,
@@ -122,7 +97,7 @@ async function createZoomMeeting(
       type: 2, // Réunion planifiée
       start_time: formattedStartTime,
       duration: duration,
-      timezone: 'UTC', // Utiliser UTC car les dates en base sont déjà en UTC
+      timezone: 'UTC',
       agenda: description || '',
       settings: {
         host_video: true,
@@ -130,11 +105,10 @@ async function createZoomMeeting(
         join_before_host: false,
         mute_upon_entry: true,
         waiting_room: true,
-        // auto_recording: 'cloud', // Enregistrement automatique dans le cloud
         allow_multiple_devices: true,
-        approval_type: 0, // Approbation automatique
-        registration_type: 2, // Les participants peuvent s'inscrire et rejoindre
-        audio: 'both', // Téléphone et VoIP
+        approval_type: 0,
+        registration_type: 2,
+        audio: 'both',
         enforce_login: false
       }
     };
@@ -143,12 +117,8 @@ async function createZoomMeeting(
       endpoint: `https://api.zoom.us/v2/users/${ZOOM_USER_ID}/meetings`,
       topic: title,
       start_time: formattedStartTime,
-      duration: duration,
-      timezone: 'UTC',
-      agenda_length: description?.length || 0
+      duration: duration
     });
-
-    console.log('📝 Full request body:', JSON.stringify(requestBody, null, 2));
 
     const response = await fetch(
       `https://api.zoom.us/v2/users/${ZOOM_USER_ID}/meetings`,
@@ -210,7 +180,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Vérifier les credentials Zoom
+    // Vérifier les credentials
     if (!ZOOM_ACCOUNT_ID || !ZOOM_CLIENT_ID || !ZOOM_CLIENT_SECRET) {
       console.error('Missing Zoom credentials');
       return new Response(
@@ -222,7 +192,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Vérifier les credentials Supabase
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
       console.error('Missing Supabase credentials');
       return new Response(
@@ -250,7 +219,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { activity_id } = payload;
+    const { activity_id, approved_by } = payload;
 
     // Validation du payload
     if (!activity_id) {
@@ -275,8 +244,8 @@ Deno.serve(async (req) => {
       }
     );
 
-    // Récupérer les informations de l'activité et de l'événement associé
-    console.log('Fetching activity and event data...');
+    // Récupérer l'activité avec toutes ses informations
+    console.log('Fetching activity data...');
     const { data: activity, error: activityError } = await supabaseClient
       .from('activities')
       .select(`
@@ -284,12 +253,12 @@ Deno.serve(async (req) => {
         title,
         objectives,
         detailed_presentation,
-        final_start_date,
-        final_end_date,
         proposed_start_date,
         proposed_end_date,
-        zoom_meeting_id,
+        final_start_date,
+        final_end_date,
         validation_status,
+        zoom_meeting_id,
         event:events (
           timezone,
           title,
@@ -313,29 +282,83 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Vérifier que l'activité est validée (approuvée)
-    if (activity.validation_status !== 'approved') {
-      console.log('Activity is not approved. Current status:', activity.validation_status);
+    // Vérifier que l'activité n'est pas déjà approuvée
+    if (activity.validation_status === 'approved') {
+      console.log('Activity is already approved');
+
+      // Si déjà approuvée ET a déjà une réunion Zoom
+      if (activity.zoom_meeting_id) {
+        return new Response(
+          JSON.stringify({
+            message: 'Activity already approved with Zoom meeting',
+            already_approved: true,
+            validation_status: 'approved',
+            zoom_meeting_id: activity.zoom_meeting_id
+          }),
+          {
+            status: 200,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders }
+          }
+        );
+      }
+    }
+
+    console.log('📝 Approving activity and creating Zoom meeting...');
+
+    // ÉTAPE 1: Approuver l'activité (changer le statut et copier les dates)
+    const updateData: any = {
+      validation_status: 'approved',
+      final_start_date: activity.proposed_start_date,
+      final_end_date: activity.proposed_end_date,
+      updated_at: new Date().toISOString()
+    };
+
+    const { error: updateError } = await supabaseClient
+      .from('activities')
+      .update(updateData)
+      .eq('id', activity_id);
+
+    if (updateError) {
+      console.error('Failed to approve activity:', updateError);
       return new Response(
         JSON.stringify({
-          error: 'Activity not approved',
-          message: `Impossible de créer une réunion Zoom pour cette activité. L'activité doit être approuvée (statut actuel : ${activity.validation_status})`,
-          validation_status: activity.validation_status
+          error: 'Failed to approve activity',
+          details: updateError.message
         }),
         {
-          status: 400,
+          status: 500,
           headers: { 'Content-Type': 'application/json', ...corsHeaders }
         }
       );
     }
 
-    // Vérifier si une réunion Zoom existe déjà
+    console.log('✅ Activity approved successfully');
+
+    // Enregistrer dans l'historique des modifications
+    if (approved_by) {
+      await supabaseClient
+        .from('activity_modifications')
+        .insert({
+          activity_id: activity_id,
+          field_name: 'validation_status',
+          old_value: activity.validation_status,
+          new_value: 'approved',
+          old_value_type: 'string',
+          new_value_type: 'string',
+          modified_by: approved_by,
+          modified_at: new Date().toISOString()
+        });
+    }
+
+    // ÉTAPE 2: Créer la réunion Zoom (si elle n'existe pas déjà)
     if (activity.zoom_meeting_id) {
-      console.log('Activity already has a Zoom meeting:', activity.zoom_meeting_id);
+      console.log('Activity already has a Zoom meeting');
       return new Response(
         JSON.stringify({
-          message: 'Activity already has a Zoom meeting',
-          zoom_meeting_id: activity.zoom_meeting_id
+          message: 'Activity approved successfully (Zoom meeting already exists)',
+          validation_status: 'approved',
+          zoom_meeting_id: activity.zoom_meeting_id,
+          activity_id: activity_id
         }),
         {
           status: 200,
@@ -344,48 +367,36 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Utiliser les dates finales si disponibles, sinon les dates proposées
-    const startDate = activity.final_start_date || activity.proposed_start_date;
-    const endDate = activity.final_end_date || activity.proposed_end_date;
+    // Vérifier qu'on a les dates nécessaires
+    const startDate = activity.proposed_start_date;
+    const endDate = activity.proposed_end_date;
     const timezone = activity.event.timezone;
 
     if (!startDate || !endDate || !timezone) {
       console.error('Missing required date or timezone information');
       return new Response(
         JSON.stringify({
-          error: 'Missing required date or timezone information for the activity'
+          message: 'Activity approved but cannot create Zoom meeting: missing dates',
+          validation_status: 'approved',
+          activity_id: activity_id,
+          error: 'Missing required date or timezone information'
         }),
         {
-          status: 400,
+          status: 200,
           headers: { 'Content-Type': 'application/json', ...corsHeaders }
         }
       );
     }
 
-    // Calculer la durée de la réunion en minutes
+    // Calculer la durée et préparer les infos
     const duration = calculateDurationInMinutes(startDate, endDate);
-
-    console.log('📊 Meeting details:', {
-      title: activity.title,
-      event_title: activity.event.title,
-      event_year: activity.event.year,
-      event_timezone: timezone,
-      start_date_utc: startDate,
-      end_date_utc: endDate,
-      duration_minutes: duration,
-      note: 'Using UTC timezone for Zoom meeting (dates are already in UTC)'
-    });
-
-    // Créer une description pour la réunion
     const description = activity.objectives || activity.detailed_presentation || '';
-    const meetingTitle = `${activity.title}`;
+    const meetingTitle = activity.title;
 
-    // Obtenir le token d'accès Zoom
     console.log('🔑 Getting Zoom access token...');
     const accessToken = await getZoomAccessToken();
 
-    // Créer la réunion Zoom avec UTC (les dates en base sont déjà en UTC)
-    console.log('🎥 Creating Zoom meeting with UTC timezone...');
+    console.log('🎥 Creating Zoom meeting...');
     const zoomMeeting = await createZoomMeeting(
       accessToken,
       meetingTitle,
@@ -394,7 +405,7 @@ Deno.serve(async (req) => {
       description
     );
 
-    // Insérer les informations de la réunion Zoom dans la base de données
+    // Sauvegarder la réunion Zoom dans la base de données
     console.log('Saving Zoom meeting to database...');
     const { data: savedMeeting, error: saveMeetingError } = await supabaseClient
       .from('zoom_meetings')
@@ -404,7 +415,7 @@ Deno.serve(async (req) => {
         start_url: zoomMeeting.start_url,
         password: zoomMeeting.password,
         registration_url: zoomMeeting.registration_url,
-        created_by: null // Créé automatiquement par le système
+        created_by: approved_by || null
       })
       .select()
       .single();
@@ -413,34 +424,11 @@ Deno.serve(async (req) => {
       console.error('Failed to save Zoom meeting to database:', saveMeetingError);
       return new Response(
         JSON.stringify({
-          error: 'Failed to save Zoom meeting to database',
-          details: saveMeetingError?.message
-        }),
-        {
-          status: 500,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders }
-        }
-      );
-    }
-
-    // Mettre à jour l'activité avec l'ID de la réunion Zoom
-    console.log('Updating activity with Zoom meeting ID...');
-    const { error: updateActivityError } = await supabaseClient
-      .from('activities')
-      .update({ zoom_meeting_id: savedMeeting.id })
-      .eq('id', activity_id);
-
-    if (updateActivityError) {
-      console.error('Failed to update activity with Zoom meeting ID:', updateActivityError);
-      // Note: La réunion Zoom a été créée, mais la liaison avec l'activité a échoué
-      // On retourne quand même un succès partiel
-      return new Response(
-        JSON.stringify({
-          warning: 'Zoom meeting created but failed to link to activity',
-          zoom_meeting_id: savedMeeting.id,
-          meeting_id: zoomMeeting.meeting_id,
-          join_url: zoomMeeting.join_url,
-          details: updateActivityError?.message
+          message: 'Activity approved and Zoom meeting created but failed to save to database',
+          validation_status: 'approved',
+          activity_id: activity_id,
+          zoom_meeting_data: zoomMeeting,
+          error: saveMeetingError?.message
         }),
         {
           status: 200,
@@ -449,12 +437,41 @@ Deno.serve(async (req) => {
       );
     }
 
-    console.log('Zoom meeting created and linked successfully');
+    // Lier la réunion Zoom à l'activité
+    console.log('Linking Zoom meeting to activity...');
+    const { error: linkError } = await supabaseClient
+      .from('activities')
+      .update({ zoom_meeting_id: savedMeeting.id })
+      .eq('id', activity_id);
 
-    // Retourner les informations de la réunion
+    if (linkError) {
+      console.error('Failed to link Zoom meeting to activity:', linkError);
+      return new Response(
+        JSON.stringify({
+          message: 'Activity approved and Zoom meeting created but failed to link',
+          validation_status: 'approved',
+          activity_id: activity_id,
+          zoom_meeting_id: savedMeeting.id,
+          meeting_id: zoomMeeting.meeting_id,
+          join_url: zoomMeeting.join_url,
+          warning: 'Failed to link Zoom meeting to activity'
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json', ...corsHeaders }
+        }
+      );
+    }
+
+    console.log('🎉 Activity approved and Zoom meeting created successfully');
+
+    // Retourner le succès complet
     return new Response(
       JSON.stringify({
-        message: 'Zoom meeting created and linked successfully',
+        message: 'Activity approved and Zoom meeting created successfully',
+        validation_status: 'approved',
+        activity_id: activity_id,
+        activity_title: activity.title,
         zoom_meeting_id: savedMeeting.id,
         meeting_id: zoomMeeting.meeting_id,
         join_url: zoomMeeting.join_url,
@@ -469,7 +486,7 @@ Deno.serve(async (req) => {
     );
 
   } catch (err) {
-    console.error('Unhandled error in create-zoom-meeting function:', err);
+    console.error('Unhandled error in approve-activity function:', err);
     return new Response(
       JSON.stringify({
         error: 'Internal server error',

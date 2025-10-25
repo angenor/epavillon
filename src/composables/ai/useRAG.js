@@ -2,12 +2,13 @@
  * Composable pour le système RAG (Retrieval Augmented Generation)
  * Utilise Claude d'Anthropic pour générer des réponses basées sur les documents
  * Support OpenRouter ou API directe Anthropic
+ * Support des outils (tools) pour les fonctionnalités avancées (Zoom, etc.)
  */
 
 import { ref } from 'vue'
 import { ChatAnthropic } from '@langchain/anthropic'
 import { ChatOpenAI } from '@langchain/openai'
-import { HumanMessage, AIMessage, SystemMessage } from '@langchain/core/messages'
+import { HumanMessage, AIMessage, SystemMessage, ToolMessage } from '@langchain/core/messages'
 import { useDocumentEmbeddings } from './useDocumentEmbeddings'
 import {
   formatResponseWithReferences,
@@ -41,21 +42,25 @@ export function useRAG() {
 
   /**
    * Initialise le modèle Claude (via OpenRouter ou API directe)
+   * @param {Array} tools - Outils à lier au modèle (optionnel)
    * @returns {ChatAnthropic|ChatOpenAI}
    */
-  function getClaudeModel() {
+  function getClaudeModel(tools = []) {
+    let model
+
     if (USE_OPENROUTER) {
       // Utiliser OpenRouter
       if (!OPENROUTER_API_KEY || OPENROUTER_API_KEY === 'your_openrouter_api_key_here') {
         throw new Error('OpenRouter API key is not configured')
       }
 
-      return new ChatOpenAI({
+      model = new ChatOpenAI({
         openAIApiKey: OPENROUTER_API_KEY,
         modelName: OPENROUTER_CHAT_MODEL,
         temperature: TEMPERATURE,
         maxTokens: MAX_TOKENS,
         configuration: {
+          apiKey: OPENROUTER_API_KEY, // Forcer la clé API explicitement
           baseURL: 'https://openrouter.ai/api/v1',
           defaultHeaders: {
             'HTTP-Referer': import.meta.env.VITE_APP_URL || 'http://localhost:5173',
@@ -69,13 +74,21 @@ export function useRAG() {
         throw new Error('Anthropic API key is not configured')
       }
 
-      return new ChatAnthropic({
+      model = new ChatAnthropic({
         anthropicApiKey: ANTHROPIC_API_KEY,
         modelName: 'claude-3-5-sonnet-20241022',
         temperature: TEMPERATURE,
         maxTokens: MAX_TOKENS
       })
     }
+
+    // Lier les outils au modèle si fournis
+    if (tools && tools.length > 0) {
+      console.log('[RAG] Binding tools to model:', tools.map(t => t.name))
+      return model.bindTools(tools)
+    }
+
+    return model
   }
 
   /**
@@ -110,43 +123,115 @@ ${doc.chunk_text}
   /**
    * Construit le prompt système pour Claude
    * @param {string} language - Langue de la réponse (fr ou en)
+   * @param {boolean} hasTools - Indique si des outils sont disponibles
    * @returns {string}
    */
-  function buildSystemPrompt(language = 'fr') {
-    if (language === 'en') {
-      return `You are an AI assistant specialized in climate negotiations, biodiversity, and desertification.
-Your role is to help negotiators by answering questions based on the provided documents.
+  function buildSystemPrompt(language = 'fr', hasTools = false) {
+    const toolsInstructions = hasTools ? `
 
-Instructions:
-1. Always base your answers on the documents provided in the context
-2. If the answer is not in the documents, clearly say so
-3. Provide specific references (document title, page) when possible
-4. Be concise and precise
-5. If several documents address the question, synthesize the information
-6. Answer in English
-7. Use professional language appropriate for negotiators`
-    }
+    ## Outils disponibles
+    Tu as accès à des outils pour gérer les activités et les réunions Zoom. Utilise-les intelligemment :
+    - Pour trouver une activité par son titre → utilise search_activity_by_title
+    - Pour approuver/valider une activité ET créer automatiquement sa réunion Zoom → utilise approve_activity (action atomique)
+    - Pour créer/planifier une réunion Zoom (activité déjà approuvée) → utilise create_zoom_meeting
+    - Pour modifier une réunion existante → utilise edit_zoom_meeting
+    - Pour obtenir des détails sur une réunion → utilise get_zoom_meeting_details
+    - Pour supprimer/annuler une réunion → utilise delete_zoom_meeting
 
-    return `Tu es un assistant IA spécialisé dans les négociations climatiques, la biodiversité et la désertification.
-Ton rôle est d'aider les négociateurs en répondant à leurs questions en te basant sur les documents fournis.
+    IMPORTANT - Utilisation des outils :
+    - Si l'utilisateur donne un TITRE d'activité, utilise d'abord search_activity_by_title pour trouver l'ID
+    - Si l'utilisateur donne un ID (format UUID), utilise-le directement
+    - Pour APPROUVER une activité → utilise approve_activity (crée automatiquement la réunion Zoom)
+    - Pour CRÉER une réunion sur une activité déjà approuvée → utilise create_zoom_meeting
+    - Utilise les outils UNIQUEMENT quand l'utilisateur demande explicitement une action
+    - Pour les questions sur les documents, utilise TOUJOURS le contexte fourni
 
-Instructions:
-1. Base toujours tes réponses sur les documents fournis dans le contexte
-2. Si la réponse ne se trouve pas dans les documents, dis-le clairement
-3. Fournis des références précises (titre du document, page) quand c'est possible
-4. Sois concis et précis
-5. Si plusieurs documents traitent de la question, synthétise les informations
-6. Réponds en français
-7. Utilise un langage professionnel adapté aux négociateurs`
+    CRITIQUE - Lecture des résultats :
+    - TOUJOURS lire et analyser le résultat de chaque outil AVANT de répondre à l'utilisateur
+    - NE JAMAIS assumer que l'opération a réussi sans vérifier le résultat
+    - Si le résultat contient "success: false" ou "error", l'opération a ÉCHOUÉ
+    - Base ta réponse UNIQUEMENT sur ce que les outils retournent réellement
+    - Si une activité n'est pas "approved", la création de réunion Zoom échouera - informe l'utilisateur du statut réel
+    - L'outil approve_activity fait DEUX choses : (1) approuve l'activité ET (2) crée la réunion Zoom` : ''
+
+        if (language === 'en') {
+          return `You are an intelligent AI assistant specialized in climate negotiations, biodiversity, and desertification.
+    You help negotiators by answering questions from documents AND managing Zoom meetings when needed.
+
+    ## Core Capabilities
+    1. **Document Research**: Answer questions based on provided documents
+    2. **Zoom Management**: Create, modify, and manage Zoom meetings for activities (if tools available)
+
+    ## Instructions for Document Questions
+    1. Always base your answers on the documents provided in the context
+    2. If the answer is not in the documents, clearly say so
+    3. Provide specific references (document title, page) when possible
+    4. Be concise and precise
+    5. If several documents address the question, synthesize the information
+    6. Use professional language appropriate for negotiators${toolsInstructions}
+
+    ## Response Style
+    - Answer in English
+    - Be professional and concise
+    - Provide actionable information
+    - Ask for clarification when needed`
+        }
+
+        return `Tu es un assistant IA intelligent spécialisé dans les négociations climatiques, la biodiversité et la désertification.
+    Tu aides les négociateurs en répondant à leurs questions à partir des documents ET en gérant les réunions Zoom si nécessaire.
+
+    ## Capacités principales
+    1. **Recherche documentaire** : Répondre aux questions à partir des documents fournis
+    2. **Gestion Zoom** : Créer, modifier et gérer les réunions Zoom des activités (si outils disponibles)
+
+    ## Instructions pour les questions documentaires
+    1. Base toujours tes réponses sur les documents fournis dans le contexte
+    2. Si la réponse ne se trouve pas dans les documents, dis-le clairement
+    3. Fournis des références précises (titre du document, page) quand c'est possible
+    4. Sois concis et précis
+    5. Si plusieurs documents traitent de la question, synthétise les informations
+    6. Utilise un langage professionnel adapté aux négociateurs${toolsInstructions}
+
+    ## Style de réponse
+    - Réponds en français
+    - Sois professionnel et concis
+    - Fournis des informations actionnables
+    - Demande des clarifications si nécessaire`
   }
 
   /**
    * Génère une réponse avec RAG
    * @param {string} question - Question de l'utilisateur
    * @param {Array} conversationHistory - Historique de la conversation
-   * @param {object} options - Options (category, language, k)
+   * @param {object} options - Options (category, language, k, tools)
    * @returns {Promise<{response: string, sources: Array, metadata: object}>}
    */
+  /**
+   * Détecte si la question est une action pure (sans besoin de documents)
+   * @param {string} question - Question de l'utilisateur
+   * @param {boolean} hasTools - Outils disponibles
+   * @returns {boolean}
+   */
+  function isPureAction(question, hasTools) {
+    if (!hasTools) return false
+
+    const lowerQuestion = question.toLowerCase()
+    const actionKeywords = [
+      'crée', 'créer', 'créé', 'création',
+      'supprime', 'supprimer', 'supprimé', 'suppression',
+      'modifie', 'modifier', 'modifié', 'modification',
+      'édite', 'éditer', 'édité', 'édition',
+      'annule', 'annuler', 'annulé', 'annulation',
+      'planifie', 'planifier', 'planifié', 'planification',
+      'create', 'delete', 'edit', 'modify', 'cancel', 'schedule'
+    ]
+
+    const hasActionKeyword = actionKeywords.some(keyword => lowerQuestion.includes(keyword))
+    const hasZoomKeyword = lowerQuestion.includes('zoom') || lowerQuestion.includes('réunion') || lowerQuestion.includes('meeting')
+
+    return hasActionKeyword && hasZoomKeyword
+  }
+
   const generateResponse = async (question, conversationHistory = [], options = {}) => {
     try {
       isGenerating.value = true
@@ -157,13 +242,32 @@ Instructions:
       const {
         category = null,
         language = 'fr',
-        k = 5
+        k = 5,
+        tools = []
       } = options
 
-      // Étape 1: Récupérer les documents pertinents
-      const similarDocuments = await searchSimilarDocuments(question, k, category)
+      // Étape 1: Décider si on a besoin de chercher des documents
+      let similarDocuments = []
+      let skippedEmbeddings = false
 
-      if (similarDocuments.length === 0) {
+      console.log('[RAG] Analyzing question:', {
+        question: question.substring(0, 50) + '...',
+        hasTools: tools.length > 0,
+        toolsCount: tools.length
+      })
+
+      if (isPureAction(question, tools.length > 0)) {
+        // Action pure détectée : skip la recherche documentaire pour économiser les appels API
+        console.log('[RAG] ✅ Pure action detected, skipping document search')
+        skippedEmbeddings = true
+      } else {
+        // Question documentaire ou mixte : chercher des documents
+        console.log('[RAG] 📚 Document search required')
+        similarDocuments = await searchSimilarDocuments(question, k, category)
+      }
+
+      // Si aucun document trouvé ET aucun outil disponible, retourner une erreur
+      if (similarDocuments.length === 0 && tools.length === 0) {
         const noDocsMessage = language === 'en'
           ? 'I could not find relevant documents to answer your question. Please try rephrasing your question or check if documents are available in the database.'
           : 'Je n\'ai pas trouvé de documents pertinents pour répondre à votre question. Veuillez reformuler votre question ou vérifier si des documents sont disponibles dans la base de données.'
@@ -179,14 +283,18 @@ Instructions:
         }
       }
 
-      // Étape 2: Construire le contexte
-      const context = buildContext(similarDocuments)
+      // Étape 2: Construire le contexte (peut être vide si aucun document)
+      const context = similarDocuments.length > 0
+        ? buildContext(similarDocuments)
+        : (language === 'en'
+          ? 'The user is requesting an action. Use the appropriate tools to fulfill the request.'
+          : 'L\'utilisateur demande une action. Utilise les outils appropriés pour répondre à sa demande.')
 
       // Étape 3: Préparer les messages
       const messages = []
 
-      // Message système
-      messages.push(new SystemMessage(buildSystemPrompt(language)))
+      // Message système (avec information sur les outils disponibles)
+      messages.push(new SystemMessage(buildSystemPrompt(language, tools.length > 0)))
 
       // Ajouter le contexte comme message système
       messages.push(new SystemMessage(context))
@@ -204,9 +312,51 @@ Instructions:
       // Ajouter la question actuelle
       messages.push(new HumanMessage(question))
 
-      // Étape 4: Générer la réponse avec Claude
-      const model = getClaudeModel()
-      const response = await model.invoke(messages)
+      // Étape 4: Générer la réponse avec Claude (avec outils si fournis)
+      const model = getClaudeModel(tools)
+      let response = await model.invoke(messages)
+
+      // Étape 5: Gérer les appels d'outils (tool calls)
+      let toolCallsExecuted = 0
+      const maxToolCalls = 5 // Limite pour éviter les boucles infinies
+
+      while (response.tool_calls && response.tool_calls.length > 0 && toolCallsExecuted < maxToolCalls) {
+        console.log('[RAG] Tool calls detected:', response.tool_calls.length)
+
+        // Ajouter la réponse de l'IA avec tool_calls aux messages
+        messages.push(response)
+
+        // Exécuter chaque outil appelé
+        for (const toolCall of response.tool_calls) {
+          console.log('[RAG] Executing tool:', toolCall.name, toolCall.args)
+
+          // Trouver l'outil correspondant
+          const tool = tools.find(t => t.name === toolCall.name)
+
+          if (tool) {
+            try {
+              const toolResult = await tool.func(toolCall.args)
+              console.log('[RAG] Tool result:', toolResult)
+
+              // Ajouter le résultat de l'outil aux messages
+              messages.push(new ToolMessage({
+                content: toolResult,
+                tool_call_id: toolCall.id
+              }))
+            } catch (toolError) {
+              console.error('[RAG] Tool execution error:', toolError)
+              messages.push(new ToolMessage({
+                content: JSON.stringify({ success: false, error: toolError.message }),
+                tool_call_id: toolCall.id
+              }))
+            }
+          }
+        }
+
+        // Générer une nouvelle réponse en incluant les résultats des outils
+        response = await model.invoke(messages)
+        toolCallsExecuted++
+      }
 
       const responseTime = Date.now() - startTime
 
@@ -227,7 +377,9 @@ Instructions:
           responseTime,
           tokens: response.usage_metadata?.total_tokens || 0,
           documentsFound: similarDocuments.length,
-          model: USE_OPENROUTER ? OPENROUTER_CHAT_MODEL : 'claude-3-5-sonnet-20241022'
+          model: USE_OPENROUTER ? OPENROUTER_CHAT_MODEL : 'claude-3-5-sonnet-20241022',
+          toolCallsExecuted,
+          skippedEmbeddings // Indique si on a économisé un appel API OpenAI
         }
       }
     } catch (err) {
