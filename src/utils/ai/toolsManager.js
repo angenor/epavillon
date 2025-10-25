@@ -180,11 +180,15 @@ export const approveActivityTool = new DynamicStructuredTool({
     try {
       console.log('[Tool] Approving activity and creating Zoom meeting:', activity_id)
       const result = await zoomApiClient.approveActivity(activity_id)
+      console.log('[Tool] Raw result from API:', JSON.stringify(result, null, 2))
       const formatted = zoomToolsFormatter.formatApproveResponse(result)
+      console.log('[Tool] Formatted response:', JSON.stringify(formatted, null, 2))
       return JSON.stringify(formatted)
     } catch (error) {
       console.error('[Tool] Error approving activity:', error)
+      console.error('[Tool] Error details:', error.message, error.stack)
       const formatted = zoomToolsFormatter.formatError(error)
+      console.log('[Tool] Formatted error:', JSON.stringify(formatted, null, 2))
       return JSON.stringify(formatted)
     }
   }

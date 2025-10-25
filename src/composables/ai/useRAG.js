@@ -146,13 +146,28 @@ ${doc.chunk_text}
     - Utilise les outils UNIQUEMENT quand l'utilisateur demande explicitement une action
     - Pour les questions sur les documents, utilise TOUJOURS le contexte fourni
 
-    CRITIQUE - Lecture des résultats :
-    - TOUJOURS lire et analyser le résultat de chaque outil AVANT de répondre à l'utilisateur
-    - NE JAMAIS assumer que l'opération a réussi sans vérifier le résultat
-    - Si le résultat contient "success: false" ou "error", l'opération a ÉCHOUÉ
-    - Base ta réponse UNIQUEMENT sur ce que les outils retournent réellement
-    - Si une activité n'est pas "approved", la création de réunion Zoom échouera - informe l'utilisateur du statut réel
-    - L'outil approve_activity fait DEUX choses : (1) approuve l'activité ET (2) crée la réunion Zoom` : ''
+    ⚠️ RÈGLE ABSOLUE - Lecture des résultats des outils ⚠️
+    TU DOIS OBLIGATOIREMENT :
+    1. ATTENDRE le résultat complet de l'outil
+    2. LIRE le champ "success" dans le résultat JSON
+    3. Si "success": false → L'opération a ÉCHOUÉ - informe l'utilisateur de l'erreur
+    4. Si "success": true → L'opération a RÉUSSI - donne les détails du résultat
+    5. NE JAMAIS inventer ou supposer un résultat
+
+    Exemples OBLIGATOIRES à suivre :
+
+    ❌ INTERDIT - Réponse optimiste sans lire le résultat :
+    "Excellente nouvelle ! La réunion a été créée avec succès !"
+
+    ✅ CORRECT - Lecture du résultat puis réponse basée sur le résultat :
+    Résultat reçu : {"success": false, "error": "Edge Function returned..."}
+    Réponse : "❌ Impossible de créer la réunion : Edge Function returned..."
+
+    ✅ CORRECT - Succès avec détails :
+    Résultat reçu : {"success": true, "join_url": "https://zoom.us/j/123"}
+    Réponse : "✅ Réunion créée ! Lien : https://zoom.us/j/123"
+
+    SI TU RÉPONDS SANS LIRE LE RÉSULTAT, TU DONNERAS DES INFORMATIONS FAUSSES À L'UTILISATEUR.` : ''
 
         if (language === 'en') {
           return `You are an intelligent AI assistant specialized in climate negotiations, biodiversity, and desertification.
@@ -223,11 +238,22 @@ ${doc.chunk_text}
       'édite', 'éditer', 'édité', 'édition',
       'annule', 'annuler', 'annulé', 'annulation',
       'planifie', 'planifier', 'planifié', 'planification',
-      'create', 'delete', 'edit', 'modify', 'cancel', 'schedule'
+      'approuve', 'approuver', 'approuvé', 'approbation',
+      'valide', 'valider', 'validé', 'validation',
+      'create', 'delete', 'edit', 'modify', 'cancel', 'schedule',
+      'approve', 'validate'
     ]
 
     const hasActionKeyword = actionKeywords.some(keyword => lowerQuestion.includes(keyword))
     const hasZoomKeyword = lowerQuestion.includes('zoom') || lowerQuestion.includes('réunion') || lowerQuestion.includes('meeting')
+
+    // Cas spécial : approuver/valider une activité crée automatiquement une réunion Zoom
+    const isApprovalAction = lowerQuestion.includes('approuve') || lowerQuestion.includes('valide') || lowerQuestion.includes('approve') || lowerQuestion.includes('validate')
+    const hasActivityKeyword = lowerQuestion.includes('activité') || lowerQuestion.includes('activity')
+
+    if (isApprovalAction && hasActivityKeyword) {
+      return true
+    }
 
     return hasActionKeyword && hasZoomKeyword
   }
@@ -343,12 +369,31 @@ ${doc.chunk_text}
                 content: toolResult,
                 tool_call_id: toolCall.id
               }))
+
+              // Ajouter un rappel explicite pour forcer la lecture du résultat
+              try {
+                const parsedResult = JSON.parse(toolResult)
+                if (parsedResult.success === false) {
+                  messages.push(new HumanMessage(
+                    `⚠️ ATTENTION: L'outil a retourné une ERREUR (success: false). Tu DOIS informer l'utilisateur de l'erreur et NE PAS dire que l'opération a réussi.`
+                  ))
+                } else if (parsedResult.success === true) {
+                  messages.push(new HumanMessage(
+                    `✅ L'outil a retourné un SUCCÈS. Tu peux utiliser les détails fournis dans le résultat pour informer l'utilisateur.`
+                  ))
+                }
+              } catch (e) {
+                // Si le parsing échoue, on continue sans message de rappel
+              }
             } catch (toolError) {
               console.error('[RAG] Tool execution error:', toolError)
               messages.push(new ToolMessage({
                 content: JSON.stringify({ success: false, error: toolError.message }),
                 tool_call_id: toolCall.id
               }))
+              messages.push(new HumanMessage(
+                `⚠️ ERREUR CRITIQUE: L'outil a échoué avec une exception. Tu DOIS informer l'utilisateur de cette erreur.`
+              ))
             }
           }
         }

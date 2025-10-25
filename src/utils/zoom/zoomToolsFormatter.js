@@ -193,8 +193,22 @@ export const zoomToolsFormatter = {
    * @returns {object}
    */
   formatApproveResponse(data) {
+    console.log('[Formatter] formatApproveResponse called with data:', JSON.stringify(data, null, 2))
+
+    // Vérifier d'abord si c'est une erreur explicite
+    if (data.error && !data.join_url) {
+      console.log('[Formatter] Error detected in response')
+      return {
+        success: false,
+        error: data.error,
+        message: data.message || data.error,
+        userMessage: `❌ ${data.message || data.error}`
+      }
+    }
+
     // Si l'activité était déjà approuvée
     if (data.already_approved) {
+      console.log('[Formatter] Activity already approved')
       return {
         success: true,
         message: 'Activité déjà approuvée',
@@ -206,8 +220,9 @@ export const zoomToolsFormatter = {
       }
     }
 
-    // Si l'approbation a réussi avec création de réunion Zoom
-    if (data.join_url) {
+    // Si l'approbation a réussi avec création de réunion Zoom COMPLÈTE
+    if (data.join_url && data.meeting_id) {
+      console.log('[Formatter] Full success - activity approved and Zoom meeting created')
       return {
         success: true,
         message: 'Activité approuvée et réunion Zoom créée avec succès',
@@ -228,16 +243,29 @@ export const zoomToolsFormatter = {
       }
     }
 
-    // Si l'approbation a réussi mais pas la création Zoom (cas d'erreur partiel)
+    // Si on arrive ici, c'est un cas incomplet ou une erreur partielle
+    console.log('[Formatter] Partial success or error - no join_url')
+
+    // Si validation_status = 'approved' mais pas de réunion créée
+    if (data.validation_status === 'approved' && !data.join_url) {
+      return {
+        success: false,  // CHANGÉ: false car la réunion n'a pas été créée
+        error: data.warning || data.error || 'Zoom meeting creation failed',
+        message: 'Activité approuvée mais échec création Zoom',
+        details: {
+          activity_id: data.activity_id,
+          validation_status: data.validation_status
+        },
+        userMessage: `⚠️ L'activité a été approuvée mais la création de la réunion Zoom a échoué.\n\nErreur : ${data.warning || data.error || 'Erreur inconnue'}`
+      }
+    }
+
+    // Cas par défaut: quelque chose s'est mal passé
     return {
-      success: true,
-      message: 'Activité approuvée',
-      warning: data.warning || data.error,
-      details: {
-        activity_id: data.activity_id,
-        validation_status: data.validation_status
-      },
-      userMessage: `✅ Activité approuvée.\n⚠️ ${data.warning || data.error || 'Création de la réunion Zoom à finaliser manuellement.'}`
+      success: false,
+      error: 'Unexpected response format',
+      message: JSON.stringify(data),
+      userMessage: `❌ Erreur inattendue lors de l'approbation. Données reçues : ${JSON.stringify(data)}`
     }
   }
 }

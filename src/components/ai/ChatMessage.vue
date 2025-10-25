@@ -203,11 +203,13 @@ const sendFeedback = async (type) => {
 </script>
 
 <style scoped>
-@reference;
-
 /* Styles pour le contenu markdown */
 .markdown-content {
-  @apply text-gray-800 dark:text-gray-200;
+  color: #1f2937;
+}
+
+:global(.dark) .markdown-content {
+  color: #e5e7eb;
 }
 
 /* Titres */
@@ -217,123 +219,249 @@ const sendFeedback = async (type) => {
 .markdown-content :deep(h4),
 .markdown-content :deep(h5),
 .markdown-content :deep(h6) {
-  @apply font-bold text-gray-900 dark:text-gray-100 mt-4 mb-2;
+  font-weight: 700;
+  color: #111827;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+:global(.dark) .markdown-content :deep(h1),
+:global(.dark) .markdown-content :deep(h2),
+:global(.dark) .markdown-content :deep(h3),
+:global(.dark) .markdown-content :deep(h4),
+:global(.dark) .markdown-content :deep(h5),
+:global(.dark) .markdown-content :deep(h6) {
+  color: #f9fafb;
 }
 
 .markdown-content :deep(h1) {
-  @apply text-2xl;
+  font-size: 1.5rem;
 }
 
 .markdown-content :deep(h2) {
-  @apply text-xl;
+  font-size: 1.25rem;
 }
 
 .markdown-content :deep(h3) {
-  @apply text-lg;
+  font-size: 1.125rem;
 }
 
 /* Paragraphes */
 .markdown-content :deep(p) {
-  @apply mb-3 leading-relaxed;
+  margin-bottom: 0.75rem;
+  line-height: 1.625;
 }
 
 /* Listes */
 .markdown-content :deep(ul),
 .markdown-content :deep(ol) {
-  @apply mb-3 ml-6;
+  margin-bottom: 0.75rem;
+  margin-left: 1.5rem;
 }
 
 .markdown-content :deep(ul) {
-  @apply list-disc;
+  list-style-type: disc;
 }
 
 .markdown-content :deep(ol) {
-  @apply list-decimal;
+  list-style-type: decimal;
 }
 
 .markdown-content :deep(li) {
-  @apply mb-1;
+  margin-bottom: 0.25rem;
 }
 
 /* Liens */
 .markdown-content :deep(a) {
-  @apply text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 underline;
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.markdown-content :deep(a:hover) {
+  color: #2563eb;
+}
+
+:global(.dark) .markdown-content :deep(a) {
+  color: #60a5fa;
+}
+
+:global(.dark) .markdown-content :deep(a:hover) {
+  color: #93c5fd;
 }
 
 /* Code inline */
 .markdown-content :deep(.inline-code) {
-  @apply px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded text-sm font-mono;
+  padding: 0.25rem 0.5rem;
+  background-color: #e5e7eb;
+  color: #1f2937;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: monospace;
+}
+
+:global(.dark) .markdown-content :deep(.inline-code) {
+  background-color: #374151;
+  color: #e5e7eb;
 }
 
 /* Blocs de code */
 .markdown-content :deep(.code-block-wrapper) {
-  @apply rounded-lg overflow-hidden border border-gray-300 dark:border-gray-700 my-4;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid #d1d5db;
+  margin: 1rem 0;
+}
+
+:global(.dark) .markdown-content :deep(.code-block-wrapper) {
+  border-color: #374151;
 }
 
 .markdown-content :deep(.code-block-header) {
-  @apply flex items-center justify-between px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background-color: #f3f4f6;
+  border-bottom: 1px solid #d1d5db;
+}
+
+:global(.dark) .markdown-content :deep(.code-block-header) {
+  background-color: #1f2937;
+  border-bottom-color: #374151;
 }
 
 .markdown-content :deep(.code-block-language) {
-  @apply text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #4b5563;
+  text-transform: uppercase;
+}
+
+:global(.dark) .markdown-content :deep(.code-block-language) {
+  color: #9ca3af;
 }
 
 .markdown-content :deep(.code-block-copy) {
-  @apply flex items-center gap-2 px-3 py-1 text-xs bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors cursor-pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  background-color: #e5e7eb;
+  color: #374151;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.markdown-content :deep(.code-block-copy:hover) {
+  background-color: #d1d5db;
+}
+
+:global(.dark) .markdown-content :deep(.code-block-copy) {
+  background-color: #374151;
+  color: #d1d5db;
+}
+
+:global(.dark) .markdown-content :deep(.code-block-copy:hover) {
+  background-color: #4b5563;
 }
 
 .markdown-content :deep(.code-block-content) {
-  @apply p-4 bg-gray-900 overflow-x-auto;
+  padding: 1rem;
+  background-color: #111827;
+  overflow-x: auto;
 }
 
 .markdown-content :deep(.code-block-content code) {
-  @apply text-sm font-mono;
+  font-size: 0.875rem;
+  font-family: monospace;
 }
 
 /* Blockquotes */
 .markdown-content :deep(blockquote) {
-  @apply border-l-4 border-gray-300 dark:border-gray-600 pl-4 my-4 italic text-gray-700 dark:text-gray-300;
+  border-left: 4px solid #d1d5db;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: #374151;
+}
+
+:global(.dark) .markdown-content :deep(blockquote) {
+  border-left-color: #4b5563;
+  color: #d1d5db;
 }
 
 /* Tableaux */
 .markdown-content :deep(.table-wrapper) {
-  @apply overflow-x-auto my-4;
+  overflow-x: auto;
+  margin: 1rem 0;
 }
 
 .markdown-content :deep(.markdown-table) {
-  @apply w-full border-collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
 
 .markdown-content :deep(.markdown-table thead) {
-  @apply bg-gray-100 dark:bg-gray-800;
+  background-color: #f3f4f6;
+}
+
+:global(.dark) .markdown-content :deep(.markdown-table thead) {
+  background-color: #1f2937;
 }
 
 .markdown-content :deep(.markdown-table th),
 .markdown-content :deep(.markdown-table td) {
-  @apply px-4 py-2 border border-gray-300 dark:border-gray-700 text-left;
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  text-align: left;
+}
+
+:global(.dark) .markdown-content :deep(.markdown-table th),
+:global(.dark) .markdown-content :deep(.markdown-table td) {
+  border-color: #374151;
 }
 
 .markdown-content :deep(.markdown-table th) {
-  @apply font-semibold text-gray-900 dark:text-gray-100;
+  font-weight: 600;
+  color: #111827;
+}
+
+:global(.dark) .markdown-content :deep(.markdown-table th) {
+  color: #f9fafb;
 }
 
 /* Séparateur horizontal */
 .markdown-content :deep(hr) {
-  @apply my-4 border-t border-gray-300 dark:border-gray-700;
+  margin: 1rem 0;
+  border-top: 1px solid #d1d5db;
+}
+
+:global(.dark) .markdown-content :deep(hr) {
+  border-top-color: #374151;
 }
 
 /* Images */
 .markdown-content :deep(img) {
-  @apply max-w-full h-auto rounded-lg my-4;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
 }
 
 /* Strong/Bold */
 .markdown-content :deep(strong) {
-  @apply font-semibold text-gray-900 dark:text-gray-100;
+  font-weight: 600;
+  color: #111827;
+}
+
+:global(.dark) .markdown-content :deep(strong) {
+  color: #f9fafb;
 }
 
 /* Italic */
 .markdown-content :deep(em) {
-  @apply italic;
+  font-style: italic;
 }
 </style>
