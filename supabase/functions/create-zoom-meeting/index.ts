@@ -65,49 +65,38 @@ function calculateDurationInMinutes(startDate: string, endDate: string): number 
 
 /**
  * Formate une date au format ISO 8601 requis par Zoom (YYYY-MM-DDTHH:mm:ss)
- * Important: L'API Zoom attend la date/heure LOCALE du timezone spécifié, sans indicateur de timezone
  *
- * Exemple: Si l'événement est à 14:00 à Paris (Europe/Paris)
- * - Input: "2025-11-15T13:00:00.000Z" (UTC)
- * - Output: "2025-11-15T14:00:00" (heure locale de Paris)
- * - Timezone param: "Europe/Paris"
+ * IMPORTANT: Les dates en base de données sont déjà en UTC et représentent le bon moment.
+ * On envoie directement l'heure UTC à Zoom avec timezone UTC.
+ *
+ * Exemple: Si l'activité doit avoir lieu à 14:00 heure de Paris
+ * - Stocké en base: "2025-11-15T13:00:00.000Z" (13:00 UTC = 14:00 Paris)
+ * - Envoyé à Zoom: "2025-11-15T13:00:00" avec timezone="UTC"
+ * - Zoom affichera: 13:00 UTC (chaque utilisateur verra l'heure dans son fuseau local)
  */
-function formatDateForZoom(dateString: string, timezone: string): string {
+function formatDateForZoomUTC(dateString: string): string {
   // Créer un objet Date à partir de la chaîne ISO (qui est en UTC)
   const date = new Date(dateString);
 
-  console.log('🕐 Formatting date for Zoom:', {
+  console.log('🕐 Formatting date for Zoom (UTC):', {
     input_date: dateString,
     input_date_utc: date.toISOString(),
-    target_timezone: timezone,
     timestamp_ms: date.getTime()
   });
 
-  // Utiliser Intl.DateTimeFormat pour obtenir les composants de la date dans le timezone cible
-  const formatter = new Intl.DateTimeFormat('en-CA', {
-    timeZone: timezone,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false
-  });
-
-  const parts = formatter.formatToParts(date);
-  const year = parts.find(p => p.type === 'year')?.value;
-  const month = parts.find(p => p.type === 'month')?.value;
-  const day = parts.find(p => p.type === 'day')?.value;
-  const hour = parts.find(p => p.type === 'hour')?.value;
-  const minute = parts.find(p => p.type === 'minute')?.value;
-  const second = parts.find(p => p.type === 'second')?.value;
+  // Extraire directement les composants UTC sans conversion
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  const hour = String(date.getUTCHours()).padStart(2, '0');
+  const minute = String(date.getUTCMinutes()).padStart(2, '0');
+  const second = String(date.getUTCSeconds()).padStart(2, '0');
 
   const formattedDate = `${year}-${month}-${day}T${hour}:${minute}:${second}`;
 
-  console.log('✅ Formatted date for Zoom:', {
+  console.log('✅ Formatted date for Zoom (UTC):', {
     output_date: formattedDate,
-    timezone: timezone,
+    timezone: 'UTC',
     components: { year, month, day, hour, minute, second }
   });
 
@@ -116,24 +105,24 @@ function formatDateForZoom(dateString: string, timezone: string): string {
 
 /**
  * Crée une réunion Zoom via l'API
+ * Utilise UTC comme timezone car les dates en base sont déjà en UTC
  */
 async function createZoomMeeting(
   accessToken: string,
   title: string,
   startDate: string,
   duration: number,
-  timezone: string,
   description?: string
 ) {
   try {
-    const formattedStartTime = formatDateForZoom(startDate, timezone);
+    const formattedStartTime = formatDateForZoomUTC(startDate);
 
     const requestBody = {
       topic: title,
       type: 2, // Réunion planifiée
       start_time: formattedStartTime,
       duration: duration,
-      timezone: timezone,
+      timezone: 'UTC', // Utiliser UTC car les dates en base sont déjà en UTC
       agenda: description || '',
       settings: {
         host_video: true,
@@ -141,7 +130,7 @@ async function createZoomMeeting(
         join_before_host: false,
         mute_upon_entry: true,
         waiting_room: true,
-        auto_recording: 'cloud', // Enregistrement automatique dans le cloud
+        // auto_recording: 'cloud', // Enregistrement automatique dans le cloud
         allow_multiple_devices: true,
         approval_type: 0, // Approbation automatique
         registration_type: 2, // Les participants peuvent s'inscrire et rejoindre
@@ -155,7 +144,7 @@ async function createZoomMeeting(
       topic: title,
       start_time: formattedStartTime,
       duration: duration,
-      timezone: timezone,
+      timezone: 'UTC',
       agenda_length: description?.length || 0
     });
 
@@ -363,28 +352,28 @@ Deno.serve(async (req) => {
       title: activity.title,
       event_title: activity.event.title,
       event_year: activity.event.year,
-      timezone: timezone,
+      event_timezone: timezone,
       start_date_utc: startDate,
       end_date_utc: endDate,
-      duration_minutes: duration
+      duration_minutes: duration,
+      note: 'Using UTC timezone for Zoom meeting (dates are already in UTC)'
     });
 
     // Créer une description pour la réunion
     const description = activity.objectives || activity.detailed_presentation || '';
-    const meetingTitle = `${activity.title} - ${activity.event.title} ${activity.event.year}`;
+    const meetingTitle = `${activity.title}`;
 
     // Obtenir le token d'accès Zoom
     console.log('🔑 Getting Zoom access token...');
     const accessToken = await getZoomAccessToken();
 
-    // Créer la réunion Zoom
-    console.log('🎥 Creating Zoom meeting...');
+    // Créer la réunion Zoom avec UTC (les dates en base sont déjà en UTC)
+    console.log('🎥 Creating Zoom meeting with UTC timezone...');
     const zoomMeeting = await createZoomMeeting(
       accessToken,
       meetingTitle,
       startDate,
       duration,
-      timezone,
       description
     );
 
