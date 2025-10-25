@@ -2,8 +2,11 @@ Je veux implémenter un chatbot LLM très polivalent:
 # Fonctionnalité 1: Negociation document (role obligatoire: négociateur ou admin ou superadmin)
 - Le chatbot devra répondre à des questions en s'appuyant sur les documents de négociation disponibles dans la base de données(negotiation_documents) en fornissant les référence possible(ducuments, pages, titres).
 
-# Fonctionnalité 3: utilisation d'outils d'administration (role obligatoire: admin ou superadmin)
-- Chaque fonctionnalité
+# Fonctionnalité 2: utilisation d'outils d'administration (role obligatoire: admin ou superadmin)
+- Creer des réunions zoom
+- Supprimer des réunions zoom
+- - Editer des réunions zoom(edge funtion à creer en s'inspirant de @supabase/functions/create-zoom-meeting/index.ts )
+- d'autres fontionnalités d'administration pourront être ajoutées par la suite.
 
 # Fonctionnalité 3: Assistance utilisateur
 - Le chatbot devra être capable de comprendre le contexte des questions et d'y répondre de manière pertinente en se basant sur les données disponibles dans la base de données Supabase.
