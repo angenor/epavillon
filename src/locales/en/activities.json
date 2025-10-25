@@ -17,6 +17,7 @@
     "completion": "Completion",
     "submittedForValidation": "Activity successfully submitted for validation",
     "errorSubmittingValidation": "Error submitting for validation",
+    "datesNotEditableAfterSubmission": "Dates and times can only be modified in Draft or Submitted status",
     "validationStatus": {
       "draft": "Draft",
       "submitted": "Submitted",

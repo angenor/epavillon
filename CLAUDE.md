@@ -10,7 +10,9 @@ Il s'agit d'une application web **Vue 3** utilisant Vite comme outil de build, J
 - **Composants réutilisables** : Créer des composants Vue modulaires et réutilisables dans `src/components/`
 - **Composables** : Organiser la logique métier dans des composables spécialisés dans `src/composables/`
   - `src/composables/ai/` : **IMPORTANT** - Tous les composables liés au chatbot IA doivent être implémentés dans ce dossier
+  - `src/composables/zoom/` : **IMPORTANT** - Tous les composables liés à Zoom (réunions, webhooks, etc.) doivent être implémentés dans ce dossier
 - **Utils** : Fonctions utilitaires pures dans `src/utils/`
+  - `src/utils/zoom/` : **IMPORTANT** - Toutes les fonctions utilitaires liées à Zoom doivent être implémentées dans ce dossier
 - **Stores** : Gestion d'état avec Pinia dans `src/stores/`
 - **Views** : Pages de l'application organisées par domaine dans `src/views/`
   - `src/views/auth/` : Toutes les vues liées à l'authentification (Login, Register, VerifyEmail, ForgotPassword, AuthCallback)

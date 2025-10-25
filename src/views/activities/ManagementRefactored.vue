@@ -76,6 +76,7 @@
               :tempValue="activityEditing.tempValue.value"
               :hasUnsavedChanges="activityEditing.hasUnsavedChanges.value"
               :savingField="activityEditing.savingField.value"
+              :canEdit="canEditDates"
               @start-edit="startEditActivity"
               @cancel-edit="cancelEditActivity"
               @field-change="onActivityFieldChange"
@@ -258,6 +259,11 @@ const eventTimezone = computed(() => {
 const isActivityApproved = computed(() => {
   const approvedStatuses = ['approved', 'live', 'completed']
   return activity.value && approvedStatuses.includes(activity.value.validation_status)
+})
+
+const canEditDates = computed(() => {
+  const editableStatuses = ['draft', 'submitted']
+  return activity.value && editableStatuses.includes(activity.value.validation_status)
 })
 
 // Activity editing methods

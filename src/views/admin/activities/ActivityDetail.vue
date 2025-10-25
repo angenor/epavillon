@@ -131,6 +131,7 @@
                   <option value="under_review">En examen</option>
                   <option value="approved">Approuvée</option>
                   <option value="rejected">Rejetée</option>
+                  <option value="cancelled">Annulée</option>
                 </select>
                 <!-- Icône dropdown -->
                 <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
@@ -588,7 +589,7 @@
           <div class="relative bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all max-w-lg w-full mx-4 z-10">
             <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">
-                Motif du rejet
+                {{ validationAction === 'reject' ? 'Motif du rejet' : 'Motif de l\'annulation' }}
               </h3>
 
               <!-- Message d'erreur -->
@@ -597,7 +598,7 @@
               </div>
 
               <textarea v-model="validationReason"
-                      placeholder="Expliquez brièvement pourquoi cette activité est rejetée..."
+                      :placeholder="validationAction === 'reject' ? 'Expliquez brièvement pourquoi cette activité est rejetée...' : 'Expliquez brièvement pourquoi cette activité est annulée...'"
                       rows="4"
                       :disabled="isValidating"
                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed">
@@ -606,9 +607,10 @@
             <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
               <button @click="confirmValidation"
                       :disabled="isValidating"
-                      class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed bg-red-600 hover:bg-red-700">
+                      :class="validationAction === 'reject' ? 'bg-red-600 hover:bg-red-700' : 'bg-orange-600 hover:bg-orange-700'"
+                      class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed">
                 <div v-if="isValidating" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                {{ isValidating ? 'En cours...' : 'Confirmer le rejet' }}
+                {{ isValidating ? 'En cours...' : (validationAction === 'reject' ? 'Confirmer le rejet' : 'Confirmer l\'annulation') }}
               </button>
               <button @click="closeModal"
                       :disabled="isValidating"
@@ -683,6 +685,7 @@ import { useAuth } from '@/composables/useAuth'
 import { useTimezone } from '@/composables/useTimezone'
 import { useAdminPanel } from '@/composables/useAdminPanel'
 import { useRevisionViews } from '@/composables/useRevisionViews'
+import { useZoomMeeting } from '@/composables/zoom/useZoomMeeting'
 import ChangeSubmitterModal from '@/components/admin/ChangeSubmitterModal.vue'
 import ActivityReviewSidebar from '@/components/admin/ActivityReviewSidebar.vue'
 import RatingFloatingButton from '@/components/admin/RatingFloatingButton.vue'
@@ -696,6 +699,7 @@ const { currentUser } = useAuth()
 const { getCityFromTimezone, formatDateTimeWithTimezone, getTimezoneLabel } = useTimezone()
 const { enableActivityReviewMode, disableActivityReviewMode, closeReviewSidebar: closeReviewSidebarState, isReviewSidebarOpen, reviewSidebarWidth } = useAdminPanel()
 const { getCurrentUserViewCount, resetActivityView, recordActivityView } = useRevisionViews()
+const { createZoomMeeting, deleteZoomMeeting, isCreatingMeeting, isDeletingMeeting } = useZoomMeeting()
 
 const isLoading = ref(true)
 const activity = ref(null)
@@ -1073,9 +1077,9 @@ const handleStatusChange = async (event) => {
   // Restaurer l'ancien statut en attendant la confirmation
   activity.value.validation_status = previousStatus
 
-  // Si c'est un rejet, on ouvre la modale spéciale pour demander la raison
-  if (newStatus === 'rejected') {
-    validationAction.value = 'reject'
+  // Si c'est un rejet ou une annulation, on ouvre la modale spéciale pour demander la raison
+  if (newStatus === 'rejected' || newStatus === 'cancelled') {
+    validationAction.value = newStatus === 'rejected' ? 'reject' : 'cancel'
     validationReason.value = ''
     showValidationModal.value = true
     return
@@ -1104,6 +1108,84 @@ const updateActivityStatus = async (newStatus, previousStatus, rejectionReason =
       // Mettre à jour le statut dans l'interface après succès
       activity.value.validation_status = newStatus
       console.log(`Statut mis à jour vers: ${newStatus}`)
+
+      // Si l'activité est approuvée, copier les dates proposées vers les dates finales
+      if (newStatus === 'approved') {
+        try {
+          const { error: dateError } = await supabase
+            .from('activities')
+            .update({
+              final_start_date: activity.value.proposed_start_date,
+              final_end_date: activity.value.proposed_end_date
+            })
+            .eq('id', activity.value.id)
+
+          if (dateError) {
+            console.error('❌ Erreur lors de la copie des dates:', dateError)
+          } else {
+            console.log('✅ Dates proposées copiées vers les dates finales')
+            // Mettre à jour les dates dans l'objet local
+            activity.value.final_start_date = activity.value.proposed_start_date
+            activity.value.final_end_date = activity.value.proposed_end_date
+          }
+        } catch (dateUpdateError) {
+          console.error('❌ Erreur lors de la mise à jour des dates:', dateUpdateError)
+        }
+      }
+
+      // Si l'activité est approuvée, créer automatiquement une réunion Zoom
+      if (newStatus === 'approved' && !activity.value.zoom_meeting_id) {
+        console.log('Création automatique de la réunion Zoom pour l\'activité approuvée...')
+        try {
+          const zoomResult = await createZoomMeeting(activity.value.id)
+
+          if (zoomResult.success) {
+            console.log('✅ Réunion Zoom créée avec succès:', zoomResult.data)
+            // Mettre à jour l'activité avec l'ID de la réunion Zoom
+            activity.value.zoom_meeting_id = zoomResult.data.zoom_meeting_id
+
+            // Afficher un message de succès à l'utilisateur
+            if (zoomResult.warning) {
+              alert(`⚠️ ${zoomResult.warning}\n\nID de la réunion: ${zoomResult.data.meeting_id}`)
+            } else {
+              alert(`✅ Activité approuvée et réunion Zoom créée avec succès!\n\nID de la réunion: ${zoomResult.data.meeting_id}\nLien: ${zoomResult.data.join_url}`)
+            }
+          } else {
+            console.error('❌ Erreur lors de la création de la réunion Zoom:', zoomResult.error)
+            // Ne pas bloquer la validation de l'activité si la création Zoom échoue
+            alert(`⚠️ Activité approuvée, mais la création de la réunion Zoom a échoué:\n${zoomResult.error}\n\nVous pouvez créer la réunion manuellement plus tard.`)
+          }
+        } catch (zoomError) {
+          console.error('❌ Erreur inattendue lors de la création Zoom:', zoomError)
+          alert(`⚠️ Activité approuvée, mais la création de la réunion Zoom a échoué:\n${zoomError.message}\n\nVous pouvez créer la réunion manuellement plus tard.`)
+        }
+      }
+
+      // Si l'activité est annulée ou rejetée, supprimer la réunion Zoom si elle existe
+      if ((newStatus === 'cancelled' || newStatus === 'rejected') && activity.value.zoom_meeting_id) {
+        console.log('Suppression automatique de la réunion Zoom pour l\'activité annulée/rejetée...')
+        try {
+          const zoomDeleteResult = await deleteZoomMeeting(activity.value.id)
+
+          if (zoomDeleteResult.success) {
+            console.log('✅ Réunion Zoom supprimée avec succès')
+            // Mettre à jour l'activité en retirant l'ID de la réunion Zoom
+            activity.value.zoom_meeting_id = null
+
+            // Afficher un message d'information à l'utilisateur
+            if (zoomDeleteResult.warning) {
+              console.warn('⚠️', zoomDeleteResult.warning)
+            }
+          } else {
+            console.error('❌ Erreur lors de la suppression de la réunion Zoom:', zoomDeleteResult.error)
+            // Ne pas bloquer l'annulation de l'activité si la suppression Zoom échoue
+            alert(`⚠️ Activité ${newStatus === 'cancelled' ? 'annulée' : 'rejetée'}, mais la suppression de la réunion Zoom a échoué:\n${zoomDeleteResult.error}\n\nVous pouvez supprimer la réunion manuellement.`)
+          }
+        } catch (zoomDeleteError) {
+          console.error('❌ Erreur inattendue lors de la suppression Zoom:', zoomDeleteError)
+          alert(`⚠️ Activité ${newStatus === 'cancelled' ? 'annulée' : 'rejetée'}, mais la suppression de la réunion Zoom a échoué:\n${zoomDeleteError.message}\n\nVous pouvez supprimer la réunion manuellement.`)
+        }
+      }
     } else {
       // Restaurer l'ancien statut en cas d'erreur
       activity.value.validation_status = previousStatus
@@ -1126,9 +1208,12 @@ const confirmValidation = async () => {
   validationError.value = null
 
   try {
-    // Seulement pour les rejets maintenant (l'approbation se fait directement via le dropdown)
+    // Pour les rejets et annulations (l'approbation se fait directement via le dropdown)
     if (validationAction.value === 'reject') {
       await updateActivityStatus('rejected', previousStatusValue.value, validationReason.value)
+      closeModal()
+    } else if (validationAction.value === 'cancel') {
+      await updateActivityStatus('cancelled', previousStatusValue.value, validationReason.value)
       closeModal()
     }
   } catch (error) {
@@ -1169,7 +1254,8 @@ const getStatusChangeMessage = () => {
     submitted: 'Soumise',
     under_review: 'En examen',
     approved: 'Approuvée',
-    rejected: 'Rejetée'
+    rejected: 'Rejetée',
+    cancelled: 'Annulée'
   }
 
   return `Êtes-vous sûr de vouloir changer le statut de "${statusTexts[previousStatus]}" vers "${statusTexts[newStatus]}" ?`

@@ -17,6 +17,7 @@
     "completion": "Complétude",
     "submittedForValidation": "Activité soumise pour validation avec succès",
     "errorSubmittingValidation": "Erreur lors de la soumission pour validation",
+    "datesNotEditableAfterSubmission": "Les dates et heures ne peuvent être modifiées qu'au statut Brouillon ou Soumis",
     "validationStatus": {
       "draft": "Brouillon",
       "submitted": "Soumise",

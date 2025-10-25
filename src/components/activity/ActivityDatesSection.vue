@@ -38,12 +38,16 @@
               v-model="activityDates.activityDate.value"
               :min="minDate"
               :max="maxDate"
-              class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white"
+              :disabled="!canEdit"
+              class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
             />
             <font-awesome-icon :icon="['fas', 'calendar-alt']" class="absolute right-3 top-3 text-gray-400" />
           </div>
           <p v-if="eventData" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
             {{ t('events.eventPeriod') }}: {{ formatEventPeriod }}
+          </p>
+          <p v-if="!canEdit" class="mt-1 text-xs text-amber-600 dark:text-amber-400">
+            {{ t('activities.datesNotEditableAfterSubmission') }}
           </p>
         </div>
 
@@ -58,7 +62,8 @@
               <input
                 type="time"
                 v-model="activityDates.startTime.value"
-                class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white"
+                :disabled="!canEdit"
+                class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <font-awesome-icon :icon="['fas', 'clock']" class="absolute right-3 top-3 text-gray-400" />
             </div>
@@ -73,7 +78,8 @@
               <input
                 type="time"
                 v-model="activityDates.endTime.value"
-                class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white"
+                :disabled="!canEdit"
+                class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <font-awesome-icon :icon="['fas', 'clock']" class="absolute right-3 top-3 text-gray-400" />
             </div>
@@ -82,7 +88,7 @@
       </div>
 
       <!-- Save/Cancel buttons for dates -->
-      <div v-if="activityDates.hasPendingDateChanges.value" class="flex justify-end space-x-2 mt-4">
+      <div v-if="canEdit && activityDates.hasPendingDateChanges.value" class="flex justify-end space-x-2 mt-4">
         <button
           @click="$emit('save-dates')"
           :disabled="activityDates.savingDates.value"
@@ -117,6 +123,7 @@
           </div>
           <div v-else>
             <select v-model="tempValue.format"
+                    disabled
                     @change="$emit('field-change', 'format')"
                     class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2">
               <option value="online">{{ t('activities.format.online') }}</option>
@@ -225,6 +232,10 @@ const props = defineProps({
   savingField: {
     type: Object,
     default: () => ({})
+  },
+  canEdit: {
+    type: Boolean,
+    default: true
   }
 })
 
