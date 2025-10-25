@@ -192,7 +192,7 @@ export function useChatbot() {
         currentSession.value.title = title
       }
 
-      // Générer la réponse avec RAG (avec outils Zoom si disponibles)
+      // Générer la réponse avec l'assistant IA Zoom
       const conversationHistory = messages.value.map(m => ({
         role: m.role,
         content: m.content
@@ -202,7 +202,6 @@ export function useChatbot() {
         message,
         conversationHistory.slice(0, -1), // Exclure le message actuel
         {
-          category: options.category || currentSession.value.category,
           language: options.language || 'fr',
           tools: zoomTools.value || [] // Passer les outils Zoom disponibles
         }

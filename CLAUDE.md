@@ -178,5 +178,5 @@ VITE_SUPABASE_ANON_KEY=votre_clé_anon_supabase
 ### Bibliothèques et APIs spécialisées
 - **Vue Cal v^5.0.1-rc.33** : https://antoniandre.github.io/vue-cal/getting-started - Composant calendrier pour Vue.js
 - **PeerJS** : https://www.npmjs.com/package/peerjs - Bibliothèque pour connexions peer-to-peer WebRTC
-- **Zoom API** : https://developers.zoom.us/docs/api/rest/reference/zoom-api/methods/#tag/Meetings - API REST pour gestion des réunions Zoom
+- **Zoom API** : https://developers.zoom.us/docs/api/meetings/#tag/meetings/post/meetings/{meetingId}/open_apps - API REST pour gestion des réunions Zoom
 - **Zoom Webhooks** : https://developers.zoom.us/docs/api/meetings/events/#tag/meeting/postmeeting.alert - Webhooks pour événements de réunions Zoom

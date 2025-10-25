@@ -289,20 +289,11 @@ Deno.serve(async (req) => {
       }
     );
 
-    // Récupérer l'activité avec la réunion Zoom associée
-    console.log('Fetching activity and Zoom meeting data...');
+    // Récupérer l'activité (sans jointure car la relation n'existe pas dans le schéma)
+    console.log('Fetching activity data...');
     const { data: activity, error: activityError } = await supabaseClient
       .from('activities')
-      .select(`
-        id,
-        title,
-        zoom_meeting_id,
-        zoom_meetings (
-          id,
-          meeting_id,
-          join_url
-        )
-      `)
+      .select('id, title, zoom_meeting_id')
       .eq('id', activity_id)
       .single();
 
@@ -320,8 +311,8 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Vérifier qu'une réunion Zoom existe
-    if (!activity.zoom_meeting_id || !activity.zoom_meetings) {
+    // Vérifier qu'une réunion Zoom est associée
+    if (!activity.zoom_meeting_id) {
       console.error('No Zoom meeting associated with this activity');
       return new Response(
         JSON.stringify({ error: 'No Zoom meeting associated with this activity' }),
@@ -332,7 +323,29 @@ Deno.serve(async (req) => {
       );
     }
 
-    const zoomMeetingId = activity.zoom_meetings.meeting_id;
+    // Récupérer le zoom_meeting séparément
+    console.log('Fetching Zoom meeting record from database...');
+    const { data: zoomMeetingRecord, error: zoomMeetingError } = await supabaseClient
+      .from('zoom_meetings')
+      .select('id, meeting_id, join_url')
+      .eq('id', activity.zoom_meeting_id)
+      .single();
+
+    if (zoomMeetingError || !zoomMeetingRecord) {
+      console.error('Failed to fetch Zoom meeting record:', zoomMeetingError);
+      return new Response(
+        JSON.stringify({
+          error: 'Zoom meeting record not found',
+          details: zoomMeetingError?.message
+        }),
+        {
+          status: 404,
+          headers: { 'Content-Type': 'application/json', ...corsHeaders }
+        }
+      );
+    }
+
+    const zoomMeetingId = zoomMeetingRecord.meeting_id;
 
     // Obtenir le token d'accès Zoom
     console.log('🔑 Getting Zoom access token...');
