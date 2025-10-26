@@ -6,6 +6,7 @@
 
 import { ref, computed, watch } from 'vue'
 import { useSpeechRecognition } from '@vueuse/core'
+import { useAudioAnalyzer } from './useAudioAnalyzer'
 
 export function useVoiceInput(options = {}) {
   const {
@@ -14,6 +15,10 @@ export function useVoiceInput(options = {}) {
     interimResults = true, // Afficher les résultats intermédiaires
     onSendTriggered = null // Callback quand "à toi" est détecté
   } = options
+
+  // Analyseur audio pour l'animation
+  const { audioData, startAnalysis, stopAnalysis } = useAudioAnalyzer()
+  const mediaStream = ref(null)
 
   // Utiliser useSpeechRecognition de @vueuse/core
   const speech = useSpeechRecognition({
@@ -51,7 +56,8 @@ export function useVoiceInput(options = {}) {
       /\s*a\s*toi\s*$/i,     // "a toi" à la fin
       /\s*atoi\s*$/i,        // "atoi" à la fin
       /\s*à\s*toit\s*$/i,    // "à toit" (erreur courante)
-      /\s*a\s*toit\s*$/i     // "a toit" (erreur courante)
+      /\s*a\s*toit\s*$/i,    // "a toit" (erreur courante)
+      /\s*pas\s*toi\s*$/i    // "pas toi" (erreur courante)
     ]
 
     let cleaned = text
@@ -76,7 +82,8 @@ export function useVoiceInput(options = {}) {
       lowerText.endsWith('a toi') ||
       lowerText.endsWith('atoi') ||
       lowerText.endsWith('à toit') ||
-      lowerText.endsWith('a toit')
+      lowerText.endsWith('a toit') ||
+      lowerText.endsWith('pas toi')
     )
   }
 
@@ -93,6 +100,18 @@ export function useVoiceInput(options = {}) {
         return false
       }
 
+      // Demander l'accès au microphone pour l'analyse audio
+      try {
+        mediaStream.value = await navigator.mediaDevices.getUserMedia({ audio: true })
+
+        // Démarrer l'analyse audio pour l'animation
+        await startAnalysis(mediaStream.value, 5) // 5 barres
+      } catch (micError) {
+        console.warn('Could not access microphone for audio analysis:', micError)
+        // Continuer même si l'analyse audio échoue
+      }
+
+      // Démarrer la reconnaissance vocale
       start()
       return true
     } catch (err) {
@@ -107,7 +126,18 @@ export function useVoiceInput(options = {}) {
    */
   const stopListening = () => {
     try {
+      // Arrêter la reconnaissance vocale
       stop()
+
+      // Arrêter l'analyse audio
+      stopAnalysis()
+
+      // Fermer le MediaStream
+      if (mediaStream.value) {
+        mediaStream.value.getTracks().forEach(track => track.stop())
+        mediaStream.value = null
+      }
+
       return true
     } catch (err) {
       console.error('Error stopping voice recognition:', err)
@@ -170,6 +200,7 @@ export function useVoiceInput(options = {}) {
     isListening,
     result: cleanedResult, // Retourner le résultat nettoyé
     error: errorMessage,
+    audioData, // Données audio pour l'animation
 
     // Méthodes
     startListening,

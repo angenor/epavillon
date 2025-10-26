@@ -122,7 +122,7 @@
       </div>
 
       <!-- Sound Wave Animation -->
-      <SoundWaveAnimation v-if="isListening" />
+      <SoundWaveAnimation v-if="isListening" :audioData="audioData" />
 
       <form @submit.prevent="handleSendMessage" class="flex gap-3">
         <div class="flex-1">
@@ -143,7 +143,7 @@
         <button
           type="submit"
           :disabled="!canSend"
-          class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer font-medium flex items-center gap-2"
+          class="px-6 py-3 h-min my-auto bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer font-medium flex items-center gap-2"
         >
           <font-awesome-icon :icon="isSending ? 'spinner' : 'paper-plane'" :spin="isSending" />
           {{ t('chatbot.send') }}
@@ -211,6 +211,7 @@ const {
   isListening,
   result: voiceResult,
   error: voiceError,
+  audioData,
   startListening,
   stopListening
 } = useVoiceInput({
