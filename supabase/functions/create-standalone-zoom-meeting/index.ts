@@ -96,7 +96,8 @@ async function createZoomMeeting(
     console.log('✅ Zoom meeting created successfully:', {
       id: zoomMeeting.id,
       topic: zoomMeeting.topic,
-      join_url: zoomMeeting.join_url
+      join_url: zoomMeeting.join_url,
+      registration_url: zoomMeeting.registration_url
     });
 
     return {
@@ -106,6 +107,7 @@ async function createZoomMeeting(
       duration: zoomMeeting.duration,
       timezone: zoomMeeting.timezone,
       join_url: zoomMeeting.join_url,
+      registration_url: zoomMeeting.registration_url, // URL d'inscription pour les participants
       password: zoomMeeting.password,
       start_url: zoomMeeting.start_url,
       host_email: zoomMeeting.host_email

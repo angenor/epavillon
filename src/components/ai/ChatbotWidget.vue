@@ -92,15 +92,38 @@
       </div>
 
       <form @submit.prevent="handleSendMessage" class="flex gap-3">
-        <textarea
-          v-model="messageInput"
-          ref="messageInputRef"
-          :placeholder="t('chatbot.typeMessage')"
-          :disabled="!currentSession || isSending"
-          class="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none disabled:opacity-50 disabled:cursor-not-allowed"
-          rows="3"
-          @keydown.enter.exact.prevent="handleSendMessage"
-        ></textarea>
+        <div class="flex-1 relative">
+          <textarea
+            v-model="messageInput"
+            ref="messageInputRef"
+            :placeholder="isListening ? 'Écoute en cours...' : t('chatbot.typeMessage')"
+            :disabled="!currentSession || isSending"
+            :class="[
+              'w-full px-4 py-3 pr-12 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none disabled:opacity-50 disabled:cursor-not-allowed',
+              isListening ? 'ring-2 ring-red-500 border-red-500' : ''
+            ]"
+            rows="3"
+            @keydown.enter.exact.prevent="handleSendMessage"
+          ></textarea>
+
+          <!-- Bouton microphone -->
+          <button
+            v-if="voiceSupported"
+            type="button"
+            @click="handleMicClick"
+            :disabled="!currentSession || isSending"
+            :class="[
+              'absolute right-2 bottom-2 p-2 rounded-full transition-all cursor-pointer',
+              isListening
+                ? 'bg-red-500 text-white hover:bg-red-600 animate-pulse'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600',
+              (!currentSession || isSending) ? 'opacity-50 cursor-not-allowed' : ''
+            ]"
+            :title="isListening ? 'Arrêter l\'enregistrement' : 'Activer la reconnaissance vocale'"
+          >
+            <font-awesome-icon :icon="isListening ? 'stop' : 'microphone'" class="text-lg" />
+          </button>
+        </div>
 
         <button
           type="submit"
@@ -127,10 +150,11 @@ import { ref, computed, watch, nextTick, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useChatbot } from '@/composables/ai/useChatbot'
 import { useToast } from '@/composables/useToast'
+import { useVoiceInput } from '@/composables/useVoiceInput'
 import ChatMessage from './ChatMessage.vue'
 
 const { t } = useI18n()
-const { error: showError } = useToast()
+const { error: showError, success: showSuccess } = useToast()
 const {
   currentSession,
   messages,
@@ -142,6 +166,19 @@ const {
 const messageInput = ref('')
 const messagesContainer = ref(null)
 const messageInputRef = ref(null)
+
+// Reconnaissance vocale
+const {
+  isSupported: voiceSupported,
+  isListening,
+  result: voiceResult,
+  error: voiceError,
+  toggleListening
+} = useVoiceInput({
+  lang: 'fr-FR',
+  continuous: false,
+  interimResults: true
+})
 
 // Computed
 const canSend = computed(() => {
@@ -174,6 +211,37 @@ const scrollToBottom = () => {
     messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
   }
 }
+
+// Gestion de la reconnaissance vocale
+const handleMicClick = async () => {
+  if (!voiceSupported.value) {
+    showError('La reconnaissance vocale n\'est pas supportée par votre navigateur')
+    return
+  }
+
+  if (isListening.value) {
+    toggleListening()
+  } else {
+    const started = await toggleListening()
+    if (started) {
+      showSuccess('Reconnaissance vocale activée - Parlez maintenant')
+    }
+  }
+}
+
+// Watcher pour le résultat de la reconnaissance vocale
+watch(voiceResult, (newResult) => {
+  if (newResult && newResult.trim()) {
+    messageInput.value = newResult
+  }
+})
+
+// Watcher pour les erreurs vocales
+watch(voiceError, (error) => {
+  if (error) {
+    showError(error)
+  }
+})
 
 // Watch messages for auto-scroll
 watch(() => messages.value.length, async () => {

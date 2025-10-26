@@ -33,11 +33,12 @@ export const zoomToolsFormatter = {
       success: true,
       message: `Réunion Zoom créée avec succès !`,
       details: {
+        registration_url: data.registration_url,
         join_url: data.join_url,
         meeting_id: data.meeting_id,
         password: data.password
       },
-      userMessage: `✅ Réunion Zoom créée.\nLien : ${data.join_url}${data.password ? `\nMot de passe : ${data.password}` : ''}`
+      userMessage: `✅ Réunion Zoom créée.\n🔗 Lien d'inscription : ${data.registration_url || data.join_url}${data.password ? `\n🔑 Mot de passe : ${data.password}` : ''}`
     }
   },
 
@@ -69,6 +70,7 @@ export const zoomToolsFormatter = {
           topic: data.topic,
           start_time: data.start_time,
           duration: data.duration,
+          registration_url: data.registration_url,
           join_url: data.join_url,
           password: data.password
         },
@@ -76,7 +78,7 @@ export const zoomToolsFormatter = {
           `📋 Sujet : ${data.topic}\n` +
           `📅 Début : ${formatDateConcise(data.start_time)}\n` +
           `⏱️ Durée : ${data.duration} min\n` +
-          `🔗 Lien : ${data.join_url}\n` +
+          `🔗 Lien d'inscription : ${data.registration_url || data.join_url}\n` +
           `🔑 Mot de passe : ${data.password || 'Aucun'}\n` +
           `📝 ID réunion : ${data.meeting_id}\n\n` +
           `⚠️ ${response.warning}`
@@ -94,18 +96,20 @@ export const zoomToolsFormatter = {
         start_time: data.start_time,
         duration: data.duration,
         timezone: data.timezone,
+        registration_url: data.registration_url,
         join_url: data.join_url,
         password: data.password,
         start_url: data.start_url
       },
       userMessage: `✅ **Réunion Zoom créée avec succès !**\n\n` +
-        `📋 Sujet : ${data.topic}\n` +
-        `📅 Début : ${formatDateConcise(data.start_time)}\n` +
-        `⏱️ Durée : ${data.duration} min\n` +
-        `🌍 Fuseau horaire : ${data.timezone}\n` +
-        `🔗 Lien de participation : ${data.join_url}\n` +
-        `🔑 Mot de passe : ${data.password || 'Aucun'}\n` +
-        `📝 ID réunion : ${data.meeting_id}`
+        `📋 **Sujet** : ${data.topic}\n` +
+        `📅 **Date/Heure** : ${formatDateConcise(data.start_time)}\n` +
+        `⏱️ **Durée** : ${data.duration} minutes\n` +
+        `🌍 **Fuseau horaire** : ${data.timezone}\n` +
+        `🔗 **Lien d'inscription** : ${data.registration_url || data.join_url}\n` +
+        `🔑 **Mot de passe** : ${data.password || 'Aucun'}\n` +
+        `📝 **ID de la réunion** : ${data.meeting_id}\n\n` +
+        `Partagez le lien d'inscription avec les participants ! 🎉`
     }
   },
 
@@ -137,10 +141,11 @@ export const zoomToolsFormatter = {
       success: true,
       message: `Réunion Zoom mise à jour avec succès${fieldsText}.`,
       details: {
+        registration_url: data.registration_url,
         join_url: data.join_url,
         meeting_id: data.meeting_id
       },
-      userMessage: `✅ Réunion Zoom mise à jour${fieldsText}.\nLien : ${data.join_url}`
+      userMessage: `✅ Réunion Zoom mise à jour${fieldsText}.\n🔗 Lien d'inscription : ${data.registration_url || data.join_url}`
     }
   },
 
@@ -289,7 +294,7 @@ export const zoomToolsFormatter = {
     }
 
     // Si l'approbation a réussi avec création de réunion Zoom COMPLÈTE
-    if (data.join_url && data.meeting_id) {
+    if ((data.registration_url || data.join_url) && data.meeting_id) {
       console.log('[Formatter] Full success - activity approved and Zoom meeting created')
       return {
         success: true,
@@ -300,14 +305,15 @@ export const zoomToolsFormatter = {
           validation_status: data.validation_status,
           zoom_meeting_id: data.zoom_meeting_id,
           meeting_id: data.meeting_id,
+          registration_url: data.registration_url,
           join_url: data.join_url,
           password: data.password
         },
         userMessage: `✅ **Activité approuvée avec succès !**\n\n` +
           `🎉 Réunion Zoom créée automatiquement\n` +
-          `🔗 Lien : ${data.join_url}\n` +
-          `🔑 Mot de passe : ${data.password || 'Aucun'}\n` +
-          `📋 ID réunion : ${data.meeting_id}`
+          `🔗 **Lien d'inscription** : ${data.registration_url || data.join_url}\n` +
+          `🔑 **Mot de passe** : ${data.password || 'nego2025'}\n` +
+          `📋 **ID réunion** : ${data.meeting_id}`
       }
     }
 
