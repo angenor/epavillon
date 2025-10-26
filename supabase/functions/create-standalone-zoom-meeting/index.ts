@@ -228,13 +228,15 @@ Deno.serve(async (req) => {
       type,
       duration,
       timezone,
+      password: password && password.trim() ? password.trim() : 'nego2025', // Mot de passe par défaut
       settings: {
         host_video: true,
         participant_video: true,
         join_before_host: false,
         waiting_room: true,
         mute_upon_entry: false,
-        approval_type: 2, // Pas de registration requise
+        approval_type: 0, // 0 = Inscription requise avec approbation automatique
+        registration_type: 2, // 2 = Les participants doivent s'inscrire pour rejoindre
         ...settings // Permet d'override les settings par défaut
       }
     };
@@ -247,10 +249,6 @@ Deno.serve(async (req) => {
     // Ajouter les champs optionnels si fournis
     if (agenda && agenda.trim()) {
       meetingData.agenda = agenda.trim();
-    }
-
-    if (password && password.trim()) {
-      meetingData.password = password.trim();
     }
 
     // Obtenir le token d'accès Zoom
@@ -288,7 +286,7 @@ Deno.serve(async (req) => {
           start_time: zoomMeeting.start_time,
           duration: zoomMeeting.duration,
           timezone: zoomMeeting.timezone
-          // activity_id est NULL (réunion standalone)
+          // Note: Réunion standalone - aucune activité ne référence ce zoom_meetings.id
         })
         .select()
         .single();

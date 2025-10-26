@@ -124,6 +124,7 @@ async function createZoomMeeting(
       duration: duration,
       timezone: 'UTC', // Utiliser UTC car les dates en base sont déjà en UTC
       agenda: description || '',
+      password: 'nego2025', // Mot de passe par défaut pour toutes les réunions
       settings: {
         host_video: true,
         participant_video: true,
@@ -132,8 +133,8 @@ async function createZoomMeeting(
         waiting_room: true,
         // auto_recording: 'cloud', // Enregistrement automatique dans le cloud
         allow_multiple_devices: true,
-        approval_type: 0, // Approbation automatique
-        registration_type: 2, // Les participants peuvent s'inscrire et rejoindre
+        approval_type: 0, // 0 = Inscription requise avec approbation automatique
+        registration_type: 2, // 2 = Les participants doivent s'inscrire pour rejoindre
         audio: 'both', // Téléphone et VoIP
         enforce_login: false
       }

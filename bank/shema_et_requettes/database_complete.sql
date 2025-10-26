@@ -292,7 +292,7 @@ CREATE TABLE public.activities (
     cover_image_high_url TEXT,
     cover_image_low_url TEXT,
     banner_url TEXT,
-    zoom_meeting_id UUID, -- Lien vers la table zoom
+    zoom_meeting_id UUID REFERENCES public.zoom_meetings(id) ON DELETE SET NULL, -- Lien vers la table zoom
     youtube_link TEXT,
     tags TEXT[], -- Tags stockés directement dans un tableau
     -- Soft delete
@@ -308,17 +308,26 @@ CREATE TABLE public.activities (
 );
 
 -- Table Zoom pour stocker les informations de réunion
+-- NOTE: La relation avec activities se fait via activities.zoom_meeting_id → zoom_meetings.id
 CREATE TABLE public.zoom_meetings (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    meeting_id TEXT UNIQUE NOT NULL,
+    meeting_id TEXT UNIQUE NOT NULL, -- ID Zoom de la réunion
     registration_url TEXT,
     start_url TEXT,
     join_url TEXT,
     banner_url TEXT,
     password TEXT,
+    host_email TEXT, -- Email de l'hôte Zoom
+    topic TEXT, -- Sujet/titre de la réunion
+    start_time TIMESTAMPTZ, -- Date/heure de début
+    duration INTEGER, -- Durée en minutes
+    timezone TEXT DEFAULT 'UTC', -- Fuseau horaire IANA (ex: "America/Montreal")
     created_by UUID REFERENCES public.users(id),
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Index pour optimiser les recherches par date
+CREATE INDEX idx_zoom_meetings_start_time ON public.zoom_meetings(start_time);
 
 -- Table des intervenants
 CREATE TABLE public.activity_speakers (
