@@ -118,6 +118,26 @@ export const zoomApiClient = {
   },
 
   /**
+   * Récupérer les détails complets d'une réunion Zoom standalone depuis l'API Zoom
+   * en utilisant le meeting_id
+   * @param {string} meetingId - ID Zoom de la réunion
+   * @param {object} options - Options (include_registrants, max_registrants)
+   * @returns {Promise<object>}
+   */
+  async getStandaloneMeetingDetails(meetingId, options = {}) {
+    const { data, error } = await supabase.functions.invoke('get-zoom-meeting-details', {
+      body: {
+        meeting_id: meetingId,
+        include_registrants: options.include_registrants ?? false,
+        max_registrants: options.max_registrants ?? 100
+      }
+    })
+
+    if (error) throw error
+    return data
+  },
+
+  /**
    * Rechercher des activités par titre
    * @param {string} query - Titre ou partie du titre à rechercher
    * @param {number} limit - Nombre maximum de résultats (défaut: 5)

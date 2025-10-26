@@ -99,6 +99,7 @@ async function getZoomMeetingInfo(
       duration: meetingData.duration,
       timezone: meetingData.timezone,
       join_url: meetingData.join_url,
+      registration_url: meetingData.registration_url,
       password: meetingData.password,
       status: meetingData.status,
       host_email: meetingData.host_email,
@@ -251,14 +252,15 @@ Deno.serve(async (req) => {
 
     const {
       activity_id,
+      meeting_id,
       include_registrants = false,  // Par défaut false pour économiser les tokens
       max_registrants = 100
     } = payload;
 
-    // Validation du payload
-    if (!activity_id) {
+    // Validation du payload - au moins l'un des deux doit être fourni
+    if (!activity_id && !meeting_id) {
       return new Response(
-        JSON.stringify({ error: 'Missing required field: activity_id' }),
+        JSON.stringify({ error: 'Missing required field: either activity_id or meeting_id must be provided' }),
         {
           status: 400,
           headers: { 'Content-Type': 'application/json', ...corsHeaders }
@@ -289,63 +291,73 @@ Deno.serve(async (req) => {
       }
     );
 
-    // Récupérer l'activité (sans jointure car la relation n'existe pas dans le schéma)
-    console.log('Fetching activity data...');
-    const { data: activity, error: activityError } = await supabaseClient
-      .from('activities')
-      .select('id, title, zoom_meeting_id')
-      .eq('id', activity_id)
-      .single();
+    let zoomMeetingId: string;
 
-    if (activityError || !activity) {
-      console.error('Failed to fetch activity:', activityError);
-      return new Response(
-        JSON.stringify({
-          error: 'Activity not found',
-          details: activityError?.message
-        }),
-        {
-          status: 404,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders }
-        }
-      );
+    // CAS 1: meeting_id fourni directement (réunion standalone ou connue)
+    if (meeting_id) {
+      console.log('Using provided meeting_id:', meeting_id);
+      zoomMeetingId = meeting_id;
     }
+    // CAS 2: activity_id fourni (réunion liée à une activité)
+    else if (activity_id) {
+      // Récupérer l'activité
+      console.log('Fetching activity data...');
+      const { data: activity, error: activityError } = await supabaseClient
+        .from('activities')
+        .select('id, title, zoom_meeting_id')
+        .eq('id', activity_id)
+        .single();
 
-    // Vérifier qu'une réunion Zoom est associée
-    if (!activity.zoom_meeting_id) {
-      console.error('No Zoom meeting associated with this activity');
-      return new Response(
-        JSON.stringify({ error: 'No Zoom meeting associated with this activity' }),
-        {
-          status: 404,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders }
-        }
-      );
+      if (activityError || !activity) {
+        console.error('Failed to fetch activity:', activityError);
+        return new Response(
+          JSON.stringify({
+            error: 'Activity not found',
+            details: activityError?.message
+          }),
+          {
+            status: 404,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders }
+          }
+        );
+      }
+
+      // Vérifier qu'une réunion Zoom est associée
+      if (!activity.zoom_meeting_id) {
+        console.error('No Zoom meeting associated with this activity');
+        return new Response(
+          JSON.stringify({ error: 'No Zoom meeting associated with this activity' }),
+          {
+            status: 404,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders }
+          }
+        );
+      }
+
+      // Récupérer le zoom_meeting séparément
+      console.log('Fetching Zoom meeting record from database...');
+      const { data: zoomMeetingRecord, error: zoomMeetingError } = await supabaseClient
+        .from('zoom_meetings')
+        .select('id, meeting_id, join_url')
+        .eq('id', activity.zoom_meeting_id)
+        .single();
+
+      if (zoomMeetingError || !zoomMeetingRecord) {
+        console.error('Failed to fetch Zoom meeting record:', zoomMeetingError);
+        return new Response(
+          JSON.stringify({
+            error: 'Zoom meeting record not found',
+            details: zoomMeetingError?.message
+          }),
+          {
+            status: 404,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders }
+          }
+        );
+      }
+
+      zoomMeetingId = zoomMeetingRecord.meeting_id;
     }
-
-    // Récupérer le zoom_meeting séparément
-    console.log('Fetching Zoom meeting record from database...');
-    const { data: zoomMeetingRecord, error: zoomMeetingError } = await supabaseClient
-      .from('zoom_meetings')
-      .select('id, meeting_id, join_url')
-      .eq('id', activity.zoom_meeting_id)
-      .single();
-
-    if (zoomMeetingError || !zoomMeetingRecord) {
-      console.error('Failed to fetch Zoom meeting record:', zoomMeetingError);
-      return new Response(
-        JSON.stringify({
-          error: 'Zoom meeting record not found',
-          details: zoomMeetingError?.message
-        }),
-        {
-          status: 404,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders }
-        }
-      );
-    }
-
-    const zoomMeetingId = zoomMeetingRecord.meeting_id;
 
     // Obtenir le token d'accès Zoom
     console.log('🔑 Getting Zoom access token...');

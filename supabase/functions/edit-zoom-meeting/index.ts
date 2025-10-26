@@ -160,10 +160,13 @@ async function getZoomMeetingDetails(
       meeting_id: meetingData.id.toString(),
       join_url: meetingData.join_url,
       start_url: meetingData.start_url,
+      registration_url: meetingData.registration_url,
       topic: meetingData.topic,
       start_time: meetingData.start_time,
       duration: meetingData.duration,
-      password: meetingData.password
+      timezone: meetingData.timezone,
+      password: meetingData.password,
+      host_email: meetingData.host_email
     };
   } catch (error) {
     console.error('Error getting meeting details:', error);
@@ -264,7 +267,7 @@ Deno.serve(async (req) => {
     }
 
     // Valider que au moins un champ à modifier est présent
-    const validFields = ['title', 'start_time', 'duration', 'description'];
+    const validFields = ['title', 'start_time', 'duration', 'timezone', 'password', 'host_email', 'description'];
     const hasValidUpdate = Object.keys(updates).some(key => validFields.includes(key));
 
     if (!hasValidUpdate) {
@@ -366,13 +369,27 @@ Deno.serve(async (req) => {
     }
 
     if (updates.start_time) {
-      // Formater la date pour Zoom (UTC)
+      // Formater la date pour Zoom
       zoomUpdates.start_time = formatDateForZoomUTC(updates.start_time);
-      zoomUpdates.timezone = 'UTC';
+      // Si un timezone est fourni, l'utiliser, sinon garder UTC
+      zoomUpdates.timezone = updates.timezone || 'UTC';
+    } else if (updates.timezone) {
+      // Si seulement le timezone change (sans changer start_time)
+      zoomUpdates.timezone = updates.timezone;
     }
 
     if (updates.duration) {
       zoomUpdates.duration = updates.duration;
+    }
+
+    if (updates.password) {
+      zoomUpdates.password = updates.password;
+    }
+
+    if (updates.host_email) {
+      // L'API Zoom ne supporte pas directement le changement de host_email
+      // Il faudrait utiliser l'endpoint /users/{userId}/meetings/{meetingId}/transfer
+      console.warn('⚠️ host_email modification not supported via PATCH endpoint');
     }
 
     if (updates.description) {
@@ -395,19 +412,31 @@ Deno.serve(async (req) => {
 
     // Mettre à jour la base de données si possible
     if (zoomMeetingDbId) {
+      // Construire l'objet de mise à jour dynamiquement
+      const dbUpdates: any = {
+        join_url: updatedMeeting.join_url,
+        start_url: updatedMeeting.start_url,
+        registration_url: updatedMeeting.registration_url
+      };
+
+      // Ajouter les champs modifiables si présents
+      if (updatedMeeting.topic) dbUpdates.topic = updatedMeeting.topic;
+      if (updatedMeeting.start_time) dbUpdates.start_time = updatedMeeting.start_time;
+      if (updatedMeeting.duration) dbUpdates.duration = updatedMeeting.duration;
+      if (updatedMeeting.timezone) dbUpdates.timezone = updatedMeeting.timezone;
+      if (updatedMeeting.password) dbUpdates.password = updatedMeeting.password;
+      if (updatedMeeting.host_email) dbUpdates.host_email = updatedMeeting.host_email;
+
       const { error: updateDbError } = await supabaseClient
         .from('zoom_meetings')
-        .update({
-          join_url: updatedMeeting.join_url,
-          start_url: updatedMeeting.start_url
-        })
+        .update(dbUpdates)
         .eq('id', zoomMeetingDbId);
 
       if (updateDbError) {
         console.warn('Failed to update database:', updateDbError);
         // Ne pas bloquer si la mise à jour DB échoue
       } else {
-        console.log('✅ Database updated successfully');
+        console.log('✅ Database updated successfully with:', dbUpdates);
       }
     } else {
       console.log('⚠️ No database record found for this meeting_id, skipping DB update');

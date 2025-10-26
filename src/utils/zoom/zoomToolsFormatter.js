@@ -150,8 +150,7 @@ export const zoomToolsFormatter = {
   },
 
   /**
-   * Formatte les détails d'une réunion Zoom (version concise)
-   * Optimisé pour réduire l'utilisation de tokens
+   * Formatte les détails d'une réunion Zoom (version complète)
    * @param {object} data - Données détaillées de la réunion
    * @returns {object}
    */
@@ -163,12 +162,31 @@ export const zoomToolsFormatter = {
       'finished': '✅'
     }[data.status] || '📋'
 
-    // Version concise sans la liste détaillée des inscrits
-    const message = `${statusEmoji} **${data.topic}**\n` +
-      `📅 ${startTime}\n` +
-      `⏱️ Durée : ${data.duration} min\n` +
-      `👥 Inscrits : ${data.registrants_count || 0}\n` +
-      `🔗 ${data.join_url}`
+    // Formater le message avec tous les détails disponibles
+    let message = `${statusEmoji} **${data.topic}**\n\n`
+    message += `📋 **Meeting ID** : ${data.meeting_id}\n`
+    message += `📅 **Date et heure** : ${startTime}\n`
+    message += `⏱️ **Durée** : ${data.duration} minutes\n`
+
+    if (data.timezone) {
+      message += `🌍 **Fuseau horaire** : ${data.timezone}\n`
+    }
+
+    if (data.password) {
+      message += `🔑 **Mot de passe** : ${data.password}\n`
+    }
+
+    if (data.host_email) {
+      message += `👤 **Hôte** : ${data.host_email}\n`
+    }
+
+    message += `👥 **Inscrits** : ${data.registrants_count || 0}\n`
+
+    if (data.registration_url) {
+      message += `\n🔗 **Lien d'inscription** : ${data.registration_url}\n`
+    } else if (data.join_url) {
+      message += `\n🔗 **Lien de la réunion** : ${data.join_url}\n`
+    }
 
     return {
       success: true,
@@ -177,7 +195,11 @@ export const zoomToolsFormatter = {
         topic: data.topic,
         start_time: data.start_time,
         duration: data.duration,
+        timezone: data.timezone,
+        registration_url: data.registration_url,
         join_url: data.join_url,
+        password: data.password,
+        host_email: data.host_email,
         registrants_count: data.registrants_count || 0,
         status: data.status
       },

@@ -181,7 +181,7 @@ export const deleteZoomMeetingTool = new DynamicStructuredTool({
  */
 export const editZoomMeetingTool = new DynamicStructuredTool({
   name: 'edit_zoom_meeting',
-  description: 'Modifie une réunion Zoom (liée à une activité ou standalone). Fournissez soit activity_id (pour réunion liée) soit meeting_id (pour réunion standalone). Utilisez cet outil quand l\'utilisateur demande de modifier/changer une réunion Zoom.',
+  description: 'Modifie une réunion Zoom (liée à une activité ou standalone). Peut modifier le titre, date/heure, durée, timezone, mot de passe, email hôte et description. Fournissez soit activity_id (pour réunion liée) soit meeting_id (pour réunion standalone). Utilisez cet outil quand l\'utilisateur demande de modifier/changer une réunion Zoom.',
   schema: z.object({
     activity_id: z.string().optional().describe('ID de l\'activité (pour réunion liée à une activité)'),
     meeting_id: z.string().optional().describe('ID Zoom de la réunion (pour réunion standalone)'),
@@ -189,6 +189,9 @@ export const editZoomMeetingTool = new DynamicStructuredTool({
       title: z.string().optional().describe('Nouveau titre de la réunion'),
       start_time: z.string().optional().describe('Nouvelle date/heure de début (format ISO 8601)'),
       duration: z.number().optional().describe('Nouvelle durée en minutes'),
+      timezone: z.string().optional().describe('Nouveau fuseau horaire (format IANA, ex: "America/Montreal", "Europe/Paris", "UTC")'),
+      password: z.string().optional().describe('Nouveau mot de passe de la réunion'),
+      host_email: z.string().optional().describe('Nouvel email de l\'hôte'),
       description: z.string().optional().describe('Nouvelle description/agenda')
     }).describe('Modifications à apporter à la réunion')
   }),
@@ -219,12 +222,11 @@ export const editZoomMeetingTool = new DynamicStructuredTool({
 })
 
 /**
- * Outil pour obtenir les détails d'une réunion Zoom
- * Version concise optimisée pour minimiser les tokens
+ * Outil pour obtenir les détails d'une réunion Zoom liée à une activité
  */
 export const getZoomMeetingDetailsTool = new DynamicStructuredTool({
   name: 'get_zoom_meeting_details',
-  description: 'Obtient les détails d\'une réunion Zoom (titre, date, durée, nombre d\'inscrits, lien). Utilisez cet outil quand l\'utilisateur demande des informations sur une réunion Zoom.',
+  description: 'Obtient les détails d\'une réunion Zoom liée à une activité (titre, date, durée, nombre d\'inscrits, lien). Utilisez cet outil quand l\'utilisateur demande des informations sur une réunion Zoom liée à une activité.',
   schema: z.object({
     activity_id: z.string().describe('ID de l\'activité'),
     include_registrants: z.boolean().optional().describe('Inclure la liste détaillée des inscrits (par défaut: false)')
@@ -245,6 +247,38 @@ export const getZoomMeetingDetailsTool = new DynamicStructuredTool({
       return JSON.stringify(formatted)
     } catch (error) {
       console.error('[Tool] Error getting Zoom meeting details:', error)
+      const formatted = zoomToolsFormatter.formatError(error)
+      return JSON.stringify(formatted)
+    }
+  }
+})
+
+/**
+ * Outil pour obtenir les détails d'une réunion Zoom standalone
+ */
+export const getStandaloneMeetingDetailsTool = new DynamicStructuredTool({
+  name: 'get_standalone_meeting_details',
+  description: 'Obtient les détails complets d\'une réunion Zoom standalone (non liée à une activité) depuis l\'API Zoom. Retourne le titre, date, durée, timezone, password, email hôte, URL d\'inscription, nombre d\'inscrits, etc. Utilisez cet outil quand l\'utilisateur demande TOUTES les informations ou les détails complets d\'une réunion standalone. Nécessite le meeting_id (ID Zoom numérique).',
+  schema: z.object({
+    meeting_id: z.string().describe('ID Zoom de la réunion (meeting_id numérique, ex: "81073223949")'),
+    include_registrants: z.boolean().optional().describe('Inclure la liste détaillée des inscrits (par défaut: false)')
+  }),
+  func: async ({ meeting_id, include_registrants = false }) => {
+    try {
+      console.log('[Tool] Getting standalone Zoom meeting details for meeting_id:', meeting_id)
+      const result = await zoomApiClient.getStandaloneMeetingDetails(meeting_id, {
+        include_registrants: include_registrants,
+        max_registrants: 100
+      })
+
+      // Utiliser le formateur approprié selon si on inclut les inscrits ou non
+      const formatted = include_registrants
+        ? zoomToolsFormatter.formatDetailsWithRegistrants(result)
+        : zoomToolsFormatter.formatDetailsResponse(result)
+
+      return JSON.stringify(formatted)
+    } catch (error) {
+      console.error('[Tool] Error getting standalone meeting details:', error)
       const formatted = zoomToolsFormatter.formatError(error)
       return JSON.stringify(formatted)
     }
@@ -354,7 +388,8 @@ export function getZoomTools(userRole) {
     createStandaloneZoomMeetingTool,  // Créer une réunion Zoom standalone (sans activité)
     deleteZoomMeetingTool,
     editZoomMeetingTool,
-    getZoomMeetingDetailsTool
+    getZoomMeetingDetailsTool,        // Détails réunion liée à une activité
+    getStandaloneMeetingDetailsTool   // Détails complets réunion standalone depuis API Zoom
   ]
 }
 
