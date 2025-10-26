@@ -11,7 +11,7 @@
             <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
               {{ t('chatbot.title') }}
             </h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
+            <p class="text-sm text-gray-500 dark:text-gray-400 truncate max-w-2xl">
               {{ currentSession?.title || t('chatbot.selectOrCreateSession') }}
             </p>
           </div>

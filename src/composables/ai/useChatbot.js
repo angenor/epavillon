@@ -145,9 +145,22 @@ export function useChatbot() {
   }
 
   /**
+   * Détecte le fuseau horaire du navigateur de l'utilisateur
+   * @returns {string} - Nom IANA du timezone (ex: "America/Montreal")
+   */
+  const getUserTimezone = () => {
+    try {
+      return Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Montreal'
+    } catch (error) {
+      console.warn('Unable to detect user timezone, defaulting to America/Montreal:', error)
+      return 'America/Montreal'
+    }
+  }
+
+  /**
    * Envoie un message et obtient une réponse
    * @param {string} message - Message de l'utilisateur
-   * @param {object} options - Options (category, language)
+   * @param {object} options - Options (category, language, timezone)
    * @returns {Promise<object>}
    */
   const sendMessage = async (message, options = {}) => {
@@ -162,6 +175,9 @@ export function useChatbot() {
       if (!message || message.trim().length === 0) {
         throw new Error('Message cannot be empty')
       }
+
+      // Détecter automatiquement le fuseau horaire de l'utilisateur si non fourni
+      const timezone = options.timezone || getUserTimezone()
 
       // Sauvegarder le message utilisateur
       const userMessageData = {
@@ -203,7 +219,8 @@ export function useChatbot() {
         conversationHistory.slice(0, -1), // Exclure le message actuel
         {
           language: options.language || 'fr',
-          tools: zoomTools.value || [] // Passer les outils Zoom disponibles
+          tools: zoomTools.value || [], // Passer les outils Zoom disponibles
+          timezone: timezone // Passer le fuseau horaire détecté
         }
       )
 

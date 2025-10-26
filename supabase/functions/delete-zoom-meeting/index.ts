@@ -162,12 +162,15 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { activity_id } = payload;
+    const { activity_id, meeting_id } = payload;
 
-    // Validation du payload
-    if (!activity_id) {
+    // Validation du payload - au moins l'un des deux doit être fourni
+    if (!activity_id && !meeting_id) {
       return new Response(
-        JSON.stringify({ error: 'Missing required field: activity_id' }),
+        JSON.stringify({
+          error: 'Missing required field: either activity_id or meeting_id must be provided',
+          message: 'Vous devez fournir soit activity_id (pour réunion liée à une activité) soit meeting_id (pour réunion standalone)'
+        }),
         {
           status: 400,
           headers: { 'Content-Type': 'application/json', ...corsHeaders }
@@ -187,72 +190,99 @@ Deno.serve(async (req) => {
       }
     );
 
-    // Récupérer les informations de l'activité
-    console.log('Fetching activity data...');
-    const { data: activity, error: activityError } = await supabaseClient
-      .from('activities')
-      .select('id, title, zoom_meeting_id')
-      .eq('id', activity_id)
-      .single();
+    let zoomMeetingId: string;
+    let zoomMeetingDbId: string | null = null;
+    let isLinkedToActivity = false;
 
-    if (activityError || !activity) {
-      console.error('Failed to fetch activity:', activityError);
-      return new Response(
-        JSON.stringify({
-          error: 'Activity not found',
-          details: activityError?.message
-        }),
-        {
-          status: 404,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders }
-        }
-      );
+    // CAS 1: meeting_id fourni directement (réunion standalone ou connue)
+    if (meeting_id) {
+      console.log('Using provided meeting_id:', meeting_id);
+      zoomMeetingId = meeting_id;
+
+      // Chercher dans la base pour récupérer l'ID de la table zoom_meetings
+      const { data: zoomMeeting, error: zoomError } = await supabaseClient
+        .from('zoom_meetings')
+        .select('id, meeting_id')
+        .eq('meeting_id', meeting_id)
+        .single();
+
+      if (zoomError || !zoomMeeting) {
+        console.warn('⚠️ Meeting not found in database, will try to delete from Zoom only');
+      } else {
+        zoomMeetingDbId = zoomMeeting.id;
+      }
     }
+    // CAS 2: activity_id fourni (réunion liée à une activité)
+    else if (activity_id) {
+      console.log('Fetching meeting_id from activity...');
+      isLinkedToActivity = true;
 
-    // Vérifier si l'activité a une réunion Zoom
-    if (!activity.zoom_meeting_id) {
-      console.log('Activity has no Zoom meeting to delete');
-      return new Response(
-        JSON.stringify({
-          message: 'Activity has no Zoom meeting to delete'
-        }),
-        {
-          status: 200,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders }
-        }
-      );
+      const { data: activity, error: activityError } = await supabaseClient
+        .from('activities')
+        .select('id, title, zoom_meeting_id')
+        .eq('id', activity_id)
+        .single();
+
+      if (activityError || !activity) {
+        console.error('Failed to fetch activity:', activityError);
+        return new Response(
+          JSON.stringify({
+            error: 'Activity not found',
+            details: activityError?.message
+          }),
+          {
+            status: 404,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders }
+          }
+        );
+      }
+
+      // Vérifier si l'activité a une réunion Zoom
+      if (!activity.zoom_meeting_id) {
+        console.log('Activity has no Zoom meeting to delete');
+        return new Response(
+          JSON.stringify({
+            message: 'Activity has no Zoom meeting to delete'
+          }),
+          {
+            status: 200,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders }
+          }
+        );
+      }
+
+      // Récupérer les informations de la réunion Zoom
+      console.log('Fetching Zoom meeting data...');
+      const { data: zoomMeeting, error: zoomMeetingError } = await supabaseClient
+        .from('zoom_meetings')
+        .select('id, meeting_id')
+        .eq('id', activity.zoom_meeting_id)
+        .single();
+
+      if (zoomMeetingError || !zoomMeeting) {
+        console.error('Failed to fetch Zoom meeting:', zoomMeetingError);
+        return new Response(
+          JSON.stringify({
+            error: 'Zoom meeting not found in database',
+            details: zoomMeetingError?.message
+          }),
+          {
+            status: 404,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders }
+          }
+        );
+      }
+
+      zoomMeetingId = zoomMeeting.meeting_id;
+      zoomMeetingDbId = activity.zoom_meeting_id;
+
+      console.log('📊 Meeting deletion details:', {
+        activity_id: activity.id,
+        activity_title: activity.title,
+        zoom_meeting_db_id: activity.zoom_meeting_id,
+        zoom_meeting_id: zoomMeetingId
+      });
     }
-
-    // Récupérer les informations de la réunion Zoom
-    console.log('Fetching Zoom meeting data...');
-    const { data: zoomMeeting, error: zoomMeetingError } = await supabaseClient
-      .from('zoom_meetings')
-      .select('id, meeting_id')
-      .eq('id', activity.zoom_meeting_id)
-      .single();
-
-    if (zoomMeetingError || !zoomMeeting) {
-      console.error('Failed to fetch Zoom meeting:', zoomMeetingError);
-      return new Response(
-        JSON.stringify({
-          error: 'Zoom meeting not found in database',
-          details: zoomMeetingError?.message
-        }),
-        {
-          status: 404,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders }
-        }
-      );
-    }
-
-    const zoomMeetingId = zoomMeeting.meeting_id;
-
-    console.log('📊 Meeting deletion details:', {
-      activity_id: activity.id,
-      activity_title: activity.title,
-      zoom_meeting_db_id: activity.zoom_meeting_id,
-      zoom_meeting_id: zoomMeetingId
-    });
 
     // Obtenir le token d'accès Zoom
     console.log('🔑 Getting Zoom access token...');
@@ -268,50 +298,57 @@ Deno.serve(async (req) => {
       throw new Error('Zoom meeting deletion failed');
     }
 
-    // Supprimer la réunion de la base de données
-    console.log('💾 Deleting Zoom meeting from database...');
-    const { error: deleteDbError } = await supabaseClient
-      .from('zoom_meetings')
-      .delete()
-      .eq('id', activity.zoom_meeting_id);
+    // Supprimer la réunion de la base de données si on a trouvé un enregistrement
+    if (zoomMeetingDbId) {
+      console.log('💾 Deleting Zoom meeting from database...');
+      const { error: deleteDbError } = await supabaseClient
+        .from('zoom_meetings')
+        .delete()
+        .eq('id', zoomMeetingDbId);
 
-    if (deleteDbError) {
-      console.error('Failed to delete Zoom meeting from database:', deleteDbError);
-      // On continue quand même car la réunion a été supprimée sur Zoom
-      // Note: C'est un avertissement, pas une erreur bloquante
+      if (deleteDbError) {
+        console.error('Failed to delete Zoom meeting from database:', deleteDbError);
+        // On continue quand même car la réunion a été supprimée sur Zoom
+      } else {
+        console.log('✅ Zoom meeting deleted from database');
+      }
     } else {
-      console.log('✅ Zoom meeting deleted from database');
+      console.log('⚠️ No database record to delete (meeting not in database)');
     }
 
-    // Mettre à jour l'activité pour retirer la référence à la réunion Zoom
-    console.log('📝 Updating activity to remove Zoom meeting reference...');
-    const { error: updateActivityError } = await supabaseClient
-      .from('activities')
-      .update({ zoom_meeting_id: null })
-      .eq('id', activity_id);
+    // Mettre à jour l'activité pour retirer la référence si c'est une réunion liée
+    if (isLinkedToActivity && activity_id) {
+      console.log('📝 Updating activity to remove Zoom meeting reference...');
+      const { error: updateActivityError } = await supabaseClient
+        .from('activities')
+        .update({ zoom_meeting_id: null })
+        .eq('id', activity_id);
 
-    if (updateActivityError) {
-      console.error('Failed to update activity:', updateActivityError);
-      return new Response(
-        JSON.stringify({
-          warning: 'Zoom meeting deleted but failed to update activity',
-          details: updateActivityError?.message
-        }),
-        {
-          status: 200,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders }
-        }
-      );
+      if (updateActivityError) {
+        console.error('Failed to update activity:', updateActivityError);
+        return new Response(
+          JSON.stringify({
+            warning: 'Zoom meeting deleted but failed to update activity',
+            details: updateActivityError?.message
+          }),
+          {
+            status: 200,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders }
+          }
+        );
+      }
+
+      console.log('✅ Activity updated successfully');
     }
 
-    console.log('✅ Activity updated successfully');
     console.log('🎉 Zoom meeting deletion completed successfully');
 
     // Retourner le résultat
     return new Response(
       JSON.stringify({
         message: 'Zoom meeting deleted successfully',
-        activity_id: activity_id
+        activity_id: activity_id || null,
+        meeting_id: zoomMeetingId
       }),
       {
         status: 200,

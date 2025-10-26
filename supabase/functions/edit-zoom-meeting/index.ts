@@ -237,12 +237,15 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { activity_id, updates } = payload;
+    const { activity_id, meeting_id, updates } = payload;
 
-    // Validation du payload
-    if (!activity_id) {
+    // Validation du payload - au moins l'un des deux doit être fourni
+    if (!activity_id && !meeting_id) {
       return new Response(
-        JSON.stringify({ error: 'Missing required field: activity_id' }),
+        JSON.stringify({
+          error: 'Missing required field: either activity_id or meeting_id must be provided',
+          message: 'Vous devez fournir soit activity_id (pour réunion liée à une activité) soit meeting_id (pour réunion standalone)'
+        }),
         {
           status: 400,
           headers: { 'Content-Type': 'application/json', ...corsHeaders }
@@ -286,55 +289,73 @@ Deno.serve(async (req) => {
       }
     );
 
-    // Récupérer l'activité avec la réunion Zoom associée
-    console.log('Fetching activity and Zoom meeting data...');
-    const { data: activity, error: activityError } = await supabaseClient
-      .from('activities')
-      .select(`
-        id,
-        title,
-        zoom_meeting_id,
-        final_start_date,
-        final_end_date,
-        proposed_start_date,
-        proposed_end_date,
-        zoom_meetings (
+    let zoomMeetingId: string;
+    let zoomMeetingDbId: string | null = null;
+
+    // CAS 1: meeting_id fourni directement (réunion standalone ou connue)
+    if (meeting_id) {
+      console.log('Using provided meeting_id:', meeting_id);
+      zoomMeetingId = meeting_id;
+
+      // Chercher dans la base pour récupérer l'ID de la table zoom_meetings (pour mise à jour DB)
+      const { data: zoomMeeting, error: zoomError } = await supabaseClient
+        .from('zoom_meetings')
+        .select('id')
+        .eq('meeting_id', meeting_id)
+        .single();
+
+      if (!zoomError && zoomMeeting) {
+        zoomMeetingDbId = zoomMeeting.id;
+      }
+    }
+    // CAS 2: activity_id fourni (réunion liée à une activité)
+    else if (activity_id) {
+      console.log('Fetching meeting_id from activity...');
+      const { data: activity, error: activityError } = await supabaseClient
+        .from('activities')
+        .select(`
           id,
-          meeting_id,
-          join_url,
-          start_url
-        )
-      `)
-      .eq('id', activity_id)
-      .single();
+          title,
+          zoom_meeting_id,
+          zoom_meetings (
+            id,
+            meeting_id,
+            join_url,
+            start_url
+          )
+        `)
+        .eq('id', activity_id)
+        .single();
 
-    if (activityError || !activity) {
-      console.error('Failed to fetch activity:', activityError);
-      return new Response(
-        JSON.stringify({
-          error: 'Activity not found',
-          details: activityError?.message
-        }),
-        {
-          status: 404,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders }
-        }
-      );
+      if (activityError || !activity) {
+        console.error('Failed to fetch activity:', activityError);
+        return new Response(
+          JSON.stringify({
+            error: 'Activity not found',
+            details: activityError?.message
+          }),
+          {
+            status: 404,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders }
+          }
+        );
+      }
+
+      // Vérifier qu'une réunion Zoom existe
+      if (!activity.zoom_meeting_id || !activity.zoom_meetings) {
+        console.error('No Zoom meeting associated with this activity');
+        return new Response(
+          JSON.stringify({ error: 'No Zoom meeting associated with this activity' }),
+          {
+            status: 404,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders }
+          }
+        );
+      }
+
+      zoomMeetingId = activity.zoom_meetings.meeting_id;
+      zoomMeetingDbId = activity.zoom_meeting_id;
     }
-
-    // Vérifier qu'une réunion Zoom existe
-    if (!activity.zoom_meeting_id || !activity.zoom_meetings) {
-      console.error('No Zoom meeting associated with this activity');
-      return new Response(
-        JSON.stringify({ error: 'No Zoom meeting associated with this activity' }),
-        {
-          status: 404,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders }
-        }
-      );
-    }
-
-    const zoomMeetingId = activity.zoom_meetings.meeting_id;
 
     // Construire le payload de mise à jour pour Zoom
     const zoomUpdates: any = {};
@@ -372,27 +393,33 @@ Deno.serve(async (req) => {
     console.log('📥 Fetching updated meeting details...');
     const updatedMeeting = await getZoomMeetingDetails(accessToken, zoomMeetingId);
 
-    // Mettre à jour la base de données si les URLs ont changé (rare)
-    const { error: updateDbError } = await supabaseClient
-      .from('zoom_meetings')
-      .update({
-        join_url: updatedMeeting.join_url,
-        start_url: updatedMeeting.start_url
-      })
-      .eq('id', activity.zoom_meeting_id);
+    // Mettre à jour la base de données si possible
+    if (zoomMeetingDbId) {
+      const { error: updateDbError } = await supabaseClient
+        .from('zoom_meetings')
+        .update({
+          join_url: updatedMeeting.join_url,
+          start_url: updatedMeeting.start_url
+        })
+        .eq('id', zoomMeetingDbId);
 
-    if (updateDbError) {
-      console.warn('Failed to update database:', updateDbError);
-      // Ne pas bloquer si la mise à jour DB échoue
+      if (updateDbError) {
+        console.warn('Failed to update database:', updateDbError);
+        // Ne pas bloquer si la mise à jour DB échoue
+      } else {
+        console.log('✅ Database updated successfully');
+      }
+    } else {
+      console.log('⚠️ No database record found for this meeting_id, skipping DB update');
     }
 
-    console.log('Zoom meeting updated successfully');
+    console.log('🎉 Zoom meeting updated successfully');
 
     // Retourner les informations de la réunion mise à jour
     return new Response(
       JSON.stringify({
         message: 'Zoom meeting updated successfully',
-        activity_id: activity_id,
+        activity_id: activity_id || null,
         meeting_id: updatedMeeting.meeting_id,
         join_url: updatedMeeting.join_url,
         start_url: updatedMeeting.start_url,

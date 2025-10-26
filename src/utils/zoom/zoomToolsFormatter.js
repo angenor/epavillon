@@ -42,6 +42,74 @@ export const zoomToolsFormatter = {
   },
 
   /**
+   * Formatte la réponse après création d'une réunion standalone
+   * @param {object} response - Réponse de l'edge function
+   * @returns {object}
+   */
+  formatStandaloneCreateResponse(response) {
+    // Gérer les erreurs
+    if (!response.success) {
+      return {
+        success: false,
+        error: response.error || 'Erreur lors de la création de la réunion',
+        message: response.message || response.error,
+        userMessage: `❌ ${response.message || response.error}`
+      }
+    }
+
+    // Gérer les warnings (réunion créée mais non sauvegardée en base)
+    if (response.warning) {
+      const data = response.data
+      return {
+        success: true,
+        warning: response.warning,
+        message: 'Réunion créée avec avertissement',
+        details: {
+          meeting_id: data.meeting_id,
+          topic: data.topic,
+          start_time: data.start_time,
+          duration: data.duration,
+          join_url: data.join_url,
+          password: data.password
+        },
+        userMessage: `⚠️ **Réunion Zoom créée avec avertissement**\n\n` +
+          `📋 Sujet : ${data.topic}\n` +
+          `📅 Début : ${formatDateConcise(data.start_time)}\n` +
+          `⏱️ Durée : ${data.duration} min\n` +
+          `🔗 Lien : ${data.join_url}\n` +
+          `🔑 Mot de passe : ${data.password || 'Aucun'}\n` +
+          `📝 ID réunion : ${data.meeting_id}\n\n` +
+          `⚠️ ${response.warning}`
+      }
+    }
+
+    // Succès complet
+    const data = response.data
+    return {
+      success: true,
+      message: 'Réunion Zoom standalone créée avec succès',
+      details: {
+        meeting_id: data.meeting_id,
+        topic: data.topic,
+        start_time: data.start_time,
+        duration: data.duration,
+        timezone: data.timezone,
+        join_url: data.join_url,
+        password: data.password,
+        start_url: data.start_url
+      },
+      userMessage: `✅ **Réunion Zoom créée avec succès !**\n\n` +
+        `📋 Sujet : ${data.topic}\n` +
+        `📅 Début : ${formatDateConcise(data.start_time)}\n` +
+        `⏱️ Durée : ${data.duration} min\n` +
+        `🌍 Fuseau horaire : ${data.timezone}\n` +
+        `🔗 Lien de participation : ${data.join_url}\n` +
+        `🔑 Mot de passe : ${data.password || 'Aucun'}\n` +
+        `📝 ID réunion : ${data.meeting_id}`
+    }
+  },
+
+  /**
    * Formatte la réponse après suppression d'une réunion
    * @param {object} data - Données de la réunion supprimée
    * @returns {object}

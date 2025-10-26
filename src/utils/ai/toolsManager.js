@@ -87,14 +87,27 @@ export const createZoomMeetingTool = new DynamicStructuredTool({
  */
 export const deleteZoomMeetingTool = new DynamicStructuredTool({
   name: 'delete_zoom_meeting',
-  description: 'Supprime une réunion Zoom associée à une activité. Utilisez cet outil quand l\'utilisateur demande de supprimer/annuler une réunion Zoom.',
+  description: 'Supprime une réunion Zoom (liée à une activité ou standalone). Utilisez cet outil quand l\'utilisateur demande de supprimer/annuler une réunion Zoom. Fournissez soit activity_id (pour réunion liée) soit meeting_id (pour réunion standalone).',
   schema: z.object({
-    activity_id: z.string().describe('ID de l\'activité dont il faut supprimer la réunion Zoom')
+    activity_id: z.string().optional().describe('ID de l\'activité (pour réunion liée à une activité)'),
+    meeting_id: z.string().optional().describe('ID Zoom de la réunion (pour réunion standalone)')
   }),
-  func: async ({ activity_id }) => {
+  func: async (params) => {
     try {
-      console.log('[Tool] Deleting Zoom meeting for activity:', activity_id)
-      const result = await zoomApiClient.deleteMeeting(activity_id)
+      const { activity_id, meeting_id } = params
+
+      if (!activity_id && !meeting_id) {
+        return JSON.stringify({
+          success: false,
+          error: 'Missing parameter',
+          userMessage: '❌ Vous devez fournir soit activity_id soit meeting_id'
+        })
+      }
+
+      console.log('[Tool] Deleting Zoom meeting:', params)
+
+      const identifier = activity_id ? { activityId: activity_id } : { meetingId: meeting_id }
+      const result = await zoomApiClient.deleteMeeting(identifier)
       const formatted = zoomToolsFormatter.formatDeleteResponse(result)
       return JSON.stringify(formatted)
     } catch (error) {
@@ -110,9 +123,10 @@ export const deleteZoomMeetingTool = new DynamicStructuredTool({
  */
 export const editZoomMeetingTool = new DynamicStructuredTool({
   name: 'edit_zoom_meeting',
-  description: 'Modifie une réunion Zoom (titre, date, durée, description). Utilisez cet outil quand l\'utilisateur demande de modifier/changer une réunion Zoom.',
+  description: 'Modifie une réunion Zoom (liée à une activité ou standalone). Fournissez soit activity_id (pour réunion liée) soit meeting_id (pour réunion standalone). Utilisez cet outil quand l\'utilisateur demande de modifier/changer une réunion Zoom.',
   schema: z.object({
-    activity_id: z.string().describe('ID de l\'activité dont il faut modifier la réunion Zoom'),
+    activity_id: z.string().optional().describe('ID de l\'activité (pour réunion liée à une activité)'),
+    meeting_id: z.string().optional().describe('ID Zoom de la réunion (pour réunion standalone)'),
     updates: z.object({
       title: z.string().optional().describe('Nouveau titre de la réunion'),
       start_time: z.string().optional().describe('Nouvelle date/heure de début (format ISO 8601)'),
@@ -120,10 +134,22 @@ export const editZoomMeetingTool = new DynamicStructuredTool({
       description: z.string().optional().describe('Nouvelle description/agenda')
     }).describe('Modifications à apporter à la réunion')
   }),
-  func: async ({ activity_id, updates }) => {
+  func: async (params) => {
     try {
-      console.log('[Tool] Editing Zoom meeting for activity:', activity_id, updates)
-      const result = await zoomApiClient.editMeeting(activity_id, updates)
+      const { activity_id, meeting_id, updates } = params
+
+      if (!activity_id && !meeting_id) {
+        return JSON.stringify({
+          success: false,
+          error: 'Missing parameter',
+          userMessage: '❌ Vous devez fournir soit activity_id soit meeting_id'
+        })
+      }
+
+      console.log('[Tool] Editing Zoom meeting:', params)
+
+      const identifier = activity_id ? { activityId: activity_id } : { meetingId: meeting_id }
+      const result = await zoomApiClient.editMeeting(identifier, updates)
       const formatted = zoomToolsFormatter.formatEditResponse(result)
       return JSON.stringify(formatted)
     } catch (error) {
@@ -195,6 +221,58 @@ export const approveActivityTool = new DynamicStructuredTool({
 })
 
 /**
+ * Outil pour créer une réunion Zoom standalone (non liée à une activité)
+ */
+export const createStandaloneZoomMeetingTool = new DynamicStructuredTool({
+  name: 'create_standalone_zoom_meeting',
+  description: `Crée une réunion Zoom standalone (non liée à une activité). Utilise cet outil quand l'utilisateur demande de créer une réunion Zoom sans mentionner d'activité.
+
+PARAMÈTRES OBLIGATOIRES :
+- topic : Sujet de la réunion
+- duration : Durée en minutes
+- start_time : Date/heure de début au format ISO 8601 (ex: "2024-12-25T14:00:00Z") - OBLIGATOIRE pour réunions planifiées
+
+PARAMÈTRES OPTIONNELS :
+- type : 1=instant, 2=planifiée (défaut), 3=récurrente sans heure fixe, 8=récurrente avec heure fixe
+- timezone : Fuseau horaire (ex: "America/Montreal", "Europe/Paris", défaut: "UTC")
+- agenda : Description/ordre du jour
+- password : Mot de passe de la réunion
+- settings : Objet avec les paramètres (host_video, participant_video, waiting_room, etc.)
+
+Si des informations obligatoires manquent, l'outil retournera une erreur explicite.`,
+  schema: z.object({
+    topic: z.string().describe('Sujet de la réunion (OBLIGATOIRE)'),
+    duration: z.number().describe('Durée de la réunion en minutes (OBLIGATOIRE)'),
+    start_time: z.string().optional().describe('Date/heure de début au format ISO 8601 (ex: "2024-12-25T14:00:00Z"). OBLIGATOIRE pour réunions planifiées'),
+    type: z.number().optional().describe('Type de réunion : 1=instant, 2=planifiée, 3=récurrente sans heure fixe, 8=récurrente avec heure fixe (défaut: 2)'),
+    timezone: z.string().optional().describe('Fuseau horaire (ex: "America/Montreal", "Europe/Paris", défaut: "UTC")'),
+    agenda: z.string().optional().describe('Description/ordre du jour de la réunion'),
+    password: z.string().optional().describe('Mot de passe de la réunion'),
+    settings: z.object({
+      host_video: z.boolean().optional().describe('Activer la vidéo de l\'hôte au démarrage'),
+      participant_video: z.boolean().optional().describe('Activer la vidéo des participants au démarrage'),
+      join_before_host: z.boolean().optional().describe('Permettre aux participants de rejoindre avant l\'hôte'),
+      waiting_room: z.boolean().optional().describe('Activer la salle d\'attente'),
+      mute_upon_entry: z.boolean().optional().describe('Mettre les participants en sourdine à l\'entrée'),
+      approval_type: z.number().optional().describe('Type d\'approbation : 0=automatique, 1=manuelle, 2=pas de registration'),
+      auto_recording: z.string().optional().describe('Enregistrement automatique : "local", "cloud", "none"')
+    }).optional().describe('Paramètres de la réunion')
+  }),
+  func: async (params) => {
+    try {
+      console.log('[Tool] Creating standalone Zoom meeting:', params)
+      const result = await zoomApiClient.createStandaloneMeeting(params)
+      const formatted = zoomToolsFormatter.formatStandaloneCreateResponse(result)
+      return JSON.stringify(formatted)
+    } catch (error) {
+      console.error('[Tool] Error creating standalone Zoom meeting:', error)
+      const formatted = zoomToolsFormatter.formatError(error)
+      return JSON.stringify(formatted)
+    }
+  }
+})
+
+/**
  * Retourne tous les outils Zoom disponibles pour un utilisateur
  * @param {string} userRole - Rôle de l'utilisateur
  * @returns {Array} Liste des outils disponibles
@@ -211,9 +289,10 @@ export function getZoomTools(userRole) {
   console.log('[Tools] Returning Zoom tools for role:', userRole)
 
   return [
-    searchActivityByTitleTool,  // Toujours en premier pour chercher l'ID si nécessaire
-    approveActivityTool,        // Nouvel outil pour approuver + créer Zoom automatiquement
-    createZoomMeetingTool,
+    searchActivityByTitleTool,        // Toujours en premier pour chercher l'ID si nécessaire
+    approveActivityTool,              // Approuver une activité + créer Zoom automatiquement
+    createZoomMeetingTool,            // Créer une réunion Zoom pour une activité existante
+    createStandaloneZoomMeetingTool,  // Créer une réunion Zoom standalone (sans activité)
     deleteZoomMeetingTool,
     editZoomMeetingTool,
     getZoomMeetingDetailsTool

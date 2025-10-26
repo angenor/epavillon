@@ -23,13 +23,23 @@ export const zoomApiClient = {
   },
 
   /**
-   * Supprimer une réunion Zoom d'une activité
-   * @param {string} activityId - ID de l'activité
+   * Supprimer une réunion Zoom
+   * @param {object} identifier - Soit { activityId } pour réunion liée, soit { meetingId } pour standalone
    * @returns {Promise<object>}
    */
-  async deleteMeeting(activityId) {
+  async deleteMeeting(identifier) {
+    const body = {}
+
+    if (identifier.activityId) {
+      body.activity_id = identifier.activityId
+    } else if (identifier.meetingId) {
+      body.meeting_id = identifier.meetingId
+    } else {
+      throw new Error('Either activityId or meetingId must be provided')
+    }
+
     const { data, error } = await supabase.functions.invoke('delete-zoom-meeting', {
-      body: { activity_id: activityId }
+      body
     })
 
     if (error) throw error
@@ -38,16 +48,23 @@ export const zoomApiClient = {
 
   /**
    * Éditer une réunion Zoom existante
-   * @param {string} activityId - ID de l'activité
+   * @param {object} identifier - Soit { activityId } pour réunion liée, soit { meetingId } pour standalone
    * @param {object} updates - Modifications (title, start_time, duration, description)
    * @returns {Promise<object>}
    */
-  async editMeeting(activityId, updates) {
+  async editMeeting(identifier, updates) {
+    const body = { updates }
+
+    if (identifier.activityId) {
+      body.activity_id = identifier.activityId
+    } else if (identifier.meetingId) {
+      body.meeting_id = identifier.meetingId
+    } else {
+      throw new Error('Either activityId or meetingId must be provided')
+    }
+
     const { data, error } = await supabase.functions.invoke('edit-zoom-meeting', {
-      body: {
-        activity_id: activityId,
-        updates: updates
-      }
+      body
     })
 
     if (error) throw error
@@ -130,6 +147,28 @@ export const zoomApiClient = {
         activity_id: activityId,
         approved_by: approvedBy
       }
+    })
+
+    if (error) throw error
+    return data
+  },
+
+  /**
+   * Créer une réunion Zoom standalone (non liée à une activité)
+   * @param {object} meetingData - Données de la réunion
+   * @param {string} meetingData.topic - Sujet de la réunion (obligatoire)
+   * @param {number} meetingData.duration - Durée en minutes (obligatoire)
+   * @param {number} meetingData.type - Type de réunion (1=instant, 2=scheduled, 3=recurring no fixed time, 8=recurring with fixed time)
+   * @param {string} meetingData.start_time - Date/heure de début ISO 8601 (obligatoire pour type 2 et 8)
+   * @param {string} meetingData.timezone - Fuseau horaire (défaut: UTC)
+   * @param {string} meetingData.agenda - Description/ordre du jour (optionnel)
+   * @param {string} meetingData.password - Mot de passe (optionnel)
+   * @param {object} meetingData.settings - Paramètres de la réunion (optionnel)
+   * @returns {Promise<object>}
+   */
+  async createStandaloneMeeting(meetingData) {
+    const { data, error } = await supabase.functions.invoke('create-standalone-zoom-meeting', {
+      body: meetingData
     })
 
     if (error) throw error
