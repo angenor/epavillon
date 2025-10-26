@@ -1,49 +1,30 @@
 /**
  * Composable pour la reconnaissance vocale
- * Utilise @vueuse/core - useSpeechRecognition
- * Détecte automatiquement "à toi" pour envoyer le message
+ * Utilise l'API native SpeechRecognition pour un contrôle total
+ * Accumule les résultats sans réinitialisation
  */
 
-import { ref, computed, watch } from 'vue'
-import { useSpeechRecognition } from '@vueuse/core'
+import { ref, computed, onUnmounted } from 'vue'
 import { useAudioAnalyzer } from './useAudioAnalyzer'
 
 export function useVoiceInput(options = {}) {
   const {
-    lang = 'fr-FR', // Langue par défaut : français
-    continuous = true, // Mode continu pour rester en écoute
-    interimResults = true, // Afficher les résultats intermédiaires
-    onSendTriggered = null // Callback quand "à toi" est détecté
+    lang = 'fr-FR' // Langue par défaut : français
   } = options
 
   // Analyseur audio pour l'animation
   const { audioData, startAnalysis, stopAnalysis } = useAudioAnalyzer()
   const mediaStream = ref(null)
 
-  // Utiliser useSpeechRecognition de @vueuse/core
-  const speech = useSpeechRecognition({
-    lang,
-    continuous,
-    interimResults
-  })
-
-  const {
-    isListening,
-    isSupported,
-    result,
-    start,
-    stop,
-    error: speechError
-  } = speech
-
-  // État d'erreur personnalisé
+  // État de la reconnaissance vocale
+  const isListening = ref(false)
+  const isSupported = ref(false)
+  const result = ref('') // Texte accumulé
   const error = ref(null)
 
-  // Texte accumulé (persiste pendant les pauses)
-  const accumulatedText = ref('')
-
-  // Dernier résultat traité (pour éviter les doublons)
-  const lastProcessedResult = ref('')
+  // Objet SpeechRecognition natif
+  let recognition = null
+  let accumulatedText = '' // Accumulation interne
 
   /**
    * Nettoie le texte en retirant "à toi" et ses variantes
@@ -91,36 +72,107 @@ export function useVoiceInput(options = {}) {
   }
 
   /**
+   * Initialise l'objet SpeechRecognition
+   */
+  const initRecognition = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+
+    if (!SpeechRecognition) {
+      isSupported.value = false
+      return false
+    }
+
+    isSupported.value = true
+    recognition = new SpeechRecognition()
+    recognition.lang = lang
+    recognition.continuous = true // Mode continu
+    recognition.interimResults = true // Résultats intermédiaires
+
+    // Événement : résultat de reconnaissance
+    recognition.onresult = (event) => {
+      let interimTranscript = ''
+      let finalTranscript = ''
+
+      // Parcourir tous les résultats
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript
+
+        if (event.results[i].isFinal) {
+          // Résultat final → ajouter à l'accumulation
+          finalTranscript += transcript + ' '
+        } else {
+          // Résultat intermédiaire
+          interimTranscript += transcript
+        }
+      }
+
+      // Si on a un résultat final, l'accumuler
+      if (finalTranscript) {
+        accumulatedText += finalTranscript
+        console.log('[Voice] Segment final ajouté:', finalTranscript)
+        console.log('[Voice] Texte accumulé:', accumulatedText)
+      }
+
+      // Afficher le texte accumulé + l'intermédiaire en cours
+      result.value = (accumulatedText + interimTranscript).trim()
+    }
+
+    // Événement : erreur
+    recognition.onerror = (event) => {
+      console.error('[Voice] Erreur:', event.error)
+      error.value = `Erreur de reconnaissance vocale: ${event.error}`
+    }
+
+    // Événement : fin inattendue → redémarrer si on écoute toujours
+    recognition.onend = () => {
+      console.log('[Voice] Recognition ended')
+      if (isListening.value) {
+        console.log('[Voice] Redémarrage automatique...')
+        try {
+          recognition.start()
+        } catch (err) {
+          console.error('[Voice] Erreur redémarrage:', err)
+        }
+      }
+    }
+
+    return true
+  }
+
+  /**
    * Démarre l'écoute vocale
    */
   const startListening = async () => {
     try {
       error.value = null
-      accumulatedText.value = ''
-      lastProcessedResult.value = ''
+      accumulatedText = ''
+      result.value = ''
 
-      if (!isSupported.value) {
-        error.value = 'La reconnaissance vocale n\'est pas supportée par votre navigateur'
-        return false
+      // Initialiser si pas déjà fait
+      if (!recognition) {
+        if (!initRecognition()) {
+          error.value = 'La reconnaissance vocale n\'est pas supportée par votre navigateur'
+          return false
+        }
       }
 
       // Demander l'accès au microphone pour l'analyse audio
       try {
         mediaStream.value = await navigator.mediaDevices.getUserMedia({ audio: true })
-
-        // Démarrer l'analyse audio pour l'animation
         await startAnalysis(mediaStream.value, 5) // 5 barres
       } catch (micError) {
         console.warn('Could not access microphone for audio analysis:', micError)
-        // Continuer même si l'analyse audio échoue
       }
 
       // Démarrer la reconnaissance vocale
-      start()
+      isListening.value = true
+      recognition.start()
+      console.log('[Voice] Reconnaissance démarrée')
       return true
     } catch (err) {
       console.error('Error starting voice recognition:', err)
       error.value = err.message || 'Erreur lors du démarrage de la reconnaissance vocale'
+      isListening.value = false
       return false
     }
   }
@@ -130,8 +182,13 @@ export function useVoiceInput(options = {}) {
    */
   const stopListening = () => {
     try {
+      console.log('[Voice] Arrêt de la reconnaissance')
+      isListening.value = false
+
       // Arrêter la reconnaissance vocale
-      stop()
+      if (recognition) {
+        recognition.stop()
+      }
 
       // Arrêter l'analyse audio
       stopAnalysis()
@@ -161,71 +218,37 @@ export function useVoiceInput(options = {}) {
     }
   }
 
-  // Computed pour combiner le texte accumulé avec le résultat actuel
-  const fullText = computed(() => {
-    if (!result.value) {
-      return accumulatedText.value
-    }
-
-    if (accumulatedText.value) {
-      return accumulatedText.value + ' ' + result.value
-    }
-
-    return result.value
-  })
-
-  // Watcher pour détecter les pauses et accumuler les segments
-  watch(result, (newResult, oldResult) => {
-    if (!isListening.value) {
-      return
-    }
-
-    // Quand result devient vide après avoir contenu du texte,
-    // cela signifie qu'un segment est terminé (pause)
-    if (!newResult && oldResult && oldResult.trim()) {
-      // Ajouter le segment terminé à accumulatedText
-      if (accumulatedText.value) {
-        accumulatedText.value += ' ' + oldResult
-      } else {
-        accumulatedText.value = oldResult
-      }
-      console.log('[Voice] Segment sauvegardé:', oldResult)
-      console.log('[Voice] Texte accumulé:', accumulatedText.value)
-    }
-
-    // Vérifier "à toi" dans le texte complet (accumulé + actuel)
-    if (containsAToi(fullText.value)) {
-      console.log('[Voice] "à toi" détecté - envoi du message')
-      const cleaned = removeAToi(fullText.value)
-
-      if (onSendTriggered && cleaned.trim()) {
-        onSendTriggered(cleaned)
-      }
-
-      // Réinitialiser
-      accumulatedText.value = ''
-      lastProcessedResult.value = ''
+  // Nettoyer lors de la destruction
+  onUnmounted(() => {
+    stopListening()
+    if (recognition) {
+      recognition.onresult = null
+      recognition.onerror = null
+      recognition.onend = null
+      recognition = null
     }
   })
 
-  // Message d'erreur formaté
-  const errorMessage = computed(() => {
-    if (error.value) return error.value
-    if (speechError.value) return speechError.value
-    return null
-  })
+  // Vérifier le support au chargement
+  if (window.SpeechRecognition || window.webkitSpeechRecognition) {
+    isSupported.value = true
+  }
 
   return {
     // État
     isSupported,
     isListening,
-    result: fullText, // Retourner le texte complet (accumulé + actuel)
-    error: errorMessage,
+    result, // Texte accumulé (résultats finaux + intermédiaire)
+    error,
     audioData, // Données audio pour l'animation
 
     // Méthodes
     startListening,
     stopListening,
-    toggleListening
+    toggleListening,
+
+    // Fonctions utilitaires pour le parent
+    containsAToi,
+    removeAToi
   }
 }

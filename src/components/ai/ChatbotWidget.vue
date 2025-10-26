@@ -184,26 +184,6 @@ const messagesContainer = ref(null)
 const messageInputRef = ref(null)
 const voiceModeEnabled = ref(false)
 
-// Callback pour l'envoi automatique avec "à toi"
-const handleAutoSend = async (text) => {
-  if (!currentSession.value || !text.trim() || isSending.value) return
-
-  messageInput.value = ''
-
-  try {
-    await sendMessage(text, {
-      language: 'fr',
-      isVoiceMode: true // Indique au chatbot qu'on est en mode vocal
-    })
-
-    // Scroll to bottom après envoi
-    await nextTick()
-    scrollToBottom()
-  } catch (error) {
-    console.error('Error sending voice message:', error)
-    showError(t('chatbot.errorSendingMessage'))
-  }
-}
 
 // Reconnaissance vocale
 const {
@@ -213,13 +193,15 @@ const {
   error: voiceError,
   audioData,
   startListening,
-  stopListening
+  stopListening,
+  containsAToi,
+  removeAToi
 } = useVoiceInput({
   lang: 'fr-FR',
   continuous: true, // Mode continu pour détecter "à toi"
-  interimResults: true,
-  onSendTriggered: handleAutoSend // Callback pour auto-send
+  interimResults: true
 })
+
 
 // Computed
 const canSend = computed(() => {
@@ -267,6 +249,7 @@ const toggleVoiceMode = async () => {
     voiceModeEnabled.value = false
   } else {
     // Activer le mode vocal
+    messageInput.value = '' // Réinitialiser l'input
     voiceModeEnabled.value = true
     const started = await startListening()
     if (started) {
@@ -278,10 +261,45 @@ const toggleVoiceMode = async () => {
   }
 }
 
-// Watcher pour synchroniser le résultat vocal avec l'input
-watch(voiceResult, (newResult) => {
-  if (newResult && newResult.trim()) {
-    messageInput.value = newResult
+// Watcher pour synchroniser le texte vocal avec l'input et détecter "à toi"
+watch(voiceResult, async (newResult) => {
+  if (!isListening.value || !newResult) {
+    return
+  }
+
+  // Afficher le texte accumulé
+  messageInput.value = newResult
+
+  // Vérifier "à toi" dans le texte
+  if (containsAToi(newResult)) {
+    console.log('[ChatbotWidget] "à toi" détecté - envoi du message')
+
+    const cleaned = removeAToi(newResult)
+
+    if (cleaned.trim() && !isSending.value && currentSession.value) {
+      const textToSend = cleaned
+      messageInput.value = ''
+
+      try {
+        await sendMessage(textToSend, {
+          language: 'fr',
+          isVoiceMode: true
+        })
+
+        await nextTick()
+        scrollToBottom()
+
+        // Redémarrer l'écoute après l'envoi
+        if (voiceModeEnabled.value) {
+          stopListening()
+          await new Promise(resolve => setTimeout(resolve, 100))
+          startListening()
+        }
+      } catch (error) {
+        console.error('Error sending voice message:', error)
+        showError(t('chatbot.errorSendingMessage'))
+      }
+    }
   }
 })
 
