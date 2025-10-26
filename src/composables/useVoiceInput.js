@@ -39,8 +39,11 @@ export function useVoiceInput(options = {}) {
   // État d'erreur personnalisé
   const error = ref(null)
 
-  // Texte nettoyé (sans "à toi")
-  const cleanedResult = ref('')
+  // Texte accumulé (persiste pendant les pauses)
+  const accumulatedText = ref('')
+
+  // Dernier résultat traité (pour éviter les doublons)
+  const lastProcessedResult = ref('')
 
   /**
    * Nettoie le texte en retirant "à toi" et ses variantes
@@ -93,7 +96,8 @@ export function useVoiceInput(options = {}) {
   const startListening = async () => {
     try {
       error.value = null
-      cleanedResult.value = ''
+      accumulatedText.value = ''
+      lastProcessedResult.value = ''
 
       if (!isSupported.value) {
         error.value = 'La reconnaissance vocale n\'est pas supportée par votre navigateur'
@@ -157,33 +161,50 @@ export function useVoiceInput(options = {}) {
     }
   }
 
-  // Watcher pour détecter "à toi" dans le résultat
-  watch(result, (newResult) => {
-    if (!newResult) {
-      cleanedResult.value = ''
+  // Computed pour combiner le texte accumulé avec le résultat actuel
+  const fullText = computed(() => {
+    if (!result.value) {
+      return accumulatedText.value
+    }
+
+    if (accumulatedText.value) {
+      return accumulatedText.value + ' ' + result.value
+    }
+
+    return result.value
+  })
+
+  // Watcher pour détecter les pauses et accumuler les segments
+  watch(result, (newResult, oldResult) => {
+    if (!isListening.value) {
       return
     }
 
-    // Vérifier si "à toi" est détecté
-    if (containsAToi(newResult)) {
+    // Quand result devient vide après avoir contenu du texte,
+    // cela signifie qu'un segment est terminé (pause)
+    if (!newResult && oldResult && oldResult.trim()) {
+      // Ajouter le segment terminé à accumulatedText
+      if (accumulatedText.value) {
+        accumulatedText.value += ' ' + oldResult
+      } else {
+        accumulatedText.value = oldResult
+      }
+      console.log('[Voice] Segment sauvegardé:', oldResult)
+      console.log('[Voice] Texte accumulé:', accumulatedText.value)
+    }
+
+    // Vérifier "à toi" dans le texte complet (accumulé + actuel)
+    if (containsAToi(fullText.value)) {
       console.log('[Voice] "à toi" détecté - envoi du message')
+      const cleaned = removeAToi(fullText.value)
 
-      // Nettoyer le texte
-      const cleaned = removeAToi(newResult)
-      cleanedResult.value = cleaned
-
-      // Déclencher l'envoi
       if (onSendTriggered && cleaned.trim()) {
         onSendTriggered(cleaned)
       }
 
-      // Réinitialiser pour la prochaine saisie
-      setTimeout(() => {
-        cleanedResult.value = ''
-      }, 100)
-    } else {
-      // Mettre à jour le résultat nettoyé (sans "à toi" partiel)
-      cleanedResult.value = newResult
+      // Réinitialiser
+      accumulatedText.value = ''
+      lastProcessedResult.value = ''
     }
   })
 
@@ -198,7 +219,7 @@ export function useVoiceInput(options = {}) {
     // État
     isSupported,
     isListening,
-    result: cleanedResult, // Retourner le résultat nettoyé
+    result: fullText, // Retourner le texte complet (accumulé + actuel)
     error: errorMessage,
     audioData, // Données audio pour l'animation
 
