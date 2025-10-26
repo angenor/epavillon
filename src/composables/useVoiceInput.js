@@ -125,14 +125,30 @@ export function useVoiceInput(options = {}) {
 
     // Événement : fin inattendue → redémarrer si on écoute toujours
     recognition.onend = () => {
-      console.log('[Voice] Recognition ended')
+      console.log('[Voice] Recognition ended, isListening:', isListening.value)
+
+      // Redémarrer seulement si on veut vraiment continuer à écouter
       if (isListening.value) {
-        console.log('[Voice] Redémarrage automatique...')
-        try {
-          recognition.start()
-        } catch (err) {
-          console.error('[Voice] Erreur redémarrage:', err)
-        }
+        console.log('[Voice] Tentative de redémarrage automatique...')
+
+        // Petit délai pour éviter les conflits
+        setTimeout(() => {
+          if (isListening.value) {
+            try {
+              recognition.start()
+              console.log('[Voice] Redémarrage réussi')
+            } catch (err) {
+              console.error('[Voice] Erreur redémarrage:', err)
+              // Si le redémarrage échoue, marquer comme arrêté
+              if (err.message.includes('already started')) {
+                console.log('[Voice] La reconnaissance est déjà active')
+              } else {
+                isListening.value = false
+                error.value = 'La reconnaissance vocale s\'est arrêtée de manière inattendue'
+              }
+            }
+          }
+        }, 100)
       }
     }
 
@@ -144,6 +160,12 @@ export function useVoiceInput(options = {}) {
    */
   const startListening = async () => {
     try {
+      // Si déjà en écoute, ne rien faire
+      if (isListening.value) {
+        console.log('[Voice] Déjà en cours d\'écoute')
+        return true
+      }
+
       error.value = null
       accumulatedText = ''
       result.value = ''
@@ -158,8 +180,10 @@ export function useVoiceInput(options = {}) {
 
       // Demander l'accès au microphone pour l'analyse audio
       try {
-        mediaStream.value = await navigator.mediaDevices.getUserMedia({ audio: true })
-        await startAnalysis(mediaStream.value, 5) // 5 barres
+        if (!mediaStream.value) {
+          mediaStream.value = await navigator.mediaDevices.getUserMedia({ audio: true })
+          await startAnalysis(mediaStream.value, 5) // 5 barres
+        }
       } catch (micError) {
         console.warn('Could not access microphone for audio analysis:', micError)
       }
@@ -218,6 +242,16 @@ export function useVoiceInput(options = {}) {
     }
   }
 
+  /**
+   * Réinitialise l'accumulateur sans arrêter l'écoute
+   * Utile après l'envoi d'un message
+   */
+  const resetAccumulator = () => {
+    console.log('[Voice] Réinitialisation de l\'accumulateur')
+    accumulatedText = ''
+    result.value = ''
+  }
+
   // Nettoyer lors de la destruction
   onUnmounted(() => {
     stopListening()
@@ -246,6 +280,7 @@ export function useVoiceInput(options = {}) {
     startListening,
     stopListening,
     toggleListening,
+    resetAccumulator,
 
     // Fonctions utilitaires pour le parent
     containsAToi,

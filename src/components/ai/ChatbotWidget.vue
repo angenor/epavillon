@@ -194,6 +194,7 @@ const {
   audioData,
   startListening,
   stopListening,
+  resetAccumulator,
   containsAToi,
   removeAToi
 } = useVoiceInput({
@@ -289,12 +290,9 @@ watch(voiceResult, async (newResult) => {
         await nextTick()
         scrollToBottom()
 
-        // Redémarrer l'écoute après l'envoi
-        if (voiceModeEnabled.value) {
-          stopListening()
-          await new Promise(resolve => setTimeout(resolve, 100))
-          startListening()
-        }
+        // Réinitialiser l'accumulateur pour la prochaine phrase
+        // SANS arrêter/redémarrer la reconnaissance
+        resetAccumulator()
       } catch (error) {
         console.error('Error sending voice message:', error)
         showError(t('chatbot.errorSendingMessage'))
