@@ -136,6 +136,48 @@ export const zoomApiClient = {
   },
 
   /**
+   * Rechercher des réunions Zoom par titre (topic)
+   * @param {string} query - Titre ou partie du titre à rechercher
+   * @param {number} limit - Nombre maximum de résultats (défaut: 10)
+   * @returns {Promise<object>}
+   */
+  async searchZoomMeetings(query, limit = 10) {
+    try {
+      const { data, error } = await supabase
+        .from('zoom_meetings')
+        .select(`
+          id,
+          meeting_id,
+          topic,
+          start_time,
+          duration,
+          join_url,
+          registration_url,
+          password,
+          created_at,
+          activities!zoom_meeting_id (
+            id,
+            title
+          )
+        `)
+        .ilike('topic', `%${query}%`)
+        .order('created_at', { ascending: false })
+        .limit(limit)
+
+      if (error) throw error
+
+      return {
+        success: true,
+        count: data?.length || 0,
+        meetings: data || []
+      }
+    } catch (error) {
+      console.error('[zoomApiClient] Error searching zoom meetings:', error)
+      throw error
+    }
+  },
+
+  /**
    * Approuver une activité et créer automatiquement une réunion Zoom
    * @param {string} activityId - ID de l'activité à approuver
    * @param {string} approvedBy - ID de l'utilisateur qui approuve (optionnel)

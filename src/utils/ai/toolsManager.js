@@ -60,6 +60,64 @@ export const searchActivityByTitleTool = new DynamicStructuredTool({
 })
 
 /**
+ * Outil pour rechercher des réunions Zoom par titre
+ */
+export const searchZoomMeetingByTitleTool = new DynamicStructuredTool({
+  name: 'search_zoom_meeting_by_title',
+  description: 'Recherche des réunions Zoom par titre/topic (partiel ou complet) dans la table zoom_meetings. Utilise cet outil pour trouver le meeting_id d\'une réunion Zoom quand l\'utilisateur donne un titre. Retourne les réunions avec leur meeting_id, topic, date, et activity_id associé si applicable.',
+  schema: z.object({
+    query: z.string().describe('Titre (topic) ou partie du titre de la réunion Zoom à rechercher')
+  }),
+  func: async ({ query }) => {
+    try {
+      console.log('[Tool] Searching Zoom meetings with query:', query)
+      const result = await zoomApiClient.searchZoomMeetings(query, 10)
+
+      if (!result.success || result.count === 0) {
+        return JSON.stringify({
+          success: false,
+          message: `Aucune réunion Zoom trouvée avec le titre "${query}"`,
+          meetings: []
+        })
+      }
+
+      // Formater les résultats de manière concise
+      const meetings = result.meetings.map(meeting => {
+        // activities est un tableau car c'est une relation inversée
+        const linkedActivity = meeting.activities && meeting.activities.length > 0 ? meeting.activities[0] : null
+
+        return {
+          meeting_id: meeting.meeting_id,
+          topic: meeting.topic,
+          start_time: meeting.start_time,
+          duration: meeting.duration,
+          registration_url: meeting.registration_url,
+          password: meeting.password,
+          activity_id: linkedActivity?.id || null,
+          activity_title: linkedActivity?.title || 'Standalone'
+        }
+      })
+
+      return JSON.stringify({
+        success: true,
+        count: result.count,
+        meetings: meetings,
+        message: result.count === 1
+          ? `Réunion Zoom trouvée : "${meetings[0].topic}" (Meeting ID: ${meetings[0].meeting_id})`
+          : `${result.count} réunions Zoom trouvées avec le titre "${query}". Demande à l'utilisateur de préciser laquelle il souhaite.`
+      })
+    } catch (error) {
+      console.error('[Tool] Error searching Zoom meetings:', error)
+      return JSON.stringify({
+        success: false,
+        error: error.message,
+        message: `Erreur lors de la recherche de réunions Zoom : ${error.message}`
+      })
+    }
+  }
+})
+
+/**
  * Outil pour créer une réunion Zoom
  */
 export const createZoomMeetingTool = new DynamicStructuredTool({
@@ -289,7 +347,8 @@ export function getZoomTools(userRole) {
   console.log('[Tools] Returning Zoom tools for role:', userRole)
 
   return [
-    searchActivityByTitleTool,        // Toujours en premier pour chercher l'ID si nécessaire
+    searchActivityByTitleTool,        // Chercher l'ID d'une activité par titre
+    searchZoomMeetingByTitleTool,     // Chercher le meeting_id d'une réunion Zoom par titre
     approveActivityTool,              // Approuver une activité + créer Zoom automatiquement
     createZoomMeetingTool,            // Créer une réunion Zoom pour une activité existante
     createStandaloneZoomMeetingTool,  // Créer une réunion Zoom standalone (sans activité)
