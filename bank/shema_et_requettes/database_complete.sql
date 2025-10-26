@@ -314,6 +314,7 @@ CREATE TABLE public.zoom_meetings (
     registration_url TEXT,
     start_url TEXT,
     join_url TEXT,
+    banner_url TEXT,
     password TEXT,
     created_by UUID REFERENCES public.users(id),
     created_at TIMESTAMPTZ DEFAULT NOW()
