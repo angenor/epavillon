@@ -91,38 +91,53 @@
         </div>
       </div>
 
+      <!-- Voice Mode Toggle -->
+      <div v-if="voiceSupported && currentSession" class="mb-3 flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+        <div class="flex items-center gap-3">
+          <font-awesome-icon icon="microphone" class="text-blue-600 dark:text-blue-400" />
+          <div>
+            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Mode audio</p>
+            <p v-if="voiceModeEnabled" class="text-xs text-gray-600 dark:text-gray-400">
+              Dites "à toi" pour envoyer
+            </p>
+          </div>
+        </div>
+
+        <!-- Switch Toggle -->
+        <button
+          type="button"
+          @click="toggleVoiceMode"
+          :class="[
+            'relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer',
+            voiceModeEnabled ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
+          ]"
+        >
+          <span
+            :class="[
+              'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
+              voiceModeEnabled ? 'translate-x-6' : 'translate-x-1'
+            ]"
+          ></span>
+        </button>
+      </div>
+
+      <!-- Sound Wave Animation -->
+      <SoundWaveAnimation v-if="isListening" />
+
       <form @submit.prevent="handleSendMessage" class="flex gap-3">
-        <div class="flex-1 relative">
+        <div class="flex-1">
           <textarea
             v-model="messageInput"
             ref="messageInputRef"
-            :placeholder="isListening ? 'Écoute en cours...' : t('chatbot.typeMessage')"
+            :placeholder="isListening ? '🎤 Écoute en cours... Dites \u0022à toi\u0022 pour envoyer' : t('chatbot.typeMessage')"
             :disabled="!currentSession || isSending"
             :class="[
-              'w-full px-4 py-3 pr-12 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none disabled:opacity-50 disabled:cursor-not-allowed',
-              isListening ? 'ring-2 ring-red-500 border-red-500' : ''
+              'w-full px-4 py-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none disabled:opacity-50 disabled:cursor-not-allowed transition-all',
+              isListening ? 'ring-2 ring-blue-500 border-blue-500 shadow-lg' : ''
             ]"
             rows="3"
             @keydown.enter.exact.prevent="handleSendMessage"
           ></textarea>
-
-          <!-- Bouton microphone -->
-          <button
-            v-if="voiceSupported"
-            type="button"
-            @click="handleMicClick"
-            :disabled="!currentSession || isSending"
-            :class="[
-              'absolute right-2 bottom-2 p-2 rounded-full transition-all cursor-pointer',
-              isListening
-                ? 'bg-red-500 text-white hover:bg-red-600 animate-pulse'
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600',
-              (!currentSession || isSending) ? 'opacity-50 cursor-not-allowed' : ''
-            ]"
-            :title="isListening ? 'Arrêter l\'enregistrement' : 'Activer la reconnaissance vocale'"
-          >
-            <font-awesome-icon :icon="isListening ? 'stop' : 'microphone'" class="text-lg" />
-          </button>
         </div>
 
         <button
@@ -152,9 +167,10 @@ import { useChatbot } from '@/composables/ai/useChatbot'
 import { useToast } from '@/composables/useToast'
 import { useVoiceInput } from '@/composables/useVoiceInput'
 import ChatMessage from './ChatMessage.vue'
+import SoundWaveAnimation from './SoundWaveAnimation.vue'
 
 const { t } = useI18n()
-const { error: showError, success: showSuccess } = useToast()
+const { error: showError, info: showInfo } = useToast()
 const {
   currentSession,
   messages,
@@ -166,6 +182,28 @@ const {
 const messageInput = ref('')
 const messagesContainer = ref(null)
 const messageInputRef = ref(null)
+const voiceModeEnabled = ref(false)
+
+// Callback pour l'envoi automatique avec "à toi"
+const handleAutoSend = async (text) => {
+  if (!currentSession.value || !text.trim() || isSending.value) return
+
+  messageInput.value = ''
+
+  try {
+    await sendMessage(text, {
+      language: 'fr',
+      isVoiceMode: true // Indique au chatbot qu'on est en mode vocal
+    })
+
+    // Scroll to bottom après envoi
+    await nextTick()
+    scrollToBottom()
+  } catch (error) {
+    console.error('Error sending voice message:', error)
+    showError(t('chatbot.errorSendingMessage'))
+  }
+}
 
 // Reconnaissance vocale
 const {
@@ -173,11 +211,13 @@ const {
   isListening,
   result: voiceResult,
   error: voiceError,
-  toggleListening
+  startListening,
+  stopListening
 } = useVoiceInput({
   lang: 'fr-FR',
-  continuous: false,
-  interimResults: true
+  continuous: true, // Mode continu pour détecter "à toi"
+  interimResults: true,
+  onSendTriggered: handleAutoSend // Callback pour auto-send
 })
 
 // Computed
@@ -212,24 +252,32 @@ const scrollToBottom = () => {
   }
 }
 
-// Gestion de la reconnaissance vocale
-const handleMicClick = async () => {
-  if (!voiceSupported.value) {
-    showError('La reconnaissance vocale n\'est pas supportée par votre navigateur')
+// Basculer le mode vocal
+const toggleVoiceMode = async () => {
+  // Vérifier la compatibilité seulement lors de l'activation
+  if (!voiceModeEnabled.value && !voiceSupported.value) {
+    showError('Votre navigateur ne supporte pas la reconnaissance vocale. Utilisez Chrome, Edge ou Safari.')
     return
   }
 
-  if (isListening.value) {
-    toggleListening()
+  if (voiceModeEnabled.value) {
+    // Désactiver le mode vocal
+    stopListening()
+    voiceModeEnabled.value = false
   } else {
-    const started = await toggleListening()
+    // Activer le mode vocal
+    voiceModeEnabled.value = true
+    const started = await startListening()
     if (started) {
-      showSuccess('Reconnaissance vocale activée - Parlez maintenant')
+      showInfo('Mode audio activé. Parlez et dites "à toi" pour envoyer votre message.')
+    } else {
+      voiceModeEnabled.value = false
+      showError('Impossible d\'activer la reconnaissance vocale.')
     }
   }
 }
 
-// Watcher pour le résultat de la reconnaissance vocale
+// Watcher pour synchroniser le résultat vocal avec l'input
 watch(voiceResult, (newResult) => {
   if (newResult && newResult.trim()) {
     messageInput.value = newResult
