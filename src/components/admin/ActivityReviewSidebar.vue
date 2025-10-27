@@ -476,6 +476,139 @@
               </div>
             </div>
           </div>
+
+          <!-- Section "Non notées" -->
+          <div v-if="activitiesNotRated.length > 0" class="mt-4">
+            <div class="sticky top-0 bg-gradient-to-r from-gray-500 to-gray-600 dark:from-gray-600 dark:to-gray-700 text-white px-4 py-2.5 mb-2 rounded-lg shadow-md z-10 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span class="font-semibold text-sm uppercase tracking-wide">Non notées</span>
+              </div>
+              <span class="bg-white/20 text-white px-2 py-0.5 rounded-full text-xs font-bold">{{ activitiesNotRated.length }}</span>
+            </div>
+            <div class="space-y-2">
+              <div
+                v-for="activity in activitiesNotRated"
+                :key="activity.id"
+                :ref="el => setActivityRef(activity.id, el)"
+                @click="selectActivity(activity.id)"
+                :class="[
+                  'relative p-3 rounded-lg cursor-pointer transition-all duration-200 border-l-4 border-gray-400',
+                  String(activity.id) === String(currentActivityId)
+                    ? 'bg-orange-50 dark:bg-orange-900/20 border-r border-t border-b border-orange-300 dark:border-orange-700 shadow-md'
+                    : 'bg-white dark:bg-gray-800 border-r border-t border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:shadow-sm'
+                ]"
+              >
+                <!-- Contenu -->
+                <div class="flex items-start space-x-3 mt-1">
+                  <!-- Logo de l'organisation avec indicateur de vue et badge de commentaires -->
+                  <div class="flex-shrink-0 flex flex-col items-center gap-1">
+                    <div class="relative">
+                      <img
+                        v-if="activity.organization?.logo_url"
+                        :src="activity.organization.logo_url"
+                        :alt="activity.organization.name"
+                        :class="[
+                          'w-10 h-10 rounded object-contain bg-gray-100 dark:bg-gray-700 p-1',
+                          hasViewedActivity(activity.id) ? 'opacity-60' : ''
+                        ]"
+                      >
+                      <div
+                        v-else
+                        :class="[
+                          'w-10 h-10 rounded bg-gray-200 dark:bg-gray-600 flex items-center justify-center',
+                          hasViewedActivity(activity.id) ? 'opacity-60' : ''
+                        ]"
+                      >
+                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                      </div>
+
+                      <!-- Badge "vue" -->
+                      <div
+                        v-if="hasViewedActivity(activity.id)"
+                        class="absolute -top-1 -right-1 bg-blue-500 dark:bg-blue-600 rounded-full p-0.5"
+                        title="Activité déjà vue"
+                      >
+                        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                      </div>
+                    </div>
+
+                    <!-- Badges sous le logo -->
+                    <div class="flex flex-col gap-1">
+                      <!-- Badge de commentaires -->
+                      <div v-if="activity.comments_count > 0" class="flex items-center bg-red-500 text-white rounded-full px-1.5 py-0.5">
+                        <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                        </svg>
+                        <span class="text-xs font-semibold">{{ activity.comments_count }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Informations -->
+                  <div class="flex-1 min-w-0">
+                    <h3 class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">
+                      {{ activity.title }}
+                    </h3>
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 truncate">
+                      {{ activity.organization?.name || 'Organisation inconnue' }}
+                      <span v-if="activity.organization?.acronym" class="text-gray-500">
+                        ({{ activity.organization.acronym }})
+                      </span>
+                    </p>
+
+                    <!-- Date, pays et statut sur une ligne -->
+                    <div class="flex items-center justify-between mt-2">
+                      <div class="flex items-center space-x-2">
+                        <!-- Date -->
+                        <span class="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                          {{ formatDate(activity.created_at) }}
+                        </span>
+
+                        <!-- Pays avec drapeau -->
+                        <div v-if="activity.organization?.country" class="flex items-center">
+                          <span class="text-xs text-gray-400 dark:text-gray-500">•</span>
+                          <img
+                            v-if="activity.organization.country.code"
+                            :src="`https://flagcdn.com/w20/${activity.organization.country.code.toLowerCase()}.png`"
+                            :alt="activity.organization.country.name_fr"
+                            class="w-4 h-3 ml-2 mr-1 object-cover rounded-sm"
+                            loading="lazy"
+                          >
+                          <span class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[60px]">
+                            {{ activity.organization.country.name_fr }}
+                          </span>
+                        </div>
+                      </div>
+
+                      <!-- Statut -->
+                      <span
+                        :class="[
+                          'px-2 py-0.5 text-xs font-medium rounded-full flex-shrink-0',
+                          getStatusClass(activity.validation_status)
+                        ]"
+                      >
+                        {{ getStatusLabel(activity.validation_status) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Indicateur d'activité courante -->
+                <div
+                  v-if="String(activity.id) === String(currentActivityId)"
+                  class="absolute inset-y-0 left-0 w-1 bg-orange-500 rounded-l-lg"
+                ></div>
+              </div>
+            </div>
+          </div>
         </template>
 
         <!-- Affichage classique sans sections -->
@@ -738,22 +871,30 @@ const filteredActivities = computed(() => {
 
   // Filtrer par révisionniste
   if (filterRevisionist.value) {
-    result = result.filter(a => {
-      // Vérifier si le révisionniste sélectionné a noté cette activité
-      return a.all_ratings?.some(rating => rating.revisionniste_id === filterRevisionist.value)
-    })
-    // Ajouter une propriété temporaire pour le tri
+    // Ajouter une propriété temporaire pour identifier les activités notées
     result = result.map(activity => {
       const revisionistRating = activity.all_ratings?.find(
         rating => rating.revisionniste_id === filterRevisionist.value
       )
       return {
         ...activity,
-        selected_revisionist_rating: revisionistRating?.rating || 0
+        selected_revisionist_rating: revisionistRating?.rating || null,
+        has_revisionist_rating: !!revisionistRating
       }
     })
-    // Trier par note décroissante du révisionniste sélectionné
-    result.sort((a, b) => (b.selected_revisionist_rating || 0) - (a.selected_revisionist_rating || 0))
+    // Trier : les notées d'abord (par note décroissante), puis les non notées
+    result.sort((a, b) => {
+      // Si a est noté et b non, a vient avant
+      if (a.has_revisionist_rating && !b.has_revisionist_rating) return -1
+      // Si b est noté et a non, b vient avant
+      if (!a.has_revisionist_rating && b.has_revisionist_rating) return 1
+      // Si les deux sont notés, trier par note décroissante
+      if (a.has_revisionist_rating && b.has_revisionist_rating) {
+        return (b.selected_revisionist_rating || 0) - (a.selected_revisionist_rating || 0)
+      }
+      // Si aucun n'est noté, garder l'ordre par date de création
+      return new Date(b.created_at) - new Date(a.created_at)
+    })
   }
   // Filtrer par commentaires non lus
   else if (filterByComments.value) {
@@ -797,13 +938,19 @@ const hasActiveFilters = computed(() => {
 // Computed pour les activités à valider (note >= 10)
 const activitiesToValidate = computed(() => {
   if (!filterRevisionist.value) return []
-  return filteredActivities.value.filter(a => a.selected_revisionist_rating >= 10)
+  return filteredActivities.value.filter(a => a.has_revisionist_rating && a.selected_revisionist_rating >= 10)
 })
 
 // Computed pour les activités à rejeter (note < 10)
 const activitiesToReject = computed(() => {
   if (!filterRevisionist.value) return []
-  return filteredActivities.value.filter(a => a.selected_revisionist_rating < 10)
+  return filteredActivities.value.filter(a => a.has_revisionist_rating && a.selected_revisionist_rating < 10)
+})
+
+// Computed pour les activités non notées par le révisionniste sélectionné
+const activitiesNotRated = computed(() => {
+  if (!filterRevisionist.value) return []
+  return filteredActivities.value.filter(a => !a.has_revisionist_rating)
 })
 
 const currentIndex = computed(() => {
