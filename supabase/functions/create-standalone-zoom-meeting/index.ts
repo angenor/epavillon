@@ -156,6 +156,23 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Récupérer l'utilisateur authentifié
+    const authHeader = req.headers.get('Authorization');
+    let currentUserId = null;
+
+    if (authHeader && SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
+      const jwt = authHeader.replace('Bearer ', '');
+      const supabaseAuthClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+      const { data: { user }, error: userError } = await supabaseAuthClient.auth.getUser(jwt);
+
+      if (!userError && user) {
+        currentUserId = user.id;
+        console.log('User authenticated:', currentUserId);
+      } else {
+        console.warn('Failed to authenticate user:', userError);
+      }
+    }
+
     // Parser le payload
     let payload;
     try {
@@ -282,12 +299,14 @@ Deno.serve(async (req) => {
           meeting_id: zoomMeeting.meeting_id,
           join_url: zoomMeeting.join_url,
           start_url: zoomMeeting.start_url,
+          registration_url: zoomMeeting.registration_url,
           password: zoomMeeting.password,
           host_email: zoomMeeting.host_email,
           topic: zoomMeeting.topic,
           start_time: zoomMeeting.start_time,
           duration: zoomMeeting.duration,
-          timezone: zoomMeeting.timezone
+          timezone: zoomMeeting.timezone,
+          created_by: currentUserId
           // Note: Réunion standalone - aucune activité ne référence ce zoom_meetings.id
         })
         .select()

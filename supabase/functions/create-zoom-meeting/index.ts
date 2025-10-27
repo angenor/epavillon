@@ -235,6 +235,23 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Récupérer l'utilisateur authentifié
+    const authHeader = req.headers.get('Authorization');
+    let currentUserId = null;
+
+    if (authHeader) {
+      const jwt = authHeader.replace('Bearer ', '');
+      const supabaseAuthClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+      const { data: { user }, error: userError } = await supabaseAuthClient.auth.getUser(jwt);
+
+      if (!userError && user) {
+        currentUserId = user.id;
+        console.log('User authenticated:', currentUserId);
+      } else {
+        console.warn('Failed to authenticate user:', userError);
+      }
+    }
+
     // Parser le payload
     let payload;
     try {
@@ -405,7 +422,11 @@ Deno.serve(async (req) => {
         start_url: zoomMeeting.start_url,
         password: zoomMeeting.password,
         registration_url: zoomMeeting.registration_url,
-        created_by: null // Créé automatiquement par le système
+        topic: meetingTitle,
+        start_time: startDate,
+        duration: duration,
+        timezone: 'UTC',
+        created_by: currentUserId // ID de l'utilisateur qui crée la réunion (null si système)
       })
       .select()
       .single();
