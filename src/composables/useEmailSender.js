@@ -102,7 +102,7 @@ Nous avons le plaisir de vous informer que votre activité a été sélectionné
 Organisation : {organization_name}
 Titre de l'activité : {activity_name}
 Date proposée : __ACTIVITY_FINAL_DATE__
-Heure proposée : __ACTIVITY_FINAL_TIME__
+Heure proposée : __ACTIVITY_FINAL_START_TIME__ - __ACTIVITY_FINAL_END_TIME__
 
 Merci de confirmer par retour de courriel que la date et le créneau vous conviennent. Advenant que vous avez des contraintes, merci de noter que les horaires qui vous sont proposés sont difficilement modifiables, en raison de créneaux alternatifs limités.
 

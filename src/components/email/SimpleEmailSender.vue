@@ -1072,8 +1072,23 @@ export default {
 
       // Cas spécial pour le template "pavilion_confirmation"
       // Remplacer les placeholders par les vraies valeurs de l'activité si disponibles
-      if (template.id === 'pavilion_confirmation' && emailData.value.activity_id) {
+      if (template.id === 'pavilion_confirmation' && emailData.value.activity_id && emailData.value.event_id) {
         try {
+          // Récupérer le timezone de l'événement
+          const { data: eventData, error: eventError } = await supabase
+            .from('events')
+            .select('timezone')
+            .eq('id', emailData.value.event_id)
+            .single()
+
+          if (eventError) {
+            console.error('Erreur lors de la récupération du timezone de l\'événement:', eventError)
+            return
+          }
+
+          const eventTimezone = eventData?.timezone || 'UTC'
+
+          // Récupérer les dates de l'activité
           const { data: activityData, error: activityError } = await supabase
             .from('activities')
             .select('final_start_date, final_end_date')
@@ -1083,27 +1098,48 @@ export default {
           if (!activityError && activityData) {
             let content = emailData.value.content
 
-            // Remplacer la date proposée
+            // Remplacer la date et les heures proposées
             if (activityData.final_start_date) {
               const finalStartDate = new Date(activityData.final_start_date)
+
+              // Formater la date avec le fuseau horaire de l'événement
               const finalDate = finalStartDate.toLocaleDateString('fr-FR', {
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
-                day: 'numeric'
+                day: 'numeric',
+                timeZone: eventTimezone
               })
-              const finalTime = finalStartDate.toLocaleTimeString('fr-FR', {
+
+              // Formater l'heure de début avec le fuseau horaire de l'événement
+              const startTime = finalStartDate.toLocaleTimeString('fr-FR', {
                 hour: '2-digit',
                 minute: '2-digit',
-                hour12: false
+                hour12: false,
+                timeZone: eventTimezone
               })
 
               content = content.replace('__ACTIVITY_FINAL_DATE__', finalDate)
-              content = content.replace('__ACTIVITY_FINAL_TIME__', finalTime)
+              content = content.replace('__ACTIVITY_FINAL_START_TIME__', startTime)
+
+              // Formater l'heure de fin si disponible
+              if (activityData.final_end_date) {
+                const finalEndDate = new Date(activityData.final_end_date)
+                const endTime = finalEndDate.toLocaleTimeString('fr-FR', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false,
+                  timeZone: eventTimezone
+                })
+                content = content.replace('__ACTIVITY_FINAL_END_TIME__', endTime)
+              } else {
+                content = content.replace('__ACTIVITY_FINAL_END_TIME__', '….')
+              }
             } else {
               // Si pas de final_start_date, laisser des points de suspension
               content = content.replace('__ACTIVITY_FINAL_DATE__', '….')
-              content = content.replace('__ACTIVITY_FINAL_TIME__', '….')
+              content = content.replace('__ACTIVITY_FINAL_START_TIME__', '….')
+              content = content.replace('__ACTIVITY_FINAL_END_TIME__', '….')
             }
 
             emailData.value.content = content
