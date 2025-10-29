@@ -1074,10 +1074,10 @@ export default {
       // Remplacer les placeholders par les vraies valeurs de l'activité si disponibles
       if (template.id === 'pavilion_confirmation' && emailData.value.activity_id && emailData.value.event_id) {
         try {
-          // Récupérer le timezone de l'événement
+          // Récupérer le timezone et la ville de l'événement
           const { data: eventData, error: eventError } = await supabase
             .from('events')
-            .select('timezone')
+            .select('timezone, city')
             .eq('id', emailData.value.event_id)
             .single()
 
@@ -1087,6 +1087,32 @@ export default {
           }
 
           const eventTimezone = eventData?.timezone || 'UTC'
+          const eventCity = eventData?.city || ''
+
+          // Calculer l'offset GMT du timezone
+          const getTimezoneOffset = (timezone) => {
+            try {
+              const now = new Date()
+              const formatter = new Intl.DateTimeFormat('en-US', {
+                timeZone: timezone,
+                timeZoneName: 'longOffset'
+              })
+              const parts = formatter.formatToParts(now)
+              const timeZoneName = parts.find(part => part.type === 'timeZoneName')?.value || ''
+
+              // Extraire l'offset (ex: "GMT-3" ou "GMT+5:30")
+              const match = timeZoneName.match(/GMT([+-]\d{1,2}(?::\d{2})?)/)
+              if (match) {
+                return `(GMT ${match[1]})`
+              }
+              return '(GMT+0)'
+            } catch (err) {
+              console.error('Erreur lors du calcul de l\'offset GMT:', err)
+              return '(GMT+0)'
+            }
+          }
+
+          const timezoneOffset = getTimezoneOffset(eventTimezone)
 
           // Récupérer les dates de l'activité et le nom de l'organisation
           const { data: activityData, error: activityError } = await supabase
@@ -1101,6 +1127,10 @@ export default {
             // Remplacer le nom de l'organisation
             const organizationName = activityData.organizations?.name || '….'
             content = content.replace('__ORGANIZATION_NAME__', organizationName)
+
+            // Remplacer la ville et le fuseau horaire
+            content = content.replace('__EVENT_CITY__', eventCity)
+            content = content.replace('__EVENT_TIMEZONE_OFFSET__', timezoneOffset)
 
             // Remplacer la date et les heures proposées
             if (activityData.final_start_date) {
