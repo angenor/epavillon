@@ -95,7 +95,7 @@ L'équipe IFDD - Organisation de {event_name}`
       id: 'pavilion_confirmation',
       name: 'Confirmation Pavillon de la Francophonie',
       subject: 'Votre évènement au Pavillon de la Francophonie - Action requise avant le 30 octobre 2025',
-      content: `Madame, Monsieur,
+      content: `Bonjour {recipient_name},
 
 Nous avons le plaisir de vous informer que votre activité a été sélectionnée par notre comité de sélection pour être organisée par vous au Pavillon de la Francophonie, à Belém au Brésil lors de la 30e Conférence des Nations Unies sur le climat (CdP30), à la date et à l'horaire suivants :
 
