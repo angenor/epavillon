@@ -123,7 +123,7 @@ Nous avons le plaisir de vous informer que votre activité a été sélectionné
 Organisation : __ORGANIZATION_NAME__
 Titre de l'activité : {activity_name}
 Date proposée : Mercredi 12 novembre 2025
-Heure proposée : 09h00 - 17h00
+Heure proposée : 09h00 - 17h00 (heure de Belém (GMT - 3))
 
 En attendant de vous partager prochainement le programme de la journée jeunesse intégrant votre activité, nous vous prions de bien vouloir nous confirmer les informations ci-après, avant le vendredi 3 novembre 2025, en utilisant le formulaire dont le lien est le suivant :
 
