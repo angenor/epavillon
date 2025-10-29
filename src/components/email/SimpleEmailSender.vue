@@ -1088,15 +1088,19 @@ export default {
 
           const eventTimezone = eventData?.timezone || 'UTC'
 
-          // Récupérer les dates de l'activité
+          // Récupérer les dates de l'activité et le nom de l'organisation
           const { data: activityData, error: activityError } = await supabase
             .from('activities')
-            .select('final_start_date, final_end_date')
+            .select('final_start_date, final_end_date, organization_id, organizations!inner(name)')
             .eq('id', emailData.value.activity_id)
             .single()
 
           if (!activityError && activityData) {
             let content = emailData.value.content
+
+            // Remplacer le nom de l'organisation
+            const organizationName = activityData.organizations?.name || '….'
+            content = content.replace('__ORGANIZATION_NAME__', organizationName)
 
             // Remplacer la date et les heures proposées
             if (activityData.final_start_date) {

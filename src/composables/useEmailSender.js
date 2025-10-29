@@ -99,7 +99,7 @@ L'équipe IFDD - Organisation de {event_name}`
 
 Nous avons le plaisir de vous informer que votre activité a été sélectionnée par notre comité de sélection pour être organisée par vous au Pavillon de la Francophonie, à Belém au Brésil lors de la 30e Conférence des Nations Unies sur le climat (CdP30), à la date et à l'horaire suivants :
 
-Organisation : {organization_name}
+Organisation : __ORGANIZATION_NAME__
 Titre de l'activité : {activity_name}
 Date proposée : __ACTIVITY_FINAL_DATE__
 Heure proposée : __ACTIVITY_FINAL_START_TIME__ - __ACTIVITY_FINAL_END_TIME__
