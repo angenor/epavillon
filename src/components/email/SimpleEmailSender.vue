@@ -1065,10 +1065,53 @@ export default {
       }
     }
 
-    const loadTemplate = (template) => {
+    const loadTemplate = async (template) => {
       emailData.value.subject = template.subject
       emailData.value.content = template.content
       showTemplates.value = false
+
+      // Cas spécial pour le template "pavilion_confirmation"
+      // Remplacer les placeholders par les vraies valeurs de l'activité si disponibles
+      if (template.id === 'pavilion_confirmation' && emailData.value.activity_id) {
+        try {
+          const { data: activityData, error: activityError } = await supabase
+            .from('activities')
+            .select('final_start_date, final_end_date')
+            .eq('id', emailData.value.activity_id)
+            .single()
+
+          if (!activityError && activityData) {
+            let content = emailData.value.content
+
+            // Remplacer la date proposée
+            if (activityData.final_start_date) {
+              const finalStartDate = new Date(activityData.final_start_date)
+              const finalDate = finalStartDate.toLocaleDateString('fr-FR', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })
+              const finalTime = finalStartDate.toLocaleTimeString('fr-FR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+              })
+
+              content = content.replace('__ACTIVITY_FINAL_DATE__', finalDate)
+              content = content.replace('__ACTIVITY_FINAL_TIME__', finalTime)
+            } else {
+              // Si pas de final_start_date, laisser des points de suspension
+              content = content.replace('__ACTIVITY_FINAL_DATE__', '….')
+              content = content.replace('__ACTIVITY_FINAL_TIME__', '….')
+            }
+
+            emailData.value.content = content
+          }
+        } catch (err) {
+          console.error('Erreur lors du chargement des dates de l\'activité:', err)
+        }
+      }
     }
 
     const insertVariable = (variable) => {

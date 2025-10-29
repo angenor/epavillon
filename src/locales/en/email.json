@@ -65,6 +65,7 @@
     "template_notification": "Notification",
     "template_reminder": "Reminder",
     "template_activity_under_review": "Activity Under Review",
+    "template_pavilion_confirmation": "Francophonie Pavilion Confirmation",
     "template_custom": "Custom",
     "loading_templates": "Loading templates...",
     "no_templates_available": "No templates available",
