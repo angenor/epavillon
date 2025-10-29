@@ -25,6 +25,48 @@
         </div>
       </div>
 
+      <!-- Dates validées (confirmées) - Affichage en lecture seule -->
+      <div v-if="activity.final_start_date && activity.final_end_date" class="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl border-2 border-green-200 dark:border-green-800">
+        <div class="flex items-center mb-3">
+          <font-awesome-icon :icon="['fas', 'check-circle']" class="w-5 h-5 text-green-600 dark:text-green-400 mr-2" />
+          <h4 class="text-sm font-medium text-green-800 dark:text-green-300 uppercase">
+            {{ t('activities.validatedDates') || 'Date et heure confirmées' }}
+          </h4>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <p class="text-xs text-green-700 dark:text-green-400 mb-1">{{ t('events.activityDate') }}</p>
+            <p class="text-base font-semibold text-green-900 dark:text-green-200">
+              {{ formatValidatedDate(activity.final_start_date) }}
+            </p>
+          </div>
+          <div>
+            <p class="text-xs text-green-700 dark:text-green-400 mb-1">{{ t('events.startTime') }}</p>
+            <p class="text-base font-semibold text-green-900 dark:text-green-200">
+              {{ formatValidatedTime(activity.final_start_date) }}
+            </p>
+          </div>
+          <div>
+            <p class="text-xs text-green-700 dark:text-green-400 mb-1">{{ t('events.endTime') }}</p>
+            <p class="text-base font-semibold text-green-900 dark:text-green-200">
+              {{ formatValidatedTime(activity.final_end_date) }}
+            </p>
+          </div>
+        </div>
+        <p class="mt-3 text-xs text-green-600 dark:text-green-500 flex items-center">
+          <font-awesome-icon :icon="['fas', 'info-circle']" class="mr-1" />
+          {{ t('activities.validatedDatesInfo') || 'Ces dates ont été confirmées par l\'équipe de validation' }}
+        </p>
+      </div>
+
+      <!-- Dates proposées - Section titre mise à jour -->
+      <div v-if="activity.final_start_date && activity.final_end_date" class="mb-2">
+        <h4 class="text-sm font-medium text-gray-600 dark:text-gray-400 uppercase flex items-center">
+          <font-awesome-icon :icon="['fas', 'calendar-alt']" class="w-4 h-4 mr-2" />
+          {{ t('activities.proposedDates') || 'Dates proposées initialement' }}
+        </h4>
+      </div>
+
       <!-- Date and Time fields -->
       <div class="space-y-4">
         <!-- Activity Date -->
@@ -291,4 +333,34 @@ const formatEventPeriod = computed(() => {
 
   return ''
 })
+
+// Format validated date in event timezone
+const formatValidatedDate = (dateString) => {
+  if (!dateString) return '-'
+
+  const date = new Date(dateString)
+  const timezone = props.eventData?.timezone || 'UTC'
+
+  return date.toLocaleDateString(t('common.locale') === 'fr' ? 'fr-FR' : 'en-US', {
+    timeZone: timezone,
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+}
+
+// Format validated time in event timezone
+const formatValidatedTime = (dateString) => {
+  if (!dateString) return '-'
+
+  const date = new Date(dateString)
+  const timezone = props.eventData?.timezone || 'UTC'
+
+  return date.toLocaleTimeString(t('common.locale') === 'fr' ? 'fr-FR' : 'en-US', {
+    timeZone: timezone,
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
 </script>

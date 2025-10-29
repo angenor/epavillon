@@ -199,15 +199,49 @@
                         <span class="text-xs font-semibold">{{ event.unread_comments_count }}</span>
                       </div>
                     </div>
-                    <div class="flex items-center space-x-4 mt-1 text-sm text-gray-600 dark:text-gray-400">
+                    <!-- Dates confirmées (validées) -->
+                    <div v-if="event.final_start_date && event.final_end_date" class="mt-2 space-y-1">
+                      <div class="flex items-center space-x-4 text-sm">
+                        <span class="flex items-center text-green-700 dark:text-green-400 font-medium">
+                          <font-awesome-icon :icon="['fas', 'check-circle']" class="w-4 h-4 mr-1" />
+                          <span class="text-xs uppercase">Confirmé</span>
+                        </span>
+                        <span class="flex items-center text-green-800 dark:text-green-300">
+                          <font-awesome-icon :icon="['fas', 'calendar']" class="w-4 h-4 mr-1" />
+                          {{ formatDate(event.final_start_date, event.events?.timezone) }}
+                        </span>
+                        <span class="flex items-center text-green-800 dark:text-green-300">
+                          <font-awesome-icon :icon="['fas', 'clock']" class="w-4 h-4 mr-1" />
+                          {{ formatTime(event.final_start_date, event.events?.timezone) }} - {{ formatTime(event.final_end_date, event.events?.timezone) }}
+                        </span>
+                      </div>
+                      <!-- Dates proposées en gris -->
+                      <div class="flex items-center space-x-4 text-xs text-gray-500 dark:text-gray-500">
+                        <span class="flex items-center">
+                          <font-awesome-icon :icon="['fas', 'calendar-alt']" class="w-3 h-3 mr-1" />
+                          <span class="italic">Proposé: {{ formatDate(event.proposed_start_date, event.events?.timezone) }}</span>
+                        </span>
+                        <span class="flex items-center">
+                          <font-awesome-icon :icon="['fas', 'clock']" class="w-3 h-3 mr-1" />
+                          <span class="italic">{{ formatTime(event.proposed_start_date, event.events?.timezone) }} - {{ formatTime(event.proposed_end_date, event.events?.timezone) }}</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <!-- Dates proposées uniquement (pas de dates validées) -->
+                    <div v-else class="flex items-center space-x-4 mt-1 text-sm text-gray-600 dark:text-gray-400">
                       <span class="flex items-center">
                         <font-awesome-icon :icon="['fas', 'calendar']" class="w-4 h-4 mr-1" />
-                        {{ formatDate(event.proposed_start_date) }}
+                        {{ formatDate(event.proposed_start_date, event.events?.timezone) }}
                       </span>
                       <span class="flex items-center">
                         <font-awesome-icon :icon="['fas', 'clock']" class="w-4 h-4 mr-1" />
-                        {{ formatTime(event.proposed_start_date) }} - {{ formatTime(event.proposed_end_date) }}
+                        {{ formatTime(event.proposed_start_date, event.events?.timezone) }} - {{ formatTime(event.proposed_end_date, event.events?.timezone) }}
                       </span>
+                    </div>
+
+                    <!-- Inscriptions (toujours affichées) -->
+                    <div class="flex items-center mt-1 text-sm text-gray-600 dark:text-gray-400">
                       <span class="flex items-center">
                         <font-awesome-icon :icon="['fas', 'users']" class="w-4 h-4 mr-1" />
                         {{ event.activity_registrations?.[0]?.count || 0 }} {{ t('events.registrations') }}
@@ -301,12 +335,17 @@ const filteredEvents = computed(() => {
   return filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
 })
 
-const formatDate = (date) => {
-  return new Date(date).toLocaleDateString('fr-FR', {
+const formatDate = (date, timezone = null) => {
+  if (!date) return ''
+  const options = {
     day: 'numeric',
     month: 'long',
     year: 'numeric'
-  })
+  }
+  if (timezone) {
+    options.timeZone = timezone
+  }
+  return new Date(date).toLocaleDateString('fr-FR', options)
 }
 
 const getEventIcon = (type) => {
@@ -318,12 +357,16 @@ const getEventIcon = (type) => {
   return icons[type] || 'calendar'
 }
 
-const formatTime = (datetime) => {
+const formatTime = (datetime, timezone = null) => {
   if (!datetime) return ''
-  return new Date(datetime).toLocaleTimeString('fr-FR', {
+  const options = {
     hour: '2-digit',
     minute: '2-digit'
-  })
+  }
+  if (timezone) {
+    options.timeZone = timezone
+  }
+  return new Date(datetime).toLocaleTimeString('fr-FR', options)
 }
 
 const getStatusClass = (status) => {
