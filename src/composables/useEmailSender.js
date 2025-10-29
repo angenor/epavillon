@@ -120,10 +120,10 @@ Nous vous remercions pour votre retour apprécié d'ici le 30 octobre 2025.`
 
 Nous avons le plaisir de vous informer que votre activité a été sélectionnée par notre comité de sélection pour être organisée au Pavillon de la Francophonie, à Belém au Brésil lors de la 30e Conférence des Nations Unies sur le climat (CdP30), dans le cadre de la journée dédiée à « l'action jeunesse pour le climat en Francophonie », prévue le 12 novembre 2025 au Pavillon de la Francophonie. Considérant le lien entre votre événement ci-dessous et la thématique jeunesse et engagement collectif, nous vous proposerons un programme dédié mettant en avant votre activité.
 
-Organisation : __ORGANIZATION_NAME__
-Titre de l'activité : {activity_name}
-Date proposée : Mercredi 12 novembre 2025
-Heure proposée : 09h00 - 17h00 (heure de Belém (GMT - 3))
+- Organisation : __ORGANIZATION_NAME__
+- Titre de l'activité : {activity_name}
+- Date proposée : Mercredi 12 novembre 2025
+- Heure proposée : 09h00 - 17h00 (heure de Belém (GMT - 3))
 
 En attendant de vous partager prochainement le programme de la journée jeunesse intégrant votre activité, nous vous prions de bien vouloir nous confirmer les informations ci-après, avant le vendredi 3 novembre 2025, en utilisant le formulaire dont le lien est le suivant :
 
