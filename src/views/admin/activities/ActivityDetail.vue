@@ -75,41 +75,89 @@
             </div>
           </div>
 
-          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <!-- Date et heure principale -->
-            <div class="flex-1">
-              <div class="flex items-center mb-3">
-                <svg class="h-5 w-5 mr-2 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-                <span class="text-sm font-medium text-orange-600 dark:text-orange-400">
-                  {{ activity.final_start_date ? 'DATE ET HEURE CONFIRMÉES' : 'DATE ET HEURE PROPOSÉES' }}
-                </span>
+          <!-- Dates et heures -->
+          <div class="space-y-4">
+            <!-- Dates proposées -->
+            <div class="p-4 bg-white/50 dark:bg-gray-900/30 rounded-lg border border-gray-200 dark:border-gray-600">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center">
+                  <svg class="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </svg>
+                  <span class="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase">
+                    Date et heure proposées par le soumissionnaire
+                  </span>
+                </div>
               </div>
-              <div class="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-                {{ formatDateWithDay(activity.final_start_date || activity.proposed_start_date) }}
-              </div>
-              <div class="text-lg font-semibold text-gray-700 dark:text-gray-300">
-                {{ formatTimeRange(activity.final_start_date || activity.proposed_start_date, activity.final_end_date || activity.proposed_end_date) }}
-              </div>
-              <div v-if="activity.event?.timezone" class="text-sm text-gray-500 dark:text-gray-400 flex items-center mt-2">
-                <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                {{ getTimezoneLabel(activity.event.timezone, 'fr') }}
+              <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div class="flex-1">
+                  <div class="text-lg font-bold text-gray-700 dark:text-gray-300 mb-0.5">
+                    {{ formatDateWithDay(activity.proposed_start_date) }}
+                  </div>
+                  <div class="text-base font-semibold text-gray-600 dark:text-gray-400">
+                    {{ formatTimeRange(activity.proposed_start_date, activity.proposed_end_date) }}
+                  </div>
+                  <div v-if="activity.event?.timezone" class="text-xs text-gray-500 dark:text-gray-500 flex items-center mt-1">
+                    <svg class="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    {{ getTimezoneLabel(activity.event.timezone, 'fr') }}
+                  </div>
+                </div>
+                <!-- Format et Type (badges compacts) -->
+                <div class="flex flex-wrap gap-2">
+                  <span class="px-3 py-1.5 text-sm font-medium rounded-full inline-flex items-center"
+                        :class="getActivityTypeClass(activity.activity_type)">
+                    {{ getActivityTypeLabel(activity.activity_type) }}
+                  </span>
+                  <span class="px-3 py-1.5 text-sm font-medium rounded-full inline-flex items-center"
+                        :class="getFormatClass(activity.format)">
+                    {{ getFormatLabel(activity.format) }}
+                  </span>
+                </div>
               </div>
             </div>
 
-            <!-- Format et Type (badges compacts) -->
-            <div class="flex flex-wrap gap-2">
-              <span class="px-3 py-1.5 text-sm font-medium rounded-full inline-flex items-center"
-                    :class="getActivityTypeClass(activity.activity_type)">
-                {{ getActivityTypeLabel(activity.activity_type) }}
-              </span>
-              <span class="px-3 py-1.5 text-sm font-medium rounded-full inline-flex items-center"
-                    :class="getFormatClass(activity.format)">
-                {{ getFormatLabel(activity.format) }}
-              </span>
+            <!-- Dates validées -->
+            <div class="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg border-2 border-green-200 dark:border-green-800">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center">
+                  <svg class="h-4 w-4 mr-2 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  <span class="text-xs font-medium text-green-700 dark:text-green-400 uppercase">
+                    Date et heure confirmées
+                  </span>
+                </div>
+                <!-- Bouton pour éditer les dates validées -->
+                <button @click="showEditDatesModal = true"
+                        class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 dark:bg-green-900/50 dark:text-green-300 dark:hover:bg-green-900/70 transition-colors cursor-pointer">
+                  <svg class="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                  </svg>
+                  {{ activity.final_start_date ? 'Modifier' : 'Définir' }}
+                </button>
+              </div>
+              <div v-if="activity.final_start_date && activity.final_end_date" class="flex-1">
+                <div class="text-xl font-bold text-green-800 dark:text-green-300 mb-0.5">
+                  {{ formatDateWithDay(activity.final_start_date) }}
+                </div>
+                <div class="text-lg font-semibold text-green-700 dark:text-green-400">
+                  {{ formatTimeRange(activity.final_start_date, activity.final_end_date) }}
+                </div>
+                <div v-if="activity.event?.timezone" class="text-xs text-green-600 dark:text-green-500 flex items-center mt-1">
+                  <svg class="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  {{ getTimezoneLabel(activity.event.timezone, 'fr') }}
+                </div>
+              </div>
+              <div v-else class="flex items-center text-sm text-green-700 dark:text-green-400">
+                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span class="italic">Aucune date confirmée - Cliquez sur "Définir" pour confirmer les dates</span>
+              </div>
             </div>
           </div>
 
@@ -672,6 +720,19 @@
         @close="showChangeSubmitterModal = false"
         @update="handleSubmitterUpdate"
       />
+
+      <!-- Modal d'édition des dates validées -->
+      <EditValidatedDatesModal
+        :show="showEditDatesModal"
+        :activity-id="activity?.id"
+        :proposed-start-date="activity?.proposed_start_date"
+        :proposed-end-date="activity?.proposed_end_date"
+        :current-final-start-date="activity?.final_start_date"
+        :current-final-end-date="activity?.final_end_date"
+        :timezone="activity?.event?.timezone"
+        @close="showEditDatesModal = false"
+        @update="handleDatesUpdate"
+      />
     </div>
   </div>
 </template>
@@ -687,6 +748,7 @@ import { useAdminPanel } from '@/composables/useAdminPanel'
 import { useRevisionViews } from '@/composables/useRevisionViews'
 import { useZoomMeeting } from '@/composables/zoom/useZoomMeeting'
 import ChangeSubmitterModal from '@/components/admin/ChangeSubmitterModal.vue'
+import EditValidatedDatesModal from '@/components/admin/EditValidatedDatesModal.vue'
 import ActivityReviewSidebar from '@/components/admin/ActivityReviewSidebar.vue'
 import RatingFloatingButton from '@/components/admin/RatingFloatingButton.vue'
 import CommentFloatingButton from '@/components/admin/CommentFloatingButton.vue'
@@ -720,6 +782,7 @@ const speakers = ref([])
 const documents = ref([])
 const registrations = ref([])
 const showChangeSubmitterModal = ref(false)
+const showEditDatesModal = ref(false)
 const activityId = computed(() => route.params.id)
 const organizationActivities = ref([])
 const isLoadingOrgActivities = ref(false)
@@ -1327,6 +1390,20 @@ const handleSubmitterUpdate = async (newSubmitter) => {
   }
 
   console.log('Soumissionnaire mis à jour avec succès')
+}
+
+// Fonction pour gérer la mise à jour des dates validées
+const handleDatesUpdate = async (updatedDates) => {
+  if (!activity.value) return
+
+  // Mettre à jour l'objet activity avec les nouvelles dates validées
+  activity.value.final_start_date = updatedDates.final_start_date
+  activity.value.final_end_date = updatedDates.final_end_date
+
+  console.log('✅ Dates validées mises à jour avec succès:', updatedDates)
+
+  // Afficher un message de succès à l'utilisateur
+  alert('✅ Les dates et heures confirmées ont été mises à jour avec succès!')
 }
 
 // Fonction pour marquer comme non-lu (réinitialiser les vues)
