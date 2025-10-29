@@ -110,10 +110,7 @@ Avant d'intégrer définitivement votre événement au programme du Pavillon de 
 
 Lien du formulaire : https://docs.google.com/document/d/1GXkhzq2iHYTqbRu1-VyghePUU0IYGOHOoj6ghK4vMGg/edit?usp=sharing
 
-Nous vous remercions pour votre retour apprécié d'ici le 30 octobre 2025.
-
-Cordialement,
-L'équipe IFDD - Organisation de {event_name}`
+Nous vous remercions pour votre retour apprécié d'ici le 30 octobre 2025.`
     },
     {
       id: 'custom',
