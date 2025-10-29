@@ -1070,6 +1070,27 @@ export default {
       emailData.value.content = template.content
       showTemplates.value = false
 
+      // Cas spécial pour le template "youth_day"
+      // Remplacer uniquement le nom de l'organisation
+      if (template.id === 'youth_day' && emailData.value.activity_id) {
+        try {
+          const { data: activityData, error: activityError } = await supabase
+            .from('activities')
+            .select('organization_id, organizations!inner(name)')
+            .eq('id', emailData.value.activity_id)
+            .single()
+
+          if (!activityError && activityData) {
+            let content = emailData.value.content
+            const organizationName = activityData.organizations?.name || '….'
+            content = content.replace('__ORGANIZATION_NAME__', organizationName)
+            emailData.value.content = content
+          }
+        } catch (err) {
+          console.error('Erreur lors du chargement de l\'organisation:', err)
+        }
+      }
+
       // Cas spécial pour le template "pavilion_confirmation"
       // Remplacer les placeholders par les vraies valeurs de l'activité si disponibles
       if (template.id === 'pavilion_confirmation' && emailData.value.activity_id && emailData.value.event_id) {
