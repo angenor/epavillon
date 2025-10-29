@@ -132,6 +132,23 @@
             </svg>
             <span v-if="totalRatedActivities > 0" class="font-semibold">{{ totalRatedActivities }}</span>
           </button>
+
+          <!-- Bouton Date validée -->
+          <button
+            @click="toggleValidatedDateFilter"
+            :class="[
+              'flex items-center gap-1 px-2 py-1 text-xs rounded-lg transition-colors cursor-pointer',
+              filterByValidatedDate
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+            ]"
+            :title="filterByValidatedDate ? 'Afficher toutes les activités' : 'Filtrer par date validée'"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span v-if="totalActivitiesWithValidatedDate > 0" class="font-semibold">{{ totalActivitiesWithValidatedDate }}</span>
+          </button>
         </div>
       </div>
       <!-- Filtre par révisionniste -->
@@ -827,6 +844,7 @@ const activityRefs = ref({})
 const LISTENER_ID = 'activity-review-sidebar' // ID unique pour ce composant
 const filterByComments = ref(false)
 const filterByRating = ref(false)
+const filterByValidatedDate = ref(false)
 
 // État pour le redimensionnement
 const MIN_WIDTH = 320 // 80 en Tailwind = 320px
@@ -908,6 +926,12 @@ const filteredActivities = computed(() => {
     // Trier par note décroissante (meilleures notes en premier)
     result.sort((a, b) => (b.user_rating || 0) - (a.user_rating || 0))
   }
+  // Filtrer par activités avec date validée
+  else if (filterByValidatedDate.value) {
+    result = result.filter(a => a.final_start_date !== null && a.final_start_date !== undefined)
+    // Trier par date validée (du plus ancien au plus récent)
+    result.sort((a, b) => new Date(a.final_start_date) - new Date(b.final_start_date))
+  }
   // Tri par défaut : du plus récent au plus ancien
   else {
     result.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
@@ -924,6 +948,10 @@ const totalRatedActivities = computed(() => {
   return activities.value.filter(a => a.user_rating !== null && a.user_rating !== undefined).length
 })
 
+const totalActivitiesWithValidatedDate = computed(() => {
+  return activities.value.filter(a => a.final_start_date !== null && a.final_start_date !== undefined).length
+})
+
 const hasActiveFilters = computed(() => {
   return !!(
     searchQuery.value ||
@@ -931,7 +959,8 @@ const hasActiveFilters = computed(() => {
     filterCountry.value ||
     filterRevisionist.value ||
     filterByComments.value ||
-    filterByRating.value
+    filterByRating.value ||
+    filterByValidatedDate.value
   )
 })
 
@@ -978,6 +1007,7 @@ const loadActivities = async () => {
         title,
         created_at,
         validation_status,
+        final_start_date,
         organization:organizations(
           id,
           name,
@@ -1126,6 +1156,7 @@ const clearFilters = () => {
   filterRevisionist.value = ''
   filterByComments.value = false
   filterByRating.value = false
+  filterByValidatedDate.value = false
 }
 
 const toggleCommentsFilter = () => {
@@ -1133,6 +1164,7 @@ const toggleCommentsFilter = () => {
   // Désactiver les autres filtres si celui-ci est activé
   if (filterByComments.value) {
     filterByRating.value = false
+    filterByValidatedDate.value = false
     filterRevisionist.value = ''
   }
 }
@@ -1142,10 +1174,21 @@ const toggleRatedFilter = () => {
   // Désactiver les autres filtres si celui-ci est activé
   if (filterByRating.value) {
     filterByComments.value = false
+    filterByValidatedDate.value = false
     // Synchroniser avec le dropdown : sélectionner "Mes notes"
     filterRevisionist.value = currentUser.value?.id || ''
   } else {
     // Réinitialiser le dropdown si on désactive le filtre
+    filterRevisionist.value = ''
+  }
+}
+
+const toggleValidatedDateFilter = () => {
+  filterByValidatedDate.value = !filterByValidatedDate.value
+  // Désactiver les autres filtres si celui-ci est activé
+  if (filterByValidatedDate.value) {
+    filterByComments.value = false
+    filterByRating.value = false
     filterRevisionist.value = ''
   }
 }
@@ -1408,6 +1451,7 @@ watch(filterRevisionist, async (newValue) => {
   // Désactiver les autres filtres si celui-ci est activé
   if (newValue) {
     filterByComments.value = false
+    filterByValidatedDate.value = false
     // Si l'utilisateur sélectionne "Mes notes", activer aussi le bouton "Notés"
     if (newValue === currentUser.value?.id) {
       filterByRating.value = true
