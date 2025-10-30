@@ -65,6 +65,7 @@
                   :initial-recipients="initialRecipients"
                   :initial-event="initialEvent"
                   :initial-activity="initialActivity"
+                  :initial-filter="initialFilter"
                   @email-sent="handleEmailSent"
                 />
               </div>
@@ -103,6 +104,7 @@ export default {
     const initialRecipients = computed(() => emailModalStore.initialRecipients)
     const initialEvent = computed(() => emailModalStore.initialEvent)
     const initialActivity = computed(() => emailModalStore.initialActivity)
+    const initialFilter = computed(() => emailModalStore.initialFilter)
 
     // Vérifier si l'utilisateur est super_admin
     const isSuperAdmin = computed(() => authStore.isSuperAdmin)
@@ -141,6 +143,7 @@ export default {
       initialRecipients,
       initialEvent,
       initialActivity,
+      initialFilter,
       close,
       handleEmailSent
     }

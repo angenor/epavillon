@@ -333,6 +333,7 @@
       "title": "Validation des Activités",
       "subtitle": "Gestion et validation des propositions d'activités",
       "export": "Exporter",
+      "emailValidDates": "Email - Dates valides",
       "searchPlaceholder": "Rechercher par titre, organisation ou événement...",
       "allEvents": "Tous les événements",
       "allCountries": "Tous les pays",

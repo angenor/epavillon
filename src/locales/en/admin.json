@@ -289,6 +289,7 @@
       "title": "Activity Validation",
       "subtitle": "Management and validation of activity proposals",
       "export": "Export",
+      "emailValidDates": "Email - Valid Dates",
       "searchPlaceholder": "Search by title, organization or event...",
       "allEvents": "All events",
       "allCountries": "All countries",

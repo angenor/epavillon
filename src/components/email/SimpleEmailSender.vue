@@ -516,6 +516,10 @@ export default {
     initialActivity: {
       type: String,
       default: null
+    },
+    initialFilter: {
+      type: String,
+      default: null
     }
   },
   emits: ['email-sent'],
@@ -1272,13 +1276,60 @@ export default {
       showVariables.value = false
     }
 
+    // Fonction pour charger les emails des soumissionnaires avec dates valides
+    const loadValidDatesSubmitters = async () => {
+      try {
+        console.log('Chargement des soumissionnaires avec dates valides...')
+
+        // Récupérer toutes les activités avec final_start_date et final_end_date définis
+        const { data, error } = await supabase
+          .from('activities')
+          .select(`
+            id,
+            submitted_by,
+            final_start_date,
+            final_end_date,
+            users!submitted_by(email, first_name, last_name)
+          `)
+          .not('final_start_date', 'is', null)
+          .not('final_end_date', 'is', null)
+          .eq('is_deleted', false)
+
+        if (error) throw error
+
+        // Extraire les emails uniques des soumissionnaires
+        const submitterEmails = [...new Set(
+          (data || [])
+            .map(activity => activity.users?.email)
+            .filter(Boolean)
+        )]
+
+        console.log(`${submitterEmails.length} soumissionnaires avec dates valides trouvés`)
+
+        // Ajouter les emails dans le champ BCC
+        recipients.value.bcc = submitterEmails
+
+        // Mettre le bulkDestination sur 'bcc' par défaut
+        bulkDestination.value = 'bcc'
+
+      } catch (err) {
+        console.error('Erreur lors du chargement des soumissionnaires avec dates valides:', err)
+        error.value = 'Erreur lors du chargement des soumissionnaires avec dates valides'
+      }
+    }
+
     // Load events on mount
-    onMounted(() => {
+    onMounted(async () => {
       fetchEvents()
 
       // Si un événement initial est fourni, charger ses activités
       if (props.initialEvent) {
         fetchActivities(props.initialEvent)
+      }
+
+      // Si un filtre initial est fourni, appliquer le filtre
+      if (props.initialFilter === 'valid-dates') {
+        await loadValidDatesSubmitters()
       }
 
       // Fermer le dropdown en cliquant en dehors

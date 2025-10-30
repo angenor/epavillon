@@ -5,7 +5,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Simple Email Tab -->
       <div v-if="activeTab === 'simple'">
-        <SimpleEmailSender />
+        <SimpleEmailSender :initialFilter="filterType" />
       </div>
 
       <!-- Event Email Tab (Future) -->
@@ -44,8 +44,9 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 import SimpleEmailSender from '@/components/email/SimpleEmailSender.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCalendarAlt, faHistory } from '@fortawesome/free-solid-svg-icons'
@@ -62,10 +63,15 @@ export default {
   },
   setup() {
     const { t } = useI18n()
+    const route = useRoute()
     const activeTab = ref('simple')
+
+    // Récupérer le paramètre de filtre depuis la route
+    const filterType = computed(() => route.query.filter || null)
 
     return {
       activeTab,
+      filterType,
       t
     }
   }

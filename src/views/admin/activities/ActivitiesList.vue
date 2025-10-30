@@ -26,6 +26,13 @@
           </svg>
           {{ t('admin.activities.manageDates') || 'Gérer les dates' }}
         </button> -->
+        <button @click="goToEmailWithValidDates"
+                class="cursor-pointer px-5 py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 shadow-sm">
+          <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+          {{ t('admin.activities.emailValidDates') }}
+        </button>
         <button @click="exportActivities"
                 class="cursor-pointer px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 transition-colors duration-200 shadow-sm">
           <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -600,7 +607,7 @@ const router = useRouter()
 const { supabase } = useSupabase()
 const { hasReviewerOrAdminRole, isLoadingRoles, loadUserRoles, validateActivity } = useAdmin()
 const { currentUser } = useAuth()
-const { openForActivity, canSendEmails } = useEmailModal()
+const { openForActivity, openWithFilter, canSendEmails } = useEmailModal()
 const { recordActivityView, loadViewedActivities, hasViewedActivity } = useRevisionViews()
 const { addListener, removeListener } = useCommentBroadcast()
 
@@ -1145,6 +1152,10 @@ const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++
   }
+}
+
+const goToEmailWithValidDates = () => {
+  openWithFilter('valid-dates')
 }
 
 // Fonction pour mettre à jour le compteur de commentaires non lus d'une activité spécifique

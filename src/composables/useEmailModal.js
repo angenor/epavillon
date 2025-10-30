@@ -31,6 +31,7 @@ export function useEmailModal() {
    * @param {Array} options.bcc - Liste des destinataires en copie cachée
    * @param {String} options.eventId - ID de l'événement pré-sélectionné
    * @param {String} options.activityId - ID de l'activité pré-sélectionnée
+   * @param {String} options.filter - Type de filtre à appliquer (ex: 'valid-dates')
    */
   const openEmailModal = (options = {}) => {
     // Vérifier les permissions avant d'ouvrir
@@ -47,7 +48,8 @@ export function useEmailModal() {
         bcc: options.bcc || []
       },
       eventId: options.eventId,
-      activityId: options.activityId
+      activityId: options.activityId,
+      filter: options.filter
     }
 
     emailModalStore.open(formattedOptions)
@@ -101,6 +103,16 @@ export function useEmailModal() {
   }
 
   /**
+   * Ouvrir le modal avec un filtre spécifique
+   */
+  const openWithFilter = (filterType) => {
+    // Les vérifications sont faites dans openEmailModal
+    openEmailModal({
+      filter: filterType
+    })
+  }
+
+  /**
    * Vérifier si l'utilisateur peut envoyer des emails
    * Retourne une propriété computed réactive
    */
@@ -116,6 +128,7 @@ export function useEmailModal() {
     openForEvent,
     openForActivity,
     openWithRecipients,
+    openWithFilter,
     canSendEmails,
     isOpen: emailModalStore.isOpen
   }
