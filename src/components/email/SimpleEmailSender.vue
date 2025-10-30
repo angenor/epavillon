@@ -1070,9 +1070,9 @@ export default {
       emailData.value.content = template.content
       showTemplates.value = false
 
-      // Cas spécial pour le template "youth_day"
+      // Cas spécial pour les templates "youth_day" et "sustainable_finance_day"
       // Remplacer uniquement le nom de l'organisation
-      if (template.id === 'youth_day' && emailData.value.activity_id) {
+      if ((template.id === 'youth_day' || template.id === 'sustainable_finance_day') && emailData.value.activity_id) {
         try {
           const { data: activityData, error: activityError } = await supabase
             .from('activities')

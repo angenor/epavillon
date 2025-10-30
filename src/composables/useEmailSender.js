@@ -132,6 +132,25 @@ Lien du formulaire : https://docs.google.com/document/d/1UDwxxPskr5uKcTu0el-5pxf
 Nous vous remercions pour votre retour apprécié d'ici le 3 novembre 2025.`
     },
     {
+      id: 'sustainable_finance_day',
+      name: 'Finance Durable - 14 novembre',
+      subject: 'Votre évènement au Pavillon de la Francophonie - Action requise avant le 3 novembre 2025',
+      content: `Bonjour {recipient_name},
+
+Nous avons le plaisir de vous informer que votre activité a été sélectionnée par notre comité de sélection pour être organisée au Pavillon de la Francophonie, à Belém au Brésil lors de la 30e Conférence des Nations Unies sur le climat (CdP30), dans le cadre de la journée dédiée à l'« Finance durable en Francophonie », prévue le 14 novembre 2025 au Pavillon de la Francophonie. Considérant le lien entre votre événement ci-dessous et la thématique finance durable et mobilisation des ressources, nous vous proposerons un programme dédié mettant en avant votre activité ci-dessous :
+
+- Organisation : __ORGANIZATION_NAME__
+- Titre de l'activité : {activity_name}
+- Date proposée : Vendredi 14 novembre 2025
+- Heure proposée : 09h00 - 17h00 (heure de Belém (GMT - 3))
+
+En attendant de vous partager prochainement le programme de la « Finance durable en Francophonie » intégrant votre activité, nous vous prions de bien vouloir nous confirmer les informations ci-après, avant le vendredi 3 novembre 2025, en utilisant le formulaire dont le lien est le suivant :
+
+Lien du formulaire : https://docs.google.com/document/d/1bJW_XNqCqqesNVKjlR2eougzslLrLECsupD0QsdbHQE/edit?usp=sharing
+
+Nous vous remercions pour votre retour apprécié d'ici le 3 novembre 2025.`
+    },
+    {
       id: 'custom',
       name: 'Personnalisé',
       subject: '',
