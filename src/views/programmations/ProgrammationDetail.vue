@@ -2,13 +2,13 @@
   <div class="min-h-screen bg-white dark:bg-gray-900">
     <!-- Header avec image de bannière -->
     <div class="relative h-64 md:h-80 lg:h-96 overflow-hidden">
-      <img 
-        src="/images/example/event_banniere_par_defaut_32_9.jpg"
+      <img
+        src="/images/example/event_banniere_par_defaut_32_9_v3.jpg"
         alt="Programmation bannière"
         class="w-full h-full object-cover"
       >
       <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-      
+
       <!-- Contenu du header -->
       <div class="absolute bottom-0 left-0 right-0 p-6 md:p-12">
         <div class="max-w-7xl mx-auto">
@@ -73,7 +73,7 @@
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
           {{ t('programmations.activities') }}
         </h2>
-        
+
         <div class="flex gap-2">
           <button
             @click="viewMode = 'grid'"
@@ -89,7 +89,7 @@
             </svg>
             <span class="hidden sm:inline">{{ t('programmations.viewGrid') }}</span>
           </button>
-          
+
           <button
             @click="viewMode = 'list'"
             :class="[
@@ -104,7 +104,7 @@
             </svg>
             <span class="hidden sm:inline">{{ t('programmations.viewList') }}</span>
           </button>
-          
+
           <button
             @click="viewMode = 'calendar'"
             disabled
@@ -143,8 +143,8 @@
 
       <!-- Vue Grille -->
       <div v-else-if="viewMode === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div 
-          v-for="activity in activities" 
+        <div
+          v-for="activity in activities"
           :key="activity.id"
           @click="goToActivityDetail(activity.id)"
           class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
@@ -158,17 +158,17 @@
               </span>
             </div>
           </div>
-          
+
           <!-- Contenu -->
           <div class="p-6">
             <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3 line-clamp-2">
               {{ activity.title }}
             </h3>
-            
+
             <p v-if="activity.description" class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3">
               {{ stripHtml(activity.description) }}
             </p>
-            
+
             <!-- Détails -->
             <div class="space-y-2">
               <div v-if="activity.proposed_start_date" class="flex items-center text-sm text-gray-500 dark:text-gray-400">
@@ -177,14 +177,14 @@
                 </svg>
                 {{ formatDate(activity.proposed_start_date) }}
               </div>
-              
+
               <div v-if="activity.proposed_start_date" class="flex items-center text-sm text-gray-500 dark:text-gray-400">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 {{ formatTime(activity.proposed_start_date) }} - {{ formatTime(activity.proposed_end_date) }}
               </div>
-              
+
               <div v-if="activity.room" class="flex items-center text-sm text-gray-500 dark:text-gray-400">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -198,8 +198,8 @@
 
       <!-- Vue Liste -->
       <div v-else-if="viewMode === 'list'" class="space-y-4">
-        <div 
-          v-for="activity in activities" 
+        <div
+          v-for="activity in activities"
           :key="activity.id"
           @click="goToActivityDetail(activity.id)"
           class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer"
@@ -214,11 +214,11 @@
                   {{ t(`activity.submit.formats.${activity.format || 'presentation'}`) }}
                 </span>
               </div>
-              
+
               <p v-if="activity.description" class="text-gray-600 dark:text-gray-400 mb-3">
                 {{ stripHtml(activity.description) }}
               </p>
-              
+
               <div class="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400">
                 <div v-if="activity.proposed_start_date" class="flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -226,21 +226,21 @@
                   </svg>
                   {{ formatDate(activity.proposed_start_date) }}
                 </div>
-                
+
                 <div v-if="activity.proposed_start_date" class="flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   {{ formatTime(activity.proposed_start_date) }} - {{ formatTime(activity.proposed_end_date) }}
                 </div>
-                
+
                 <div v-if="activity.room" class="flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
                   {{ activity.room }}
                 </div>
-                
+
                 <div v-if="activity.max_participants" class="flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -249,7 +249,7 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="ml-4">
               <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -413,7 +413,7 @@ const loadEvent = async () => {
       .single()
 
     if (error) throw error
-    
+
     event.value = data
 
     // Si on a un événement, charger ses activités
@@ -582,56 +582,56 @@ onMounted(() => {
   :deep(.vuecal--orange-theme) {
     border-color: #374151;
   }
-  
+
   :deep(.vuecal--orange-theme .vuecal__header) {
     background-color: #1f2937;
     border-bottom-color: #374151;
   }
-  
+
   :deep(.vuecal--orange-theme .vuecal__title) {
     color: white;
   }
-  
+
   :deep(.vuecal--orange-theme .vuecal__weekdays-headings) {
     border-bottom-color: #374151;
   }
-  
+
   :deep(.vuecal--orange-theme .vuecal__heading) {
     color: #d1d5db;
   }
-  
+
   :deep(.vuecal--orange-theme .vuecal__cell) {
     border-color: #374151;
   }
-  
+
   :deep(.vuecal--orange-theme .vuecal__cell-date) {
     color: #d1d5db;
   }
-  
+
   :deep(.vuecal--orange-theme .vuecal__cell--today) {
     background-color: rgba(249, 115, 22, 0.2);
   }
-  
+
   :deep(.vuecal--orange-theme .vuecal__cell--selected) {
     background-color: rgba(249, 115, 22, 0.3);
   }
-  
+
   :deep(.vuecal--orange-theme .vuecal__arrow) {
     color: #9ca3af;
   }
-  
+
   :deep(.vuecal--orange-theme .vuecal__arrow:hover) {
     color: #fb923c;
   }
-  
+
   :deep(.vuecal--orange-theme .vuecal__view-btn) {
     color: #d1d5db;
   }
-  
+
   :deep(.vuecal--orange-theme .vuecal__view-btn:hover) {
     color: #fb923c;
   }
-  
+
   :deep(.vuecal--orange-theme .vuecal__time-cell) {
     color: #9ca3af;
   }

@@ -2,20 +2,20 @@
   <div class="min-h-screen bg-white dark:bg-gray-900">
     <!-- Header avec image de bannière -->
     <div class="relative h-64 md:h-80 lg:h-96 overflow-hidden">
-      <img 
-        src="/images/example/event_banniere_par_defaut_32_9.jpg"
+      <img
+        src="/images/example/event_banniere_par_defaut_32_9_v3.jpg"
         alt="Programmations bannière"
         class="w-full h-full object-cover"
       >
       <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-      
+
       <!-- Contenu du header -->
       <div class="absolute bottom-0 left-0 right-0 p-6 md:p-12">
         <div class="max-w-7xl mx-auto">
           <h1 class="text-3xl md:text-5xl font-bold text-white mb-6">
             {{ t('programmations.title') }}
           </h1>
-          
+
           <!-- Navigation horizontale des années -->
           <div class="flex gap-2 overflow-x-auto pb-2">
             <button
@@ -63,9 +63,9 @@
           {{ t('programmations.noEvents') }}
         </h3>
         <p class="mt-1 text-gray-500 dark:text-gray-400">
-          {{ selectedYear === 'all' 
-            ? t('programmations.noEventsAll') 
-            : t('programmations.noEventsDescription', { year: selectedYear }) 
+          {{ selectedYear === 'all'
+            ? t('programmations.noEventsAll')
+            : t('programmations.noEventsDescription', { year: selectedYear })
           }}
         </p>
       </div>
@@ -85,7 +85,7 @@
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
             >
             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-            
+
             <!-- Badge de statut -->
             <div class="absolute top-4 right-4">
               <span :class="getStatusClass(event)" class="px-3 py-1 rounded-full text-xs font-medium">
@@ -227,11 +227,11 @@ const loadEvents = async () => {
     if (error) throw error
 
     events.value = data || []
-    
+
     // Extraire les années disponibles
     const years = [...new Set(data.map(event => event.year))].sort((a, b) => b - a)
     availableYears.value = years.length > 0 ? years : [new Date().getFullYear()]
-    
+
     // Par défaut, afficher toutes les programmations
     // selectedYear.value reste à 'all' par défaut
 
@@ -328,9 +328,9 @@ watch(selectedYear, (newYear) => {
   if (newYear === 'all') {
     router.replace({ path: '/programmations' })
   } else {
-    router.replace({ 
-      path: '/programmations', 
-      query: { year: newYear } 
+    router.replace({
+      path: '/programmations',
+      query: { year: newYear }
     })
   }
 })
