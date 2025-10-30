@@ -183,6 +183,9 @@
       <div class="mb-3">
         <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">
           {{ t('email.to') }} ({{ t('email.to_description') }})
+          <span v-if="recipients.to.length > 0" class="ml-2 px-2 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs font-semibold">
+            {{ recipients.to.length }}
+          </span>
         </label>
         <EmailAutocompleteInput
           v-model="recipients.to"
@@ -194,6 +197,9 @@
       <div class="mb-3">
         <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">
           {{ t('email.cc') }} ({{ t('email.cc_description') }})
+          <span v-if="recipients.cc.length > 0" class="ml-2 px-2 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs font-semibold">
+            {{ recipients.cc.length }}
+          </span>
         </label>
         <EmailAutocompleteInput
           v-model="recipients.cc"
@@ -205,6 +211,9 @@
       <div class="mb-3">
         <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">
           {{ t('email.bcc') }} ({{ t('email.bcc_description') }})
+          <span v-if="recipients.bcc.length > 0" class="ml-2 px-2 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs font-semibold">
+            {{ recipients.bcc.length }}
+          </span>
         </label>
         <EmailAutocompleteInput
           v-model="recipients.bcc"
