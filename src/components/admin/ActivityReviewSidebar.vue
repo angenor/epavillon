@@ -926,9 +926,14 @@ const filteredActivities = computed(() => {
     // Trier par note décroissante (meilleures notes en premier)
     result.sort((a, b) => (b.user_rating || 0) - (a.user_rating || 0))
   }
-  // Filtrer par activités avec date validée
+  // Filtrer par activités avec date validée (final_start_date ET final_end_date)
   else if (filterByValidatedDate.value) {
-    result = result.filter(a => a.final_start_date !== null && a.final_start_date !== undefined)
+    result = result.filter(a =>
+      a.final_start_date !== null &&
+      a.final_start_date !== undefined &&
+      a.final_end_date !== null &&
+      a.final_end_date !== undefined
+    )
     // Trier par date validée (du plus ancien au plus récent)
     result.sort((a, b) => new Date(a.final_start_date) - new Date(b.final_start_date))
   }
@@ -1008,6 +1013,7 @@ const loadActivities = async () => {
         created_at,
         validation_status,
         final_start_date,
+        final_end_date,
         organization:organizations(
           id,
           name,
