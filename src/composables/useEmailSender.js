@@ -151,6 +151,28 @@ Lien du formulaire : https://docs.google.com/document/d/1bJW_XNqCqqesNVKjlR2eoug
 Nous vous remercions pour votre retour apprécié d'ici le 3 novembre 2025.`
     },
     {
+      id: 'program_modification',
+      name: 'Modification du programme',
+      subject: 'Modification du programme - {activity_name}',
+      content: `Bonjour {recipient_name},
+
+Nous vous informons que le programme de votre activité {activity_name} a été modifié.
+
+Nouvelles informations :
+
+- Organisation : {organization_name}
+- Titre de l'activité : {activity_name}
+- Date : {activity_start_date}
+- Heure : {activity_start_time} - {activity_end_time} (heure de {event_city} {event_timezone})
+
+Nous sommes conscients que ces changements peuvent occasionner des désagréments. Toutefois, en raison de créneaux alternatifs limités, il sera très difficile de proposer d'autres horaires.
+
+Nous vous remercions de votre compréhension.
+
+Cordialement,
+L'équipe IFDD - Organisation de {event_name}`
+    },
+    {
       id: 'custom',
       name: 'Personnalisé',
       subject: '',
@@ -254,7 +276,7 @@ Nous vous remercions pour votre retour apprécié d'ici le 3 novembre 2025.`
       if (eventId) {
         const { data: eventData, error: eventError } = await supabase
           .from('events')
-          .select('title, description, in_person_start_date, in_person_end_date')
+          .select('title, description, in_person_start_date, in_person_end_date, city, timezone')
           .eq('id', eventId)
           .single()
 
@@ -269,6 +291,8 @@ Nous vous remercions pour votre retour apprécié d'ici le 3 novembre 2025.`
           eventActivityVars['{event_end_date}'] = eventData.in_person_end_date
             ? new Date(eventData.in_person_end_date).toLocaleDateString('fr-FR')
             : ''
+          eventActivityVars['{event_city}'] = eventData.city || ''
+          eventActivityVars['{event_timezone}'] = eventData.timezone || ''
         }
       }
 
@@ -276,7 +300,15 @@ Nous vous remercions pour votre retour apprécié d'ici le 3 novembre 2025.`
       if (activityId) {
         const { data: activityData, error: activityError } = await supabase
           .from('activities')
-          .select('title, detailed_presentation, proposed_start_date, proposed_end_date, final_start_date, final_end_date')
+          .select(`
+            title,
+            detailed_presentation,
+            proposed_start_date,
+            proposed_end_date,
+            final_start_date,
+            final_end_date,
+            organizations(name)
+          `)
           .eq('id', activityId)
           .single()
 
@@ -285,13 +317,39 @@ Nous vous remercions pour votre retour apprécié d'ici le 3 novembre 2025.`
         if (activityData) {
           eventActivityVars['{activity_name}'] = activityData.title || ''
           eventActivityVars['{activity_description}'] = activityData.detailed_presentation || ''
+          eventActivityVars['{organization_name}'] = activityData.organizations?.name || ''
+
           // Utiliser les dates finales si disponibles, sinon les dates proposées
-          eventActivityVars['{activity_start_date}'] = (activityData.final_start_date || activityData.proposed_start_date)
-            ? new Date(activityData.final_start_date || activityData.proposed_start_date).toLocaleDateString('fr-FR')
+          const startDate = activityData.final_start_date || activityData.proposed_start_date
+          const endDate = activityData.final_end_date || activityData.proposed_end_date
+
+          eventActivityVars['{activity_start_date}'] = startDate
+            ? new Date(startDate).toLocaleDateString('fr-FR')
             : ''
-          eventActivityVars['{activity_end_date}'] = (activityData.final_end_date || activityData.proposed_end_date)
-            ? new Date(activityData.final_end_date || activityData.proposed_end_date).toLocaleDateString('fr-FR')
+          eventActivityVars['{activity_end_date}'] = endDate
+            ? new Date(endDate).toLocaleDateString('fr-FR')
             : ''
+
+          // Extraire les heures
+          if (startDate) {
+            const startDateTime = new Date(startDate)
+            eventActivityVars['{activity_start_time}'] = startDateTime.toLocaleTimeString('fr-FR', {
+              hour: '2-digit',
+              minute: '2-digit'
+            })
+          } else {
+            eventActivityVars['{activity_start_time}'] = ''
+          }
+
+          if (endDate) {
+            const endDateTime = new Date(endDate)
+            eventActivityVars['{activity_end_time}'] = endDateTime.toLocaleTimeString('fr-FR', {
+              hour: '2-digit',
+              minute: '2-digit'
+            })
+          } else {
+            eventActivityVars['{activity_end_time}'] = ''
+          }
         }
       }
     } catch (err) {
