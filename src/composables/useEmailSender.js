@@ -162,8 +162,8 @@ Nouvelles informations :
 
 - Organisation : {organization_name}
 - Titre de l'activité : {activity_name}
-- Date : {activity_start_date}
-- Heure : {activity_start_time} - {activity_end_time} (heure de {event_city} {event_timezone})
+- Date : {final_start_date}
+- Heure : {final_start_time} - {final_end_time} (heure de {event_city} {event_timezone})
 
 Nous sommes conscients que ces changements peuvent occasionner des désagréments. Toutefois, en raison de créneaux alternatifs limités, il sera très difficile de proposer d'autres horaires.
 
@@ -319,37 +319,57 @@ L'équipe IFDD - Organisation de {event_name}`
           eventActivityVars['{activity_description}'] = activityData.detailed_presentation || ''
           eventActivityVars['{organization_name}'] = activityData.organizations?.name || ''
 
-          // Utiliser les dates finales si disponibles, sinon les dates proposées
-          const startDate = activityData.final_start_date || activityData.proposed_start_date
-          const endDate = activityData.final_end_date || activityData.proposed_end_date
+          // Dates et heures finales (pour template de modification)
+          const finalStartDate = activityData.final_start_date
+          const finalEndDate = activityData.final_end_date
 
-          eventActivityVars['{activity_start_date}'] = startDate
-            ? new Date(startDate).toLocaleDateString('fr-FR')
+          // Variables pour dates finales directes
+          eventActivityVars['{final_start_date}'] = finalStartDate
+            ? new Date(finalStartDate).toLocaleDateString('fr-FR')
             : ''
-          eventActivityVars['{activity_end_date}'] = endDate
-            ? new Date(endDate).toLocaleDateString('fr-FR')
+          eventActivityVars['{final_end_date}'] = finalEndDate
+            ? new Date(finalEndDate).toLocaleDateString('fr-FR')
             : ''
 
-          // Extraire les heures
-          if (startDate) {
-            const startDateTime = new Date(startDate)
-            eventActivityVars['{activity_start_time}'] = startDateTime.toLocaleTimeString('fr-FR', {
+          // Extraire les heures pour dates finales
+          if (finalStartDate) {
+            const startDateTime = new Date(finalStartDate)
+            eventActivityVars['{final_start_time}'] = startDateTime.toLocaleTimeString('fr-FR', {
               hour: '2-digit',
               minute: '2-digit'
             })
           } else {
-            eventActivityVars['{activity_start_time}'] = ''
+            eventActivityVars['{final_start_time}'] = ''
           }
 
-          if (endDate) {
-            const endDateTime = new Date(endDate)
-            eventActivityVars['{activity_end_time}'] = endDateTime.toLocaleTimeString('fr-FR', {
+          if (finalEndDate) {
+            const endDateTime = new Date(finalEndDate)
+            eventActivityVars['{final_end_time}'] = endDateTime.toLocaleTimeString('fr-FR', {
               hour: '2-digit',
               minute: '2-digit'
             })
           } else {
-            eventActivityVars['{activity_end_time}'] = ''
+            eventActivityVars['{final_end_time}'] = ''
           }
+
+          // Variables génériques avec fallback (pour d'autres templates)
+          const proposedStartDate = activityData.proposed_start_date
+          const proposedEndDate = activityData.proposed_end_date
+
+          eventActivityVars['{activity_start_date}'] = (finalStartDate || proposedStartDate)
+            ? new Date(finalStartDate || proposedStartDate).toLocaleDateString('fr-FR')
+            : ''
+          eventActivityVars['{activity_end_date}'] = (finalEndDate || proposedEndDate)
+            ? new Date(finalEndDate || proposedEndDate).toLocaleDateString('fr-FR')
+            : ''
+
+          // Variables pour dates proposées
+          eventActivityVars['{activity_proposed_start_date}'] = proposedStartDate
+            ? new Date(proposedStartDate).toLocaleDateString('fr-FR')
+            : ''
+          eventActivityVars['{activity_proposed_end_date}'] = proposedEndDate
+            ? new Date(proposedEndDate).toLocaleDateString('fr-FR')
+            : ''
         }
       }
     } catch (err) {
