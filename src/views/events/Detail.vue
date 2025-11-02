@@ -779,6 +779,14 @@ const loadEvent = async () => {
 const loadActivities = async () => {
   try {
     isLoadingActivities.value = true
+
+    // Ne charger les activités que si l'événement est ongoing ou completed
+    if (actualEventStatus.value !== 'ongoing' && actualEventStatus.value !== 'completed') {
+      activities.value = []
+      isLoadingActivities.value = false
+      return
+    }
+
     const { data, error } = await supabase
       .from('activities')
       .select('*, organizations(id, name, logo_url)')
