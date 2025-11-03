@@ -118,6 +118,9 @@
     "totalQuestions": "Total",
     "questionsForMe": "For me",
     "yourTime": "Your time",
+    "schedule": "Schedule",
+    "eventTime": "{city} time ({offset})",
+    "yourLocalTime": "Your local time ({city})",
     "questionsPanel": {
       "title": "Questions & Answers",
       "subtitle": "Ask your questions to the speakers",

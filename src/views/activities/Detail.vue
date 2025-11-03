@@ -66,44 +66,10 @@
               <span>{{ event?.city }}</span>
             </div>
 
-            <!-- Date et heures avec fuseaux horaires -->
-            <div v-if="displayStartDate && event?.timezone" class="flex flex-col gap-1">
-              <!-- Date complète -->
-              <div class="flex items-center gap-1 sm:gap-2">
-                <font-awesome-icon :icon="['fas', 'calendar']" class="w-4 h-4 sm:w-5 sm:h-5" />
-                <span>{{ formatDate(displayStartDate) }}</span>
-              </div>
-
-              <!-- Heures dans le fuseau de l'événement (en évidence) -->
-              <div class="flex items-center gap-1 sm:gap-2 ml-6 sm:ml-7">
-                <font-awesome-icon :icon="['fas', 'clock']" class="w-3 h-3 sm:w-4 sm:h-4" />
-                <span class="font-bold">
-                  {{ formatDateWithTimezone(displayStartDate, event.timezone).eventTime }}
-                  <span v-if="displayEndDate">
-                    - {{ formatDateWithTimezone(displayEndDate, event.timezone).eventTime }}
-                  </span>
-                  <span class="text-xs sm:text-sm font-normal opacity-80 ml-1">
-                    ({{ getTimezoneAbbreviation(event.timezone) }})
-                  </span>
-                </span>
-              </div>
-
-              <!-- Heures dans le fuseau de l'utilisateur (discret, si différent) -->
-              <div
-                v-if="formatDateWithTimezone(displayStartDate, event.timezone).showUserTime"
-                class="flex items-center gap-1 sm:gap-2 ml-6 sm:ml-7 text-xs sm:text-sm opacity-70"
-              >
-                <font-awesome-icon :icon="['fas', 'user-clock']" class="w-3 h-3" />
-                <span>
-                  {{ formatDateWithTimezone(displayStartDate, event.timezone).userTime }}
-                  <span v-if="displayEndDate">
-                    - {{ formatDateWithTimezone(displayEndDate, event.timezone).userTime }}
-                  </span>
-                  <span class="italic ml-1">
-                    ({{ t('activity.yourTime') }})
-                  </span>
-                </span>
-              </div>
+            <!-- Date avec jour de la semaine -->
+            <div v-if="displayStartDate" class="flex items-center gap-1 sm:gap-2">
+              <font-awesome-icon :icon="['fas', 'calendar']" class="w-4 h-4 sm:w-5 sm:h-5" />
+              <span>{{ formatDateWithDay(displayStartDate) }}</span>
             </div>
 
             <!-- Organisation avec logo et pays avec drapeau -->
@@ -217,6 +183,61 @@
       <div class="w-full lg:w-96 h-min bg-white/0 dark:bg-gray-800/10 backdrop-blur-xl shadow-xl rounded-b-xl overflow-hidden">
         <div class="w-full h-2 bg-gradient-to-r from-blue-700 to-blue-800"></div>
           <div class="p-4 sm:p-6">
+            <!-- Horaires -->
+            <div v-if="displayStartDate && event?.timezone" class="mb-6">
+              <h2 class="text-base sm:text-lg font-semibold text-center mb-3 text-gray-900 dark:text-white flex items-center justify-center">
+                <font-awesome-icon :icon="['fas', 'clock']" class="mr-2 text-blue-700" />
+                {{ t('activity.schedule') }}
+              </h2>
+
+              <!-- Date -->
+              <div class="mb-4 p-3 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg">
+                <div class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                  <font-awesome-icon :icon="['fas', 'calendar-alt']" class="text-blue-700 dark:text-blue-400" />
+                  <span class="font-medium">{{ formatDateWithDay(displayStartDate) }}</span>
+                </div>
+              </div>
+
+              <!-- Heure de l'événement -->
+              <div class="mb-3 p-3 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg">
+                <div class="flex flex-col gap-1">
+                  <div class="flex items-center gap-2 text-sm font-bold text-green-800 dark:text-green-300">
+                    <font-awesome-icon :icon="['fas', 'clock']" class="text-green-700 dark:text-green-400" />
+                    <span>
+                      {{ formatDateWithTimezone(displayStartDate, event.timezone).eventTime }}
+                      <span v-if="displayEndDate">
+                        - {{ formatDateWithTimezone(displayEndDate, event.timezone).eventTime }}
+                      </span>
+                    </span>
+                  </div>
+                  <div class="text-xs text-gray-600 dark:text-gray-400 ml-6">
+                    {{ t('activity.eventTime', { city: event.city || getCityFromTimezone(event.timezone), offset: getGMTOffset(event.timezone) }) }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Heure locale (si différente) -->
+              <div
+                v-if="formatDateWithTimezone(displayStartDate, event.timezone).showUserTime"
+                class="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700"
+              >
+                <div class="flex flex-col gap-1">
+                  <div class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                    <font-awesome-icon :icon="['fas', 'user-clock']" class="text-gray-600 dark:text-gray-400" />
+                    <span>
+                      {{ formatDateWithTimezone(displayStartDate, event.timezone).userTime }}
+                      <span v-if="displayEndDate">
+                        - {{ formatDateWithTimezone(displayEndDate, event.timezone).userTime }}
+                      </span>
+                    </span>
+                  </div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400 ml-6">
+                    {{ t('activity.yourLocalTime', { city: getCityFromTimezone(formatDateWithTimezone(displayStartDate, event.timezone).userTimezone) }) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- Thèmes -->
             <h2 class="text-base sm:text-lg font-semibold text-center mb-3 text-gray-900 dark:text-white flex items-center justify-center">
               <font-awesome-icon :icon="['fas', 'tags']" class="mr-2 text-blue-700" />
@@ -988,6 +1009,52 @@ const formatDate = (dateString) => {
     month: 'long',
     year: 'numeric'
   })
+}
+
+// Fonction pour formater une date avec le jour de la semaine
+const formatDateWithDay = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleDateString(t('common.locale'), {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  })
+}
+
+// Fonction pour obtenir la ville principale d'un fuseau horaire
+const getCityFromTimezone = (timezone) => {
+  if (!timezone) return ''
+  // Extraire la ville du fuseau horaire (ex: "America/Belem" -> "Bélem")
+  const parts = timezone.split('/')
+  const city = parts[parts.length - 1].replace(/_/g, ' ')
+  return city
+}
+
+// Fonction pour obtenir le décalage GMT d'un fuseau horaire
+const getGMTOffset = (timezone) => {
+  if (!timezone) return ''
+
+  const date = new Date()
+  const formatter = new Intl.DateTimeFormat('en', {
+    timeZone: timezone,
+    timeZoneName: 'longOffset'
+  })
+
+  const parts = formatter.formatToParts(date)
+  const offsetPart = parts.find(part => part.type === 'timeZoneName')
+
+  if (offsetPart && offsetPart.value.includes('GMT')) {
+    return offsetPart.value.replace('GMT', 'GMT')
+  }
+
+  // Fallback: calculer manuellement
+  const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }))
+  const tzDate = new Date(date.toLocaleString('en-US', { timeZone: timezone }))
+  const offset = (tzDate.getTime() - utcDate.getTime()) / (1000 * 60 * 60)
+  const sign = offset >= 0 ? '+' : ''
+  return `GMT${sign}${offset}`
 }
 
 // Fonction pour formater une date avec les deux fuseaux horaires

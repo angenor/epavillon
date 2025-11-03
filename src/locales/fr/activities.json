@@ -391,6 +391,9 @@
     "totalQuestions": "Total",
     "questionsForMe": "Pour moi",
     "yourTime": "Votre heure",
+    "schedule": "Horaires",
+    "eventTime": "Heure de {city} ({offset})",
+    "yourLocalTime": "Votre heure locale ({city})",
     "showMore": "Voir plus",
     "showLess": "Voir moins",
     "questionsPanel": {
