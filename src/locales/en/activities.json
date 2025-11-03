@@ -114,6 +114,9 @@
     "availableForQuestions": "Available for questions",
     "questionsToSpeakers": "Questions to Speakers",
     "askQuestion": "Ask a question",
+    "viewQuestions": "View questions",
+    "totalQuestions": "Total",
+    "questionsForMe": "For me",
     "questionsPanel": {
       "title": "Questions & Answers",
       "subtitle": "Ask your questions to the speakers",
@@ -152,6 +155,16 @@
         "deleteError": "Error deleting question",
         "updateSuccess": "Question updated successfully",
         "updateError": "Error updating question"
+      },
+      "answerForm": {
+        "label": "Your answer",
+        "placeholder": "Write your answer here...",
+        "reply": "Reply",
+        "submit": "Send answer",
+        "cancel": "Cancel",
+        "answerRequired": "Please enter an answer",
+        "error": "Error sending answer",
+        "success": "Answer sent successfully"
       },
       "filters": {
         "all": "All",

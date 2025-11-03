@@ -241,14 +241,22 @@
               </div>
             </div>
 
-            <!-- Bouton poser une question -->
+            <!-- Bouton pour les questions -->
             <button
-              v-if="speakers && speakers.length > 0 && canAskQuestions"
+              v-if="speakers && speakers.length > 0 && canViewQuestions"
               @click="openQuestionsPanel"
-              class="mt-6 w-full bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900 text-white py-2 px-4 rounded-full shadow-md transition-all duration-300 text-sm sm:text-base flex items-center justify-center gap-2 cursor-pointer"
+              class="mt-6 w-full bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900 text-white py-2 px-4 rounded-full shadow-md transition-all duration-300 text-sm sm:text-base cursor-pointer"
             >
-              <font-awesome-icon :icon="['fas', 'question-circle']" />
-              {{ t('activity.askQuestion') }}
+              <div class="flex items-center justify-center gap-2">
+                <font-awesome-icon :icon="['fas', 'question-circle']" />
+                <span v-if="!currentUserIsSpeaker">{{ t('activity.askQuestion') }}</span>
+                <span v-else>{{ t('activity.viewQuestions') }}</span>
+              </div>
+              <!-- Compteurs pour les speakers -->
+              <div v-if="currentUserIsSpeaker && (totalQuestionsCount > 0 || questionsForMeCount > 0)" class="flex items-center justify-center gap-3 mt-1 text-xs">
+                <span>{{ t('activity.totalQuestions') }}: {{ totalQuestionsCount }}</span>
+                <span class="font-bold">{{ t('activity.questionsForMe') }}: {{ questionsForMeCount }}</span>
+              </div>
             </button>
           </div>
       </div>
@@ -314,7 +322,7 @@
     <div
       v-if="showQuestionsPanel"
       class="fixed left-0 top-0 bottom-0 w-full sm:w-[600px] md:w-[700px] bg-white dark:bg-gray-800 shadow-2xl z-[60] flex flex-col"
-      @click.stop
+      @click="closeQuestionMenu"
     >
       <!-- Header du panneau -->
       <div class="bg-gradient-to-r from-blue-700 to-blue-800 text-white p-4 sm:p-6 shadow-md">
@@ -352,8 +360,8 @@
         </div>
       </div>
 
-      <!-- Bouton Poser une question -->
-      <div class="px-4 sm:px-6 py-3 border-b border-gray-200 dark:border-gray-700">
+      <!-- Bouton Poser une question (seulement pour les non-speakers) -->
+      <div v-if="canAskQuestions" class="px-4 sm:px-6 py-3 border-b border-gray-200 dark:border-gray-700">
         <button
           @click="toggleQuestionForm"
           class="w-full py-3 px-4 bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900 text-white rounded-lg font-medium transition-all cursor-pointer flex items-center justify-center gap-2"
@@ -578,32 +586,50 @@
 
             <!-- Question en mode lecture -->
             <div v-else class="mb-3 pl-13">
-              <p class="text-gray-800 dark:text-gray-200 whitespace-pre-wrap">{{ question.question }}</p>
+              <div class="flex items-start justify-between gap-2">
+                <p class="text-gray-800 dark:text-gray-200 whitespace-pre-wrap flex-1">{{ question.question }}</p>
 
-              <!-- Boutons modifier/supprimer (seulement pour l'auteur et si pas encore répondu) -->
-              <div
-                v-if="question.user_id === authStore.user?.id && (!question.answers || question.answers.length === 0)"
-                class="flex gap-2 mt-3"
-              >
-                <button
-                  @click="startEditQuestion(question)"
-                  class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded-lg transition-colors cursor-pointer flex items-center gap-1"
+                <!-- Menu trois points pour modifier/supprimer (seulement pour l'auteur et si pas encore répondu) -->
+                <div
+                  v-if="question.user_id === authStore.user?.id && (!question.answers || question.answers.length === 0)"
+                  class="relative"
                 >
-                  <font-awesome-icon :icon="['fas', 'edit']" class="w-3 h-3" />
-                  {{ t('activity.questionsPanel.questionItem.edit') }}
-                </button>
-                <button
-                  @click="deleteQuestion(question.id)"
-                  :disabled="deletingQuestionId === question.id"
-                  class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs rounded-lg transition-colors cursor-pointer flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <font-awesome-icon
-                    :icon="['fas', deletingQuestionId === question.id ? 'spinner' : 'trash']"
-                    :class="{ 'animate-spin': deletingQuestionId === question.id }"
-                    class="w-3 h-3"
-                  />
-                  {{ t('activity.questionsPanel.questionItem.delete') }}
-                </button>
+                  <button
+                    @click="toggleQuestionMenu(question.id)"
+                    class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors cursor-pointer"
+                  >
+                    <font-awesome-icon :icon="['fas', 'ellipsis-v']" class="w-3 h-3 text-gray-600 dark:text-gray-400" />
+                  </button>
+
+                  <!-- Dropdown menu -->
+                  <Transition name="dropdown">
+                    <div
+                      v-if="openMenuQuestionId === question.id"
+                      class="absolute right-0 mt-1 w-40 bg-white dark:bg-gray-700 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 z-10"
+                      @click.stop
+                    >
+                      <button
+                        @click="startEditQuestion(question); openMenuQuestionId = null"
+                        class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 flex items-center gap-2 rounded-t-lg cursor-pointer"
+                      >
+                        <font-awesome-icon :icon="['fas', 'edit']" class="w-3 h-3 text-blue-600 dark:text-blue-400" />
+                        {{ t('activity.questionsPanel.questionItem.edit') }}
+                      </button>
+                      <button
+                        @click="deleteQuestion(question.id); openMenuQuestionId = null"
+                        :disabled="deletingQuestionId === question.id"
+                        class="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-600 flex items-center gap-2 rounded-b-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <font-awesome-icon
+                          :icon="['fas', deletingQuestionId === question.id ? 'spinner' : 'trash']"
+                          :class="{ 'animate-spin': deletingQuestionId === question.id }"
+                          class="w-3 h-3"
+                        />
+                        {{ t('activity.questionsPanel.questionItem.delete') }}
+                      </button>
+                    </div>
+                  </Transition>
+                </div>
               </div>
             </div>
 
@@ -633,6 +659,55 @@
                 <font-awesome-icon :icon="['fas', 'clock']" class="w-3 h-3 text-orange-600 dark:text-orange-400" />
                 <span class="text-xs text-orange-700 dark:text-orange-400">{{ t('activity.questionsPanel.questionItem.noAnswer') }}</span>
               </div>
+            </div>
+
+            <!-- Section réponse pour les speakers (tous les speakers peuvent répondre à toutes les questions) -->
+            <div v-if="canAnswerQuestions" class="pl-13 mt-3">
+              <!-- Formulaire de réponse -->
+              <div v-if="answeringQuestionId === question.id" class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
+                <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                  {{ t('activity.questionsPanel.answerForm.label') }}
+                </label>
+                <textarea
+                  v-model="answerText"
+                  :placeholder="t('activity.questionsPanel.answerForm.placeholder')"
+                  rows="4"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all resize-none text-sm"
+                  :disabled="isSubmittingAnswer"
+                ></textarea>
+                <div class="flex gap-2 mt-3">
+                  <button
+                    @click="submitAnswer(question.id)"
+                    :disabled="isSubmittingAnswer"
+                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  >
+                    <font-awesome-icon
+                      v-if="isSubmittingAnswer"
+                      :icon="['fas', 'spinner']"
+                      class="animate-spin"
+                    />
+                    <font-awesome-icon v-else :icon="['fas', 'paper-plane']" />
+                    {{ t('activity.questionsPanel.answerForm.submit') }}
+                  </button>
+                  <button
+                    @click="cancelAnswer"
+                    :disabled="isSubmittingAnswer"
+                    class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {{ t('activity.questionsPanel.answerForm.cancel') }}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Bouton Répondre -->
+              <button
+                v-else
+                @click="startAnswering(question.id)"
+                class="px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm rounded-lg transition-all cursor-pointer flex items-center gap-2"
+              >
+                <font-awesome-icon :icon="['fas', 'reply']" />
+                {{ t('activity.questionsPanel.answerForm.reply') }}
+              </button>
             </div>
           </div>
         </div>
@@ -696,6 +771,20 @@ const editingQuestionId = ref(null)
 const editQuestionText = ref('')
 const editQuestionSpeakers = ref([])
 const deletingQuestionId = ref(null)
+const openMenuQuestionId = ref(null) // Pour gérer le menu dropdown
+
+// État pour identifier si l'utilisateur est un speaker
+const currentUserIsSpeaker = ref(false)
+const currentUserSpeakerId = ref(null)
+
+// États pour répondre aux questions (pour les speakers)
+const answeringQuestionId = ref(null)
+const answerText = ref('')
+const isSubmittingAnswer = ref(false)
+
+// Compteurs de questions pour les speakers
+const totalQuestionsCount = ref(0)
+const questionsForMeCount = ref(0)
 
 // Computed
 const canRegister = computed(() => {
@@ -716,7 +805,30 @@ const canAskQuestions = computed(() => {
   if (!activity.value) return false
   if (!speakers.value || speakers.value.length === 0) return false
 
+  // Si l'utilisateur est un speaker, il ne peut PAS poser de questions
+  if (currentUserIsSpeaker.value) return false
+
   // Vérifier si au moins un intervenant accepte les questions
+  return speakers.value.some(s => s.is_available_for_questions)
+})
+
+const canAnswerQuestions = computed(() => {
+  if (!authStore.user) return false
+  if (!activity.value) return false
+
+  // Seuls les speakers peuvent répondre
+  return currentUserIsSpeaker.value
+})
+
+const canViewQuestions = computed(() => {
+  if (!authStore.user) return false
+  if (!activity.value) return false
+  if (!speakers.value || speakers.value.length === 0) return false
+
+  // Les speakers peuvent toujours voir les questions
+  if (currentUserIsSpeaker.value) return true
+
+  // Les autres utilisateurs peuvent voir si au moins un speaker accepte les questions
   return speakers.value.some(s => s.is_available_for_questions)
 })
 
@@ -901,7 +1013,48 @@ const loadActivity = async () => {
       .order('created_at')
 
     if (!speakersError && speakersData) {
-      speakers.value = speakersData
+      // Pour TOUS les speakers, chercher un utilisateur avec le même email
+      const enrichedSpeakers = await Promise.all(
+        speakersData.map(async (speaker) => {
+          // Si le speaker a un email, chercher un utilisateur correspondant
+          if (speaker.email) {
+            // Chercher un utilisateur avec le même email et qui a confirmé son inscription
+            const { data: userData } = await supabase
+              .from('users')
+              .select('id, email, first_name, last_name, profile_photo_url, profile_photo_thumbnail_url, email_confirmed')
+              .eq('email', speaker.email)
+              .eq('email_confirmed', true)
+              .single()
+
+            // Si un utilisateur est trouvé, enrichir les données du speaker
+            if (userData) {
+              return {
+                ...speaker,
+                user_data: userData,
+                // Utiliser la photo de l'utilisateur si la photo du speaker n'est pas renseignée
+                photo_url: speaker.photo_url || userData.profile_photo_url,
+                photo_thumbnail_url: speaker.photo_thumbnail_url || userData.profile_photo_thumbnail_url
+              }
+            }
+          }
+
+          return speaker
+        })
+      )
+
+      speakers.value = enrichedSpeakers
+
+      // Vérifier si l'utilisateur connecté est un speaker
+      if (authStore.user) {
+        const userSpeaker = enrichedSpeakers.find(s =>
+          s.user_data?.id === authStore.user.id ||
+          (s.email && s.email.toLowerCase() === authStore.user.email?.toLowerCase())
+        )
+        if (userSpeaker) {
+          currentUserIsSpeaker.value = true
+          currentUserSpeakerId.value = userSpeaker.id
+        }
+      }
     }
 
     // Charger les documents
@@ -1026,8 +1179,18 @@ const loadQuestions = async () => {
       )
 
       questions.value = questionsWithAnswers
+
+      // Calculer les compteurs pour les speakers
+      if (currentUserIsSpeaker.value && currentUserSpeakerId.value) {
+        totalQuestionsCount.value = questionsWithAnswers.length
+        questionsForMeCount.value = questionsWithAnswers.filter(q =>
+          q.target_speakers && q.target_speakers.includes(currentUserSpeakerId.value)
+        ).length
+      }
     } else {
       questions.value = []
+      totalQuestionsCount.value = 0
+      questionsForMeCount.value = 0
     }
 
   } catch (error) {
@@ -1228,6 +1391,82 @@ const toggleEditSpeaker = (speakerId) => {
   }
 }
 
+// Fonction pour gérer le menu dropdown des questions
+const toggleQuestionMenu = (questionId) => {
+  if (openMenuQuestionId.value === questionId) {
+    openMenuQuestionId.value = null
+  } else {
+    openMenuQuestionId.value = questionId
+  }
+}
+
+// Fermer le menu si on clique ailleurs
+const closeQuestionMenu = () => {
+  openMenuQuestionId.value = null
+}
+
+// Fonctions pour répondre aux questions (pour les speakers)
+const startAnswering = (questionId) => {
+  answeringQuestionId.value = questionId
+  answerText.value = ''
+}
+
+const cancelAnswer = () => {
+  answeringQuestionId.value = null
+  answerText.value = ''
+}
+
+const submitAnswer = async (questionId) => {
+  if (!answerText.value.trim()) {
+    questionError.value = t('activity.questionsPanel.answerForm.answerRequired')
+    return
+  }
+
+  if (!currentUserSpeakerId.value) {
+    questionError.value = 'Erreur: Identifiant du speaker non trouvé'
+    return
+  }
+
+  try {
+    isSubmittingAnswer.value = true
+    questionError.value = ''
+
+    // Insérer la réponse
+    const { error: insertError } = await supabase
+      .from('activity_question_answers')
+      .insert({
+        question_id: questionId,
+        speaker_id: currentUserSpeakerId.value,
+        answer: answerText.value.trim()
+      })
+
+    if (insertError) throw insertError
+
+    // Marquer la question comme répondue
+    const { error: updateError } = await supabase
+      .from('activity_questions')
+      .update({
+        is_answered: true,
+        answered_at: new Date().toISOString()
+      })
+      .eq('id', questionId)
+
+    if (updateError) throw updateError
+
+    // Recharger les questions
+    await loadQuestions()
+
+    // Réinitialiser le formulaire
+    cancelAnswer()
+
+  } catch (error) {
+    console.error('Error submitting answer:', error)
+    questionError.value = t('activity.questionsPanel.answerForm.error')
+  } finally {
+    isSubmittingAnswer.value = false
+  }
+}
+
 // Fonctions pour gérer le modal d'erreur
 const showError = (titleKey, messageKey) => {
   errorModal.value = {
@@ -1354,5 +1593,23 @@ onMounted(() => {
 .slide-down-leave-from {
   max-height: 1000px;
   opacity: 1;
+}
+
+/* Animations pour le dropdown menu */
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: all 0.2s ease;
+}
+
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.dropdown-enter-to,
+.dropdown-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>

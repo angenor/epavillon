@@ -387,6 +387,9 @@
     "documents": "Documents",
     "register": "S'inscrire",
     "askQuestion": "Poser une question",
+    "viewQuestions": "Voir les questions",
+    "totalQuestions": "Total",
+    "questionsForMe": "Pour moi",
     "showMore": "Voir plus",
     "showLess": "Voir moins",
     "questionsPanel": {
@@ -427,6 +430,16 @@
         "deleteError": "Erreur lors de la suppression",
         "updateSuccess": "Question modifiée avec succès",
         "updateError": "Erreur lors de la modification"
+      },
+      "answerForm": {
+        "label": "Votre réponse",
+        "placeholder": "Écrivez votre réponse ici...",
+        "reply": "Répondre",
+        "submit": "Envoyer la réponse",
+        "cancel": "Annuler",
+        "answerRequired": "Veuillez saisir une réponse",
+        "error": "Erreur lors de l'envoi de la réponse",
+        "success": "Réponse envoyée avec succès"
       },
       "filters": {
         "all": "Toutes",
