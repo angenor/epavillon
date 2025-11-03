@@ -67,7 +67,7 @@
           <div class="flex flex-wrap items-center font-semibold sm:font-bold text-sm sm:text-base md:text-lg gap-3 sm:gap-4 md:gap-6 text-white/90 animate-fade-in-up animation-delay-500">
             <div v-if="activityCountry" class="flex items-center gap-1 sm:gap-2">
               <font-awesome-icon :icon="['fas', 'map-marker-alt']" class="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>{{ event?.city }}<span v-if="activityCountry">, {{ activityCountry.name_fr }}</span></span>
+              <span>{{ event?.city }}</span>
             </div>
 
             <div v-if="activity?.proposed_start_date" class="flex items-center gap-1 sm:gap-2">
@@ -420,7 +420,7 @@ const getBannerUrl = () => {
   if (activity.value?.banner_url) return activity.value.banner_url
 
   // Par défaut
-  return '/images/example/event_banniere_par_defaut_32_9.jpg'
+  return '/images/example/event_banniere_par_defaut_32_9_v3.jpg'
 }
 
 const getActivityPosterUrl = () => {
@@ -429,7 +429,7 @@ const getActivityPosterUrl = () => {
   if (activity.value?.cover_image_low_url) return activity.value.cover_image_low_url
 
   // Image par défaut (même que dans Management.vue)
-  return '/images/example/event_banniere_par_defaut_32_9_v3.jpg'
+  return '/images/example/event_banniere_par_defaut_16_9.jpg'
 }
 
 const loadActivity = async () => {
