@@ -124,6 +124,11 @@
       "beTheFirst": "Be the first to ask a question!",
       "askNewQuestion": "Ask a question",
       "viewAllQuestions": "View all questions",
+      "loginRequired": {
+        "title": "Log in to participate",
+        "message": "You must be logged in to ask questions to speakers or answer them if you are a speaker.",
+        "button": "Log in"
+      },
       "questionForm": {
         "title": "New question",
         "questionLabel": "Your question",

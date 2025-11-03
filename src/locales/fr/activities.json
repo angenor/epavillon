@@ -399,6 +399,11 @@
       "beTheFirst": "Soyez le premier à poser une question !",
       "askNewQuestion": "Poser une question",
       "viewAllQuestions": "Voir toutes les questions",
+      "loginRequired": {
+        "title": "Connectez-vous pour participer",
+        "message": "Vous devez être connecté pour poser des questions aux intervenants ou y répondre si vous êtes intervenant.",
+        "button": "Se connecter"
+      },
       "questionForm": {
         "title": "Nouvelle question",
         "questionLabel": "Votre question",

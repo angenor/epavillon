@@ -80,7 +80,7 @@
           <!-- Bannière de l'événement -->
           <div class="relative h-48 overflow-hidden">
             <img
-              :src="event.banner_high_quality_32_9_url || event.banner || '/images/example/event_banniere_par_defaut_32_9.jpg'"
+              :src="event.banner_high_quality_32_9_url || event.banner || '/images/example/event_banniere_par_defaut_32_9_v3.jpg'"
               :alt="event.title"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
             >

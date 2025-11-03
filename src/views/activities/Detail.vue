@@ -1,9 +1,5 @@
 <template>
   <div class="min-h-screen relative transition-colors duration-200">
-    <!-- Logo de l'événement parent -->
-    <div v-if="event?.logo_url" class="absolute right-2 sm:right-5 top-2 sm:top-5 h-12 w-12 sm:h-16 md:h-20 sm:w-16 md:w-20 z-10 rounded-full shadow-xl overflow-hidden bg-white">
-      <img :src="event.logo_url" :alt="event.title" class="w-full h-full object-cover">
-    </div>
     <!-- Image de fond avec repeat -->
     <div
       class="absolute inset-0 z-0 dark:opacity-20"
@@ -360,6 +356,28 @@
         </div>
       </div>
 
+      <!-- Message pour les visiteurs non authentifiés -->
+      <div v-if="!authStore.user" class="px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-blue-900/20">
+        <div class="flex items-start gap-3">
+          <font-awesome-icon :icon="['fas', 'info-circle']" class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+          <div class="flex-1">
+            <p class="text-sm text-blue-800 dark:text-blue-200 font-medium mb-1">
+              {{ t('activity.questionsPanel.loginRequired.title') }}
+            </p>
+            <p class="text-xs text-blue-700 dark:text-blue-300">
+              {{ t('activity.questionsPanel.loginRequired.message') }}
+            </p>
+            <button
+              @click="$router.push('/login')"
+              class="mt-3 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors cursor-pointer flex items-center gap-2"
+            >
+              <font-awesome-icon :icon="['fas', 'sign-in-alt']" />
+              {{ t('activity.questionsPanel.loginRequired.button') }}
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Bouton Poser une question (seulement pour les non-speakers) -->
       <div v-if="canAskQuestions" class="px-4 sm:px-6 py-3 border-b border-gray-200 dark:border-gray-700">
         <button
@@ -595,7 +613,7 @@
                   class="relative"
                 >
                   <button
-                    @click="toggleQuestionMenu(question.id)"
+                    @click.stop="toggleQuestionMenu(question.id)"
                     class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors cursor-pointer"
                   >
                     <font-awesome-icon :icon="['fas', 'ellipsis-v']" class="w-3 h-3 text-gray-600 dark:text-gray-400" />
@@ -821,14 +839,18 @@ const canAnswerQuestions = computed(() => {
 })
 
 const canViewQuestions = computed(() => {
-  if (!authStore.user) return false
   if (!activity.value) return false
   if (!speakers.value || speakers.value.length === 0) return false
 
+  // Les visiteurs non authentifiés peuvent voir les questions
   // Les speakers peuvent toujours voir les questions
+  // Les autres utilisateurs peuvent voir si au moins un speaker accepte les questions
+  if (!authStore.user) {
+    return speakers.value.some(s => s.is_available_for_questions)
+  }
+
   if (currentUserIsSpeaker.value) return true
 
-  // Les autres utilisateurs peuvent voir si au moins un speaker accepte les questions
   return speakers.value.some(s => s.is_available_for_questions)
 })
 
@@ -1053,6 +1075,9 @@ const loadActivity = async () => {
         if (userSpeaker) {
           currentUserIsSpeaker.value = true
           currentUserSpeakerId.value = userSpeaker.id
+
+          // Charger les compteurs de questions pour les speakers
+          await loadQuestionsCounts()
         }
       }
     }
@@ -1110,6 +1135,41 @@ const registerToActivity = async () => {
   } catch (error) {
     console.error('Error registering to activity:', error)
     // Afficher un message d'erreur
+  }
+}
+
+// Fonction pour charger uniquement les compteurs de questions (pour les speakers)
+const loadQuestionsCounts = async () => {
+  if (!activity.value || !currentUserIsSpeaker.value || !currentUserSpeakerId.value) return
+
+  try {
+    // Charger uniquement le nombre total de questions
+    const { count: totalCount, error: totalError } = await supabase
+      .from('activity_questions')
+      .select('*', { count: 'exact', head: true })
+      .eq('activity_id', activity.value.id)
+      .eq('is_visible', true)
+      .eq('is_disabled', false)
+
+    if (!totalError && totalCount !== null) {
+      totalQuestionsCount.value = totalCount
+    }
+
+    // Charger le nombre de questions qui me sont adressées
+    const { data: myQuestionsData, error: myQuestionsError } = await supabase
+      .from('activity_questions')
+      .select('target_speakers')
+      .eq('activity_id', activity.value.id)
+      .eq('is_visible', true)
+      .eq('is_disabled', false)
+
+    if (!myQuestionsError && myQuestionsData) {
+      questionsForMeCount.value = myQuestionsData.filter(q =>
+        q.target_speakers && q.target_speakers.includes(currentUserSpeakerId.value)
+      ).length
+    }
+  } catch (error) {
+    console.error('Error loading questions counts:', error)
   }
 }
 
