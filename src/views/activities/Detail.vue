@@ -411,13 +411,6 @@
     </div>
   </div>
 
-  <!-- Comment Floating Button for Submitters (only if user is the owner) -->
-  <CommentFloatingButtonUser
-    v-if="activity && authStore.user && activity.submitted_by === authStore.user.id"
-    :activityId="activity.id"
-    :submitterId="activity.submitted_by"
-  />
-
   <!-- Panneau Questions & Réponses (glisse depuis la gauche) -->
   <Transition name="modal-backdrop">
     <div
