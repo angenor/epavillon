@@ -30,7 +30,3 @@ voici un exemple de code pour le tableau dynamique avec vue-cal: @src/views/admi
 
 CREATE TYPE validation_status AS ENUM ('draft', 'submitted', 'under_review', 'approved', 'rejected', 'cancelled', 'live', 'completed');
 
-
-
-
-Bien mais je ne voie pas le drapeau de l'organisation comme dans @Organi, l'un des éléments les plus importants c'est l'affichage de la date et l'heure(heure de début et de fin), je veux que cette page affiche l'heure dans le fuseau horaire de l’évènement associé à l'activité en évidence et l'heure dans le fuseau horaire de l'utilisateur courant de fonçon plus discret. On affiche le second uniquement s'il est différent du premier

@@ -199,19 +199,39 @@
               </div> -->
 
               <!-- Heure de l'événement -->
-              <div class="mb-3 p-3 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg">
-                <div class="flex flex-col gap-1">
-                  <div class="flex items-center gap-2 text-sm font-bold text-green-800 dark:text-green-300">
-                    <font-awesome-icon :icon="['fas', 'clock']" class="text-green-700 dark:text-green-400" />
-                    <span>
-                      {{ formatDateWithTimezone(displayStartDate, event.timezone).eventTime }}
-                      <span v-if="displayEndDate">
-                        - {{ formatDateWithTimezone(displayEndDate, event.timezone).eventTime }}
-                      </span>
-                    </span>
-                  </div>
-                  <div class="text-xs text-gray-600 dark:text-gray-400 ml-6">
-                    {{ t('activity.eventTime', { city: event.city || getCityFromTimezone(event.timezone), offset: getGMTOffset(event.timezone) }) }}
+              <div class="mb-3 relative overflow-hidden rounded-xl bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/30 dark:via-emerald-900/20 dark:to-teal-900/20">
+                <!-- Bordure animée -->
+                <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 dark:from-green-400 dark:via-emerald-400 dark:to-teal-400 opacity-20 animate-border-pulse"></div>
+                <div class="absolute inset-[2px] rounded-xl bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/30 dark:via-emerald-900/20 dark:to-teal-900/20"></div>
+
+                <!-- Contenu -->
+                <div class="relative p-4">
+                  <div class="flex items-start gap-3">
+                    <!-- Icône animée -->
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 dark:from-green-400 dark:to-emerald-500 flex items-center justify-center shadow-lg">
+                      <font-awesome-icon :icon="['fas', 'clock']" class="text-white text-lg" />
+                    </div>
+
+                    <!-- Informations horaires -->
+                    <div class="flex-1 space-y-2">
+                      <!-- Heures -->
+                      <div class="text-base font-bold text-green-900 dark:text-green-100">
+                        {{ formatDateWithTimezone(displayStartDate, event.timezone).eventTime }}
+                        <span v-if="displayEndDate" class="mx-1">-</span>
+                        <span v-if="displayEndDate">
+                          {{ formatDateWithTimezone(displayEndDate, event.timezone).eventTime }}
+                        </span>
+                      </div>
+
+                      <!-- Ville et GMT -->
+                      <div class="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-300">
+                        <font-awesome-icon :icon="['fas', 'map-marker-alt']" class="text-green-600 dark:text-green-400" />
+                        <span class="font-medium">{{ event.city || getCityFromTimezone(event.timezone) }}</span>
+                        <span class="px-2 py-0.5 bg-green-100 dark:bg-green-800/50 text-green-700 dark:text-green-300 rounded-full font-mono text-[10px]">
+                          {{ getGMTOffset(event.timezone) }}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -219,20 +239,37 @@
               <!-- Heure locale (si différente) -->
               <div
                 v-if="formatDateWithTimezone(displayStartDate, event.timezone).showUserTime"
-                class="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700"
+                class="relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-800/50 dark:to-slate-800/40"
               >
-                <div class="flex flex-col gap-1">
-                  <div class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                    <font-awesome-icon :icon="['fas', 'user-clock']" class="text-gray-600 dark:text-gray-400" />
-                    <span>
-                      {{ formatDateWithTimezone(displayStartDate, event.timezone).userTime }}
-                      <span v-if="displayEndDate">
-                        - {{ formatDateWithTimezone(displayEndDate, event.timezone).userTime }}
-                      </span>
-                    </span>
-                  </div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400 ml-6">
-                    {{ t('activity.yourLocalTime', { city: getCityFromTimezone(formatDateWithTimezone(displayStartDate, event.timezone).userTimezone) }) }}
+                <!-- Bordure subtile -->
+                <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-400 to-purple-400 dark:from-blue-500 dark:to-purple-500 opacity-10"></div>
+                <div class="absolute inset-[1.5px] rounded-xl bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-800/50 dark:to-slate-800/40"></div>
+
+                <!-- Contenu -->
+                <div class="relative p-4">
+                  <div class="flex items-start gap-3">
+                    <!-- Icône -->
+                    <div class="flex-shrink-0 w-9 h-9 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/40 dark:to-purple-900/40 flex items-center justify-center border border-blue-200 dark:border-blue-700">
+                      <font-awesome-icon :icon="['fas', 'user-clock']" class="text-blue-600 dark:text-blue-400 text-sm" />
+                    </div>
+
+                    <!-- Informations horaires -->
+                    <div class="flex-1 space-y-1.5">
+                      <!-- Heures -->
+                      <div class="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                        {{ formatDateWithTimezone(displayStartDate, event.timezone).userTime }}
+                        <span v-if="displayEndDate" class="mx-1">-</span>
+                        <span v-if="displayEndDate">
+                          {{ formatDateWithTimezone(displayEndDate, event.timezone).userTime }}
+                        </span>
+                      </div>
+
+                      <!-- Ville locale -->
+                      <div class="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
+                        <font-awesome-icon :icon="['fas', 'globe']" class="text-blue-500 dark:text-blue-400 text-[10px]" />
+                        <span class="italic">{{ t('activity.yourLocalTime', { city: getCityFromTimezone(formatDateWithTimezone(displayStartDate, event.timezone).userTimezone) }) }}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1036,25 +1073,34 @@ const getCityFromTimezone = (timezone) => {
 const getGMTOffset = (timezone) => {
   if (!timezone) return ''
 
-  const date = new Date()
-  const formatter = new Intl.DateTimeFormat('en', {
-    timeZone: timezone,
-    timeZoneName: 'longOffset'
-  })
+  try {
+    const date = new Date()
 
-  const parts = formatter.formatToParts(date)
-  const offsetPart = parts.find(part => part.type === 'timeZoneName')
+    // Obtenir le décalage en minutes
+    const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }))
+    const tzDate = new Date(date.toLocaleString('en-US', { timeZone: timezone }))
+    const offsetMinutes = (tzDate.getTime() - utcDate.getTime()) / (1000 * 60)
+    const offsetHours = offsetMinutes / 60
 
-  if (offsetPart && offsetPart.value.includes('GMT')) {
-    return offsetPart.value.replace('GMT', 'GMT')
+    // Formatage simple : "GMT+3" ou "GMT-3"
+    if (offsetHours === 0) {
+      return 'GMT'
+    }
+
+    // Si c'est un nombre entier d'heures
+    if (Number.isInteger(offsetHours)) {
+      return `GMT${offsetHours > 0 ? '+' : ''}${offsetHours}`
+    }
+
+    // Si il y a des minutes (ex: GMT+5:30 pour l'Inde)
+    const hours = Math.floor(Math.abs(offsetHours))
+    const minutes = Math.abs(offsetMinutes) % 60
+    const sign = offsetHours > 0 ? '+' : '-'
+    return `GMT${sign}${hours}:${minutes.toString().padStart(2, '0')}`
+  } catch (error) {
+    console.error('Error calculating GMT offset:', error)
+    return 'GMT'
   }
-
-  // Fallback: calculer manuellement
-  const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }))
-  const tzDate = new Date(date.toLocaleString('en-US', { timeZone: timezone }))
-  const offset = (tzDate.getTime() - utcDate.getTime()) / (1000 * 60 * 60)
-  const sign = offset >= 0 ? '+' : ''
-  return `GMT${sign}${offset}`
 }
 
 // Fonction pour formater une date avec les deux fuseaux horaires
@@ -1796,6 +1842,37 @@ onMounted(() => {
 
 .animation-delay-500 {
   animation-delay: 500ms;
+}
+
+/* Animations pour les bordures des cartes d'horaires */
+@keyframes border-pulse {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+.animate-border-pulse {
+  animation: border-pulse 3s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s ease-in-out infinite;
 }
 
 /* Style pour l'effet de fade sur la description tronquée */
