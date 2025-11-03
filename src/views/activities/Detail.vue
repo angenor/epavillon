@@ -191,12 +191,12 @@
               </h2>
 
               <!-- Date -->
-              <div class="mb-4 p-3 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg">
+              <!-- <div class="mb-4 p-3 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg">
                 <div class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                   <font-awesome-icon :icon="['fas', 'calendar-alt']" class="text-blue-700 dark:text-blue-400" />
                   <span class="font-medium">{{ formatDateWithDay(displayStartDate) }}</span>
                 </div>
-              </div>
+              </div> -->
 
               <!-- Heure de l'événement -->
               <div class="mb-3 p-3 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg">
