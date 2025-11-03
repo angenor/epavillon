@@ -389,6 +389,52 @@
     "askQuestion": "Poser une question",
     "showMore": "Voir plus",
     "showLess": "Voir moins",
+    "questionsPanel": {
+      "title": "Questions & Réponses",
+      "subtitle": "Posez vos questions aux intervenants",
+      "noQuestions": "Aucune question pour le moment",
+      "beTheFirst": "Soyez le premier à poser une question !",
+      "askNewQuestion": "Poser une question",
+      "viewAllQuestions": "Voir toutes les questions",
+      "questionForm": {
+        "title": "Nouvelle question",
+        "questionLabel": "Votre question",
+        "questionPlaceholder": "Écrivez votre question ici...",
+        "selectSpeakers": "Destinataires",
+        "selectSpeakersHelp": "Sélectionnez les intervenants",
+        "allSpeakers": "Tous les intervenants",
+        "submit": "Envoyer",
+        "submitting": "Envoi...",
+        "cancel": "Annuler",
+        "success": "Question envoyée avec succès",
+        "error": "Erreur lors de l'envoi",
+        "questionRequired": "Veuillez saisir votre question",
+        "speakersRequired": "Sélectionnez au moins un intervenant"
+      },
+      "questionItem": {
+        "askedBy": "Posée par",
+        "askedTo": "Destinée à",
+        "noAnswer": "En attente de réponse",
+        "answered": "Répondu par",
+        "answeredOn": "le",
+        "you": "Vous",
+        "edit": "Modifier",
+        "delete": "Supprimer",
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette question ?",
+        "deleteSuccess": "Question supprimée avec succès",
+        "deleteError": "Erreur lors de la suppression",
+        "updateSuccess": "Question modifiée avec succès",
+        "updateError": "Erreur lors de la modification"
+      },
+      "filters": {
+        "all": "Toutes",
+        "answered": "Répondues",
+        "pending": "En attente",
+        "myQuestions": "Mes questions"
+      }
+    },
     "status": {
       "completed": "Terminée"
     },
