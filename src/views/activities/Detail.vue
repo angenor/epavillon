@@ -66,14 +66,69 @@
               <span>{{ event?.city }}</span>
             </div>
 
-            <div v-if="activity?.proposed_start_date" class="flex items-center gap-1 sm:gap-2">
-              <font-awesome-icon :icon="['fas', 'calendar']" class="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>{{ formatDate(activity.proposed_start_date) }}</span>
+            <!-- Date et heures avec fuseaux horaires -->
+            <div v-if="displayStartDate && event?.timezone" class="flex flex-col gap-1">
+              <!-- Date complète -->
+              <div class="flex items-center gap-1 sm:gap-2">
+                <font-awesome-icon :icon="['fas', 'calendar']" class="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>{{ formatDate(displayStartDate) }}</span>
+              </div>
+
+              <!-- Heures dans le fuseau de l'événement (en évidence) -->
+              <div class="flex items-center gap-1 sm:gap-2 ml-6 sm:ml-7">
+                <font-awesome-icon :icon="['fas', 'clock']" class="w-3 h-3 sm:w-4 sm:h-4" />
+                <span class="font-bold">
+                  {{ formatDateWithTimezone(displayStartDate, event.timezone).eventTime }}
+                  <span v-if="displayEndDate">
+                    - {{ formatDateWithTimezone(displayEndDate, event.timezone).eventTime }}
+                  </span>
+                  <span class="text-xs sm:text-sm font-normal opacity-80 ml-1">
+                    ({{ getTimezoneAbbreviation(event.timezone) }})
+                  </span>
+                </span>
+              </div>
+
+              <!-- Heures dans le fuseau de l'utilisateur (discret, si différent) -->
+              <div
+                v-if="formatDateWithTimezone(displayStartDate, event.timezone).showUserTime"
+                class="flex items-center gap-1 sm:gap-2 ml-6 sm:ml-7 text-xs sm:text-sm opacity-70"
+              >
+                <font-awesome-icon :icon="['fas', 'user-clock']" class="w-3 h-3" />
+                <span>
+                  {{ formatDateWithTimezone(displayStartDate, event.timezone).userTime }}
+                  <span v-if="displayEndDate">
+                    - {{ formatDateWithTimezone(displayEndDate, event.timezone).userTime }}
+                  </span>
+                  <span class="italic ml-1">
+                    ({{ t('activity.yourTime') }})
+                  </span>
+                </span>
+              </div>
             </div>
 
-            <div v-if="organization" class="flex items-center gap-1 sm:gap-2">
-              <font-awesome-icon :icon="['fas', 'building']" class="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>{{ organization.name }}</span>
+            <!-- Organisation avec logo et pays avec drapeau -->
+            <div v-if="organization" class="flex items-center gap-2">
+              <!-- Logo de l'organisation si disponible -->
+              <div v-if="organization.logo_url" class="h-8 w-8 sm:h-10 sm:w-10 rounded-full overflow-hidden bg-white shadow-md flex-shrink-0">
+                <img :src="organization.logo_url" :alt="organization.name" class="w-full h-full object-cover">
+              </div>
+              <!-- Icône par défaut si pas de logo -->
+              <font-awesome-icon v-else :icon="['fas', 'building']" class="w-4 h-4 sm:w-5 sm:h-5" />
+
+              <div class="flex flex-col">
+                <span>{{ organization.name }}</span>
+                <!-- Pays de l'organisation avec drapeau -->
+                <div v-if="organizationCountry" class="flex items-center gap-1 text-xs sm:text-sm opacity-90">
+                  <img
+                    v-if="organizationCountry.code"
+                    :src="`https://flagcdn.com/w20/${organizationCountry.code.toLowerCase()}.png`"
+                    :alt="t('common.locale') === 'fr' ? organizationCountry.name_fr : organizationCountry.name_en"
+                    class="h-3 w-5 object-cover border border-white/30"
+                  />
+                  <span v-else-if="organizationCountry.flag_emoji">{{ organizationCountry.flag_emoji }}</span>
+                  <span>{{ t('common.locale') === 'fr' ? organizationCountry.name_fr : organizationCountry.name_en }}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -368,7 +423,7 @@
               {{ t('activity.questionsPanel.loginRequired.message') }}
             </p>
             <button
-              @click="$router.push('/login')"
+              @click="$router.push({ path: '/login', query: { redirect: $route.fullPath } })"
               class="mt-3 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors cursor-pointer flex items-center gap-2"
             >
               <font-awesome-icon :icon="['fas', 'sign-in-alt']" />
@@ -752,6 +807,7 @@ const authStore = useAuthStore()
 const activity = ref(null)
 const event = ref(null)
 const organization = ref(null)
+const organizationCountry = ref(null)
 const speakers = ref([])
 const documents = ref([])
 const activityCountry = ref(null)
@@ -805,6 +861,17 @@ const totalQuestionsCount = ref(0)
 const questionsForMeCount = ref(0)
 
 // Computed
+// Dates à afficher (finales si disponibles, sinon proposées)
+const displayStartDate = computed(() => {
+  if (!activity.value) return null
+  return activity.value.final_start_date || activity.value.proposed_start_date
+})
+
+const displayEndDate = computed(() => {
+  if (!activity.value) return null
+  return activity.value.final_end_date || activity.value.proposed_end_date
+})
+
 const canRegister = computed(() => {
   if (!authStore.user) return false
   if (isRegistered.value) return false
@@ -812,7 +879,7 @@ const canRegister = computed(() => {
 
   // Vérifier si l'activité n'est pas passée
   const now = new Date()
-  const endDate = activity.value.final_end_date || activity.value.proposed_end_date
+  const endDate = displayEndDate.value
   if (endDate && new Date(endDate) < now) return false
 
   return activity.value.validation_status === 'approved'
@@ -923,6 +990,60 @@ const formatDate = (dateString) => {
   })
 }
 
+// Fonction pour formater une date avec les deux fuseaux horaires
+const formatDateWithTimezone = (dateString, eventTimezone) => {
+  if (!dateString || !eventTimezone) return { eventTime: '', userTime: '', showUserTime: false }
+
+  const date = new Date(dateString)
+  const locale = t('common.locale')
+
+  // Format pour l'événement
+  const eventTimeStr = new Intl.DateTimeFormat(locale, {
+    timeZone: eventTimezone,
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }).format(date)
+
+  // Fuseau horaire de l'utilisateur
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
+  // Format pour l'utilisateur
+  const userTimeStr = new Intl.DateTimeFormat(locale, {
+    timeZone: userTimezone,
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }).format(date)
+
+  // Vérifier si les deux fuseaux sont différents
+  const showUserTime = eventTimeStr !== userTimeStr && eventTimezone !== userTimezone
+
+  return {
+    eventTime: eventTimeStr,
+    userTime: userTimeStr,
+    showUserTime,
+    eventTimezone,
+    userTimezone
+  }
+}
+
+// Fonction pour obtenir le nom court du fuseau horaire
+const getTimezoneAbbreviation = (timezone) => {
+  if (!timezone) return ''
+
+  // Obtenir l'abréviation du fuseau horaire
+  const date = new Date()
+  const formatter = new Intl.DateTimeFormat('en', {
+    timeZone: timezone,
+    timeZoneName: 'short'
+  })
+
+  const parts = formatter.formatToParts(date)
+  const tzPart = parts.find(part => part.type === 'timeZoneName')
+  return tzPart ? tzPart.value : timezone
+}
+
 const getInitials = (speaker) => {
   if (!speaker) return '?'
   const firstInitial = speaker.first_name ? speaker.first_name[0].toUpperCase() : ''
@@ -993,12 +1114,14 @@ const loadActivity = async () => {
           country_id,
           logo_url,
           banner_high_quality_32_9_url,
-          banner_low_quality_32_9_url
+          banner_low_quality_32_9_url,
+          timezone
         ),
         organizations!inner (
           id,
           name,
-          logo_url
+          logo_url,
+          country_id
         ),
         countries (
           id,
@@ -1021,6 +1144,19 @@ const loadActivity = async () => {
 
     if (activityData.organizations) {
       organization.value = activityData.organizations
+
+      // Charger le pays de l'organisation avec son drapeau
+      if (activityData.organizations.country_id) {
+        const { data: orgCountryData } = await supabase
+          .from('countries')
+          .select('id, name_fr, name_en, flag_emoji, flag_svg_url, code')
+          .eq('id', activityData.organizations.country_id)
+          .single()
+
+        if (orgCountryData) {
+          organizationCountry.value = orgCountryData
+        }
+      }
     }
 
     if (activityData.countries) {
