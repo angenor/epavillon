@@ -141,7 +141,7 @@
             create: false
           }"
           :snap-to-time="15"
-          :time-cell-height="60"
+          :time-cell-height="120"
           :locale="currentLocale"
           @event-drag-create="handleEventDragCreate"
           @event-drop="handleEventDrop"
@@ -150,30 +150,29 @@
         >
           <!-- Template personnalisé pour les événements -->
           <template #event="{ event, view }">
-            <div class="p-2 h-full overflow-hidden" style="pointer-events: none;">
-              <div class="flex items-start space-x-2">
-                <!-- Logo de l'organisation -->
+            <div class="px-2 h-full overflow-hidden" style="pointer-events: none;">
+              <!-- Logo de l'organisation -->
                 <img
                   v-if="event.organization?.logo_url"
                   :src="event.organization.logo_url"
                   :alt="event.organization.name"
-                  class="w-8 h-8 rounded object-contain bg-white flex-shrink-0"
+                  class="w-8 h-8 rounded object-contain bg-white flex-shrink-0 mx-auto"
                 />
-                <div v-else class="w-8 h-8 rounded bg-gray-300 dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+                <div v-else class="w-8 h-8 rounded bg-gray-300 dark:bg-gray-600 flex items-center justify-center flex-shrink-0  mx-auto">
                   <span class="text-xs font-semibold text-gray-600 dark:text-gray-300">
                     {{ event.organization?.name?.[0]?.toUpperCase() }}
                   </span>
                 </div>
-
+              <div class="flex items-start space-x-2">
                 <!-- Informations de l'activité -->
                 <div class="flex-1 min-w-0">
-                  <p class="font-semibold text-sm truncate" :class="getEventTextClass(event)">
+                  <p class="font-semibold text-sm line-clamp-2" :class="getEventTextClass(event)">
                     {{ event.title }}
                   </p>
                   <p class="text-xs opacity-90 truncate" :class="getEventTextClass(event)">
                     {{ event.organization?.name }}
                   </p>
-                  <p class="text-xs opacity-75 mt-1" :class="getEventTextClass(event)">
+                  <p class="text-xs opacity-75 mt-1 text-center" :class="getEventTextClass(event)">
                     {{ formatEventTime(event.start, event.end) }}
                   </p>
                 </div>
