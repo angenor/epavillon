@@ -67,59 +67,60 @@
     </div>
 
     <!-- Contenu principal -->
-    <div v-else-if="event" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div v-else-if="event">
       <!-- Sélecteur de vue -->
-      <div class="flex justify-between items-center mb-8">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-          {{ t('programmations.activities') }}
-        </h2>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-4">
+        <div class="flex justify-between items-center">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+            {{ t('programmations.activities') }}
+          </h2>
 
-        <div class="flex gap-2">
-          <button
-            @click="viewMode = 'grid'"
-            :class="[
-              'px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2',
-              viewMode === 'grid'
-                ? 'bg-orange-600 text-white'
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-            ]"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-            </svg>
-            <span class="hidden sm:inline">{{ t('programmations.viewGrid') }}</span>
-          </button>
+          <div class="flex gap-2">
+            <button
+              @click="viewMode = 'grid'"
+              :class="[
+                'px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2',
+                viewMode === 'grid'
+                  ? 'bg-orange-600 text-white'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+              ]"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+              </svg>
+              <span class="hidden sm:inline">{{ t('programmations.viewGrid') }}</span>
+            </button>
 
-          <button
-            @click="viewMode = 'list'"
-            :class="[
-              'px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2',
-              viewMode === 'list'
-                ? 'bg-orange-600 text-white'
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-            ]"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-            <span class="hidden sm:inline">{{ t('programmations.viewList') }}</span>
-          </button>
+            <button
+              @click="viewMode = 'list'"
+              :class="[
+                'px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2',
+                viewMode === 'list'
+                  ? 'bg-orange-600 text-white'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+              ]"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <span class="hidden sm:inline">{{ t('programmations.viewList') }}</span>
+            </button>
 
-          <button
-            @click="viewMode = 'calendar'"
-            disabled
-            :class="[
-              'px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2',
-              viewMode === 'calendar'
-                ? 'bg-orange-600 text-white'
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-            ]"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <span class="hidden sm:inline">{{ t('programmations.viewCalendar') }}</span>
-          </button>
+            <button
+              @click="viewMode = 'calendar'"
+              :class="[
+                'px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2',
+                viewMode === 'calendar'
+                  ? 'bg-orange-600 text-white'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+              ]"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span class="hidden sm:inline">{{ t('programmations.viewCalendar') }}</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -129,7 +130,7 @@
       </div>
 
       <!-- Empty state -->
-      <div v-else-if="activities.length === 0" class="text-center py-16">
+      <div v-else-if="activities.length === 0" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-16">
         <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
@@ -141,8 +142,9 @@
         </p>
       </div>
 
-      <!-- Vue Grille -->
-      <div v-else-if="viewMode === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Vue Grille (largeur limitée) -->
+      <div v-else-if="viewMode === 'grid'" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div
           v-for="activity in activities"
           :key="activity.id"
@@ -171,18 +173,18 @@
 
             <!-- Détails -->
             <div class="space-y-2">
-              <div v-if="activity.proposed_start_date" class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+              <div v-if="activity.final_start_date" class="flex items-center text-sm text-gray-500 dark:text-gray-400">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                {{ formatDate(activity.proposed_start_date) }}
+                {{ formatDate(activity.final_start_date) }}
               </div>
 
-              <div v-if="activity.proposed_start_date" class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+              <div v-if="activity.final_start_date" class="flex items-center text-sm text-gray-500 dark:text-gray-400">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                {{ formatTime(activity.proposed_start_date) }} - {{ formatTime(activity.proposed_end_date) }}
+                {{ formatTime(activity.final_start_date) }} - {{ formatTime(activity.final_end_date) }}
               </div>
 
               <div v-if="activity.room" class="flex items-center text-sm text-gray-500 dark:text-gray-400">
@@ -194,10 +196,11 @@
             </div>
           </div>
         </div>
+        </div>
       </div>
 
-      <!-- Vue Liste -->
-      <div v-else-if="viewMode === 'list'" class="space-y-4">
+      <!-- Vue Liste (largeur limitée) -->
+      <div v-else-if="viewMode === 'list'" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-4">
         <div
           v-for="activity in activities"
           :key="activity.id"
@@ -220,18 +223,18 @@
               </p>
 
               <div class="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400">
-                <div v-if="activity.proposed_start_date" class="flex items-center">
+                <div v-if="activity.final_start_date" class="flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  {{ formatDate(activity.proposed_start_date) }}
+                  {{ formatDate(activity.final_start_date) }}
                 </div>
 
-                <div v-if="activity.proposed_start_date" class="flex items-center">
+                <div v-if="activity.final_start_date" class="flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  {{ formatTime(activity.proposed_start_date) }} - {{ formatTime(activity.proposed_end_date) }}
+                  {{ formatTime(activity.final_start_date) }} - {{ formatTime(activity.final_end_date) }}
                 </div>
 
                 <div v-if="activity.room" class="flex items-center">
@@ -259,28 +262,57 @@
         </div>
       </div>
 
-      <!-- Vue Calendrier avec Vue-Cal -->
-      <div v-else-if="viewMode === 'calendar'" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+      <!-- Vue Calendrier avec Vue-Cal (pleine largeur) -->
+      <div v-else-if="viewMode === 'calendar'" class="bg-white dark:bg-gray-800 shadow-lg overflow-hidden w-full" style="height: 700px;">
         <vue-cal
           :events="calendarEvents"
           :time-from="8 * 60"
-          :time-to="20 * 60"
+          :time-to="18 * 60"
           :disable-views="['years', 'year']"
           :selected-date="selectedDate"
-          active-view="month"
-          :locale="locale"
+          default-view="week"
+          :editable-events="{
+            title: false,
+            drag: false,
+            resize: false,
+            delete: false,
+            create: false
+          }"
+          :snap-to-time="15"
+          :time-cell-height="120"
+          :locale="currentLocale"
           :hide-weekends="false"
-          :events-on-month-view="true"
-          events-count-on-year-view
           class="vuecal--orange-theme"
           @event-click="onEventClick"
         >
-          <template v-slot:event="{ event }">
-            <div class="vuecal__event-title">
-              {{ event.title }}
-            </div>
-            <div class="vuecal__event-time text-xs">
-              {{ formatTime(event.start) }}
+          <!-- Template personnalisé pour les événements -->
+          <template #event="{ event }">
+            <div class="px-2 h-full overflow-hidden cursor-pointer">
+              <!-- Logo de l'organisation -->
+              <img
+                v-if="event.organization?.logo_url"
+                :src="event.organization.logo_url"
+                :alt="event.organization.name"
+                class="w-8 h-8 rounded object-contain bg-white flex-shrink-0 mx-auto mb-1"
+              />
+              <div v-else class="w-8 h-8 rounded bg-gray-300 dark:bg-gray-600 flex items-center justify-center flex-shrink-0 mx-auto mb-1">
+                <span class="text-xs font-semibold text-gray-600 dark:text-gray-300">
+                  {{ event.organization?.name?.[0]?.toUpperCase() || 'A' }}
+                </span>
+              </div>
+
+              <!-- Informations de l'activité -->
+              <div class="flex-1 min-w-0">
+                <p class="font-semibold text-sm line-clamp-2 text-center" :class="getEventTextClass(event)">
+                  {{ event.title }}
+                </p>
+                <p class="text-xs opacity-90 truncate text-center" :class="getEventTextClass(event)">
+                  {{ event.organization?.name }}
+                </p>
+                <p class="text-xs opacity-75 mt-1 text-center" :class="getEventTextClass(event)">
+                  {{ formatEventTimeDisplay(event.start, event.end) }}
+                </p>
+              </div>
             </div>
           </template>
         </vue-cal>
@@ -309,17 +341,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { VueCal } from 'vue-cal'
+import 'vue-cal/style.css'
 import { useSupabase } from '@/composables/useSupabase'
-
-const VueCal = defineAsyncComponent(() =>
-  import('vue-cal').then(module => {
-    import('vue-cal/style.css')
-    return module.default
-  })
-)
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -338,19 +365,42 @@ const selectedDate = ref(new Date())
 const year = computed(() => parseInt(route.params.year))
 const eventId = computed(() => route.params.eventId)
 
+// Locale pour vue-cal
+const currentLocale = computed(() => locale.value)
+
 // Computed pour le calendrier
 const calendarEvents = computed(() => {
-  return activities.value.map(activity => ({
-    id: activity.id,
-    title: activity.title,
-    start: activity.proposed_start_date ? new Date(activity.proposed_start_date) : new Date(),
-    end: activity.proposed_end_date ? new Date(activity.proposed_end_date) : new Date(),
-    class: 'orange',
-    background: true,
-    content: activity.description || '',
-    room: activity.room || '',
-    format: activity.format || 'presentation'
-  }))
+  return activities.value.map(activity => {
+    // Utiliser final_start_date et final_end_date pour les activités approuvées
+    const startDate = activity.final_start_date ? new Date(activity.final_start_date) : new Date()
+    const endDate = activity.final_end_date ? new Date(activity.final_end_date) : new Date()
+
+    // Déterminer la classe CSS en fonction du type d'activité et du statut
+    let cssClass = 'activity-event'
+    if (activity.validation_status === 'approved') {
+      cssClass += ' activity-approved'
+    } else if (activity.activity_type === 'side_event') {
+      cssClass += ' activity-side-event'
+    } else if (activity.activity_type === 'country_day') {
+      cssClass += ' activity-country-day'
+    }
+
+    return {
+      activityId: activity.id,
+      title: activity.title,
+      start: startDate,
+      end: endDate,
+      class: cssClass,
+      organization: activity.organization,
+      activityType: activity.activity_type,
+      validationStatus: activity.validation_status,
+      room: activity.room || '',
+      format: activity.format || 'presentation',
+      deletable: false,
+      resizable: false,
+      draggable: false
+    }
+  })
 })
 
 // Méthodes
@@ -397,7 +447,30 @@ const goToActivityDetail = (activityId) => {
 }
 
 const onEventClick = (event) => {
-  goToActivityDetail(event.id)
+  goToActivityDetail(event.activityId)
+}
+
+const getEventTextClass = (event) => {
+  // Pour les activités approuvées avec fond blanc, utiliser du texte sombre
+  if (event.validationStatus === 'approved') {
+    return 'text-gray-900 dark:text-gray-900'
+  }
+  // Pour les autres, utiliser du texte blanc
+  return 'text-white'
+}
+
+const formatEventTimeDisplay = (start, end) => {
+  const startTime = start.toLocaleTimeString(locale.value === 'fr' ? 'fr-FR' : 'en-US', {
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+
+  const endTime = end.toLocaleTimeString(locale.value === 'fr' ? 'fr-FR' : 'en-US', {
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+
+  return `${startTime} - ${endTime}`
 }
 
 const loadEvent = async () => {
@@ -432,28 +505,23 @@ const loadActivities = async () => {
   try {
     isLoadingActivities.value = true
 
-    // Ne charger les activités que si l'événement est ongoing ou completed
-    const eventStatus = event.value?.event_status || event.value?.status
-    if (eventStatus !== 'ongoing' && eventStatus !== 'completed') {
-      activities.value = []
-      isLoadingActivities.value = false
-      return
-    }
-
     const { data, error } = await supabase
       .from('activities')
-      .select('*')
+      .select(`
+        *,
+        organization:organizations(id, name, logo_url)
+      `)
       .eq('event_id', eventId.value)
-      .eq('validation_status', 'approved')
-      .order('proposed_start_date', { ascending: true })
+      .not('validation_status', 'in', '(draft,submitted,under_review,rejected)')
+      .order('final_start_date', { ascending: true })
 
     if (error) throw error
 
     activities.value = data || []
 
     // Si on a des activités et qu'on est en vue calendrier, définir la date sélectionnée
-    if (data && data.length > 0 && data[0].proposed_start_date) {
-      selectedDate.value = new Date(data[0].proposed_start_date)
+    if (data && data.length > 0 && data[0].final_start_date) {
+      selectedDate.value = new Date(data[0].final_start_date)
     }
 
   } catch (error) {
@@ -490,6 +558,7 @@ onMounted(() => {
 :deep(.vuecal--orange-theme) {
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
+  height: 100%;
 }
 
 :deep(.vuecal--orange-theme .vuecal__header) {
@@ -530,28 +599,6 @@ onMounted(() => {
   background-color: #ffe5cc;
 }
 
-:deep(.vuecal--orange-theme .vuecal__event) {
-  background-color: #f97316;
-  color: white;
-  border-radius: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-:deep(.vuecal--orange-theme .vuecal__event:hover) {
-  background-color: #ea580c;
-}
-
-:deep(.vuecal--orange-theme .vuecal__event.orange) {
-  background-color: #f97316;
-}
-
-:deep(.vuecal--orange-theme .vuecal__event.orange:hover) {
-  background-color: #ea580c;
-}
-
 :deep(.vuecal--orange-theme .vuecal__arrow) {
   color: #4b5563;
 }
@@ -585,63 +632,127 @@ onMounted(() => {
   color: #4b5563;
 }
 
+/* Classes pour les événements */
+:deep(.activity-event) {
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  border-width: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+:deep(.activity-event:hover) {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  transform: scale(1.02);
+}
+
+:deep(.activity-approved) {
+  background-color: white;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+:deep(.activity-approved:hover) {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+:deep(.activity-side-event) {
+  background-color: rgb(59 130 246);
+  border-color: rgb(37 99 235);
+  color: white;
+}
+
+:deep(.activity-side-event:hover) {
+  background-color: rgb(37 99 235);
+}
+
+:deep(.activity-country-day) {
+  background-color: rgb(34 197 94);
+  border-color: rgb(22 163 74);
+  color: white;
+}
+
+:deep(.activity-country-day:hover) {
+  background-color: rgb(22 163 74);
+}
+
+:deep(.vuecal__event) {
+  overflow: visible;
+}
+
 /* Styles pour le mode sombre */
-@media (prefers-color-scheme: dark) {
-  :deep(.vuecal--orange-theme) {
-    border-color: #374151;
-  }
+.dark :deep(.vuecal--orange-theme) {
+  border-color: #374151;
+}
 
-  :deep(.vuecal--orange-theme .vuecal__header) {
-    background-color: #1f2937;
-    border-bottom-color: #374151;
-  }
+.dark :deep(.vuecal--orange-theme .vuecal__header) {
+  background-color: #1f2937;
+  border-bottom-color: #374151;
+}
 
-  :deep(.vuecal--orange-theme .vuecal__title) {
-    color: white;
-  }
+.dark :deep(.vuecal--orange-theme .vuecal__title) {
+  color: white;
+}
 
-  :deep(.vuecal--orange-theme .vuecal__weekdays-headings) {
-    border-bottom-color: #374151;
-  }
+.dark :deep(.vuecal--orange-theme .vuecal__weekdays-headings) {
+  border-bottom-color: #374151;
+}
 
-  :deep(.vuecal--orange-theme .vuecal__heading) {
-    color: #d1d5db;
-  }
+.dark :deep(.vuecal--orange-theme .vuecal__heading) {
+  color: #d1d5db;
+}
 
-  :deep(.vuecal--orange-theme .vuecal__cell) {
-    border-color: #374151;
-  }
+.dark :deep(.vuecal--orange-theme .vuecal__cell) {
+  border-color: #374151;
+  background-color: rgb(55 65 81);
+}
 
-  :deep(.vuecal--orange-theme .vuecal__cell-date) {
-    color: #d1d5db;
-  }
+.dark :deep(.vuecal--orange-theme .vuecal__cell-date) {
+  color: #d1d5db;
+}
 
-  :deep(.vuecal--orange-theme .vuecal__cell--today) {
-    background-color: rgba(249, 115, 22, 0.2);
-  }
+.dark :deep(.vuecal--orange-theme .vuecal__cell--today) {
+  background-color: rgba(249, 115, 22, 0.2);
+}
 
-  :deep(.vuecal--orange-theme .vuecal__cell--selected) {
-    background-color: rgba(249, 115, 22, 0.3);
-  }
+.dark :deep(.vuecal--orange-theme .vuecal__cell--selected) {
+  background-color: rgba(249, 115, 22, 0.3);
+}
 
-  :deep(.vuecal--orange-theme .vuecal__arrow) {
-    color: #9ca3af;
-  }
+.dark :deep(.vuecal--orange-theme .vuecal__arrow) {
+  color: #9ca3af;
+}
 
-  :deep(.vuecal--orange-theme .vuecal__arrow:hover) {
-    color: #fb923c;
-  }
+.dark :deep(.vuecal--orange-theme .vuecal__arrow:hover) {
+  color: #fb923c;
+}
 
-  :deep(.vuecal--orange-theme .vuecal__view-btn) {
-    color: #d1d5db;
-  }
+.dark :deep(.vuecal--orange-theme .vuecal__view-btn) {
+  color: #d1d5db;
+}
 
-  :deep(.vuecal--orange-theme .vuecal__view-btn:hover) {
-    color: #fb923c;
-  }
+.dark :deep(.vuecal--orange-theme .vuecal__view-btn:hover) {
+  color: #fb923c;
+}
 
-  :deep(.vuecal--orange-theme .vuecal__time-cell) {
-    color: #9ca3af;
-  }
+.dark :deep(.vuecal--orange-theme .vuecal__time-cell) {
+  color: #9ca3af;
+  border-color: rgb(75 85 99);
+}
+
+.dark :deep(.vuecal--orange-theme .vuecal__title-bar) {
+  background-color: rgb(31 41 55);
+}
+
+/* Styles spécifiques pour les événements en mode sombre */
+.dark :deep(.activity-approved) {
+  background-color: rgb(243 244 246);
+  border-color: #9ca3af;
+  color: #111827;
+}
+
+.dark :deep(.activity-approved:hover) {
+  background-color: rgb(229 231 235);
 }
 </style>
