@@ -337,7 +337,21 @@
         >
           <!-- Template personnalisé pour les événements -->
           <template #event="{ event }">
-            <div class="px-2 h-full overflow-hidden cursor-pointer">
+            <!-- Journées spéciales -->
+            <div v-if="event.isSpecialDay" class="flex flex-col items-center justify-center h-full px-3 py-2 cursor-pointer">
+              <div class="text-center">
+                <p class="font-bold text-base mb-2 leading-tight">{{ event.title }}</p>
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-white/80 dark:bg-gray-800/80 rounded-lg shadow-sm text-xs font-medium">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  {{ t('programmations.viewProgram') }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Activités régulières -->
+            <div v-else class="px-2 h-full overflow-hidden cursor-pointer">
               <!-- Logo de l'organisation -->
               <img
                 v-if="event.organization?.logo_url"
@@ -469,7 +483,10 @@ const convertUTCToEventTimezoneAsLocal = (dateString) => {
 
 // Computed pour le calendrier
 const calendarEvents = computed(() => {
-  return activities.value.map(activity => {
+  const events = []
+
+  // Ajouter les activités régulières
+  activities.value.forEach(activity => {
     // Convertir les dates UTC en dates locales représentant l'heure du timezone de l'événement
     // Vue-cal les affichera alors dans le bon créneau horaire
     const startDate = activity.final_start_date
@@ -489,7 +506,7 @@ const calendarEvents = computed(() => {
       cssClass += ' activity-country-day'
     }
 
-    return {
+    events.push({
       activityId: activity.id,
       title: activity.title,
       start: startDate,
@@ -503,44 +520,77 @@ const calendarEvents = computed(() => {
       deletable: false,
       resizable: false,
       draggable: false
-    }
+    })
   })
+
+  // Ajouter les journées spéciales en dur
+  // Journée Jeunesse Climat - Mercredi 12 novembre 2025
+  events.push({
+    isSpecialDay: true,
+    specialDayType: 'youth-climate',
+    title: `🌱 ${t('programmations.youthClimateDay')}`,
+    start: new Date(2025, 10, 12, 8, 0), // 12 novembre 2025 à 8h00 (mois 10 = novembre car 0-indexed)
+    end: new Date(2025, 10, 12, 18, 0), // 12 novembre 2025 à 18h00
+    class: 'special-day-event youth-climate-day',
+    link: 'https://epavillonclimatique.francophonie.org/public/documents_uploades/Journee_jeunesse_CdP30.pdf',
+    deletable: false,
+    resizable: false,
+    draggable: false
+  })
+
+  // Journée Finance durable en Francophonie - Vendredi 14 novembre 2025
+  events.push({
+    isSpecialDay: true,
+    specialDayType: 'sustainable-finance',
+    title: `💰 ${t('programmations.sustainableFinanceDay')}`,
+    start: new Date(2025, 10, 14, 8, 0), // 14 novembre 2025 à 8h00
+    end: new Date(2025, 10, 14, 18, 0), // 14 novembre 2025 à 18h00
+    class: 'special-day-event sustainable-finance-day',
+    link: 'https://epavillonclimatique.francophonie.org/public/documents_uploades/Journee_finance_CdP30.pdf',
+    deletable: false,
+    resizable: false,
+    draggable: false
+  })
+
+  return events
 })
 
-// Computed pour les heures spéciales (jour de repos)
+// Computed pour les heures spéciales (jour de repos et journées spéciales)
 const specialHours = computed(() => {
-  // Si pas d'activités, pas de jour de repos à afficher
-  if (!activities.value || activities.value.length === 0) return {}
+  const special = {}
 
-  // Trouver la première activité avec une date de début
-  const sortedActivities = [...activities.value]
-    .filter(a => a.final_start_date)
-    .sort((a, b) => new Date(a.final_start_date) - new Date(b.final_start_date))
+  // Si on a des activités, ajouter le jour de repos (dimanche)
+  if (activities.value && activities.value.length > 0) {
+    // Trouver la première activité avec une date de début
+    const sortedActivities = [...activities.value]
+      .filter(a => a.final_start_date)
+      .sort((a, b) => new Date(a.final_start_date) - new Date(b.final_start_date))
 
-  if (sortedActivities.length === 0) return {}
+    if (sortedActivities.length > 0) {
+      // Obtenir la date de la première activité
+      const firstActivityDate = new Date(sortedActivities[0].final_start_date)
 
-  // Obtenir la date de la première activité
-  const firstActivityDate = new Date(sortedActivities[0].final_start_date)
+      // Trouver le premier dimanche à partir de cette date
+      const firstSunday = new Date(firstActivityDate)
+      const dayOfWeek = firstSunday.getDay() // 0 = dimanche, 1 = lundi, ..., 6 = samedi
 
-  // Trouver le premier dimanche à partir de cette date
-  const firstSunday = new Date(firstActivityDate)
-  const dayOfWeek = firstSunday.getDay() // 0 = dimanche, 1 = lundi, ..., 6 = samedi
+      // Si on n'est pas déjà dimanche, avancer jusqu'au prochain dimanche
+      if (dayOfWeek !== 0) {
+        const daysUntilSunday = 7 - dayOfWeek
+        firstSunday.setDate(firstSunday.getDate() + daysUntilSunday)
+      }
 
-  // Si on n'est pas déjà dimanche, avancer jusqu'au prochain dimanche
-  if (dayOfWeek !== 0) {
-    const daysUntilSunday = 7 - dayOfWeek
-    firstSunday.setDate(firstSunday.getDate() + daysUntilSunday)
-  }
-
-  // Vue-cal utilise 1-7 où 7 = dimanche
-  return {
-    7: {
-      from: 8 * 60, // De 8h00
-      to: 18 * 60,  // À 18h00
-      class: 'rest-day',
-      label: `🌴 ${t('programmations.restDay')}`
+      // Vue-cal utilise 1-7 où 7 = dimanche
+      special[7] = {
+        from: 8 * 60, // De 8h00
+        to: 18 * 60,  // À 18h00
+        class: 'rest-day',
+        label: `🌴 ${t('programmations.restDay')}`
+      }
     }
   }
+
+  return special
 })
 
 // Méthodes
@@ -603,7 +653,13 @@ const goToActivityDetail = (activityId) => {
 }
 
 const onEventClick = (event) => {
-  goToActivityDetail(event.activityId)
+  // Si c'est une journée spéciale avec un lien, ouvrir le PDF dans un nouvel onglet
+  if (event.isSpecialDay && event.link) {
+    window.open(event.link, '_blank', 'noopener,noreferrer')
+  } else if (event.activityId) {
+    // Sinon, naviguer vers la page de détail de l'activité
+    goToActivityDetail(event.activityId)
+  }
 }
 
 const getEventTextClass = (event) => {
@@ -984,5 +1040,78 @@ onMounted(() => {
     );
   color: #fb923c;
   border: 2px dashed #fb923c;
+}
+
+/* Styles généraux pour les journées spéciales */
+:deep(.special-day-event) {
+  min-height: 100px;
+  font-weight: 600;
+}
+
+:deep(.special-day-event:hover) {
+  transform: scale(1.01);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Styles pour la Journée Jeunesse Climat */
+:deep(.youth-climate-day) {
+  background:
+    linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(34, 197, 94, 0.1),
+      rgba(34, 197, 94, 0.1) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+  color: #15803d;
+  border: 3px solid #22c55e;
+  background-blend-mode: overlay;
+}
+
+.dark :deep(.youth-climate-day) {
+  background:
+    linear-gradient(135deg, rgb(55 65 81) 0%, rgb(45 55 72) 100%),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(34, 197, 94, 0.3),
+      rgba(34, 197, 94, 0.3) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+  color: #4ade80;
+  border: 3px solid #22c55e;
+  background-blend-mode: overlay;
+}
+
+/* Styles pour la Journée Finance durable en Francophonie */
+:deep(.sustainable-finance-day) {
+  background:
+    linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(59, 130, 246, 0.1),
+      rgba(59, 130, 246, 0.1) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+  color: #1e40af;
+  border: 3px solid #3b82f6;
+  background-blend-mode: overlay;
+}
+
+.dark :deep(.sustainable-finance-day) {
+  background:
+    linear-gradient(135deg, rgb(55 65 81) 0%, rgb(45 55 72) 100%),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(59, 130, 246, 0.3),
+      rgba(59, 130, 246, 0.3) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+  color: #60a5fa;
+  border: 3px solid #3b82f6;
+  background-blend-mode: overlay;
 }
 </style>

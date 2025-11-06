@@ -22,6 +22,9 @@
     "week1": "Semaine 1",
     "week2": "Semaine 2",
     "restDay": "Jour de repos",
+    "youthClimateDay": "Journée Jeunesse Climat",
+    "sustainableFinanceDay": "Journée Finance durable en Francophonie",
+    "viewProgram": "Voir le programme",
     "error": {
       "title": "Erreur",
       "notFound": "L'événement demandé n'a pas été trouvé."

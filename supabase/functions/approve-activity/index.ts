@@ -64,75 +64,62 @@ function calculateDurationInMinutes(startDate: string, endDate: string): number 
 }
 
 /**
- * Formate une date UTC vers le timezone local pour l'API Zoom (YYYY-MM-DDTHH:mm:ss)
+ * Formate une date UTC pour l'API Zoom (YYYY-MM-DDTHH:mm:ss)
  *
- * IMPORTANT: Les dates en base sont en UTC. Pour Zoom, on doit les convertir
- * dans le timezone local de l'événement.
+ * IMPORTANT: Les dates en base sont en UTC et représentent le moment exact.
+ * On les envoie directement à Zoom en UTC sans conversion.
+ * Zoom affichera l'heure dans le fuseau horaire local de chaque participant.
  *
  * Exemple: Si l'activité doit avoir lieu à 14:00 heure de Paris
  * - Stocké en base: "2025-11-15T13:00:00.000Z" (13:00 UTC = 14:00 Paris)
- * - Envoyé à Zoom: "2025-11-15T14:00:00" avec timezone="Europe/Paris"
+ * - Envoyé à Zoom: "2025-11-15T13:00:00" avec timezone="UTC"
+ * - Zoom affiche: 13:00 UTC = 14:00 Paris = 08:00 New York
  */
-function formatDateForZoom(dateString: string, timezone: string): string {
+function formatDateForZoomUTC(dateString: string): string {
   const date = new Date(dateString);
 
-  console.log('🕐 Converting date to timezone:', {
+  console.log('🕐 Formatting date for Zoom (UTC):', {
     input_utc: dateString,
-    target_timezone: timezone,
     timestamp_ms: date.getTime()
   });
 
-  // Utiliser Intl.DateTimeFormat pour convertir vers le timezone local
-  const formatter = new Intl.DateTimeFormat('en-CA', {
-    timeZone: timezone,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false
-  });
+  // Extraire les composants UTC directement
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  const hour = String(date.getUTCHours()).padStart(2, '0');
+  const minute = String(date.getUTCMinutes()).padStart(2, '0');
+  const second = String(date.getUTCSeconds()).padStart(2, '0');
 
-  const parts = formatter.formatToParts(date);
-  const dateParts: Record<string, string> = {};
+  const formattedDate = `${year}-${month}-${day}T${hour}:${minute}:${second}`;
 
-  for (const part of parts) {
-    if (part.type !== 'literal') {
-      dateParts[part.type] = part.value;
-    }
-  }
-
-  const formattedDate = `${dateParts.year}-${dateParts.month}-${dateParts.day}T${dateParts.hour}:${dateParts.minute}:${dateParts.second}`;
-
-  console.log('✅ Formatted date for Zoom:', {
-    output_local: formattedDate,
-    timezone: timezone
+  console.log('✅ Formatted date for Zoom (UTC):', {
+    output_utc: formattedDate,
+    timezone: 'UTC'
   });
 
   return formattedDate;
 }
 
 /**
- * Crée une réunion Zoom via l'API
+ * Crée une réunion Zoom via l'API en UTC
  */
 async function createZoomMeeting(
   accessToken: string,
   title: string,
   startDate: string,
   duration: number,
-  timezone: string,
   description?: string
 ) {
   try {
-    const formattedStartTime = formatDateForZoom(startDate, timezone);
+    const formattedStartTime = formatDateForZoomUTC(startDate);
 
     const requestBody = {
       topic: title,
       type: 2, // Réunion planifiée
       start_time: formattedStartTime,
       duration: duration,
-      timezone: timezone, // Utiliser le timezone de l'événement
+      timezone: 'UTC', // Utiliser UTC car les dates en base sont déjà en UTC
       agenda: description || '',
       password: 'nego2025', // Mot de passe par défaut pour toutes les réunions
       settings: {
@@ -154,7 +141,7 @@ async function createZoomMeeting(
       topic: title,
       start_time: formattedStartTime,
       duration: duration,
-      timezone: timezone
+      timezone: 'UTC'
     });
 
     const response = await fetch(
@@ -466,13 +453,12 @@ Deno.serve(async (req) => {
     console.log('🔑 Getting Zoom access token...');
     const accessToken = await getZoomAccessToken();
 
-    console.log('🎥 Creating Zoom meeting with timezone:', timezone);
+    console.log('🎥 Creating Zoom meeting in UTC (dates are already in UTC)');
     const zoomMeeting = await createZoomMeeting(
       accessToken,
       meetingTitle,
       finalStartDate,
       duration,
-      timezone,
       description
     );
 
