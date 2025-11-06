@@ -358,17 +358,56 @@ CREATE TABLE public.activity_speaker_connections (
     UNIQUE(activity_id, speaker_id)
 );
 
--- Table des inscriptions aux activités
+-- Type ENUM pour le type d'inscription
+CREATE TYPE registration_type AS ENUM ('user', 'guest');
+
+-- Table des inscriptions aux activités (supporte utilisateurs authentifiés ET guests)
 CREATE TABLE public.activity_registrations (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     activity_id UUID NOT NULL REFERENCES public.activities(id) ON DELETE CASCADE,
-    user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
-    personal_join_url TEXT,
+
+    -- Utilisateur authentifié (NULL pour les guests)
+    user_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
+
+    -- Données guest (NULL pour les utilisateurs authentifiés)
+    guest_email TEXT,
+    guest_first_name TEXT,
+    guest_last_name TEXT,
+    guest_organization TEXT,
+    guest_country_id UUID REFERENCES public.countries(id),
+
+    -- Type d'inscription
+    registration_type registration_type DEFAULT 'user',
+
+    -- Données Zoom
+    zoom_registrant_id TEXT,
+    zoom_join_url TEXT,
+    personal_join_url TEXT, -- Deprecated: utiliser zoom_join_url
+
+    -- Métadonnées
     registration_date TIMESTAMPTZ DEFAULT NOW(),
     attended BOOLEAN DEFAULT FALSE,
     attendance_duration INTEGER, -- en minutes
-    UNIQUE(activity_id, user_id)
+
+    -- Contraintes
+    CONSTRAINT check_user_or_guest CHECK (
+        (user_id IS NOT NULL AND guest_email IS NULL) OR
+        (user_id IS NULL AND guest_email IS NOT NULL)
+    ),
+    CONSTRAINT check_guest_data CHECK (
+        (user_id IS NOT NULL) OR
+        (user_id IS NULL AND guest_email IS NOT NULL AND guest_first_name IS NOT NULL AND guest_last_name IS NOT NULL)
+    )
 );
+
+-- Index uniques pour éviter les doublons
+CREATE UNIQUE INDEX activity_registrations_user_unique
+    ON public.activity_registrations(activity_id, user_id)
+    WHERE user_id IS NOT NULL;
+
+CREATE UNIQUE INDEX activity_registrations_guest_unique
+    ON public.activity_registrations(activity_id, guest_email)
+    WHERE guest_email IS NOT NULL AND user_id IS NULL;
 
 -- Documents supports des activités
 CREATE TABLE public.activity_documents (

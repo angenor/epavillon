@@ -413,6 +413,27 @@
         "message": "Vous êtes déjà inscrit à cette activité. Veuillez consulter votre email pour retrouver le lien de connexion Zoom."
       }
     },
+    "guestRegistration": {
+      "title": "Inscription à l'activité",
+      "info": "Pour vous inscrire à cette activité, veuillez remplir les informations suivantes. Un email de confirmation avec le lien Zoom vous sera envoyé.",
+      "email": "Adresse email",
+      "emailPlaceholder": "votre.email@exemple.com",
+      "firstName": "Prénom",
+      "firstNamePlaceholder": "Ex: Jean",
+      "lastName": "Nom",
+      "lastNamePlaceholder": "Ex: Dupont",
+      "organization": "Organisation (optionnel)",
+      "organizationPlaceholder": "Ex: Ministère de l'Environnement",
+      "country": "Pays (optionnel)",
+      "selectCountry": "Sélectionnez un pays",
+      "submit": "S'inscrire",
+      "errors": {
+        "emailRequired": "L'adresse email est requise",
+        "emailInvalid": "L'adresse email n'est pas valide",
+        "firstNameRequired": "Le prénom est requis (minimum 2 caractères)",
+        "lastNameRequired": "Le nom est requis (minimum 2 caractères)"
+      }
+    },
     "questionsPanel": {
       "title": "Questions & Réponses",
       "subtitle": "Posez vos questions aux intervenants",

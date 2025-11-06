@@ -475,6 +475,27 @@
         "message": "You are already registered for this activity. Please check your email to find the Zoom connection link."
       }
     },
+    "guestRegistration": {
+      "title": "Activity Registration",
+      "info": "To register for this activity, please fill in the following information. A confirmation email with the Zoom link will be sent to you.",
+      "email": "Email address",
+      "emailPlaceholder": "your.email@example.com",
+      "firstName": "First name",
+      "firstNamePlaceholder": "Ex: John",
+      "lastName": "Last name",
+      "lastNamePlaceholder": "Ex: Doe",
+      "organization": "Organization (optional)",
+      "organizationPlaceholder": "Ex: Ministry of Environment",
+      "country": "Country (optional)",
+      "selectCountry": "Select a country",
+      "submit": "Register",
+      "errors": {
+        "emailRequired": "Email address is required",
+        "emailInvalid": "Email address is not valid",
+        "firstNameRequired": "First name is required (minimum 2 characters)",
+        "lastNameRequired": "Last name is required (minimum 2 characters)"
+      }
+    },
     "status": {
       "completed": "Completed"
     },

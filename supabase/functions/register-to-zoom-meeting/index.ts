@@ -1,6 +1,6 @@
 // supabase/functions/register-to-zoom-meeting/index.ts
-// Edge Function pour inscrire un utilisateur authentifié à une réunion Zoom
-// IMPORTANT: L'utilisateur doit être authentifié (user_id requis)
+// Edge Function pour inscrire un participant à une réunion Zoom
+// Supporte les utilisateurs authentifiés ET les guests (sans compte)
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.43.5';
 
@@ -318,28 +318,17 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Vérifier que l'utilisateur est authentifié avant de continuer
-    if (!currentUserId) {
-      console.error('Cannot register: user not authenticated');
-      return new Response(
-        JSON.stringify({
-          error: 'User authentication required',
-          message: 'Vous devez être connecté pour vous inscrire à cette activité'
-        }),
-        {
-          status: 401,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders }
-        }
-      );
-    }
-
     // Vérifier que le participant n'est pas déjà inscrit
     console.log('Checking for existing registration...');
     const { data: existingRegistration } = await supabaseClient
       .from('activity_registrations')
-      .select('id, personal_join_url')
+      .select('id, zoom_join_url, personal_join_url')
       .eq('activity_id', activity_id)
-      .eq('user_id', currentUserId)
+      .or(
+        currentUserId
+          ? `user_id.eq.${currentUserId}`
+          : `guest_email.ilike.${guest_email}`
+      )
       .maybeSingle();
 
     if (existingRegistration) {
@@ -350,7 +339,7 @@ Deno.serve(async (req) => {
           message: 'Vous êtes déjà inscrit à cette activité',
           data: {
             registration_id: existingRegistration.id,
-            zoom_join_url: existingRegistration.personal_join_url
+            zoom_join_url: existingRegistration.zoom_join_url || existingRegistration.personal_join_url
           }
         }),
         {
@@ -394,12 +383,20 @@ Deno.serve(async (req) => {
 
     // Enregistrer l'inscription dans la base de données
     console.log('💾 Saving registration to database...');
-    const { data: savedRegistration, error: saveError } = await supabaseClient
+    const { data: savedRegistration, error: saveError} = await supabaseClient
       .from('activity_registrations')
       .insert({
         activity_id: activity_id,
-        user_id: currentUserId,
-        personal_join_url: zoomRegistration.join_url,
+        user_id: currentUserId, // null si guest
+        guest_email: currentUserId ? null : guest_email,
+        guest_first_name: currentUserId ? null : guest_first_name,
+        guest_last_name: currentUserId ? null : guest_last_name,
+        guest_organization: currentUserId ? null : guest_organization,
+        guest_country_id: currentUserId ? null : guest_country_id,
+        zoom_registrant_id: zoomRegistration.registrant_id,
+        zoom_join_url: zoomRegistration.join_url,
+        personal_join_url: zoomRegistration.join_url, // compatibility
+        registration_type: currentUserId ? 'user' : 'guest',
         registration_date: new Date().toISOString(),
         attended: false
       })
