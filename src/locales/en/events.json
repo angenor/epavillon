@@ -19,6 +19,8 @@
     "viewList": "List",
     "viewCalendar": "Calendar",
     "timezoneInfo": "Time zone",
+    "week1": "Week 1",
+    "week2": "Week 2",
     "error": {
       "title": "Error",
       "notFound": "The requested event was not found."

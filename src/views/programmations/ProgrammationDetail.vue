@@ -264,9 +264,10 @@
 
       <!-- Vue Calendrier avec Vue-Cal (pleine largeur) :selected-date="selectedDate"-->
       <div v-else-if="viewMode === 'calendar'" class="w-full">
-        <!-- Indicateur du fuseau horaire -->
-        <div v-if="event?.timezone" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-          <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg px-4 py-2 flex items-center justify-center">
+        <!-- Indicateur du fuseau horaire et sélecteur de semaine -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 space-y-3">
+          <!-- Fuseau horaire -->
+          <div v-if="event?.timezone" class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg px-4 py-2 flex items-center justify-center">
             <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -274,16 +275,51 @@
               {{ t('programmations.timezoneInfo') }}: {{ event.timezone }}
             </span>
           </div>
+
+          <!-- Boutons de navigation par semaine -->
+          <div class="flex justify-center gap-3">
+            <button
+              @click="goToWeek(1)"
+              :class="[
+                'px-6 py-3 rounded-lg font-semibold transition-all cursor-pointer flex items-center gap-2',
+                currentWeek === 1
+                  ? 'bg-orange-600 text-white shadow-lg scale-105'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-102'
+              ]"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              {{ t('programmations.week1') }}
+            </button>
+
+            <button
+              @click="goToWeek(2)"
+              :class="[
+                'px-6 py-3 rounded-lg font-semibold transition-all cursor-pointer flex items-center gap-2',
+                currentWeek === 2
+                  ? 'bg-orange-600 text-white shadow-lg scale-105'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 hover:scale-102'
+              ]"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              {{ t('programmations.week2') }}
+            </button>
+          </div>
         </div>
 
         <div class="bg-white dark:bg-gray-800 shadow-lg overflow-hidden w-full" style="height: 700px;">
         <vue-cal
 
           :events="calendarEvents"
+          hide-view-selector
+          hide-title-bar
           :time-from="8 * 60"
           :time-to="18 * 60"
           :disable-views="['years', 'year', 'month', 'day']"
-          :selected-date="'2025-11-10'"
+          :selected-date="selectedDate"
           :editable-events="{
             title: false,
             drag: false,
@@ -374,6 +410,9 @@ const event = ref(null)
 const activities = ref([])
 const viewMode = ref('grid') // 'grid', 'list', 'calendar'
 const selectedDate = ref(new Date())
+const currentWeek = ref(1) // Semaine actuelle (1 ou 2)
+const week1StartDate = ref(null)
+const week2StartDate = ref(null)
 
 // Paramètres de route
 const year = computed(() => parseInt(route.params.year))
@@ -553,6 +592,42 @@ const formatEventTimeDisplay = (start, end) => {
   return `${startTime} - ${endTime}`
 }
 
+// Fonction pour naviguer vers une semaine spécifique
+const goToWeek = (weekNumber) => {
+  currentWeek.value = weekNumber
+
+  if (weekNumber === 1 && week1StartDate.value) {
+    selectedDate.value = new Date(week1StartDate.value)
+  } else if (weekNumber === 2 && week2StartDate.value) {
+    selectedDate.value = new Date(week2StartDate.value)
+  }
+}
+
+// Fonction pour calculer les dates de début des semaines 1 et 2
+const calculateWeekDates = () => {
+  if (!activities.value || activities.value.length === 0) return
+
+  // Trier les activités par date
+  const sortedActivities = [...activities.value]
+    .filter(a => a.final_start_date)
+    .sort((a, b) => new Date(a.final_start_date) - new Date(b.final_start_date))
+
+  if (sortedActivities.length === 0) return
+
+  // La première activité définit le début de la semaine 1
+  const firstActivityDate = new Date(sortedActivities[0].final_start_date)
+  week1StartDate.value = firstActivityDate
+
+  // Trouver le début de la semaine 2 (7 jours après le début de la semaine 1)
+  const week2Date = new Date(firstActivityDate)
+  week2Date.setDate(week2Date.getDate() + 7)
+  week2StartDate.value = week2Date
+
+  // Définir la date sélectionnée par défaut sur la semaine 1
+  selectedDate.value = new Date(firstActivityDate)
+  currentWeek.value = 1
+}
+
 const loadEvent = async () => {
   try {
     isLoading.value = true
@@ -599,9 +674,9 @@ const loadActivities = async () => {
 
     activities.value = data || []
 
-    // Si on a des activités et qu'on est en vue calendrier, définir la date sélectionnée
-    if (data && data.length > 0 && data[0].final_start_date) {
-      selectedDate.value = new Date(data[0].final_start_date)
+    // Calculer les dates des semaines 1 et 2
+    if (data && data.length > 0) {
+      calculateWeekDates()
     }
 
   } catch (error) {
