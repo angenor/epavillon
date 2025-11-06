@@ -18,6 +18,7 @@
     "viewGrid": "Grid",
     "viewList": "List",
     "viewCalendar": "Calendar",
+    "timezoneInfo": "Time zone",
     "error": {
       "title": "Error",
       "notFound": "The requested event was not found."

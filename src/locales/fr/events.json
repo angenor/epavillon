@@ -18,6 +18,7 @@
     "viewGrid": "Grille",
     "viewList": "Liste",
     "viewCalendar": "Calendrier",
+    "timezoneInfo": "Fuseau horaire",
     "error": {
       "title": "Erreur",
       "notFound": "L'événement demandé n'a pas été trouvé."

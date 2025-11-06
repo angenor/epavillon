@@ -263,7 +263,20 @@
       </div>
 
       <!-- Vue Calendrier avec Vue-Cal (pleine largeur) :selected-date="selectedDate"-->
-      <div v-else-if="viewMode === 'calendar'" class="bg-white dark:bg-gray-800 shadow-lg overflow-hidden w-full" style="height: 700px;">
+      <div v-else-if="viewMode === 'calendar'" class="w-full">
+        <!-- Indicateur du fuseau horaire -->
+        <div v-if="event?.timezone" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+          <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg px-4 py-2 flex items-center justify-center">
+            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="text-sm font-medium text-blue-800 dark:text-blue-300">
+              {{ t('programmations.timezoneInfo') }}: {{ event.timezone }}
+            </span>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 shadow-lg overflow-hidden w-full" style="height: 700px;">
         <vue-cal
 
           :events="calendarEvents"
@@ -316,6 +329,7 @@
             </div>
           </template>
         </vue-cal>
+        </div>
       </div>
     </div>
 
@@ -368,12 +382,62 @@ const eventId = computed(() => route.params.eventId)
 // Locale pour vue-cal
 const currentLocale = computed(() => locale.value)
 
+// Fonction pour convertir une date UTC en date "locale" représentant l'heure du timezone de l'événement
+const convertUTCToEventTimezoneAsLocal = (dateString) => {
+  if (!dateString) return new Date()
+  if (!event.value?.timezone) return new Date(dateString)
+
+  try {
+    const utcDate = new Date(dateString)
+
+    // Obtenir les composants de la date dans le timezone de l'événement
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: event.value.timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    })
+
+    const parts = formatter.formatToParts(utcDate)
+    const values = {}
+    parts.forEach(part => {
+      if (part.type !== 'literal') {
+        values[part.type] = part.value
+      }
+    })
+
+    // Créer une date "locale" avec ces composants
+    // Cette date sera interprétée par vue-cal comme une heure locale,
+    // affichant ainsi l'heure correcte du timezone de l'événement
+    return new Date(
+      parseInt(values.year),
+      parseInt(values.month) - 1, // Les mois commencent à 0 en JavaScript
+      parseInt(values.day),
+      parseInt(values.hour),
+      parseInt(values.minute),
+      parseInt(values.second)
+    )
+  } catch (error) {
+    console.error('Error converting to event timezone:', error)
+    return new Date(dateString)
+  }
+}
+
 // Computed pour le calendrier
 const calendarEvents = computed(() => {
   return activities.value.map(activity => {
-    // Utiliser final_start_date et final_end_date pour les activités approuvées
-    const startDate = activity.final_start_date ? new Date(activity.final_start_date) : new Date()
-    const endDate = activity.final_end_date ? new Date(activity.final_end_date) : new Date()
+    // Convertir les dates UTC en dates locales représentant l'heure du timezone de l'événement
+    // Vue-cal les affichera alors dans le bon créneau horaire
+    const startDate = activity.final_start_date
+      ? convertUTCToEventTimezoneAsLocal(activity.final_start_date)
+      : new Date()
+    const endDate = activity.final_end_date
+      ? convertUTCToEventTimezoneAsLocal(activity.final_end_date)
+      : new Date()
 
     // Déterminer la classe CSS en fonction du type d'activité et du statut
     let cssClass = 'activity-event'
@@ -407,21 +471,37 @@ const calendarEvents = computed(() => {
 const formatDate = (dateString) => {
   if (!dateString) return ''
   const date = new Date(dateString)
-  return date.toLocaleDateString(locale.value === 'fr' ? 'fr-FR' : 'en-US', {
+
+  // Si on a un timezone d'événement, l'utiliser pour le formatage
+  const options = {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric'
-  })
+  }
+
+  if (event.value?.timezone) {
+    options.timeZone = event.value.timezone
+  }
+
+  return date.toLocaleDateString(locale.value === 'fr' ? 'fr-FR' : 'en-US', options)
 }
 
 const formatTime = (dateString) => {
   if (!dateString) return ''
   const date = new Date(dateString)
-  return date.toLocaleTimeString(locale.value === 'fr' ? 'fr-FR' : 'en-US', {
+
+  // Si on a un timezone d'événement, l'utiliser pour le formatage
+  const options = {
     hour: '2-digit',
     minute: '2-digit'
-  })
+  }
+
+  if (event.value?.timezone) {
+    options.timeZone = event.value.timezone
+  }
+
+  return date.toLocaleTimeString(locale.value === 'fr' ? 'fr-FR' : 'en-US', options)
 }
 
 const stripHtml = (html) => {
@@ -460,15 +540,15 @@ const getEventTextClass = (event) => {
 }
 
 const formatEventTimeDisplay = (start, end) => {
-  const startTime = start.toLocaleTimeString(locale.value === 'fr' ? 'fr-FR' : 'en-US', {
+  // Les dates reçues ici sont déjà converties en "local" par convertUTCToEventTimezoneAsLocal
+  // On les formate donc simplement sans spécifier de timezone
+  const options = {
     hour: '2-digit',
     minute: '2-digit'
-  })
+  }
 
-  const endTime = end.toLocaleTimeString(locale.value === 'fr' ? 'fr-FR' : 'en-US', {
-    hour: '2-digit',
-    minute: '2-digit'
-  })
+  const startTime = start.toLocaleTimeString(locale.value === 'fr' ? 'fr-FR' : 'en-US', options)
+  const endTime = end.toLocaleTimeString(locale.value === 'fr' ? 'fr-FR' : 'en-US', options)
 
   return `${startTime} - ${endTime}`
 }
