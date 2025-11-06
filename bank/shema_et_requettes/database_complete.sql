@@ -365,6 +365,7 @@ CREATE TYPE registration_type AS ENUM ('user', 'guest');
 CREATE TABLE public.activity_registrations (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     activity_id UUID NOT NULL REFERENCES public.activities(id) ON DELETE CASCADE,
+    sexe TEXT NOT NULL,
 
     -- Utilisateur authentifié (NULL pour les guests)
     user_id UUID REFERENCES public.users(id) ON DELETE CASCADE,

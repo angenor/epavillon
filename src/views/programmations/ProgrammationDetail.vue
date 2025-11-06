@@ -479,12 +479,15 @@ const route = useRoute()
 const router = useRouter()
 const { supabase } = useSupabase()
 
+// Détecter si on est sur mobile pour définir le mode d'affichage par défaut
+const isMobile = window.matchMedia('(max-width: 768px)').matches
+
 // État
 const isLoading = ref(true)
 const isLoadingActivities = ref(false)
 const event = ref(null)
 const activities = ref([])
-const viewMode = ref('calendar') // 'grid', 'list', 'calendar'
+const viewMode = ref(isMobile ? 'grid' : 'calendar') // 'grid' sur mobile, 'calendar' sur desktop
 const selectedDate = ref(new Date())
 const currentWeek = ref(1) // Semaine actuelle (1 ou 2)
 const week1StartDate = ref(null)
