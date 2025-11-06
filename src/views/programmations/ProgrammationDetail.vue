@@ -310,10 +310,11 @@
           </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 shadow-lg overflow-hidden w-full" style="height: 700px;">
+        <div class="bg-white dark:bg-gray-800 shadow-lg overflow-hidden w-full">
         <vue-cal
 
           :events="calendarEvents"
+          :special-hours="specialHours"
           hide-view-selector
           hide-title-bar
           :time-from="8 * 60"
@@ -408,7 +409,7 @@ const isLoading = ref(true)
 const isLoadingActivities = ref(false)
 const event = ref(null)
 const activities = ref([])
-const viewMode = ref('grid') // 'grid', 'list', 'calendar'
+const viewMode = ref('calendar') // 'grid', 'list', 'calendar'
 const selectedDate = ref(new Date())
 const currentWeek = ref(1) // Semaine actuelle (1 ou 2)
 const week1StartDate = ref(null)
@@ -504,6 +505,42 @@ const calendarEvents = computed(() => {
       draggable: false
     }
   })
+})
+
+// Computed pour les heures spéciales (jour de repos)
+const specialHours = computed(() => {
+  // Si pas d'activités, pas de jour de repos à afficher
+  if (!activities.value || activities.value.length === 0) return {}
+
+  // Trouver la première activité avec une date de début
+  const sortedActivities = [...activities.value]
+    .filter(a => a.final_start_date)
+    .sort((a, b) => new Date(a.final_start_date) - new Date(b.final_start_date))
+
+  if (sortedActivities.length === 0) return {}
+
+  // Obtenir la date de la première activité
+  const firstActivityDate = new Date(sortedActivities[0].final_start_date)
+
+  // Trouver le premier dimanche à partir de cette date
+  const firstSunday = new Date(firstActivityDate)
+  const dayOfWeek = firstSunday.getDay() // 0 = dimanche, 1 = lundi, ..., 6 = samedi
+
+  // Si on n'est pas déjà dimanche, avancer jusqu'au prochain dimanche
+  if (dayOfWeek !== 0) {
+    const daysUntilSunday = 7 - dayOfWeek
+    firstSunday.setDate(firstSunday.getDate() + daysUntilSunday)
+  }
+
+  // Vue-cal utilise 1-7 où 7 = dimanche
+  return {
+    7: {
+      from: 8 * 60, // De 8h00
+      to: 18 * 60,  // À 18h00
+      class: 'rest-day',
+      label: `🌴 ${t('programmations.restDay')}`
+    }
+  }
 })
 
 // Méthodes
@@ -909,5 +946,43 @@ onMounted(() => {
 
 .dark :deep(.activity-approved:hover) {
   background-color: rgb(229 231 235);
+}
+
+/* Styles pour les heures spéciales (jour de repos) */
+:deep(.vuecal__special-hours) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  font-size: 0.95em;
+  font-weight: 500;
+}
+
+:deep(.rest-day) {
+  background:
+    #fff7f0
+    repeating-linear-gradient(
+      -45deg,
+      rgba(249, 115, 22, 0.15),
+      rgba(249, 115, 22, 0.15) 10px,
+      rgba(255, 255, 255, 0) 10px,
+      rgba(255, 255, 255, 0) 20px
+    );
+  color: #ea580c;
+  border: 2px dashed #fb923c;
+}
+
+.dark :deep(.rest-day) {
+  background:
+    rgb(55 65 81)
+    repeating-linear-gradient(
+      -45deg,
+      rgba(249, 115, 22, 0.25),
+      rgba(249, 115, 22, 0.25) 10px,
+      rgba(55, 65, 81, 0) 10px,
+      rgba(55, 65, 81, 0) 20px
+    );
+  color: #fb923c;
+  border: 2px dashed #fb923c;
 }
 </style>
