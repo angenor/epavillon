@@ -229,21 +229,10 @@ export const useAdmin = () => {
         updated_at: new Date().toISOString()
       }
 
-      // Si c'est une validation positive, on peut définir les dates finales
-      if (status === 'approved') {
-        // Les dates finales peuvent être identiques aux dates proposées initialement
-        // L'admin peut les modifier séparément si nécessaire
-        const { data: activity } = await supabase
-          .from('activities')
-          .select('proposed_start_date, proposed_end_date')
-          .eq('id', activityId)
-          .single()
-
-        if (activity) {
-          updateData.final_start_date = activity.proposed_start_date
-          updateData.final_end_date = activity.proposed_end_date
-        }
-      }
+      // IMPORTANT: NE PAS copier les dates proposées vers les dates finales lors de l'approbation
+      // Les final_start_date/final_end_date se modifient UNIQUEMENT via le bouton "Modifier"
+      // Cette logique garantit que les dates finales ne sont jamais écrasées automatiquement
+      console.log('📅 Approbation: NOT modifying final dates - they are set via "Modifier" button only')
 
       const { error } = await supabase
         .from('activities')

@@ -1185,29 +1185,9 @@ const updateActivityStatus = async (newStatus, previousStatus, rejectionReason =
       activity.value.validation_status = newStatus
       console.log(`Statut mis à jour vers: ${newStatus}`)
 
-      // Si l'activité est approuvée, copier les dates proposées vers les dates finales
-      if (newStatus === 'approved') {
-        try {
-          const { error: dateError } = await supabase
-            .from('activities')
-            .update({
-              final_start_date: activity.value.proposed_start_date,
-              final_end_date: activity.value.proposed_end_date
-            })
-            .eq('id', activity.value.id)
-
-          if (dateError) {
-            console.error('❌ Erreur lors de la copie des dates:', dateError)
-          } else {
-            console.log('✅ Dates proposées copiées vers les dates finales')
-            // Mettre à jour les dates dans l'objet local
-            activity.value.final_start_date = activity.value.proposed_start_date
-            activity.value.final_end_date = activity.value.proposed_end_date
-          }
-        } catch (dateUpdateError) {
-          console.error('❌ Erreur lors de la mise à jour des dates:', dateUpdateError)
-        }
-      }
+      // IMPORTANT: NE PAS copier les dates proposées vers les dates finales
+      // Les final_start_date/final_end_date se modifient UNIQUEMENT via le bouton "Modifier"
+      console.log('📅 NOT copying proposed dates to final dates - final dates are set via "Modifier" button only')
 
       // Si l'activité est approuvée, créer automatiquement une réunion Zoom
       if (newStatus === 'approved' && !activity.value.zoom_meeting_id) {
