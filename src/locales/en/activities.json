@@ -439,8 +439,42 @@
     }
   },
   "activity": {
+    "details": "Details",
+    "themes": "Themes",
+    "categories": "Categories",
+    "speakers": "Speakers",
+    "noSpeakers": "No speakers at the moment",
+    "objectives": "Objectives",
+    "presentation": "Presentation",
+    "documents": "Documents",
+    "register": "Register",
+    "registering": "Registering...",
+    "askQuestion": "Ask a question",
+    "viewQuestions": "View questions",
+    "totalQuestions": "Total",
+    "questionsForMe": "For me",
+    "yourTime": "Your time",
+    "schedule": "Schedule",
+    "eventTime": "Time in {city} ({offset})",
+    "yourLocalTime": "Your local time ({city})",
     "showMore": "Show more",
     "showLess": "Show less",
+    "registration": {
+      "success": {
+        "title": "Registration successful!",
+        "message": "You are now registered for this activity. A confirmation email with the Zoom link has been sent to you.",
+        "linkInfo": "You can also directly access the Zoom meeting by clicking the button below:",
+        "joinZoom": "Join Zoom meeting"
+      },
+      "error": {
+        "title": "Registration error",
+        "message": "An error occurred during your registration. Please try again later."
+      },
+      "alreadyRegistered": {
+        "title": "Already registered",
+        "message": "You are already registered for this activity. Please check your email to find the Zoom connection link."
+      }
+    },
     "status": {
       "completed": "Completed"
     },

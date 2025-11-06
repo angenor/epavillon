@@ -386,6 +386,7 @@
     "presentation": "Présentation",
     "documents": "Documents",
     "register": "S'inscrire",
+    "registering": "Inscription en cours...",
     "askQuestion": "Poser une question",
     "viewQuestions": "Voir les questions",
     "totalQuestions": "Total",
@@ -396,6 +397,22 @@
     "yourLocalTime": "Votre heure locale ({city})",
     "showMore": "Voir plus",
     "showLess": "Voir moins",
+    "registration": {
+      "success": {
+        "title": "Inscription réussie !",
+        "message": "Vous êtes maintenant inscrit à cette activité. Un email de confirmation avec le lien Zoom vous a été envoyé.",
+        "linkInfo": "Vous pouvez également accéder directement à la réunion Zoom en cliquant sur le bouton ci-dessous :",
+        "joinZoom": "Rejoindre la réunion Zoom"
+      },
+      "error": {
+        "title": "Erreur d'inscription",
+        "message": "Une erreur est survenue lors de votre inscription. Veuillez réessayer plus tard."
+      },
+      "alreadyRegistered": {
+        "title": "Déjà inscrit",
+        "message": "Vous êtes déjà inscrit à cette activité. Veuillez consulter votre email pour retrouver le lien de connexion Zoom."
+      }
+    },
     "questionsPanel": {
       "title": "Questions & Réponses",
       "subtitle": "Posez vos questions aux intervenants",

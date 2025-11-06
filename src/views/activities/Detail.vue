@@ -47,10 +47,15 @@
             <button
               v-if="canRegister"
               @click="registerToActivity"
-              class="backdrop-blur-md bg-orange-500/80 border border-orange-400/50 text-white px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-bold animate-fade-in-up animation-delay-300 hover:bg-orange-600/90 transition-colors"
+              :disabled="isRegistering"
+              class="backdrop-blur-md bg-orange-500/80 border border-orange-400/50 text-white px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-bold animate-fade-in-up animation-delay-300 hover:bg-orange-600/90 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <font-awesome-icon :icon="['fas', 'user-plus']" class="mr-2" />
-              {{ t('activity.register') }}
+              <font-awesome-icon
+                :icon="['fas', isRegistering ? 'spinner' : 'user-plus']"
+                class="mr-2"
+                :class="{ 'animate-spin': isRegistering }"
+              />
+              {{ isRegistering ? t('activity.registering') : t('activity.register') }}
             </button>
           </div>
 
@@ -396,15 +401,92 @@
         <div class="flex gap-3 justify-center">
           <button
             @click="goBack"
-            class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors"
+            class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors cursor-pointer"
           >
             {{ t('common.goBack') }}
           </button>
           <button
             @click="goHome"
-            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors cursor-pointer"
           >
             {{ t('common.goHome') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal d'inscription (succès/erreur/déjà inscrit) -->
+  <div v-if="showRegistrationModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full mx-4 transform transition-all">
+      <div class="p-6">
+        <!-- Succès -->
+        <div v-if="registrationModal.type === 'success'" class="text-center">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
+            <font-awesome-icon :icon="['fas', 'check-circle']" class="w-8 h-8 text-green-600 dark:text-green-400" />
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            {{ registrationModal.title }}
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">
+            {{ registrationModal.message }}
+          </p>
+          <div v-if="registrationModal.zoomJoinUrl" class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <p class="text-sm text-gray-700 dark:text-gray-300 mb-3">
+              {{ t('activity.registration.success.linkInfo') }}
+            </p>
+            <a
+              :href="registrationModal.zoomJoinUrl"
+              target="_blank"
+              class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm cursor-pointer"
+            >
+              <font-awesome-icon :icon="['fas', 'video']" />
+              {{ t('activity.registration.success.joinZoom') }}
+            </a>
+          </div>
+          <button
+            @click="closeRegistrationModal"
+            class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors cursor-pointer"
+          >
+            {{ t('common.close') }}
+          </button>
+        </div>
+
+        <!-- Déjà inscrit -->
+        <div v-else-if="registrationModal.type === 'already_registered'" class="text-center">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center">
+            <font-awesome-icon :icon="['fas', 'info-circle']" class="w-8 h-8 text-orange-600 dark:text-orange-400" />
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            {{ registrationModal.title }}
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-6">
+            {{ registrationModal.message }}
+          </p>
+          <button
+            @click="closeRegistrationModal"
+            class="w-full px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors cursor-pointer"
+          >
+            {{ t('common.close') }}
+          </button>
+        </div>
+
+        <!-- Erreur -->
+        <div v-else-if="registrationModal.type === 'error'" class="text-center">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center">
+            <font-awesome-icon :icon="['fas', 'exclamation-circle']" class="w-8 h-8 text-red-600 dark:text-red-400" />
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            {{ registrationModal.title }}
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-6">
+            {{ registrationModal.message }}
+          </p>
+          <button
+            @click="closeRegistrationModal"
+            class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors cursor-pointer"
+          >
+            {{ t('common.close') }}
           </button>
         </div>
       </div>
@@ -873,6 +955,16 @@ const showErrorModal = ref(false)
 const errorModal = ref({
   title: '',
   message: ''
+})
+
+// États pour l'inscription
+const isRegistering = ref(false)
+const showRegistrationModal = ref(false)
+const registrationModal = ref({
+  type: '', // 'success', 'error', 'already_registered'
+  title: '',
+  message: '',
+  zoomJoinUrl: ''
 })
 
 // États pour le panneau de questions
@@ -1360,24 +1452,96 @@ const loadActivity = async () => {
 }
 
 const registerToActivity = async () => {
-  if (!authStore.user || !activity.value) return
+  if (!authStore.user || !activity.value) {
+    // Rediriger vers la page de connexion
+    router.push({ path: '/login', query: { redirect: route.fullPath } })
+    return
+  }
 
   try {
-    const { error } = await supabase
-      .from('activity_registrations')
-      .insert({
-        activity_id: activity.value.id,
-        user_id: authStore.user.id
-      })
+    isRegistering.value = true
 
-    if (error) throw error
+    // Préparer les données pour l'inscription
+    // Utiliser authStore.profile pour les données du profil utilisateur
+    const registrationData = {
+      activity_id: activity.value.id,
+      guest_email: authStore.user.email,
+      guest_first_name: authStore.profile?.first_name || '',
+      guest_last_name: authStore.profile?.last_name || '',
+      guest_organization: authStore.profile?.organization || '',
+      guest_country_id: authStore.profile?.country_id || null
+    }
 
-    isRegistered.value = true
-    // Afficher un message de succès
+    console.log('📝 Inscription à l\'activité:', registrationData)
+
+    // Appeler la fonction edge pour l'inscription Zoom + Supabase
+    const { data, error } = await supabase.functions.invoke('register-to-zoom-meeting', {
+      body: registrationData
+    })
+
+    console.log('📩 Réponse de la fonction edge:', { data, error })
+
+    // Gérer les erreurs HTTP
+    if (error) {
+      console.error('❌ Erreur lors de l\'inscription:', error)
+
+      // Cas spécifique : déjà inscrit (code 409)
+      if (error.message?.includes('Already registered') || error.message?.includes('409')) {
+        registrationModal.value = {
+          type: 'already_registered',
+          title: t('activity.registration.alreadyRegistered.title'),
+          message: t('activity.registration.alreadyRegistered.message'),
+          zoomJoinUrl: data?.data?.zoom_join_url || ''
+        }
+        showRegistrationModal.value = true
+        return
+      }
+
+      // Autres erreurs
+      registrationModal.value = {
+        type: 'error',
+        title: t('activity.registration.error.title'),
+        message: error.message || t('activity.registration.error.message'),
+        zoomJoinUrl: ''
+      }
+      showRegistrationModal.value = true
+      return
+    }
+
+    // Succès
+    if (data?.success) {
+      console.log('✅ Inscription réussie:', data.data)
+
+      isRegistered.value = true
+
+      registrationModal.value = {
+        type: 'success',
+        title: t('activity.registration.success.title'),
+        message: t('activity.registration.success.message'),
+        zoomJoinUrl: data.data?.zoom_join_url || ''
+      }
+      showRegistrationModal.value = true
+    } else {
+      // Réponse inattendue
+      throw new Error('Réponse inattendue de la fonction edge')
+    }
+
   } catch (error) {
-    console.error('Error registering to activity:', error)
-    // Afficher un message d'erreur
+    console.error('❌ Erreur inattendue lors de l\'inscription:', error)
+    registrationModal.value = {
+      type: 'error',
+      title: t('activity.registration.error.title'),
+      message: t('activity.registration.error.message'),
+      zoomJoinUrl: ''
+    }
+    showRegistrationModal.value = true
+  } finally {
+    isRegistering.value = false
   }
+}
+
+const closeRegistrationModal = () => {
+  showRegistrationModal.value = false
 }
 
 // Fonction pour charger uniquement les compteurs de questions (pour les speakers)
