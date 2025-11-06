@@ -151,11 +151,16 @@
           @click="goToActivityDetail(activity.id)"
           class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
         >
-          <!-- Badge de type -->
-          <div class="relative">
-            <div class="h-2 bg-gradient-to-r from-orange-500 to-orange-600"></div>
+          <!-- Image de couverture -->
+          <div class="relative h-48 overflow-hidden">
+            <img
+              :src="activity.cover_image_low_url || '/images/example/event_banniere_par_defaut_16_9_reduit.jpg'"
+              :alt="activity.title"
+              class="w-full h-full object-cover"
+            >
+            <!-- Badge de type -->
             <div class="absolute top-4 right-4">
-              <span class="px-3 py-1 bg-white/90 dark:bg-gray-900/90 rounded-full text-xs font-medium text-gray-700 dark:text-gray-300">
+              <span class="px-3 py-1 bg-white/90 dark:bg-gray-900/90 rounded-full text-xs font-medium text-gray-700 dark:text-gray-300 shadow-md">
                 {{ t(`activity.submit.formats.${activity.format || 'presentation'}`) }}
               </span>
             </div>
@@ -163,6 +168,29 @@
 
           <!-- Contenu -->
           <div class="p-6">
+            <!-- Informations de l'organisation -->
+            <div v-if="activity.organization" class="flex items-center gap-3 mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
+              <!-- Logo de l'organisation -->
+              <img
+                v-if="activity.organization.logo_url"
+                :src="activity.organization.logo_url"
+                :alt="activity.organization.name"
+                class="w-10 h-10 rounded-lg object-contain bg-white shadow-sm"
+              >
+              <div v-else class="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center shadow-sm">
+                <span class="text-sm font-bold text-gray-600 dark:text-gray-300">
+                  {{ activity.organization.name?.[0]?.toUpperCase() || 'O' }}
+                </span>
+              </div>
+
+              <!-- Nom de l'organisation -->
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
+                  {{ activity.organization.name }}
+                </p>
+              </div>
+            </div>
+
             <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3 line-clamp-2">
               {{ activity.title }}
             </h3>
@@ -205,58 +233,91 @@
           v-for="activity in activities"
           :key="activity.id"
           @click="goToActivityDetail(activity.id)"
-          class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer"
+          class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all cursor-pointer"
         >
-          <div class="flex justify-between items-start">
-            <div class="flex-1">
-              <div class="flex items-center gap-3 mb-2">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                  {{ activity.title }}
-                </h3>
-                <span class="px-3 py-1 bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-300 rounded-full text-xs font-medium">
-                  {{ t(`activity.submit.formats.${activity.format || 'presentation'}`) }}
-                </span>
-              </div>
-
-              <p v-if="activity.description" class="text-gray-600 dark:text-gray-400 mb-3">
-                {{ stripHtml(activity.description) }}
-              </p>
-
-              <div class="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400">
-                <div v-if="activity.final_start_date" class="flex items-center">
-                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  {{ formatDate(activity.final_start_date) }}
-                </div>
-
-                <div v-if="activity.final_start_date" class="flex items-center">
-                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  {{ formatTime(activity.final_start_date) }} - {{ formatTime(activity.final_end_date) }}
-                </div>
-
-                <div v-if="activity.room" class="flex items-center">
-                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
-                  {{ activity.room }}
-                </div>
-
-                <div v-if="activity.max_participants" class="flex items-center">
-                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                  {{ activity.max_participants }} {{ t('activity.participants') }}
-                </div>
-              </div>
+          <div class="flex gap-6">
+            <!-- Image de couverture -->
+            <div class="flex-shrink-0 w-64 h-48 overflow-hidden">
+              <img
+                :src="activity.cover_image_low_url || '/images/example/event_banniere_par_defaut_16_9_reduit.jpg'"
+                :alt="activity.title"
+                class="w-full h-full object-cover"
+              >
             </div>
 
-            <div class="ml-4">
-              <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-              </svg>
+            <!-- Contenu -->
+            <div class="flex-1 p-6 flex justify-between items-start">
+              <div class="flex-1">
+                <!-- Informations de l'organisation -->
+                <div v-if="activity.organization" class="flex items-center gap-3 mb-3">
+                  <!-- Logo de l'organisation -->
+                  <img
+                    v-if="activity.organization.logo_url"
+                    :src="activity.organization.logo_url"
+                    :alt="activity.organization.name"
+                    class="w-8 h-8 rounded object-contain bg-white shadow-sm"
+                  >
+                  <div v-else class="w-8 h-8 rounded bg-gray-200 dark:bg-gray-700 flex items-center justify-center shadow-sm">
+                    <span class="text-xs font-semibold text-gray-600 dark:text-gray-300">
+                      {{ activity.organization.name?.[0]?.toUpperCase() || 'O' }}
+                    </span>
+                  </div>
+
+                  <!-- Nom de l'organisation -->
+                  <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {{ activity.organization.name }}
+                  </p>
+                </div>
+
+                <div class="flex items-center gap-3 mb-2">
+                  <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    {{ activity.title }}
+                  </h3>
+                  <span class="px-3 py-1 bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-300 rounded-full text-xs font-medium">
+                    {{ t(`activity.submit.formats.${activity.format || 'presentation'}`) }}
+                  </span>
+                </div>
+
+                <p v-if="activity.description" class="text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                  {{ stripHtml(activity.description) }}
+                </p>
+
+                <div class="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400">
+                  <div v-if="activity.final_start_date" class="flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    {{ formatDate(activity.final_start_date) }}
+                  </div>
+
+                  <div v-if="activity.final_start_date" class="flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {{ formatTime(activity.final_start_date) }} - {{ formatTime(activity.final_end_date) }}
+                  </div>
+
+                  <div v-if="activity.room" class="flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    {{ activity.room }}
+                  </div>
+
+                  <div v-if="activity.max_participants" class="flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    {{ activity.max_participants }} {{ t('activity.participants') }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="ml-4 flex-shrink-0">
+                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
             </div>
           </div>
         </div>
