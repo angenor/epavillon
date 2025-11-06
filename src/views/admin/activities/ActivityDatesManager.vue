@@ -128,6 +128,7 @@
 
       <div v-else class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden" style="height: 700px;">
         <vue-cal
+          ref="vuecalRef"
           :events="calendarEvents"
           :time-from="6 * 60"
           :time-to="20 * 60"
@@ -656,6 +657,9 @@ const showError = (message) => {
 
 // Monter le composant
 onMounted(async () => {
+  if (vuecalRef.value) {
+    vuecalRef.value.switchView('week', new Date('2025-11-10'))
+  }
   await loadEvents()
   await loadActivities()
 })

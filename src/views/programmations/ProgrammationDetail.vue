@@ -262,15 +262,15 @@
         </div>
       </div>
 
-      <!-- Vue Calendrier avec Vue-Cal (pleine largeur) -->
+      <!-- Vue Calendrier avec Vue-Cal (pleine largeur) :selected-date="selectedDate"-->
       <div v-else-if="viewMode === 'calendar'" class="bg-white dark:bg-gray-800 shadow-lg overflow-hidden w-full" style="height: 700px;">
         <vue-cal
+
           :events="calendarEvents"
           :time-from="8 * 60"
           :time-to="18 * 60"
-          :disable-views="['years', 'year']"
-          :selected-date="selectedDate"
-          default-view="week"
+          :disable-views="['years', 'year', 'month', 'day']"
+          :selected-date="'2025-11-10'"
           :editable-events="{
             title: false,
             drag: false,
@@ -344,8 +344,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { VueCal } from 'vue-cal'
-import 'vue-cal/style.css'
+import VueCal from 'vue-cal'
+import 'vue-cal/dist/vuecal.css'
 import { useSupabase } from '@/composables/useSupabase'
 
 const { t, locale } = useI18n()
