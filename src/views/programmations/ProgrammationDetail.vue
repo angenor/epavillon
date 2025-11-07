@@ -372,7 +372,7 @@
         </div>
 
         <!-- Wrapper avec scroll horizontal pour mobile -->
-        <div class="bg-white dark:bg-gray-800 shadow-lg overflow-x-auto w-full calendar-scroll-wrapper">
+        <div class="bg-white mb-10 dark:bg-gray-800 shadow-lg overflow-x-auto w-full calendar-scroll-wrapper">
         <vue-cal
 
           :events="calendarEvents"
@@ -1224,24 +1224,9 @@ onMounted(() => {
     min-width: 130px; /* Même largeur que les cellules */
   }
 
-  /* Indicateur visuel de scroll */
+  /* Indicateur visuel de scroll - supprimé pour éviter les problèmes de positionnement */
   .calendar-scroll-wrapper {
     position: relative;
-  }
-
-  .calendar-scroll-wrapper::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 20px;
-    background: linear-gradient(to left, rgba(0,0,0,0.1), transparent);
-    pointer-events: none;
-  }
-
-  .dark .calendar-scroll-wrapper::after {
-    background: linear-gradient(to left, rgba(255,255,255,0.1), transparent);
   }
 }
 </style>
