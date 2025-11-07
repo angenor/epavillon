@@ -4,11 +4,39 @@
     <meta charset="UTF-8">
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Pavillon IFDD</title>
+
+    <!-- Meta tags par défaut (seront mis à jour dynamiquement par Vue) -->
+    <title>e-Pavillon Climatique de la Francophonie - IFDD</title>
+    <meta name="description" content="Plateforme de l'Institut de la Francophonie pour le développement durable (IFDD) dédiée aux événements climatiques et de développement durable dans l'espace francophone.">
+    <meta name="keywords" content="IFDD, climat, développement durable, francophonie, COP, environnement, biodiversité">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://epavillonclimatique.francophonie.org/">
+    <meta property="og:title" content="e-Pavillon Climatique de la Francophonie - IFDD">
+    <meta property="og:description" content="Plateforme de l'Institut de la Francophonie pour le développement durable (IFDD) dédiée aux événements climatiques et de développement durable dans l'espace francophone.">
+    <meta property="og:image" content="https://epavillonclimatique.francophonie.org/images/example/event_banniere_par_defaut_32_9_v3.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="e-Pavillon Climatique de la Francophonie">
+    <meta property="og:locale" content="fr_FR">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://epavillonclimatique.francophonie.org/">
+    <meta name="twitter:title" content="e-Pavillon Climatique de la Francophonie - IFDD">
+    <meta name="twitter:description" content="Plateforme de l'Institut de la Francophonie pour le développement durable (IFDD) dédiée aux événements climatiques et de développement durable dans l'espace francophone.">
+    <meta name="twitter:image" content="https://epavillonclimatique.francophonie.org/images/example/event_banniere_par_defaut_32_9_v3.jpg">
+
+    <!-- SEO -->
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="IFDD - Institut de la Francophonie pour le développement durable">
+    <link rel="canonical" href="https://epavillonclimatique.francophonie.org/">
+
     <script>
       // Initialiser le thème avant le chargement pour éviter le flash
       (function() {
-        const theme = localStorage.getItem('epavillon-theme') || 
+        const theme = localStorage.getItem('epavillon-theme') ||
           (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         if (theme === 'dark') {
           document.documentElement.classList.add('dark');

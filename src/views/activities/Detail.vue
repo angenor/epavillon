@@ -2271,7 +2271,15 @@ const metaTitle = computed(() => {
 })
 
 const activityImageUrl = computed(() => {
-  return getActivityPosterUrl()
+  const posterUrl = getActivityPosterUrl()
+
+  // Si l'URL est déjà absolue (commence par http:// ou https://), la retourner telle quelle
+  if (posterUrl.startsWith('http://') || posterUrl.startsWith('https://')) {
+    return posterUrl
+  }
+
+  // Sinon, construire une URL absolue
+  return `${siteUrl.value}${posterUrl.startsWith('/') ? '' : '/'}${posterUrl}`
 })
 
 // Données structurées JSON-LD pour le SEO

@@ -974,8 +974,21 @@ const metaTitle = computed(() => {
 })
 
 const eventImageUrl = computed(() => {
-  if (!event.value) return `${siteUrl.value}/images/example/event_banniere_par_defaut_32_9_v3.jpg`
-  return event.value.cover_image_url || `${siteUrl.value}/images/example/event_banniere_par_defaut_32_9_v3.jpg`
+  const defaultImage = `${siteUrl.value}/images/example/event_banniere_par_defaut_32_9_v3.jpg`
+
+  if (!event.value) return defaultImage
+
+  // Si l'événement a une image de couverture, s'assurer qu'elle est absolue
+  if (event.value.cover_image_url) {
+    // Si l'URL est déjà absolue (commence par http:// ou https://), la retourner telle quelle
+    if (event.value.cover_image_url.startsWith('http://') || event.value.cover_image_url.startsWith('https://')) {
+      return event.value.cover_image_url
+    }
+    // Sinon, construire une URL absolue
+    return `${siteUrl.value}${event.value.cover_image_url.startsWith('/') ? '' : '/'}${event.value.cover_image_url}`
+  }
+
+  return defaultImage
 })
 
 // Données structurées JSON-LD pour le SEO
