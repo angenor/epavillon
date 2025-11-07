@@ -209,7 +209,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { VueCal } from 'vue-cal'
+import VueCal from 'vue-cal'
 import 'vue-cal/style.css'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAuth } from '@/composables/useAuth'

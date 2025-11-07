@@ -12,7 +12,9 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      // Alias pour résoudre le problème d'import CSS de vue-cal
+      'vue-cal/style.css': fileURLToPath(new URL('./src/assets/vuecal.css', import.meta.url)),
     },
   },
   build: {

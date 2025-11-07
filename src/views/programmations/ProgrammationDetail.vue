@@ -471,7 +471,6 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import VueCal from 'vue-cal'
-import 'vue-cal/dist/vuecal.css'
 import { useSupabase } from '@/composables/useSupabase'
 
 const { t, locale } = useI18n()

@@ -3,6 +3,9 @@ import './assets/main.css'
 // Import du thème highlight.js pour la coloration syntaxique du code
 import 'highlight.js/styles/github-dark.css'
 
+// Import du CSS de vue-cal (copié localement pour éviter les problèmes de résolution avec Rollup)
+import './assets/vuecal.css'
+
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { createI18n } from 'vue-i18n'
