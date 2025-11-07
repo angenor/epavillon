@@ -908,7 +908,7 @@ onMounted(() => {
 }
 
 :deep(.vuecal--orange-theme .vuecal__cell--selected) {
-  background-color: #ffe5cc;
+  background-color: transparent;
 }
 
 :deep(.vuecal--orange-theme .vuecal__arrow) {
@@ -1029,7 +1029,7 @@ onMounted(() => {
 }
 
 .dark :deep(.vuecal--orange-theme .vuecal__cell--selected) {
-  background-color: rgba(249, 115, 22, 0.3);
+  background-color: transparent;
 }
 
 .dark :deep(.vuecal--orange-theme .vuecal__arrow) {
