@@ -371,7 +371,8 @@
           </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 shadow-lg overflow-hidden w-full">
+        <!-- Wrapper avec scroll horizontal pour mobile -->
+        <div class="bg-white dark:bg-gray-800 shadow-lg overflow-x-auto w-full calendar-scroll-wrapper">
         <vue-cal
 
           :events="calendarEvents"
@@ -393,7 +394,7 @@
           :time-cell-height="120"
           :locale="currentLocale"
           :hide-weekends="false"
-          class="vuecal--orange-theme"
+          class="vuecal--orange-theme calendar-mobile-optimized"
           @event-click="onEventClick"
         >
           <!-- Template personnalisé pour les événements -->
@@ -1176,5 +1177,71 @@ onMounted(() => {
   color: #60a5fa;
   border: 3px solid #3b82f6;
   background-blend-mode: overlay;
+}
+
+/* Optimisation mobile pour le calendrier */
+.calendar-scroll-wrapper {
+  -webkit-overflow-scrolling: touch; /* Scroll fluide sur iOS */
+}
+
+/* Largeur minimale des cellules en mode mobile */
+@media (max-width: 768px) {
+  :deep(.calendar-mobile-optimized .vuecal__cell) {
+    min-width: 150px; /* Largeur minimale pour une meilleure lisibilité */
+  }
+
+  /* Aligner l'en-tête avec le contenu */
+  :deep(.calendar-mobile-optimized .vuecal__heading) {
+    min-width: 150px; /* Même largeur que les cellules */
+  }
+
+  :deep(.calendar-mobile-optimized .vuecal__time-column) {
+    min-width: 60px; /* Largeur minimale pour la colonne des heures */
+  }
+
+  /* S'assurer que le calendrier prend la largeur nécessaire */
+  :deep(.calendar-mobile-optimized .vuecal__flex) {
+    min-width: max-content;
+  }
+
+  :deep(.calendar-mobile-optimized .vuecal__body) {
+    min-width: max-content;
+  }
+
+  :deep(.calendar-mobile-optimized .vuecal__weekdays-headings) {
+    min-width: max-content;
+  }
+}
+
+/* Amélioration du scroll horizontal pour mobile */
+@media (max-width: 640px) {
+  :deep(.calendar-mobile-optimized .vuecal__cell) {
+    min-width: 130px; /* Largeur minimale réduite pour très petits écrans */
+  }
+
+  /* Aligner l'en-tête avec le contenu sur petits écrans */
+  :deep(.calendar-mobile-optimized .vuecal__heading) {
+    min-width: 130px; /* Même largeur que les cellules */
+  }
+
+  /* Indicateur visuel de scroll */
+  .calendar-scroll-wrapper {
+    position: relative;
+  }
+
+  .calendar-scroll-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    background: linear-gradient(to left, rgba(0,0,0,0.1), transparent);
+    pointer-events: none;
+  }
+
+  .dark .calendar-scroll-wrapper::after {
+    background: linear-gradient(to left, rgba(255,255,255,0.1), transparent);
+  }
 }
 </style>
