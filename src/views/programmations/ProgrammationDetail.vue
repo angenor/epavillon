@@ -170,18 +170,49 @@
           <div class="p-6">
             <!-- Informations de l'organisation -->
             <div v-if="activity.organization" class="flex items-center gap-3 mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
-              <!-- Logo de l'organisation -->
-              <img
-                v-if="activity.organization.logo_url"
-                :src="activity.organization.logo_url"
-                :alt="activity.organization.name"
-                class="w-10 h-10 rounded-lg object-contain bg-white shadow-sm"
-              >
-              <div v-else class="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center shadow-sm">
-                <span class="text-sm font-bold text-gray-600 dark:text-gray-300">
-                  {{ activity.organization.name?.[0]?.toUpperCase() || 'O' }}
-                </span>
-              </div>
+              <!-- Institution publique nationale : logo + drapeau entre parenthèses -->
+              <template v-if="isPublicNationalInstitution(activity.organization) && activity.organization.country?.code">
+                <div class="flex items-center gap-2">
+                  <!-- Logo de l'organisation -->
+                  <img
+                    v-if="activity.organization.logo_url"
+                    :src="activity.organization.logo_url"
+                    :alt="activity.organization.name"
+                    class="w-10 h-10 rounded-lg object-contain bg-white shadow-sm"
+                  >
+                  <div v-else class="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center shadow-sm">
+                    <span class="text-sm font-bold text-gray-600 dark:text-gray-300">
+                      {{ activity.organization.name?.[0]?.toUpperCase() || 'O' }}
+                    </span>
+                  </div>
+                  <!-- Drapeau du pays entre parenthèses -->
+                  <div class="flex items-center gap-1">
+                    <span class="text-gray-400 text-sm">(</span>
+                    <div class="w-6 h-6 rounded bg-white dark:bg-gray-700 flex items-center justify-center p-0.5">
+                      <img
+                        :src="`https://flagcdn.com/w80/${activity.organization.country.code.toLowerCase()}.png`"
+                        :alt="activity.organization.country.name_fr"
+                        class="w-full h-full object-contain rounded"
+                        loading="lazy">
+                    </div>
+                    <span class="text-gray-400 text-sm">)</span>
+                  </div>
+                </div>
+              </template>
+              <!-- Autres types d'organisation : logo uniquement -->
+              <template v-else>
+                <img
+                  v-if="activity.organization.logo_url"
+                  :src="activity.organization.logo_url"
+                  :alt="activity.organization.name"
+                  class="w-10 h-10 rounded-lg object-contain bg-white shadow-sm"
+                >
+                <div v-else class="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center shadow-sm">
+                  <span class="text-sm font-bold text-gray-600 dark:text-gray-300">
+                    {{ activity.organization.name?.[0]?.toUpperCase() || 'O' }}
+                  </span>
+                </div>
+              </template>
 
               <!-- Nom de l'organisation -->
               <div class="flex-1 min-w-0">
@@ -250,18 +281,49 @@
               <div class="flex-1">
                 <!-- Informations de l'organisation -->
                 <div v-if="activity.organization" class="flex items-center gap-3 mb-3">
-                  <!-- Logo de l'organisation -->
-                  <img
-                    v-if="activity.organization.logo_url"
-                    :src="activity.organization.logo_url"
-                    :alt="activity.organization.name"
-                    class="w-8 h-8 rounded object-contain bg-white shadow-sm"
-                  >
-                  <div v-else class="w-8 h-8 rounded bg-gray-200 dark:bg-gray-700 flex items-center justify-center shadow-sm">
-                    <span class="text-xs font-semibold text-gray-600 dark:text-gray-300">
-                      {{ activity.organization.name?.[0]?.toUpperCase() || 'O' }}
-                    </span>
-                  </div>
+                  <!-- Institution publique nationale : logo + drapeau entre parenthèses -->
+                  <template v-if="isPublicNationalInstitution(activity.organization) && activity.organization.country?.code">
+                    <div class="flex items-center gap-1.5">
+                      <!-- Logo de l'organisation -->
+                      <img
+                        v-if="activity.organization.logo_url"
+                        :src="activity.organization.logo_url"
+                        :alt="activity.organization.name"
+                        class="w-8 h-8 rounded object-contain bg-white shadow-sm"
+                      >
+                      <div v-else class="w-8 h-8 rounded bg-gray-200 dark:bg-gray-700 flex items-center justify-center shadow-sm">
+                        <span class="text-xs font-semibold text-gray-600 dark:text-gray-300">
+                          {{ activity.organization.name?.[0]?.toUpperCase() || 'O' }}
+                        </span>
+                      </div>
+                      <!-- Drapeau du pays entre parenthèses -->
+                      <div class="flex items-center gap-0.5">
+                        <span class="text-gray-400 text-xs">(</span>
+                        <div class="w-5 h-5 rounded bg-white dark:bg-gray-700 flex items-center justify-center p-0.5">
+                          <img
+                            :src="`https://flagcdn.com/w80/${activity.organization.country.code.toLowerCase()}.png`"
+                            :alt="activity.organization.country.name_fr"
+                            class="w-full h-full object-contain rounded"
+                            loading="lazy">
+                        </div>
+                        <span class="text-gray-400 text-xs">)</span>
+                      </div>
+                    </div>
+                  </template>
+                  <!-- Autres types d'organisation : logo uniquement -->
+                  <template v-else>
+                    <img
+                      v-if="activity.organization.logo_url"
+                      :src="activity.organization.logo_url"
+                      :alt="activity.organization.name"
+                      class="w-8 h-8 rounded object-contain bg-white shadow-sm"
+                    >
+                    <div v-else class="w-8 h-8 rounded bg-gray-200 dark:bg-gray-700 flex items-center justify-center shadow-sm">
+                      <span class="text-xs font-semibold text-gray-600 dark:text-gray-300">
+                        {{ activity.organization.name?.[0]?.toUpperCase() || 'O' }}
+                      </span>
+                    </div>
+                  </template>
 
                   <!-- Nom de l'organisation -->
                   <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -414,18 +476,49 @@
 
             <!-- Activités régulières -->
             <div v-else class="px-2 h-full overflow-hidden cursor-pointer">
-              <!-- Logo de l'organisation -->
-              <img
-                v-if="event.organization?.logo_url"
-                :src="event.organization.logo_url"
-                :alt="event.organization.name"
-                class="w-8 h-8 rounded object-contain bg-white flex-shrink-0 mx-auto mb-1"
-              />
-              <div v-else class="w-8 h-8 rounded bg-gray-300 dark:bg-gray-600 flex items-center justify-center flex-shrink-0 mx-auto mb-1">
-                <span class="text-xs font-semibold text-gray-600 dark:text-gray-300">
-                  {{ event.organization?.name?.[0]?.toUpperCase() || 'A' }}
-                </span>
-              </div>
+              <!-- Institution publique nationale : logo + drapeau entre parenthèses -->
+              <template v-if="isPublicNationalInstitution(event.organization) && event.organization.country?.code">
+                <div class="flex items-center justify-center gap-1 mb-1">
+                  <!-- Logo de l'organisation -->
+                  <img
+                    v-if="event.organization?.logo_url"
+                    :src="event.organization.logo_url"
+                    :alt="event.organization.name"
+                    class="w-7 h-7 rounded object-contain bg-white flex-shrink-0"
+                  />
+                  <div v-else class="w-7 h-7 rounded bg-gray-300 dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+                    <span class="text-xs font-semibold text-gray-600 dark:text-gray-300">
+                      {{ event.organization?.name?.[0]?.toUpperCase() || 'A' }}
+                    </span>
+                  </div>
+                  <!-- Drapeau du pays entre parenthèses -->
+                  <div class="flex items-center gap-0.5">
+                    <span class="text-gray-400 text-xs">(</span>
+                    <div class="w-4 h-4 rounded bg-white flex items-center justify-center p-0.5">
+                      <img
+                        :src="`https://flagcdn.com/w80/${event.organization.country.code.toLowerCase()}.png`"
+                        :alt="event.organization.country.name_fr"
+                        class="w-full h-full object-contain rounded"
+                        loading="lazy">
+                    </div>
+                    <span class="text-gray-400 text-xs">)</span>
+                  </div>
+                </div>
+              </template>
+              <!-- Autres types d'organisation : logo uniquement -->
+              <template v-else>
+                <img
+                  v-if="event.organization?.logo_url"
+                  :src="event.organization.logo_url"
+                  :alt="event.organization.name"
+                  class="w-8 h-8 rounded object-contain bg-white flex-shrink-0 mx-auto mb-1"
+                />
+                <div v-else class="w-8 h-8 rounded bg-gray-300 dark:bg-gray-600 flex items-center justify-center flex-shrink-0 mx-auto mb-1">
+                  <span class="text-xs font-semibold text-gray-600 dark:text-gray-300">
+                    {{ event.organization?.name?.[0]?.toUpperCase() || 'A' }}
+                  </span>
+                </div>
+              </template>
 
               <!-- Informations de l'activité -->
               <div class="flex-1 min-w-0">
@@ -570,13 +663,23 @@ const calendarEvents = computed(() => {
       cssClass += ' activity-country-day'
     }
 
+    // Ajouter une classe spéciale pour les activités de l'IFDD
+    if (activity.organization?.acronym === 'IFDD') {
+      cssClass += ' activity-ifdd'
+    }
+
     events.push({
       activityId: activity.id,
       title: activity.title,
       start: startDate,
       end: endDate,
       class: cssClass,
-      organization: activity.organization,
+      organization: {
+        ...activity.organization,
+        acronym: activity.organization?.acronym,
+        organization_type: activity.organization?.organization_type,
+        country: activity.organization?.country
+      },
       activityType: activity.activity_type,
       validationStatus: activity.validation_status,
       room: activity.room || '',
@@ -749,6 +852,11 @@ const formatEventTimeDisplay = (start, end) => {
   return `${startTime} - ${endTime}`
 }
 
+// Vérifie si l'organisation est une institution publique nationale
+const isPublicNationalInstitution = (organization) => {
+  return organization?.organization_type === 'public_national_institution'
+}
+
 // Fonction pour naviguer vers une semaine spécifique
 const goToWeek = (weekNumber) => {
   currentWeek.value = weekNumber
@@ -821,7 +929,14 @@ const loadActivities = async () => {
       .from('activities')
       .select(`
         *,
-        organization:organizations(id, name, logo_url)
+        organization:organizations(
+          id,
+          name,
+          acronym,
+          logo_url,
+          organization_type,
+          country:countries(code, name_fr, name_en)
+        )
       `)
       .eq('event_id', eventId.value)
       .not('validation_status', 'in', '(draft,submitted,under_review,rejected)')
@@ -989,6 +1104,32 @@ onMounted(() => {
   background-color: rgb(22 163 74);
 }
 
+/* Animation spéciale pour les activités de l'IFDD */
+@keyframes borderGlow {
+  0% {
+    border-color: #f97316;
+    box-shadow: 0 0 5px #f97316, 0 0 10px #f97316;
+  }
+  50% {
+    border-color: #fb923c;
+    box-shadow: 0 0 10px #fb923c, 0 0 20px #fb923c, 0 0 30px #f97316;
+  }
+  100% {
+    border-color: #f97316;
+    box-shadow: 0 0 5px #f97316, 0 0 10px #f97316;
+  }
+}
+
+:deep(.activity-ifdd) {
+  border-width: 3px;
+  border-style: solid;
+  animation: borderGlow 2s ease-in-out infinite;
+}
+
+:deep(.activity-ifdd.activity-approved) {
+  animation: borderGlow 2s ease-in-out infinite;
+}
+
 :deep(.vuecal__event) {
   overflow: visible;
 }
@@ -1066,6 +1207,30 @@ onMounted(() => {
 
 .dark :deep(.activity-approved:hover) {
   background-color: rgb(229 231 235);
+}
+
+/* Animation IFDD pour le mode sombre */
+@keyframes borderGlowDark {
+  0% {
+    border-color: #fb923c;
+    box-shadow: 0 0 8px #fb923c, 0 0 15px #f97316;
+  }
+  50% {
+    border-color: #fdba74;
+    box-shadow: 0 0 15px #fdba74, 0 0 25px #fb923c, 0 0 35px #f97316;
+  }
+  100% {
+    border-color: #fb923c;
+    box-shadow: 0 0 8px #fb923c, 0 0 15px #f97316;
+  }
+}
+
+.dark :deep(.activity-ifdd) {
+  animation: borderGlowDark 2s ease-in-out infinite;
+}
+
+.dark :deep(.activity-ifdd.activity-approved) {
+  animation: borderGlowDark 2s ease-in-out infinite;
 }
 
 /* Styles pour les heures spéciales (jour de repos) */
