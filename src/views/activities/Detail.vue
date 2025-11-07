@@ -1071,14 +1071,15 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useHead } from '@vueuse/head'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAuthStore } from '@/stores/auth'
 import CommentFloatingButtonUser from '@/components/CommentFloatingButtonUser.vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const supabase = useSupabase()
@@ -2245,6 +2246,145 @@ const goBack = () => {
 const goHome = () => {
   router.push('/')
 }
+
+// Helper function pour extraire du texte depuis HTML
+const stripHtml = (html) => {
+  if (!html) return ''
+  const tmp = document.createElement('div')
+  tmp.innerHTML = html
+  return tmp.textContent || tmp.innerText || ''
+}
+
+// Meta tags dynamiques pour le SEO
+const siteUrl = computed(() => window.location.origin)
+const pageUrl = computed(() => `${siteUrl.value}${route.fullPath}`)
+
+const metaDescription = computed(() => {
+  if (!activity.value) return t('activity.metaDescription')
+  const desc = stripHtml(activity.value.description || activity.value.detailed_presentation || '')
+  return desc.substring(0, 160) + (desc.length > 160 ? '...' : '')
+})
+
+const metaTitle = computed(() => {
+  if (!activity.value) return t('activity.title')
+  return `${activity.value.title} - ${event.value?.title || ''} ${event.value?.year || ''}`
+})
+
+const activityImageUrl = computed(() => {
+  return getActivityPosterUrl()
+})
+
+// Données structurées JSON-LD pour le SEO
+const structuredData = computed(() => {
+  if (!activity.value) return null
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: activity.value.title,
+    description: metaDescription.value,
+    startDate: displayStartDate.value,
+    endDate: displayEndDate.value,
+    eventStatus: activity.value.validation_status === 'approved'
+      ? 'https://schema.org/EventScheduled'
+      : 'https://schema.org/EventPostponed',
+    eventAttendanceMode: activity.value.format === 'in_person'
+      ? 'https://schema.org/OfflineEventAttendanceMode'
+      : activity.value.format === 'online'
+      ? 'https://schema.org/OnlineEventAttendanceMode'
+      : 'https://schema.org/MixedEventAttendanceMode',
+    location: activity.value.format === 'online' || activity.value.format === 'hybrid'
+      ? {
+          '@type': 'VirtualLocation',
+          url: activity.value.online_location_url || pageUrl.value
+        }
+      : {
+          '@type': 'Place',
+          name: activity.value.room || event.value?.city || '',
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: event.value?.city || '',
+            addressCountry: activityCountry.value?.name_en || event.value?.country || ''
+          }
+        },
+    image: activityImageUrl.value,
+    organizer: organization.value ? {
+      '@type': 'Organization',
+      name: organization.value.name,
+      url: siteUrl.value
+    } : {
+      '@type': 'Organization',
+      name: 'IFDD - Institut de la Francophonie pour le développement durable',
+      url: 'https://www.ifdd.francophonie.org'
+    },
+    performer: speakers.value.map(speaker => ({
+      '@type': 'Person',
+      name: `${speaker.civility || ''} ${speaker.first_name} ${speaker.last_name}`.trim(),
+      jobTitle: speaker.position,
+      worksFor: {
+        '@type': 'Organization',
+        name: speaker.organization
+      }
+    })),
+    offers: {
+      '@type': 'Offer',
+      price: 0,
+      priceCurrency: 'USD',
+      availability: canRegister.value ? 'https://schema.org/InStock' : 'https://schema.org/SoldOut',
+      url: pageUrl.value
+    },
+    inLanguage: activity.value.language || locale.value
+  }
+})
+
+// Configuration des meta tags avec useHead
+useHead({
+  title: metaTitle,
+  meta: [
+    { name: 'description', content: metaDescription },
+    { name: 'keywords', content: computed(() => `${activity.value?.title || ''}, ${organization.value?.name || ''}, ${event.value?.title || ''}, ${activity.value?.format || ''}, climat, développement durable, IFDD`) },
+
+    // Open Graph
+    { property: 'og:title', content: metaTitle },
+    { property: 'og:description', content: metaDescription },
+    { property: 'og:type', content: 'event' },
+    { property: 'og:url', content: pageUrl },
+    { property: 'og:image', content: activityImageUrl },
+    { property: 'og:image:width', content: '1200' },
+    { property: 'og:image:height', content: '675' },
+    { property: 'og:site_name', content: 'e-Pavillon Climatique de la Francophonie' },
+    { property: 'og:locale', content: computed(() => locale.value === 'fr' ? 'fr_FR' : 'en_US') },
+
+    // Twitter Card
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: metaTitle },
+    { name: 'twitter:description', content: metaDescription },
+    { name: 'twitter:image', content: activityImageUrl },
+
+    // Event-specific meta tags
+    { property: 'event:start_date', content: computed(() => displayStartDate.value || '') },
+    { property: 'event:end_date', content: computed(() => displayEndDate.value || '') },
+    { property: 'event:location', content: computed(() => activity.value?.room || event.value?.city || '') },
+
+    // Additional SEO
+    { name: 'robots', content: 'index, follow' },
+    { name: 'author', content: computed(() => organization.value?.name || 'IFDD') }
+  ],
+  link: [
+    { rel: 'canonical', href: pageUrl }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: computed(() => structuredData.value ? JSON.stringify(structuredData.value) : '')
+    }
+  ]
+})
+
+// Watcher pour mettre à jour les meta tags quand les données changent
+watch([activity, event, organization, speakers, locale], () => {
+  // Les meta tags seront automatiquement mis à jour grâce aux computed properties
+}, { deep: true })
 
 // Lifecycle
 onMounted(async () => {

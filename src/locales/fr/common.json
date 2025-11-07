@@ -31,6 +31,8 @@
     "search": "Rechercher",
     "back": "Retour",
     "locale": "fr",
+    "logo": "Logo",
+    "flag": "Drapeau",
     "mustBeLoggedIn": "Vous devez être connecté",
     "sessionExpired": "Session expirée, veuillez vous reconnecter",
     "authenticationError": "Erreur d'authentification",

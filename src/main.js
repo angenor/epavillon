@@ -9,6 +9,7 @@ import './assets/vuecal.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { createI18n } from 'vue-i18n'
+import { createHead } from '@vueuse/head'
 
 // Font Awesome imports
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -64,6 +65,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const analytics = getAnalytics(firebaseApp);
 
 const app = createApp(App)
+const head = createHead()
 
 // Enregistrement global du composant Font Awesome
 app.component('font-awesome-icon', FontAwesomeIcon)
@@ -74,5 +76,6 @@ app.directive('click-outside', clickOutside)
 app.use(createPinia())
 app.use(router)
 app.use(i18n)
+app.use(head)
 
 app.mount('#app')

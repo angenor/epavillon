@@ -37,6 +37,7 @@
     "@tiptap/starter-kit": "^3.0.9",
     "@tiptap/vue-3": "^3.0.9",
     "@vueuse/core": "^14.0.0",
+    "@vueuse/head": "^2.0.0",
     "aos": "^2.3.4",
     "compressorjs": "^1.2.1",
     "date-fns": "^4.1.0",

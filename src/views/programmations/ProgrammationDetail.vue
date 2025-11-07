@@ -4,7 +4,7 @@
     <div class="relative h-64 md:h-80 lg:h-96 overflow-hidden">
       <img
         src="/images/example/event_banniere_par_defaut_32_9_v3.jpg"
-        alt="Programmation bannière"
+        :alt="event ? `${t('programmations.title')} - ${event.title} ${event.year}` : t('programmations.title')"
         class="w-full h-full object-cover"
       >
       <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
@@ -155,7 +155,7 @@
           <div class="relative h-48 overflow-hidden">
             <img
               :src="activity.cover_image_low_url || '/images/example/event_banniere_par_defaut_16_9_reduit.jpg'"
-              :alt="activity.title"
+              :alt="`${activity.title} - ${t('activity.details')}`"
               class="w-full h-full object-cover"
             >
             <!-- Badge de type -->
@@ -177,7 +177,7 @@
                   <img
                     v-if="activity.organization.logo_url"
                     :src="activity.organization.logo_url"
-                    :alt="activity.organization.name"
+                    :alt="`${t('common.logo')} ${activity.organization.name}`"
                     class="w-10 h-10 rounded-lg object-contain bg-white shadow-sm"
                   >
                   <div v-else class="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center shadow-sm">
@@ -191,7 +191,7 @@
                     <div class="w-6 h-6 rounded bg-white dark:bg-gray-700 flex items-center justify-center p-0.5">
                       <img
                         :src="`https://flagcdn.com/w80/${activity.organization.country.code.toLowerCase()}.png`"
-                        :alt="activity.organization.country.name_fr"
+                        :alt="`${t('common.flag')} ${t('common.locale') === 'fr' ? activity.organization.country.name_fr : activity.organization.country.name_en}`"
                         class="w-full h-full object-contain rounded"
                         loading="lazy">
                     </div>
@@ -204,7 +204,7 @@
                 <img
                   v-if="activity.organization.logo_url"
                   :src="activity.organization.logo_url"
-                  :alt="activity.organization.name"
+                  :alt="`${t('common.logo')} ${activity.organization.name}`"
                   class="w-10 h-10 rounded-lg object-contain bg-white shadow-sm"
                 >
                 <div v-else class="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center shadow-sm">
@@ -271,7 +271,7 @@
             <div class="flex-shrink-0 w-64 h-48 overflow-hidden">
               <img
                 :src="activity.cover_image_low_url || '/images/example/event_banniere_par_defaut_16_9_reduit.jpg'"
-                :alt="activity.title"
+                :alt="`${activity.title} - ${t('activity.details')}`"
                 class="w-full h-full object-cover"
               >
             </div>
@@ -288,7 +288,7 @@
                       <img
                         v-if="activity.organization.logo_url"
                         :src="activity.organization.logo_url"
-                        :alt="activity.organization.name"
+                        :alt="`${t('common.logo')} ${activity.organization.name}`"
                         class="w-8 h-8 rounded object-contain bg-white shadow-sm"
                       >
                       <div v-else class="w-8 h-8 rounded bg-gray-200 dark:bg-gray-700 flex items-center justify-center shadow-sm">
@@ -302,7 +302,7 @@
                         <div class="w-5 h-5 rounded bg-white dark:bg-gray-700 flex items-center justify-center p-0.5">
                           <img
                             :src="`https://flagcdn.com/w80/${activity.organization.country.code.toLowerCase()}.png`"
-                            :alt="activity.organization.country.name_fr"
+                            :alt="`${t('common.flag')} ${t('common.locale') === 'fr' ? activity.organization.country.name_fr : activity.organization.country.name_en}`"
                             class="w-full h-full object-contain rounded"
                             loading="lazy">
                         </div>
@@ -315,7 +315,7 @@
                     <img
                       v-if="activity.organization.logo_url"
                       :src="activity.organization.logo_url"
-                      :alt="activity.organization.name"
+                      :alt="`${t('common.logo')} ${activity.organization.name}`"
                       class="w-8 h-8 rounded object-contain bg-white shadow-sm"
                     >
                     <div v-else class="w-8 h-8 rounded bg-gray-200 dark:bg-gray-700 flex items-center justify-center shadow-sm">
@@ -483,7 +483,7 @@
                   <img
                     v-if="event.organization?.logo_url"
                     :src="event.organization.logo_url"
-                    :alt="event.organization.name"
+                    :alt="`${t('common.logo')} ${event.organization.name}`"
                     class="w-7 h-7 rounded object-contain bg-white flex-shrink-0"
                   />
                   <div v-else class="w-7 h-7 rounded bg-gray-300 dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
@@ -497,7 +497,7 @@
                     <div class="w-4 h-4 rounded bg-white flex items-center justify-center p-0.5">
                       <img
                         :src="`https://flagcdn.com/w80/${event.organization.country.code.toLowerCase()}.png`"
-                        :alt="event.organization.country.name_fr"
+                        :alt="`${t('common.flag')} ${t('common.locale') === 'fr' ? event.organization.country.name_fr : event.organization.country.name_en}`"
                         class="w-full h-full object-contain rounded"
                         loading="lazy">
                     </div>
@@ -510,7 +510,7 @@
                 <img
                   v-if="event.organization?.logo_url"
                   :src="event.organization.logo_url"
-                  :alt="event.organization.name"
+                  :alt="`${t('common.logo')} ${event.organization.name}`"
                   class="w-8 h-8 rounded object-contain bg-white flex-shrink-0 mx-auto mb-1"
                 />
                 <div v-else class="w-8 h-8 rounded bg-gray-300 dark:bg-gray-600 flex items-center justify-center flex-shrink-0 mx-auto mb-1">
@@ -561,9 +561,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useHead } from '@vueuse/head'
 import VueCal from 'vue-cal'
 import { useSupabase } from '@/composables/useSupabase'
 
@@ -957,6 +958,108 @@ const loadActivities = async () => {
     isLoadingActivities.value = false
   }
 }
+
+// Meta tags dynamiques pour le SEO
+const siteUrl = computed(() => window.location.origin)
+const pageUrl = computed(() => `${siteUrl.value}${route.fullPath}`)
+
+const metaDescription = computed(() => {
+  if (!event.value) return t('programmations.metaDescription')
+  return `${t('programmations.metaDescriptionPrefix')} ${event.value.title} ${event.value.year}. ${t('programmations.metaDescriptionSuffix')}`
+})
+
+const metaTitle = computed(() => {
+  if (!event.value) return t('programmations.title')
+  return `${event.value.title} ${event.value.year} - ${t('programmations.title')}`
+})
+
+const eventImageUrl = computed(() => {
+  if (!event.value) return `${siteUrl.value}/images/example/event_banniere_par_defaut_32_9_v3.jpg`
+  return event.value.cover_image_url || `${siteUrl.value}/images/example/event_banniere_par_defaut_32_9_v3.jpg`
+})
+
+// Données structurées JSON-LD pour le SEO
+const structuredData = computed(() => {
+  if (!event.value) return null
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event.value.title,
+    description: event.value.description || metaDescription.value,
+    startDate: activities.value.length > 0 ? activities.value[0].final_start_date : undefined,
+    endDate: activities.value.length > 0 ? activities.value[activities.value.length - 1].final_end_date : undefined,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
+    location: {
+      '@type': 'Place',
+      name: event.value.venue || event.value.city,
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: event.value.city,
+        addressCountry: event.value.country
+      }
+    },
+    image: eventImageUrl.value,
+    organizer: {
+      '@type': 'Organization',
+      name: 'IFDD - Institut de la Francophonie pour le développement durable',
+      url: 'https://www.ifdd.francophonie.org'
+    },
+    offers: activities.value.map(activity => ({
+      '@type': 'Offer',
+      name: activity.title,
+      description: activity.description,
+      availability: 'https://schema.org/InStock',
+      price: 0,
+      priceCurrency: 'USD'
+    }))
+  }
+})
+
+// Configuration des meta tags avec useHead
+useHead({
+  title: metaTitle,
+  meta: [
+    { name: 'description', content: metaDescription },
+    { name: 'keywords', content: computed(() => `${event.value?.title || ''}, ${event.value?.acronym || ''}, ${event.value?.year || ''}, programmation, activités, IFDD, climat, francophonie`) },
+
+    // Open Graph
+    { property: 'og:title', content: metaTitle },
+    { property: 'og:description', content: metaDescription },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: pageUrl },
+    { property: 'og:image', content: eventImageUrl },
+    { property: 'og:image:width', content: '1200' },
+    { property: 'og:image:height', content: '630' },
+    { property: 'og:site_name', content: 'e-Pavillon Climatique de la Francophonie' },
+    { property: 'og:locale', content: computed(() => locale.value === 'fr' ? 'fr_FR' : 'en_US') },
+
+    // Twitter Card
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: metaTitle },
+    { name: 'twitter:description', content: metaDescription },
+    { name: 'twitter:image', content: eventImageUrl },
+
+    // Additional SEO
+    { name: 'robots', content: 'index, follow' },
+    { name: 'author', content: 'IFDD - Institut de la Francophonie pour le développement durable' }
+  ],
+  link: [
+    { rel: 'canonical', href: pageUrl }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: computed(() => structuredData.value ? JSON.stringify(structuredData.value) : '')
+    }
+  ]
+})
+
+// Watcher pour mettre à jour les meta tags quand les données changent
+watch([event, activities, locale], () => {
+  // Les meta tags seront automatiquement mis à jour grâce aux computed properties
+}, { deep: true })
 
 // Lifecycle
 onMounted(() => {

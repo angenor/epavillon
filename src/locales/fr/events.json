@@ -25,6 +25,9 @@
     "youthClimateDay": "Journée Jeunesse Climat",
     "sustainableFinanceDay": "Journée Finance durable en Francophonie",
     "viewProgram": "Voir le programme",
+    "metaDescription": "Découvrez la programmation complète des événements climatiques et de développement durable organisés par l'IFDD et ses partenaires.",
+    "metaDescriptionPrefix": "Découvrez la programmation complète de",
+    "metaDescriptionSuffix": "Activités, conférences, panels et événements parallèles organisés par l'IFDD et ses partenaires.",
     "error": {
       "title": "Erreur",
       "notFound": "L'événement demandé n'a pas été trouvé."

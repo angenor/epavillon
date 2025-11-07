@@ -25,6 +25,9 @@
     "youthClimateDay": "Youth Climate Day",
     "sustainableFinanceDay": "Sustainable Finance in Francophonie Day",
     "viewProgram": "View program",
+    "metaDescription": "Discover the complete schedule of climate and sustainable development events organized by IFDD and its partners.",
+    "metaDescriptionPrefix": "Discover the complete schedule of",
+    "metaDescriptionSuffix": "Activities, conferences, panels, and side events organized by IFDD and its partners.",
     "error": {
       "title": "Error",
       "notFound": "The requested event was not found."
