@@ -78,7 +78,7 @@
           class="group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
         >
           <!-- Bannière de l'événement -->
-          <div class="relative h-48 overflow-hidden">
+          <div @click.stop="goToEventDetail(event)" class="relative cursor-pointer h-48 overflow-hidden ">
             <img
               :src="event.banner_low_quality_16_9_url || event.banner"
               :alt="event.title"
@@ -103,7 +103,7 @@
 
           <!-- Contenu -->
           <div class="p-6">
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3 line-clamp-2">
+            <h3 @click.stop="goToEventDetail(event)" class="text-xl hover:text-amber-600 cursor-pointer font-semibold text-gray-900 dark:text-white mb-3 line-clamp-2">
               {{ event.title }}
             </h3>
 
