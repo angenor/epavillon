@@ -40,6 +40,14 @@
             class="mb-8"
           />
 
+          <!-- Information de publication (uniquement pour les activités approuvées) -->
+          <ActivityPublicationInfo
+            v-if="isActivityApproved"
+            :activity-id="activity.id"
+            :activity-title="activity.title"
+            class="mb-8"
+          />
+
           <!-- Sections -->
           <div class="space-y-8">
             <!-- Bannières Section -->
@@ -196,6 +204,7 @@ import useUserActivities from '@/composables/useUserActivities'
 // UI Components
 import ActivityValidationTimeline from '@/components/ActivityValidationTimeline.vue'
 import ActivityHeader from '@/components/activity/ActivityHeader.vue'
+import ActivityPublicationInfo from '@/components/activity/ActivityPublicationInfo.vue'
 import ActivityBannerSection from '@/components/activity/ActivityBannerSection.vue'
 import ActivityGeneralInfoSection from '@/components/activity/ActivityGeneralInfoSection.vue'
 import ActivityDatesSection from '@/components/activity/ActivityDatesSection.vue'
