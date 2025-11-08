@@ -47,7 +47,7 @@
 
         <div class="space-y-2">
           <button
-            v-if="canEdit"
+            v-if="showPreviewButton"
             @click="$emit('preview')"
             class="w-full text-left px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-gray-100 rounded-md transition-colors duration-200 flex items-center gap-2 cursor-pointer"
           >
@@ -198,6 +198,13 @@ const completionPercentage = computed(() => {
   const totalSections = sections.value.filter(s => s.status !== 'optional').length
   const completedSections = sections.value.filter(s => s.status === 'complete').length
   return Math.round((completedSections / totalSections) * 100)
+})
+
+// Afficher le bouton prévisualiser (uniquement pour draft, submitted et under_review)
+const showPreviewButton = computed(() => {
+  const allowedStatuses = ['draft', 'submitted', 'under_review']
+  console.log('🔍 Debug validationStatus:', props.validationStatus, 'showPreview:', allowedStatuses.includes(props.validationStatus))
+  return allowedStatuses.includes(props.validationStatus)
 })
 
 // Afficher le bouton de validation

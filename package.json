@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:verify": "npm run build && node scripts/verify-seo.js",
     "preview": "vite preview",
     "test:unit": "vitest",
     "test:e2e": "playwright test",
-    "deploy": "npm run build && firebase deploy",
-    "deploy:hosting": "npm run build && firebase deploy --only hosting"
+    "verify:seo": "node scripts/verify-seo.js",
+    "deploy": "npm run build && npm run verify:seo && firebase deploy",
+    "deploy:hosting": "npm run build && npm run verify:seo && firebase deploy --only hosting"
   },
   "dependencies": {
     "@amcharts/amcharts5": "^5.10.7",
@@ -69,6 +71,7 @@
     "postcss": "^8.5.5",
     "tailwindcss": "^4.1.10",
     "vite": "^6.2.4",
+    "vite-plugin-prerender": "^1.0.8",
     "vite-plugin-vue-devtools": "^7.7.2",
     "vitest": "^3.1.1"
   },
