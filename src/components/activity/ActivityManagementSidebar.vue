@@ -203,7 +203,6 @@ const completionPercentage = computed(() => {
 // Afficher le bouton prévisualiser (uniquement pour draft, submitted et under_review)
 const showPreviewButton = computed(() => {
   const allowedStatuses = ['draft', 'submitted', 'under_review']
-  console.log('🔍 Debug validationStatus:', props.validationStatus, 'showPreview:', allowedStatuses.includes(props.validationStatus))
   return allowedStatuses.includes(props.validationStatus)
 })
 

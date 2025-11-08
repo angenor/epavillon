@@ -27,6 +27,7 @@
 
       <div class="flex space-x-3">
         <router-link
+          v-if="showPreviewButton"
           :to="`/activities/preview/${activity.id}`"
           target="_blank"
           class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
@@ -50,15 +51,22 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { formatDate, getStatusClass } from '@/utils/activityHelpers'
 
 const { t } = useI18n()
 
-defineProps({
+const props = defineProps({
   activity: {
     type: Object,
     required: true
   }
+})
+
+// Afficher le bouton prévisualiser uniquement pour draft, submitted et under_review
+const showPreviewButton = computed(() => {
+  const allowedStatuses = ['draft', 'submitted', 'under_review']
+  return allowedStatuses.includes(props.activity?.validation_status)
 })
 </script>
