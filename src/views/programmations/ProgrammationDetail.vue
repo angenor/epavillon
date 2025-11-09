@@ -13,10 +13,10 @@
       <div class="absolute bottom-0 left-0 right-0 p-6 md:p-12">
         <div class="max-w-7xl mx-auto">
           <h1 v-if="event" class="text-3xl md:text-5xl font-bold text-white mb-4">
-            {{ event.title }}
+            {{ displayTitle }}
           </h1>
-          <div v-if="event" class="flex flex-wrap gap-3">
-            <span v-if="event.year" class="bg-white/90 px-4 py-2 rounded-lg text-sm font-bold text-gray-900">
+          <div v-if="event" class="flex flex-wrap gap-3 mb-4">
+            <span v-if="event.year && !isCopEvent" class="bg-white/90 px-4 py-2 rounded-lg text-sm font-bold text-gray-900">
               {{ event.year }}
             </span>
             <span v-if="event.acronym" class="bg-orange-500/90 px-4 py-2 rounded-lg text-sm font-bold text-white">
@@ -25,6 +25,61 @@
             <span :class="getStatusClass(event)" class="px-4 py-2 rounded-lg text-sm font-medium">
               {{ t(`events.status.${event.event_status || 'upcoming'}`) }}
             </span>
+          </div>
+
+          <!-- Statistiques -->
+          <div v-if="event && activities.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <!-- Activités approuvées -->
+            <div class="bg-white/90 dark:bg-gray-800/90 px-4 py-3 rounded-lg backdrop-blur-sm">
+              <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-orange-600 dark:text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+                <div>
+                  <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ approvedActivitiesCount }}</p>
+                  <p class="text-xs text-gray-600 dark:text-gray-400">{{ t('programmations.approvedActivitiesCount') }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Organisations -->
+            <div class="bg-white/90 dark:bg-gray-800/90 px-4 py-3 rounded-lg backdrop-blur-sm">
+              <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-orange-600 dark:text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                <div>
+                  <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ organizationsCount }}</p>
+                  <p class="text-xs text-gray-600 dark:text-gray-400">{{ t('programmations.organizationsCount') }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pays -->
+            <div class="bg-white/90 dark:bg-gray-800/90 px-4 py-3 rounded-lg backdrop-blur-sm">
+              <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-orange-600 dark:text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ countriesCount }}</p>
+                  <p class="text-xs text-gray-600 dark:text-gray-400">{{ t('programmations.countriesCount') }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dernière mise à jour -->
+            <div v-if="lastUpdateDate" class="bg-white/90 dark:bg-gray-800/90 px-4 py-3 rounded-lg backdrop-blur-sm">
+              <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-orange-600 dark:text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ lastUpdateDate }}</p>
+                  <p class="text-xs text-gray-600 dark:text-gray-400">{{ t('programmations.lastUpdate') }}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -591,6 +646,73 @@ const eventId = computed(() => route.params.eventId)
 
 // Locale pour vue-cal
 const currentLocale = computed(() => locale.value)
+
+// Vérifie si l'événement est une CdP
+const isCopEvent = computed(() => {
+  return event.value?.acronym?.startsWith('CdP') || event.value?.acronym?.startsWith('COP')
+})
+
+// Titre à afficher dans la hero section
+const displayTitle = computed(() => {
+  if (!event.value) return ''
+
+  if (isCopEvent.value) {
+    return `${t('programmations.francophoniePavilionTitle')} ${event.value.year}`
+  }
+
+  return event.value.title
+})
+
+// Nombre d'activités approuvées
+const approvedActivitiesCount = computed(() => {
+  return activities.value.filter(a => a.validation_status === 'approved').length
+})
+
+// Nombre d'organisations représentées (uniques)
+const organizationsCount = computed(() => {
+  const uniqueOrgs = new Set()
+  activities.value.forEach(activity => {
+    if (activity.organization?.id) {
+      uniqueOrgs.add(activity.organization.id)
+    }
+  })
+  return uniqueOrgs.size
+})
+
+// Nombre de pays représentés (uniques)
+const countriesCount = computed(() => {
+  const uniqueCountries = new Set()
+  activities.value.forEach(activity => {
+    if (activity.organization?.country?.code) {
+      uniqueCountries.add(activity.organization.country.code)
+    }
+  })
+  return uniqueCountries.size
+})
+
+// Date de dernière mise à jour (la plus récente updated_at des activités approuvées)
+const lastUpdateDate = computed(() => {
+  const approvedActivities = activities.value.filter(a => a.validation_status === 'approved')
+
+  if (approvedActivities.length === 0) return null
+
+  const dates = approvedActivities
+    .map(a => a.updated_at ? new Date(a.updated_at) : null)
+    .filter(d => d !== null)
+
+  if (dates.length === 0) return null
+
+  const mostRecent = new Date(Math.max(...dates.map(d => d.getTime())))
+
+  // Formater la date selon la locale
+  return mostRecent.toLocaleDateString(locale.value === 'fr' ? 'fr-FR' : 'en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+})
 
 // Fonction pour convertir une date UTC en date "locale" représentant l'heure du timezone de l'événement
 const convertUTCToEventTimezoneAsLocal = (dateString) => {
