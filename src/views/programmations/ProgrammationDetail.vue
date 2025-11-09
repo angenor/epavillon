@@ -27,56 +27,64 @@
             </span>
           </div>
 
-          <!-- Statistiques -->
-          <div v-if="event && activities.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <!-- Statistiques avec design Glass -->
+          <div v-if="event && activities.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <!-- Activités approuvées -->
-            <div class="bg-white/90 dark:bg-gray-800/90 px-4 py-3 rounded-lg backdrop-blur-sm">
-              <div class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-orange-600 dark:text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                </svg>
+            <div class="glass-card group">
+              <div class="flex items-center gap-3">
+                <div class="p-2 rounded-lg bg-orange-500/20 group-hover:bg-orange-500/30 transition-colors">
+                  <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
+                </div>
                 <div>
-                  <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ approvedActivitiesCount }}</p>
-                  <p class="text-xs text-gray-600 dark:text-gray-400">{{ t('programmations.approvedActivitiesCount') }}</p>
+                  <p class="text-3xl font-bold text-white drop-shadow-lg">+{{ approvedActivitiesCount }}</p>
+                  <p class="text-xs font-medium text-white/90">{{ t('programmations.approvedActivitiesCount') }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Organisations -->
-            <div class="bg-white/90 dark:bg-gray-800/90 px-4 py-3 rounded-lg backdrop-blur-sm">
-              <div class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-orange-600 dark:text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
+            <div class="glass-card group">
+              <div class="flex items-center gap-3">
+                <div class="p-2 rounded-lg bg-orange-500/20 group-hover:bg-orange-500/30 transition-colors">
+                  <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
                 <div>
-                  <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ organizationsCount }}</p>
-                  <p class="text-xs text-gray-600 dark:text-gray-400">{{ t('programmations.organizationsCount') }}</p>
+                  <p class="text-3xl font-bold text-white drop-shadow-lg">+{{ organizationsCount }}</p>
+                  <p class="text-xs font-medium text-white/90">{{ t('programmations.organizationsCount') }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Pays -->
-            <div class="bg-white/90 dark:bg-gray-800/90 px-4 py-3 rounded-lg backdrop-blur-sm">
-              <div class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-orange-600 dark:text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div class="glass-card group">
+              <div class="flex items-center gap-3">
+                <div class="p-2 rounded-lg bg-orange-500/20 group-hover:bg-orange-500/30 transition-colors">
+                  <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
                 <div>
-                  <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ countriesCount }}</p>
-                  <p class="text-xs text-gray-600 dark:text-gray-400">{{ t('programmations.countriesCount') }}</p>
+                  <p class="text-3xl font-bold text-white drop-shadow-lg">+{{ countriesCount }}</p>
+                  <p class="text-xs font-medium text-white/90">{{ t('programmations.countriesCount') }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Dernière mise à jour -->
-            <div v-if="lastUpdateDate" class="bg-white/90 dark:bg-gray-800/90 px-4 py-3 rounded-lg backdrop-blur-sm">
-              <div class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-orange-600 dark:text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <div>
-                  <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ lastUpdateDate }}</p>
-                  <p class="text-xs text-gray-600 dark:text-gray-400">{{ t('programmations.lastUpdate') }}</p>
+            <div v-if="lastUpdateDate" class="glass-card group">
+              <div class="flex items-center gap-3">
+                <div class="p-2 rounded-lg bg-orange-500/20 group-hover:bg-orange-500/30 transition-colors">
+                  <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-bold text-white drop-shadow-lg truncate">{{ lastUpdateDate }}</p>
+                  <p class="text-xs font-medium text-white/90">{{ t('programmations.lastUpdate') }}</p>
                 </div>
               </div>
             </div>
@@ -1215,6 +1223,25 @@ onMounted(() => {
   -webkit-box-orient: vertical;
   overflow: hidden;
   line-clamp: 3;
+}
+
+/* Design Glassmorphism pour les cartes de statistiques */
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
 }
 
 /* Styles pour Vue-Cal theme orange */
