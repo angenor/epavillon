@@ -39,7 +39,7 @@
       </div>
 
       <!-- Stats Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
           <div class="flex items-center justify-between">
             <div>
@@ -76,17 +76,6 @@
           </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-gray-600 dark:text-gray-400">{{ t('events.stats.totalRegistrations') }}</p>
-              <p class="text-2xl font-bold text-ifdd-bleu">{{ stats.totalRegistrations }}</p>
-            </div>
-            <div class="p-3 bg-ifdd-bleu/10 rounded-lg">
-              <font-awesome-icon :icon="['fas', 'users']" class="w-6 h-6 text-ifdd-bleu" />
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- Filters -->
@@ -240,14 +229,6 @@
                       </span>
                     </div>
 
-                    <!-- Inscriptions (toujours affichées) -->
-                    <div class="flex items-center mt-1 text-sm text-gray-600 dark:text-gray-400">
-                      <span class="flex items-center">
-                        <font-awesome-icon :icon="['fas', 'users']" class="w-4 h-4 mr-1" />
-                        {{ event.activity_registrations?.[0]?.count || 0 }} {{ t('events.registrations') }}
-                      </span>
-                    </div>
-
                     <!-- Status Badge -->
                     <div class="mt-2">
                       <span
@@ -308,8 +289,7 @@ const stats = computed(() => {
   return {
     total: events.value.length,
     upcoming: events.value.filter(e => e.validation_status === 'approved' && new Date(e.proposed_start_date) > now).length,
-    draft: events.value.filter(e => e.validation_status === 'draft').length,
-    totalRegistrations: events.value.reduce((sum, e) => sum + (e.activity_registrations?.[0]?.count || 0), 0)
+    draft: events.value.filter(e => e.validation_status === 'draft').length
   }
 })
 

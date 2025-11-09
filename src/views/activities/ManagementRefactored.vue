@@ -48,6 +48,7 @@
             :activity-description="activity.objectives || activity.detailed_presentation"
             :activity-image="activity.cover_image_high_url || activity.cover_image_low_url"
             :activity-date="formatActivityDate(activity)"
+            :hide-registrations="true"
             class="mb-8"
           />
 
