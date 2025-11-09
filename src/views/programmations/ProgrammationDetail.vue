@@ -1,21 +1,21 @@
 <template>
   <div class="min-h-screen bg-white dark:bg-gray-900">
-    <!-- Header avec image de bannière - hauteur augmentée sur mobile pour les CdP -->
+    <!-- Header avec image de bannière - hauteur optimisée -->
     <div :class="[
       'relative overflow-hidden',
-      isCopEvent ? 'h-[520px] md:h-80 lg:h-96' : 'h-64 md:h-80 lg:h-96'
+      isCopEvent ? 'min-h-[400px] md:h-80 lg:h-96' : 'h-64 md:h-80 lg:h-96'
     ]">
       <img
         src="/images/example/event_banniere_par_defaut_32_9_v3.jpg"
         :alt="event ? `${t('programmations.title')} - ${event.title} ${event.year}` : t('programmations.title')"
-        class="w-full h-full object-cover"
+        class="absolute inset-0 w-full h-full object-cover"
       >
-      <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
 
       <!-- Contenu du header -->
-      <div class="absolute bottom-0 left-0 right-0 p-4 md:p-12">
+      <div class="absolute bottom-0 left-0 right-0 p-4 pb-6 md:p-12">
         <div class="max-w-7xl mx-auto">
-          <h1 v-if="event" class="text-2xl md:text-5xl font-bold text-white mb-3 md:mb-4 leading-tight">
+          <h1 v-if="event" class="text-xl sm:text-2xl md:text-5xl font-bold text-white mb-3 md:mb-4 leading-tight">
             {{ displayTitle }}
           </h1>
           <div v-if="event" class="flex flex-wrap gap-2 md:gap-3 mb-3 md:mb-4">
