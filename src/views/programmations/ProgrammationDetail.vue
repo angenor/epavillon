@@ -131,16 +131,25 @@
 
     <!-- Contenu principal -->
     <div v-else-if="event">
-      <!-- Sélecteur de vue -->
+      <!-- Sélecteur de vue et fuseau horaire -->
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-4">
-        <div class="flex justify-between items-center">
-          
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <!-- Indicateur du fuseau horaire -->
+          <div v-if="event?.timezone" class="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg px-4 py-2">
+            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="text-sm font-medium text-blue-800 dark:text-blue-300">
+              {{ t('programmations.timezoneInfo') }}: {{ timezoneWithGMT }}
+            </span>
+          </div>
 
+          <!-- Boutons de vue -->
           <div class="flex gap-2">
             <button
               @click="viewMode = 'grid'"
               :class="[
-                'px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2',
+                'px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 cursor-pointer',
                 viewMode === 'grid'
                   ? 'bg-orange-600 text-white'
                   : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
@@ -152,10 +161,11 @@
               <span class="hidden sm:inline">{{ t('programmations.viewGrid') }}</span>
             </button>
 
+            <!-- Bouton Liste - masqué sur mobile -->
             <button
               @click="viewMode = 'list'"
               :class="[
-                'px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2',
+                'hidden md:flex px-4 py-2 rounded-lg font-medium transition-all items-center gap-2 cursor-pointer',
                 viewMode === 'list'
                   ? 'bg-orange-600 text-white'
                   : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
@@ -170,7 +180,7 @@
             <button
               @click="viewMode = 'calendar'"
               :class="[
-                'px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2',
+                'px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 cursor-pointer',
                 viewMode === 'calendar'
                   ? 'bg-orange-600 text-white'
                   : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
@@ -448,18 +458,8 @@
 
       <!-- Vue Calendrier avec Vue-Cal (pleine largeur) :selected-date="selectedDate"-->
       <div v-else-if="viewMode === 'calendar'" class="w-full">
-        <!-- Indicateur du fuseau horaire et sélecteur de semaine -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 space-y-3">
-          <!-- Fuseau horaire -->
-          <div v-if="event?.timezone" class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg px-4 py-2 flex items-center justify-center">
-            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span class="text-sm font-medium text-blue-800 dark:text-blue-300">
-              {{ t('programmations.timezoneInfo') }}: {{ event.timezone }}
-            </span>
-          </div>
-
+        <!-- Sélecteur de semaine -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
           <!-- Boutons de navigation par semaine -->
           <div class="flex justify-center gap-3">
             <button
@@ -622,7 +622,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useHead } from '@vueuse/head'
@@ -720,6 +720,65 @@ const lastUpdateDate = computed(() => {
     hour: '2-digit',
     minute: '2-digit'
   })
+})
+
+// Calculer le GMT offset pour un timezone donné
+const getGMTOffset = (timezone) => {
+  if (!timezone) return ''
+
+  try {
+    // Créer une date de référence
+    const now = new Date()
+
+    // Obtenir l'offset en minutes pour le timezone donné
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: timezone,
+      timeZoneName: 'longOffset'
+    })
+
+    const parts = formatter.formatToParts(now)
+    const offsetPart = parts.find(part => part.type === 'timeZoneName')
+
+    if (offsetPart && offsetPart.value) {
+      // Le format est généralement "GMT+/-HH:MM"
+      const match = offsetPart.value.match(/GMT([+-]\d{1,2}):?(\d{2})?/)
+      if (match) {
+        const hours = parseInt(match[1])
+        const minutes = match[2] ? parseInt(match[2]) : 0
+
+        if (minutes === 0) {
+          return `GMT${hours >= 0 ? '+' : ''}${hours}`
+        } else {
+          return `GMT${hours >= 0 ? '+' : ''}${hours}:${minutes.toString().padStart(2, '0')}`
+        }
+      }
+    }
+
+    // Fallback : calculer manuellement l'offset
+    const utcDate = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }))
+    const tzDate = new Date(now.toLocaleString('en-US', { timeZone: timezone }))
+    const offset = (tzDate.getTime() - utcDate.getTime()) / (1000 * 60 * 60)
+
+    const hours = Math.floor(Math.abs(offset))
+    const minutes = Math.round((Math.abs(offset) - hours) * 60)
+
+    if (minutes === 0) {
+      return `GMT${offset >= 0 ? '+' : '-'}${hours}`
+    } else {
+      return `GMT${offset >= 0 ? '+' : '-'}${hours}:${minutes.toString().padStart(2, '0')}`
+    }
+  } catch (error) {
+    console.error('Error calculating GMT offset:', error)
+    return ''
+  }
+}
+
+// Timezone avec GMT offset
+const timezoneWithGMT = computed(() => {
+  if (!event.value?.timezone) return ''
+
+  const gmtOffset = getGMTOffset(event.value.timezone)
+  return gmtOffset ? `${event.value.timezone} (${gmtOffset})` : event.value.timezone
 })
 
 // Fonction pour convertir une date UTC en date "locale" représentant l'heure du timezone de l'événement
@@ -1202,9 +1261,30 @@ watch([event, activities, locale], () => {
   // Les meta tags seront automatiquement mis à jour grâce aux computed properties
 }, { deep: true })
 
+// Watcher pour empêcher le mode liste sur mobile
+watch(() => viewMode.value, (newMode) => {
+  const isMobileNow = window.matchMedia('(max-width: 768px)').matches
+  if (isMobileNow && newMode === 'list') {
+    viewMode.value = 'grid'
+  }
+})
+
+// Gérer le redimensionnement de la fenêtre
+const handleResize = () => {
+  const isMobileNow = window.matchMedia('(max-width: 768px)').matches
+  if (isMobileNow && viewMode.value === 'list') {
+    viewMode.value = 'grid'
+  }
+}
+
 // Lifecycle
 onMounted(() => {
   loadEvent()
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
 })
 </script>
 
