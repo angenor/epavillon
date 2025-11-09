@@ -485,6 +485,14 @@
     "yourLocalTime": "Your local time ({city})",
     "showMore": "Show more",
     "showLess": "Show less",
+    "countdown": {
+      "startsIn": "Starts in",
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "seconds": "Seconds",
+      "started": "The activity has started"
+    },
     "registration": {
       "success": {
         "title": "Registration successful!",

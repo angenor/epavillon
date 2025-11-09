@@ -59,6 +59,82 @@
             </button>
           </div>
 
+          <!-- Décompteur -->
+          <div v-if="timeRemaining && !timeRemaining.isExpired" class="mb-6 sm:mb-8 animate-fade-in-up animation-delay-200">
+            <div class="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-4 sm:p-6 inline-block">
+              <div class="text-white/80 text-xs sm:text-sm font-medium mb-2 uppercase tracking-wider">
+                {{ t('activity.countdown.startsIn') }}
+              </div>
+              <div class="flex gap-2 sm:gap-4">
+                <!-- Jours -->
+                <div class="flex flex-col items-center">
+                  <div class="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2 sm:px-4 sm:py-3 min-w-[50px] sm:min-w-[70px]">
+                    <div class="text-2xl sm:text-4xl font-bold text-white tabular-nums">
+                      {{ formattedTime.days }}
+                    </div>
+                  </div>
+                  <div class="text-white/70 text-xs sm:text-sm mt-1 font-medium">
+                    {{ t('activity.countdown.days') }}
+                  </div>
+                </div>
+
+                <div class="text-2xl sm:text-4xl font-bold text-white/50 self-center">:</div>
+
+                <!-- Heures -->
+                <div class="flex flex-col items-center">
+                  <div class="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2 sm:px-4 sm:py-3 min-w-[50px] sm:min-w-[70px]">
+                    <div class="text-2xl sm:text-4xl font-bold text-white tabular-nums">
+                      {{ formattedTime.hours }}
+                    </div>
+                  </div>
+                  <div class="text-white/70 text-xs sm:text-sm mt-1 font-medium">
+                    {{ t('activity.countdown.hours') }}
+                  </div>
+                </div>
+
+                <div class="text-2xl sm:text-4xl font-bold text-white/50 self-center">:</div>
+
+                <!-- Minutes -->
+                <div class="flex flex-col items-center">
+                  <div class="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2 sm:px-4 sm:py-3 min-w-[50px] sm:min-w-[70px]">
+                    <div class="text-2xl sm:text-4xl font-bold text-white tabular-nums">
+                      {{ formattedTime.minutes }}
+                    </div>
+                  </div>
+                  <div class="text-white/70 text-xs sm:text-sm mt-1 font-medium">
+                    {{ t('activity.countdown.minutes') }}
+                  </div>
+                </div>
+
+                <div class="text-2xl sm:text-4xl font-bold text-white/50 self-center">:</div>
+
+                <!-- Secondes -->
+                <div class="flex flex-col items-center">
+                  <div class="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2 sm:px-4 sm:py-3 min-w-[50px] sm:min-w-[70px]">
+                    <div class="text-2xl sm:text-4xl font-bold text-white tabular-nums">
+                      {{ formattedTime.seconds }}
+                    </div>
+                  </div>
+                  <div class="text-white/70 text-xs sm:text-sm mt-1 font-medium">
+                    {{ t('activity.countdown.seconds') }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Message si l'activité a déjà commencé ou est terminée -->
+          <div v-else-if="timeRemaining && timeRemaining.isExpired" class="mb-6 sm:mb-8 animate-fade-in-up animation-delay-200">
+            <div class="backdrop-blur-md bg-orange-500/20 border border-orange-400/30 rounded-2xl p-4 sm:p-6 inline-block">
+              <div class="flex items-center gap-2 text-white">
+                <font-awesome-icon :icon="['fas', 'play-circle']" class="text-xl sm:text-2xl" />
+                <span class="text-sm sm:text-base font-semibold">
+                  {{ t('activity.countdown.started') }}
+                </span>
+              </div>
+            </div>
+          </div>
+
           <!-- Titre avec animation -->
           <h1 class="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 animate-fade-in-up animation-delay-400 line-clamp-3">
             {{ activity?.title || '' }}
@@ -1077,6 +1153,7 @@ import { useI18n } from 'vue-i18n'
 import { useHead } from '@vueuse/head'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAuthStore } from '@/stores/auth'
+import { useCountdown } from '@/composables/useCountdown'
 import CommentFloatingButtonUser from '@/components/CommentFloatingButtonUser.vue'
 
 const { t, locale } = useI18n()
@@ -1175,6 +1252,9 @@ const displayEndDate = computed(() => {
   if (!activity.value) return null
   return activity.value.final_end_date || activity.value.proposed_end_date
 })
+
+// Décompteur jusqu'au début de l'activité
+const { timeRemaining, formattedTime } = useCountdown(() => displayStartDate.value)
 
 const canRegister = computed(() => {
   // Permettre l'inscription même pour les utilisateurs non connectés (mode guest)

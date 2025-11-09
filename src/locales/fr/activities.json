@@ -423,6 +423,14 @@
     "yourLocalTime": "Votre heure locale ({city})",
     "showMore": "Voir plus",
     "showLess": "Voir moins",
+    "countdown": {
+      "startsIn": "Commence dans",
+      "days": "Jours",
+      "hours": "Heures",
+      "minutes": "Minutes",
+      "seconds": "Secondes",
+      "started": "L'activité a commencé"
+    },
     "registration": {
       "success": {
         "title": "Inscription réussie !",
