@@ -1683,12 +1683,35 @@ const loadActivity = async () => {
     // Vérifier la hauteur du contenu après le chargement
     await checkContentHeight()
 
+    // Incrémenter le compteur de vues
+    await incrementViewCount()
+
   } catch (error) {
     console.error('Error loading activity:', error)
     // Erreur générique de chargement
     showError('activity.error.generic.title', 'activity.error.generic.message')
   } finally {
     loading.value = false
+  }
+}
+
+// Fonction pour incrémenter le compteur de vues
+const incrementViewCount = async () => {
+  try {
+    if (!activity.value?.id) return
+
+    // Utiliser la fonction RPC pour une incrémentation atomique
+    const { error } = await supabase
+      .rpc('increment_activity_view_count', {
+        activity_uuid: activity.value.id
+      })
+
+    if (error) {
+      console.error('Error incrementing view count:', error)
+    }
+  } catch (error) {
+    console.error('Error in incrementViewCount:', error)
+    // Ne pas bloquer l'affichage si l'incrémentation échoue
   }
 }
 
