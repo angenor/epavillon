@@ -13,7 +13,7 @@
     </div>
 
     <!-- Hero Section avec effet parallaxe -->
-    <div class="relative h-[40vh] sm:h-[50vh] min-h-[250px] sm:min-h-[300px] overflow-hidden">
+    <div class="relative h-[55vh] sm:h-[60vh] md:h-[65vh] min-h-[400px] sm:min-h-[450px] overflow-hidden">
       <!-- Image de couverture de l'événement parent -->
       <div class="absolute inset-0">
         <img
@@ -29,9 +29,9 @@
 
       <!-- Contenu Hero -->
       <div class="relative h-full flex flex-col justify-end">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12 md:pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 sm:pb-10 md:pb-14">
           <!-- Badges flottants -->
-          <div class="flex flex-wrap gap-2 sm:gap-3 mb-4 sm:mb-6">
+          <div class="flex flex-wrap gap-2 sm:gap-3 mb-3 sm:mb-4">
             <span v-if="activity?.validation_status" class="backdrop-blur-md bg-white/10 border border-white/20 text-white px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-medium animate-fade-in-up">
               <span class="inline-block w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
               {{ t(`activity.status.${activity.validation_status}`) }}
@@ -60,62 +60,62 @@
           </div>
 
           <!-- Décompteur -->
-          <div v-if="timeRemaining && !timeRemaining.isExpired" class="mb-6 sm:mb-8 animate-fade-in-up animation-delay-200">
-            <div class="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-4 sm:p-6 inline-block">
-              <div class="text-white/80 text-xs sm:text-sm font-medium mb-2 uppercase tracking-wider">
+          <div v-if="timeRemaining && !timeRemaining.isExpired" class="mb-4 sm:mb-6 animate-fade-in-up animation-delay-200">
+            <div class="backdrop-blur-md bg-white/10 border border-white/20 rounded-xl sm:rounded-2xl p-3 sm:p-5 inline-block">
+              <div class="text-white/80 text-[10px] sm:text-xs font-medium mb-1.5 sm:mb-2 uppercase tracking-wider">
                 {{ t('activity.countdown.startsIn') }}
               </div>
-              <div class="flex gap-2 sm:gap-4">
+              <div class="flex gap-1.5 sm:gap-3">
                 <!-- Jours -->
                 <div class="flex flex-col items-center">
-                  <div class="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2 sm:px-4 sm:py-3 min-w-[50px] sm:min-w-[70px]">
-                    <div class="text-2xl sm:text-4xl font-bold text-white tabular-nums">
+                  <div class="bg-white/20 backdrop-blur-sm rounded-lg px-2 py-1.5 sm:px-3 sm:py-2 min-w-[45px] sm:min-w-[65px]">
+                    <div class="text-xl sm:text-3xl font-bold text-white tabular-nums">
                       {{ formattedTime.days }}
                     </div>
                   </div>
-                  <div class="text-white/70 text-xs sm:text-sm mt-1 font-medium">
+                  <div class="text-white/70 text-[10px] sm:text-xs mt-0.5 sm:mt-1 font-medium">
                     {{ t('activity.countdown.days') }}
                   </div>
                 </div>
 
-                <div class="text-2xl sm:text-4xl font-bold text-white/50 self-center">:</div>
+                <div class="text-xl sm:text-3xl font-bold text-white/50 self-center">:</div>
 
                 <!-- Heures -->
                 <div class="flex flex-col items-center">
-                  <div class="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2 sm:px-4 sm:py-3 min-w-[50px] sm:min-w-[70px]">
-                    <div class="text-2xl sm:text-4xl font-bold text-white tabular-nums">
+                  <div class="bg-white/20 backdrop-blur-sm rounded-lg px-2 py-1.5 sm:px-3 sm:py-2 min-w-[45px] sm:min-w-[65px]">
+                    <div class="text-xl sm:text-3xl font-bold text-white tabular-nums">
                       {{ formattedTime.hours }}
                     </div>
                   </div>
-                  <div class="text-white/70 text-xs sm:text-sm mt-1 font-medium">
+                  <div class="text-white/70 text-[10px] sm:text-xs mt-0.5 sm:mt-1 font-medium">
                     {{ t('activity.countdown.hours') }}
                   </div>
                 </div>
 
-                <div class="text-2xl sm:text-4xl font-bold text-white/50 self-center">:</div>
+                <div class="text-xl sm:text-3xl font-bold text-white/50 self-center">:</div>
 
                 <!-- Minutes -->
                 <div class="flex flex-col items-center">
-                  <div class="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2 sm:px-4 sm:py-3 min-w-[50px] sm:min-w-[70px]">
-                    <div class="text-2xl sm:text-4xl font-bold text-white tabular-nums">
+                  <div class="bg-white/20 backdrop-blur-sm rounded-lg px-2 py-1.5 sm:px-3 sm:py-2 min-w-[45px] sm:min-w-[65px]">
+                    <div class="text-xl sm:text-3xl font-bold text-white tabular-nums">
                       {{ formattedTime.minutes }}
                     </div>
                   </div>
-                  <div class="text-white/70 text-xs sm:text-sm mt-1 font-medium">
+                  <div class="text-white/70 text-[10px] sm:text-xs mt-0.5 sm:mt-1 font-medium">
                     {{ t('activity.countdown.minutes') }}
                   </div>
                 </div>
 
-                <div class="text-2xl sm:text-4xl font-bold text-white/50 self-center">:</div>
+                <div class="text-xl sm:text-3xl font-bold text-white/50 self-center">:</div>
 
                 <!-- Secondes -->
                 <div class="flex flex-col items-center">
-                  <div class="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2 sm:px-4 sm:py-3 min-w-[50px] sm:min-w-[70px]">
-                    <div class="text-2xl sm:text-4xl font-bold text-white tabular-nums">
+                  <div class="bg-white/20 backdrop-blur-sm rounded-lg px-2 py-1.5 sm:px-3 sm:py-2 min-w-[45px] sm:min-w-[65px]">
+                    <div class="text-xl sm:text-3xl font-bold text-white tabular-nums">
                       {{ formattedTime.seconds }}
                     </div>
                   </div>
-                  <div class="text-white/70 text-xs sm:text-sm mt-1 font-medium">
+                  <div class="text-white/70 text-[10px] sm:text-xs mt-0.5 sm:mt-1 font-medium">
                     {{ t('activity.countdown.seconds') }}
                   </div>
                 </div>
@@ -124,11 +124,11 @@
           </div>
 
           <!-- Message si l'activité a déjà commencé ou est terminée -->
-          <div v-else-if="timeRemaining && timeRemaining.isExpired" class="mb-6 sm:mb-8 animate-fade-in-up animation-delay-200">
-            <div class="backdrop-blur-md bg-orange-500/20 border border-orange-400/30 rounded-2xl p-4 sm:p-6 inline-block">
+          <div v-else-if="timeRemaining && timeRemaining.isExpired" class="mb-4 sm:mb-6 animate-fade-in-up animation-delay-200">
+            <div class="backdrop-blur-md bg-orange-500/20 border border-orange-400/30 rounded-xl sm:rounded-2xl p-3 sm:p-5 inline-block">
               <div class="flex items-center gap-2 text-white">
-                <font-awesome-icon :icon="['fas', 'play-circle']" class="text-xl sm:text-2xl" />
-                <span class="text-sm sm:text-base font-semibold">
+                <font-awesome-icon :icon="['fas', 'play-circle']" class="text-lg sm:text-xl" />
+                <span class="text-xs sm:text-base font-semibold">
                   {{ t('activity.countdown.started') }}
                 </span>
               </div>
@@ -136,7 +136,7 @@
           </div>
 
           <!-- Titre avec animation -->
-          <h1 class="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 animate-fade-in-up animation-delay-400 line-clamp-3">
+          <h1 class="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-2 sm:mb-3 animate-fade-in-up animation-delay-400 line-clamp-3">
             {{ activity?.title || '' }}
           </h1>
 
@@ -1253,8 +1253,8 @@ const displayEndDate = computed(() => {
   return activity.value.final_end_date || activity.value.proposed_end_date
 })
 
-// Décompteur jusqu'au début de l'activité
-const { timeRemaining, formattedTime } = useCountdown(() => displayStartDate.value)
+// Décompteur jusqu'au début de l'activité (uniquement final_start_date)
+const { timeRemaining, formattedTime } = useCountdown(() => activity.value?.final_start_date)
 
 const canRegister = computed(() => {
   // Permettre l'inscription même pour les utilisateurs non connectés (mode guest)
