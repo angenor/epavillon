@@ -520,7 +520,15 @@
       }
     },
     "status": {
-      "completed": "Completed"
+      "draft": "Draft",
+      "submitted": "Submitted",
+      "under_review": "Under Review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled",
+      "live": "Live",
+      "completed": "Completed",
+      "postponed": "Postponed"
     },
     "submit": {
       "title": "Submit an activity",

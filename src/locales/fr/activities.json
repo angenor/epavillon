@@ -519,7 +519,15 @@
       }
     },
     "status": {
-      "completed": "Terminée"
+      "draft": "Brouillon",
+      "submitted": "Soumise",
+      "under_review": "En révision",
+      "approved": "Approuvée",
+      "rejected": "Rejetée",
+      "cancelled": "Annulée",
+      "live": "En direct",
+      "completed": "Terminée",
+      "postponed": "Reportée"
     },
     "format": {
       "online": "En ligne",
