@@ -119,7 +119,18 @@
 
     <!-- Actions supplémentaires -->
     <div class="mt-6 pt-6 border-t border-green-200 dark:border-green-700">
+      <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+        {{ t('activities.publicationInfo.shareActivity') }}
+      </h4>
       <div class="flex flex-wrap gap-3">
+        <button
+          @click="shareOnSocialMedia('whatsapp')"
+          class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors cursor-pointer flex items-center gap-2"
+        >
+          <font-awesome-icon :icon="['fab', 'whatsapp']" />
+          {{ t('activities.publicationInfo.shareWhatsApp') }}
+        </button>
+
         <button
           @click="shareOnSocialMedia('twitter')"
           class="px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg transition-colors cursor-pointer flex items-center gap-2"
@@ -163,6 +174,18 @@ const props = defineProps({
   activityTitle: {
     type: String,
     required: true
+  },
+  activityDescription: {
+    type: String,
+    default: ''
+  },
+  activityImage: {
+    type: String,
+    default: ''
+  },
+  activityDate: {
+    type: String,
+    default: ''
   }
 })
 
@@ -217,20 +240,48 @@ const downloadQRCode = async () => {
 
 // Partager sur les réseaux sociaux
 const shareOnSocialMedia = (platform) => {
-  const url = encodeURIComponent(publicUrl.value)
-  const text = encodeURIComponent(props.activityTitle)
+  const url = publicUrl.value
+
+  // Créer un message de base
+  let shareText = props.activityTitle
+
+  if (props.activityDate) {
+    shareText += `\n${props.activityDate}`
+  }
+
+  if (props.activityDescription) {
+    // Limiter la description à 200 caractères pour les réseaux sociaux
+    const truncatedDesc = props.activityDescription.length > 200
+      ? props.activityDescription.substring(0, 200) + '...'
+      : props.activityDescription
+    shareText += `\n\n${truncatedDesc}`
+  }
+
+  shareText += `\n\n${t('activities.publicationInfo.registerNow')}`
 
   let shareUrl = ''
 
   switch (platform) {
     case 'twitter':
-      shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`
+      // Twitter supporte le texte et l'URL avec emojis
+      let twitterText = props.activityTitle
+      if (props.activityDate) {
+        twitterText += ` 📅 ${props.activityDate}`
+      }
+      shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(twitterText)}`
       break
     case 'linkedin':
-      shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`
+      // LinkedIn avec URL et description
+      shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`
       break
     case 'facebook':
-      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`
+      // Facebook avec URL et citation
+      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(shareText)}`
+      break
+    case 'whatsapp':
+      // WhatsApp - texte simple sans emojis problématiques
+      const whatsappText = `${shareText}\n${url}`
+      shareUrl = `https://wa.me/?text=${encodeURIComponent(whatsappText)}`
       break
   }
 

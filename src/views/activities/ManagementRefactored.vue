@@ -45,6 +45,9 @@
             v-if="isActivityApproved"
             :activity-id="activity.id"
             :activity-title="activity.title"
+            :activity-description="activity.objectives || activity.detailed_presentation"
+            :activity-image="activity.cover_image_high_url || activity.cover_image_low_url"
+            :activity-date="formatActivityDate(activity)"
             class="mb-8"
           />
 
@@ -192,6 +195,8 @@ import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { useTimezone } from '@/composables/useTimezone'
 import { useSupabase } from '@/composables/useSupabase'
+import { format } from 'date-fns'
+import { fr, enUS } from 'date-fns/locale'
 
 // Business logic composables
 import { useInlineEditing } from '@/composables/useInlineEditing'
@@ -274,6 +279,33 @@ const canEditDates = computed(() => {
   const editableStatuses = ['draft', 'submitted']
   return activity.value && editableStatuses.includes(activity.value.validation_status)
 })
+
+// Format activity date for sharing
+const formatActivityDate = (activity) => {
+  if (!activity) return ''
+
+  const dateLocale = locale.value === 'fr' ? fr : enUS
+  const startDate = activity.final_start_date || activity.proposed_start_date
+  const endDate = activity.final_end_date || activity.proposed_end_date
+
+  if (!startDate) return ''
+
+  try {
+    const start = new Date(startDate)
+    const end = endDate ? new Date(endDate) : null
+
+    if (end && start.toDateString() !== end.toDateString()) {
+      // Dates différentes
+      return `${format(start, 'PPP', { locale: dateLocale })} - ${format(end, 'PPP', { locale: dateLocale })}`
+    } else {
+      // Même jour
+      return format(start, 'PPP', { locale: dateLocale })
+    }
+  } catch (error) {
+    console.error('Error formatting date:', error)
+    return ''
+  }
+}
 
 // Activity editing methods
 const startEditActivity = (field) => {

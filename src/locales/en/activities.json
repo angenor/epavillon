@@ -452,9 +452,12 @@
       "speakerRegistration": "Panelists can register on the public page",
       "audienceRegistration": "Audience can register to attend remotely",
       "statsTracking": "Track registration statistics in real-time",
-      "shareTwitter": "Share on X (Twitter)",
-      "shareLinkedIn": "Share on LinkedIn",
-      "shareFacebook": "Share on Facebook",
+      "shareActivity": "Share activity",
+      "shareWhatsApp": "WhatsApp",
+      "shareTwitter": "X (Twitter)",
+      "shareLinkedIn": "LinkedIn",
+      "shareFacebook": "Facebook",
+      "registerNow": "Register now!",
       "errorCopyUrl": "Error copying URL",
       "errorDownloadQR": "Error downloading QR Code"
     }

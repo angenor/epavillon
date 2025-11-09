@@ -390,9 +390,12 @@
       "speakerRegistration": "Les panélistes peuvent s'inscrire sur la page publique",
       "audienceRegistration": "L'audience peut s'inscrire pour assister à distance",
       "statsTracking": "Suivez les statistiques d'inscription en temps réel",
-      "shareTwitter": "Partager sur X (Twitter)",
-      "shareLinkedIn": "Partager sur LinkedIn",
-      "shareFacebook": "Partager sur Facebook",
+      "shareActivity": "Partager l'activité",
+      "shareWhatsApp": "WhatsApp",
+      "shareTwitter": "X (Twitter)",
+      "shareLinkedIn": "LinkedIn",
+      "shareFacebook": "Facebook",
+      "registerNow": "Inscrivez-vous maintenant !",
       "errorCopyUrl": "Erreur lors de la copie de l'URL",
       "errorDownloadQR": "Erreur lors du téléchargement du QR Code"
     }

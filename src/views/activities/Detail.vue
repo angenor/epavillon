@@ -32,9 +32,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12 md:pb-16">
           <!-- Badges flottants -->
           <div class="flex flex-wrap gap-2 sm:gap-3 mb-4 sm:mb-6">
-            <span v-if="activity?.activity_status" class="backdrop-blur-md bg-white/10 border border-white/20 text-white px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-medium animate-fade-in-up">
+            <span v-if="activity?.validation_status" class="backdrop-blur-md bg-white/10 border border-white/20 text-white px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-medium animate-fade-in-up">
               <span class="inline-block w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-              {{ t(`activity.status.${activity.activity_status}`) }}
+              {{ t(`activity.status.${activity.validation_status}`) }}
             </span>
 
             <span v-if="activity?.format" class="backdrop-blur-md bg-white/10 border border-white/20 text-white px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-medium animate-fade-in-up animation-delay-100">
