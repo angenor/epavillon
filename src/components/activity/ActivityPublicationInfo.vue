@@ -279,8 +279,26 @@ const shareOnSocialMedia = (platform) => {
       shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(shareText)}`
       break
     case 'whatsapp':
-      // WhatsApp - texte simple sans emojis problématiques
-      const whatsappText = `${shareText}\n${url}`
+      // WhatsApp - texte simple sans emojis ni duplication du titre
+      let whatsappText = ''
+
+      // Ajouter la date si disponible (sans emoji)
+      if (props.activityDate) {
+        whatsappText += `${props.activityDate}\n\n`
+      }
+
+      // Ajouter la description (qui contient déjà le titre généralement)
+      if (props.activityDescription) {
+        const truncatedDesc = props.activityDescription.length > 200
+          ? props.activityDescription.substring(0, 200) + '...'
+          : props.activityDescription
+        whatsappText += `${truncatedDesc}\n\n`
+      } else {
+        // Si pas de description, ajouter le titre
+        whatsappText += `${props.activityTitle}\n\n`
+      }
+
+      whatsappText += `${t('activities.publicationInfo.registerNow')}\n${url}`
       shareUrl = `https://wa.me/?text=${encodeURIComponent(whatsappText)}`
       break
   }

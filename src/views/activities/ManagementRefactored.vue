@@ -295,12 +295,24 @@ const formatActivityDate = (activity) => {
     const start = new Date(startDate)
     const end = endDate ? new Date(endDate) : null
 
+    // Obtenir le fuseau horaire de l'événement
+    const timezone = eventData.value?.timezone || 'UTC'
+
+    // Formater avec l'heure
+    const timeFormat = 'HH:mm' // Format 24h
+    const startTime = format(start, timeFormat)
+
     if (end && start.toDateString() !== end.toDateString()) {
       // Dates différentes
-      return `${format(start, 'PPP', { locale: dateLocale })} - ${format(end, 'PPP', { locale: dateLocale })}`
+      const endTime = format(end, timeFormat)
+      return `${format(start, 'PPP', { locale: dateLocale })} ${startTime} - ${format(end, 'PPP', { locale: dateLocale })} ${endTime} (${timezone})`
+    } else if (end) {
+      // Même jour avec heure de fin
+      const endTime = format(end, timeFormat)
+      return `${format(start, 'PPP', { locale: dateLocale })}, ${startTime} - ${endTime} (${timezone})`
     } else {
-      // Même jour
-      return format(start, 'PPP', { locale: dateLocale })
+      // Même jour sans heure de fin
+      return `${format(start, 'PPP', { locale: dateLocale })}, ${startTime} (${timezone})`
     }
   } catch (error) {
     console.error('Error formatting date:', error)
