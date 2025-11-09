@@ -1,7 +1,10 @@
 <template>
   <div class="min-h-screen bg-white dark:bg-gray-900">
-    <!-- Header avec image de bannière -->
-    <div class="relative h-64 md:h-80 lg:h-96 overflow-hidden">
+    <!-- Header avec image de bannière - hauteur augmentée sur mobile pour les CdP -->
+    <div :class="[
+      'relative overflow-hidden',
+      isCopEvent ? 'h-[520px] md:h-80 lg:h-96' : 'h-64 md:h-80 lg:h-96'
+    ]">
       <img
         src="/images/example/event_banniere_par_defaut_32_9_v3.jpg"
         :alt="event ? `${t('programmations.title')} - ${event.title} ${event.year}` : t('programmations.title')"
@@ -10,12 +13,12 @@
       <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
 
       <!-- Contenu du header -->
-      <div class="absolute bottom-0 left-0 right-0 p-6 md:p-12">
+      <div class="absolute bottom-0 left-0 right-0 p-4 md:p-12">
         <div class="max-w-7xl mx-auto">
-          <h1 v-if="event" class="text-3xl md:text-5xl font-bold text-white mb-4">
+          <h1 v-if="event" class="text-2xl md:text-5xl font-bold text-white mb-3 md:mb-4 leading-tight">
             {{ displayTitle }}
           </h1>
-          <div v-if="event" class="flex flex-wrap gap-3 mb-4">
+          <div v-if="event" class="flex flex-wrap gap-2 md:gap-3 mb-3 md:mb-4">
             <span v-if="event.year && !isCopEvent" class="bg-white/90 px-4 py-2 rounded-lg text-sm font-bold text-gray-900">
               {{ event.year }}
             </span>
@@ -28,63 +31,63 @@
           </div>
 
           <!-- Statistiques avec design Glass -->
-          <div v-if="event && activities.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div v-if="event && activities.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
             <!-- Activités approuvées -->
-            <div class="glass-card group">
-              <div class="flex items-center gap-3">
-                <div class="p-2 rounded-lg bg-orange-500/20 group-hover:bg-orange-500/30 transition-colors">
-                  <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="glass-card-mobile group">
+              <div class="flex items-center gap-2 md:gap-3">
+                <div class="p-1.5 md:p-2 rounded-lg bg-orange-500/20 group-hover:bg-orange-500/30 transition-colors">
+                  <svg class="w-5 h-5 md:w-6 md:h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                   </svg>
                 </div>
                 <div>
-                  <p class="text-3xl font-bold text-white drop-shadow-lg">+{{ approvedActivitiesCount }}</p>
-                  <p class="text-xs font-medium text-white/90">{{ t('programmations.approvedActivitiesCount') }}</p>
+                  <p class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">+{{ approvedActivitiesCount }}</p>
+                  <p class="text-[10px] md:text-xs font-medium text-white/90 leading-tight">{{ t('programmations.approvedActivitiesCount') }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Organisations -->
-            <div class="glass-card group">
-              <div class="flex items-center gap-3">
-                <div class="p-2 rounded-lg bg-orange-500/20 group-hover:bg-orange-500/30 transition-colors">
-                  <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="glass-card-mobile group">
+              <div class="flex items-center gap-2 md:gap-3">
+                <div class="p-1.5 md:p-2 rounded-lg bg-orange-500/20 group-hover:bg-orange-500/30 transition-colors">
+                  <svg class="w-5 h-5 md:w-6 md:h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
                 </div>
                 <div>
-                  <p class="text-3xl font-bold text-white drop-shadow-lg">+{{ organizationsCount }}</p>
-                  <p class="text-xs font-medium text-white/90">{{ t('programmations.organizationsCount') }}</p>
+                  <p class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">+{{ organizationsCount }}</p>
+                  <p class="text-[10px] md:text-xs font-medium text-white/90 leading-tight">{{ t('programmations.organizationsCount') }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Pays -->
-            <div class="glass-card group">
-              <div class="flex items-center gap-3">
-                <div class="p-2 rounded-lg bg-orange-500/20 group-hover:bg-orange-500/30 transition-colors">
-                  <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="glass-card-mobile group">
+              <div class="flex items-center gap-2 md:gap-3">
+                <div class="p-1.5 md:p-2 rounded-lg bg-orange-500/20 group-hover:bg-orange-500/30 transition-colors">
+                  <svg class="w-5 h-5 md:w-6 md:h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
                 <div>
-                  <p class="text-3xl font-bold text-white drop-shadow-lg">+{{ countriesCount }}</p>
-                  <p class="text-xs font-medium text-white/90">{{ t('programmations.countriesCount') }}</p>
+                  <p class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">+{{ countriesCount }}</p>
+                  <p class="text-[10px] md:text-xs font-medium text-white/90 leading-tight">{{ t('programmations.countriesCount') }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Dernière mise à jour -->
-            <div v-if="lastUpdateDate" class="glass-card group">
-              <div class="flex items-center gap-3">
-                <div class="p-2 rounded-lg bg-orange-500/20 group-hover:bg-orange-500/30 transition-colors">
-                  <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div v-if="lastUpdateDate" class="glass-card-mobile group">
+              <div class="flex items-center gap-2 md:gap-3">
+                <div class="p-1.5 md:p-2 rounded-lg bg-orange-500/20 group-hover:bg-orange-500/30 transition-colors">
+                  <svg class="w-5 h-5 md:w-6 md:h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <p class="text-sm font-bold text-white drop-shadow-lg truncate">{{ lastUpdateDate }}</p>
-                  <p class="text-xs font-medium text-white/90">{{ t('programmations.lastUpdate') }}</p>
+                  <p class="text-xs md:text-sm font-bold text-white drop-shadow-lg truncate">{{ lastUpdateDate }}</p>
+                  <p class="text-[10px] md:text-xs font-medium text-white/90 leading-tight">{{ t('programmations.lastUpdate') }}</p>
                 </div>
               </div>
             </div>
@@ -1318,6 +1321,32 @@ onUnmounted(() => {
 }
 
 .glass-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Version mobile optimisée des cartes glass */
+.glass-card-mobile {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 0.5rem;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .glass-card-mobile {
+    border-radius: 12px;
+    padding: 1rem;
+  }
+}
+
+.glass-card-mobile:hover {
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.3);
