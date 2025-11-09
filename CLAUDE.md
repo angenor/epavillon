@@ -59,8 +59,23 @@ npm run dev        # Démarrer le serveur de développement Vite (port par défa
 
 ### Build & Production
 ```bash
-npm run build      # Construire pour la production
-npm run preview    # Prévisualiser le build de production localement
+npm run build          # Construire pour la production (sans pre-rendering SEO)
+npm run build:seo      # Construire avec pre-rendering SEO (RECOMMANDÉ pour déploiement)
+npm run preview        # Prévisualiser le build de production localement
+```
+
+### SEO et Pre-rendering
+```bash
+npm run generate:routes  # Générer la liste des routes depuis Supabase
+npm run prerender        # Pré-rendre les pages avec Puppeteer
+npm run build:seo        # Build + pre-rendering (commande complète)
+npm run verify:seo       # Vérifier les meta tags après le build
+```
+
+### Déploiement
+```bash
+npm run deploy           # Build:seo + firebase deploy (déploiement complet)
+npm run deploy:hosting   # Build:seo + firebase deploy --only hosting
 ```
 
 ### Tests
@@ -106,6 +121,8 @@ VITE_SUPABASE_ANON_KEY=votre_clé_anon_supabase
 - **Vitest** - Framework de test unitaire
 - **Playwright** - Framework de test end-to-end
 - **Vue Devtools** - Outils de développement pour Vue
+- **Puppeteer** - Navigateur headless pour le pre-rendering SEO
+- **serve-handler** - Serveur HTTP pour le pre-rendering
 
 ## Exigences UI/UX
 
@@ -164,14 +181,67 @@ VITE_SUPABASE_ANON_KEY=votre_clé_anon_supabase
   supabase functions deploy nom-fonction
   ```
 
+## SEO et Pre-rendering
+
+### Système de pre-rendering intelligent
+**IMPORTANT** : Le projet utilise un système de **pre-rendering avec Puppeteer** pour générer des fichiers HTML statiques avec les meta tags dynamiques.
+
+#### Comment ça fonctionne
+Au moment du build (`npm run build:seo`) :
+1. Build normal de Vite → génère `dist/`
+2. Récupère TOUTES les activités et événements depuis Supabase
+3. Lance un navigateur headless (Puppeteer)
+4. Visite chaque page (activité/événement)
+5. Attend que `@vueuse/head` génère les meta tags dynamiques avec les vraies données
+6. Sauvegarde le HTML complet dans `dist/`
+
+**Résultat** : Chaque page a son propre fichier HTML avec ses propres meta tags (titre, image, description) !
+
+#### Meta tags dynamiques avec @vueuse/head
+- **Installé dans** : `ProgrammationDetail.vue` et `Detail.vue` (activités)
+- **Pour Google** : Les meta tags dynamiques fonctionnent parfaitement
+- **Pour réseaux sociaux** : Le pre-rendering génère des fichiers HTML statiques visibles par les crawlers
+
+#### Workflow de déploiement
+```bash
+# 1. Build avec pre-rendering (génère les meta tags pour chaque page)
+npm run build:seo
+
+# 2. Vérifier (optionnel)
+npm run verify:seo
+
+# 3. Déployer
+firebase deploy
+```
+
+Ou simplement :
+```bash
+npm run deploy  # Fait tout automatiquement
+```
+
+#### Quand rebuild ?
+Vous devez reconstruire (`npm run build:seo`) et redéployer quand :
+- ✅ Nouvel événement créé
+- ✅ Nouvelle activité créée
+- ✅ Modification d'un titre/description d'événement ou activité
+- ✅ Changement d'image de couverture
+
+#### Documentation complète
+Consultez `DEPLOYMENT_SEO.md` pour :
+- Guide complet du pre-rendering
+- Tests des meta tags
+- Dépannage
+- Configuration serveur
+
 ## Notes de développement
 - Application Vue 3 avec Vite comme outil de build
-- Rendu côté client (SPA) par défaut
+- Rendu côté client (SPA) par défaut avec **pre-rendering SEO au build**
 - Hot Module Replacement (HMR) activé pour un développement rapide
 - TailwindCSS v4 configuré avec PostCSS
 - Le client Supabase sera disponible via un composable personnalisé
 - Structure modulaire avec composants, stores et composables organisés
 - Créer des composants UI personnalisés suivant le système de design IFDD avec TailwindCSS
+- **Pre-rendering avec Puppeteer** pour générer des HTML statiques avec meta tags dynamiques
 
 ## Documentations externes
 

@@ -28,7 +28,10 @@
       "Bash(cat:*)",
       "Bash(echo \"Vérifiez dans la console du navigateur (F12 > Console) s''il y a des erreurs.\")",
       "Bash(npx supabase functions list)",
-      "Bash(npm run verify:seo:*)"
+      "Bash(npm run verify:seo:*)",
+      "Bash(npm run generate:routes:*)",
+      "Bash(npm run build:seo:*)",
+      "Bash(npm run prerender:*)"
     ],
     "deny": [],
     "ask": []

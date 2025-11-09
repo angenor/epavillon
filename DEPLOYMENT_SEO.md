@@ -1,138 +1,220 @@
 # Guide SEO et Partage sur les Réseaux Sociaux
 
-## 📊 État actuel
+## 🎯 Solution implémentée : Pre-rendering au moment du build
 
-Votre site utilise des **meta tags statiques** définis dans [index.html](index.html). Ces meta tags sont les mêmes pour toutes les pages.
+Votre site utilise un système de **pre-rendering intelligent** qui génère des fichiers HTML statiques avec les **vraies données** de Supabase (titres, descriptions, images) pour chaque événement et activité.
 
-### ✅ Ce qui fonctionne
+### ✅ Comment ça fonctionne
 
-Lorsque vous partagez votre site sur les réseaux sociaux (Facebook, WhatsApp, LinkedIn, Twitter), l'aperçu affichera :
+**Au moment du build (`npm run build:seo`)** :
+1. Build normal de Vite → génère `dist/`
+2. Récupère TOUTES les activités et événements depuis Supabase
+3. Lance un navigateur headless (Puppeteer)
+4. Visite chaque page (activité/événement)
+5. Attend que `@vueuse/head` génère les meta tags dynamiques avec les vraies données
+6. Sauvegarde le HTML complet dans `dist/`
 
-- **Titre** : e-Pavillon Climatique de la Francophonie - IFDD
-- **Image** : https://epavillonclimatique.francophonie.org/images/example/event_banniere_par_defaut_32_9_v3.jpg
-- **Description** : Plateforme de l'Institut de la Francophonie pour le développement durable (IFDD) dédiée aux événements climatiques et de développement durable dans l'espace francophone.
+**Résultat** : Chaque page a son propre fichier HTML avec ses propres meta tags !
 
-### 📍 Meta tags configurés
-
-Les meta tags sont définis dans [index.html](index.html:8-34) :
-
-```html
-<!-- Meta tags par défaut -->
-<title>e-Pavillon Climatique de la Francophonie - IFDD</title>
-<meta name="description" content="...">
-
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://epavillonclimatique.francophonie.org/">
-<meta property="og:title" content="e-Pavillon Climatique de la Francophonie - IFDD">
-<meta property="og:description" content="...">
-<meta property="og:image" content="https://epavillonclimatique.francophonie.org/images/example/event_banniere_par_defaut_32_9_v3.jpg">
-
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="e-Pavillon Climatique de la Francophonie - IFDD">
-<meta name="twitter:image" content="https://epavillonclimatique.francophonie.org/images/example/event_banniere_par_defaut_32_9_v3.jpg">
+```
+dist/
+├── index.html                                    (page d'accueil)
+├── programmations/
+│   └── 2025/
+│       └── 8303bbfa.../
+│           └── index.html                       (événement avec SES meta tags)
+├── activities/
+│   └── 84ac2637.../
+│       └── index.html                           (activité avec SES meta tags)
 ```
 
-## 🚀 Déploiement
+## 📦 Installation (À FAIRE UNE SEULE FOIS)
 
-### 1. Build du projet
+**Installez les dépendances** :
+```bash
+npm install --save-dev puppeteer serve-handler
+```
+
+**Note** : Puppeteer télécharge Chrome headless (~150 MB). L'installation peut prendre 2-3 minutes.
+
+## 🚀 Build et déploiement
+
+### Build avec pre-rendering (RECOMMANDÉ)
+```bash
+npm run build:seo
+```
+
+**Ce que fait cette commande** :
+- ✅ Build Vite
+- ✅ Récupère toutes les routes depuis Supabase (événements + activités)
+- ✅ Pré-rend chaque page avec Puppeteer
+- ✅ Génère les fichiers HTML avec les **vraies données**
+
+**Durée** : 3-7 minutes (build 1-2 min + pre-rendering 2-5 min)
+
+### Build normal (sans pre-rendering)
 ```bash
 npm run build
 ```
 
-### 2. Vérification SEO (optionnel)
+Utilisez ceci seulement si vous ne voulez PAS les meta tags dynamiques.
+
+### Déployer
 ```bash
-npm run verify:seo
+npm run deploy
 ```
 
-Cette commande vérifie que :
-- ✅ Les meta tags Open Graph sont présents
-- ✅ Les meta tags Twitter Card sont présents
-- ✅ L'image par défaut existe
+Cette commande fait automatiquement :
+1. `npm run build:seo` (build + pre-rendering)
+2. `firebase deploy` (déploiement)
 
-### 3. Déployer
+## 📊 Résultat final
 
-Déployez le contenu du dossier `dist/` sur votre hébergement.
+### ✅ Pour les réseaux sociaux (Facebook, WhatsApp, LinkedIn, Twitter)
+
+Chaque page partagée affichera **SES PROPRES** meta tags :
+
+**Page d'accueil** :
+- Titre : "e-Pavillon Climatique de la Francophonie - IFDD"
+- Image : Bannière par défaut
+- Description : Description générique
+
+**Page d'événement** (ex: `/programmations/2025/8303bbfa...`) :
+- Titre : **Nom réel de l'événement**
+- Image : **Image de couverture de l'événement**
+- Description : **Description de l'événement**
+
+**Page d'activité** (ex: `/activities/84ac2637...`) :
+- Titre : **Nom réel de l'activité**
+- Image : **Poster de l'activité**
+- Description : **Description de l'activité**
+
+### ✅ Pour Google et moteurs de recherche
+
+Fonctionne parfaitement ! Google exécute JavaScript ET voit aussi le HTML pré-rendu.
 
 ## 🧪 Tests après déploiement
 
-### Facebook Sharing Debugger
+### 1. Vérifier qu'un fichier HTML a été généré
+
+Après le pre-rendering, vérifiez :
+```bash
+ls dist/activities/84ac2637-817d-4e7e-a256-ea2902efaed0/
+```
+
+Vous devriez voir un fichier `index.html`.
+
+### 2. Vérifier les meta tags dans le fichier
+
+```bash
+cat dist/activities/84ac2637-817d-4e7e-a256-ea2902efaed0/index.html | grep "og:title"
+```
+
+Vous devriez voir le **titre réel de l'activité**, pas le titre par défaut.
+
+### 3. Facebook Debugger
+
 1. Allez sur : https://developers.facebook.com/tools/debug/
-2. Collez votre URL : `https://epavillonclimatique.francophonie.org/`
-3. Cliquez sur "Scrape Again"
-4. Vérifiez que l'image et le titre s'affichent
+2. Collez votre URL : `https://epavillonclimatique.francophonie.org/activities/84ac2637-817d-4e7e-a256-ea2902efaed0`
+3. Cliquez "Scrape Again"
+4. ✅ Vous devriez voir le **titre, l'image et la description spécifiques** de l'activité !
 
-### LinkedIn Post Inspector
-1. Allez sur : https://www.linkedin.com/post-inspector/
-2. Collez votre URL
-3. Vérifiez l'aperçu
+### 4. LinkedIn Post Inspector
 
-### Twitter Card Validator
-1. Allez sur : https://cards-dev.twitter.com/validator
-2. Collez votre URL
-3. Vérifiez l'aperçu
+https://www.linkedin.com/post-inspector/
 
-### WhatsApp
-Partagez simplement un lien dans une conversation et vérifiez l'aperçu.
+### 5. Twitter Card Validator
 
-## 💡 Pour changer l'image ou le titre par défaut
+https://cards-dev.twitter.com/validator
 
-Si vous voulez modifier l'image, le titre ou la description affichés lors du partage :
+### 6. WhatsApp
 
-1. Ouvrez [index.html](index.html)
-2. Modifiez les valeurs des meta tags :
-   - `og:title` pour le titre
-   - `og:description` pour la description
-   - `og:image` pour l'image
-   - `twitter:title`, `twitter:description`, `twitter:image` pour Twitter
+Partagez simplement un lien dans une conversation. L'aperçu affichera les bonnes données !
 
-3. Changez aussi l'URL de l'image si vous voulez utiliser une autre image par défaut :
+## ⚠️ Quand rebuild ?
+
+Vous devez reconstruire (`npm run build:seo`) et redéployer quand :
+
+- ✅ Nouvel événement créé
+- ✅ Nouvelle activité créée
+- ✅ Modification d'un titre/description d'événement ou activité
+- ✅ Changement d'image de couverture
+- ❌ Commentaire ajouté (pas besoin)
+- ❌ Inscription à un événement (pas besoin)
+
+## 🔧 Scripts disponibles
+
+```bash
+# Générer la liste des routes depuis Supabase
+npm run generate:routes
+
+# Build normal (sans pre-rendering)
+npm run build
+
+# Build avec pre-rendering (RECOMMANDÉ)
+npm run build:seo
+
+# Pre-rendering seulement (après un build)
+npm run prerender
+
+# Vérifier les meta tags
+npm run verify:seo
+
+# Déployer (build:seo + firebase deploy)
+npm run deploy
+```
+
+## 🐛 Dépannage
+
+### Erreur : "Puppeteer not found"
+```bash
+npm install --save-dev puppeteer serve-handler
+```
+
+### Le pre-rendering est très lent
+- **Normal** : 2-5 minutes pour ~50 pages
+- Puppeteer lance un vrai navigateur Chrome pour chaque page
+
+### Erreur "Port 3000 already in use"
+Arrêtez le processus :
+```bash
+pkill -f "node.*3000"
+```
+
+### Les meta tags ne s'affichent pas après déploiement
+1. Vérifiez que le fichier HTML existe bien sur le serveur
+2. Videz le cache de votre navigateur
+3. Videz le cache des réseaux sociaux (Facebook Debugger)
+
+## 💡 Pour changer l'image ou le titre par défaut de la page d'accueil
+
+1. Ouvrez [index.html](index.html:8-34)
+2. Modifiez les meta tags :
    ```html
-   <meta property="og:image" content="https://epavillonclimatique.francophonie.org/images/votre-nouvelle-image.jpg">
+   <meta property="og:title" content="Votre nouveau titre">
+   <meta property="og:image" content="https://epavillonclimatique.francophonie.org/images/votre-image.jpg">
+   <meta property="og:description" content="Votre nouvelle description">
    ```
-
-4. Rebuild et redéployez :
+3. Rebuild et redéployez :
    ```bash
-   npm run build
-   # Puis déployez le dossier dist/
+   npm run build:seo
+   npm run deploy
    ```
 
-5. Videz le cache Facebook :
-   - https://developers.facebook.com/tools/debug/
-   - Cliquez "Scrape Again"
+## ✅ Avantages de cette solution
 
-## 📝 Notes importantes
+- ✅ **Meta tags dynamiques** : Chaque page a ses propres meta tags
+- ✅ **Partage social parfait** : Image, titre, description spécifiques sur tous les réseaux
+- ✅ **SEO optimal** : Google et les crawlers voient le contenu complet
+- ✅ **Pas de serveur requis** : Fonctionne avec n'importe quel hébergement statique
+- ✅ **Gratuit** : Pas de service externe payant
 
-### Pour les moteurs de recherche (Google, Bing, etc.)
-- ✅ **Fonctionne parfaitement** : Les moteurs de recherche modernes exécutent JavaScript
-- ✅ Google verra les meta tags dynamiques générés par Vue.js avec `@vueuse/head`
-- ✅ Le SEO de votre site est optimal pour Google
+## ⚠️ Limites
 
-### Pour les réseaux sociaux (Facebook, WhatsApp, LinkedIn, Twitter)
-- ⚠️ **Meta tags statiques uniquement** : Les crawlers ne peuvent pas exécuter JavaScript
-- ⚠️ Toutes les pages partagent les mêmes meta tags par défaut
-- ✅ L'aperçu affichera toujours l'image, le titre et la description définis dans `index.html`
-
-### Pourquoi cette limitation ?
-
-Les crawlers des réseaux sociaux (Facebook Bot, WhatsApp Bot, etc.) sont des robots simples qui :
-- ✅ Lisent le HTML statique
-- ❌ N'exécutent PAS JavaScript
-- ❌ Ne voient PAS les meta tags générés dynamiquement par Vue.js
-
-C'est une limitation technique de tous les frameworks SPA (Single Page Applications) comme Vue.js, React, Angular.
-
-## ✅ Résultat final
-
-Votre site est :
-- ✅ **Partageable** sur tous les réseaux sociaux avec image et titre
-- ✅ **Optimisé SEO** pour Google et autres moteurs de recherche
-- ✅ **Performant** avec un build optimisé
-- ✅ **Fonctionnel** avec une bonne expérience utilisateur
-
-**Note** : Toutes les pages partagent les mêmes meta tags lors du partage sur les réseaux sociaux. C'est normal et attendu avec cette configuration.
+- ⚠️ **Rebuild requis** : Vous devez reconstruire et redéployer à chaque nouveau contenu
+- ⚠️ **Temps de build** : Ajoute 2-5 minutes au processus de build
+- ⚠️ **Contenu statique** : Le HTML est généré au moment du build, pas en temps réel
 
 ---
 
-**Dernière mise à jour :** 2025-01-08
+**Dernière mise à jour :** 2025-01-09

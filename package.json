@@ -5,14 +5,17 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "generate:routes": "node scripts/generate-routes.js",
     "build": "vite build",
+    "prerender": "npm run generate:routes && node scripts/prerender-after-build.js",
+    "build:seo": "npm run build && npm run prerender",
     "build:verify": "npm run build && node scripts/verify-seo.js",
     "preview": "vite preview",
     "test:unit": "vitest",
     "test:e2e": "playwright test",
     "verify:seo": "node scripts/verify-seo.js",
-    "deploy": "npm run build && npm run verify:seo && firebase deploy",
-    "deploy:hosting": "npm run build && npm run verify:seo && firebase deploy --only hosting"
+    "deploy": "npm run build:seo && firebase deploy",
+    "deploy:hosting": "npm run build:seo && firebase deploy --only hosting"
   },
   "dependencies": {
     "@amcharts/amcharts5": "^5.10.7",
@@ -69,6 +72,8 @@
     "autoprefixer": "^10.4.21",
     "jsdom": "^26.0.0",
     "postcss": "^8.5.5",
+    "puppeteer": "^24.29.1",
+    "serve-handler": "^6.1.6",
     "tailwindcss": "^4.1.10",
     "vite": "^6.2.4",
     "vite-plugin-prerender": "^1.0.8",

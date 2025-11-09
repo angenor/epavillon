@@ -31,3 +31,6 @@ coverage
 
 test-results/
 playwright-report/
+
+# Generated files
+prerender-routes.json
