@@ -288,6 +288,7 @@ CREATE TABLE public.activities (
     proposed_end_date TIMESTAMPTZ NOT NULL,
     final_start_date TIMESTAMPTZ,
     final_end_date TIMESTAMPTZ,
+    activites_view_count  NUMBER DEFAULT 0,
     validation_status validation_status DEFAULT 'draft',
     cover_image_high_url TEXT,
     cover_image_low_url TEXT,
