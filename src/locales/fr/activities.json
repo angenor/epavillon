@@ -374,6 +374,27 @@
         "viewAnalytics": "Voir les Analytiques",
         "viewAnalyticsDesc": "Statistiques de vos formations"
       }
+    },
+    "publicationInfo": {
+      "title": "Activité approuvée et publiée !",
+      "description": "Votre activité est maintenant visible publiquement. Les inscriptions des panélistes et de l'audience se font directement sur la page publique de l'activité.",
+      "qrCode": "Code QR de l'activité",
+      "qrDescription": "Scannez ce code pour accéder à la page publique",
+      "downloadQR": "Télécharger le QR Code",
+      "publicLink": "Lien public de l'activité",
+      "activityUrl": "URL de l'activité",
+      "copyUrl": "Copier l'URL",
+      "urlCopied": "URL copiée dans le presse-papiers !",
+      "viewPublic": "Voir la page publique",
+      "registrationInfo": "Inscriptions",
+      "speakerRegistration": "Les panélistes peuvent s'inscrire sur la page publique",
+      "audienceRegistration": "L'audience peut s'inscrire pour assister à distance",
+      "statsTracking": "Suivez les statistiques d'inscription en temps réel",
+      "shareTwitter": "Partager sur X (Twitter)",
+      "shareLinkedIn": "Partager sur LinkedIn",
+      "shareFacebook": "Partager sur Facebook",
+      "errorCopyUrl": "Erreur lors de la copie de l'URL",
+      "errorDownloadQR": "Erreur lors du téléchargement du QR Code"
     }
   },
   "activity": {
@@ -767,27 +788,6 @@
         "title": "Erreur de prévisualisation",
         "message": "Impossible de charger la prévisualisation de cette activité."
       }
-    },
-    "publicationInfo": {
-      "title": "Activité approuvée et publiée !",
-      "description": "Votre activité est maintenant visible publiquement. Les inscriptions des panélistes et de l'audience se font directement sur la page publique de l'activité.",
-      "qrCode": "Code QR de l'activité",
-      "qrDescription": "Scannez ce code pour accéder à la page publique",
-      "downloadQR": "Télécharger le QR Code",
-      "publicLink": "Lien public de l'activité",
-      "activityUrl": "URL de l'activité",
-      "copyUrl": "Copier l'URL",
-      "urlCopied": "URL copiée dans le presse-papiers !",
-      "viewPublic": "Voir la page publique",
-      "registrationInfo": "Inscriptions",
-      "speakerRegistration": "Les panélistes peuvent s'inscrire sur la page publique",
-      "audienceRegistration": "L'audience peut s'inscrire pour assister à distance",
-      "statsTracking": "Suivez les statistiques d'inscription en temps réel",
-      "shareTwitter": "Partager sur X (Twitter)",
-      "shareLinkedIn": "Partager sur LinkedIn",
-      "shareFacebook": "Partager sur Facebook",
-      "errorCopyUrl": "Erreur lors de la copie de l'URL",
-      "errorDownloadQR": "Erreur lors du téléchargement du QR Code"
     }
   },
   "activityDatesManager": {
