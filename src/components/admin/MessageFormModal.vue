@@ -23,6 +23,39 @@
 
         <!-- Form -->
         <form @submit.prevent="handleSubmit" class="space-y-6">
+          <!-- Modèles prédéfinis -->
+          <div v-if="!isEditing" class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 bg-gray-50 dark:bg-gray-800/50">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+              {{ t('admin.incidentMessages.templates.title') }}
+            </label>
+            <select
+              v-model="selectedTemplate"
+              @change="applyTemplate"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent cursor-pointer"
+            >
+              <option :value="null">{{ t('admin.incidentMessages.templates.select') }}</option>
+              <optgroup :label="t('admin.incidentMessages.templates.categories.technical')">
+                <option value="technical_general">{{ t('admin.incidentMessages.templates.list.technical_general') }}</option>
+                <option value="streaming_issue">{{ t('admin.incidentMessages.templates.list.streaming_issue') }}</option>
+                <option value="audio_video_issue">{{ t('admin.incidentMessages.templates.list.audio_video_issue') }}</option>
+                <option value="internet_issue">{{ t('admin.incidentMessages.templates.list.internet_issue') }}</option>
+              </optgroup>
+              <optgroup :label="t('admin.incidentMessages.templates.categories.scheduling')">
+                <option value="activity_cancelled">{{ t('admin.incidentMessages.templates.list.activity_cancelled') }}</option>
+                <option value="activity_delayed">{{ t('admin.incidentMessages.templates.list.activity_delayed') }}</option>
+                <option value="location_changed">{{ t('admin.incidentMessages.templates.list.location_changed') }}</option>
+              </optgroup>
+              <optgroup :label="t('admin.incidentMessages.templates.categories.maintenance')">
+                <option value="scheduled_maintenance">{{ t('admin.incidentMessages.templates.list.scheduled_maintenance') }}</option>
+                <option value="update_in_progress">{{ t('admin.incidentMessages.templates.list.update_in_progress') }}</option>
+                <option value="temporary_access_restricted">{{ t('admin.incidentMessages.templates.list.temporary_access_restricted') }}</option>
+              </optgroup>
+            </select>
+            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+              {{ t('admin.incidentMessages.templates.helper') }}
+            </p>
+          </div>
+
           <!-- Événement -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -296,6 +329,7 @@ const { supabase } = useSupabase()
 const isSaving = ref(false)
 const organizations = ref([])
 const messageType = ref('general')
+const selectedTemplate = ref(null)
 
 const form = ref({
   event_id: null,
@@ -306,6 +340,60 @@ const form = ref({
   severity: 'warning',
   is_active: true
 })
+
+// Modèles prédéfinis
+const templates = {
+  technical_general: {
+    message_fr: 'Nous rencontrons actuellement des problèmes techniques. Nos équipes travaillent à résoudre la situation dans les plus brefs délais.',
+    message_en: 'We are currently experiencing technical issues. Our teams are working to resolve the situation as soon as possible.',
+    severity: 'warning'
+  },
+  streaming_issue: {
+    message_fr: 'Le streaming vidéo rencontre des difficultés techniques. Veuillez patienter pendant que nous résolvons le problème.',
+    message_en: 'Video streaming is experiencing technical difficulties. Please be patient while we resolve the issue.',
+    severity: 'error'
+  },
+  audio_video_issue: {
+    message_fr: 'Des problèmes audio et/ou vidéo sont actuellement en cours de résolution. Merci de votre compréhension.',
+    message_en: 'Audio and/or video issues are currently being resolved. Thank you for your understanding.',
+    severity: 'warning'
+  },
+  internet_issue: {
+    message_fr: 'Nous rencontrons des problèmes de connexion internet. Le service pourrait être temporairement interrompu.',
+    message_en: 'We are experiencing internet connectivity issues. Service may be temporarily interrupted.',
+    severity: 'error'
+  },
+  activity_cancelled: {
+    message_fr: 'Cette activité a été annulée. Nous nous excusons pour tout inconvénient causé. Plus d\'informations seront communiquées prochainement.',
+    message_en: 'This activity has been cancelled. We apologize for any inconvenience. More information will be communicated soon.',
+    severity: 'error'
+  },
+  activity_delayed: {
+    message_fr: 'Le début de cette activité est retardé. Nous vous tiendrons informés de la nouvelle heure de début.',
+    message_en: 'The start of this activity is delayed. We will keep you informed of the new start time.',
+    severity: 'warning'
+  },
+  location_changed: {
+    message_fr: 'Le lieu de cette activité a été modifié. Veuillez consulter les détails de l\'activité pour plus d\'informations.',
+    message_en: 'The location of this activity has been changed. Please check the activity details for more information.',
+    severity: 'info'
+  },
+  scheduled_maintenance: {
+    message_fr: 'Une maintenance planifiée est en cours. Les services seront temporairement indisponibles.',
+    message_en: 'Scheduled maintenance is in progress. Services will be temporarily unavailable.',
+    severity: 'info'
+  },
+  update_in_progress: {
+    message_fr: 'Une mise à jour est en cours d\'installation. Vous pourriez rencontrer des perturbations temporaires.',
+    message_en: 'An update is being installed. You may experience temporary disruptions.',
+    severity: 'info'
+  },
+  temporary_access_restricted: {
+    message_fr: 'L\'accès est temporairement restreint pour des raisons de maintenance. Nous serons bientôt de retour.',
+    message_en: 'Access is temporarily restricted for maintenance reasons. We will be back soon.',
+    severity: 'warning'
+  }
+}
 
 // Computed
 const isEditing = computed(() => !!props.message)
@@ -320,6 +408,17 @@ const setMessageType = (type) => {
   }
   if (type !== 'day') {
     form.value.day_date = null
+  }
+}
+
+const applyTemplate = () => {
+  if (!selectedTemplate.value) return
+
+  const template = templates[selectedTemplate.value]
+  if (template) {
+    form.value.message_fr = template.message_fr
+    form.value.message_en = template.message_en
+    form.value.severity = template.severity
   }
 }
 
@@ -343,6 +442,28 @@ const loadOrganizations = async () => {
 const handleSubmit = async () => {
   try {
     isSaving.value = true
+
+    // Validation des champs obligatoires
+    if (!form.value.event_id) {
+      alert(t('admin.incidentMessages.errors.eventRequired'))
+      return
+    }
+
+    if (!form.value.message_fr || !form.value.message_en) {
+      alert(t('admin.incidentMessages.errors.messagesRequired'))
+      return
+    }
+
+    // Validation selon le type de message
+    if (messageType.value === 'organization' && !form.value.organization_id) {
+      alert(t('admin.incidentMessages.errors.organizationRequired'))
+      return
+    }
+
+    if (messageType.value === 'day' && !form.value.day_date) {
+      alert(t('admin.incidentMessages.errors.dateRequired'))
+      return
+    }
 
     const payload = {
       event_id: form.value.event_id,

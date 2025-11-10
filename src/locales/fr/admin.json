@@ -499,6 +499,28 @@
         "saveFailed": "Erreur lors de l'enregistrement du message",
         "toggleFailed": "Erreur lors du changement de statut",
         "deleteFailed": "Erreur lors de la suppression du message"
+      },
+      "templates": {
+        "title": "💡 Modèles prédéfinis",
+        "select": "Choisir un modèle...",
+        "helper": "Sélectionnez un modèle pour pré-remplir le message. Vous pouvez le modifier ensuite.",
+        "categories": {
+          "technical": "🔧 Problèmes techniques",
+          "scheduling": "📅 Programmation",
+          "maintenance": "🛠️ Maintenance"
+        },
+        "list": {
+          "technical_general": "Problème technique général",
+          "streaming_issue": "Problème de streaming vidéo",
+          "audio_video_issue": "Problème audio/vidéo",
+          "internet_issue": "Problème de connexion internet",
+          "activity_cancelled": "Activité annulée",
+          "activity_delayed": "Activité retardée",
+          "location_changed": "Changement de lieu",
+          "scheduled_maintenance": "Maintenance planifiée",
+          "update_in_progress": "Mise à jour en cours",
+          "temporary_access_restricted": "Accès restreint temporairement"
+        }
       }
     }
   }

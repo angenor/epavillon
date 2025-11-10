@@ -497,6 +497,28 @@
         "saveFailed": "Error saving message",
         "toggleFailed": "Error changing status",
         "deleteFailed": "Error deleting message"
+      },
+      "templates": {
+        "title": "💡 Predefined templates",
+        "select": "Choose a template...",
+        "helper": "Select a template to prefill the message. You can modify it afterwards.",
+        "categories": {
+          "technical": "🔧 Technical issues",
+          "scheduling": "📅 Scheduling",
+          "maintenance": "🛠️ Maintenance"
+        },
+        "list": {
+          "technical_general": "General technical issue",
+          "streaming_issue": "Video streaming issue",
+          "audio_video_issue": "Audio/video issue",
+          "internet_issue": "Internet connectivity issue",
+          "activity_cancelled": "Activity cancelled",
+          "activity_delayed": "Activity delayed",
+          "location_changed": "Location changed",
+          "scheduled_maintenance": "Scheduled maintenance",
+          "update_in_progress": "Update in progress",
+          "temporary_access_restricted": "Temporarily restricted access"
+        }
       }
     }
   }
