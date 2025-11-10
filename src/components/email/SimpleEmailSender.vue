@@ -529,6 +529,14 @@ export default {
     initialFilter: {
       type: String,
       default: null
+    },
+    initialSubject: {
+      type: String,
+      default: null
+    },
+    initialContent: {
+      type: String,
+      default: null
     }
   },
   emits: ['email-sent'],
@@ -554,8 +562,8 @@ export default {
     const showVariables = ref(false)
 
     const emailData = ref({
-      subject: '',
-      content: '',
+      subject: props.initialSubject || '',
+      content: props.initialContent || '',
       event_id: props.initialEvent || '',
       activity_id: props.initialActivity || ''
     })

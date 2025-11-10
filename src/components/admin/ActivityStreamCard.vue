@@ -124,6 +124,52 @@
               {{ isFetching ? t('admin.youtube.fetching') : t('admin.youtube.autoFetchLink') }}
             </button>
           </div>
+
+          <!-- Email Action Buttons -->
+          <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ t('admin.youtube.quickEmailActions') }}</p>
+            <div class="flex flex-wrap gap-2">
+              <!-- Bouton alerte imminence (si activité à venir dans moins de 24h) -->
+              <button
+                v-if="shouldShowImminenceButton"
+                @click="handleSendImminenceAlert"
+                class="px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white text-xs font-medium rounded-lg transition-colors cursor-pointer flex items-center gap-1"
+                :title="t('admin.youtube.alertImminence')"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                {{ t('admin.youtube.alertImminence') }}
+              </button>
+
+              <!-- Bouton annulation pour absence -->
+              <button
+                v-if="shouldShowCancellationButton"
+                @click="handleSendCancellation"
+                class="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-medium rounded-lg transition-colors cursor-pointer flex items-center gap-1"
+                :title="t('admin.youtube.cancelForAbsence')"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+                {{ t('admin.youtube.cancelForAbsence') }}
+              </button>
+
+              <!-- Bouton demande éléments post-activité (si terminée) -->
+              <button
+                v-if="shouldShowPostActivityButton"
+                @click="handleSendPostActivityRequest"
+                class="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium rounded-lg transition-colors cursor-pointer flex items-center gap-1"
+                :title="t('admin.youtube.requestPostElements')"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                {{ t('admin.youtube.requestPostElements') }}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -131,11 +177,18 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { extractYoutubeVideoId, getYoutubeWatchUrl, fetchCurrentLiveStreamId } from '@/utils/youtube'
+import { useActivityEmailTemplates } from '@/composables/useActivityEmailTemplates'
 
 const { t } = useI18n()
+const {
+  sendImminenceAlert,
+  sendCancellationForAbsence,
+  sendPostActivityRequest,
+  getMinutesUntilStart
+} = useActivityEmailTemplates()
 
 // Props
 const props = defineProps({
@@ -233,5 +286,48 @@ const handleAutoFetch = async () => {
   } finally {
     isFetching.value = false
   }
+}
+
+// Email Actions - Computed
+const shouldShowImminenceButton = computed(() => {
+  const now = new Date()
+  const startDate = new Date(props.activity.final_start_date || props.activity.proposed_start_date)
+  const hoursUntilStart = (startDate - now) / (1000 * 60 * 60)
+
+  // Afficher si l'activité commence dans moins de 24h et n'est pas annulée ou terminée
+  return hoursUntilStart > 0 &&
+         hoursUntilStart <= 24 &&
+         props.activity.activity_status !== 'cancelled' &&
+         props.activity.streamStatus.status !== 'finished'
+})
+
+const shouldShowCancellationButton = computed(() => {
+  // Afficher si l'activité devrait être en cours ou passée mais pas encore marquée comme annulée
+  const now = new Date()
+  const startDate = new Date(props.activity.final_start_date || props.activity.proposed_start_date)
+
+  return startDate <= now &&
+         props.activity.activity_status !== 'cancelled' &&
+         props.activity.streamStatus.status !== 'finished'
+})
+
+const shouldShowPostActivityButton = computed(() => {
+  // Afficher uniquement si l'activité est terminée
+  return props.activity.streamStatus.status === 'finished'
+})
+
+// Email Actions - Méthodes
+const handleSendImminenceAlert = () => {
+  sendImminenceAlert(props.activity)
+}
+
+const handleSendCancellation = () => {
+  if (confirm(t('admin.youtube.confirmCancellationEmail'))) {
+    sendCancellationForAbsence(props.activity)
+  }
+}
+
+const handleSendPostActivityRequest = () => {
+  sendPostActivityRequest(props.activity)
 }
 </script>

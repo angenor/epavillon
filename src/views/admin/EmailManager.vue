@@ -5,7 +5,12 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Simple Email Tab -->
       <div v-if="activeTab === 'simple'">
-        <SimpleEmailSender :initialFilter="filterType" />
+        <SimpleEmailSender
+          :initialFilter="filterType"
+          :initialRecipients="initialRecipients"
+          :initialSubject="initialSubject"
+          :initialContent="initialContent"
+        />
       </div>
 
       <!-- Event Email Tab (Future) -->
@@ -69,9 +74,28 @@ export default {
     // Récupérer le paramètre de filtre depuis la route
     const filterType = computed(() => route.query.filter || null)
 
+    // Récupérer les paramètres d'email prédéfini depuis la route
+    const initialRecipients = computed(() => {
+      if (!route.query.to && !route.query.cc && !route.query.bcc) {
+        return null
+      }
+
+      return {
+        to: route.query.to ? route.query.to.split(',').map(email => email.trim()) : [],
+        cc: route.query.cc ? route.query.cc.split(',').map(email => email.trim()) : [],
+        bcc: route.query.bcc ? route.query.bcc.split(',').map(email => email.trim()) : []
+      }
+    })
+
+    const initialSubject = computed(() => route.query.subject || null)
+    const initialContent = computed(() => route.query.body || null)
+
     return {
       activeTab,
       filterType,
+      initialRecipients,
+      initialSubject,
+      initialContent,
       t
     }
   }

@@ -430,7 +430,12 @@
       "confirmRemove": "Are you sure you want to remove this YouTube link?",
       "invalidVideoId": "Invalid YouTube video ID",
       "noLiveFound": "No live stream found on YouTube channel",
-      "fetchError": "Error fetching YouTube stream"
+      "fetchError": "Error fetching YouTube stream",
+      "quickEmailActions": "Quick email actions",
+      "alertImminence": "Alert imminence",
+      "cancelForAbsence": "Cancel for absence",
+      "requestPostElements": "Request post-activity elements",
+      "confirmCancellationEmail": "Are you sure you want to send a cancellation email for absence?"
     }
   }
 }

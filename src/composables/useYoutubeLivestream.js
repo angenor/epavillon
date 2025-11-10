@@ -141,6 +141,7 @@ export function useYoutubeLivestream() {
           youtube_link,
           validation_status,
           cover_image_low_url,
+          submitted_by,
           event:events!inner(
             id,
             title,
@@ -160,10 +161,53 @@ export function useYoutubeLivestream() {
 
       const { data, error: fetchError } = await query.order('proposed_start_date', { ascending: true })
 
-      if (fetchError) throw fetchError
+      if (fetchError) {
+        console.error('Error fetching activities:', fetchError)
+        throw fetchError
+      }
+
+      // Enrichir les activités avec les informations du soumissionnaire et des panélistes
+      const enrichedActivities = await Promise.all(
+        (data || []).map(async (activity) => {
+          // Récupérer les infos du soumissionnaire
+          let submitter = null
+          if (activity.submitted_by) {
+            const { data: userData } = await supabase
+              .from('users')
+              .select('id, email, first_name, last_name')
+              .eq('id', activity.submitted_by)
+              .single()
+            submitter = userData
+          }
+
+          // Récupérer les panélistes
+          let activity_panelists = []
+          const { data: panelists } = await supabase
+            .from('activity_panelists')
+            .select(`
+              panelist:users(
+                id,
+                email,
+                first_name,
+                last_name
+              )
+            `)
+            .eq('activity_id', activity.id)
+
+          if (panelists) {
+            activity_panelists = panelists
+          }
+
+          return {
+            ...activity,
+            submitter,
+            activity_panelists
+          }
+        })
+      )
 
       // Enrichir les activités avec leur statut de direct
-      activities.value = (data || []).map(activity => {
+      activities.value = enrichedActivities.map(activity => {
         const streamStatus = getActivityStreamStatus(activity)
         return {
           ...activity,
