@@ -496,7 +496,11 @@
       "errors": {
         "saveFailed": "Error saving message",
         "toggleFailed": "Error changing status",
-        "deleteFailed": "Error deleting message"
+        "deleteFailed": "Error deleting message",
+        "eventRequired": "Please select an event",
+        "messagesRequired": "Please fill in the messages in French and English",
+        "organizationRequired": "Please select an organization for this message type",
+        "dateRequired": "Please select a date for this message type"
       },
       "templates": {
         "title": "💡 Predefined templates",

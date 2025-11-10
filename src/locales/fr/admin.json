@@ -498,7 +498,11 @@
       "errors": {
         "saveFailed": "Erreur lors de l'enregistrement du message",
         "toggleFailed": "Erreur lors du changement de statut",
-        "deleteFailed": "Erreur lors de la suppression du message"
+        "deleteFailed": "Erreur lors de la suppression du message",
+        "eventRequired": "Veuillez sélectionner un événement",
+        "messagesRequired": "Veuillez remplir les messages en français et en anglais",
+        "organizationRequired": "Veuillez sélectionner une organisation pour ce type de message",
+        "dateRequired": "Veuillez sélectionner une date pour ce type de message"
       },
       "templates": {
         "title": "💡 Modèles prédéfinis",
