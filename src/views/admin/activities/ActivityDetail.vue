@@ -19,7 +19,7 @@
       <div v-if="isLoadingRoles || isLoading" class="flex items-center justify-center min-h-screen">
         <div class="text-center">
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
-          <p class="text-gray-600 dark:text-gray-300">Chargement...</p>
+          <p class="text-gray-600 dark:text-gray-300">{{ t('common.loading') }}</p>
         </div>
       </div>
 
@@ -303,18 +303,18 @@
             </div>
 
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-              <h2 class="text-lg font-semibold mb-4">Description détaillée</h2>
+              <h2 class="text-lg font-semibold mb-4">{{ t('activity.presentation') }}</h2>
               <div class="prose dark:prose-invert max-w-none" v-html="activity.detailed_presentation"></div>
             </div>
 
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-              <h2 class="text-lg font-semibold mb-4">Objectifs</h2>
+              <h2 class="text-lg font-semibold mb-4">{{ t('activity.objectives') }}</h2>
               <div class="prose dark:prose-invert max-w-none" v-html="activity.objectives"></div>
             </div>
 
             <!-- Intervenants / Panelistes -->
             <div v-if="speakers.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-              <h2 class="text-lg font-semibold mb-4">Intervenants / Panélistes ({{ speakers.length }})</h2>
+              <h2 class="text-lg font-semibold mb-4">{{ t('activity.speakers') }} ({{ speakers.length }})</h2>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div v-for="speaker in speakers" :key="speaker.id"
                     class="flex items-start space-x-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
@@ -434,7 +434,7 @@
 
             <!-- Documents supports -->
             <div v-if="documents.length > 0" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-              <h2 class="text-lg font-semibold mb-4">Documents supports ({{ documents.length }})</h2>
+              <h2 class="text-lg font-semibold mb-4">{{ t('activity.documents') }} ({{ documents.length }})</h2>
               <div class="space-y-2">
                 <div v-for="doc in documents" :key="doc.id"
                     class="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
@@ -571,21 +571,21 @@
 
             <!-- Nombre d'intervenants et documents -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-              <h3 class="text-lg font-semibold mb-4">Vue d'ensemble</h3>
+              <h3 class="text-lg font-semibold mb-4">{{ t('common.overview') }}</h3>
               <div class="space-y-3">
                 <div class="flex items-center justify-between">
-                  <span class="text-sm text-gray-500 dark:text-gray-400">Intervenants</span>
+                  <span class="text-sm text-gray-500 dark:text-gray-400">{{ t('activity.speakers') }}</span>
                   <span class="text-lg font-bold text-blue-600 dark:text-blue-400">{{ speakers.length }}</span>
                 </div>
                 <div class="flex items-center justify-between">
-                  <span class="text-sm text-gray-500 dark:text-gray-400">Documents</span>
+                  <span class="text-sm text-gray-500 dark:text-gray-400">{{ t('activity.documents') }}</span>
                   <span class="text-lg font-bold text-green-600 dark:text-green-400">{{ documents.length }}</span>
                 </div>
               </div>
             </div>
 
             <div v-if="activity.main_themes?.length" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-              <h3 class="text-lg font-semibold mb-4">Thématiques</h3>
+              <h3 class="text-lg font-semibold mb-4">{{ t('activity.themes') }}</h3>
               <div class="flex flex-wrap gap-2">
                 <span v-for="theme in activity.main_themes" :key="theme"
                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
@@ -595,7 +595,7 @@
             </div>
 
             <div v-if="activity.categories?.length" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-              <h3 class="text-lg font-semibold mb-4">Catégories</h3>
+              <h3 class="text-lg font-semibold mb-4">{{ t('activity.categories') }}</h3>
               <div class="flex flex-wrap gap-2">
                 <span v-for="category in activity.categories" :key="category"
                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
@@ -605,7 +605,7 @@
             </div>
 
             <div v-if="activity.tags?.length" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-              <h3 class="text-lg font-semibold mb-4">Tags</h3>
+              <h3 class="text-lg font-semibold mb-4">{{ t('activity.tags') }}</h3>
               <div class="flex flex-wrap gap-2">
                 <span v-for="tag in activity.tags" :key="tag"
                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300">
@@ -751,6 +751,7 @@
 <script setup>
 import { ref, onMounted, computed, onBeforeUnmount, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
 import { useAuth } from '@/composables/useAuth'
@@ -767,6 +768,7 @@ import CommentFloatingButton from '@/components/admin/CommentFloatingButton.vue'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const { supabase } = useSupabase()
 const { hasReviewerOrAdminRole, isLoadingRoles, loadUserRoles, validateActivity, hasRole } = useAdmin()
 const { currentUser } = useAuth()

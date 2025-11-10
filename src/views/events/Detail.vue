@@ -658,12 +658,11 @@ const loadActivities = async () => {
 
 const loadTotalActivitiesCount = async () => {
   try {
-    // Compter toutes les activités approuvées pour cet événement
+    // Compter TOUTES les activités soumises pour cet événement (validées ou non)
     const { count, error } = await supabase
       .from('activities')
       .select('*', { count: 'exact', head: true })
       .eq('event_id', route.params.id)
-      .eq('validation_status', 'approved')
 
     if (error) throw error
 

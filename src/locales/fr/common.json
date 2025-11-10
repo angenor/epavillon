@@ -59,6 +59,7 @@
     "close": "Fermer",
     "all": "Tous",
     "reset": "Réinitialiser",
+    "overview": "Vue d'ensemble",
     "maintenance": {
       "title": "Page en maintenance",
       "message": "Cette page est actuellement en cours de maintenance. Nous travaillons à l'améliorer pour vous offrir une meilleure expérience.",
