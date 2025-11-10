@@ -160,6 +160,12 @@
         "acronym": "Par acronyme",
         "organization": "Par organisation"
       }
+    },
+    "incidents": {
+      "technicalIssue": "Problème technique",
+      "information": "Information",
+      "warning": "Avertissement",
+      "loading": "Chargement des alertes..."
     }
   },
   "community": {

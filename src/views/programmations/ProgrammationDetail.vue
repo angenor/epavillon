@@ -127,6 +127,16 @@
       </div>
     </div>
 
+    <!-- Messages d'alerte/incidents -->
+    <div v-if="!isLoading && event && incidentMessages.length > 0" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <AlertBanner
+        v-for="message in incidentMessages"
+        :key="message.id"
+        :message="locale === 'fr' ? message.message_fr : message.message_en"
+        :severity="message.severity"
+      />
+    </div>
+
     <!-- Loading state -->
     <div v-if="isLoading" class="flex justify-center items-center min-h-[400px]">
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
@@ -649,6 +659,7 @@ import { useHead } from '@vueuse/head'
 import VueCal from 'vue-cal'
 import { useSupabase } from '@/composables/useSupabase'
 import SearchModal from '@/components/SearchModal.vue'
+import AlertBanner from '@/components/AlertBanner.vue'
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -669,6 +680,7 @@ const currentWeek = ref(1) // Semaine actuelle (1 ou 2)
 const week1StartDate = ref(null)
 const week2StartDate = ref(null)
 const isSearchModalOpen = ref(false)
+const incidentMessages = ref([]) // Messages d'alerte/incidents
 
 // Paramètres de route
 const year = computed(() => parseInt(route.params.year))
@@ -1119,9 +1131,12 @@ const loadEvent = async () => {
 
     event.value = data
 
-    // Si on a un événement, charger ses activités
+    // Si on a un événement, charger ses activités et messages d'incidents
     if (data) {
-      await loadActivities()
+      await Promise.all([
+        loadActivities(),
+        loadIncidentMessages()
+      ])
     }
 
   } catch (error) {
@@ -1165,6 +1180,36 @@ const loadActivities = async () => {
     console.error('Error loading activities:', error)
   } finally {
     isLoadingActivities.value = false
+  }
+}
+
+const loadIncidentMessages = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('incident_messages')
+      .select(`
+        *,
+        organization:organizations(
+          id,
+          name,
+          acronym
+        )
+      `)
+      .eq('event_id', eventId.value)
+      .eq('is_active', true)
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+
+    // Filtrer les messages selon les critères :
+    // - Messages généraux (sans organization_id ni day_date)
+    // - Messages pour des organisations spécifiques
+    // - Messages pour des journées spécifiques
+    incidentMessages.value = data || []
+
+  } catch (error) {
+    console.error('Error loading incident messages:', error)
+    incidentMessages.value = []
   }
 }
 

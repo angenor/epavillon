@@ -150,6 +150,12 @@
         "acronym": "By acronym",
         "organization": "By organization"
       }
+    },
+    "incidents": {
+      "technicalIssue": "Technical issue",
+      "information": "Information",
+      "warning": "Warning",
+      "loading": "Loading alerts..."
     }
   },
   "community": {

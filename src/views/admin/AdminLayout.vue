@@ -293,6 +293,12 @@ const navigation = [
     requiresAdmin: true
   },
   {
+    name: 'admin.nav.incidentMessages',
+    href: '/admin/incident-messages',
+    icon: ['fas', 'exclamation-triangle'],
+    requiresAdmin: true
+  },
+  {
     name: 'admin.nav.negotiations',
     href: '/admin/negotiations',
     icon: ['fas', 'handshake'],

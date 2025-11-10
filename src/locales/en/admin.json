@@ -20,6 +20,7 @@
       "reports": "Reports",
       "roles": "Roles",
       "youtubeStreams": "YouTube Streams",
+      "incidentMessages": "Incident Messages",
       "negotiations": "Negotiations"
     },
     "dashboard": {
@@ -436,6 +437,67 @@
       "cancelForAbsence": "Cancel for absence",
       "requestPostElements": "Request post-activity elements",
       "confirmCancellationEmail": "Are you sure you want to send a cancellation email for absence?"
+    },
+    "incidentMessages": {
+      "title": "Incident Messages",
+      "description": "Manage alert and incident messages for events",
+      "createNew": "New message",
+      "createFirst": "Create first message",
+      "noMessages": "No incident messages",
+      "noMessagesDescription": "Start by creating an alert message to inform participants",
+      "event": "Event",
+      "organization": "Organization",
+      "dayDate": "Concerned date",
+      "createdAt": "Created on",
+      "updatedAt": "Updated on",
+      "confirmDelete": "Are you sure you want to delete this message?",
+      "filters": {
+        "event": "Event",
+        "severity": "Severity",
+        "status": "Status"
+      },
+      "severity": {
+        "info": "Information",
+        "warning": "Warning",
+        "error": "Error"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "types": {
+        "general": "General message",
+        "organization": "Specific organization",
+        "day": "Specific day",
+        "organizationAndDay": "Organization & Date"
+      },
+      "actions": {
+        "activate": "Activate",
+        "deactivate": "Deactivate"
+      },
+      "modal": {
+        "createTitle": "Create incident message",
+        "editTitle": "Edit incident message"
+      },
+      "form": {
+        "event": "Event",
+        "selectEvent": "Select an event",
+        "messageType": "Message type",
+        "organization": "Organization",
+        "selectOrganization": "Select an organization",
+        "dayDate": "Date",
+        "severity": "Severity",
+        "messageFr": "Message in French",
+        "messageFrPlaceholder": "Enter message in French...",
+        "messageEn": "Message in English",
+        "messageEnPlaceholder": "Enter message in English...",
+        "isActive": "Activate this message immediately"
+      },
+      "errors": {
+        "saveFailed": "Error saving message",
+        "toggleFailed": "Error changing status",
+        "deleteFailed": "Error deleting message"
+      }
     }
   }
 }

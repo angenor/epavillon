@@ -351,6 +351,12 @@ const router = createRouter({
           name: 'admin-youtube-streams',
           component: () => import('../views/admin/YoutubeStreamManager.vue'),
           meta: { requiresRole: ['admin', 'super_admin'] }
+        },
+        {
+          path: 'incident-messages',
+          name: 'admin-incident-messages',
+          component: () => import('../views/admin/IncidentMessages.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         }
       ]
     },

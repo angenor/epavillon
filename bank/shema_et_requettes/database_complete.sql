@@ -225,6 +225,51 @@ CREATE TABLE public.events (
     )
 );
 
+-- =====================================================
+-- Table pour les messages d'alerte/incidents
+-- =====================================================
+-- Cette table permet de gérer les messages d'alerte pour:
+-- - Des organisations spécifiques
+-- - Des journées spécifiques
+-- - L'événement en général
+-- =====================================================
+
+CREATE TABLE public.incident_messages (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  event_id UUID REFERENCES public.events(id) ON DELETE CASCADE NOT NULL,
+  organization_id UUID REFERENCES public.organizations(id) ON DELETE SET NULL,
+  day_date DATE,
+  message_fr TEXT NOT NULL,
+  message_en TEXT NOT NULL,
+  severity TEXT CHECK (severity IN ('info', 'warning', 'error')) DEFAULT 'warning',
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Index pour améliorer les performances
+CREATE INDEX idx_incident_messages_event_id ON public.incident_messages(event_id);
+CREATE INDEX idx_incident_messages_organization_id ON public.incident_messages(organization_id);
+CREATE INDEX idx_incident_messages_day_date ON public.incident_messages(day_date);
+CREATE INDEX idx_incident_messages_is_active ON public.incident_messages(is_active);
+
+-- Commentaires sur la table et les colonnes
+COMMENT ON TABLE public.incident_messages IS 'Messages d''alerte et incidents pour les événements';
+COMMENT ON COLUMN public.incident_messages.id IS 'Identifiant unique du message';
+COMMENT ON COLUMN public.incident_messages.event_id IS 'Événement concerné (obligatoire)';
+COMMENT ON COLUMN public.incident_messages.organization_id IS 'Organisation concernée (NULL = message non spécifique à une organisation)';
+COMMENT ON COLUMN public.incident_messages.day_date IS 'Date concernée (NULL = message non spécifique à un jour)';
+COMMENT ON COLUMN public.incident_messages.message_fr IS 'Message en français';
+COMMENT ON COLUMN public.incident_messages.message_en IS 'Message en anglais';
+COMMENT ON COLUMN public.incident_messages.severity IS 'Niveau de gravité: info (bleu), warning (orange), error (rouge)';
+COMMENT ON COLUMN public.incident_messages.is_active IS 'Indique si le message doit être affiché';
+
+-- Trigger pour mettre à jour automatiquement updated_at
+CREATE TRIGGER set_incident_messages_updated_at
+  BEFORE UPDATE ON public.incident_messages
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
 -- Types et catégories d'activités
 CREATE TYPE activity_categories AS ENUM (
     'capacity_building',
@@ -1199,6 +1244,7 @@ ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.organizations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.incident_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.activities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
@@ -1506,6 +1552,23 @@ CREATE POLICY "Users can update their own events" ON public.events
 
 CREATE POLICY "Admins can delete events" ON public.events
     FOR DELETE USING (
+        EXISTS (
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
+            AND (valid_until IS NULL OR valid_until > NOW())
+        )
+    );
+
+-- Politiques pour les messages d'incidents
+-- Lecture : Tout le monde peut lire les messages actifs
+CREATE POLICY "Active incident messages are viewable by all" ON public.incident_messages
+    FOR SELECT USING (is_active = true);
+
+-- Gestion : Seuls les admins peuvent créer, modifier, supprimer
+CREATE POLICY "Only admins can manage incident messages" ON public.incident_messages
+    FOR ALL USING (
         EXISTS (
             SELECT 1 FROM public.user_roles
             WHERE user_id = auth.uid()

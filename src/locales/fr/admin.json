@@ -20,6 +20,7 @@
       "reports": "Rapports",
       "roles": "Rôles",
       "youtubeStreams": "Directs YouTube",
+      "incidentMessages": "Messages d'Incidents",
       "negotiations": "Négociations"
     },
     "dashboard": {
@@ -438,6 +439,67 @@
       "cancelForAbsence": "Annuler pour absence",
       "requestPostElements": "Demander éléments post-activité",
       "confirmCancellationEmail": "Êtes-vous sûr de vouloir envoyer un email d'annulation pour absence ?"
+    },
+    "incidentMessages": {
+      "title": "Messages d'Incidents",
+      "description": "Gérez les messages d'alerte et incidents pour les événements",
+      "createNew": "Nouveau message",
+      "createFirst": "Créer le premier message",
+      "noMessages": "Aucun message d'incident",
+      "noMessagesDescription": "Commencez par créer un message d'alerte pour informer les participants",
+      "event": "Événement",
+      "organization": "Organisation",
+      "dayDate": "Date concernée",
+      "createdAt": "Créé le",
+      "updatedAt": "Modifié le",
+      "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce message ?",
+      "filters": {
+        "event": "Événement",
+        "severity": "Gravité",
+        "status": "Statut"
+      },
+      "severity": {
+        "info": "Information",
+        "warning": "Avertissement",
+        "error": "Erreur"
+      },
+      "status": {
+        "active": "Actif",
+        "inactive": "Inactif"
+      },
+      "types": {
+        "general": "Message général",
+        "organization": "Organisation spécifique",
+        "day": "Journée spécifique",
+        "organizationAndDay": "Organisation & Date"
+      },
+      "actions": {
+        "activate": "Activer",
+        "deactivate": "Désactiver"
+      },
+      "modal": {
+        "createTitle": "Créer un message d'incident",
+        "editTitle": "Modifier le message d'incident"
+      },
+      "form": {
+        "event": "Événement",
+        "selectEvent": "Sélectionnez un événement",
+        "messageType": "Type de message",
+        "organization": "Organisation",
+        "selectOrganization": "Sélectionnez une organisation",
+        "dayDate": "Date",
+        "severity": "Gravité",
+        "messageFr": "Message en français",
+        "messageFrPlaceholder": "Saisissez le message en français...",
+        "messageEn": "Message en anglais",
+        "messageEnPlaceholder": "Saisissez le message en anglais...",
+        "isActive": "Activer immédiatement ce message"
+      },
+      "errors": {
+        "saveFailed": "Erreur lors de l'enregistrement du message",
+        "toggleFailed": "Erreur lors du changement de statut",
+        "deleteFailed": "Erreur lors de la suppression du message"
+      }
     }
   }
 }
