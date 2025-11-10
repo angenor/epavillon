@@ -1498,17 +1498,17 @@ const getBannerUrl = () => {
   // Sinon bannière de l'activité
   if (activity.value?.banner_url) return activity.value.banner_url
 
-  // Par défaut
-  return '/images/example/event_banniere_par_defaut_32_9_v3.jpg'
+  // Par défaut (version réduite plus légère)
+  return '/images/example/event_banniere_par_defaut_16_9_reduit.jpg'
 }
 
 const getActivityPosterUrl = () => {
-  // Priorité : poster de l'activité (haute qualité puis basse qualité)
-  if (activity.value?.cover_image_high_url) return activity.value.cover_image_high_url
+  // Priorité : poster de l'activité (basse qualité d'abord pour les meta tags - plus légère)
   if (activity.value?.cover_image_low_url) return activity.value.cover_image_low_url
+  if (activity.value?.cover_image_high_url) return activity.value.cover_image_high_url
 
-  // Image par défaut (même que dans Management.vue)
-  return '/images/example/event_banniere_par_defaut_16_9.jpg'
+  // Image par défaut réduite (plus légère)
+  return '/images/example/event_banniere_par_defaut_16_9_reduit.jpg'
 }
 
 const loadActivity = async () => {
@@ -2453,7 +2453,10 @@ useHead({
   title: metaTitle,
   meta: [
     { name: 'description', content: metaDescription },
-    { name: 'keywords', content: computed(() => `${activity.value?.title || ''}, ${organization.value?.name || ''}, ${event.value?.title || ''}, ${activity.value?.format || ''}, climat, développement durable, IFDD`) },
+    { name: 'keywords', content: computed(() => {
+      const tags = activity.value?.tags?.join(', ') || ''
+      return `${activity.value?.title || ''}, ${organization.value?.name || ''}, ${event.value?.title || ''}, ${tags ? tags + ', ' : ''}climat, développement durable, francophonie, IFDD, Cdp`
+    }) },
 
     // Open Graph
     { property: 'og:title', content: metaTitle },

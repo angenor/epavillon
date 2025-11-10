@@ -294,7 +294,7 @@ CREATE TABLE public.activities (
     cover_image_low_url TEXT,
     banner_url TEXT,
     zoom_meeting_id UUID REFERENCES public.zoom_meetings(id) ON DELETE SET NULL, -- Lien vers la table zoom
-    youtube_link TEXT,
+    youtube_link TEXT, -- Pour le lien du direct et de l'enregistrement
     tags TEXT[], -- Tags stockés directement dans un tableau
     -- Soft delete
     send_activites_recu_email_count NUMBER DEFAULT 0,
