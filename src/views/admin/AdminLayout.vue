@@ -287,6 +287,12 @@ const navigation = [
     requiresAdmin: true
   },
   {
+    name: 'admin.nav.youtubeStreams',
+    href: '/admin/youtube-streams',
+    icon: ['fab', 'youtube'],
+    requiresAdmin: true
+  },
+  {
     name: 'admin.nav.negotiations',
     href: '/admin/negotiations',
     icon: ['fas', 'handshake'],

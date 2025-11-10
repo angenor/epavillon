@@ -19,6 +19,7 @@
       "emails": "Emails",
       "reports": "Rapports",
       "roles": "Rôles",
+      "youtubeStreams": "Directs YouTube",
       "negotiations": "Négociations"
     },
     "dashboard": {
@@ -405,6 +406,33 @@
       "deleteError": "Erreur lors de la suppression de la formation",
       "deleteButton": "Supprimer définitivement",
       "cancel": "Annuler"
+    },
+    "youtube": {
+      "title": "Gestion des Directs YouTube",
+      "subtitle": "Gérez les liens des directs YouTube pour les activités",
+      "urgentAlerts": "⚠️ Alertes urgentes",
+      "urgentAlertsDesc": "{count} activité(s) nécessitent votre attention immédiate",
+      "liveNow": "En direct maintenant",
+      "urgentActivities": "Activités urgentes",
+      "upcomingActivities": "Activités à venir",
+      "futureActivities": "📅 Activités à venir",
+      "finishedActivities": "✅ Activités terminées",
+      "cancelledActivities": "❌ Activités annulées",
+      "allActivities": "Toutes les activités",
+      "noActivities": "Aucune activité trouvée",
+      "noActivitiesDesc": "Aucune activité approuvée pour l'événement sélectionné",
+      "enterVideoId": "Entrez l'ID de la vidéo YouTube",
+      "addLink": "Ajouter le lien",
+      "autoFetchLink": "Récupérer automatiquement le direct en cours",
+      "fetching": "Récupération en cours...",
+      "removeLink": "Supprimer le lien",
+      "viewActivity": "Voir l'activité",
+      "updateError": "Erreur lors de la mise à jour du lien",
+      "removeError": "Erreur lors de la suppression du lien",
+      "confirmRemove": "Êtes-vous sûr de vouloir supprimer ce lien YouTube ?",
+      "invalidVideoId": "ID de vidéo YouTube invalide",
+      "noLiveFound": "Aucun direct en cours trouvé sur la chaîne YouTube",
+      "fetchError": "Erreur lors de la récupération du direct YouTube"
     }
   }
 }

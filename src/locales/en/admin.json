@@ -19,6 +19,7 @@
       "emails": "Emails",
       "reports": "Reports",
       "roles": "Roles",
+      "youtubeStreams": "YouTube Streams",
       "negotiations": "Negotiations"
     },
     "dashboard": {
@@ -403,6 +404,33 @@
         "blocked": "Blocked",
         "suspended": "Suspended"
       }
+    },
+    "youtube": {
+      "title": "YouTube Streams Management",
+      "subtitle": "Manage YouTube stream links for activities",
+      "urgentAlerts": "⚠️ Urgent alerts",
+      "urgentAlertsDesc": "{count} activity(ies) require your immediate attention",
+      "liveNow": "Live now",
+      "urgentActivities": "Urgent activities",
+      "upcomingActivities": "Upcoming activities",
+      "futureActivities": "📅 Upcoming Activities",
+      "finishedActivities": "✅ Finished Activities",
+      "cancelledActivities": "❌ Cancelled Activities",
+      "allActivities": "All activities",
+      "noActivities": "No activities found",
+      "noActivitiesDesc": "No approved activities for the selected event",
+      "enterVideoId": "Enter YouTube video ID",
+      "addLink": "Add link",
+      "autoFetchLink": "Auto-fetch current stream",
+      "fetching": "Fetching...",
+      "removeLink": "Remove link",
+      "viewActivity": "View activity",
+      "updateError": "Error updating link",
+      "removeError": "Error removing link",
+      "confirmRemove": "Are you sure you want to remove this YouTube link?",
+      "invalidVideoId": "Invalid YouTube video ID",
+      "noLiveFound": "No live stream found on YouTube channel",
+      "fetchError": "Error fetching YouTube stream"
     }
   }
 }

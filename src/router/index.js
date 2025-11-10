@@ -345,6 +345,12 @@ const router = createRouter({
           name: 'admin-emails',
           component: () => import('../views/admin/EmailManager.vue'),
           meta: { requiresRole: ['admin', 'super_admin'] }
+        },
+        {
+          path: 'youtube-streams',
+          name: 'admin-youtube-streams',
+          component: () => import('../views/admin/YoutubeStreamManager.vue'),
+          meta: { requiresRole: ['admin', 'super_admin'] }
         }
       ]
     },

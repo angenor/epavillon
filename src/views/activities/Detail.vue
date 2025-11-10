@@ -184,11 +184,24 @@
 
     <div class="flex flex-col lg:flex-row gap-4 lg:gap-6 w-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative -mt-6 sm:-mt-8 md:-mt-10 mb-10">
       <div class="w-full lg:max-w-3xl bg-white dark:bg-gray-800 rounded-xl h-min pb-10 shadow-xl">
-        <!-- Affiche/Poster de l'activité -->
+        <!-- Affiche/Poster de l'activité ou Iframe YouTube -->
         <div
           class="h-64 sm:h-80 md:h-96 rounded-xl shadow-md relative overflow-hidden bg-gradient-to-br from-blue-50 to-green-50 dark:from-blue-900/20 dark:to-green-900/20"
         >
+          <!-- Iframe YouTube si le lien est disponible -->
+          <iframe
+            v-if="activity?.youtube_link"
+            :src="getYoutubeEmbedUrl(activity.youtube_link, { autoplay: 0, mute: 0 })"
+            :title="activity?.title || 'YouTube video'"
+            class="w-full h-full"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="lazy"
+          ></iframe>
+          <!-- Image de couverture si pas de lien YouTube -->
           <img
+            v-else
             :src="getActivityPosterUrl()"
             :alt="activity?.title || 'Activity poster'"
             class="w-full h-full object-cover"
@@ -1155,6 +1168,7 @@ import { useSupabase } from '@/composables/useSupabase'
 import { useAuthStore } from '@/stores/auth'
 import { useCountdown } from '@/composables/useCountdown'
 import CommentFloatingButtonUser from '@/components/CommentFloatingButtonUser.vue'
+import { getYoutubeEmbedUrl } from '@/utils/youtube'
 
 const { t, locale } = useI18n()
 const route = useRoute()
