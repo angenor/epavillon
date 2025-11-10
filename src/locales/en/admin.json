@@ -290,6 +290,8 @@
       "subtitle": "Management and validation of activity proposals",
       "export": "Export",
       "emailValidDates": "Email - Valid Dates",
+      "emailApprovedActivities": "Email - Approved Activities",
+      "emailNotApprovedActivities": "Email - Under Review",
       "searchPlaceholder": "Search by title, organization or event...",
       "allEvents": "All events",
       "allCountries": "All countries",

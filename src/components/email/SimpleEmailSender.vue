@@ -1327,6 +1327,86 @@ export default {
       }
     }
 
+    // Fonction pour charger les emails des coordinateurs dont les activités sont approuvées
+    const loadApprovedActivitiesSubmitters = async () => {
+      try {
+        console.log('Chargement des coordinateurs avec activités approuvées...')
+
+        // Récupérer toutes les activités avec validation_status = 'approved'
+        const { data, error } = await supabase
+          .from('activities')
+          .select(`
+            id,
+            submitted_by,
+            validation_status,
+            users!submitted_by(email, first_name, last_name)
+          `)
+          .eq('validation_status', 'approved')
+          .eq('is_deleted', false)
+
+        if (error) throw error
+
+        // Extraire les emails uniques des coordinateurs
+        const submitterEmails = [...new Set(
+          (data || [])
+            .map(activity => activity.users?.email)
+            .filter(Boolean)
+        )]
+
+        console.log(`${submitterEmails.length} coordinateurs avec activités approuvées trouvés`)
+
+        // Ajouter les emails dans le champ BCC
+        recipients.value.bcc = submitterEmails
+
+        // Mettre le bulkDestination sur 'bcc' par défaut
+        bulkDestination.value = 'bcc'
+
+      } catch (err) {
+        console.error('Erreur lors du chargement des coordinateurs avec activités approuvées:', err)
+        error.value = 'Erreur lors du chargement des coordinateurs avec activités approuvées'
+      }
+    }
+
+    // Fonction pour charger les emails des coordinateurs dont les activités sont en attente d'examen
+    const loadUnderReviewActivitiesSubmitters = async () => {
+      try {
+        console.log('Chargement des coordinateurs avec activités en attente d\'examen...')
+
+        // Récupérer toutes les activités avec validation_status = 'under_review'
+        const { data, error } = await supabase
+          .from('activities')
+          .select(`
+            id,
+            submitted_by,
+            validation_status,
+            users!submitted_by(email, first_name, last_name)
+          `)
+          .eq('validation_status', 'under_review')
+          .eq('is_deleted', false)
+
+        if (error) throw error
+
+        // Extraire les emails uniques des coordinateurs
+        const submitterEmails = [...new Set(
+          (data || [])
+            .map(activity => activity.users?.email)
+            .filter(Boolean)
+        )]
+
+        console.log(`${submitterEmails.length} coordinateurs avec activités en attente d'examen trouvés`)
+
+        // Ajouter les emails dans le champ BCC
+        recipients.value.bcc = submitterEmails
+
+        // Mettre le bulkDestination sur 'bcc' par défaut
+        bulkDestination.value = 'bcc'
+
+      } catch (err) {
+        console.error('Erreur lors du chargement des coordinateurs avec activités en attente d\'examen:', err)
+        error.value = 'Erreur lors du chargement des coordinateurs avec activités en attente d\'examen'
+      }
+    }
+
     // Load events on mount
     onMounted(async () => {
       fetchEvents()
@@ -1339,6 +1419,10 @@ export default {
       // Si un filtre initial est fourni, appliquer le filtre
       if (props.initialFilter === 'valid-dates') {
         await loadValidDatesSubmitters()
+      } else if (props.initialFilter === 'approved-activities') {
+        await loadApprovedActivitiesSubmitters()
+      } else if (props.initialFilter === 'under-review-activities') {
+        await loadUnderReviewActivitiesSubmitters()
       }
 
       // Fermer le dropdown en cliquant en dehors

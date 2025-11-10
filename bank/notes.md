@@ -30,3 +30,18 @@ voici un exemple de code pour le tableau dynamique avec vue-cal: @src/views/admi
 
 CREATE TYPE validation_status AS ENUM ('draft', 'submitted', 'under_review', 'approved', 'rejected', 'cancelled', 'live', 'completed');
 
+
+---------------
+dans la page d'administration des activités, Je veux une section de gestion des directs youtube des activités.
+- Les activités doivent etre mise en évidence selon selon qu'il soit l'heure du direct youtube approche ou que le direct soit en cours. si l'évenemnt est terminé, ou annulé, la mise en évidence disparait.
+- Si le lien du direct n'est pas ajouté alors qu'il est l'heure et que l'activité n'est pas annulée, il faut indiquer un message pour indiquer qu'on est en retard pour ajouter le lien du direct youtube.
+- je veux deux possiblité d'ajouter le lien. possibilité 1: ajouter via un formulaire qui receuil l'id de la vidéo youtube. Possibilité 2: lorsqu'on clique sur un bouton, l'id du direct en cours sur la page https://www.youtube.com/@ifddoif/streams est automatiquement récupéré.
+- une fois le lien youtube ajouté, un racourcis pour "Regarder le direct" doit apparaitre en pop-up lorsque lons ne se trouve pas sur la page de détail de l'activité sinon l'image de couverture de l'activité se remplace par un Iframe de la vidéo youtube.
+- Le lien youtube doit être stocké dans un nouveau champ "youtube_link" de la table activities.
+Le lien youtube doit être l'id de la vidéo youtube (ex: pour le lien https://www.youtube.com/watch?v=dQw4w9WgXcQ , l'id est dQw4w9WgXcQ).
+
+
+- Cette section doit permettre d'ajouter, modifier ou supprimer le lien youtube du direct et de l'enregistrement youtube de chaque activité.
+
+. la card de l'activité dans la liste des activités si l'activité est en direct ou un bouton "Regarder l'enregistrement" si l'activité est terminée.
+
