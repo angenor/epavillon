@@ -140,14 +140,14 @@
               </div>
 
               <!-- Date limite de soumission -->
-              <div v-if="event.submission_deadline && event.submission_status === 'open'" class="flex items-center text-sm">
+              <!-- <div v-if="event.submission_deadline && event.submission_status === 'open'" class="flex items-center text-sm">
                 <svg class="w-4 h-4 mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 <span class="text-orange-600 dark:text-orange-400 font-medium">
                   {{ t('programmations.submissionDeadline') }}: {{ formatDate(event.submission_deadline) }}
                 </span>
-              </div>
+              </div> -->
             </div>
 
             <!-- Indicateur programmation bientôt disponible -->
@@ -267,9 +267,25 @@ const getStatusClass = (event) => {
   return statusClasses[status] || statusClasses.upcoming
 }
 
+// Parse une date en temps local (évite les problèmes de timezone)
+const parseLocalDate = (dateString) => {
+  if (!dateString) return null
+
+  // Si la date contient l'heure (datetime), utiliser le constructeur normal
+  if (dateString.includes('T') || dateString.includes(' ')) {
+    return new Date(dateString)
+  }
+
+  // Pour les dates simples (YYYY-MM-DD), parser manuellement en temps local
+  const [year, month, day] = dateString.split('-').map(Number)
+  return new Date(year, month - 1, day)
+}
+
 const formatDate = (dateString) => {
   if (!dateString) return ''
-  const date = new Date(dateString)
+  const date = dateString instanceof Date ? dateString : parseLocalDate(dateString)
+  if (!date) return ''
+
   return date.toLocaleDateString(t('common.locale'), {
     day: 'numeric',
     month: 'short',
@@ -283,13 +299,13 @@ const formatDateRange = (event) => {
 
   // Priorité aux dates en ligne
   if (event.online_start_datetime) {
-    startDate = new Date(event.online_start_datetime)
-    endDate = event.online_end_datetime ? new Date(event.online_end_datetime) : startDate
+    startDate = parseLocalDate(event.online_start_datetime)
+    endDate = event.online_end_datetime ? parseLocalDate(event.online_end_datetime) : startDate
   }
   // Sinon dates en présentiel
   else if (event.in_person_start_date) {
-    startDate = new Date(event.in_person_start_date)
-    endDate = event.in_person_end_date ? new Date(event.in_person_end_date) : startDate
+    startDate = parseLocalDate(event.in_person_start_date)
+    endDate = event.in_person_end_date ? parseLocalDate(event.in_person_end_date) : startDate
   }
 
   if (!startDate) return t('programmations.dateTBA')
