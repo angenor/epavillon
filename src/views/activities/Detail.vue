@@ -124,12 +124,20 @@
           </div>
 
           <!-- Message si l'activité a déjà commencé ou est terminée -->
-          <div v-else-if="timeRemaining && timeRemaining.isExpired" class="mb-4 sm:mb-6 animate-fade-in-up animation-delay-200">
-            <div class="backdrop-blur-md bg-orange-500/20 border border-orange-400/30 rounded-xl sm:rounded-2xl p-3 sm:p-5 inline-block">
+          <div v-else-if="activityStatusMessage" class="mb-4 sm:mb-6 animate-fade-in-up animation-delay-200">
+            <div
+              :class="[
+                'backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-5 inline-block',
+                activityStatusMessage.type === 'incident' && activityStatusMessage.severity === 'error' ? 'bg-red-500/20 border border-red-400/30' :
+                activityStatusMessage.type === 'incident' && activityStatusMessage.severity === 'warning' ? 'bg-orange-500/20 border border-orange-400/30' :
+                activityStatusMessage.type === 'delayed' ? 'bg-yellow-500/20 border border-yellow-400/30' :
+                'bg-orange-500/20 border border-orange-400/30'
+              ]"
+            >
               <div class="flex items-center gap-2 text-white">
-                <font-awesome-icon :icon="['fas', 'play-circle']" class="text-lg sm:text-xl" />
+                <font-awesome-icon :icon="['fas', activityStatusMessage.icon]" class="text-lg sm:text-xl" />
                 <span class="text-xs sm:text-base font-semibold">
-                  {{ t('activity.countdown.started') }}
+                  {{ activityStatusMessage.message }}
                 </span>
               </div>
             </div>
@@ -1189,6 +1197,7 @@ const loading = ref(true)
 const isDescriptionExpanded = ref(false)
 const descriptionContainer = ref(null)
 const shouldShowToggleButton = ref(false)
+const incidentMessages = ref([])
 
 // États pour le modal d'erreur
 const showErrorModal = ref(false)
@@ -1341,6 +1350,58 @@ const filteredQuestions = computed(() => {
 
   // Trier par date de création (plus récentes en premier)
   return filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+})
+
+// Messages d'incidents
+const hasIncident = computed(() => {
+  return incidentMessages.value && incidentMessages.value.length > 0
+})
+
+const incidentMessage = computed(() => {
+  if (!hasIncident.value) return null
+  // Retourner le message dans la langue actuelle
+  const message = incidentMessages.value[0]
+  return locale.value === 'fr' ? message.message_fr : message.message_en
+})
+
+const incidentSeverity = computed(() => {
+  if (!hasIncident.value) return null
+  return incidentMessages.value[0].severity
+})
+
+// Logique pour déterminer le message à afficher quand l'activité est "expirée"
+const activityStatusMessage = computed(() => {
+  if (!timeRemaining.value || !timeRemaining.value.isExpired) {
+    return null
+  }
+
+  // Si un incident technique est déclaré ET qu'il n'y a pas de lien YouTube
+  if (hasIncident.value && !activity.value?.youtube_link) {
+    return {
+      type: 'incident',
+      message: incidentMessage.value,
+      severity: incidentSeverity.value,
+      icon: 'exclamation-triangle'
+    }
+  }
+
+  // Si pas d'incident ET pas de lien YouTube ET l'heure est dépassée
+  if (!hasIncident.value && !activity.value?.youtube_link) {
+    return {
+      type: 'delayed',
+      message: t('activity.delayed'),
+      severity: 'warning',
+      icon: 'clock'
+    }
+  }
+
+  // Sinon, message normal "L'activité a commencé"
+  return {
+    type: 'started',
+    message: t('activity.countdown.started'),
+    severity: 'info',
+    icon: 'play-circle'
+  }
 })
 
 // Fonction pour vérifier si le contenu dépasse 300px de hauteur
@@ -1700,6 +1761,9 @@ const loadActivity = async () => {
     // Incrémenter le compteur de vues
     await incrementViewCount()
 
+    // Charger les messages d'incidents
+    await loadIncidentMessages()
+
   } catch (error) {
     console.error('Error loading activity:', error)
     // Erreur générique de chargement
@@ -1941,6 +2005,52 @@ const registerAsGuest = async () => {
 const closeGuestRegistrationModal = () => {
   showGuestRegistrationModal.value = false
   guestFormErrors.value = {}
+}
+
+// Charger les messages d'incidents pour cette activité
+const loadIncidentMessages = async () => {
+  if (!activity.value || !event.value) return
+
+  try {
+    const activityStartDate = activity.value.final_start_date || activity.value.proposed_start_date
+    const activityDay = activityStartDate ? activityStartDate.split('T')[0] : null
+
+    const { data, error } = await supabase
+      .from('incident_messages')
+      .select(`
+        *,
+        organization:organizations(id, name, acronym)
+      `)
+      .eq('event_id', event.value.id)
+      .eq('is_active', true)
+      .or(`organization_id.eq.${organization.value?.id},organization_id.is.null`)
+      .or(`day_date.eq.${activityDay},day_date.is.null`)
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+
+    // Filtrer les messages pertinents côté client
+    const relevantMessages = (data || []).filter(msg => {
+      // Message général (pas d'org ni de date)
+      if (!msg.organization_id && !msg.day_date) return true
+
+      // Message pour cette organisation spécifique
+      if (msg.organization_id === organization.value?.id && !msg.day_date) return true
+
+      // Message pour ce jour spécifique
+      if (!msg.organization_id && msg.day_date === activityDay) return true
+
+      // Message pour cette organisation ET ce jour
+      if (msg.organization_id === organization.value?.id && msg.day_date === activityDay) return true
+
+      return false
+    })
+
+    incidentMessages.value = relevantMessages
+  } catch (error) {
+    console.error('Error loading incident messages:', error)
+    incidentMessages.value = []
+  }
 }
 
 const loadCountries = async () => {

@@ -431,6 +431,7 @@
       "seconds": "Secondes",
       "started": "L'activité a commencé"
     },
+    "delayed": "⏰ L'activité est en retard",
     "registration": {
       "success": {
         "title": "Inscription réussie !",
