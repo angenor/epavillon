@@ -32,8 +32,8 @@ CREATE TYPE validation_status AS ENUM ('draft', 'submitted', 'under_review', 'ap
 
 
 ---------------
-dans la page d'administration des activités, Je veux une section de gestion des directs youtube des activités.
-- Les activités doivent etre mise en évidence selon selon qu'il soit l'heure du direct youtube approche ou que le direct soit en cours. si l'évenemnt est terminé, ou annulé, la mise en évidence disparait.
+dans la page d'administration, Je veux une section de gestion des directs youtube des activités.
+- Les activités doivent etre mise en évidence selon selon qu'il soit l'heure du direct youtube approche ou que le direct soit en cours ou que l'activité soit la prochaine. si l'évenemnt est terminé, ou annulé, la mise en évidence disparait.
 - Si le lien du direct n'est pas ajouté alors qu'il est l'heure et que l'activité n'est pas annulée, il faut indiquer un message pour indiquer qu'on est en retard pour ajouter le lien du direct youtube.
 - je veux deux possiblité d'ajouter le lien. possibilité 1: ajouter via un formulaire qui receuil l'id de la vidéo youtube. Possibilité 2: lorsqu'on clique sur un bouton, l'id du direct en cours sur la page https://www.youtube.com/@ifddoif/streams est automatiquement récupéré.
 - une fois le lien youtube ajouté, un racourcis pour "Regarder le direct" doit apparaitre en pop-up lorsque lons ne se trouve pas sur la page de détail de l'activité sinon l'image de couverture de l'activité se remplace par un Iframe de la vidéo youtube.
