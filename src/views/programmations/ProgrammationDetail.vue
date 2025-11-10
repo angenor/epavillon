@@ -149,6 +149,17 @@
 
           <!-- Boutons de vue -->
           <div class="flex gap-2">
+            <!-- Bouton de recherche -->
+            <button
+              @click="isSearchModalOpen = true"
+              class="px-4 py-2 rounded-lg font-medium bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-all flex items-center gap-2 cursor-pointer"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <span class="hidden sm:inline">{{ t('common.search') }}</span>
+            </button>
+
             <button
               @click="viewMode = 'grid'"
               :class="[
@@ -621,6 +632,12 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal de recherche -->
+    <SearchModal
+      :is-open="isSearchModalOpen"
+      @close="isSearchModalOpen = false"
+    />
   </div>
 </template>
 
@@ -631,6 +648,7 @@ import { useI18n } from 'vue-i18n'
 import { useHead } from '@vueuse/head'
 import VueCal from 'vue-cal'
 import { useSupabase } from '@/composables/useSupabase'
+import SearchModal from '@/components/SearchModal.vue'
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -650,6 +668,7 @@ const selectedDate = ref(new Date())
 const currentWeek = ref(1) // Semaine actuelle (1 ou 2)
 const week1StartDate = ref(null)
 const week2StartDate = ref(null)
+const isSearchModalOpen = ref(false)
 
 // Paramètres de route
 const year = computed(() => parseInt(route.params.year))

@@ -143,6 +143,23 @@
     "browserRecommendation": {
       "title": "Recommandation de navigateur",
       "message": "Pour une expérience optimale, nous recommandons d'utiliser Google Chrome ou Mozilla Firefox. Certaines fonctionnalités pourraient être limitées sur Microsoft Edge en raison de contraintes de compatibilité."
+    },
+    "searchModal": {
+      "title": "Rechercher une activité",
+      "placeholder": "Rechercher par titre, acronyme ou organisation...",
+      "searching": "Recherche en cours...",
+      "noResults": "Aucun résultat trouvé",
+      "noResultsDescription": "Essayez d'autres mots-clés",
+      "recentSearches": "Recherches récentes",
+      "suggestions": "Suggestions",
+      "viewActivity": "Voir l'activité",
+      "pressEnter": "Appuyez sur Entrée pour rechercher",
+      "pressEsc": "Échap pour fermer",
+      "searchBy": {
+        "title": "Par titre",
+        "acronym": "Par acronyme",
+        "organization": "Par organisation"
+      }
     }
   },
   "community": {

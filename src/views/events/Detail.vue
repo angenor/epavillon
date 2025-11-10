@@ -306,9 +306,9 @@
                 <span class="text-white/80">{{ t('event.participationMode') }}</span>
                 <span class="font-bold">{{ t(`event.participationModes.${event.participation_mode || event.format}`) }}</span>
               </div>
-              <div v-if="activities.length > 0" class="flex justify-between items-center">
+              <div v-if="totalActivitiesCount > 0" class="flex justify-between items-center">
                 <span class="text-white/80">{{ t('event.totalActivities') }}</span>
-                <span class="font-bold">{{ activities.length }}+</span>
+                <span class="font-bold">{{ totalActivitiesCount }}</span>
               </div>
               <div v-if="actualSubmissionStatus" class="flex justify-between items-center">
                 <span class="text-white/80">{{ t('event.submissions') }}</span>
@@ -387,6 +387,7 @@ const event = ref({
 })
 
 const activities = ref([])
+const totalActivitiesCount = ref(0)
 const country = ref(null)
 
 // Computed
@@ -655,6 +656,24 @@ const loadActivities = async () => {
   }
 }
 
+const loadTotalActivitiesCount = async () => {
+  try {
+    // Compter toutes les activités approuvées pour cet événement
+    const { count, error } = await supabase
+      .from('activities')
+      .select('*', { count: 'exact', head: true })
+      .eq('event_id', route.params.id)
+      .eq('validation_status', 'approved')
+
+    if (error) throw error
+
+    totalActivitiesCount.value = count || 0
+  } catch (error) {
+    console.error('Error loading total activities count:', error)
+    totalActivitiesCount.value = 0
+  }
+}
+
 // Lifecycle
 onMounted(async () => {
   // Check if management mode
@@ -673,6 +692,7 @@ onMounted(async () => {
   }
 
   loadActivities()
+  loadTotalActivitiesCount()
 })
 
 // Watch for route changes
