@@ -349,6 +349,11 @@ watch(selectedYear, (newYear) => {
       query: { year: newYear }
     })
   }
+
+  // Vérifier et rediriger si une seule programmation après le changement de filtre
+  setTimeout(() => {
+    checkAndRedirect()
+  }, 100)
 })
 
 // Observer les changements de route
@@ -364,10 +369,26 @@ watch(() => route.query.year, (newYear) => {
   }
 })
 
+// Vérifier et rediriger automatiquement si une seule programmation
+const checkAndRedirect = () => {
+  // Attendre que le filtrage soit appliqué
+  if (filteredEvents.value.length === 1) {
+    const singleEvent = filteredEvents.value[0]
+    // Rediriger uniquement si la programmation est disponible
+    if (singleEvent.is_programmation_available) {
+      router.push(`/programmations/${singleEvent.year}/${singleEvent.id}`)
+    }
+  }
+}
+
 // Lifecycle
 onMounted(async () => {
   await loadEvents()
   setYearFromRoute()
+  // Vérifier après un court délai pour s'assurer que filteredEvents est calculé
+  setTimeout(() => {
+    checkAndRedirect()
+  }, 100)
 })
 </script>
 

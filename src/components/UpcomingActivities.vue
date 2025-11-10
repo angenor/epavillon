@@ -24,11 +24,11 @@
     <div v-else class="flex-1 flex flex-col justify-between relative z-10">
       <div class="flex-1 overflow-y-auto px-3 py-2 space-y-2">
         <!-- Boucle sur les activités disponibles (max 3) -->
-        <RouterLink
+        <div
           v-for="(event, index) in events.slice(0, 3)"
           :key="event.id || index"
-          :to="`/events/${event.id}`"
-          class="block"
+          @click="handleEventClick(event)"
+          class="block cursor-pointer"
         >
           <div class="text-white bg-gradient-to-r from-white/30 to-white/20 backdrop-blur-sm rounded-xl px-4 py-2 hover:from-white/40 hover:to-white/30 transition-all duration-300 shadow-lg">
             <div class="font-bold text-xl mb-2">{{ event.title }}</div>
@@ -47,7 +47,7 @@
               </div>
             </div>
           </div>
-        </RouterLink>
+        </div>
 
         <!-- Message si aucune activité -->
         <div v-if="!events || events.length === 0" class="text-white text-center py-8 px-4">
@@ -76,12 +76,13 @@
 import { useI18n } from 'vue-i18n'
 import { onMounted } from 'vue'
 import { useActivities } from '@/composables/useActivities'
-import { RouterLink } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 export default {
   name: 'UpcomingActivities',
   setup() {
     const { t, locale } = useI18n()
+    const router = useRouter()
     const {
       events,
       trainings,
@@ -155,6 +156,22 @@ export default {
       }
     }
 
+    // Gérer le clic sur un événement avec redirection conditionnelle
+    const handleEventClick = (event) => {
+      if (!event?.id) return
+
+      // Utiliser directement le champ event_status de la base de données
+      const status = event.event_status
+
+      // Si l'événement est en cours ou terminé, rediriger vers la programmation
+      if (status === 'ongoing' || status === 'completed') {
+        router.push(`/programmations/${event.year}/${event.id}`)
+      } else {
+        // Sinon, rediriger vers la page de détail de l'événement
+        router.push(`/events/${event.id}`)
+      }
+    }
+
     return {
       t,
       events,
@@ -167,7 +184,8 @@ export default {
       getEventStatus,
       getEventStatusClass,
       getCategoryLabel,
-      getTrainingDuration
+      getTrainingDuration,
+      handleEventClick
     }
   }
 }
