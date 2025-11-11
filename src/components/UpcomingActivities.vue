@@ -128,9 +128,17 @@
         <!-- Bouton Voir toutes les activités -->
         <div v-if="eventsWithActivities && eventsWithActivities.length > 0" class="pt-4 pb-2">
           <RouterLink :to="getProgrammationLink()" class="block w-full">
-            <button class="w-full py-3 px-4 bg-gradient-to-t from-ifdd-bleu to-ifdd-bleu/80 hover:from-ifdd-bleu/90 hover:to-ifdd-bleu/70 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer transform hover:scale-[1.02]">
-              {{ t('activities.viewAll') || 'Voir le tableau de programmation' }}
-            </button>
+            <div class="bg-white/15 backdrop-blur-sm rounded-xl px-4 py-4 border-2 border-dashed border-white/30 hover:bg-white/25 hover:border-ifdd-bleu/50 transition-all duration-300 cursor-pointer group">
+              <div class="flex items-center justify-center gap-3 text-white">
+                <svg class="w-5 h-5 text-ifdd-bleu group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                </svg>
+                <span class="font-semibold text-sm">{{ t('activities.viewAll') || 'Voir le tableau de programmation' }}</span>
+                <svg class="w-4 h-4 text-ifdd-bleu group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+              </div>
+            </div>
           </RouterLink>
         </div>
       </div>
