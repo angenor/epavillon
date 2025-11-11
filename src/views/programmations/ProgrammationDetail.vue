@@ -974,7 +974,7 @@ const specialHours = computed(() => {
         from: 8 * 60, // De 8h00
         to: 18 * 60,  // À 18h00
         class: 'rest-day',
-        label: `🌴 ${t('programmations.restDay')}`
+        label: `<div class="rest-day-sticky-content">🌴 ${t('programmations.restDay')}</div>`
       }
     }
   }
@@ -1365,36 +1365,67 @@ const setupStickySpecialDays = () => {
       }
 
       rafId = requestAnimationFrame(() => {
+        // Gérer les journées spéciales (Finance durable, Jeunesse climat)
         const specialDayWrappers = document.querySelectorAll('.special-day-wrapper')
 
-        if (specialDayWrappers.length === 0) {
-          return
+        if (specialDayWrappers.length > 0) {
+          console.log(`📊 ${specialDayWrappers.length} journées spéciales trouvées`)
+
+          specialDayWrappers.forEach((wrapper, index) => {
+            const content = wrapper.querySelector('.special-day-fixed-content')
+            if (!content) return
+
+            const wrapperRect = wrapper.getBoundingClientRect()
+            const contentHeight = content.offsetHeight
+
+            // Position depuis le haut du viewport
+            const topOffset = 100 // Offset depuis le haut de la fenêtre
+
+            // Si le wrapper est dans la zone visible et commence à être scrollé
+            if (wrapperRect.top < topOffset && wrapperRect.bottom > topOffset + contentHeight) {
+              // Calculer le décalage nécessaire
+              const translateY = topOffset - wrapperRect.top
+              content.style.transform = `translateY(${translateY}px)`
+              content.style.zIndex = '50'
+              console.log(`✨ Journée spéciale ${index} sticky avec offset ${translateY}px`)
+            } else {
+              content.style.transform = 'translateY(0)'
+              content.style.zIndex = '20'
+            }
+          })
         }
 
-        console.log(`📊 ${specialDayWrappers.length} journées spéciales trouvées`)
+        // Gérer le jour de repos (rest-day) - uniquement le contenu texte
+        const restDays = document.querySelectorAll('.vuecal__special-hours.rest-day')
 
-        specialDayWrappers.forEach((wrapper, index) => {
-          const content = wrapper.querySelector('.special-day-fixed-content')
-          if (!content) return
+        if (restDays.length > 0) {
+          console.log(`🌴 ${restDays.length} jours de repos trouvés`)
 
-          const wrapperRect = wrapper.getBoundingClientRect()
-          const contentHeight = content.offsetHeight
+          restDays.forEach((restDay, index) => {
+            const stickyContent = restDay.querySelector('.rest-day-sticky-content')
+            if (!stickyContent) return
 
-          // Position depuis le haut du viewport
-          const topOffset = 100 // Offset depuis le haut de la fenêtre
+            const restDayRect = restDay.getBoundingClientRect()
+            const contentHeight = stickyContent.offsetHeight
 
-          // Si le wrapper est dans la zone visible et commence à être scrollé
-          if (wrapperRect.top < topOffset && wrapperRect.bottom > topOffset + contentHeight) {
-            // Calculer le décalage nécessaire
-            const translateY = topOffset - wrapperRect.top
-            content.style.transform = `translateY(${translateY}px)`
-            content.style.zIndex = '50'
-            console.log(`✨ Journée ${index} sticky avec offset ${translateY}px`)
-          } else {
-            content.style.transform = 'translateY(0)'
-            content.style.zIndex = '20'
-          }
-        })
+            // Position depuis le haut du viewport
+            const topOffset = 100
+
+            // Si le jour de repos est scrollé
+            if (restDayRect.top < topOffset && restDayRect.bottom > topOffset + contentHeight) {
+              // Calculer le décalage pour le contenu uniquement
+              const translateY = topOffset - restDayRect.top
+              stickyContent.style.transform = `translateY(${translateY}px)`
+              stickyContent.style.position = 'relative'
+              stickyContent.style.zIndex = '50'
+              console.log(`✨ Jour de repos ${index} - contenu sticky avec offset ${translateY}px`)
+            } else {
+              stickyContent.style.transform = 'translateY(0)'
+              stickyContent.style.position = 'relative'
+              stickyContent.style.zIndex = '20'
+            }
+          })
+        }
       })
     }
 
@@ -1771,10 +1802,11 @@ watch(viewMode, (newMode) => {
 :deep(.vuecal__special-hours) {
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 8px;
+  align-items: flex-start;
+  padding: 16px 8px 8px 8px;
   font-size: 0.95em;
   font-weight: 500;
+  position: relative;
 }
 
 :deep(.rest-day) {
@@ -1803,6 +1835,72 @@ watch(viewMode, (newMode) => {
     );
   color: #fb923c;
   border: 2px dashed #fb923c;
+}
+
+/* Styles pour le contenu sticky du jour de repos */
+:deep(.rest-day-sticky-content) {
+  display: inline-block;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-weight: 600;
+  transition: transform 0.1s ease-out, box-shadow 0.2s ease;
+  will-change: transform;
+  background:
+    rgba(255, 247, 240, 0.95)
+    repeating-linear-gradient(
+      -45deg,
+      rgba(249, 115, 22, 0.15),
+      rgba(249, 115, 22, 0.15) 10px,
+      rgba(255, 255, 255, 0) 10px,
+      rgba(255, 255, 255, 0) 20px
+    );
+  color: #ea580c;
+  border: 2px dashed #fb923c;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Effet quand le contenu du jour de repos est sticky */
+:deep(.rest-day-sticky-content[style*="translateY"]) {
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.35) !important;
+  background:
+    rgba(255, 247, 240, 0.98)
+    repeating-linear-gradient(
+      -45deg,
+      rgba(249, 115, 22, 0.25),
+      rgba(249, 115, 22, 0.25) 10px,
+      rgba(255, 255, 255, 0) 10px,
+      rgba(255, 255, 255, 0) 20px
+    ) !important;
+}
+
+/* Mode sombre pour le contenu du jour de repos */
+.dark :deep(.rest-day-sticky-content) {
+  background:
+    rgba(55, 65, 81, 0.95)
+    repeating-linear-gradient(
+      -45deg,
+      rgba(249, 115, 22, 0.25),
+      rgba(249, 115, 22, 0.25) 10px,
+      rgba(55, 65, 81, 0) 10px,
+      rgba(55, 65, 81, 0) 20px
+    );
+  color: #fb923c;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.dark :deep(.rest-day-sticky-content[style*="translateY"]) {
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.45) !important;
+  background:
+    rgba(55, 65, 81, 0.98)
+    repeating-linear-gradient(
+      -45deg,
+      rgba(249, 115, 22, 0.35),
+      rgba(249, 115, 22, 0.35) 10px,
+      rgba(55, 65, 81, 0) 10px,
+      rgba(55, 65, 81, 0) 20px
+    ) !important;
 }
 
 /* Styles généraux pour les journées spéciales */
