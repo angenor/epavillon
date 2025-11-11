@@ -547,10 +547,10 @@
           <!-- Template personnalisé pour les événements -->
           <template #event="{ event }">
             <!-- Journées spéciales -->
-            <div v-if="event.isSpecialDay" class="flex flex-col items-center justify-center h-full px-3 py-2 cursor-pointer">
-              <div class="text-center">
+            <div v-if="event.isSpecialDay" class="special-day-wrapper h-full cursor-pointer" :data-special-type="event.specialDayType">
+              <div class="special-day-fixed-content">
                 <p class="font-bold text-base mb-2 leading-tight">{{ event.title }}</p>
-                <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-white/80 dark:bg-gray-800/80 rounded-lg shadow-sm text-xs font-medium">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow-md text-xs font-medium backdrop-blur-sm">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
@@ -1326,6 +1326,10 @@ useHead({
 // Watcher pour mettre à jour les meta tags quand les données changent
 watch([event, activities, locale], () => {
   // Les meta tags seront automatiquement mis à jour grâce aux computed properties
+  // Setup sticky après chargement des activités
+  if (activities.value.length > 0 && viewMode.value === 'calendar') {
+    setupStickySpecialDays()
+  }
 }, { deep: true })
 
 // Watcher pour empêcher le mode liste sur mobile
@@ -1344,14 +1348,108 @@ const handleResize = () => {
   }
 }
 
+// Variable pour stocker la référence à handleScroll pour le cleanup
+let scrollHandler = null
+let rafId = null
+
+// Gérer le positionnement sticky des journées spéciales lors du scroll
+const setupStickySpecialDays = () => {
+  // Attendre que Vue-Cal soit monté et que le DOM soit prêt
+  setTimeout(() => {
+    console.log('🔍 Initialisation sticky pour journées spéciales...')
+
+    // Définir handleScroll avec requestAnimationFrame pour de meilleures performances
+    scrollHandler = () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId)
+      }
+
+      rafId = requestAnimationFrame(() => {
+        const specialDayWrappers = document.querySelectorAll('.special-day-wrapper')
+
+        if (specialDayWrappers.length === 0) {
+          return
+        }
+
+        console.log(`📊 ${specialDayWrappers.length} journées spéciales trouvées`)
+
+        specialDayWrappers.forEach((wrapper, index) => {
+          const content = wrapper.querySelector('.special-day-fixed-content')
+          if (!content) return
+
+          const wrapperRect = wrapper.getBoundingClientRect()
+          const contentHeight = content.offsetHeight
+
+          // Position depuis le haut du viewport
+          const topOffset = 100 // Offset depuis le haut de la fenêtre
+
+          // Si le wrapper est dans la zone visible et commence à être scrollé
+          if (wrapperRect.top < topOffset && wrapperRect.bottom > topOffset + contentHeight) {
+            // Calculer le décalage nécessaire
+            const translateY = topOffset - wrapperRect.top
+            content.style.transform = `translateY(${translateY}px)`
+            content.style.zIndex = '50'
+            console.log(`✨ Journée ${index} sticky avec offset ${translateY}px`)
+          } else {
+            content.style.transform = 'translateY(0)'
+            content.style.zIndex = '20'
+          }
+        })
+      })
+    }
+
+    // Ajouter les listeners sur window et tous les éléments scrollables
+    window.addEventListener('scroll', scrollHandler, { passive: true })
+
+    // Chercher tous les éléments avec overflow dans Vue-Cal
+    const allElements = document.querySelectorAll('.vuecal, .vuecal__body, .calendar-scroll-wrapper')
+    allElements.forEach(el => {
+      el.addEventListener('scroll', scrollHandler, { passive: true })
+      console.log('✅ Listener ajouté sur', el.className)
+    })
+
+    // Appeler une fois pour initialiser
+    scrollHandler()
+  }, 1000)
+}
+
 // Lifecycle
 onMounted(() => {
   loadEvent()
   window.addEventListener('resize', handleResize)
+
+  // Setup sticky après un délai pour laisser Vue-Cal se monter
+  setTimeout(() => {
+    if (viewMode.value === 'calendar') {
+      setupStickySpecialDays()
+    }
+  }, 1000)
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
+
+  // Nettoyer les event listeners du scroll
+  if (scrollHandler) {
+    window.removeEventListener('scroll', scrollHandler)
+
+    const allElements = document.querySelectorAll('.vuecal, .vuecal__body, .calendar-scroll-wrapper')
+    allElements.forEach(el => {
+      el.removeEventListener('scroll', scrollHandler)
+    })
+  }
+
+  // Annuler l'animation frame en cours
+  if (rafId) {
+    cancelAnimationFrame(rafId)
+  }
+})
+
+// Watcher pour setup sticky après changement de vue
+watch(viewMode, (newMode) => {
+  if (newMode === 'calendar') {
+    setupStickySpecialDays()
+  }
 })
 </script>
 
@@ -1829,5 +1927,72 @@ onUnmounted(() => {
   .calendar-scroll-wrapper {
     position: relative;
   }
+}
+
+/* Styles pour les journées spéciales avec effet sticky JavaScript */
+.special-day-wrapper {
+  position: relative;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.special-day-fixed-content {
+  text-align: center;
+  padding: 12px 16px;
+  border-radius: 12px;
+  transition: transform 0.1s ease-out, box-shadow 0.2s ease;
+  will-change: transform;
+  z-index: 20;
+}
+
+/* Améliorer le backdrop pour les journées spéciales en mode light */
+:deep(.youth-climate-day .special-day-fixed-content) {
+  background: linear-gradient(135deg, rgba(240, 253, 244, 0.98) 0%, rgba(220, 252, 231, 0.98) 100%);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+}
+
+:deep(.sustainable-finance-day .special-day-fixed-content) {
+  background: linear-gradient(135deg, rgba(239, 246, 255, 0.98) 0%, rgba(219, 234, 254, 0.98) 100%);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+/* Mode sombre pour les journées spéciales */
+.dark :deep(.youth-climate-day .special-day-fixed-content) {
+  background: linear-gradient(135deg, rgba(55, 65, 81, 0.98) 0%, rgba(45, 55, 72, 0.98) 100%);
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+}
+
+.dark :deep(.sustainable-finance-day .special-day-fixed-content) {
+  background: linear-gradient(135deg, rgba(55, 65, 81, 0.98) 0%, rgba(45, 55, 72, 0.98) 100%);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+}
+
+/* Effet lors du scroll */
+.special-day-fixed-content[style*="translateY"] {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Amélioration du label pour le jour de repos */
+:deep(.vuecal__special-hours.rest-day) {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 16px;
+  position: relative;
+}
+
+/* S'assurer que les conteneurs permettent l'overflow visible */
+:deep(.special-day-event) {
+  overflow: visible !important;
+}
+
+:deep(.vuecal__event-title) {
+  overflow: visible !important;
+}
+
+:deep(.vuecal__cell-content) {
+  position: relative;
 }
 </style>
