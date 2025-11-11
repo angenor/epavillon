@@ -54,6 +54,58 @@
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
       </div>
 
+      <!-- Message de redirection automatique -->
+      <div v-else-if="redirectCountdown !== null && redirectEvent" class="max-w-2xl mx-auto">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 text-center">
+          <div class="mb-6">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-orange-100 dark:bg-orange-900/30 rounded-full mb-4">
+              <svg class="w-8 h-8 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              {{ t('programmations.singleEventFound') }}
+            </h2>
+            <p class="text-gray-600 dark:text-gray-400">
+              {{ t('programmations.redirectingIn') }}
+            </p>
+          </div>
+
+          <!-- Décompte -->
+          <div class="mb-6">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full shadow-lg">
+              <span class="text-4xl font-bold text-white">{{ redirectCountdown }}</span>
+            </div>
+          </div>
+
+          <!-- Nom de l'événement -->
+          <div class="mb-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">
+              {{ t('programmations.redirectingTo') }}
+            </p>
+            <p class="text-lg font-semibold text-gray-900 dark:text-white">
+              {{ redirectEvent.title }}
+            </p>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex gap-3 justify-center">
+            <button
+              @click="cancelRedirect"
+              class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors font-medium cursor-pointer"
+            >
+              {{ t('common.cancel') }}
+            </button>
+            <button
+              @click="redirectNow"
+              class="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-medium cursor-pointer"
+            >
+              {{ t('programmations.redirectNow') }}
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Empty state -->
       <div v-else-if="filteredEvents.length === 0" class="text-center py-16">
         <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -189,7 +241,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
@@ -204,6 +256,8 @@ const isLoading = ref(false)
 const events = ref([])
 const selectedYear = ref('all')
 const availableYears = ref([])
+const redirectCountdown = ref(null)
+const redirectEvent = ref(null)
 
 // Computed
 const filteredEvents = computed(() => {
@@ -370,15 +424,62 @@ watch(() => route.query.year, (newYear) => {
 })
 
 // Vérifier et rediriger automatiquement si une seule programmation
+let countdownInterval = null
+
 const checkAndRedirect = () => {
+  // Annuler tout décompte en cours
+  if (countdownInterval) {
+    clearInterval(countdownInterval)
+    countdownInterval = null
+  }
+
   // Attendre que le filtrage soit appliqué
   if (filteredEvents.value.length === 1) {
     const singleEvent = filteredEvents.value[0]
     // Rediriger uniquement si la programmation est disponible
     if (singleEvent.is_programmation_available) {
-      router.push(`/programmations/${singleEvent.year}/${singleEvent.id}`)
+      redirectEvent.value = singleEvent
+      redirectCountdown.value = 3
+
+      // Démarrer le décompte
+      countdownInterval = setInterval(() => {
+        redirectCountdown.value--
+
+        if (redirectCountdown.value <= 0) {
+          clearInterval(countdownInterval)
+          countdownInterval = null
+          performRedirect()
+        }
+      }, 1000)
     }
+  } else {
+    // Réinitialiser si plusieurs événements
+    redirectCountdown.value = null
+    redirectEvent.value = null
   }
+}
+
+const performRedirect = () => {
+  if (redirectEvent.value) {
+    router.push(`/programmations/${redirectEvent.value.year}/${redirectEvent.value.id}`)
+  }
+}
+
+const cancelRedirect = () => {
+  if (countdownInterval) {
+    clearInterval(countdownInterval)
+    countdownInterval = null
+  }
+  redirectCountdown.value = null
+  redirectEvent.value = null
+}
+
+const redirectNow = () => {
+  if (countdownInterval) {
+    clearInterval(countdownInterval)
+    countdownInterval = null
+  }
+  performRedirect()
 }
 
 // Lifecycle
@@ -389,6 +490,14 @@ onMounted(async () => {
   setTimeout(() => {
     checkAndRedirect()
   }, 100)
+})
+
+onUnmounted(() => {
+  // Nettoyer l'intervalle si le composant est démonté
+  if (countdownInterval) {
+    clearInterval(countdownInterval)
+    countdownInterval = null
+  }
 })
 </script>
 
