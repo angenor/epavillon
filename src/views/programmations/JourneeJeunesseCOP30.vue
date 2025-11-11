@@ -51,22 +51,7 @@
     <div class="max-w-7xl mx-auto px-4 py-8 md:py-12">
       <!-- Bouton d'inscription Zoom -->
       <section class="mb-12">
-        <div class="bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-2xl p-8 md:p-12 text-center shadow-2xl">
-          <div class="flex flex-col md:flex-row items-center justify-center gap-6">
-            <div class="flex-shrink-0">
-              <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M3 7v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm16 10H5V7h14v10zm-7-7c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6-2v6l-2.5-2.5L13 14v-6l2.5 2.5L18 8z"/>
-              </svg>
-            </div>
-            <div class="flex-1 text-center md:text-left">
-              <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">
-                {{ t('youthClimateDay.registerTitle') }}
-              </h2>
-              <p class="text-white/90 text-lg">
-                {{ t('youthClimateDay.registerDescription') }}
-              </p>
-            </div>
-            <div class="flex-shrink-0">
+        <div class="flex-shrink-0">
               <a
                 href="https://us06web.zoom.us/meeting/register/8b4PtGDsS2uLhvgEyiMtNw"
                 target="_blank"
@@ -82,8 +67,6 @@
                 </svg>
               </a>
             </div>
-          </div>
-        </div>
       </section>
 
       <!-- Informations générales -->
@@ -402,7 +385,7 @@
 
       <!-- Call to Action -->
       <section class="mb-12">
-        <div class="bg-gradient-to-r from-orange-500 to-orange-600 dark:from-orange-600 dark:to-orange-700 rounded-2xl p-8 md:p-12 text-center shadow-2xl">
+        <div class="bg-gradient-to-r from-blue-800 to-blue-900 dark:from-blue-800 dark:to-blue-900 rounded-2xl p-8 md:p-12 text-center shadow-2xl">
           <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">
             {{ t('youthClimateDay.ctaTitle') }}
           </h2>

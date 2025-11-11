@@ -185,9 +185,43 @@ export default {
     })
 
     // Fonction pour filtrer les activités selon aujourd'hui ou demain
-    const getFilteredActivities = (eventId) => {
+    const getFilteredActivities = (eventId, event) => {
       const activities = eventActivities.value[eventId] || []
-      if (activities.length === 0) return { activities: [], period: null }
+      const allItems = [...activities]
+
+      // Ajouter les journées spéciales si l'événement est la CdP 30 2025
+      const isCopEvent = event?.acronym?.startsWith('CdP') || event?.acronym?.startsWith('COP')
+      if (isCopEvent && event?.year === 2025) {
+        // Journée Jeunesse Climat - 12 novembre 2025
+        allItems.push({
+          id: 'youth-climate-day',
+          title: `🌱 ${t('programmations.youthClimateDay')}`,
+          final_start_date: '2025-11-12T08:00:00Z',
+          final_end_date: '2025-11-12T18:00:00Z',
+          isSpecialDay: true,
+          specialDayType: 'youth-climate',
+          internalLink: '/programmations/2025/journee-jeunesse',
+          organization: {
+            name: 'IFDD'
+          }
+        })
+
+        // Journée Finance durable - 14 novembre 2025
+        allItems.push({
+          id: 'sustainable-finance-day',
+          title: `💰 ${t('programmations.sustainableFinanceDay')}`,
+          final_start_date: '2025-11-14T08:00:00Z',
+          final_end_date: '2025-11-14T18:00:00Z',
+          isSpecialDay: true,
+          specialDayType: 'sustainable-finance',
+          externalLink: 'https://epavillonclimatique.francophonie.org/public/documents_uploades/Journee_finance_CdP30.pdf',
+          organization: {
+            name: 'IFDD'
+          }
+        })
+      }
+
+      if (allItems.length === 0) return { activities: [], period: null }
 
       const now = new Date()
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
@@ -197,7 +231,7 @@ export default {
       dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 1)
 
       // Filtrer les activités d'aujourd'hui
-      const todayActivities = activities.filter(activity => {
+      const todayActivities = allItems.filter(activity => {
         const startDate = new Date(activity.final_start_date || activity.proposed_start_date)
         return startDate >= today && startDate < tomorrow
       })
@@ -220,7 +254,7 @@ export default {
       }
 
       // Sinon, afficher les activités de demain
-      const tomorrowActivities = activities.filter(activity => {
+      const tomorrowActivities = allItems.filter(activity => {
         const startDate = new Date(activity.final_start_date || activity.proposed_start_date)
         return startDate >= tomorrow && startDate < dayAfterTomorrow
       })
