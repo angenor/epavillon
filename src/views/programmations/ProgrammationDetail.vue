@@ -241,43 +241,46 @@
       <div v-else-if="viewMode === 'grid'" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div
-          v-for="activity in activities"
-          :key="activity.id"
-          @click="goToActivityDetail(activity.id)"
+          v-for="item in displayItems"
+          :key="item.id"
+          @click="item.isSpecialDay ? (item.internalLink ? router.push(item.internalLink) : window.open(item.externalLink, '_blank')) : goToActivityDetail(item.id)"
           class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
         >
           <!-- Image de couverture -->
           <div class="relative h-48 overflow-hidden">
             <img
-              :src="activity.cover_image_low_url || '/images/example/event_banniere_par_defaut_16_9_reduit.jpg'"
-              :alt="`${activity.title} - ${t('activity.details')}`"
+              :src="item.cover_image_low_url || '/images/example/event_banniere_par_defaut_16_9_reduit.jpg'"
+              :alt="`${item.title} - ${t('activity.details')}`"
               class="w-full h-full object-cover"
             >
-            <!-- Badge de type -->
+            <!-- Badge de type ou journée spéciale -->
             <div class="absolute top-4 right-4">
-              <span class="px-3 py-1 bg-white/90 dark:bg-gray-900/90 rounded-full text-xs font-medium text-gray-700 dark:text-gray-300 shadow-md">
-                {{ t(`activity.submit.formats.${activity.format || 'presentation'}`) }}
+              <span v-if="item.isSpecialDay" class="px-3 py-1 bg-orange-500/90 rounded-full text-xs font-medium text-white shadow-md">
+                {{ t('programmations.specialDay') }}
+              </span>
+              <span v-else class="px-3 py-1 bg-white/90 dark:bg-gray-900/90 rounded-full text-xs font-medium text-gray-700 dark:text-gray-300 shadow-md">
+                {{ t(`activity.submit.formats.${item.format || 'presentation'}`) }}
               </span>
             </div>
           </div>
 
           <!-- Contenu -->
           <div class="p-6">
-            <!-- Informations de l'organisation -->
-            <div v-if="activity.organization" class="flex items-center gap-3 mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
+            <!-- Informations de l'organisation (uniquement pour les activités) -->
+            <div v-if="!item.isSpecialDay && item.organization" class="flex items-center gap-3 mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
               <!-- Institution publique nationale : logo + drapeau entre parenthèses -->
-              <template v-if="isPublicNationalInstitution(activity.organization) && activity.organization.country?.code">
+              <template v-if="isPublicNationalInstitution(item.organization) && item.organization.country?.code">
                 <div class="flex items-center gap-2">
                   <!-- Logo de l'organisation -->
                   <img
-                    v-if="activity.organization.logo_url"
-                    :src="activity.organization.logo_url"
-                    :alt="`${t('common.logo')} ${activity.organization.name}`"
+                    v-if="item.organization.logo_url"
+                    :src="item.organization.logo_url"
+                    :alt="`${t('common.logo')} ${item.organization.name}`"
                     class="w-10 h-10 rounded-lg object-contain bg-white shadow-sm"
                   >
                   <div v-else class="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center shadow-sm">
                     <span class="text-sm font-bold text-gray-600 dark:text-gray-300">
-                      {{ activity.organization.name?.[0]?.toUpperCase() || 'O' }}
+                      {{ item.organization.name?.[0]?.toUpperCase() || 'O' }}
                     </span>
                   </div>
                   <!-- Drapeau du pays entre parenthèses -->
@@ -285,8 +288,8 @@
                     <span class="text-gray-400 text-sm">(</span>
                     <div class="w-6 h-6 rounded bg-white dark:bg-gray-700 flex items-center justify-center p-0.5">
                       <img
-                        :src="`https://flagcdn.com/w80/${activity.organization.country.code.toLowerCase()}.png`"
-                        :alt="`${t('common.flag')} ${t('common.locale') === 'fr' ? activity.organization.country.name_fr : activity.organization.country.name_en}`"
+                        :src="`https://flagcdn.com/w80/${item.organization.country.code.toLowerCase()}.png`"
+                        :alt="`${t('common.flag')} ${t('common.locale') === 'fr' ? item.organization.country.name_fr : item.organization.country.name_en}`"
                         class="w-full h-full object-contain rounded"
                         loading="lazy">
                     </div>
@@ -297,14 +300,14 @@
               <!-- Autres types d'organisation : logo uniquement -->
               <template v-else>
                 <img
-                  v-if="activity.organization.logo_url"
-                  :src="activity.organization.logo_url"
-                  :alt="`${t('common.logo')} ${activity.organization.name}`"
+                  v-if="item.organization.logo_url"
+                  :src="item.organization.logo_url"
+                  :alt="`${t('common.logo')} ${item.organization.name}`"
                   class="w-10 h-10 rounded-lg object-contain bg-white shadow-sm"
                 >
                 <div v-else class="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center shadow-sm">
                   <span class="text-sm font-bold text-gray-600 dark:text-gray-300">
-                    {{ activity.organization.name?.[0]?.toUpperCase() || 'O' }}
+                    {{ item.organization.name?.[0]?.toUpperCase() || 'O' }}
                   </span>
                 </div>
               </template>
@@ -312,40 +315,40 @@
               <!-- Nom de l'organisation -->
               <div class="flex-1 min-w-0">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
-                  {{ activity.organization.name }}
+                  {{ item.organization.name }}
                 </p>
               </div>
             </div>
 
             <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3 line-clamp-2">
-              {{ activity.title }}
+              {{ item.title }}
             </h3>
 
-            <p v-if="activity.description" class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3">
-              {{ stripHtml(activity.description) }}
+            <p v-if="item.description" class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3">
+              {{ stripHtml(item.description) }}
             </p>
 
             <!-- Détails -->
             <div class="space-y-2">
-              <div v-if="activity.final_start_date" class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+              <div v-if="item.final_start_date" class="flex items-center text-sm text-gray-500 dark:text-gray-400">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                {{ formatDate(activity.final_start_date) }}
+                {{ formatDate(item.final_start_date) }}
               </div>
 
-              <div v-if="activity.final_start_date" class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+              <div v-if="item.final_start_date" class="flex items-center text-sm text-gray-500 dark:text-gray-400">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                {{ formatTime(activity.final_start_date) }} - {{ formatTime(activity.final_end_date) }}
+                {{ formatTime(item.final_start_date) }} - {{ formatTime(item.final_end_date) }}
               </div>
 
-              <div v-if="activity.room" class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+              <div v-if="item.room" class="flex items-center text-sm text-gray-500 dark:text-gray-400">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
-                {{ activity.room }}
+                {{ item.room }}
               </div>
             </div>
           </div>
@@ -356,39 +359,45 @@
       <!-- Vue Liste (largeur limitée) -->
       <div v-else-if="viewMode === 'list'" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-4">
         <div
-          v-for="activity in activities"
-          :key="activity.id"
-          @click="goToActivityDetail(activity.id)"
+          v-for="item in displayItems"
+          :key="item.id"
+          @click="item.isSpecialDay ? (item.internalLink ? router.push(item.internalLink) : window.open(item.externalLink, '_blank')) : goToActivityDetail(item.id)"
           class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all cursor-pointer"
         >
           <div class="flex gap-6">
             <!-- Image de couverture -->
-            <div class="flex-shrink-0 w-64 h-48 overflow-hidden">
+            <div class="flex-shrink-0 w-64 h-48 overflow-hidden relative">
               <img
-                :src="activity.cover_image_low_url || '/images/example/event_banniere_par_defaut_16_9_reduit.jpg'"
-                :alt="`${activity.title} - ${t('activity.details')}`"
+                :src="item.cover_image_low_url || '/images/example/event_banniere_par_defaut_16_9_reduit.jpg'"
+                :alt="`${item.title} - ${t('activity.details')}`"
                 class="w-full h-full object-cover"
               >
+              <!-- Badge journée spéciale -->
+              <div v-if="item.isSpecialDay" class="absolute top-2 right-2">
+                <span class="px-3 py-1 bg-orange-500/90 rounded-full text-xs font-medium text-white shadow-md">
+                  {{ t('programmations.specialDay') }}
+                </span>
+              </div>
             </div>
 
             <!-- Contenu -->
             <div class="flex-1 p-6 flex justify-between items-start">
               <div class="flex-1">
-                <!-- Informations de l'organisation -->
-                <div v-if="activity.organization" class="flex items-center gap-3 mb-3">
+                <!-- Informations de l'organisation (uniquement pour les activités) -->
+                <div v-if="!item.isSpecialDay && item.organization" class="flex items-center gap-3 mb-3">
                   <!-- Institution publique nationale : logo + drapeau entre parenthèses -->
-                  <template v-if="isPublicNationalInstitution(activity.organization) && activity.organization.country?.code">
+                  <template v-if="isPublicNationalInstitution(item.organization) && item.organization.country?.code">
                     <div class="flex items-center gap-1.5">
                       <!-- Logo de l'organisation -->
                       <img
-                        v-if="activity.organization.logo_url"
-                        :src="activity.organization.logo_url"
-                        :alt="`${t('common.logo')} ${activity.organization.name}`"
+                        v-if="item.organization.logo_url"
+                        :src="item.organization.logo_url"
+                        :alt="`${t('common.logo')} ${item.organization.name}`"
                         class="w-8 h-8 rounded object-contain bg-white shadow-sm"
                       >
                       <div v-else class="w-8 h-8 rounded bg-gray-200 dark:bg-gray-700 flex items-center justify-center shadow-sm">
                         <span class="text-xs font-semibold text-gray-600 dark:text-gray-300">
-                          {{ activity.organization.name?.[0]?.toUpperCase() || 'O' }}
+                          {{ item.organization.name?.[0]?.toUpperCase() || 'O' }}
                         </span>
                       </div>
                       <!-- Drapeau du pays entre parenthèses -->
@@ -396,8 +405,8 @@
                         <span class="text-gray-400 text-xs">(</span>
                         <div class="w-5 h-5 rounded bg-white dark:bg-gray-700 flex items-center justify-center p-0.5">
                           <img
-                            :src="`https://flagcdn.com/w80/${activity.organization.country.code.toLowerCase()}.png`"
-                            :alt="`${t('common.flag')} ${t('common.locale') === 'fr' ? activity.organization.country.name_fr : activity.organization.country.name_en}`"
+                            :src="`https://flagcdn.com/w80/${item.organization.country.code.toLowerCase()}.png`"
+                            :alt="`${t('common.flag')} ${t('common.locale') === 'fr' ? item.organization.country.name_fr : item.organization.country.name_en}`"
                             class="w-full h-full object-contain rounded"
                             loading="lazy">
                         </div>
@@ -408,64 +417,64 @@
                   <!-- Autres types d'organisation : logo uniquement -->
                   <template v-else>
                     <img
-                      v-if="activity.organization.logo_url"
-                      :src="activity.organization.logo_url"
-                      :alt="`${t('common.logo')} ${activity.organization.name}`"
+                      v-if="item.organization.logo_url"
+                      :src="item.organization.logo_url"
+                      :alt="`${t('common.logo')} ${item.organization.name}`"
                       class="w-8 h-8 rounded object-contain bg-white shadow-sm"
                     >
                     <div v-else class="w-8 h-8 rounded bg-gray-200 dark:bg-gray-700 flex items-center justify-center shadow-sm">
                       <span class="text-xs font-semibold text-gray-600 dark:text-gray-300">
-                        {{ activity.organization.name?.[0]?.toUpperCase() || 'O' }}
+                        {{ item.organization.name?.[0]?.toUpperCase() || 'O' }}
                       </span>
                     </div>
                   </template>
 
                   <!-- Nom de l'organisation -->
                   <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {{ activity.organization.name }}
+                    {{ item.organization.name }}
                   </p>
                 </div>
 
                 <div class="flex items-center gap-3 mb-2">
                   <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    {{ activity.title }}
+                    {{ item.title }}
                   </h3>
-                  <span class="px-3 py-1 bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-300 rounded-full text-xs font-medium">
-                    {{ t(`activity.submit.formats.${activity.format || 'presentation'}`) }}
+                  <span v-if="!item.isSpecialDay" class="px-3 py-1 bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-300 rounded-full text-xs font-medium">
+                    {{ t(`activity.submit.formats.${item.format || 'presentation'}`) }}
                   </span>
                 </div>
 
-                <p v-if="activity.description" class="text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-                  {{ stripHtml(activity.description) }}
+                <p v-if="item.description" class="text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                  {{ stripHtml(item.description) }}
                 </p>
 
                 <div class="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400">
-                  <div v-if="activity.final_start_date" class="flex items-center">
+                  <div v-if="item.final_start_date" class="flex items-center">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    {{ formatDate(activity.final_start_date) }}
+                    {{ formatDate(item.final_start_date) }}
                   </div>
 
-                  <div v-if="activity.final_start_date" class="flex items-center">
+                  <div v-if="item.final_start_date" class="flex items-center">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    {{ formatTime(activity.final_start_date) }} - {{ formatTime(activity.final_end_date) }}
+                    {{ formatTime(item.final_start_date) }} - {{ formatTime(item.final_end_date) }}
                   </div>
 
-                  <div v-if="activity.room" class="flex items-center">
+                  <div v-if="item.room" class="flex items-center">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                     </svg>
-                    {{ activity.room }}
+                    {{ item.room }}
                   </div>
 
-                  <div v-if="activity.max_participants" class="flex items-center">
+                  <div v-if="!item.isSpecialDay && item.max_participants" class="flex items-center">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
-                    {{ activity.max_participants }} {{ t('activity.participants') }}
+                    {{ item.max_participants }} {{ t('activity.participants') }}
                   </div>
                 </div>
               </div>
@@ -756,6 +765,62 @@ const lastUpdateDate = computed(() => {
   })
 })
 
+// Items à afficher dans les vues grid et liste (activités + journées spéciales)
+const displayItems = computed(() => {
+  const items = []
+
+  // Ajouter toutes les activités approuvées
+  const approvedActivities = activities.value.filter(a => a.validation_status === 'approved')
+  items.push(...approvedActivities.map(activity => ({
+    ...activity,
+    type: 'activity',
+    isSpecialDay: false
+  })))
+
+  // Ajouter la Journée Jeunesse Climat si l'événement est la CdP 30
+  if (isCopEvent.value && event.value?.year === 2025) {
+    items.push({
+      id: 'youth-climate-day',
+      type: 'special-day',
+      isSpecialDay: true,
+      specialDayType: 'youth-climate',
+      title: `🌱 ${t('programmations.youthClimateDay')}`,
+      description: t('youthClimateDay.context'),
+      final_start_date: '2025-11-12T08:00:00Z',
+      final_end_date: '2025-11-12T18:00:00Z',
+      internalLink: '/programmations/2025/journee-jeunesse',
+      cover_image_low_url: '/images/example/event_banniere_par_defaut_16_9_reduit.jpg',
+      format: 'networking',
+      room: t('youthClimateDay.location')
+    })
+
+    // Ajouter la Journée Finance durable en Francophonie
+    items.push({
+      id: 'sustainable-finance-day',
+      type: 'special-day',
+      isSpecialDay: true,
+      specialDayType: 'sustainable-finance',
+      title: `💰 ${t('programmations.sustainableFinanceDay')}`,
+      description: 'Journée Finance durable en Francophonie',
+      final_start_date: '2025-11-14T08:00:00Z',
+      final_end_date: '2025-11-14T18:00:00Z',
+      externalLink: 'https://epavillonclimatique.francophonie.org/public/documents_uploades/Journee_finance_CdP30.pdf',
+      cover_image_low_url: '/images/example/event_banniere_par_defaut_16_9_reduit.jpg',
+      format: 'networking',
+      room: t('youthClimateDay.location')
+    })
+  }
+
+  // Trier par date de début
+  items.sort((a, b) => {
+    const dateA = new Date(a.final_start_date)
+    const dateB = new Date(b.final_start_date)
+    return dateA - dateB
+  })
+
+  return items
+})
+
 // Calculer le GMT offset pour un timezone donné
 const getGMTOffset = (timezone) => {
   if (!timezone) return ''
@@ -921,7 +986,7 @@ const calendarEvents = computed(() => {
     start: new Date(2025, 10, 12, 8, 0), // 12 novembre 2025 à 8h00 (mois 10 = novembre car 0-indexed)
     end: new Date(2025, 10, 12, 18, 0), // 12 novembre 2025 à 18h00
     class: 'special-day-event youth-climate-day',
-    link: 'https://epavillonclimatique.francophonie.org/public/documents_uploades/Journee_jeunesse_CdP30.pdf',
+    internalLink: '/programmations/2025/journee-jeunesse',
     deletable: false,
     resizable: false,
     draggable: false
@@ -1042,8 +1107,12 @@ const goToActivityDetail = (activityId) => {
 }
 
 const onEventClick = (event) => {
-  // Si c'est une journée spéciale avec un lien, ouvrir le PDF dans un nouvel onglet
-  if (event.isSpecialDay && event.link) {
+  // Si c'est une journée spéciale avec un lien interne, naviguer vers la page
+  if (event.isSpecialDay && event.internalLink) {
+    router.push(event.internalLink)
+  }
+  // Si c'est une journée spéciale avec un lien externe, ouvrir le PDF dans un nouvel onglet
+  else if (event.isSpecialDay && event.link) {
     window.open(event.link, '_blank', 'noopener,noreferrer')
   } else if (event.activityId) {
     // Sinon, naviguer vers la page de détail de l'activité

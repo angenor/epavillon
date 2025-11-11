@@ -29,6 +29,7 @@
     "youthClimateDay": "Youth Climate Day",
     "sustainableFinanceDay": "Sustainable Finance in Francophonie Day",
     "viewProgram": "View program",
+    "specialDay": "Special Day",
     "francophoniePavilionTitle": "Programming of Activities at the Francophonie Pavilion",
     "approvedActivitiesCount": "Approved activities",
     "organizationsCount": "Organizations represented",
@@ -471,7 +472,10 @@
     "ctaTitle": "Discover all our programs",
     "ctaDescription": "Explore all events and activities organized by IFDD and its partners",
     "backToProgrammations": "Back to programs",
-    "metaDescription": "Francophonie Youth Climate Action Day at COP 30: creativity and employability, engagement and leadership of Francophone youth in the fight against climate change."
+    "metaDescription": "Francophonie Youth Climate Action Day at COP 30: creativity and employability, engagement and leadership of Francophone youth in the fight against climate change.",
+    "registerTitle": "Register now!",
+    "registerDescription": "Join the Youth Climate Action Day via Zoom",
+    "registerButton": "Register on Zoom"
   },
   "formations": {
     "title": "Trainings",

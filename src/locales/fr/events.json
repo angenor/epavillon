@@ -29,6 +29,7 @@
     "youthClimateDay": "Journée Jeunesse Climat",
     "sustainableFinanceDay": "Journée Finance durable en Francophonie",
     "viewProgram": "Voir le programme",
+    "specialDay": "Journée Spéciale",
     "francophoniePavilionTitle": "Programmation des activités au Pavillon de la Francophonie",
     "approvedActivitiesCount": "Activités approuvées",
     "organizationsCount": "Organisations représentées",
@@ -502,7 +503,10 @@
     "ctaTitle": "Découvrez toutes nos programmations",
     "ctaDescription": "Explorez l'ensemble des événements et activités organisés par l'IFDD et ses partenaires",
     "backToProgrammations": "Retour aux programmations",
-    "metaDescription": "Journée Action Jeunesse pour le Climat en Francophonie à la CdP 30 : créativité et employabilité, l'engagement et le leadership de la jeunesse francophone dans la lutte contre les changements climatiques."
+    "metaDescription": "Journée Action Jeunesse pour le Climat en Francophonie à la CdP 30 : créativité et employabilité, l'engagement et le leadership de la jeunesse francophone dans la lutte contre les changements climatiques.",
+    "registerTitle": "Inscrivez-vous dès maintenant !",
+    "registerDescription": "Participez à la Journée Action Jeunesse pour le Climat via Zoom",
+    "registerButton": "S'inscrire sur Zoom"
   },
   "formations": {
     "title": "Formations",
