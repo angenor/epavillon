@@ -59,7 +59,7 @@
             <div class="mb-2 flex items-center gap-2">
               <div class="w-2 h-2 rounded-full bg-ifdd-bleu"></div>
               <span class="text-xs font-semibold text-white/90 uppercase tracking-wide">
-                {{ getPeriodLabel(event.filteredActivities.period) }}
+                {{ getPeriodLabel(event.filteredActivities.period, event.filteredActivities.activities) }}
               </span>
             </div>
 
@@ -114,7 +114,7 @@
 
       <!-- Voir toutes les activités -->
       <div class="flex-shrink-0 px-3 bg-gradient-to-t from-gray-900/90 via-gray-900/60 to-transparent backdrop-blur-sm py-5 border-t border-white/10">
-        <RouterLink to="/programmations" class="block w-full">
+        <RouterLink :to="getProgrammationLink()" class="block w-full">
           <button class="w-full py-3 px-4 bg-gradient-to-r from-ifdd-bleu to-ifdd-bleu/80 hover:from-ifdd-bleu/90 hover:to-ifdd-bleu/70 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer transform hover:scale-[1.02]">
             {{ t('activities.viewAll') || 'Voir le tableau de programmation' }}
           </button>
@@ -295,10 +295,33 @@ export default {
     }
 
     // Obtenir le label de période (Aujourd'hui ou Demain)
-    const getPeriodLabel = (period) => {
-      if (period === 'today') return t('activities.today') || "Aujourd'hui"
-      if (period === 'tomorrow') return t('activities.tomorrow') || 'Demain'
-      return ''
+    const getPeriodLabel = (period, activities = []) => {
+      if (!period) return ''
+
+      let label = ''
+      if (period === 'today') {
+        label = t('activities.today') || "Aujourd'hui"
+      } else if (period === 'tomorrow') {
+        label = t('activities.tomorrow') || 'Demain'
+      } else {
+        return ''
+      }
+
+      // Ajouter la date pour "Demain"
+      if (period === 'tomorrow' && activities.length > 0) {
+        const firstActivity = activities[0]
+        const startDate = firstActivity.final_start_date || firstActivity.proposed_start_date
+        if (startDate) {
+          const date = new Date(startDate)
+          const day = date.getDate()
+          const month = date.toLocaleDateString('fr-FR', { month: 'long' })
+          // Mettre la première lettre du mois en majuscule
+          const monthCapitalized = month.charAt(0).toUpperCase() + month.slice(1)
+          label += ` • ${day} ${monthCapitalized}`
+        }
+      }
+
+      return label
     }
 
     // Gérer le clic sur une activité
@@ -307,6 +330,30 @@ export default {
 
       // Rediriger vers la page de détail de l'activité
       router.push(`/activities/${activity.id}`)
+    }
+
+    // Obtenir le lien vers la programmation
+    const getProgrammationLink = () => {
+      // Chercher le premier événement qui a des activités affichées
+      const eventWithActivities = eventsWithActivities.value.find(
+        event => event.filteredActivities.activities.length > 0
+      )
+
+      // Si un événement avec des activités est trouvé, rediriger vers sa programmation
+      if (eventWithActivities && eventWithActivities.year && eventWithActivities.id) {
+        return `/programmations/${eventWithActivities.year}/${eventWithActivities.id}`
+      }
+
+      // Sinon, rediriger vers le premier événement ou la liste des programmations
+      if (events.value.length > 0) {
+        const firstEvent = events.value[0]
+        if (firstEvent.year && firstEvent.id) {
+          return `/programmations/${firstEvent.year}/${firstEvent.id}`
+        }
+      }
+
+      // Par défaut, rediriger vers la liste des programmations
+      return '/programmations'
     }
 
     return {
@@ -327,7 +374,8 @@ export default {
       getCategoryLabel,
       getTrainingDuration,
       handleEventClick,
-      handleActivityClick
+      handleActivityClick,
+      getProgrammationLink
     }
   }
 }
