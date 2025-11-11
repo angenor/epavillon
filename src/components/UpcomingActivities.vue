@@ -22,27 +22,80 @@
 
     <!-- Activités -->
     <div v-else class="flex-1 flex flex-col justify-between relative z-10">
-      <div class="flex-1 overflow-y-auto px-3 py-2 space-y-2">
-        <!-- Boucle sur les activités disponibles (max 3) -->
+      <div class="flex-1 overflow-y-auto px-3 py-2 pb-6 space-y-6">
+        <!-- Boucle sur les événements avec leurs activités (max 3) -->
         <div
-          v-for="(event, index) in events.slice(0, 3)"
+          v-for="(event, index) in eventsWithActivities.slice(0, 3)"
           :key="event.id || index"
-          @click="handleEventClick(event)"
-          class="block cursor-pointer"
+          class="relative"
         >
-          <div class="text-white bg-gradient-to-r from-white/30 to-white/20 backdrop-blur-sm rounded-xl px-4 py-2 hover:from-white/40 hover:to-white/30 transition-all duration-300 shadow-lg">
-            <div class="font-bold text-xl mb-2">{{ event.title }}</div>
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-                <span class="text-sm font-medium">{{ formatEventDate(event) }}</span>
+          <!-- Événement -->
+          <div
+            @click="handleEventClick(event)"
+            class="block cursor-pointer"
+          >
+            <div class="text-white bg-gradient-to-r from-white/30 to-white/20 backdrop-blur-sm rounded-xl px-4 py-2 hover:from-white/40 hover:to-white/30 transition-all duration-300 shadow-lg">
+              <div class="font-bold text-xl mb-2">{{ event.title }}</div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  <span class="text-sm font-medium">{{ formatEventDate(event) }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs opacity-75">{{ event.organization?.name || 'IFDD' }}</span>
+                  <div class="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center">
+                    <span class="text-xs font-bold">{{ (event.organization?.name || 'IFDD').charAt(0) }}</span>
+                  </div>
+                </div>
               </div>
-              <div class="flex items-center gap-2">
-                <span class="text-xs opacity-75">{{ event.organization?.name || 'IFDD' }}</span>
-                <div class="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center">
-                  <span class="text-xs font-bold">{{ (event.organization?.name || 'IFDD').charAt(0) }}</span>
+            </div>
+          </div>
+
+          <!-- Activités associées -->
+          <div v-if="event.filteredActivities.activities.length > 0" class="mt-3 ml-4">
+            <!-- Label de période (Aujourd'hui ou Demain) -->
+            <div class="mb-2 flex items-center gap-2">
+              <div class="w-2 h-2 rounded-full bg-ifdd-bleu"></div>
+              <span class="text-xs font-semibold text-white/90 uppercase tracking-wide">
+                {{ getPeriodLabel(event.filteredActivities.period) }}
+              </span>
+            </div>
+
+            <!-- Liste des activités avec ligne verticale pointillée -->
+            <div class="relative pl-6">
+              <!-- Ligne verticale pointillée -->
+              <div
+                class="absolute left-0 top-0 bottom-0 w-0.5 border-l-2 border-dashed border-white/40"
+                style="margin-left: 0.25rem;"
+              ></div>
+
+              <!-- Activités -->
+              <div class="space-y-3">
+                <div
+                  v-for="activity in event.filteredActivities.activities"
+                  :key="activity.id"
+                  class="relative cursor-pointer"
+                  @click="handleActivityClick(activity, event)"
+                >
+                  <!-- Point de connexion -->
+                  <div class="absolute -left-6 top-2 w-2 h-2 rounded-full bg-white border-2 border-ifdd-bleu"></div>
+
+                  <!-- Contenu de l'activité -->
+                  <div class="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 hover:bg-white/20 transition-all duration-200">
+                    <div class="text-white font-medium text-sm mb-1 line-clamp-3">
+                      {{ activity.title }}
+                    </div>
+                    <div class="flex items-center gap-2 text-xs text-white/80">
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      <span>{{ formatActivityTime(activity) }}</span>
+                      <span class="opacity-60">•</span>
+                      <span>{{ formatActivityDate(activity) }}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -50,7 +103,7 @@
         </div>
 
         <!-- Message si aucune activité -->
-        <div v-if="!events || events.length === 0" class="text-white text-center py-8 px-4">
+        <div v-if="!eventsWithActivities || eventsWithActivities.length === 0" class="text-white text-center py-8 px-4">
           <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
           </svg>
@@ -60,13 +113,13 @@
       </div>
 
       <!-- Voir toutes les activités -->
-      <!-- <div class="px-3 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 py-5">
-        <RouterLink to="/events" class="block w-full">
-          <button class="w-full py-2 px-4 bg-ifdd-bleu hover:bg-ifdd-bleu/90 text-white font-medium rounded-lg transition-colors duration-200 shadow-md">
-            {{ t('activities.viewAll') || 'Voir toutes les activités' }}
+      <div class="px-3 bg-gradient-to-t from-[#6B4423]/90 via-[#6B4423]/60 to-transparent backdrop-blur-sm py-5 border-t border-white/10">
+        <RouterLink to="/programmations" class="block w-full">
+          <button class="w-full py-3 px-4 bg-gradient-to-r from-ifdd-bleu to-ifdd-bleu/80 hover:from-ifdd-bleu/90 hover:to-ifdd-bleu/70 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer transform hover:scale-[1.02]">
+            {{ t('activities.viewAll') || 'Voir le tableau de programmation' }}
           </button>
         </RouterLink>
-      </div> -->
+      </div>
 
     </div>
   </div>
@@ -74,7 +127,7 @@
 
 <script>
 import { useI18n } from 'vue-i18n'
-import { onMounted } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useActivities } from '@/composables/useActivities'
 import { useRouter } from 'vue-router'
 
@@ -89,14 +142,67 @@ export default {
       loading,
       error,
       fetchAllUpcoming,
+      fetchEventActivities,
       formatDate,
       formatTime,
       getEventStatus
     } = useActivities()
 
+    const eventActivities = ref({}) // Stocke les activités par event_id
+
     // Charger les données au montage
     onMounted(async () => {
       await fetchAllUpcoming()
+      // Récupérer les activités pour chaque événement
+      for (const event of events.value) {
+        eventActivities.value[event.id] = await fetchEventActivities(event.id)
+      }
+    })
+
+    // Fonction pour filtrer les activités selon aujourd'hui ou demain
+    const getFilteredActivities = (eventId) => {
+      const activities = eventActivities.value[eventId] || []
+      if (activities.length === 0) return { activities: [], period: null }
+
+      const now = new Date()
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+      const tomorrow = new Date(today)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      const dayAfterTomorrow = new Date(tomorrow)
+      dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 1)
+
+      // Filtrer les activités d'aujourd'hui
+      const todayActivities = activities.filter(activity => {
+        const startDate = new Date(activity.final_start_date || activity.proposed_start_date)
+        return startDate >= today && startDate < tomorrow
+      })
+
+      // Vérifier si toutes les activités d'aujourd'hui sont déjà passées
+      const hasUpcomingToday = todayActivities.some(activity => {
+        const startDate = new Date(activity.final_start_date || activity.proposed_start_date)
+        return startDate > now
+      })
+
+      // Si on a des activités aujourd'hui et qu'au moins une n'est pas encore passée
+      if (hasUpcomingToday) {
+        return { activities: todayActivities, period: 'today' }
+      }
+
+      // Sinon, afficher les activités de demain
+      const tomorrowActivities = activities.filter(activity => {
+        const startDate = new Date(activity.final_start_date || activity.proposed_start_date)
+        return startDate >= tomorrow && startDate < dayAfterTomorrow
+      })
+
+      return { activities: tomorrowActivities, period: 'tomorrow' }
+    }
+
+    // Computed pour obtenir les événements avec leurs activités filtrées
+    const eventsWithActivities = computed(() => {
+      return events.value.map(event => ({
+        ...event,
+        filteredActivities: getFilteredActivities(event.id)
+      }))
     })
 
     // Formater la date d'un événement
@@ -172,20 +278,56 @@ export default {
       }
     }
 
+    // Formater l'heure d'une activité
+    const formatActivityTime = (activity) => {
+      if (!activity) return ''
+      const startDate = activity.final_start_date || activity.proposed_start_date
+      if (!startDate) return ''
+      return formatTime(startDate)
+    }
+
+    // Formater la date d'une activité
+    const formatActivityDate = (activity) => {
+      if (!activity) return ''
+      const startDate = activity.final_start_date || activity.proposed_start_date
+      if (!startDate) return ''
+      return formatDate(startDate)
+    }
+
+    // Obtenir le label de période (Aujourd'hui ou Demain)
+    const getPeriodLabel = (period) => {
+      if (period === 'today') return t('activities.today') || "Aujourd'hui"
+      if (period === 'tomorrow') return t('activities.tomorrow') || 'Demain'
+      return ''
+    }
+
+    // Gérer le clic sur une activité
+    const handleActivityClick = (activity, event) => {
+      if (!activity?.id) return
+
+      // Rediriger vers la page de détail de l'activité
+      router.push(`/activities/${activity.id}`)
+    }
+
     return {
       t,
       events,
       trainings,
       loading,
       error,
+      eventsWithActivities,
       formatEventDate,
       formatDate,
+      formatActivityTime,
+      formatActivityDate,
+      getPeriodLabel,
       getCountryName,
       getEventStatus,
       getEventStatusClass,
       getCategoryLabel,
       getTrainingDuration,
-      handleEventClick
+      handleEventClick,
+      handleActivityClick
     }
   }
 }

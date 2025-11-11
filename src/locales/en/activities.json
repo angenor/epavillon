@@ -39,6 +39,9 @@
     "online": "Online",
     "availableSpots": "Available spots",
     "noUpcoming": "No upcoming activities",
+    "checkBackLater": "Check back later to discover new activities",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
     "type": {
       "panel": "Panel",
       "workshop": "Workshop",

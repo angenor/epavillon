@@ -39,6 +39,9 @@
     "online": "En ligne",
     "availableSpots": "Places disponibles",
     "noUpcoming": "Aucune activité à venir",
+    "checkBackLater": "Revenez plus tard pour découvrir de nouvelles activités",
+    "today": "Aujourd'hui",
+    "tomorrow": "Demain",
     "type": {
       "panel": "Panel",
       "workshop": "Atelier",

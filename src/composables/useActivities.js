@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { supabase } from '@/composables/useSupabase'
 
 export function useActivities() {
@@ -117,6 +117,34 @@ export function useActivities() {
     }
   }
 
+  // Récupérer les activités d'un événement spécifique
+  const fetchEventActivities = async (eventId) => {
+    try {
+      const { data, error: supabaseError } = await supabase
+        .from('activities')
+        .select(`
+          id,
+          title,
+          proposed_start_date,
+          proposed_end_date,
+          final_start_date,
+          final_end_date,
+          validation_status
+        `)
+        .eq('event_id', eventId)
+        .eq('validation_status', 'approved')
+        .eq('is_deleted', false)
+        .order('proposed_start_date', { ascending: true })
+
+      if (supabaseError) throw supabaseError
+
+      return data || []
+    } catch (err) {
+      console.error('Error fetching event activities:', err)
+      return []
+    }
+  }
+
   // Récupérer toutes les données pour le widget
   const fetchAllUpcoming = async () => {
     loading.value = true
@@ -177,6 +205,7 @@ export function useActivities() {
     fetchUpcomingEvents,
     fetchUpcomingTrainings,
     fetchAllUpcoming,
+    fetchEventActivities,
     formatDate,
     formatTime,
     getEventStatus
