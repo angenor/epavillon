@@ -56,11 +56,22 @@
           <!-- Activités associées -->
           <div v-if="event.filteredActivities.activities.length > 0" class="mt-3 ml-4">
             <!-- Label de période (Aujourd'hui ou Demain) -->
-            <div class="mb-2 flex items-center gap-2">
-              <div class="w-2 h-2 rounded-full bg-ifdd-bleu"></div>
-              <span class="text-xs font-semibold text-white/90 uppercase tracking-wide">
-                {{ getPeriodLabel(event.filteredActivities.period, event.filteredActivities.activities) }}
-              </span>
+            <div class="mb-2 flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-ifdd-bleu"></div>
+                <span class="text-xs font-semibold text-white/90 uppercase tracking-wide">
+                  {{ getPeriodLabel(event.filteredActivities.period, event.filteredActivities.activities) }}
+                </span>
+              </div>
+              <button
+                @click.stop="goToEventProgrammation(event)"
+                class="text-xs text-ifdd-bleu hover:text-ifdd-bleu/80 font-medium transition-colors duration-200 cursor-pointer flex items-center gap-1 group"
+              >
+                <span>{{ t('activities.viewMore') || 'Voir plus' }}</span>
+                <svg class="w-3 h-3 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </button>
             </div>
 
             <!-- Liste des activités avec ligne verticale pointillée -->
@@ -332,6 +343,12 @@ export default {
       router.push(`/activities/${activity.id}`)
     }
 
+    // Rediriger vers la programmation d'un événement spécifique
+    const goToEventProgrammation = (event) => {
+      if (!event?.id || !event?.year) return
+      router.push(`/programmations/${event.year}/${event.id}`)
+    }
+
     // Obtenir le lien vers la programmation
     const getProgrammationLink = () => {
       // Chercher le premier événement qui a des activités affichées
@@ -375,6 +392,7 @@ export default {
       getTrainingDuration,
       handleEventClick,
       handleActivityClick,
+      goToEventProgrammation,
       getProgrammationLink
     }
   }
