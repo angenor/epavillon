@@ -113,7 +113,7 @@
       </div>
 
       <!-- Voir toutes les activités -->
-      <div class="flex-shrink-0 px-3 bg-gradient-to-t from-[#6B4423]/90 via-[#6B4423]/60 to-transparent backdrop-blur-sm py-5 border-t border-white/10">
+      <div class="flex-shrink-0 px-3 bg-gradient-to-t from-gray-900/90 via-gray-900/60 to-transparent backdrop-blur-sm py-5 border-t border-white/10">
         <RouterLink to="/programmations" class="block w-full">
           <button class="w-full py-3 px-4 bg-gradient-to-r from-ifdd-bleu to-ifdd-bleu/80 hover:from-ifdd-bleu/90 hover:to-ifdd-bleu/70 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer transform hover:scale-[1.02]">
             {{ t('activities.viewAll') || 'Voir le tableau de programmation' }}
