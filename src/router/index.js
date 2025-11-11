@@ -120,6 +120,11 @@ const router = createRouter({
       component: () => import('../views/programmations/ProgrammationDetail.vue'),
     },
     {
+      path: '/programmations/2025/journee-jeunesse',
+      name: 'journee-jeunesse-cop30',
+      component: () => import('../views/programmations/JourneeJeunesseCOP30.vue'),
+    },
+    {
       path: '/profile',
       name: 'profile',
       component: () => import('../views/profils/Profile.vue'),

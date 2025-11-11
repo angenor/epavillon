@@ -349,6 +349,161 @@
     },
     "seeAllTrainings": "Voir toutes les formations"
   },
+  "youthClimateDay": {
+    "title": "Journée Action Jeunesse pour le Climat en Francophonie - CdP 30",
+    "shortTitle": "Journée Jeunesse Climat",
+    "cop30": "CdP 30",
+    "november": "novembre",
+    "belém": "Belém, Brésil",
+    "generalInfo": "Informations générales",
+    "fullTitle": "Titre complet de l'événement",
+    "subtitle": "Créativité et employabilité : l'engagement et le leadership de la jeunesse francophone dans la lutte contre les changements climatiques",
+    "dateLabel": "Date",
+    "date": "Mercredi 12 novembre 2025",
+    "scheduleLabel": "Horaires",
+    "schedule": "9h00 - 17h45",
+    "locationLabel": "Lieu",
+    "location": "Pavillon de la Francophonie, Zone bleue, Belém",
+    "organizerLabel": "Organisateur principal",
+    "organizer": "Institut de la Francophonie pour le développement durable (IFDD) - Organe subsidiaire de l'Organisation internationale de la Francophonie (OIF), dans le cadre de l'Initiative jeunesse de lutte contre les changements climatiques (IJLCC)",
+    "contextTitle": "Contexte",
+    "context": "L'événement s'inscrit dans le cadre de la 30e Conférence des Nations Unies sur les changements climatiques (CdP 30). Cette journée vise à positionner les jeunes francophones comme des artisans incontournables de l'action climatique et de la transition juste et inclusive.",
+    "objectivesTitle": "Objectifs",
+    "objectives": {
+      "0": {
+        "title": "Interconnexion",
+        "description": "Favoriser les liens entre jeunes leaders, partenaires institutionnels et acteurs de la Francophonie"
+      },
+      "1": {
+        "title": "Valorisation",
+        "description": "Mettre en avant les projets, innovations et plaidoyers des jeunes francophones"
+      },
+      "2": {
+        "title": "Employabilité verte",
+        "description": "Promouvoir l'entrepreneuriat climatique via des formats interactifs"
+      },
+      "3": {
+        "title": "Visibilité",
+        "description": "Renforcer la présence de l'IJLCC et des mécanismes d'appui à l'action jeunesse"
+      }
+    },
+    "programTitle": "Programme détaillé",
+    "moderation": "Modération générale",
+    "moderator": "Mme Maïssane MANSOUR, Chargée de projets LOGIQ",
+    "moderationLabel": "Modération :",
+    "themeLabel": "Thème :",
+    "organizedByLabel": "Organisé par :",
+    "speakerLabel": "Intervenant :",
+    "animationLabel": "Animation :",
+    "parallelSessions": "Sessions parallèles :",
+    "part1": {
+      "title": "Accueil et Ouverture",
+      "welcome": "Accueil et installation des participants",
+      "openingTitle": "Séquence d'ouverture",
+      "welcomeOIF": "Bienvenue OIF :",
+      "speaker1": "Dr Issa BADO, Spécialiste de programme IFDD (3 min)",
+      "journalistImpressions": "Impressions de jeunes journalistes :",
+      "journalist1": "M. Hector Sann'Do NAMMANGUE (Togo) - 2 min",
+      "journalist2": "Mme Victoria Emmanuelle FOREST-BRIAND (Québec) - 2 min",
+      "officialOpening": "Ouverture officielle :",
+      "speaker2": "M. Jean LEMIRE, Émissaire du Québec aux changements climatiques (5 min)"
+    },
+    "part2": {
+      "title": "Engagement et Innovation",
+      "moderator": "Mme Constance GENEVEE, Coordinatrice programme jeunes délégués du Bénin",
+      "pitchesTitle": "Pitchs Inspirants",
+      "pitchesFormat": "Format : Présentations de 2 minutes par intervenant",
+      "speakers": {
+        "speaker1": "Mme Hélène OMOY KOMBE - Éco-innovatrice (RDC)",
+        "speaker2": "Mme Andréanne FIOLA - Entrepreneure (Québec)",
+        "speaker3": "Mme Malek ROMDHANE - Militante (Tunisie)",
+        "speaker4": "M. Antonio RODRIGUEZ-CAMPBELL - Synergies biodiversité-climat (Québec)",
+        "speaker5": "Mme Jennifer PAQUETTE - Comité bâtisseurs écologiques (Québec)",
+        "speaker6": "Mme Duthie-Chancel MBOMBET - Éco-entrepreneure (Gabon)"
+      },
+      "workshop1Title": "Atelier Plaidoyer Créatif #1",
+      "workshop1Theme": "Jeunesse francophone et transition climatique",
+      "workshop1Organizer": "Réseau des Organisations des Jeunes Leaders Africains des Nations Unies",
+      "workshop2Title": "Atelier Plaidoyer Créatif #2",
+      "workshop2Theme": "Jeunesse, innovation et initiatives climatiques",
+      "workshop2Organizer": "Ministère du Cadre de vie et des Transports du Bénin",
+      "quizTitle": "Concours et Quiz",
+      "quizAnimators": "Mme Constance GENEVEE (Bénin) et Mme Laurie CHARTRAND, artiste (Québec)"
+    },
+    "part3": {
+      "title": "Solutions et Partenariats",
+      "session1": {
+        "theme": "Rôle transformateur des jeunes dans biodiversité et plaidoyer climatique",
+        "speaker": "Ministère de l'environnement (Tunisie)"
+      },
+      "session2": {
+        "theme": "Jeunesse africaine et résilience climatique - systèmes alimentaires",
+        "speaker": "FAO (Organisation des Nations Unies pour l'alimentation et l'agriculture)"
+      },
+      "session3": {
+        "theme": "Sessions parallèles",
+        "speaker": "Divers intervenants"
+      },
+      "workshop1": {
+        "title": "Économie circulaire verte",
+        "description": "Valorisation déchets organiques en biogaz et fertilisants",
+        "organizer": "Les Offices jeunesse internationaux du Québec (LOJIQ)"
+      },
+      "workshop2": {
+        "title": "Politiques climatiques",
+        "description": "Implication des jeunes dans les stratégies climatiques",
+        "organizer": "Ministère de l'environnement (Tunisie)"
+      },
+      "session4": {
+        "theme": "Une seule santé et qualité de l'air",
+        "speaker": "Fédération L'Air et Moi (France)"
+      },
+      "session5": {
+        "theme": "Gener'Action CDN - Déclaration de Kpalimé",
+        "speaker": "Ecolotrip (Togo)"
+      },
+      "session6": {
+        "theme": "Lutte contre la désinformation climatique - Gamification, collaboration et science",
+        "speaker": "Fresque du Climat (France)"
+      }
+    },
+    "part4": {
+      "title": "Réseautage et Clôture",
+      "networkingTitle": "Temps de Réseautage",
+      "networking1": "Espaces d'échanges jeunes-partenaires-décideurs",
+      "networking2": "Facilitation mentorat et collaborations",
+      "animators": "Mme Constance GENEVEE et Mme Laurie CHARTRAND",
+      "closing": "Clôture officielle"
+    },
+    "targetAudienceTitle": "Public cible",
+    "audiences": {
+      "audience1": "Jeunes francophones engagés dans l'action climatique (18-35 ans)",
+      "audience2": "Représentants d'organisations jeunesse, ONG, institutions francophones",
+      "audience3": "Partenaires techniques et financiers soutenant l'action climatique",
+      "audience4": "Délégués et participants de la CdP 30"
+    },
+    "partnersTitle": "Partenaires",
+    "institutionalPartners": "Partenaires institutionnels",
+    "partners": {
+      "oif": "Organisation internationale de la Francophonie (OIF)",
+      "quebec": "Gouvernement du Québec",
+      "benin": "Ministère du Cadre de Vie et des Transports du Bénin",
+      "lojiq": "LOJIQ - Les Offices jeunesse internationaux du Québec"
+    },
+    "financialSupport": "Soutien financier",
+    "financialSupportText": "Gouvernement du Québec dans le cadre du Plan pour une économie verte 2030",
+    "expectedResultsTitle": "Résultats attendus",
+    "results": {
+      "result1": "Renforcement de la visibilité des jeunes francophones à la CdP 30",
+      "result2": "Mise en valeur de projets exemplaires et reproductibles",
+      "result3": "Création de liens jeunes-partenaires (financement, mentorat, mise à l'échelle)",
+      "result4": "Diffusion d'un message fort sur le rôle stratégique de la jeunesse francophone"
+    },
+    "ctaTitle": "Découvrez toutes nos programmations",
+    "ctaDescription": "Explorez l'ensemble des événements et activités organisés par l'IFDD et ses partenaires",
+    "backToProgrammations": "Retour aux programmations",
+    "metaDescription": "Journée Action Jeunesse pour le Climat en Francophonie à la CdP 30 : créativité et employabilité, l'engagement et le leadership de la jeunesse francophone dans la lutte contre les changements climatiques."
+  },
   "formations": {
     "title": "Formations",
     "subtitle": "Développez vos compétences en développement durable avec nos formations certifiées",

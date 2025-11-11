@@ -318,6 +318,161 @@
     },
     "seeAllTrainings": "See all trainings"
   },
+  "youthClimateDay": {
+    "title": "Francophonie Youth Climate Action Day - COP 30",
+    "shortTitle": "Youth Climate Day",
+    "cop30": "COP 30",
+    "november": "November",
+    "belém": "Belém, Brazil",
+    "generalInfo": "General Information",
+    "fullTitle": "Full Event Title",
+    "subtitle": "Creativity and employability: engagement and leadership of Francophone youth in the fight against climate change",
+    "dateLabel": "Date",
+    "date": "Wednesday, November 12, 2025",
+    "scheduleLabel": "Schedule",
+    "schedule": "9:00 AM - 5:45 PM",
+    "locationLabel": "Location",
+    "location": "Francophonie Pavilion, Blue Zone, Belém",
+    "organizerLabel": "Main Organizer",
+    "organizer": "Institute of the Francophonie for Sustainable Development (IFDD) - Subsidiary body of the International Organization of La Francophonie (OIF), as part of the Youth Initiative for Climate Change (IJLCC)",
+    "contextTitle": "Context",
+    "context": "The event is part of the 30th United Nations Conference on Climate Change (COP 30). This day aims to position Francophone youth as essential contributors to climate action and just and inclusive transition.",
+    "objectivesTitle": "Objectives",
+    "objectives": {
+      "0": {
+        "title": "Interconnection",
+        "description": "Foster links between young leaders, institutional partners and Francophonie actors"
+      },
+      "1": {
+        "title": "Recognition",
+        "description": "Showcase projects, innovations and advocacy of Francophone youth"
+      },
+      "2": {
+        "title": "Green Employability",
+        "description": "Promote climate entrepreneurship through interactive formats"
+      },
+      "3": {
+        "title": "Visibility",
+        "description": "Strengthen the presence of IJLCC and youth action support mechanisms"
+      }
+    },
+    "programTitle": "Detailed Program",
+    "moderation": "General Moderation",
+    "moderator": "Ms. Maïssane MANSOUR, LOGIQ Project Manager",
+    "moderationLabel": "Moderation:",
+    "themeLabel": "Theme:",
+    "organizedByLabel": "Organized by:",
+    "speakerLabel": "Speaker:",
+    "animationLabel": "Animation:",
+    "parallelSessions": "Parallel sessions:",
+    "part1": {
+      "title": "Welcome and Opening",
+      "welcome": "Welcome and participant registration",
+      "openingTitle": "Opening Sequence",
+      "welcomeOIF": "OIF Welcome:",
+      "speaker1": "Dr. Issa BADO, IFDD Program Specialist (3 min)",
+      "journalistImpressions": "Impressions from young journalists:",
+      "journalist1": "Mr. Hector Sann'Do NAMMANGUE (Togo) - 2 min",
+      "journalist2": "Ms. Victoria Emmanuelle FOREST-BRIAND (Quebec) - 2 min",
+      "officialOpening": "Official Opening:",
+      "speaker2": "Mr. Jean LEMIRE, Quebec's Special Envoy for Climate Change (5 min)"
+    },
+    "part2": {
+      "title": "Engagement and Innovation",
+      "moderator": "Ms. Constance GENEVEE, Coordinator of Benin's Young Delegates Program",
+      "pitchesTitle": "Inspiring Pitches",
+      "pitchesFormat": "Format: 2-minute presentations per speaker",
+      "speakers": {
+        "speaker1": "Ms. Hélène OMOY KOMBE - Eco-innovator (DRC)",
+        "speaker2": "Ms. Andréanne FIOLA - Entrepreneur (Quebec)",
+        "speaker3": "Ms. Malek ROMDHANE - Activist (Tunisia)",
+        "speaker4": "Mr. Antonio RODRIGUEZ-CAMPBELL - Biodiversity-climate synergies (Quebec)",
+        "speaker5": "Ms. Jennifer PAQUETTE - Ecological builders committee (Quebec)",
+        "speaker6": "Ms. Duthie-Chancel MBOMBET - Eco-entrepreneur (Gabon)"
+      },
+      "workshop1Title": "Creative Advocacy Workshop #1",
+      "workshop1Theme": "Francophone youth and climate transition",
+      "workshop1Organizer": "Network of African Young Leaders Organizations of the United Nations",
+      "workshop2Title": "Creative Advocacy Workshop #2",
+      "workshop2Theme": "Youth, innovation and climate initiatives",
+      "workshop2Organizer": "Ministry of Environment and Transport of Benin",
+      "quizTitle": "Contest and Quiz",
+      "quizAnimators": "Ms. Constance GENEVEE (Benin) and Ms. Laurie CHARTRAND, artist (Quebec)"
+    },
+    "part3": {
+      "title": "Solutions and Partnerships",
+      "session1": {
+        "theme": "Transformative role of youth in biodiversity and climate advocacy",
+        "speaker": "Ministry of Environment (Tunisia)"
+      },
+      "session2": {
+        "theme": "African youth and climate resilience - food systems",
+        "speaker": "FAO (Food and Agriculture Organization of the United Nations)"
+      },
+      "session3": {
+        "theme": "Parallel sessions",
+        "speaker": "Various speakers"
+      },
+      "workshop1": {
+        "title": "Green Circular Economy",
+        "description": "Valorization of organic waste into biogas and fertilizers",
+        "organizer": "Quebec International Youth Offices (LOJIQ)"
+      },
+      "workshop2": {
+        "title": "Climate Policies",
+        "description": "Youth involvement in climate strategies",
+        "organizer": "Ministry of Environment (Tunisia)"
+      },
+      "session4": {
+        "theme": "One Health and air quality",
+        "speaker": "Air and Me Federation (France)"
+      },
+      "session5": {
+        "theme": "Gener'Action NDC - Kpalimé Declaration",
+        "speaker": "Ecolotrip (Togo)"
+      },
+      "session6": {
+        "theme": "Fighting climate misinformation - Gamification, collaboration and science",
+        "speaker": "Climate Fresco (France)"
+      }
+    },
+    "part4": {
+      "title": "Networking and Closing",
+      "networkingTitle": "Networking Time",
+      "networking1": "Youth-partners-decision makers exchange spaces",
+      "networking2": "Facilitation of mentoring and collaborations",
+      "animators": "Ms. Constance GENEVEE and Ms. Laurie CHARTRAND",
+      "closing": "Official Closing"
+    },
+    "targetAudienceTitle": "Target Audience",
+    "audiences": {
+      "audience1": "Francophone youth engaged in climate action (18-35 years)",
+      "audience2": "Representatives of youth organizations, NGOs, Francophone institutions",
+      "audience3": "Technical and financial partners supporting climate action",
+      "audience4": "Delegates and participants of COP 30"
+    },
+    "partnersTitle": "Partners",
+    "institutionalPartners": "Institutional Partners",
+    "partners": {
+      "oif": "International Organization of La Francophonie (OIF)",
+      "quebec": "Government of Quebec",
+      "benin": "Ministry of Environment and Transport of Benin",
+      "lojiq": "LOJIQ - Quebec International Youth Offices"
+    },
+    "financialSupport": "Financial Support",
+    "financialSupportText": "Government of Quebec under the Plan for a Green Economy 2030",
+    "expectedResultsTitle": "Expected Results",
+    "results": {
+      "result1": "Strengthening the visibility of Francophone youth at COP 30",
+      "result2": "Showcasing exemplary and replicable projects",
+      "result3": "Creating youth-partner links (funding, mentoring, scaling up)",
+      "result4": "Disseminating a strong message about the strategic role of Francophone youth"
+    },
+    "ctaTitle": "Discover all our programs",
+    "ctaDescription": "Explore all events and activities organized by IFDD and its partners",
+    "backToProgrammations": "Back to programs",
+    "metaDescription": "Francophonie Youth Climate Action Day at COP 30: creativity and employability, engagement and leadership of Francophone youth in the fight against climate change."
+  },
   "formations": {
     "title": "Trainings",
     "subtitle": "Develop your sustainable development skills with our certified trainings",
