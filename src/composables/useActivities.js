@@ -129,7 +129,8 @@ export function useActivities() {
           proposed_end_date,
           final_start_date,
           final_end_date,
-          validation_status
+          validation_status,
+          organization:organizations(name)
         `)
         .eq('event_id', eventId)
         .eq('validation_status', 'approved')

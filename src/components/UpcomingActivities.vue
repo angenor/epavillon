@@ -98,13 +98,16 @@
                     <div class="text-white font-medium text-sm mb-1 line-clamp-3">
                       {{ activity.title }}
                     </div>
-                    <div class="flex items-center gap-2 text-xs text-white/80">
-                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="flex items-center gap-2 text-xs text-white/80 mb-1">
+                      <svg class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                       </svg>
-                      <span>{{ formatActivityTime(activity) }}</span>
-                      <span class="opacity-60">•</span>
-                      <span>{{ formatActivityDate(activity) }}</span>
+                      <span class="flex-shrink-0">{{ formatActivityTime(activity) }}</span>
+                      <span class="opacity-60 flex-shrink-0">•</span>
+                      <span class="flex-shrink-0">{{ formatActivityDate(activity) }}</span>
+                    </div>
+                    <div v-if="activity.organization?.name" class="text-xs text-white/70 truncate">
+                      <span class="opacity-75">{{ activity.organization.name }}</span>
                     </div>
                   </div>
                 </div>
@@ -124,9 +127,9 @@
       </div>
 
       <!-- Voir toutes les activités -->
-      <div class="flex-shrink-0 px-3 bg-gradient-to-t from-gray-900/90 via-gray-900/60 to-transparent backdrop-blur-sm py-5 border-t border-white/10">
+      <div class="flex-shrink-0 px-3 bg-gradient-to-t from-ifdd-bleu/90 via-ifdd-bleu/60 to-transparent backdrop-blur-sm py-5 border-t border-white/10">
         <RouterLink :to="getProgrammationLink()" class="block w-full">
-          <button class="w-full py-3 px-4 bg-gradient-to-r from-ifdd-bleu to-ifdd-bleu/80 hover:from-ifdd-bleu/90 hover:to-ifdd-bleu/70 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer transform hover:scale-[1.02]">
+          <button class="w-full py-3 px-4 bg-gradient-to-t from-ifdd-bleu to-ifdd-bleu/80 hover:from-ifdd-bleu/90 hover:to-ifdd-bleu/70 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer transform hover:scale-[1.02]">
             {{ t('activities.viewAll') || 'Voir le tableau de programmation' }}
           </button>
         </RouterLink>
@@ -196,7 +199,13 @@ export default {
 
       // Si on a des activités aujourd'hui et qu'au moins une n'est pas encore passée
       if (hasUpcomingToday) {
-        return { activities: todayActivities, period: 'today' }
+        // Trier par date de début (plus proche en premier)
+        const sortedToday = todayActivities.sort((a, b) => {
+          const dateA = new Date(a.final_start_date || a.proposed_start_date)
+          const dateB = new Date(b.final_start_date || b.proposed_start_date)
+          return dateA - dateB
+        })
+        return { activities: sortedToday, period: 'today' }
       }
 
       // Sinon, afficher les activités de demain
@@ -205,7 +214,14 @@ export default {
         return startDate >= tomorrow && startDate < dayAfterTomorrow
       })
 
-      return { activities: tomorrowActivities, period: 'tomorrow' }
+      // Trier par date de début (plus proche en premier)
+      const sortedTomorrow = tomorrowActivities.sort((a, b) => {
+        const dateA = new Date(a.final_start_date || a.proposed_start_date)
+        const dateB = new Date(b.final_start_date || b.proposed_start_date)
+        return dateA - dateB
+      })
+
+      return { activities: sortedTomorrow, period: 'tomorrow' }
     }
 
     // Computed pour obtenir les événements avec leurs activités filtrées
