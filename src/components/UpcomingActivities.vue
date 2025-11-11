@@ -124,15 +124,15 @@
           <p class="text-lg font-medium mb-2">{{ t('activities.noUpcoming') || 'Aucune activité à venir' }}</p>
           <p class="text-sm opacity-75">{{ t('activities.checkBackLater') || 'Revenez plus tard pour découvrir de nouvelles activités' }}</p>
         </div>
-      </div>
 
-      <!-- Voir toutes les activités -->
-      <div class="flex-shrink-0 px-3 bg-gradient-to-t from-ifdd-bleu/90 via-ifdd-bleu/60 to-transparent backdrop-blur-sm py-5 border-t border-white/10">
-        <RouterLink :to="getProgrammationLink()" class="block w-full">
-          <button class="w-full py-3 px-4 bg-gradient-to-t from-ifdd-bleu to-ifdd-bleu/80 hover:from-ifdd-bleu/90 hover:to-ifdd-bleu/70 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer transform hover:scale-[1.02]">
-            {{ t('activities.viewAll') || 'Voir le tableau de programmation' }}
-          </button>
-        </RouterLink>
+        <!-- Bouton Voir toutes les activités -->
+        <div v-if="eventsWithActivities && eventsWithActivities.length > 0" class="pt-4 pb-2">
+          <RouterLink :to="getProgrammationLink()" class="block w-full">
+            <button class="w-full py-3 px-4 bg-gradient-to-t from-ifdd-bleu to-ifdd-bleu/80 hover:from-ifdd-bleu/90 hover:to-ifdd-bleu/70 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer transform hover:scale-[1.02]">
+              {{ t('activities.viewAll') || 'Voir le tableau de programmation' }}
+            </button>
+          </RouterLink>
+        </div>
       </div>
 
     </div>
