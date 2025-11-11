@@ -76,10 +76,10 @@
 
             <!-- Liste des activités avec ligne verticale pointillée -->
             <div class="relative pl-6">
-              <!-- Ligne verticale pointillée -->
+              <!-- Ligne verticale pointillée (étendue jusqu'en bas) -->
               <div
-                class="absolute left-0 top-0 bottom-0 w-0.5 border-l-2 border-dashed border-white/40"
-                style="margin-left: 0.25rem;"
+                class="absolute left-0 top-0 w-0.5 border-l-2 border-dashed border-white/40"
+                style="margin-left: 0.25rem; bottom: -3rem;"
               ></div>
 
               <!-- Activités -->
@@ -126,9 +126,12 @@
         </div>
 
         <!-- Bouton Voir toutes les activités -->
-        <div v-if="eventsWithActivities && eventsWithActivities.length > 0" class="pt-4 pb-2">
+        <div v-if="eventsWithActivities && eventsWithActivities.length > 0" class="pt-4 pb-2 ml-4 pl-6 relative">
+          <!-- Point de connexion à la ligne -->
+          <div class="absolute left-4 top-7 w-2 h-2 rounded-full bg-ifdd-bleu border-2 border-white" style="margin-left: 0.25rem;"></div>
+
           <RouterLink :to="getProgrammationLink()" class="block w-full">
-            <div class="bg-white/15 backdrop-blur-sm rounded-xl px-4 py-4 border-2 border-dashed border-white/30 hover:bg-white/25 hover:border-ifdd-bleu/50 transition-all duration-300 cursor-pointer group">
+            <div class="bg-white/15 backdrop-blur-sm rounded-xl px-4 py-4 border-2 border-dashed border-ifdd-bleu/50 hover:bg-white/25 hover:border-ifdd-bleu transition-all duration-300 cursor-pointer group">
               <div class="flex items-center justify-center gap-3 text-white">
                 <svg class="w-5 h-5 text-ifdd-bleu group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
