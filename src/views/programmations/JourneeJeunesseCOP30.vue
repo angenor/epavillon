@@ -67,6 +67,39 @@
 
     <!-- Contenu principal -->
     <div class="max-w-7xl mx-auto px-4 py-8 md:py-12">
+      <!-- Direct YouTube -->
+      <section class="mb-12">
+        <div class="bg-gradient-to-br from-red-50 to-red-100/50 dark:from-gray-800 dark:to-gray-700 rounded-2xl p-6 md:p-8 shadow-lg border border-red-200 dark:border-gray-600">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="flex items-center gap-2">
+              <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+              </span>
+              <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                {{ t('youthClimateDay.liveStream') }}
+              </h2>
+            </div>
+          </div>
+
+          <!-- Container responsive pour l'iframe YouTube (16:9) -->
+          <div class="relative w-full" style="padding-bottom: 56.25%;">
+            <iframe
+              class="absolute top-0 left-0 w-full h-full rounded-lg shadow-xl"
+              src="https://www.youtube.com/embed/0t17gnM75ck?autoplay=1&mute=1&controls=1&rel=0&modestbranding=1"
+              title="Direct YouTube - Journée Action Jeunesse pour le Climat"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+
+          <p class="mt-4 text-sm text-gray-600 dark:text-gray-300 text-center">
+            {{ t('youthClimateDay.liveStreamInfo') }}
+          </p>
+        </div>
+      </section>
+
       <!-- Informations générales -->
       <section class="mb-12">
         <div class="bg-gradient-to-br from-orange-50 to-orange-100/50 dark:from-gray-800 dark:to-gray-700 rounded-2xl p-6 md:p-8 shadow-lg border border-orange-200 dark:border-gray-600">
