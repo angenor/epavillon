@@ -26,6 +26,24 @@
               {{ t('youthClimateDay.belém') }}
             </span>
           </div>
+
+          <!-- Bouton d'inscription Zoom -->
+          <div class="mt-4 md:mt-6">
+            <a
+              href="https://us06web.zoom.us/meeting/register/8b4PtGDsS2uLhvgEyiMtNw"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-3 bg-white text-blue-600 font-bold px-6 py-3 md:px-8 md:py-4 rounded-lg hover:bg-blue-50 cursor-pointer shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+            >
+              <svg class="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M3 7v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm16 10H5V7h14v10zm-7-7c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6-2v6l-2.5-2.5L13 14v-6l2.5 2.5L18 8z"/>
+              </svg>
+              <span class="text-sm md:text-base">{{ t('youthClimateDay.registerButton') }}</span>
+              <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -49,26 +67,6 @@
 
     <!-- Contenu principal -->
     <div class="max-w-7xl mx-auto px-4 py-8 md:py-12">
-      <!-- Bouton d'inscription Zoom -->
-      <section class="mb-12">
-        <div class="flex-shrink-0">
-              <a
-                href="https://us06web.zoom.us/meeting/register/8b4PtGDsS2uLhvgEyiMtNw"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center gap-3 bg-white text-blue-600 font-bold px-8 py-4 rounded-lg hover:bg-blue-50 cursor-pointer shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
-              >
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M3 7v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm16 10H5V7h14v10zm-7-7c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6-2v6l-2.5-2.5L13 14v-6l2.5 2.5L18 8z"/>
-                </svg>
-                <span>{{ t('youthClimateDay.registerButton') }}</span>
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </a>
-            </div>
-      </section>
-
       <!-- Informations générales -->
       <section class="mb-12">
         <div class="bg-gradient-to-br from-orange-50 to-orange-100/50 dark:from-gray-800 dark:to-gray-700 rounded-2xl p-6 md:p-8 shadow-lg border border-orange-200 dark:border-gray-600">

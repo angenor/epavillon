@@ -273,7 +273,7 @@ export default {
     const eventsWithActivities = computed(() => {
       return events.value.map(event => ({
         ...event,
-        filteredActivities: getFilteredActivities(event.id)
+        filteredActivities: getFilteredActivities(event.id, event)
       }))
     })
 
