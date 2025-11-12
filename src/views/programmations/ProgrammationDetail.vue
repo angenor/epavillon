@@ -786,8 +786,8 @@ const displayItems = computed(() => {
       specialDayType: 'youth-climate',
       title: `🌱 ${t('programmations.youthClimateDay')}`,
       description: t('youthClimateDay.context'),
-      final_start_date: '2025-11-12T08:00:00Z',
-      final_end_date: '2025-11-12T18:00:00Z',
+      final_start_date: '2025-11-12T12:00:00Z',
+      final_end_date: '2025-11-12T20:45:00Z',
       internalLink: '/programmations/2025/journee-jeunesse',
       cover_image_low_url: '/images/example/event_banniere_par_defaut_16_9_reduit.jpg',
       format: 'networking',
@@ -802,8 +802,8 @@ const displayItems = computed(() => {
       specialDayType: 'sustainable-finance',
       title: `💰 ${t('programmations.sustainableFinanceDay')}`,
       description: 'Journée Finance durable en Francophonie',
-      final_start_date: '2025-11-14T08:00:00Z',
-      final_end_date: '2025-11-14T18:00:00Z',
+      final_start_date: '2025-11-14T12:00:00Z',
+      final_end_date: '2025-11-14T20:45:00Z',
       externalLink: 'https://epavillonclimatique.francophonie.org/public/documents_uploades/Journee_finance_CdP30.pdf',
       cover_image_low_url: '/images/example/event_banniere_par_defaut_16_9_reduit.jpg',
       format: 'networking',
@@ -979,12 +979,13 @@ const calendarEvents = computed(() => {
 
   // Ajouter les journées spéciales en dur
   // Journée Jeunesse Climat - Mercredi 12 novembre 2025
+  // Horaires : 9h00-17h45 heure de Belém (GMT-3)
   events.push({
     isSpecialDay: true,
     specialDayType: 'youth-climate',
     title: `🌱 ${t('programmations.youthClimateDay')}`,
-    start: new Date(2025, 10, 12, 8, 0), // 12 novembre 2025 à 8h00 (mois 10 = novembre car 0-indexed)
-    end: new Date(2025, 10, 12, 18, 0), // 12 novembre 2025 à 18h00
+    start: new Date(2025, 10, 12, 9, 0), // 12 novembre 2025 à 9h00 (mois 10 = novembre car 0-indexed)
+    end: new Date(2025, 10, 12, 17, 45), // 12 novembre 2025 à 17h45
     class: 'special-day-event youth-climate-day',
     internalLink: '/programmations/2025/journee-jeunesse',
     deletable: false,
@@ -993,12 +994,13 @@ const calendarEvents = computed(() => {
   })
 
   // Journée Finance durable en Francophonie - Vendredi 14 novembre 2025
+  // Horaires : 9h00-17h45 heure de Belém (GMT-3)
   events.push({
     isSpecialDay: true,
     specialDayType: 'sustainable-finance',
     title: `💰 ${t('programmations.sustainableFinanceDay')}`,
-    start: new Date(2025, 10, 14, 8, 0), // 14 novembre 2025 à 8h00
-    end: new Date(2025, 10, 14, 18, 0), // 14 novembre 2025 à 18h00
+    start: new Date(2025, 10, 14, 9, 0), // 14 novembre 2025 à 9h00
+    end: new Date(2025, 10, 14, 17, 45), // 14 novembre 2025 à 17h45
     class: 'special-day-event sustainable-finance-day',
     link: 'https://epavillonclimatique.francophonie.org/public/documents_uploades/Journee_finance_CdP30.pdf',
     deletable: false,

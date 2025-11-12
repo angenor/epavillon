@@ -43,6 +43,9 @@
     "checkBackLater": "Revenez plus tard pour découvrir de nouvelles activités",
     "today": "Aujourd'hui",
     "tomorrow": "Demain",
+    "live": "Direct",
+    "program": "Programme",
+    "watchLive": "Voir le direct",
     "type": {
       "panel": "Panel",
       "workshop": "Atelier",
