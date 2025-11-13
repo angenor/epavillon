@@ -142,6 +142,8 @@
                 activityStatusMessage.type === 'incident' && activityStatusMessage.severity === 'error' ? 'bg-red-500/20 border border-red-400/30' :
                 activityStatusMessage.type === 'incident' && activityStatusMessage.severity === 'warning' ? 'bg-orange-500/20 border border-orange-400/30' :
                 activityStatusMessage.type === 'delayed' ? 'bg-yellow-500/20 border border-yellow-400/30' :
+                activityStatusMessage.type === 'recording' ? 'bg-blue-500/20 border border-blue-400/30' :
+                activityStatusMessage.type === 'completed' ? 'bg-green-500/20 border border-green-400/30' :
                 'bg-orange-500/20 border border-orange-400/30'
               ]"
             >
@@ -1389,8 +1391,38 @@ const activityStatusMessage = computed(() => {
     return null
   }
 
-  // Si l'activité est terminée (validation_status === 'completed')
-  if (activity.value?.validation_status === 'completed') {
+  // Vérifier si l'activité est réellement terminée (par la date de fin)
+  const endDate = displayEndDate.value
+  const now = new Date()
+  const isActuallyFinished = endDate && new Date(endDate) < now
+
+  // Si l'activité est terminée (par statut OU par date)
+  if (activity.value?.validation_status === 'completed' || isActuallyFinished) {
+    // Calculer depuis combien de temps l'activité est terminée
+    if (endDate && isActuallyFinished) {
+      const end = new Date(endDate)
+      const hoursFinished = (now - end) / (1000 * 60 * 60) // Conversion en heures
+
+      // Si terminé depuis plus de 5 heures, afficher le message d'enregistrement
+      if (hoursFinished > 5) {
+        return {
+          type: 'recording',
+          message: t('activities.recordingAvailableSoon') || 'Enregistrement bientôt disponible',
+          severity: 'info',
+          icon: 'video'
+        }
+      }
+
+      // Sinon (< 5h), afficher simplement que l'activité est terminée
+      return {
+        type: 'completed',
+        message: t('activity.countdown.completed') || 'Cette activité est terminée',
+        severity: 'success',
+        icon: 'check-circle'
+      }
+    }
+
+    // Si pas de endDate ou pas encore fini, afficher le message par défaut
     return {
       type: 'completed',
       message: t('activity.countdown.completed') || 'Cette activité est terminée',
