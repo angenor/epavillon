@@ -1,0 +1,103 @@
+{
+  "sustainableFinance": {
+    "badge": "Finance Durable",
+    "date": "Vendredi 14 novembre 2025",
+    "location": "Pavillon de la Francophonie, Belém",
+    "hours": "9h00 - 17h45 (Heure de Belém, GMT-3)",
+    "title": "Accès à la finance durable en Francophonie",
+    "subtitle": "Opportunités offertes par les partenaires de développement",
+    "meta": {
+      "title": "Journée Finance Durable - CdP 30 | e-Pavillon Climatique",
+      "description": "Journée dédiée à l'accès à la finance durable en Francophonie lors de la CdP 30 à Belém. Découvrez les opportunités, les partenaires et les mécanismes de financement climatique."
+    },
+    "context": {
+      "title": "Contexte",
+      "description": "L'événement s'inscrit dans un contexte d'intensification des besoins en financement climatique. La Francophonie se mobilise pour renforcer les capacités d'accès aux ressources disponibles, valoriser les solutions endogènes et favoriser une transition juste, inclusive et résiliente.",
+      "project": "Cette journée fait partie du projet OIF « Accompagnement des transformations structurelles en matière de l'environnement et du climat »."
+    },
+    "objectives": {
+      "title": "Objectifs",
+      "obj1": "Présenter les opportunités concrètes offertes par les partenaires de développement en finance durable",
+      "obj2": "Faciliter le dialogue entre institutions francophones, bailleurs et porteurs de projets",
+      "obj3": "Valoriser les bonnes pratiques d'accès à la finance climatique et environnementale"
+    },
+    "announcement": {
+      "title": "Annonce importante",
+      "description": "Lancement officiel de l'appel à manifestation d'intérêt aux États membres de l'OIF pour l'accompagnement à l'accès à la finance durable"
+    },
+    "program": {
+      "title": "Programme Détaillé",
+      "part1": {
+        "title": "Opportunités et Synergies",
+        "welcome": {
+          "title": "Accueil et installation",
+          "description": "Accueil des participants et installation"
+        },
+        "opening": {
+          "title": "Ouverture officielle",
+          "speaker": "Dr Issa BADO, IFDD-OIF",
+          "announcement": "Lancement de l'appel à manifestation d'intérêt"
+        },
+        "panel1": {
+          "title": "Panel Partenaires Institutionnels",
+          "theme": "Thème : Opportunités, solutions et synergies portées par les partenaires en Francophonie",
+          "speakers": "Intervenants :"
+        },
+        "panel2": {
+          "title": "Panel Acteurs de Terrain",
+          "theme": "Thème : Réflexions sur les enjeux de financement durable pour les acteurs de développement",
+          "speakers": "Intervenants :"
+        }
+      },
+      "part2": {
+        "title": "Initiatives Nationales et Études de Cas",
+        "session1": {
+          "theme": "Marché carbone et restauration des écosystèmes forestiers",
+          "focus": "Focus : Défis et opportunités pour les communautés locales",
+          "speaker": "Ministère du Cadre de vie et des Transports du Bénin"
+        },
+        "session2": {
+          "theme": "Économie bleue et préservation de la nature",
+          "focus": "Focus : Rôle clé des acteurs financiers",
+          "speaker": "France Assureurs"
+        },
+        "session3": {
+          "theme": "Localisation du financement",
+          "focus": "Focus : Transformer les portefeuilles locaux en solutions climatiques finançables",
+          "speaker": "Fonds Mondial pour le Développement des Villes (France)"
+        }
+      },
+      "part3": {
+        "title": "Partage et Prospective",
+        "session1": {
+          "theme": "Finance durable et gouvernance climatique",
+          "focus": "Focus : Catalyser compétences, capital et politiques - L'exemple du Québec",
+          "speaker": "Finance Montréal (Canada)"
+        },
+        "session2": {
+          "theme": "Mobilisation des institutions financières dans la transition énergétique",
+          "focus": "Focus : Ratio vert/marron comme indicateur pertinent",
+          "speaker": "Paris Europlace / Institut de la Finance Durable (France)"
+        },
+        "roundtable": {
+          "theme": "Table ronde : Financement de la sortie des énergies fossiles",
+          "animator": "Animateur : Initiative LINGO (France)"
+        },
+        "closing": "Clôture officielle"
+      }
+    },
+    "audience": {
+      "title": "Public Cible",
+      "target1": "Représentants d'institutions publiques",
+      "target2": "Partenaires techniques et financiers",
+      "target3": "Experts en finance climat",
+      "target4": "Porteurs de projets",
+      "target5": "ONG et organisations de la société civile"
+    },
+    "partners": {
+      "title": "Partenaires",
+      "financial": "Institutions Financières",
+      "organizations": "Organisations et Initiatives"
+    }
+  }
+}

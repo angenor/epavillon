@@ -825,7 +825,7 @@ const displayItems = computed(() => {
       description: 'Journée Finance durable en Francophonie',
       final_start_date: '2025-11-14T12:00:00Z',
       final_end_date: '2025-11-14T20:45:00Z',
-      externalLink: 'https://epavillonclimatique.francophonie.org/public/documents_uploades/Journee_finance_CdP30.pdf',
+      internalLink: '/programmations/2025/journee-finance',
       cover_image_low_url: '/images/example/event_banniere_par_defaut_16_9_reduit.jpg',
       format: 'networking',
       room: t('youthClimateDay.location')
@@ -1042,7 +1042,7 @@ const calendarEvents = computed(() => {
     start: new Date(2025, 10, 14, 9, 0), // 14 novembre 2025 à 9h00
     end: new Date(2025, 10, 14, 17, 45), // 14 novembre 2025 à 17h45
     class: 'special-day-event sustainable-finance-day',
-    link: 'https://epavillonclimatique.francophonie.org/public/documents_uploades/Journee_finance_CdP30.pdf',
+    link: '/programmations/2025/journee-finance',
     deletable: false,
     resizable: false,
     draggable: false

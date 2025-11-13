@@ -15,6 +15,7 @@ import maintenance from './maintenance.json' with { type: 'json' };
 import email from './email.json' with { type: 'json' };
 import chatbot from './chatbot.json' with { type: 'json' };
 import livestream from './livestream.json' with { type: 'json' };
+import sustainable_finance from './sustainable_finance.json' with { type: 'json' };
 
 export default {
   ...common,
@@ -35,4 +36,5 @@ export default {
   ...email,
   ...chatbot,
   ...livestream,
+  ...sustainable_finance,
 };

@@ -125,6 +125,11 @@ const router = createRouter({
       component: () => import('../views/programmations/JourneeJeunesseCOP30.vue'),
     },
     {
+      path: '/programmations/2025/journee-finance',
+      name: 'journee-finance-cop30',
+      component: () => import('../views/programmations/JourneeFinance.vue'),
+    },
+    {
       path: '/profile',
       name: 'profile',
       component: () => import('../views/profils/Profile.vue'),

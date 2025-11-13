@@ -1,0 +1,103 @@
+{
+  "sustainableFinance": {
+    "badge": "Sustainable Finance",
+    "date": "Friday, November 14, 2025",
+    "location": "Francophonie Pavilion, Belém",
+    "hours": "9:00 AM - 5:45 PM (Belém Time, GMT-3)",
+    "title": "Access to Sustainable Finance in the Francophonie",
+    "subtitle": "Opportunities offered by development partners",
+    "meta": {
+      "title": "Sustainable Finance Day - COP 30 | Climate e-Pavilion",
+      "description": "Day dedicated to access to sustainable finance in the Francophonie at COP 30 in Belém. Discover opportunities, partners and climate financing mechanisms."
+    },
+    "context": {
+      "title": "Context",
+      "description": "The event takes place in a context of intensifying climate financing needs. The Francophonie mobilizes to strengthen capacities for access to available resources, promote endogenous solutions and foster a just, inclusive and resilient transition.",
+      "project": "This day is part of the OIF project 'Support for structural transformations in environmental and climate matters'."
+    },
+    "objectives": {
+      "title": "Objectives",
+      "obj1": "Present concrete opportunities offered by development partners in sustainable finance",
+      "obj2": "Facilitate dialogue between Francophone institutions, donors and project promoters",
+      "obj3": "Showcase best practices in accessing climate and environmental finance"
+    },
+    "announcement": {
+      "title": "Important Announcement",
+      "description": "Official launch of the call for expressions of interest to OIF Member States for support in accessing sustainable finance"
+    },
+    "program": {
+      "title": "Detailed Program",
+      "part1": {
+        "title": "Opportunities and Synergies",
+        "welcome": {
+          "title": "Welcome and Registration",
+          "description": "Welcome and registration of participants"
+        },
+        "opening": {
+          "title": "Official Opening",
+          "speaker": "Dr Issa BADO, IFDD-OIF",
+          "announcement": "Launch of the call for expressions of interest"
+        },
+        "panel1": {
+          "title": "Institutional Partners Panel",
+          "theme": "Theme: Opportunities, solutions and synergies carried by partners in the Francophonie",
+          "speakers": "Speakers:"
+        },
+        "panel2": {
+          "title": "Field Actors Panel",
+          "theme": "Theme: Reflections on sustainable financing challenges for development actors",
+          "speakers": "Speakers:"
+        }
+      },
+      "part2": {
+        "title": "National Initiatives and Case Studies",
+        "session1": {
+          "theme": "Carbon market and restoration of forest ecosystems",
+          "focus": "Focus: Challenges and opportunities for local communities",
+          "speaker": "Ministry of Living Environment and Transport of Benin"
+        },
+        "session2": {
+          "theme": "Blue economy and nature preservation",
+          "focus": "Focus: Key role of financial actors",
+          "speaker": "France Assureurs"
+        },
+        "session3": {
+          "theme": "Localization of financing",
+          "focus": "Focus: Transforming local portfolios into financeable climate solutions",
+          "speaker": "Global Fund for Cities Development (France)"
+        }
+      },
+      "part3": {
+        "title": "Sharing and Prospective",
+        "session1": {
+          "theme": "Sustainable finance and climate governance",
+          "focus": "Focus: Catalyzing skills, capital and policies - The example of Quebec",
+          "speaker": "Finance Montréal (Canada)"
+        },
+        "session2": {
+          "theme": "Mobilization of financial institutions in the energy transition",
+          "focus": "Focus: Green/brown ratio as a relevant indicator",
+          "speaker": "Paris Europlace / Institute for Sustainable Finance (France)"
+        },
+        "roundtable": {
+          "theme": "Round table: Financing the phase-out of fossil fuels",
+          "animator": "Moderator: LINGO Initiative (France)"
+        },
+        "closing": "Official Closing"
+      }
+    },
+    "audience": {
+      "title": "Target Audience",
+      "target1": "Representatives of public institutions",
+      "target2": "Technical and financial partners",
+      "target3": "Climate finance experts",
+      "target4": "Project promoters",
+      "target5": "NGOs and civil society organizations"
+    },
+    "partners": {
+      "title": "Partners",
+      "financial": "Financial Institutions",
+      "organizations": "Organizations and Initiatives"
+    }
+  }
+}
