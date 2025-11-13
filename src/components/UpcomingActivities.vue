@@ -94,10 +94,22 @@
                   @click="handleActivityClick(activity, event)"
                 >
                   <!-- Point de connexion -->
-                  <div class="absolute -left-6 top-2 w-2 h-2 rounded-full bg-white border-2 border-ifdd-bleu"></div>
+                  <div
+                    :class="[
+                      'absolute -left-6 top-2 w-2 h-2 rounded-full border-2',
+                      isLive(activity) ? 'bg-red-500 border-red-500 animate-pulse' : 'bg-white border-ifdd-bleu'
+                    ]"
+                  ></div>
 
                   <!-- Contenu de l'activité -->
-                  <div class="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 hover:bg-white/20 transition-all duration-200">
+                  <div
+                    :class="[
+                      'rounded-lg px-3 py-2 transition-all duration-200',
+                      isLive(activity)
+                        ? 'live-activity-card bg-gradient-to-br from-red-500/30 to-orange-500/20 backdrop-blur-sm border-2 border-red-500/50 hover:border-red-500/70'
+                        : 'bg-white/10 backdrop-blur-sm hover:bg-white/20'
+                    ]"
+                  >
                     <!-- Badge LIVE pour toutes les activités en direct -->
                     <div v-if="isLive(activity)" class="flex items-center gap-2 mb-2">
                       <div class="flex items-center gap-1.5 bg-red-500/90 px-2.5 py-1 rounded-md">
@@ -301,8 +313,16 @@ export default {
 
       // Si on a des activités aujourd'hui et qu'au moins une n'est pas encore passée
       if (hasUpcomingToday) {
-        // Trier par date de début (plus proche en premier)
+        // Trier : activités en direct en premier, puis par date de début
         const sortedToday = todayActivities.sort((a, b) => {
+          // Les activités en direct passent en premier
+          const aIsLive = isLive(a)
+          const bIsLive = isLive(b)
+
+          if (aIsLive && !bIsLive) return -1
+          if (!aIsLive && bIsLive) return 1
+
+          // Si les deux sont en direct ou les deux ne le sont pas, trier par date
           const dateA = new Date(a.final_start_date || a.proposed_start_date)
           const dateB = new Date(b.final_start_date || b.proposed_start_date)
           return dateA - dateB
@@ -316,8 +336,16 @@ export default {
         return startDate >= tomorrow && startDate < dayAfterTomorrow
       })
 
-      // Trier par date de début (plus proche en premier)
+      // Trier : activités en direct en premier, puis par date de début
       const sortedTomorrow = tomorrowActivities.sort((a, b) => {
+        // Les activités en direct passent en premier
+        const aIsLive = isLive(a)
+        const bIsLive = isLive(b)
+
+        if (aIsLive && !bIsLive) return -1
+        if (!aIsLive && bIsLive) return 1
+
+        // Si les deux sont en direct ou les deux ne le sont pas, trier par date
         const dateA = new Date(a.final_start_date || a.proposed_start_date)
         const dateB = new Date(b.final_start_date || b.proposed_start_date)
         return dateA - dateB
@@ -559,3 +587,20 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+/* Animation de pulse personnalisée pour les activités en direct */
+@keyframes live-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.3), 0 0 20px rgba(239, 68, 68, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.5), 0 0 30px rgba(239, 68, 68, 0.3);
+  }
+}
+
+/* Applique l'animation aux cartes en direct */
+.live-activity-card {
+  animation: live-glow 2s ease-in-out infinite;
+}
+</style>
