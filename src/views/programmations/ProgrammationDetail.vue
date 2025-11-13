@@ -626,6 +626,15 @@
                     <span class="text-white text-[10px] font-bold uppercase tracking-wide">{{ t('activities.live') || 'Direct' }}</span>
                   </div>
                 </div>
+                <!-- Badge Terminé -->
+                <div v-else-if="event.isFinished" class="flex justify-center mb-1">
+                  <div class="inline-flex items-center gap-1 bg-green-600/90 px-2 py-0.5 rounded-md shadow-md">
+                    <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span class="text-white text-[10px] font-bold uppercase tracking-wide">{{ t('activities.finished') || 'Terminé' }}</span>
+                  </div>
+                </div>
                 <p class="font-semibold text-sm line-clamp-2 text-center" :class="getEventTextClass(event)">
                   {{ event.title }}
                 </p>
@@ -937,6 +946,13 @@ const convertUTCToEventTimezoneAsLocal = (dateString) => {
   }
 }
 
+// Fonction pour vérifier si une activité est terminée
+const isActivityFinished = (endDate) => {
+  if (!endDate) return false
+  const now = new Date()
+  return new Date(endDate) < now
+}
+
 // Computed pour le calendrier
 const calendarEvents = computed(() => {
   const events = []
@@ -952,11 +968,18 @@ const calendarEvents = computed(() => {
       ? convertUTCToEventTimezoneAsLocal(activity.final_end_date)
       : new Date()
 
+    // Vérifier si l'activité est terminée
+    const isFinished = isActivityFinished(activity.final_end_date)
+
     // Déterminer la classe CSS en fonction du type d'activité et du statut
     let cssClass = 'activity-event'
 
+    // Ajouter une classe pour les activités terminées (prioritaire avant live)
+    if (isFinished) {
+      cssClass += ' activity-finished'
+    }
     // Ajouter une classe spéciale pour les activités en direct (prioritaire)
-    if (activity.validation_status === 'live') {
+    else if (activity.validation_status === 'live') {
       cssClass += ' activity-live'
     } else if (activity.validation_status === 'approved') {
       cssClass += ' activity-approved'
@@ -977,6 +1000,7 @@ const calendarEvents = computed(() => {
       start: startDate,
       end: endDate,
       class: cssClass,
+      isFinished,
       organization: {
         ...activity.organization,
         acronym: activity.organization?.acronym,
@@ -1139,6 +1163,10 @@ const onEventClick = (event) => {
 }
 
 const getEventTextClass = (event) => {
+  // Pour les activités terminées, utiliser du texte vert foncé
+  if (event.isFinished) {
+    return 'text-green-800 dark:text-green-200'
+  }
   // Pour les activités approuvées avec fond blanc, utiliser du texte sombre
   if (event.validationStatus === 'approved') {
     return 'text-gray-900 dark:text-gray-900'
@@ -1415,6 +1443,7 @@ watch([event, activities, locale], () => {
   // Les meta tags seront automatiquement mis à jour grâce aux computed properties
   // Setup sticky après chargement des activités
   if (activities.value.length > 0 && viewMode.value === 'calendar') {
+    addDayNameToTimeCells()
     setupStickySpecialDays()
   }
 }, { deep: true })
@@ -1438,6 +1467,76 @@ const handleResize = () => {
 // Variable pour stocker la référence à handleScroll pour le cleanup
 let scrollHandler = null
 let rafId = null
+
+// Fonction pour ajouter le nom du jour dans les cellules de temps
+const addDayNameToTimeCells = () => {
+  console.log('📅 Ajout du nom du jour dans les cellules de temps...')
+
+  setTimeout(() => {
+    // Obtenir toutes les en-têtes de jours
+    const weekdayHeadings = document.querySelectorAll('.vuecal__heading')
+
+    if (weekdayHeadings.length === 0) {
+      console.log('⚠️ Aucune en-tête de jour trouvée')
+      return
+    }
+
+    console.log(`✅ ${weekdayHeadings.length} en-têtes de jours trouvées`)
+
+    // Créer un tableau avec les noms de jours
+    const dayNames = Array.from(weekdayHeadings).map(heading => heading.textContent.trim())
+
+    // Obtenir toutes les colonnes de cellules (chaque jour)
+    const allCells = document.querySelectorAll('.vuecal__cell')
+
+    // Grouper les cellules par jour
+    const cellsByDay = {}
+    allCells.forEach(cell => {
+      const split = cell.getAttribute('data-split')
+      if (split) {
+        if (!cellsByDay[split]) {
+          cellsByDay[split] = []
+        }
+        cellsByDay[split].push(cell)
+      }
+    })
+
+    // Pour chaque jour
+    Object.keys(cellsByDay).forEach(split => {
+      const dayIndex = parseInt(split) - 1
+      if (dayIndex >= dayNames.length) return
+
+      const dayName = dayNames[dayIndex]
+      const cells = cellsByDay[split]
+
+      // Pour chaque cellule de ce jour
+      cells.forEach(cell => {
+        const timeCells = cell.querySelectorAll('.vuecal__time-cell')
+
+        // Modifier seulement la première cellule de temps de chaque colonne
+        if (timeCells.length > 0 && !cell.dataset.dayNameAdded) {
+          const firstTimeCell = timeCells[0]
+          const timeCellLabel = firstTimeCell.querySelector('.vuecal__time-cell-label') || firstTimeCell
+
+          // Sauvegarder le contenu original
+          const originalContent = timeCellLabel.textContent
+
+          // Créer le nouveau contenu avec le nom du jour
+          timeCellLabel.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 6px; font-size: 0.875rem;">
+              <span style="font-weight: 600; color: #f97316; white-space: nowrap;">${dayName}</span>
+              <span style="color: #6b7280;">|</span>
+              <span>${originalContent}</span>
+            </div>
+          `
+
+          cell.dataset.dayNameAdded = 'true'
+          console.log(`✨ "${dayName}" ajouté à la colonne ${split}`)
+        }
+      })
+    })
+  }, 1000)
+}
 
 // Gérer le positionnement sticky des journées spéciales lors du scroll
 const setupStickySpecialDays = () => {
@@ -1539,6 +1638,7 @@ onMounted(() => {
   // Setup sticky après un délai pour laisser Vue-Cal se monter
   setTimeout(() => {
     if (viewMode.value === 'calendar') {
+      addDayNameToTimeCells()
       setupStickySpecialDays()
     }
   }, 1000)
@@ -1566,6 +1666,7 @@ onUnmounted(() => {
 // Watcher pour setup sticky après changement de vue
 watch(viewMode, (newMode) => {
   if (newMode === 'calendar') {
+    addDayNameToTimeCells()
     setupStickySpecialDays()
   }
 })
@@ -1671,7 +1772,7 @@ watch(viewMode, (newMode) => {
 }
 
 :deep(.vuecal--orange-theme .vuecal__cell--today) {
-  background-color: #fef5e7;
+  background-color: transparent;
 }
 
 :deep(.vuecal--orange-theme .vuecal__cell--selected) {
@@ -1734,6 +1835,18 @@ watch(viewMode, (newMode) => {
 :deep(.activity-approved:hover) {
   background-color: #f9fafb;
   border-color: #9ca3af;
+}
+
+/* Styles pour les activités terminées */
+:deep(.activity-finished) {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(22, 163, 74, 0.12) 100%);
+  border-color: #86efac;
+  color: #166534;
+}
+
+:deep(.activity-finished:hover) {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(22, 163, 74, 0.16) 100%);
+  border-color: #4ade80;
 }
 
 :deep(.activity-side-event) {
@@ -1839,7 +1952,7 @@ watch(viewMode, (newMode) => {
 }
 
 .dark :deep(.vuecal--orange-theme .vuecal__cell--today) {
-  background-color: rgba(249, 115, 22, 0.2);
+  background-color: transparent;
 }
 
 .dark :deep(.vuecal--orange-theme .vuecal__cell--selected) {
@@ -1880,6 +1993,18 @@ watch(viewMode, (newMode) => {
 
 .dark :deep(.activity-approved:hover) {
   background-color: rgb(229 231 235);
+}
+
+/* Styles pour les activités terminées en mode sombre */
+.dark :deep(.activity-finished) {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.2) 100%);
+  border-color: #4ade80;
+  color: #86efac;
+}
+
+.dark :deep(.activity-finished:hover) {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(22, 163, 74, 0.25) 100%);
+  border-color: #22c55e;
 }
 
 /* Animation IFDD pour le mode sombre */
@@ -2200,5 +2325,10 @@ watch(viewMode, (newMode) => {
 
 :deep(.vuecal__cell-content) {
   position: relative;
+}
+
+/* Styles pour les noms de jours ajoutés dynamiquement en mode sombre */
+.dark :deep(.vuecal__time-cell-label) span[style*="color: #6b7280"] {
+  color: #9ca3af !important;
 }
 </style>
