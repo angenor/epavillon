@@ -391,7 +391,10 @@ export default {
         }
       }
 
-      return mappedEvents
+      // Filtrer pour ne garder que les événements avec des activités à afficher
+      return mappedEvents.filter(event =>
+        event.filteredActivities && event.filteredActivities.activities.length > 0
+      )
     })
 
     // Formater la date d'un événement
@@ -534,14 +537,22 @@ export default {
     // Rediriger vers la programmation d'un événement spécifique
     const goToEventProgrammation = (event) => {
       if (!event?.id || !event?.year) return
+
+      // Si c'est un événement virtuel, rediriger vers la page des programmations générales
+      if (event.id.toString().startsWith('virtual-')) {
+        router.push('/programmations')
+        return
+      }
+
       router.push(`/programmations/${event.year}/${event.id}`)
     }
 
     // Obtenir le lien vers la programmation
     const getProgrammationLink = () => {
-      // Chercher le premier événement qui a des activités affichées
+      // Chercher le premier événement RÉEL (non virtuel) qui a des activités affichées
       const eventWithActivities = eventsWithActivities.value.find(
-        event => event.filteredActivities.activities.length > 0
+        event => event.filteredActivities.activities.length > 0 &&
+                 !event.id.toString().startsWith('virtual-') // Exclure les événements virtuels
       )
 
       // Si un événement avec des activités est trouvé, rediriger vers sa programmation
@@ -549,7 +560,7 @@ export default {
         return `/programmations/${eventWithActivities.year}/${eventWithActivities.id}`
       }
 
-      // Sinon, rediriger vers le premier événement ou la liste des programmations
+      // Sinon, rediriger vers le premier événement réel ou la liste des programmations
       if (events.value.length > 0) {
         const firstEvent = events.value[0]
         if (firstEvent.year && firstEvent.id) {
