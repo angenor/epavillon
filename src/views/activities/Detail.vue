@@ -1296,16 +1296,27 @@ const { timeRemaining, formattedTime } = useCountdown(() => activity.value?.fina
 
 const canRegister = computed(() => {
   // Permettre l'inscription même pour les utilisateurs non connectés (mode guest)
-  if (isRegistered.value) return false
-  if (!activity.value) return false
+  if (isRegistered.value) {
+    console.log('🔴 canRegister: false - utilisateur déjà inscrit')
+    return false
+  }
+  if (!activity.value) {
+    console.log('🔴 canRegister: false - pas d\'activité')
+    return false
+  }
 
   // Vérifier si l'activité n'est pas passée
   const now = new Date()
   const endDate = displayEndDate.value
-  if (endDate && new Date(endDate) < now) return false
+  if (endDate && new Date(endDate) < now) {
+    console.log('🔴 canRegister: false - activité passée')
+    return false
+  }
 
   // Les activités approuvées, en direct ou terminées peuvent recevoir des inscriptions
-  return ['approved', 'live', 'completed'].includes(activity.value.validation_status)
+  const result = ['approved', 'live', 'completed'].includes(activity.value.validation_status)
+  console.log('🟢 canRegister:', result, '- validation_status:', activity.value.validation_status)
+  return result
 })
 
 const canAskQuestions = computed(() => {
@@ -1851,11 +1862,18 @@ const incrementViewCount = async () => {
 }
 
 const registerToActivity = async () => {
+  console.log('🔵 registerToActivity appelée')
+  console.log('🔵 activity.value:', activity.value)
+  console.log('🔵 authStore.user:', authStore.user)
+
   if (!activity.value) return
 
   // Si l'utilisateur n'est pas authentifié, afficher le modal d'inscription guest
   if (!authStore.user) {
+    console.log('🔵 Utilisateur non authentifié - Affichage du modal guest')
+    console.log('🔵 showGuestRegistrationModal AVANT:', showGuestRegistrationModal.value)
     showGuestRegistrationModal.value = true
+    console.log('🔵 showGuestRegistrationModal APRÈS:', showGuestRegistrationModal.value)
     return
   }
 
@@ -2682,6 +2700,11 @@ useHead({
 watch([activity, event, organization, speakers, locale], () => {
   // Les meta tags seront automatiquement mis à jour grâce aux computed properties
 }, { deep: true })
+
+// Watcher pour déboguer le modal guest
+watch(showGuestRegistrationModal, (newVal, oldVal) => {
+  console.log('🟣 showGuestRegistrationModal changé:', { oldVal, newVal })
+})
 
 // Lifecycle
 onMounted(async () => {
