@@ -49,7 +49,7 @@
                 <div class="flex items-center gap-2">
                   <span class="text-xs opacity-75">{{ event.organization?.name || 'IFDD' }}</span>
                   <div class="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center">
-                    <span class="text-xs font-bold">{{ (event.organization?.name || 'IFDD').charAt(0) }}</span>
+                    <span class="text-xs font-bold">{{ (event.organization?.name || 'OIF/IFDD').charAt(0) }}</span>
                   </div>
                 </div>
               </div>
