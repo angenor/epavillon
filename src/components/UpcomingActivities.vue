@@ -283,7 +283,7 @@ export default {
           final_end_date: '2025-11-14T20:45:00Z',
           isSpecialDay: true,
           specialDayType: 'sustainable-finance',
-          externalLink: 'https://epavillonclimatique.francophonie.org/public/documents_uploades/Journee_finance_CdP30.pdf',
+          externalLink: 'https://epavillonclimatique.francophonie.org/programmations/2025/8303bbfa-fb3a-4da2-9e16-19d1d0db66f8',
           organization: {
             name: 'IFDD'
           }
@@ -457,6 +457,13 @@ export default {
     // Gérer le clic sur un événement avec redirection conditionnelle
     const handleEventClick = (event) => {
       if (!event?.id) return
+
+      // Cas spécial : événement virtuel CdP 2025
+      if (event.id === 'virtual-cop-2025') {
+        // Rediriger vers l'URL de la programmation de l'événement réel
+        window.location.href = 'https://epavillonclimatique.francophonie.org/programmations/2025/8303bbfa-fb3a-4da2-9e16-19d1d0db66f8'
+        return
+      }
 
       // Utiliser directement le champ event_status de la base de données
       const status = event.event_status
