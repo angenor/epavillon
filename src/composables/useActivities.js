@@ -27,7 +27,7 @@ export function useActivities() {
           organization:organizations(name),
           event:events(title, year)
         `)
-        .eq('validation_status', 'approved')
+        .in('validation_status', ['approved', 'live'])
         .eq('is_deleted', false)
         .gte('proposed_start_date', new Date().toISOString())
         .order('proposed_start_date', { ascending: true })
@@ -133,7 +133,7 @@ export function useActivities() {
           organization:organizations(name)
         `)
         .eq('event_id', eventId)
-        .eq('validation_status', 'approved')
+        .in('validation_status', ['approved', 'live'])
         .eq('is_deleted', false)
         .order('proposed_start_date', { ascending: true })
 
@@ -186,14 +186,34 @@ export function useActivities() {
   const getEventStatus = (event) => {
     const now = new Date()
     const startDate = event.online_start_datetime || event.in_person_start_date
-    
+
     if (!startDate) return 'unknown'
-    
+
     const start = new Date(startDate)
-    
+
     if (event.event_status === 'ongoing') return 'ongoing'
     if (start > now) return 'upcoming'
     return 'past'
+  }
+
+  // Vérifier si une activité est en direct maintenant
+  const isLive = (activity) => {
+    if (!activity) return false
+
+    // Vérifier d'abord si le validation_status est 'live'
+    if (activity.validation_status === 'live') return true
+
+    // Sinon, vérifier si l'activité est en cours selon les dates
+    if (activity.final_start_date && activity.final_end_date) {
+      const now = new Date()
+      const startDate = new Date(activity.final_start_date)
+      const endDate = new Date(activity.final_end_date)
+
+      // L'activité est en direct si l'heure actuelle est entre le début et la fin
+      return now >= startDate && now <= endDate
+    }
+
+    return false
   }
 
   return {
@@ -209,6 +229,7 @@ export function useActivities() {
     fetchEventActivities,
     formatDate,
     formatTime,
-    getEventStatus
+    getEventStatus,
+    isLive
   }
 }

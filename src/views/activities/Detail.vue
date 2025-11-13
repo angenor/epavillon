@@ -32,6 +32,17 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 sm:pb-10 md:pb-14">
           <!-- Badges flottants -->
           <div class="flex flex-wrap gap-2 sm:gap-3 mb-3 sm:mb-4">
+            <!-- Badge LIVE -->
+            <span v-if="activity && isLive(activity)" class="backdrop-blur-md bg-red-500/90 border border-red-400/50 text-white px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-bold animate-fade-in-up">
+              <div class="flex items-center gap-1.5">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                </span>
+                <span class="uppercase tracking-wide">{{ t('activities.live') || 'Direct' }}</span>
+              </div>
+            </span>
+
             <span v-if="activity?.validation_status" class="backdrop-blur-md bg-white/10 border border-white/20 text-white px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-medium animate-fade-in-up">
               <span class="inline-block w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
               {{ t(`activity.status.${activity.validation_status}`) }}
@@ -199,7 +210,7 @@
           <!-- Iframe YouTube si le lien est disponible -->
           <iframe
             v-if="activity?.youtube_link"
-            :src="getYoutubeEmbedUrl(activity.youtube_link, { autoplay: 0, mute: 0 })"
+            :src="getYoutubeEmbedUrl(activity.youtube_link, { autoplay: 1, mute: 0 })"
             :title="activity?.title || 'YouTube video'"
             class="w-full h-full"
             frameborder="0"
@@ -1175,6 +1186,7 @@ import { useHead } from '@vueuse/head'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAuthStore } from '@/stores/auth'
 import { useCountdown } from '@/composables/useCountdown'
+import { useActivities } from '@/composables/useActivities'
 import CommentFloatingButtonUser from '@/components/CommentFloatingButtonUser.vue'
 import { getYoutubeEmbedUrl } from '@/utils/youtube'
 
@@ -1183,6 +1195,7 @@ const route = useRoute()
 const router = useRouter()
 const supabase = useSupabase()
 const authStore = useAuthStore()
+const { isLive } = useActivities()
 
 // État
 const activity = ref(null)

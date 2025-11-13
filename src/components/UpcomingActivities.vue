@@ -98,8 +98,8 @@
 
                   <!-- Contenu de l'activité -->
                   <div class="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 hover:bg-white/20 transition-all duration-200">
-                    <!-- Badge LIVE pour la Journée Jeunesse -->
-                    <div v-if="activity.isSpecialDay && activity.specialDayType === 'youth-climate' && isLiveNow(activity)" class="flex items-center gap-2 mb-2">
+                    <!-- Badge LIVE pour toutes les activités en direct -->
+                    <div v-if="isLive(activity)" class="flex items-center gap-2 mb-2">
                       <div class="flex items-center gap-1.5 bg-red-500/90 px-2.5 py-1 rounded-md">
                         <span class="relative flex h-2 w-2">
                           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
@@ -147,7 +147,7 @@
                       </div>
 
                       <!-- Lien vers le direct -->
-                      <div v-if="isLiveNow(activity)" class="mt-3 pt-2 border-t border-white/20">
+                      <div v-if="isLive(activity)" class="mt-3 pt-2 border-t border-white/20">
                         <div class="flex items-center gap-1.5 text-xs text-ifdd-bleu hover:text-ifdd-bleu/80 font-bold cursor-pointer">
                           <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/>
@@ -224,7 +224,8 @@ export default {
       fetchEventActivities,
       formatDate,
       formatTime,
-      getEventStatus
+      getEventStatus,
+      isLive
     } = useActivities()
 
     const eventActivities = ref({}) // Stocke les activités par event_id
@@ -502,18 +503,6 @@ export default {
       }
     }
 
-    // Vérifier si une activité est en direct maintenant
-    const isLiveNow = (activity) => {
-      if (!activity?.final_start_date || !activity?.final_end_date) return false
-
-      const now = new Date()
-      const startDate = new Date(activity.final_start_date)
-      const endDate = new Date(activity.final_end_date)
-
-      // L'activité est en direct si l'heure actuelle est entre le début et la fin
-      return now >= startDate && now <= endDate
-    }
-
     // Rediriger vers la programmation d'un événement spécifique
     const goToEventProgrammation = (event) => {
       if (!event?.id || !event?.year) return
@@ -565,7 +554,7 @@ export default {
       handleActivityClick,
       goToEventProgrammation,
       getProgrammationLink,
-      isLiveNow
+      isLive
     }
   }
 }
