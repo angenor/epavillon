@@ -1302,7 +1302,8 @@ const canRegister = computed(() => {
   const endDate = displayEndDate.value
   if (endDate && new Date(endDate) < now) return false
 
-  return activity.value.validation_status === 'approved'
+  // Les activités approuvées, en direct ou terminées peuvent recevoir des inscriptions
+  return ['approved', 'live', 'completed'].includes(activity.value.validation_status)
 })
 
 const canAskQuestions = computed(() => {
@@ -1386,6 +1387,16 @@ const incidentSeverity = computed(() => {
 const activityStatusMessage = computed(() => {
   if (!timeRemaining.value || !timeRemaining.value.isExpired) {
     return null
+  }
+
+  // Si l'activité est terminée (validation_status === 'completed')
+  if (activity.value?.validation_status === 'completed') {
+    return {
+      type: 'completed',
+      message: t('activity.countdown.completed') || 'Cette activité est terminée',
+      severity: 'success',
+      icon: 'check-circle'
+    }
   }
 
   // Si un incident technique est déclaré ET qu'il n'y a pas de lien YouTube
@@ -1616,8 +1627,9 @@ const loadActivity = async () => {
       return
     }
 
-    // Vérifier si l'activité est approuvée
-    if (activityCheck.validation_status !== 'approved') {
+    // Vérifier si l'activité est dans un statut visible au public
+    const publicStatuses = ['approved', 'live', 'completed']
+    if (!publicStatuses.includes(activityCheck.validation_status)) {
       let errorKey = 'activity.error.notApproved'
       if (activityCheck.validation_status === 'pending') {
         errorKey = 'activity.error.pending'
@@ -1628,7 +1640,7 @@ const loadActivity = async () => {
       return
     }
 
-    // Charger l'activité avec toutes les relations (seulement si approuvée)
+    // Charger l'activité avec toutes les relations (si approuvée, en direct ou terminée)
     const { data: activityData, error: activityError } = await supabase
       .from('activities')
       .select(`
@@ -1657,7 +1669,7 @@ const loadActivity = async () => {
         )
       `)
       .eq('id', route.params.id)
-      .eq('validation_status', 'approved')
+      .in('validation_status', ['approved', 'live', 'completed'])
       .single()
 
     if (activityError) throw activityError
@@ -2533,7 +2545,9 @@ const structuredData = computed(() => {
     description: metaDescription.value,
     startDate: displayStartDate.value,
     endDate: displayEndDate.value,
-    eventStatus: activity.value.validation_status === 'approved'
+    eventStatus: ['approved', 'live'].includes(activity.value.validation_status)
+      ? 'https://schema.org/EventScheduled'
+      : activity.value.validation_status === 'completed'
       ? 'https://schema.org/EventScheduled'
       : 'https://schema.org/EventPostponed',
     eventAttendanceMode: activity.value.format === 'in_person'

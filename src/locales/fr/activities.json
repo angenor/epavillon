@@ -436,7 +436,8 @@
       "hours": "Heures",
       "minutes": "Minutes",
       "seconds": "Secondes",
-      "started": "L'activité a commencé"
+      "started": "L'activité a commencé",
+      "completed": "Cette activité est terminée"
     },
     "delayed": "⏰ L'activité est en retard",
     "registration": {

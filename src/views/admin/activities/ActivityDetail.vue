@@ -178,6 +178,8 @@
                   <option value="submitted">Soumise</option>
                   <option value="under_review">En examen</option>
                   <option value="approved">Approuvée</option>
+                  <option value="live">🔴 En direct</option>
+                  <option value="completed">✅ Terminée</option>
                   <option value="rejected">Rejetée</option>
                   <option value="cancelled">Annulée</option>
                 </select>
@@ -973,8 +975,8 @@ const getValidationStatusLabel = (status) => {
     approved: 'Approuvée',
     rejected: 'Rejetée',
     cancelled: 'Annulée',
-    live: 'En ligne',
-    completed: 'Complétée'
+    live: 'En direct',
+    completed: 'Terminée'
   }
   return labels[status] || status
 }
@@ -1085,7 +1087,10 @@ const getStatusText = (status) => {
     submitted: 'Soumise',
     under_review: 'En examen',
     approved: 'Approuvée',
-    rejected: 'Rejetée'
+    rejected: 'Rejetée',
+    cancelled: 'Annulée',
+    live: 'En direct',
+    completed: 'Terminée'
   }
   return texts[status] || texts.draft
 }
@@ -1313,7 +1318,9 @@ const getStatusChangeMessage = () => {
     under_review: 'En examen',
     approved: 'Approuvée',
     rejected: 'Rejetée',
-    cancelled: 'Annulée'
+    cancelled: 'Annulée',
+    live: 'En direct',
+    completed: 'Terminée'
   }
 
   return `Êtes-vous sûr de vouloir changer le statut de "${statusTexts[previousStatus]}" vers "${statusTexts[newStatus]}" ?`
