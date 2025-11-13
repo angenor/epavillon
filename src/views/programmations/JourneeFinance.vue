@@ -59,6 +59,20 @@
             <font-awesome-icon :icon="['fas', 'clock']" class="w-5 h-5" />
             <span class="text-lg font-semibold">{{ t('sustainableFinance.hours') }}</span>
           </div>
+
+          <!-- Bouton d'inscription -->
+          <div class="mt-6">
+            <a
+              href="https://us06web.zoom.us/meeting/register/v2itCTkbRlSER-SemtdwSg"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105"
+            >
+              <font-awesome-icon :icon="['fas', 'user-plus']" class="w-5 h-5" />
+              <span>{{ t('sustainableFinance.registerButton') }}</span>
+              <font-awesome-icon :icon="['fas', 'external-link-alt']" class="w-4 h-4" />
+            </a>
+          </div>
         </div>
       </div>
     </div>
