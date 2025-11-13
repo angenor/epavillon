@@ -616,6 +616,16 @@
 
               <!-- Informations de l'activité -->
               <div class="flex-1 min-w-0">
+                <!-- Badge LIVE -->
+                <div v-if="isLive(event)" class="flex justify-center mb-1">
+                  <div class="inline-flex items-center gap-1 bg-red-500/95 px-2 py-0.5 rounded-md shadow-md">
+                    <span class="relative flex h-1.5 w-1.5">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
+                    </span>
+                    <span class="text-white text-[10px] font-bold uppercase tracking-wide">{{ t('activities.live') || 'Direct' }}</span>
+                  </div>
+                </div>
                 <p class="font-semibold text-sm line-clamp-2 text-center" :class="getEventTextClass(event)">
                   {{ event.title }}
                 </p>
@@ -667,6 +677,7 @@ import { useI18n } from 'vue-i18n'
 import { useHead } from '@vueuse/head'
 import VueCal from 'vue-cal'
 import { useSupabase } from '@/composables/useSupabase'
+import { useActivities } from '@/composables/useActivities'
 import SearchModal from '@/components/SearchModal.vue'
 import AlertBanner from '@/components/AlertBanner.vue'
 
@@ -674,6 +685,7 @@ const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const { supabase } = useSupabase()
+const { isLive } = useActivities()
 
 // Détecter si on est sur mobile pour définir le mode d'affichage par défaut
 const isMobile = window.matchMedia('(max-width: 768px)').matches
@@ -942,7 +954,11 @@ const calendarEvents = computed(() => {
 
     // Déterminer la classe CSS en fonction du type d'activité et du statut
     let cssClass = 'activity-event'
-    if (activity.validation_status === 'approved') {
+
+    // Ajouter une classe spéciale pour les activités en direct (prioritaire)
+    if (activity.validation_status === 'live') {
+      cssClass += ' activity-live'
+    } else if (activity.validation_status === 'approved') {
       cssClass += ' activity-approved'
     } else if (activity.activity_type === 'side_event') {
       cssClass += ' activity-side-event'
@@ -1764,6 +1780,27 @@ watch(viewMode, (newMode) => {
 
 :deep(.activity-ifdd.activity-approved) {
   animation: borderGlow 2s ease-in-out infinite;
+}
+
+/* Styles pour les activités en direct */
+@keyframes liveGlow {
+  0%, 100% {
+    border-color: #ef4444;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5), 0 0 20px rgba(239, 68, 68, 0.3), inset 0 0 20px rgba(239, 68, 68, 0.1);
+  }
+  50% {
+    border-color: #dc2626;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.7), 0 0 30px rgba(239, 68, 68, 0.5), inset 0 0 30px rgba(239, 68, 68, 0.2);
+  }
+}
+
+:deep(.activity-live) {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(249, 115, 22, 0.15) 100%) !important;
+  border-width: 3px !important;
+  border-style: solid !important;
+  animation: liveGlow 2s ease-in-out infinite !important;
+  position: relative;
+  z-index: 10 !important;
 }
 
 :deep(.vuecal__event) {

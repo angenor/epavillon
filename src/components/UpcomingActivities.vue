@@ -40,12 +40,12 @@
             <div class="text-white bg-gradient-to-r from-white/30 to-white/20 backdrop-blur-sm rounded-xl px-4 py-2 hover:from-white/40 hover:to-white/30 transition-all duration-300 shadow-lg">
               <div class="font-bold text-xl mb-2">{{ event.title }}</div>
               <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
+                <!-- <div class="flex items-center gap-2">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                   </svg>
                   <span class="text-sm font-medium">{{ formatEventDate(event) }}</span>
-                </div>
+                </div> -->
                 <div class="flex items-center gap-2">
                   <span class="text-xs opacity-75">{{ event.organization?.name || 'IFDD' }}</span>
                   <div class="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center">
