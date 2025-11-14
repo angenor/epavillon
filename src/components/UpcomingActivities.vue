@@ -26,6 +26,9 @@
         <!-- Widget Journée Jeunesse Climat (visible uniquement le 12 novembre 2025) -->
         <YouthClimateDayWidget />
 
+        <!-- Widget Journée Finance Durable (visible uniquement le 14 novembre 2025) -->
+        <SustainableFinanceDayWidget />
+
         <!-- Boucle sur les événements avec leurs activités (max 3) -->
         <div
           v-for="(event, index) in eventsWithActivities.slice(0, 3)"
@@ -135,42 +138,6 @@
                     <div v-if="activity.organization?.name" class="text-xs text-white/70 truncate">
                       <span class="opacity-75">{{ activity.organization.name }}</span>
                     </div>
-
-                    <!-- Programme détaillé pour la Journée Jeunesse -->
-                    <div v-if="activity.isSpecialDay && activity.specialDayType === 'youth-climate'" class="mt-3 pt-3 border-t border-white/20">
-                      <h4 class="text-xs font-bold text-white mb-2 uppercase tracking-wide">{{ t('activities.program') || 'Programme' }}</h4>
-                      <div class="space-y-1.5">
-                        <div class="flex items-start gap-2 text-xs text-white/90">
-                          <span class="font-semibold text-orange-300 flex-shrink-0">8h00-9h00</span>
-                          <span class="line-clamp-1">{{ t('youthClimateDay.part1.title') }}</span>
-                        </div>
-                        <div class="flex items-start gap-2 text-xs text-white/90">
-                          <span class="font-semibold text-green-300 flex-shrink-0">9h00-10h10</span>
-                          <span class="line-clamp-1">{{ t('youthClimateDay.part2.title') }}</span>
-                        </div>
-                        <div class="flex items-start gap-2 text-xs text-white/90">
-                          <span class="font-semibold text-blue-300 flex-shrink-0">10h11-16h</span>
-                          <span class="line-clamp-1">{{ t('youthClimateDay.part3.title') }}</span>
-                        </div>
-                        <div class="flex items-start gap-2 text-xs text-white/90">
-                          <span class="font-semibold text-purple-300 flex-shrink-0">16h-17h</span>
-                          <span class="line-clamp-1">{{ t('youthClimateDay.part4.title') }}</span>
-                        </div>
-                      </div>
-
-                      <!-- Lien vers le direct -->
-                      <div v-if="isLive(activity)" class="mt-3 pt-2 border-t border-white/20">
-                        <div class="flex items-center gap-1.5 text-xs text-ifdd-bleu hover:text-ifdd-bleu/80 font-bold cursor-pointer">
-                          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/>
-                          </svg>
-                          <span>{{ t('activities.watchLive') || 'Voir le direct' }}</span>
-                          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -218,11 +185,13 @@ import { onMounted, ref, computed } from 'vue'
 import { useActivities } from '@/composables/useActivities'
 import { useRouter } from 'vue-router'
 import YouthClimateDayWidget from './YouthClimateDayWidget.vue'
+import SustainableFinanceDayWidget from './SustainableFinanceDayWidget.vue'
 
 export default {
   name: 'UpcomingActivities',
   components: {
-    YouthClimateDayWidget
+    YouthClimateDayWidget,
+    SustainableFinanceDayWidget
   },
   setup() {
     const { t, locale } = useI18n()
@@ -252,43 +221,9 @@ export default {
     })
 
     // Fonction pour filtrer les activités selon aujourd'hui ou demain
-    const getFilteredActivities = (eventId, event) => {
+    const getFilteredActivities = (eventId) => {
       const activities = eventActivities.value[eventId] || []
       const allItems = [...activities]
-
-      // Ajouter les journées spéciales si l'événement est la CdP 30 2025
-      const isCopEvent = event?.acronym?.startsWith('CdP') || event?.acronym?.startsWith('COP')
-      if (isCopEvent && event?.year === 2025) {
-        // Journée Jeunesse Climat - 12 novembre 2025
-        // 9h00-17h45 heure de Belém (GMT-3) = 12h00-20h45 UTC
-        allItems.push({
-          id: 'youth-climate-day',
-          title: `🌱 ${t('programmations.youthClimateDay')}`,
-          final_start_date: '2025-11-12T12:00:00Z',
-          final_end_date: '2025-11-12T20:45:00Z',
-          isSpecialDay: true,
-          specialDayType: 'youth-climate',
-          internalLink: '/programmations/2025/journee-jeunesse',
-          organization: {
-            name: 'IFDD'
-          }
-        })
-
-        // Journée Finance durable - 14 novembre 2025
-        // 9h00-17h45 heure de Belém (GMT-3) = 12h00-20h45 UTC
-        allItems.push({
-          id: 'sustainable-finance-day',
-          title: `💰 ${t('programmations.sustainableFinanceDay')}`,
-          final_start_date: '2025-11-14T12:00:00Z',
-          final_end_date: '2025-11-14T20:45:00Z',
-          isSpecialDay: true,
-          specialDayType: 'sustainable-finance',
-          internalLink: '/programmations/2025/journee-finance',
-          organization: {
-            name: 'IFDD'
-          }
-        })
-      }
 
       if (allItems.length === 0) return { activities: [], period: null }
 
@@ -358,38 +293,8 @@ export default {
     const eventsWithActivities = computed(() => {
       const mappedEvents = events.value.map(event => ({
         ...event,
-        filteredActivities: getFilteredActivities(event.id, event)
+        filteredActivities: getFilteredActivities(event.id)
       }))
-
-      // Ajouter un événement virtuel pour les journées spéciales de la CdP 30 2025
-      // si elles sont aujourd'hui ou demain ET qu'aucun événement CdP 2025 n'existe
-      const hasCopEvent = events.value.some(e =>
-        (e.acronym?.startsWith('CdP') || e.acronym?.startsWith('COP')) && e.year === 2025
-      )
-
-      if (!hasCopEvent) {
-        // Créer un événement virtuel pour la CdP 30
-        const virtualCopEvent = {
-          id: 'virtual-cop-2025',
-          title: 'CdP 30 - Belém',
-          acronym: 'CdP',
-          year: 2025,
-          in_person_start_date: '2025-11-10',
-          organization: { name: 'IFDD' },
-          event_status: 'ongoing'
-        }
-
-        // Récupérer les journées spéciales pour cet événement virtuel
-        const specialDaysActivities = getFilteredActivities('virtual-cop-2025', virtualCopEvent)
-
-        // Si des journées spéciales sont trouvées, ajouter l'événement virtuel
-        if (specialDaysActivities.activities.length > 0) {
-          mappedEvents.unshift({
-            ...virtualCopEvent,
-            filteredActivities: specialDaysActivities
-          })
-        }
-      }
 
       // Filtrer pour ne garder que les événements avec des activités à afficher
       return mappedEvents.filter(event =>

@@ -261,49 +261,49 @@
                   <p class="text-base font-bold text-blue-700 dark:text-blue-300 mb-5 uppercase tracking-wide">
                     {{ t('sustainableFinance.program.part1.panel1.speakers') }}
                   </p>
-                  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                     <!-- OIF -->
-                    <div class="group relative bg-white dark:bg-gray-900 rounded-xl p-6 border-2 border-blue-200 dark:border-blue-600 hover:border-blue-500 dark:hover:border-blue-400 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                      <div class="absolute top-0 right-0 w-20 h-20 bg-blue-500/10 rounded-bl-full"></div>
-                      <div class="relative flex flex-col items-center justify-center min-h-[120px]">
-                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-2xl mb-2">OIF</h5>
-                        <p class="text-center text-sm text-gray-600 dark:text-gray-400">Organisation Internationale de la Francophonie</p>
+                    <div class="group relative bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all duration-300">
+                      <div class="absolute top-0 right-0 w-12 h-12 bg-blue-500/5 rounded-bl-full"></div>
+                      <div class="relative flex flex-col items-center justify-center min-h-[80px]">
+                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-lg mb-1">OIF</h5>
+                        <p class="text-center text-xs text-gray-600 dark:text-gray-400">Organisation Internationale de la Francophonie</p>
                       </div>
                     </div>
 
                     <!-- BAD -->
-                    <div class="group relative bg-white dark:bg-gray-900 rounded-xl p-6 border-2 border-blue-200 dark:border-blue-600 hover:border-blue-500 dark:hover:border-blue-400 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                      <div class="absolute top-0 right-0 w-20 h-20 bg-blue-500/10 rounded-bl-full"></div>
-                      <div class="relative flex flex-col items-center justify-center min-h-[120px]">
-                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-2xl mb-2">BAD</h5>
-                        <p class="text-center text-sm text-gray-600 dark:text-gray-400">Banque Africaine de Développement</p>
+                    <div class="group relative bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all duration-300">
+                      <div class="absolute top-0 right-0 w-12 h-12 bg-blue-500/5 rounded-bl-full"></div>
+                      <div class="relative flex flex-col items-center justify-center min-h-[80px]">
+                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-lg mb-1">BAD</h5>
+                        <p class="text-center text-xs text-gray-600 dark:text-gray-400">Banque Africaine de Développement</p>
                       </div>
                     </div>
 
                     <!-- CIF Banque mondiale -->
-                    <div class="group relative bg-white dark:bg-gray-900 rounded-xl p-6 border-2 border-blue-200 dark:border-blue-600 hover:border-blue-500 dark:hover:border-blue-400 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                      <div class="absolute top-0 right-0 w-20 h-20 bg-blue-500/10 rounded-bl-full"></div>
-                      <div class="relative flex flex-col items-center justify-center min-h-[120px]">
-                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-xl sm:text-2xl mb-2">CIF Banque mondiale</h5>
-                        <p class="text-center text-sm text-gray-600 dark:text-gray-400">Climate Investment Funds</p>
+                    <div class="group relative bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all duration-300">
+                      <div class="absolute top-0 right-0 w-12 h-12 bg-blue-500/5 rounded-bl-full"></div>
+                      <div class="relative flex flex-col items-center justify-center min-h-[80px]">
+                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-base sm:text-lg mb-1">CIF Banque mondiale</h5>
+                        <p class="text-center text-xs text-gray-600 dark:text-gray-400">Climate Investment Funds</p>
                       </div>
                     </div>
 
                     <!-- BOAD -->
-                    <div class="group relative bg-white dark:bg-gray-900 rounded-xl p-6 border-2 border-blue-200 dark:border-blue-600 hover:border-blue-500 dark:hover:border-blue-400 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                      <div class="absolute top-0 right-0 w-20 h-20 bg-blue-500/10 rounded-bl-full"></div>
-                      <div class="relative flex flex-col items-center justify-center min-h-[120px]">
-                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-2xl mb-2">BOAD</h5>
-                        <p class="text-center text-sm text-gray-600 dark:text-gray-400">Banque Ouest Africaine de Développement</p>
+                    <div class="group relative bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all duration-300">
+                      <div class="absolute top-0 right-0 w-12 h-12 bg-blue-500/5 rounded-bl-full"></div>
+                      <div class="relative flex flex-col items-center justify-center min-h-[80px]">
+                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-lg mb-1">BOAD</h5>
+                        <p class="text-center text-xs text-gray-600 dark:text-gray-400">Banque Ouest Africaine de Développement</p>
                       </div>
                     </div>
 
                     <!-- BDEAC -->
-                    <div class="group relative bg-white dark:bg-gray-900 rounded-xl p-6 border-2 border-blue-200 dark:border-blue-600 hover:border-blue-500 dark:hover:border-blue-400 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 sm:col-span-2 lg:col-span-1">
-                      <div class="absolute top-0 right-0 w-20 h-20 bg-blue-500/10 rounded-bl-full"></div>
-                      <div class="relative flex flex-col items-center justify-center min-h-[120px]">
-                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-2xl mb-2">BDEAC</h5>
-                        <p class="text-center text-sm text-gray-600 dark:text-gray-400">Banque de Développement des États de l'Afrique Centrale</p>
+                    <div class="group relative bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all duration-300">
+                      <div class="absolute top-0 right-0 w-12 h-12 bg-blue-500/5 rounded-bl-full"></div>
+                      <div class="relative flex flex-col items-center justify-center min-h-[80px]">
+                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-lg mb-1">BDEAC</h5>
+                        <p class="text-center text-xs text-gray-600 dark:text-gray-400">Banque de Développement des États de l'Afrique Centrale</p>
                       </div>
                     </div>
                   </div>
@@ -326,49 +326,49 @@
                   <p class="text-base font-bold text-green-700 dark:text-green-300 mb-5 uppercase tracking-wide">
                     {{ t('sustainableFinance.program.part1.panel2.speakers') }}
                   </p>
-                  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                     <!-- Desjardins International -->
-                    <div class="group relative bg-white dark:bg-gray-900 rounded-xl p-6 border-2 border-green-200 dark:border-green-600 hover:border-green-500 dark:hover:border-green-400 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                      <div class="absolute top-0 right-0 w-20 h-20 bg-green-500/10 rounded-bl-full"></div>
-                      <div class="relative flex flex-col items-center justify-center min-h-[120px]">
-                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-xl sm:text-2xl mb-2">Desjardins International</h5>
-                        <p class="text-center text-sm text-gray-600 dark:text-gray-400">Développement International</p>
+                    <div class="group relative bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:border-green-400 dark:hover:border-green-500 hover:shadow-md transition-all duration-300">
+                      <div class="absolute top-0 right-0 w-12 h-12 bg-green-500/5 rounded-bl-full"></div>
+                      <div class="relative flex flex-col items-center justify-center min-h-[80px]">
+                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-base sm:text-lg mb-1">Desjardins International</h5>
+                        <p class="text-center text-xs text-gray-600 dark:text-gray-400">Développement International</p>
                       </div>
                     </div>
 
                     <!-- Investissement Québec -->
-                    <div class="group relative bg-white dark:bg-gray-900 rounded-xl p-6 border-2 border-green-200 dark:border-green-600 hover:border-green-500 dark:hover:border-green-400 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                      <div class="absolute top-0 right-0 w-20 h-20 bg-green-500/10 rounded-bl-full"></div>
-                      <div class="relative flex flex-col items-center justify-center min-h-[120px]">
-                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-xl sm:text-2xl mb-2">Investissement Québec</h5>
-                        <p class="text-center text-sm text-gray-600 dark:text-gray-400">Société d'État</p>
+                    <div class="group relative bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:border-green-400 dark:hover:border-green-500 hover:shadow-md transition-all duration-300">
+                      <div class="absolute top-0 right-0 w-12 h-12 bg-green-500/5 rounded-bl-full"></div>
+                      <div class="relative flex flex-col items-center justify-center min-h-[80px]">
+                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-base sm:text-lg mb-1">Investissement Québec</h5>
+                        <p class="text-center text-xs text-gray-600 dark:text-gray-400">Société d'État</p>
                       </div>
                     </div>
 
                     <!-- Irroko -->
-                    <div class="group relative bg-white dark:bg-gray-900 rounded-xl p-6 border-2 border-green-200 dark:border-green-600 hover:border-green-500 dark:hover:border-green-400 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                      <div class="absolute top-0 right-0 w-20 h-20 bg-green-500/10 rounded-bl-full"></div>
-                      <div class="relative flex flex-col items-center justify-center min-h-[120px]">
-                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-2xl mb-2">Irroko</h5>
-                        <p class="text-center text-sm text-gray-600 dark:text-gray-400">Innovation Durable</p>
+                    <div class="group relative bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:border-green-400 dark:hover:border-green-500 hover:shadow-md transition-all duration-300">
+                      <div class="absolute top-0 right-0 w-12 h-12 bg-green-500/5 rounded-bl-full"></div>
+                      <div class="relative flex flex-col items-center justify-center min-h-[80px]">
+                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-lg mb-1">Irroko</h5>
+                        <p class="text-center text-xs text-gray-600 dark:text-gray-400">Innovation Durable</p>
                       </div>
                     </div>
 
                     <!-- Ecolotrip -->
-                    <div class="group relative bg-white dark:bg-gray-900 rounded-xl p-6 border-2 border-green-200 dark:border-green-600 hover:border-green-500 dark:hover:border-green-400 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                      <div class="absolute top-0 right-0 w-20 h-20 bg-green-500/10 rounded-bl-full"></div>
-                      <div class="relative flex flex-col items-center justify-center min-h-[120px]">
-                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-2xl mb-2">Ecolotrip</h5>
-                        <p class="text-center text-sm text-gray-600 dark:text-gray-400">Tourisme Responsable</p>
+                    <div class="group relative bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:border-green-400 dark:hover:border-green-500 hover:shadow-md transition-all duration-300">
+                      <div class="absolute top-0 right-0 w-12 h-12 bg-green-500/5 rounded-bl-full"></div>
+                      <div class="relative flex flex-col items-center justify-center min-h-[80px]">
+                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-lg mb-1">Ecolotrip</h5>
+                        <p class="text-center text-xs text-gray-600 dark:text-gray-400">Tourisme Responsable</p>
                       </div>
                     </div>
 
                     <!-- HEC Montréal -->
-                    <div class="group relative bg-white dark:bg-gray-900 rounded-xl p-6 border-2 border-green-200 dark:border-green-600 hover:border-green-500 dark:hover:border-green-400 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 sm:col-span-2 lg:col-span-1">
-                      <div class="absolute top-0 right-0 w-20 h-20 bg-green-500/10 rounded-bl-full"></div>
-                      <div class="relative flex flex-col items-center justify-center min-h-[120px]">
-                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-2xl mb-2">HEC Montréal</h5>
-                        <p class="text-center text-sm text-gray-600 dark:text-gray-400">École de Gestion</p>
+                    <div class="group relative bg-white dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:border-green-400 dark:hover:border-green-500 hover:shadow-md transition-all duration-300">
+                      <div class="absolute top-0 right-0 w-12 h-12 bg-green-500/5 rounded-bl-full"></div>
+                      <div class="relative flex flex-col items-center justify-center min-h-[80px]">
+                        <h5 class="text-center font-bold text-gray-900 dark:text-white text-lg mb-1">HEC Montréal</h5>
+                        <p class="text-center text-xs text-gray-600 dark:text-gray-400">École de Gestion</p>
                       </div>
                     </div>
                   </div>
