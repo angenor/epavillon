@@ -79,6 +79,44 @@
 
     <!-- Contenu Principal -->
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <!-- Section Live Streaming -->
+      <div class="mb-12">
+        <div class="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 rounded-xl shadow-lg p-6 border-l-4 border-red-500">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center animate-pulse">
+              <font-awesome-icon :icon="['fas', 'video']" class="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                {{ t('sustainableFinance.livestream.title') }}
+              </h2>
+              <p class="text-sm text-gray-600 dark:text-gray-400">
+                {{ t('sustainableFinance.livestream.subtitle') }}
+              </p>
+            </div>
+          </div>
+
+          <!-- YouTube Embed -->
+          <div class="relative w-full" style="padding-bottom: 56.25%;">
+            <iframe
+              :src="youtubeEmbedUrl"
+              class="absolute top-0 left-0 w-full h-full rounded-lg"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+
+          <!-- Info supplémentaire -->
+          <div class="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg">
+            <p class="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2">
+              <font-awesome-icon :icon="['fas', 'info-circle']" class="text-blue-600 dark:text-blue-400" />
+              {{ t('sustainableFinance.livestream.info') }}
+            </p>
+          </div>
+        </div>
+      </div>
+
       <!-- Section Contexte et Objectifs -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
         <!-- Contexte -->
@@ -482,12 +520,23 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useHead } from '@vueuse/head'
+import { getYoutubeEmbedUrl } from '@/utils/youtube'
 
 const { t } = useI18n()
 const router = useRouter()
+
+// YouTube Live Stream
+const youtubeVideoId = 'ilh3JaNSXw0'
+const youtubeEmbedUrl = computed(() => getYoutubeEmbedUrl(youtubeVideoId, {
+  autoplay: 1,
+  mute: 1, // Requis pour l'autoplay dans les navigateurs modernes
+  controls: 1,
+  modestbranding: 1
+}))
 
 // Meta tags pour SEO
 useHead({

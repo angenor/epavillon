@@ -7,6 +7,11 @@
     "title": "Accès à la finance durable en Francophonie",
     "subtitle": "Opportunités offertes par les partenaires de développement",
     "registerButton": "S'inscrire pour participer à l'événement",
+    "livestream": {
+      "title": "Direct Streaming",
+      "subtitle": "Suivez l'événement en direct",
+      "info": "Le live streaming sera disponible le jour de l'événement. Vous pouvez également regarder le replay après l'événement."
+    },
     "meta": {
       "title": "Journée Finance Durable - CdP 30 | e-Pavillon Climatique",
       "description": "Journée dédiée à l'accès à la finance durable en Francophonie lors de la CdP 30 à Belém. Découvrez les opportunités, les partenaires et les mécanismes de financement climatique."
