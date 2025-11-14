@@ -29,7 +29,8 @@
     },
     "announcement": {
       "title": "Important Announcement",
-      "description": "Official launch of the call for expressions of interest to OIF Member States for support in accessing sustainable finance"
+      "description": "Official launch of the call for expressions of interest to OIF Member States for support in accessing sustainable finance",
+      "linkText": "View the call for expressions of interest"
     },
     "program": {
       "title": "Detailed Program",

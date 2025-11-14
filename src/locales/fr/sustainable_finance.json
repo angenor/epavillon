@@ -29,7 +29,8 @@
     },
     "announcement": {
       "title": "Annonce importante",
-      "description": "Lancement officiel de l'appel à manifestation d'intérêt aux États membres de l'OIF pour l'accompagnement à l'accès à la finance durable"
+      "description": "Lancement officiel de l'appel à manifestation d'intérêt aux États membres de l'OIF pour l'accompagnement à l'accès à la finance durable",
+      "linkText": "Consulter l'appel à manifestation d'intérêt"
     },
     "program": {
       "title": "Programme Détaillé",

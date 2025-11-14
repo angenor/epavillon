@@ -168,13 +168,23 @@
           <div class="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center flex-shrink-0">
             <font-awesome-icon :icon="['fas', 'bullhorn']" class="w-6 h-6 text-white" />
           </div>
-          <div>
+          <div class="flex-1">
             <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
               {{ t('sustainableFinance.announcement.title') }}
             </h3>
-            <p class="text-gray-700 dark:text-gray-300">
+            <p class="text-gray-700 dark:text-gray-300 mb-4">
               {{ t('sustainableFinance.announcement.description') }}
             </p>
+            <a
+              href="https://www.ifdd.francophonie.org/appel-a-manifestation-pour-laccompagnement-a-lacces-a-la-finance-durable-3/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
+            >
+              <font-awesome-icon :icon="['fas', 'link']" class="w-4 h-4" />
+              <span>{{ t('sustainableFinance.announcement.linkText') }}</span>
+              <font-awesome-icon :icon="['fas', 'external-link-alt']" class="w-4 h-4" />
+            </a>
           </div>
         </div>
       </div>
