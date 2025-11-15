@@ -31,7 +31,8 @@
       "Bash(npm run verify:seo:*)",
       "Bash(npm run generate:routes:*)",
       "Bash(npm run build:seo:*)",
-      "Bash(npm run prerender:*)"
+      "Bash(npm run prerender:*)",
+      "Bash(identify:*)"
     ],
     "deny": [],
     "ask": []

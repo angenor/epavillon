@@ -23,7 +23,8 @@ export function usePdfExport() {
     const doc = new jsPDF({
       orientation: 'landscape',
       unit: 'mm',
-      format: [167.06, 297] // Format 16:9 exact
+      format: [167.06, 297], // Format 16:9 exact
+      compress: true // Activer la compression PDF
     })
 
     const pageWidth = doc.internal.pageSize.getWidth()
@@ -74,7 +75,7 @@ export function usePdfExport() {
     doc.setFillColor(...blueHeader)
     doc.rect(0, 0, pageWidth, 25, 'F') // Réduit à 25mm pour format 16:9
 
-    // Charger et ajouter le logo IFDD à gauche (optimisé)
+    // Charger et ajouter le logo IFDD à gauche (ultra optimisé)
     try {
       const logoUrl = `${window.location.origin}/logos/logo-ifdd-blanc.png`
       const logoImg = await new Promise((resolve, reject) => {
@@ -85,22 +86,37 @@ export function usePdfExport() {
         img.src = logoUrl
       })
 
+      console.log('Logo original dimensions:', logoImg.width, 'x', logoImg.height)
+
       // Dimensions finales du logo dans le PDF
-      const logoHeight = 15 // Réduit pour s'adapter à l'en-tête de 25mm
+      const logoHeight = 15
       const logoWidth = (logoImg.width / logoImg.height) * logoHeight
 
-      // Créer un canvas optimisé (juste la taille nécessaire en pixels)
+      // IMPORTANT: Le logo PNG fait 8714x5670 pixels (49 MP!)
+      // Canvas de 500px pour bonne qualité sur écran TV
       const canvas = document.createElement('canvas')
-      const pixelRatio = 3 // 3x pour bonne qualité sans être excessif
-      canvas.width = logoWidth * pixelRatio
-      canvas.height = logoHeight * pixelRatio
+      const maxWidth = 500 // 500px pour qualité optimale
+      const aspectRatio = logoImg.width / logoImg.height
+      canvas.width = maxWidth
+      canvas.height = Math.round(maxWidth / aspectRatio)
+
       const ctx = canvas.getContext('2d')
+
+      // Activer le lissage pour meilleure qualité
+      ctx.imageSmoothingEnabled = true
+      ctx.imageSmoothingQuality = 'high'
+
+      // Pas de fond - on garde la transparence du PNG
+      // Dessiner le logo redimensionné avec haute qualité
       ctx.drawImage(logoImg, 0, 0, canvas.width, canvas.height)
 
-      // Convertir en JPEG avec compression pour réduire la taille
-      const logoDataUrl = canvas.toDataURL('image/jpeg', 0.8) // 80% qualité JPEG
+      // Utiliser PNG pour préserver la qualité du logo (meilleur que JPEG pour les logos)
+      const logoDataUrl = canvas.toDataURL('image/png')
+      const sizeKB = (logoDataUrl.length / 1024).toFixed(2)
 
-      doc.addImage(logoDataUrl, 'JPEG', margin + 2, 5, logoWidth, logoHeight)
+      console.log('Logo optimisé - Canvas:', canvas.width, 'x', canvas.height, '- Taille:', sizeKB, 'KB')
+
+      doc.addImage(logoDataUrl, 'PNG', margin + 2, 5, logoWidth, logoHeight)
     } catch (error) {
       console.warn('Impossible de charger le logo IFDD:', error)
     }
@@ -264,15 +280,18 @@ export function usePdfExport() {
     const programmationUrl = `${window.location.origin}/programmations/${event.year}/${event.id}`
 
     try {
-      // Générer le QR code en base64 (optimisé pour réduire la taille)
+      // Générer le QR code en base64 (ultra optimisé)
       const qrCodeDataUrl = await QRCode.toDataURL(programmationUrl, {
-        width: 100, // Réduit de 200 à 100 pour diminuer la taille du fichier
-        margin: 1,
+        width: 80, // Réduit au minimum pour diminuer la taille du fichier
+        margin: 0,
         color: {
           dark: '#000000',
           light: '#FFFFFF'
-        }
+        },
+        errorCorrectionLevel: 'L' // Niveau de correction d'erreur bas = plus petit
       })
+
+      console.log('QR Code Data URL length:', qrCodeDataUrl.length)
 
       // Ajouter le QR code en bas à droite (avec espace pour le texte)
       const qrSize = 22 // Taille en mm
@@ -304,6 +323,11 @@ export function usePdfExport() {
     const dateStr = format(selectedDate, 'yyyy-MM-dd')
     const eventSlug = event.acronym || event.title.replace(/\s+/g, '-').toLowerCase()
     const filename = `programme-${eventSlug}-${dateStr}.pdf`
+
+    // Log de la taille du PDF
+    const pdfOutput = doc.output('blob')
+    const sizeInMB = (pdfOutput.size / 1024 / 1024).toFixed(2)
+    console.log('PDF file size:', sizeInMB, 'MB')
 
     // Télécharger le PDF
     doc.save(filename)
