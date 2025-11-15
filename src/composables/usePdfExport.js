@@ -73,13 +73,9 @@ export function usePdfExport() {
       }
     }
 
-    // ===== EN-TÊTE BLEU AVEC DÉGRADÉ VISUEL =====
+    // ===== EN-TÊTE BLEU =====
     doc.setFillColor(...blueHeader)
     doc.rect(0, 0, pageWidth, 25, 'F')
-
-    // Ligne orange accent en bas de l'en-tête pour dynamisme
-    doc.setFillColor(...orangeAccent)
-    doc.rect(0, 24, pageWidth, 1, 'F')
 
     // Fonction helper pour charger et optimiser un logo
     const loadAndOptimizeLogo = async (logoPath, maxWidth = 1000) => {
@@ -213,8 +209,8 @@ export function usePdfExport() {
         if (currentY > startY + 15) {
           doc.setDrawColor(220, 220, 220)
           doc.setLineWidth(0.1)
-          doc.line(columnX + 2, currentY - 2, columnX + columnWidth - 2, currentY - 2)
-          currentY += 1
+          doc.line(columnX + 2, currentY - 1, columnX + columnWidth - 2, currentY - 1)
+          currentY += 3 // Plus d'espace pour ne pas toucher l'heure suivante
         }
 
         // Heure en vert avec fond léger pour meilleure visibilité
@@ -322,10 +318,12 @@ export function usePdfExport() {
     await drawColumn(column3, col3X, locale === 'fr' ? 'PARTIE 3 : FIN DE JOURNÉE' : 'PART 3 : END OF DAY', 3)
 
     // ===== PIED DE PAGE AMÉLIORÉ =====
-    // Ligne de séparation subtile
+    // Ligne de séparation subtile et centrée (plus courte pour ne pas traverser le QR code)
+    const footerLineWidth = pageWidth * 0.5 // 50% de la largeur
+    const footerLineX = (pageWidth - footerLineWidth) / 2 // Centré
     doc.setDrawColor(220, 220, 220)
     doc.setLineWidth(0.2)
-    doc.line(margin, pageHeight - 10, pageWidth - margin, pageHeight - 10)
+    doc.line(footerLineX, pageHeight - 10, footerLineX + footerLineWidth, pageHeight - 10)
 
     // Texte du pied de page
     doc.setFontSize(7.5)
