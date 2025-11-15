@@ -3,6 +3,7 @@ import { format, isSameDay } from 'date-fns'
 import { fr } from 'date-fns/locale/fr'
 import { enUS } from 'date-fns/locale/en-US'
 import { useSupabase } from '@/composables/useSupabase'
+import QRCode from 'qrcode'
 
 /**
  * Composable pour exporter le programme du jour en PDF format 16:9
@@ -224,6 +225,46 @@ export function usePdfExport() {
       pageHeight - 5,
       { align: 'center' }
     )
+
+    // ===== QR CODE EN BAS À DROITE =====
+    const programmationUrl = `${window.location.origin}/programmations/${event.year}/${event.id}`
+
+    try {
+      // Générer le QR code en base64
+      const qrCodeDataUrl = await QRCode.toDataURL(programmationUrl, {
+        width: 200,
+        margin: 1,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        }
+      })
+
+      // Ajouter le QR code en bas à droite (avec espace pour le texte)
+      const qrSize = 22 // Taille en mm
+      const qrX = pageWidth - margin - qrSize - 2
+      const qrY = pageHeight - 35 // Plus haut pour laisser de la place
+
+      doc.addImage(qrCodeDataUrl, 'PNG', qrX, qrY, qrSize, qrSize)
+
+      // Texte sous le QR code
+      doc.setFontSize(6)
+      doc.setTextColor(80, 80, 80)
+      doc.text(
+        locale === 'fr' ? 'Scannez pour accéder' : 'Scan to access',
+        qrX + qrSize / 2,
+        qrY + qrSize + 3,
+        { align: 'center' }
+      )
+      doc.text(
+        locale === 'fr' ? 'à la programmation' : 'the program',
+        qrX + qrSize / 2,
+        qrY + qrSize + 5.5,
+        { align: 'center' }
+      )
+    } catch (error) {
+      console.error('Erreur lors de la génération du QR code:', error)
+    }
 
     // Générer le nom du fichier
     const dateStr = format(selectedDate, 'yyyy-MM-dd')
