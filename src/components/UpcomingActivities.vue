@@ -220,7 +220,7 @@ export default {
       }
     })
 
-    // Fonction pour filtrer les activités selon aujourd'hui ou demain
+    // Fonction pour filtrer les activités selon aujourd'hui, demain ou prochaines à venir
     const getFilteredActivities = (eventId) => {
       const activities = eventActivities.value[eventId] || []
       const allItems = [...activities]
@@ -241,9 +241,10 @@ export default {
       })
 
       // Vérifier si toutes les activités d'aujourd'hui sont déjà passées
+      // Inclure aussi les activités en direct (live)
       const hasUpcomingToday = todayActivities.some(activity => {
         const startDate = new Date(activity.final_start_date || activity.proposed_start_date)
-        return startDate > now
+        return startDate > now || isLive(activity)
       })
 
       // Si on a des activités aujourd'hui et qu'au moins une n'est pas encore passée
@@ -271,22 +272,46 @@ export default {
         return startDate >= tomorrow && startDate < dayAfterTomorrow
       })
 
-      // Trier : activités en direct en premier, puis par date de début
-      const sortedTomorrow = tomorrowActivities.sort((a, b) => {
-        // Les activités en direct passent en premier
+      // Si on a des activités demain, les afficher
+      if (tomorrowActivities.length > 0) {
+        // Trier : activités en direct en premier, puis par date de début
+        const sortedTomorrow = tomorrowActivities.sort((a, b) => {
+          // Les activités en direct passent en premier
+          const aIsLive = isLive(a)
+          const bIsLive = isLive(b)
+
+          if (aIsLive && !bIsLive) return -1
+          if (!aIsLive && bIsLive) return 1
+
+          // Si les deux sont en direct ou les deux ne le sont pas, trier par date
+          const dateA = new Date(a.final_start_date || a.proposed_start_date)
+          const dateB = new Date(b.final_start_date || b.proposed_start_date)
+          return dateA - dateB
+        })
+
+        return { activities: sortedTomorrow, period: 'tomorrow' }
+      }
+
+      // Sinon, chercher les prochaines activités disponibles (après-demain et au-delà)
+      const futureActivities = allItems.filter(activity => {
+        const startDate = new Date(activity.final_start_date || activity.proposed_start_date)
+        return startDate >= dayAfterTomorrow
+      })
+
+      // Trier par date de début
+      const sortedFuture = futureActivities.sort((a, b) => {
         const aIsLive = isLive(a)
         const bIsLive = isLive(b)
 
         if (aIsLive && !bIsLive) return -1
         if (!aIsLive && bIsLive) return 1
 
-        // Si les deux sont en direct ou les deux ne le sont pas, trier par date
         const dateA = new Date(a.final_start_date || a.proposed_start_date)
         const dateB = new Date(b.final_start_date || b.proposed_start_date)
         return dateA - dateB
       })
 
-      return { activities: sortedTomorrow, period: 'tomorrow' }
+      return { activities: sortedFuture, period: 'upcoming' }
     }
 
     // Computed pour obtenir les événements avec leurs activités filtrées
@@ -398,31 +423,29 @@ export default {
       return formatDate(startDate)
     }
 
-    // Obtenir le label de période (Aujourd'hui ou Demain)
+    // Obtenir le label de période (Aujourd'hui, Demain ou À venir)
     const getPeriodLabel = (period, activities = []) => {
-      if (!period) return ''
+      if (!period || activities.length === 0) return ''
+
+      const firstActivity = activities[0]
+      const startDate = firstActivity.final_start_date || firstActivity.proposed_start_date
+
+      if (!startDate) return ''
+
+      const date = new Date(startDate)
+      const day = date.getDate()
+      const month = date.toLocaleDateString(locale.value === 'fr' ? 'fr-FR' : 'en-EN', { month: 'long' })
+      const monthCapitalized = month.charAt(0).toUpperCase() + month.slice(1)
 
       let label = ''
       if (period === 'today') {
         label = t('activities.today') || "Aujourd'hui"
       } else if (period === 'tomorrow') {
         label = t('activities.tomorrow') || 'Demain'
-      } else {
-        return ''
-      }
-
-      // Ajouter la date pour "Demain"
-      if (period === 'tomorrow' && activities.length > 0) {
-        const firstActivity = activities[0]
-        const startDate = firstActivity.final_start_date || firstActivity.proposed_start_date
-        if (startDate) {
-          const date = new Date(startDate)
-          const day = date.getDate()
-          const month = date.toLocaleDateString('fr-FR', { month: 'long' })
-          // Mettre la première lettre du mois en majuscule
-          const monthCapitalized = month.charAt(0).toUpperCase() + month.slice(1)
-          label += ` • ${day} ${monthCapitalized}`
-        }
+        label += ` • ${day} ${monthCapitalized}`
+      } else if (period === 'upcoming') {
+        // Pour les activités après-demain, afficher directement la date
+        label = `${day} ${monthCapitalized}`
       }
 
       return label
