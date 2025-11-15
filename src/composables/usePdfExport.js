@@ -75,9 +75,9 @@ export function usePdfExport() {
     doc.setFillColor(...blueHeader)
     doc.rect(0, 0, pageWidth, 25, 'F') // Réduit à 25mm pour format 16:9
 
-    // Charger et ajouter le logo IFDD à gauche (ultra optimisé)
-    try {
-      const logoUrl = `${window.location.origin}/logos/logo-ifdd-blanc.png`
+    // Fonction helper pour charger et optimiser un logo
+    const loadAndOptimizeLogo = async (logoPath, maxWidth = 1000) => {
+      const logoUrl = `${window.location.origin}${logoPath}`
       const logoImg = await new Promise((resolve, reject) => {
         const img = new Image()
         img.crossOrigin = 'anonymous'
@@ -86,39 +86,50 @@ export function usePdfExport() {
         img.src = logoUrl
       })
 
-      console.log('Logo original dimensions:', logoImg.width, 'x', logoImg.height)
+      console.log(`Logo ${logoPath} - dimensions originales:`, logoImg.width, 'x', logoImg.height)
 
-      // Dimensions finales du logo dans le PDF
-      const logoHeight = 15
-      const logoWidth = (logoImg.width / logoImg.height) * logoHeight
-
-      // IMPORTANT: Le logo PNG fait 8714x5670 pixels (49 MP!)
-      // Canvas de 500px pour bonne qualité sur écran TV
+      // Canvas haute résolution pour excellente qualité
       const canvas = document.createElement('canvas')
-      const maxWidth = 500 // 500px pour qualité optimale
       const aspectRatio = logoImg.width / logoImg.height
       canvas.width = maxWidth
       canvas.height = Math.round(maxWidth / aspectRatio)
 
       const ctx = canvas.getContext('2d')
-
-      // Activer le lissage pour meilleure qualité
+      // Activer le lissage haute qualité
       ctx.imageSmoothingEnabled = true
       ctx.imageSmoothingQuality = 'high'
 
-      // Pas de fond - on garde la transparence du PNG
-      // Dessiner le logo redimensionné avec haute qualité
+      // Dessiner le logo avec transparence
       ctx.drawImage(logoImg, 0, 0, canvas.width, canvas.height)
 
-      // Utiliser PNG pour préserver la qualité du logo (meilleur que JPEG pour les logos)
+      // PNG pour qualité optimale des logos
       const logoDataUrl = canvas.toDataURL('image/png')
       const sizeKB = (logoDataUrl.length / 1024).toFixed(2)
 
-      console.log('Logo optimisé - Canvas:', canvas.width, 'x', canvas.height, '- Taille:', sizeKB, 'KB')
+      console.log(`Logo ${logoPath} optimisé - Canvas:`, canvas.width, 'x', canvas.height, '- Taille:', sizeKB, 'KB')
 
-      doc.addImage(logoDataUrl, 'PNG', margin + 2, 5, logoWidth, logoHeight)
+      return { dataUrl: logoDataUrl, aspectRatio }
+    }
+
+    // Charger et ajouter le logo IFDD à gauche
+    try {
+      const logoHeight = 15
+      const { dataUrl, aspectRatio } = await loadAndOptimizeLogo('/logos/logo-ifdd-blanc.png', 1000)
+      const logoWidth = logoHeight * aspectRatio
+      doc.addImage(dataUrl, 'PNG', margin + 2, 5, logoWidth, logoHeight)
     } catch (error) {
       console.warn('Impossible de charger le logo IFDD:', error)
+    }
+
+    // Charger et ajouter le logo Francophonie à droite
+    try {
+      const logoHeight = 15
+      const { dataUrl, aspectRatio } = await loadAndOptimizeLogo('/logos/logo-francophonie-white-transparent.png', 1000)
+      const logoWidth = logoHeight * aspectRatio
+      const logoX = pageWidth - margin - logoWidth - 2
+      doc.addImage(dataUrl, 'PNG', logoX, 5, logoWidth, logoHeight)
+    } catch (error) {
+      console.warn('Impossible de charger le logo Francophonie:', error)
     }
 
     // Titre principal en blanc : "PROGRAMME DU PAVILLON DE LA FRANCOPHONIE"
