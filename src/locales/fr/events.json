@@ -36,6 +36,8 @@
     "countriesCount": "Pays représentés",
     "lastUpdate": "Dernière mise à jour",
     "exportDayProgramPdf": "Télécharger le programme du jour (PDF)",
+    "today": "Aujourd'hui",
+    "activitiesCount": "{count} activité(s)",
     "program": "Programme du jour",
     "generatedOn": "Généré le",
     "totalActivities": "Nombre d'activités",

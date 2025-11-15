@@ -251,14 +251,38 @@
       </div>
 
       <!-- Vue Grille (largeur limitée) -->
-      <div v-else-if="viewMode === 'grid'" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div v-else-if="viewMode === 'grid'" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+        <!-- Boucle sur les jours -->
         <div
-          v-for="item in displayItems"
-          :key="item.id"
-          @click="item.isSpecialDay ? (item.internalLink ? router.push(item.internalLink) : window.open(item.externalLink, '_blank')) : goToActivityDetail(item.id)"
-          class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
+          v-for="dayGroup in activitiesByDay"
+          :key="dayGroup.dateKey"
+          :data-date="dayGroup.dateKey"
+          class="scroll-mt-24 day-section"
         >
+          <!-- En-tête du jour -->
+          <div class="mb-6 pb-4 border-b-2 border-orange-500">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+              <svg class="w-7 h-7 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              {{ formatDayHeader(dayGroup.date) }}
+              <span v-if="isToday(dayGroup.date)" class="ml-2 px-3 py-1 bg-orange-500 text-white text-sm font-medium rounded-full">
+                {{ t('programmations.today') }}
+              </span>
+            </h2>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">
+              {{ t('programmations.activitiesCount', { count: dayGroup.items.length }) }}
+            </p>
+          </div>
+
+          <!-- Grille des activités du jour -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div
+              v-for="item in dayGroup.items"
+              :key="item.id"
+              @click="item.isSpecialDay ? (item.internalLink ? router.push(item.internalLink) : window.open(item.externalLink, '_blank')) : goToActivityDetail(item.id)"
+              class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
+            >
           <!-- Image de couverture -->
           <div class="relative h-48 overflow-hidden">
             <img
@@ -365,7 +389,8 @@
               </div>
             </div>
           </div>
-        </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -693,7 +718,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useHead } from '@vueuse/head'
@@ -858,6 +883,54 @@ const displayItems = computed(() => {
 
   return items
 })
+
+// Regrouper les activités par jour pour le mode grid
+const activitiesByDay = computed(() => {
+  const grouped = {}
+
+  displayItems.value.forEach(item => {
+    if (!item.final_start_date) return
+
+    // Obtenir la date au format YYYY-MM-DD
+    const date = new Date(item.final_start_date)
+    const dateKey = date.toISOString().split('T')[0]
+
+    if (!grouped[dateKey]) {
+      grouped[dateKey] = {
+        date: date,
+        dateKey: dateKey,
+        items: []
+      }
+    }
+
+    grouped[dateKey].items.push(item)
+  })
+
+  // Convertir en tableau et trier par date
+  return Object.values(grouped).sort((a, b) => a.date - b.date)
+})
+
+// Formater l'en-tête de jour pour le mode grid
+const formatDayHeader = (date) => {
+  if (!date) return ''
+
+  const options = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }
+
+  return date.toLocaleDateString(locale.value === 'fr' ? 'fr-FR' : 'en-US', options)
+}
+
+// Vérifier si une date est aujourd'hui
+const isToday = (date) => {
+  const today = new Date()
+  return date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+}
 
 // Calculer le GMT offset pour un timezone donné
 const getGMTOffset = (timezone) => {
@@ -1462,6 +1535,51 @@ useHead({
   ]
 })
 
+// Fonction pour scroller automatiquement vers le jour courant ou le jour suivant
+const scrollToCurrentOrNextDay = async () => {
+  if (viewMode.value !== 'grid' || activitiesByDay.value.length === 0) return
+
+  await nextTick()
+
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  // Chercher le jour courant
+  const todayGroup = activitiesByDay.value.find(dayGroup => {
+    const groupDate = new Date(dayGroup.date)
+    groupDate.setHours(0, 0, 0, 0)
+    return groupDate.getTime() === today.getTime()
+  })
+
+  let targetDateKey = null
+
+  if (todayGroup) {
+    // Si on trouve le jour courant, scroller vers lui
+    targetDateKey = todayGroup.dateKey
+  } else {
+    // Sinon, chercher le prochain jour avec activités
+    const futureDay = activitiesByDay.value.find(dayGroup => {
+      const groupDate = new Date(dayGroup.date)
+      groupDate.setHours(0, 0, 0, 0)
+      return groupDate.getTime() > today.getTime()
+    })
+
+    if (futureDay) {
+      targetDateKey = futureDay.dateKey
+    }
+  }
+
+  // Scroller vers l'élément cible
+  if (targetDateKey) {
+    setTimeout(() => {
+      const element = document.querySelector(`[data-date="${targetDateKey}"]`)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 100)
+  }
+}
+
 // Watcher pour mettre à jour les meta tags quand les données changent
 watch([event, activities, locale], () => {
   // Les meta tags seront automatiquement mis à jour grâce aux computed properties
@@ -1469,6 +1587,10 @@ watch([event, activities, locale], () => {
   if (activities.value.length > 0 && viewMode.value === 'calendar') {
     addDayNameToTimeCells()
     setupStickySpecialDays()
+  }
+  // Scroll automatique en mode grid
+  if (activities.value.length > 0 && viewMode.value === 'grid') {
+    scrollToCurrentOrNextDay()
   }
 }, { deep: true })
 
@@ -1692,6 +1814,9 @@ watch(viewMode, (newMode) => {
   if (newMode === 'calendar') {
     addDayNameToTimeCells()
     setupStickySpecialDays()
+  } else if (newMode === 'grid') {
+    // Déclencher le scroll automatique vers le jour courant
+    scrollToCurrentOrNextDay()
   }
 })
 </script>
