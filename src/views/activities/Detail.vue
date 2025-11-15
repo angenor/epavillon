@@ -1135,11 +1135,12 @@ const displayEndDate = computed(() => {
 const { timeRemaining, formattedTime } = useCountdown(() => activity.value?.final_start_date)
 
 const canRegister = computed(() => {
-  // Permettre l'inscription même pour les utilisateurs non connectés (mode guest)
+  // Ne pas afficher le bouton si l'utilisateur est déjà inscrit
   if (isRegistered.value) {
     console.log('🔴 canRegister: false - utilisateur déjà inscrit')
     return false
   }
+
   if (!activity.value) {
     console.log('🔴 canRegister: false - pas d\'activité')
     return false
@@ -1154,6 +1155,7 @@ const canRegister = computed(() => {
   }
 
   // Les activités approuvées, en direct ou terminées peuvent recevoir des inscriptions
+  // Le bouton est visible même pour les non-authentifiés
   const result = ['approved', 'live', 'completed'].includes(activity.value.validation_status)
   console.log('🟢 canRegister:', result, '- validation_status:', activity.value.validation_status)
   return result
@@ -1708,10 +1710,16 @@ const registerToActivity = async () => {
 
   if (!activity.value) return
 
-  // Si l'utilisateur n'est pas authentifié, rediriger vers la page de connexion
+  // Si l'utilisateur n'est pas authentifié, rediriger vers login avec autoRegister=true
   if (!authStore.user) {
-    console.log('🔵 Utilisateur non authentifié - Redirection vers login')
-    router.push({ path: '/login', query: { redirect: route.fullPath } })
+    console.log('🔵 Utilisateur non authentifié - Redirection vers login avec autoRegister')
+    router.push({
+      path: '/login',
+      query: {
+        redirect: route.fullPath,
+        autoRegister: 'true'
+      }
+    })
     return
   }
 
@@ -2405,9 +2413,43 @@ watch([activity, event, organization, speakers, locale], () => {
   // Les meta tags seront automatiquement mis à jour grâce aux computed properties
 }, { deep: true })
 
+// Watcher pour l'auto-inscription après authentification
+watch(() => authStore.user, async (newUser) => {
+  // Vérifier si l'utilisateur vient de se connecter et qu'il doit s'inscrire automatiquement
+  if (newUser && route.query.autoRegister === 'true') {
+    console.log('🔵 Auto-inscription après authentification')
+
+    // Nettoyer le query param
+    router.replace({
+      path: route.path,
+      query: { ...route.query, autoRegister: undefined }
+    })
+
+    // Attendre un instant pour que le profil soit chargé
+    await nextTick()
+
+    // Lancer l'inscription automatiquement
+    await registerToActivity()
+  }
+})
+
 // Lifecycle
 onMounted(async () => {
   await loadActivity()
+
+  // Vérifier si on doit auto-inscrire au chargement (si l'utilisateur est déjà connecté)
+  if (authStore.user && route.query.autoRegister === 'true') {
+    console.log('🔵 Auto-inscription au chargement (utilisateur déjà connecté)')
+
+    // Nettoyer le query param
+    router.replace({
+      path: route.path,
+      query: { ...route.query, autoRegister: undefined }
+    })
+
+    // Lancer l'inscription automatiquement
+    await registerToActivity()
+  }
 })
 </script>
 

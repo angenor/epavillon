@@ -23,6 +23,11 @@ export const useAuthStore = defineStore('auth', () => {
     if (!profile.value?.user_roles) return false
     return profile.value.user_roles.some(role => role.role === 'super_admin' && role.is_active)
   })
+
+  const isAdmin = computed(() => {
+    if (!profile.value?.user_roles) return false
+    return profile.value.user_roles.some(role => (role.role === 'admin' || role.role === 'super_admin') && role.is_active)
+  })
   
   // Actions
   const fetchUser = async () => {
@@ -121,6 +126,7 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     userInitials,
     isSuperAdmin,
+    isAdmin,
     // Actions
     fetchUser,
     fetchProfile,

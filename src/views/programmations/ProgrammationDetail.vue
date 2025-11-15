@@ -215,6 +215,19 @@
               </svg>
               <span class="hidden sm:inline">{{ t('programmations.viewCalendar') }}</span>
             </button>
+
+            <!-- Bouton Export PDF - visible uniquement pour les admins -->
+            <button
+              v-if="authStore.isAdmin"
+              @click="exportDayProgramToPdf(event, activities, selectedDate, locale, t)"
+              class="px-4 py-2 rounded-lg font-medium bg-green-600 hover:bg-green-700 text-white transition-all flex items-center gap-2 cursor-pointer"
+              title="Télécharger le programme du jour en PDF (format 16:9)"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span class="hidden sm:inline">{{ t('programmations.exportDayProgramPdf') }}</span>
+            </button>
           </div>
         </div>
       </div>
@@ -687,6 +700,8 @@ import { useHead } from '@vueuse/head'
 import VueCal from 'vue-cal'
 import { useSupabase } from '@/composables/useSupabase'
 import { useActivities } from '@/composables/useActivities'
+import { usePdfExport } from '@/composables/usePdfExport'
+import { useAuthStore } from '@/stores/auth'
 import SearchModal from '@/components/SearchModal.vue'
 import AlertBanner from '@/components/AlertBanner.vue'
 
@@ -695,6 +710,8 @@ const route = useRoute()
 const router = useRouter()
 const { supabase } = useSupabase()
 const { isLive } = useActivities()
+const { exportDayProgramToPdf } = usePdfExport()
+const authStore = useAuthStore()
 
 // Détecter si on est sur mobile pour définir le mode d'affichage par défaut
 const isMobile = window.matchMedia('(max-width: 768px)').matches
@@ -1225,9 +1242,16 @@ const calculateWeekDates = () => {
   week2Date.setDate(week2Date.getDate() + 7)
   week2StartDate.value = week2Date
 
-  // Définir la date sélectionnée par défaut sur la semaine 1
-  selectedDate.value = new Date(firstActivityDate)
-  currentWeek.value = 1
+  // Définir la date sélectionnée par défaut sur le jour actuel (15 novembre 2025)
+  const today = new Date(2025, 10, 15) // 15 novembre 2025 (mois 10 = novembre car 0-indexed)
+  selectedDate.value = today
+
+  // Déterminer dans quelle semaine se trouve aujourd'hui
+  if (today >= week2StartDate.value) {
+    currentWeek.value = 2
+  } else {
+    currentWeek.value = 1
+  }
 }
 
 const loadEvent = async () => {
