@@ -321,7 +321,7 @@ export function usePdfExport() {
         { align: 'center' }
       )
       doc.text(
-        locale === 'fr' ? 'à la programmation' : 'the program',
+        locale === 'fr' ? 'à la programmation des autres jours' : 'the program',
         qrX + qrSize / 2,
         qrY + qrSize + 5.5,
         { align: 'center' }
