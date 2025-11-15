@@ -215,12 +215,19 @@ export function usePdfExport() {
 
         // Heure en vert avec fond léger pour meilleure visibilité
         doc.setFillColor(245, 250, 245) // Fond vert très clair
-        doc.roundedRect(columnX + 2, currentY - 3, 14, 5, 1, 1, 'F')
+        const timeBoxX = columnX + 2
+        const timeBoxY = currentY - 3
+        const timeBoxWidth = 14
+        const timeBoxHeight = 5
+        doc.roundedRect(timeBoxX, timeBoxY, timeBoxWidth, timeBoxHeight, 1, 1, 'F')
 
         doc.setTextColor(...greenTime)
         doc.setFontSize(10)
         doc.setFont('helvetica', 'bold')
-        doc.text(startTime, columnX + 3, currentY)
+        // Centrer l'heure dans le rectangle (horizontalement et verticalement)
+        const timeTextX = timeBoxX + timeBoxWidth / 2
+        const timeTextY = timeBoxY + timeBoxHeight / 2 + 1 // +1 pour compenser la baseline
+        doc.text(startTime, timeTextX, timeTextY, { align: 'center' })
         currentY += 6
 
         // Titre de l'activité en noir avec meilleure lisibilité
