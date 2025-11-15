@@ -37,6 +37,8 @@
     "lastUpdate": "Dernière mise à jour",
     "exportDayProgramPdf": "Télécharger le programme du jour (PDF)",
     "today": "Aujourd'hui",
+    "finished": "Terminé",
+    "yourLocalTime": "votre heure locale",
     "activitiesCount": "{count} activité(s)",
     "program": "Programme du jour",
     "generatedOn": "Généré le",

@@ -37,6 +37,8 @@
     "lastUpdate": "Last update",
     "exportDayProgramPdf": "Download day program (PDF)",
     "today": "Today",
+    "finished": "Finished",
+    "yourLocalTime": "your local time",
     "activitiesCount": "{count} activit{count, plural, one {y} other {ies}}",
     "program": "Day program",
     "generatedOn": "Generated on",

@@ -290,8 +290,13 @@
               :alt="`${item.title} - ${t('activity.details')}`"
               class="w-full h-full object-cover"
             >
-            <!-- Badge de type ou journée spéciale -->
-            <div class="absolute top-4 right-4">
+            <!-- Badges -->
+            <div class="absolute top-4 right-4 flex flex-col gap-2 items-end">
+              <!-- Badge activité terminée -->
+              <span v-if="!item.isSpecialDay && isActivityFinished(item.final_end_date)" class="px-3 py-1 bg-gray-600/90 rounded-full text-xs font-medium text-white shadow-md">
+                {{ t('programmations.finished') }}
+              </span>
+              <!-- Badge de type ou journée spéciale -->
               <span v-if="item.isSpecialDay" class="px-3 py-1 bg-orange-500/90 rounded-full text-xs font-medium text-white shadow-md">
                 {{ t('programmations.specialDay') }}
               </span>
@@ -374,11 +379,20 @@
                 {{ formatDate(item.final_start_date) }}
               </div>
 
-              <div v-if="item.final_start_date" class="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <!-- Horaire dans le fuseau horaire de l'événement -->
+              <div v-if="item.final_start_date && event?.timezone" class="flex items-start text-sm text-gray-500 dark:text-gray-400">
+                <svg class="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                {{ formatTime(item.final_start_date) }} - {{ formatTime(item.final_end_date) }}
+                <div class="flex-1">
+                  <div class="font-medium text-gray-700 dark:text-gray-300">
+                    {{ formatDateWithTimezone(item.final_start_date, event.timezone).eventTime }} - {{ formatDateWithTimezone(item.final_end_date, event.timezone).eventTime }}
+                  </div>
+                  <!-- Heure locale de l'utilisateur (si différente) -->
+                  <div v-if="formatDateWithTimezone(item.final_start_date, event.timezone).showUserTime" class="text-xs text-blue-600 dark:text-blue-400 mt-1 italic">
+                    {{ formatDateWithTimezone(item.final_start_date, event.timezone).userTime }} - {{ formatDateWithTimezone(item.final_end_date, event.timezone).userTime }} ({{ t('programmations.yourLocalTime') }})
+                  </div>
+                </div>
               </div>
 
               <div v-if="item.room" class="flex items-center text-sm text-gray-500 dark:text-gray-400">
@@ -410,9 +424,14 @@
                 :alt="`${item.title} - ${t('activity.details')}`"
                 class="w-full h-full object-cover"
               >
-              <!-- Badge journée spéciale -->
-              <div v-if="item.isSpecialDay" class="absolute top-2 right-2">
-                <span class="px-3 py-1 bg-orange-500/90 rounded-full text-xs font-medium text-white shadow-md">
+              <!-- Badges -->
+              <div class="absolute top-2 right-2 flex flex-col gap-2 items-end">
+                <!-- Badge activité terminée -->
+                <span v-if="!item.isSpecialDay && isActivityFinished(item.final_end_date)" class="px-3 py-1 bg-gray-600/90 rounded-full text-xs font-medium text-white shadow-md">
+                  {{ t('programmations.finished') }}
+                </span>
+                <!-- Badge journée spéciale -->
+                <span v-if="item.isSpecialDay" class="px-3 py-1 bg-orange-500/90 rounded-full text-xs font-medium text-white shadow-md">
                   {{ t('programmations.specialDay') }}
                 </span>
               </div>
@@ -494,11 +513,20 @@
                     {{ formatDate(item.final_start_date) }}
                   </div>
 
-                  <div v-if="item.final_start_date" class="flex items-center">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <!-- Horaire dans le fuseau horaire de l'événement -->
+                  <div v-if="item.final_start_date && event?.timezone" class="flex items-start">
+                    <svg class="w-4 h-4 mr-1 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    {{ formatTime(item.final_start_date) }} - {{ formatTime(item.final_end_date) }}
+                    <div class="flex-1">
+                      <div class="font-medium text-gray-700 dark:text-gray-300">
+                        {{ formatDateWithTimezone(item.final_start_date, event.timezone).eventTime }} - {{ formatDateWithTimezone(item.final_end_date, event.timezone).eventTime }}
+                      </div>
+                      <!-- Heure locale de l'utilisateur (si différente) -->
+                      <div v-if="formatDateWithTimezone(item.final_start_date, event.timezone).showUserTime" class="text-xs text-blue-600 dark:text-blue-400 mt-0.5 italic">
+                        {{ formatDateWithTimezone(item.final_start_date, event.timezone).userTime }} - {{ formatDateWithTimezone(item.final_end_date, event.timezone).userTime }} ({{ t('programmations.yourLocalTime') }})
+                      </div>
+                    </div>
                   </div>
 
                   <div v-if="item.room" class="flex items-center">
@@ -1214,6 +1242,52 @@ const formatTime = (dateString) => {
   }
 
   return date.toLocaleTimeString(locale.value === 'fr' ? 'fr-FR' : 'en-US', options)
+}
+
+// Fonction pour obtenir la ville principale d'un fuseau horaire
+const getCityFromTimezone = (timezone) => {
+  if (!timezone) return ''
+  // Extraire la ville du fuseau horaire (ex: "America/Belem" -> "Bélem")
+  const parts = timezone.split('/')
+  const city = parts[parts.length - 1].replace(/_/g, ' ')
+  return city
+}
+
+// Fonction pour formater une date avec les deux fuseaux horaires
+const formatDateWithTimezone = (dateString, eventTimezone) => {
+  if (!dateString || !eventTimezone) return { eventTime: '', userTime: '', showUserTime: false }
+
+  const date = new Date(dateString)
+
+  // Format pour l'événement
+  const eventTimeStr = new Intl.DateTimeFormat(locale.value === 'fr' ? 'fr-FR' : 'en-US', {
+    timeZone: eventTimezone,
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }).format(date)
+
+  // Fuseau horaire de l'utilisateur
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
+  // Format pour l'utilisateur
+  const userTimeStr = new Intl.DateTimeFormat(locale.value === 'fr' ? 'fr-FR' : 'en-US', {
+    timeZone: userTimezone,
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }).format(date)
+
+  // Vérifier si les deux fuseaux sont différents
+  const showUserTime = eventTimeStr !== userTimeStr && eventTimezone !== userTimezone
+
+  return {
+    eventTime: eventTimeStr,
+    userTime: userTimeStr,
+    showUserTime,
+    eventTimezone,
+    userTimezone
+  }
 }
 
 const stripHtml = (html) => {
