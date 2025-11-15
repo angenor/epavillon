@@ -31,11 +31,13 @@ export function usePdfExport() {
     const pageHeight = doc.internal.pageSize.getHeight()
     const margin = 10
 
-    // Couleurs
-    const blueHeader = [41, 128, 185] // Bleu pour l'en-tête
-    const greenBand = [139, 195, 74] // Vert pour les bandes de sections
+    // Couleurs - Charte IFDD
+    const blueHeader = [41, 128, 185] // Bleu IFDD pour l'en-tête
+    const greenBand = [46, 125, 50] // Vert IFDD plus foncé pour les bandes
     const greenTime = [76, 175, 80] // Vert pour les heures
+    const orangeAccent = [255, 152, 0] // Orange IFDD pour accents
     const darkText = [33, 33, 33]
+    const grayText = [97, 97, 97]
 
     // Filtrer les activités du jour sélectionné
     const activitiesOfDay = activities.filter(activity => {
@@ -71,13 +73,26 @@ export function usePdfExport() {
       }
     }
 
-    // ===== EN-TÊTE BLEU =====
+    // ===== EN-TÊTE BLEU AVEC DÉGRADÉ VISUEL =====
     doc.setFillColor(...blueHeader)
-    doc.rect(0, 0, pageWidth, 25, 'F') // Réduit à 25mm pour format 16:9
+    doc.rect(0, 0, pageWidth, 25, 'F')
+
+    // Ligne orange accent en bas de l'en-tête pour dynamisme
+    doc.setFillColor(...orangeAccent)
+    doc.rect(0, 24, pageWidth, 1, 'F')
 
     // Fonction helper pour charger et optimiser un logo
     const loadAndOptimizeLogo = async (logoPath, maxWidth = 1000) => {
-      const logoUrl = `${window.location.origin}${logoPath}`
+      // Si c'est déjà une URL complète (http:// ou https://), l'utiliser telle quelle
+      // Sinon, construire l'URL relative (ajouter / au début si nécessaire)
+      let logoUrl
+      if (logoPath.startsWith('http://') || logoPath.startsWith('https://')) {
+        logoUrl = logoPath
+      } else {
+        const path = logoPath.startsWith('/') ? logoPath : `/${logoPath}`
+        logoUrl = `${window.location.origin}${path}`
+      }
+
       const logoImg = await new Promise((resolve, reject) => {
         const img = new Image()
         img.crossOrigin = 'anonymous'
@@ -134,31 +149,31 @@ export function usePdfExport() {
 
     // Titre principal en blanc : "PROGRAMME DU PAVILLON DE LA FRANCOPHONIE"
     doc.setTextColor(255, 255, 255)
-    doc.setFontSize(16) // Réduit de 18 à 16
+    doc.setFontSize(17)
     doc.setFont('helvetica', 'bold')
     const mainTitle = locale === 'fr'
       ? 'PROGRAMME DU PAVILLON DE LA FRANCOPHONIE'
       : 'FRANCOPHONIE PAVILION PROGRAM'
-    doc.text(mainTitle, pageWidth / 2, 10, { align: 'center' })
+    doc.text(mainTitle, pageWidth / 2, 11, { align: 'center' })
 
-    // Sous-titre avec date et horaires
-    doc.setFontSize(11) // Réduit de 12 à 11
+    // Sous-titre avec date et horaires - style amélioré
+    doc.setFontSize(10)
     doc.setFont('helvetica', 'normal')
     const dateLocale = locale === 'fr' ? fr : enUS
     const formattedDate = format(selectedDate, 'EEEE d MMMM yyyy', { locale: dateLocale })
     const capitalizedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1)
 
-    // Calculer les horaires
+    // Calculer les horaires avec style
     let timeRange = ''
     if (sortedActivities.length > 0) {
       const firstTime = format(new Date(sortedActivities[0].final_start_date), 'HH:mm')
       const lastTime = format(new Date(sortedActivities[sortedActivities.length - 1].final_end_date), 'HH:mm')
-      timeRange = ` | ${firstTime}-${lastTime}`
+      timeRange = `  •  ${firstTime} - ${lastTime}`
     }
 
-    // Ajouter l'événement sous la date
+    // Ajouter l'événement sous la date avec séparateur élégant
     const eventInfo = event.acronym ? `${event.acronym} ${event.year}` : event.title
-    doc.text(`${capitalizedDate}${timeRange} - ${eventInfo}`, pageWidth / 2, 18, { align: 'center' })
+    doc.text(`${capitalizedDate}${timeRange}  •  ${eventInfo}`, pageWidth / 2, 19, { align: 'center' })
 
     // ===== DIVISER LES ACTIVITÉS EN 3 COLONNES =====
     const activitiesPerColumn = Math.ceil(sortedActivities.length / 3)
@@ -173,10 +188,14 @@ export function usePdfExport() {
     const startY = 30 // Ajusté pour format 16:9 avec en-tête de 25mm
 
     // Fonction pour dessiner une colonne
-    const drawColumn = (activities, columnX, title, partNumber) => {
-      // Bande verte du titre
+    const drawColumn = async (activities, columnX, title, partNumber) => {
+      // Bande verte du titre avec coins légèrement arrondis
       doc.setFillColor(...greenBand)
-      doc.rect(columnX, startY, columnWidth, 8, 'F')
+      doc.roundedRect(columnX, startY, columnWidth, 8, 1, 1, 'F')
+
+      // Accent orange subtil en haut de la bande
+      doc.setFillColor(...orangeAccent)
+      doc.roundedRect(columnX, startY, columnWidth, 1.5, 1, 1, 'F')
 
       // Titre de la section en blanc
       doc.setTextColor(255, 255, 255)
@@ -187,19 +206,30 @@ export function usePdfExport() {
       let currentY = startY + 15 // Plus d'espace après le titre
 
       // Dessiner chaque activité
-      activities.forEach(activity => {
+      for (const activity of activities) {
         const startTime = format(new Date(activity.final_start_date), 'HH:mm')
 
-        // Heure en vert et plus grande
+        // Ligne de séparation subtile entre activités (sauf pour la première)
+        if (currentY > startY + 15) {
+          doc.setDrawColor(220, 220, 220)
+          doc.setLineWidth(0.1)
+          doc.line(columnX + 2, currentY - 2, columnX + columnWidth - 2, currentY - 2)
+          currentY += 1
+        }
+
+        // Heure en vert avec fond léger pour meilleure visibilité
+        doc.setFillColor(245, 250, 245) // Fond vert très clair
+        doc.roundedRect(columnX + 2, currentY - 3, 14, 5, 1, 1, 'F')
+
         doc.setTextColor(...greenTime)
         doc.setFontSize(10)
         doc.setFont('helvetica', 'bold')
-        doc.text(startTime, columnX + 2, currentY)
-        currentY += 5
+        doc.text(startTime, columnX + 3, currentY)
+        currentY += 6
 
-        // Titre de l'activité en noir
+        // Titre de l'activité en noir avec meilleure lisibilité
         doc.setTextColor(...darkText)
-        doc.setFontSize(9)
+        doc.setFontSize(9.5)
         doc.setFont('helvetica', 'bold')
 
         // Découper le titre si trop long
@@ -210,49 +240,63 @@ export function usePdfExport() {
         // Espacement avant organisation
         currentY += 1.5
 
-        // Organisation avec label
+        // Organisation avec icône
         if (activity.organization?.name) {
-          doc.setFontSize(7.5)
+          doc.setFontSize(7)
           doc.setFont('helvetica', 'bold')
-          doc.setTextColor(80, 80, 80)
-          doc.text(locale === 'fr' ? 'Organisation :' : 'Organization:', columnX + 2, currentY)
-          currentY += 3.5
+          doc.setTextColor(...grayText)
+
+          // Petit cercle orange comme icône
+          doc.setFillColor(...orangeAccent)
+          doc.circle(columnX + 3, currentY - 1, 0.7, 'F')
+
+          const orgLabel = locale === 'fr' ? 'Organisation :' : 'Organization:'
+          doc.text(orgLabel, columnX + 5, currentY)
+          currentY += 3
 
           doc.setFont('helvetica', 'normal')
+          doc.setFontSize(7.5)
           doc.setTextColor(...darkText)
-          const orgText = `• ${activity.organization.name}`
-          const orgLines = doc.splitTextToSize(orgText, columnWidth - 6)
-          doc.text(orgLines, columnX + 4, currentY)
-          currentY += orgLines.length * 3.5 + 0.5
+          const orgText = activity.organization.name
+          const orgLines = doc.splitTextToSize(orgText, columnWidth - 8)
+          doc.text(orgLines, columnX + 5, currentY)
+          currentY += orgLines.length * 3
         }
 
         // Espacement avant intervenants
         currentY += 1.5
 
-        // Panélistes avec label
+        // Panélistes avec icône
         const activitySpeakers = speakersByActivity[activity.id] || []
         if (activitySpeakers.length > 0) {
-          doc.setFontSize(7.5)
+          doc.setFontSize(7)
           doc.setFont('helvetica', 'bold')
-          doc.setTextColor(80, 80, 80)
-          doc.text(locale === 'fr' ? 'Intervenants :' : 'Speakers:', columnX + 2, currentY)
-          currentY += 3.5
+          doc.setTextColor(...grayText)
+
+          // Petit cercle orange comme icône
+          doc.setFillColor(...orangeAccent)
+          doc.circle(columnX + 3, currentY - 1, 0.7, 'F')
+
+          const speakersLabel = locale === 'fr' ? 'Intervenants :' : 'Speakers:'
+          doc.text(speakersLabel, columnX + 5, currentY)
+          currentY += 3
 
           doc.setFont('helvetica', 'normal')
+          doc.setFontSize(7.5)
           doc.setTextColor(...darkText)
 
           activitySpeakers.forEach(speaker => {
             const speakerText = `• ${speaker.first_name} ${speaker.last_name}`
-            const speakerLines = doc.splitTextToSize(speakerText, columnWidth - 6)
-            doc.text(speakerLines, columnX + 4, currentY)
-            currentY += speakerLines.length * 3.5
+            const speakerLines = doc.splitTextToSize(speakerText, columnWidth - 8)
+            doc.text(speakerLines, columnX + 5, currentY)
+            currentY += speakerLines.length * 3
 
             if (speaker.position) {
-              doc.setFontSize(7)
-              doc.setTextColor(100, 100, 100)
-              const posLines = doc.splitTextToSize(`  ${speaker.position}`, columnWidth - 6)
-              doc.text(posLines, columnX + 4, currentY)
-              currentY += posLines.length * 3.2
+              doc.setFontSize(6.5)
+              doc.setTextColor(...grayText)
+              const posLines = doc.splitTextToSize(`  ${speaker.position}`, columnWidth - 8)
+              doc.text(posLines, columnX + 5, currentY)
+              currentY += posLines.length * 2.8
               doc.setFontSize(7.5)
               doc.setTextColor(...darkText)
             }
@@ -265,7 +309,7 @@ export function usePdfExport() {
         if (currentY > pageHeight - 20) {
           return // Arrêter si on manque de place
         }
-      })
+      }
     }
 
     // Dessiner les 3 colonnes avec espacement optimisé
@@ -273,13 +317,19 @@ export function usePdfExport() {
     const col2X = margin + columnWidth + columnGap
     const col3X = margin + (columnWidth + columnGap) * 2
 
-    drawColumn(column1, col1X, locale === 'fr' ? 'PARTIE 1 : MATIN' : 'PART 1 : MORNING', 1)
-    drawColumn(column2, col2X, locale === 'fr' ? 'PARTIE 2 : APRÈS-MIDI' : 'PART 2 : AFTERNOON', 2)
-    drawColumn(column3, col3X, locale === 'fr' ? 'PARTIE 3 : FIN DE JOURNÉE' : 'PART 3 : END OF DAY', 3)
+    await drawColumn(column1, col1X, locale === 'fr' ? 'PARTIE 1 : MATIN' : 'PART 1 : MORNING', 1)
+    await drawColumn(column2, col2X, locale === 'fr' ? 'PARTIE 2 : APRÈS-MIDI' : 'PART 2 : AFTERNOON', 2)
+    await drawColumn(column3, col3X, locale === 'fr' ? 'PARTIE 3 : FIN DE JOURNÉE' : 'PART 3 : END OF DAY', 3)
 
-    // ===== PIED DE PAGE =====
-    doc.setFontSize(8)
-    doc.setTextColor(100, 100, 100)
+    // ===== PIED DE PAGE AMÉLIORÉ =====
+    // Ligne de séparation subtile
+    doc.setDrawColor(220, 220, 220)
+    doc.setLineWidth(0.2)
+    doc.line(margin, pageHeight - 10, pageWidth - margin, pageHeight - 10)
+
+    // Texte du pied de page
+    doc.setFontSize(7.5)
+    doc.setTextColor(...grayText)
     doc.text(
       t('programmations.pdfFooter'),
       pageWidth / 2,
@@ -304,26 +354,37 @@ export function usePdfExport() {
 
       console.log('QR Code Data URL length:', qrCodeDataUrl.length)
 
-      // Ajouter le QR code en bas à droite (avec espace pour le texte)
+      // Ajouter le QR code en bas à droite avec un fond élégant
       const qrSize = 22 // Taille en mm
       const qrX = pageWidth - margin - qrSize - 2
       const qrY = pageHeight - 35 // Plus haut pour laisser de la place
 
+      // Fond blanc avec bordure pour mettre en valeur le QR code
+      const padding = 2
+      doc.setFillColor(255, 255, 255)
+      doc.setDrawColor(...orangeAccent)
+      doc.setLineWidth(0.3)
+      doc.roundedRect(qrX - padding, qrY - padding, qrSize + (padding * 2), qrSize + (padding * 2), 1.5, 1.5, 'FD')
+
       doc.addImage(qrCodeDataUrl, 'PNG', qrX, qrY, qrSize, qrSize)
 
-      // Texte sous le QR code
-      doc.setFontSize(6)
-      doc.setTextColor(80, 80, 80)
+      // Texte sous le QR code avec style amélioré
+      doc.setFontSize(6.5)
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(...darkText)
       doc.text(
         locale === 'fr' ? 'Scannez pour accéder' : 'Scan to access',
         qrX + qrSize / 2,
-        qrY + qrSize + 3,
+        qrY + qrSize + 4,
         { align: 'center' }
       )
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(6)
+      doc.setTextColor(...grayText)
       doc.text(
-        locale === 'fr' ? 'à la programmation des autres jours' : 'the program',
+        locale === 'fr' ? 'à la programmation complète' : 'the full program',
         qrX + qrSize / 2,
-        qrY + qrSize + 5.5,
+        qrY + qrSize + 7,
         { align: 'center' }
       )
     } catch (error) {
