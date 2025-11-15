@@ -74,6 +74,33 @@ export function usePdfExport() {
     doc.setFillColor(...blueHeader)
     doc.rect(0, 0, pageWidth, 30, 'F')
 
+    // Charger et ajouter le logo IFDD à gauche
+    try {
+      const logoUrl = `${window.location.origin}/logos/logo-ifdd-blanc.png`
+      const logoImg = await new Promise((resolve, reject) => {
+        const img = new Image()
+        img.crossOrigin = 'anonymous'
+        img.onload = () => resolve(img)
+        img.onerror = reject
+        img.src = logoUrl
+      })
+
+      // Créer un canvas pour convertir l'image en data URL
+      const canvas = document.createElement('canvas')
+      canvas.width = logoImg.width
+      canvas.height = logoImg.height
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(logoImg, 0, 0)
+      const logoDataUrl = canvas.toDataURL('image/png')
+
+      // Ajouter le logo à gauche de l'en-tête (hauteur ~20mm, proportionnel)
+      const logoHeight = 18
+      const logoWidth = (logoImg.width / logoImg.height) * logoHeight
+      doc.addImage(logoDataUrl, 'PNG', margin + 2, 6, logoWidth, logoHeight)
+    } catch (error) {
+      console.warn('Impossible de charger le logo IFDD:', error)
+    }
+
     // Titre principal en blanc : "PROGRAMME DU PAVILLON DE LA FRANCOPHONIE"
     doc.setTextColor(255, 255, 255)
     doc.setFontSize(18)
