@@ -19,11 +19,11 @@ export function usePdfExport() {
     console.log('PDF Export - Date sélectionnée:', selectedDate)
     console.log('PDF Export - Nombre total d\'activités:', activities.length)
 
-    // Format 16:9 paysage
+    // Format 16:9 vrai paysage (297mm x 167mm)
     const doc = new jsPDF({
       orientation: 'landscape',
       unit: 'mm',
-      format: 'a4' // A4 paysage: 297 x 210mm
+      format: [167.06, 297] // Format 16:9 exact
     })
 
     const pageWidth = doc.internal.pageSize.getWidth()
@@ -72,9 +72,9 @@ export function usePdfExport() {
 
     // ===== EN-TÊTE BLEU =====
     doc.setFillColor(...blueHeader)
-    doc.rect(0, 0, pageWidth, 30, 'F')
+    doc.rect(0, 0, pageWidth, 25, 'F') // Réduit à 25mm pour format 16:9
 
-    // Charger et ajouter le logo IFDD à gauche
+    // Charger et ajouter le logo IFDD à gauche (optimisé)
     try {
       const logoUrl = `${window.location.origin}/logos/logo-ifdd-blanc.png`
       const logoImg = await new Promise((resolve, reject) => {
@@ -85,33 +85,37 @@ export function usePdfExport() {
         img.src = logoUrl
       })
 
-      // Créer un canvas pour convertir l'image en data URL
-      const canvas = document.createElement('canvas')
-      canvas.width = logoImg.width
-      canvas.height = logoImg.height
-      const ctx = canvas.getContext('2d')
-      ctx.drawImage(logoImg, 0, 0)
-      const logoDataUrl = canvas.toDataURL('image/png')
-
-      // Ajouter le logo à gauche de l'en-tête (hauteur ~20mm, proportionnel)
-      const logoHeight = 18
+      // Dimensions finales du logo dans le PDF
+      const logoHeight = 15 // Réduit pour s'adapter à l'en-tête de 25mm
       const logoWidth = (logoImg.width / logoImg.height) * logoHeight
-      doc.addImage(logoDataUrl, 'PNG', margin + 2, 6, logoWidth, logoHeight)
+
+      // Créer un canvas optimisé (juste la taille nécessaire en pixels)
+      const canvas = document.createElement('canvas')
+      const pixelRatio = 3 // 3x pour bonne qualité sans être excessif
+      canvas.width = logoWidth * pixelRatio
+      canvas.height = logoHeight * pixelRatio
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(logoImg, 0, 0, canvas.width, canvas.height)
+
+      // Convertir en JPEG avec compression pour réduire la taille
+      const logoDataUrl = canvas.toDataURL('image/jpeg', 0.8) // 80% qualité JPEG
+
+      doc.addImage(logoDataUrl, 'JPEG', margin + 2, 5, logoWidth, logoHeight)
     } catch (error) {
       console.warn('Impossible de charger le logo IFDD:', error)
     }
 
     // Titre principal en blanc : "PROGRAMME DU PAVILLON DE LA FRANCOPHONIE"
     doc.setTextColor(255, 255, 255)
-    doc.setFontSize(18)
+    doc.setFontSize(16) // Réduit de 18 à 16
     doc.setFont('helvetica', 'bold')
     const mainTitle = locale === 'fr'
       ? 'PROGRAMME DU PAVILLON DE LA FRANCOPHONIE'
       : 'FRANCOPHONIE PAVILION PROGRAM'
-    doc.text(mainTitle, pageWidth / 2, 12, { align: 'center' })
+    doc.text(mainTitle, pageWidth / 2, 10, { align: 'center' })
 
     // Sous-titre avec date et horaires
-    doc.setFontSize(12)
+    doc.setFontSize(11) // Réduit de 12 à 11
     doc.setFont('helvetica', 'normal')
     const dateLocale = locale === 'fr' ? fr : enUS
     const formattedDate = format(selectedDate, 'EEEE d MMMM yyyy', { locale: dateLocale })
@@ -127,7 +131,7 @@ export function usePdfExport() {
 
     // Ajouter l'événement sous la date
     const eventInfo = event.acronym ? `${event.acronym} ${event.year}` : event.title
-    doc.text(`${capitalizedDate}${timeRange} - ${eventInfo}`, pageWidth / 2, 22, { align: 'center' })
+    doc.text(`${capitalizedDate}${timeRange} - ${eventInfo}`, pageWidth / 2, 18, { align: 'center' })
 
     // ===== DIVISER LES ACTIVITÉS EN 3 COLONNES =====
     const activitiesPerColumn = Math.ceil(sortedActivities.length / 3)
@@ -135,8 +139,11 @@ export function usePdfExport() {
     const column2 = sortedActivities.slice(activitiesPerColumn, activitiesPerColumn * 2)
     const column3 = sortedActivities.slice(activitiesPerColumn * 2)
 
-    const columnWidth = (pageWidth - (margin * 4)) / 3
-    const startY = 35
+    // Calcul optimisé pour maximiser la largeur des colonnes
+    const columnGap = 3 // Espacement entre les colonnes
+    const totalWidth = pageWidth - (2 * margin)
+    const columnWidth = (totalWidth - (2 * columnGap)) / 3
+    const startY = 30 // Ajusté pour format 16:9 avec en-tête de 25mm
 
     // Fonction pour dessiner une colonne
     const drawColumn = (activities, columnX, title, partNumber) => {
@@ -234,10 +241,10 @@ export function usePdfExport() {
       })
     }
 
-    // Dessiner les 3 colonnes
+    // Dessiner les 3 colonnes avec espacement optimisé
     const col1X = margin
-    const col2X = margin + columnWidth + margin
-    const col3X = margin + (columnWidth + margin) * 2
+    const col2X = margin + columnWidth + columnGap
+    const col3X = margin + (columnWidth + columnGap) * 2
 
     drawColumn(column1, col1X, locale === 'fr' ? 'PARTIE 1 : MATIN' : 'PART 1 : MORNING', 1)
     drawColumn(column2, col2X, locale === 'fr' ? 'PARTIE 2 : APRÈS-MIDI' : 'PART 2 : AFTERNOON', 2)
@@ -257,9 +264,9 @@ export function usePdfExport() {
     const programmationUrl = `${window.location.origin}/programmations/${event.year}/${event.id}`
 
     try {
-      // Générer le QR code en base64
+      // Générer le QR code en base64 (optimisé pour réduire la taille)
       const qrCodeDataUrl = await QRCode.toDataURL(programmationUrl, {
-        width: 200,
+        width: 100, // Réduit de 200 à 100 pour diminuer la taille du fichier
         margin: 1,
         color: {
           dark: '#000000',
