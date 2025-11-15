@@ -73,14 +73,14 @@ export function usePdfExport() {
     doc.setFillColor(...blueHeader)
     doc.rect(0, 0, pageWidth, 30, 'F')
 
-    // Titre principal en blanc
+    // Titre principal en blanc : "PROGRAMME DU PAVILLON DE LA FRANCOPHONIE"
     doc.setTextColor(255, 255, 255)
     doc.setFontSize(18)
     doc.setFont('helvetica', 'bold')
-    const eventTitle = event.acronym
-      ? `${event.title} ${event.year} - ${event.acronym}`.toUpperCase()
-      : `${event.title} ${event.year || ''}`.toUpperCase()
-    doc.text(eventTitle, pageWidth / 2, 12, { align: 'center' })
+    const mainTitle = locale === 'fr'
+      ? 'PROGRAMME DU PAVILLON DE LA FRANCOPHONIE'
+      : 'FRANCOPHONIE PAVILION PROGRAM'
+    doc.text(mainTitle, pageWidth / 2, 12, { align: 'center' })
 
     // Sous-titre avec date et horaires
     doc.setFontSize(12)
@@ -97,7 +97,9 @@ export function usePdfExport() {
       timeRange = ` | ${firstTime}-${lastTime}`
     }
 
-    doc.text(`${capitalizedDate}${timeRange}`, pageWidth / 2, 22, { align: 'center' })
+    // Ajouter l'événement sous la date
+    const eventInfo = event.acronym ? `${event.acronym} ${event.year}` : event.title
+    doc.text(`${capitalizedDate}${timeRange} - ${eventInfo}`, pageWidth / 2, 22, { align: 'center' })
 
     // ===== DIVISER LES ACTIVITÉS EN 3 COLONNES =====
     const activitiesPerColumn = Math.ceil(sortedActivities.length / 3)
@@ -120,57 +122,82 @@ export function usePdfExport() {
       doc.setFont('helvetica', 'bold')
       doc.text(title, columnX + columnWidth / 2, startY + 5.5, { align: 'center' })
 
-      let currentY = startY + 12
+      let currentY = startY + 15 // Plus d'espace après le titre
 
       // Dessiner chaque activité
       activities.forEach(activity => {
         const startTime = format(new Date(activity.final_start_date), 'HH:mm')
 
-        // Heure en vert
+        // Heure en vert et plus grande
         doc.setTextColor(...greenTime)
-        doc.setFontSize(10)
+        doc.setFontSize(11)
         doc.setFont('helvetica', 'bold')
         doc.text(startTime, columnX + 2, currentY)
-        currentY += 5
+        currentY += 6
 
         // Titre de l'activité en noir
         doc.setTextColor(...darkText)
-        doc.setFontSize(9)
+        doc.setFontSize(9.5)
         doc.setFont('helvetica', 'bold')
 
         // Découper le titre si trop long
         const titleLines = doc.splitTextToSize(activity.title || '', columnWidth - 4)
         doc.text(titleLines, columnX + 2, currentY)
-        currentY += titleLines.length * 4
+        currentY += titleLines.length * 4.5
 
-        // Organisation et panélistes
-        doc.setFont('helvetica', 'normal')
-        doc.setFontSize(8)
+        // Espacement avant organisation
+        currentY += 2
 
-        // Organisation
+        // Organisation avec label
         if (activity.organization?.name) {
+          doc.setFontSize(8)
+          doc.setFont('helvetica', 'bold')
+          doc.setTextColor(80, 80, 80)
+          doc.text(locale === 'fr' ? 'Organisation :' : 'Organization:', columnX + 2, currentY)
+          currentY += 4
+
+          doc.setFont('helvetica', 'normal')
+          doc.setTextColor(...darkText)
           const orgText = `• ${activity.organization.name}`
           const orgLines = doc.splitTextToSize(orgText, columnWidth - 6)
           doc.text(orgLines, columnX + 4, currentY)
-          currentY += orgLines.length * 3.5
+          currentY += orgLines.length * 4
         }
 
-        // Panélistes
+        // Espacement avant intervenants
+        currentY += 2
+
+        // Panélistes avec label
         const activitySpeakers = speakersByActivity[activity.id] || []
-        activitySpeakers.forEach(speaker => {
-          const speakerText = `• ${speaker.first_name} ${speaker.last_name}`
-          const speakerLines = doc.splitTextToSize(speakerText, columnWidth - 6)
-          doc.text(speakerLines, columnX + 4, currentY)
-          currentY += speakerLines.length * 3.5
+        if (activitySpeakers.length > 0) {
+          doc.setFontSize(8)
+          doc.setFont('helvetica', 'bold')
+          doc.setTextColor(80, 80, 80)
+          doc.text(locale === 'fr' ? 'Intervenants :' : 'Speakers:', columnX + 2, currentY)
+          currentY += 4
 
-          if (speaker.position) {
-            const posLines = doc.splitTextToSize(`  ${speaker.position}`, columnWidth - 6)
-            doc.text(posLines, columnX + 4, currentY)
-            currentY += posLines.length * 3.5
-          }
-        })
+          doc.setFont('helvetica', 'normal')
+          doc.setTextColor(...darkText)
 
-        currentY += 3 // Espacement entre activités
+          activitySpeakers.forEach(speaker => {
+            const speakerText = `• ${speaker.first_name} ${speaker.last_name}`
+            const speakerLines = doc.splitTextToSize(speakerText, columnWidth - 6)
+            doc.text(speakerLines, columnX + 4, currentY)
+            currentY += speakerLines.length * 4
+
+            if (speaker.position) {
+              doc.setFontSize(7.5)
+              doc.setTextColor(100, 100, 100)
+              const posLines = doc.splitTextToSize(`  ${speaker.position}`, columnWidth - 6)
+              doc.text(posLines, columnX + 4, currentY)
+              currentY += posLines.length * 3.5
+              doc.setFontSize(8)
+              doc.setTextColor(...darkText)
+            }
+          })
+        }
+
+        currentY += 5 // Plus d'espacement entre activités
 
         // Vérifier si on dépasse la page
         if (currentY > pageHeight - 20) {
