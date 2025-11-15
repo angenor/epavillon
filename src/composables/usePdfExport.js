@@ -130,51 +130,51 @@ export function usePdfExport() {
 
         // Heure en vert et plus grande
         doc.setTextColor(...greenTime)
-        doc.setFontSize(11)
+        doc.setFontSize(10)
         doc.setFont('helvetica', 'bold')
         doc.text(startTime, columnX + 2, currentY)
-        currentY += 6
+        currentY += 5
 
         // Titre de l'activité en noir
         doc.setTextColor(...darkText)
-        doc.setFontSize(9.5)
+        doc.setFontSize(9)
         doc.setFont('helvetica', 'bold')
 
         // Découper le titre si trop long
         const titleLines = doc.splitTextToSize(activity.title || '', columnWidth - 4)
         doc.text(titleLines, columnX + 2, currentY)
-        currentY += titleLines.length * 4.5
+        currentY += titleLines.length * 4 + 1
 
         // Espacement avant organisation
-        currentY += 2
+        currentY += 1.5
 
         // Organisation avec label
         if (activity.organization?.name) {
-          doc.setFontSize(8)
+          doc.setFontSize(7.5)
           doc.setFont('helvetica', 'bold')
           doc.setTextColor(80, 80, 80)
           doc.text(locale === 'fr' ? 'Organisation :' : 'Organization:', columnX + 2, currentY)
-          currentY += 4
+          currentY += 3.5
 
           doc.setFont('helvetica', 'normal')
           doc.setTextColor(...darkText)
           const orgText = `• ${activity.organization.name}`
           const orgLines = doc.splitTextToSize(orgText, columnWidth - 6)
           doc.text(orgLines, columnX + 4, currentY)
-          currentY += orgLines.length * 4
+          currentY += orgLines.length * 3.5 + 0.5
         }
 
         // Espacement avant intervenants
-        currentY += 2
+        currentY += 1.5
 
         // Panélistes avec label
         const activitySpeakers = speakersByActivity[activity.id] || []
         if (activitySpeakers.length > 0) {
-          doc.setFontSize(8)
+          doc.setFontSize(7.5)
           doc.setFont('helvetica', 'bold')
           doc.setTextColor(80, 80, 80)
           doc.text(locale === 'fr' ? 'Intervenants :' : 'Speakers:', columnX + 2, currentY)
-          currentY += 4
+          currentY += 3.5
 
           doc.setFont('helvetica', 'normal')
           doc.setTextColor(...darkText)
@@ -183,21 +183,21 @@ export function usePdfExport() {
             const speakerText = `• ${speaker.first_name} ${speaker.last_name}`
             const speakerLines = doc.splitTextToSize(speakerText, columnWidth - 6)
             doc.text(speakerLines, columnX + 4, currentY)
-            currentY += speakerLines.length * 4
+            currentY += speakerLines.length * 3.5
 
             if (speaker.position) {
-              doc.setFontSize(7.5)
+              doc.setFontSize(7)
               doc.setTextColor(100, 100, 100)
               const posLines = doc.splitTextToSize(`  ${speaker.position}`, columnWidth - 6)
               doc.text(posLines, columnX + 4, currentY)
-              currentY += posLines.length * 3.5
-              doc.setFontSize(8)
+              currentY += posLines.length * 3.2
+              doc.setFontSize(7.5)
               doc.setTextColor(...darkText)
             }
           })
         }
 
-        currentY += 5 // Plus d'espacement entre activités
+        currentY += 4 // Espacement entre activités
 
         // Vérifier si on dépasse la page
         if (currentY > pageHeight - 20) {
