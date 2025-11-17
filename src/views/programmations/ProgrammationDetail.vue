@@ -1342,6 +1342,15 @@ const getEventTextClass = (event) => {
 const formatEventTimeDisplay = (start, end) => {
   // Les dates reçues ici sont déjà converties en "local" par convertUTCToEventTimezoneAsLocal
   // On les formate donc simplement sans spécifier de timezone
+
+  // Obtenir le nom du jour
+  const dayName = start.toLocaleDateString(locale.value === 'fr' ? 'fr-FR' : 'en-US', {
+    weekday: 'long'
+  })
+
+  // Capitaliser la première lettre du jour
+  const capitalizedDay = dayName.charAt(0).toUpperCase() + dayName.slice(1)
+
   const options = {
     hour: '2-digit',
     minute: '2-digit'
@@ -1350,7 +1359,7 @@ const formatEventTimeDisplay = (start, end) => {
   const startTime = start.toLocaleTimeString(locale.value === 'fr' ? 'fr-FR' : 'en-US', options)
   const endTime = end.toLocaleTimeString(locale.value === 'fr' ? 'fr-FR' : 'en-US', options)
 
-  return `${startTime} - ${endTime}`
+  return `${capitalizedDay} . ${startTime} - ${endTime}`
 }
 
 // Vérifie si l'organisation est une institution publique nationale
