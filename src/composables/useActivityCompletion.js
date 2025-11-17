@@ -189,8 +189,8 @@ export function useActivityCompletion(activityId) {
           testimonial_text: testimonialData.text,
           context_type: ['activity'],
           context_id: activityId,
-          thematique_type: testimonialData.themes || [],
-          photo_url: testimonialData.photoUrl || null,
+          thematique_type: [], // Pas de thématiques requises
+          photo_url: null,
           featured: false
         })
         .select(`
@@ -247,34 +247,6 @@ export function useActivityCompletion(activityId) {
     }
   }
 
-  /**
-   * Upload une photo pour le témoignage
-   */
-  async function uploadTestimonialPhoto(file, userId) {
-    try {
-      const fileExt = file.name.split('.').pop()
-      const fileName = `${userId}-${Date.now()}.${fileExt}`
-      const filePath = `testimonials/${fileName}`
-
-      const { error: uploadError } = await supabase.storage
-        .from('activity-media')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: false
-        })
-
-      if (uploadError) throw uploadError
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('activity-media')
-        .getPublicUrl(filePath)
-
-      return publicUrl
-    } catch (err) {
-      console.error('Error uploading testimonial photo:', err)
-      throw err
-    }
-  }
 
   /**
    * Vérifier si le modal doit être affiché automatiquement
@@ -345,7 +317,6 @@ export function useActivityCompletion(activityId) {
     saveReport,
     addTestimonial,
     removeTestimonial,
-    uploadTestimonialPhoto,
     checkAndShowModal,
     closeModal,
     resetTestimonialForm

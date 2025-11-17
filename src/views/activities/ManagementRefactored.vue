@@ -242,7 +242,6 @@
       :saving="activityCompletion.loading.value"
       @close="showAddTestimonialModal = false"
       @submit="handleSubmitTestimonial"
-      @upload-photo="handleUploadTestimonialPhoto"
     />
 
     <!-- Comment Floating Button for Submitters -->
@@ -669,18 +668,6 @@ const handleRemoveTestimonial = async (testimonialId) => {
   } catch (error) {
     console.error('Error removing testimonial:', error)
     alert(t('activity.completion.errors.removeTestimonialFailed'))
-  }
-}
-
-const handleUploadTestimonialPhoto = async (file, callback) => {
-  try {
-    // Créer un ID temporaire pour le participant
-    const tempUserId = `temp-${Date.now()}`
-    const photoUrl = await activityCompletion.uploadTestimonialPhoto(file, tempUserId)
-    if (callback) callback(photoUrl)
-  } catch (error) {
-    console.error('Error uploading testimonial photo:', error)
-    alert(t('activity.completion.errors.uploadPhotoFailed'))
   }
 }
 
