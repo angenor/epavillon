@@ -45,6 +45,7 @@
     "hoursAgo": "{{hours}} hours ago",
     "justNow": "Just now",
     "save": "Save",
+    "add": "Add",
     "saving": "Saving...",
     "saveSuccess": "Successfully saved",
     "saveError": "Error while saving",

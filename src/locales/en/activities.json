@@ -8,7 +8,8 @@
       "dates": "Dates and Times",
       "speakers": "Speakers",
       "documents": "Documents",
-      "tags": "Tags"
+      "tags": "Tags",
+      "mediaGallery": "Photo Gallery"
     },
     "quickActions": "Quick Actions",
     "preview": "Preview",
@@ -469,7 +470,25 @@
       "registerNow": "Register now!",
       "errorCopyUrl": "Error copying URL",
       "errorDownloadQR": "Error downloading QR Code"
-    }
+    },
+    "mediaGallery": "Photo Gallery",
+    "mediaGalleryDescription": "Photos from the completed activity",
+    "addPhoto": "Add Photo",
+    "addFirstPhoto": "Add First Photo",
+    "noMediaYet": "No photos yet",
+    "photoBy": "Photo by",
+    "selectImage": "Select Image",
+    "clickToSelectImage": "Click to select an image",
+    "imageFormatsSupported": "Supported formats: JPG, PNG, WebP (auto-compressed to max 1 MB)",
+    "photoTitle": "Photo Title",
+    "photoTitlePlaceholder": "Ex: Overview of the conference",
+    "photoDescription": "Description",
+    "photoDescriptionPlaceholder": "Describe the photo (optional)",
+    "photoAuthor": "Author/Photographer",
+    "photoAuthorPlaceholder": "Ex: John Doe",
+    "uploading": "Uploading",
+    "imageTooLarge": "Image too large",
+    "imageWillBeCompressed": "The image will be automatically compressed to less than 1 MB before upload"
   },
   "activity": {
     "title": "Activity",
@@ -784,7 +803,25 @@
         "title": "Preview error",
         "message": "Unable to load the preview of this activity."
       }
-    }
+    },
+    "mediaGallery": "Photo Gallery",
+    "mediaGalleryDescription": "Photos from the completed activity",
+    "addPhoto": "Add Photo",
+    "addFirstPhoto": "Add First Photo",
+    "noMediaYet": "No photos yet",
+    "photoBy": "Photo by",
+    "selectImage": "Select Image",
+    "clickToSelectImage": "Click to select an image",
+    "imageFormatsSupported": "Supported formats: JPG, PNG, WebP (auto-compressed to max 1 MB)",
+    "photoTitle": "Photo Title",
+    "photoTitlePlaceholder": "Ex: Overview of the conference",
+    "photoDescription": "Description",
+    "photoDescriptionPlaceholder": "Describe the photo (optional)",
+    "photoAuthor": "Author/Photographer",
+    "photoAuthorPlaceholder": "Ex: John Doe",
+    "uploading": "Uploading",
+    "imageTooLarge": "Image too large",
+    "imageWillBeCompressed": "The image will be automatically compressed to less than 1 MB before upload"
   },
   "activityDatesManager": {
     "title": "Activity Dates Management",

@@ -805,9 +805,17 @@ const displayTitle = computed(() => {
   return event.value.title
 })
 
-// Nombre d'activités approuvées
+// Nombre d'activités approuvées (incluant les activités terminées)
 const approvedActivitiesCount = computed(() => {
-  return activities.value.filter(a => a.validation_status === 'approved').length
+  // Compter toutes les activités approuvées (terminées ou non)
+  const approvedCount = activities.value.filter(a =>
+    a.validation_status === 'approved'
+  ).length
+
+  // Ajouter 20 activités pour les journées spéciales si CdP 30
+  const specialDaysBonus = event.value?.acronym === 'CdP 30' ? 20 : 0
+
+  return approvedCount + specialDaysBonus
 })
 
 // Nombre d'organisations représentées (uniques)
@@ -818,7 +826,11 @@ const organizationsCount = computed(() => {
       uniqueOrgs.add(activity.organization.id)
     }
   })
-  return uniqueOrgs.size
+
+  // Ajouter 14 organisations pour les journées spéciales si CdP 30
+  const specialDaysBonus = event.value?.acronym === 'CdP 30' ? 14 : 0
+
+  return uniqueOrgs.size + specialDaysBonus
 })
 
 // Nombre de pays représentés (uniques)
@@ -1359,7 +1371,7 @@ const formatEventTimeDisplay = (start, end) => {
   const startTime = start.toLocaleTimeString(locale.value === 'fr' ? 'fr-FR' : 'en-US', options)
   const endTime = end.toLocaleTimeString(locale.value === 'fr' ? 'fr-FR' : 'en-US', options)
 
-  return `${capitalizedDay} . ${startTime} - ${endTime}`
+  return `${capitalizedDay} · ${startTime} - ${endTime}`
 }
 
 // Vérifie si l'organisation est une institution publique nationale

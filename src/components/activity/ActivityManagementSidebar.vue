@@ -126,6 +126,10 @@ const props = defineProps({
     type: Number,
     default: 0
   },
+  mediasCount: {
+    type: Number,
+    default: 0
+  },
   canEdit: {
     type: Boolean,
     default: true
@@ -141,47 +145,62 @@ const emit = defineEmits(['scroll-to', 'preview', 'submit-validation'])
 const activeSection = ref('banner')
 
 // Sections de navigation
-const sections = computed(() => [
-  {
-    id: 'banner',
-    label: t('activities.sections.banner'),
-    icon: ['fas', 'image'],
-    status: props.activity?.cover_image_high_url ? 'complete' : 'incomplete'
-  },
-  {
-    id: 'general-info',
-    label: t('activities.sections.generalInfo'),
-    icon: ['fas', 'info-circle'],
-    status: checkGeneralInfoComplete() ? 'complete' : 'incomplete'
-  },
-  {
-    id: 'dates',
-    label: t('activities.sections.dates'),
-    icon: ['fas', 'calendar'],
-    status: checkDatesComplete() ? 'complete' : 'incomplete'
-  },
-  {
-    id: 'speakers',
-    label: t('activities.sections.speakers'),
-    icon: ['fas', 'users'],
-    count: props.speakersCount,
-    status: props.speakersCount > 0 ? 'complete' : 'incomplete'
-  },
-  {
-    id: 'documents',
-    label: t('activities.sections.documents'),
-    icon: ['fas', 'file-alt'],
-    count: props.documentsCount,
-    status: props.documentsCount > 0 ? 'complete' : 'optional'
-  },
-  {
-    id: 'tags',
-    label: t('activities.sections.tags'),
-    icon: ['fas', 'tags'],
-    count: props.tagsCount,
-    status: props.tagsCount > 0 ? 'complete' : 'optional'
+const sections = computed(() => {
+  const baseSections = [
+    {
+      id: 'banner',
+      label: t('activities.sections.banner'),
+      icon: ['fas', 'image'],
+      status: props.activity?.cover_image_high_url ? 'complete' : 'incomplete'
+    },
+    {
+      id: 'general-info',
+      label: t('activities.sections.generalInfo'),
+      icon: ['fas', 'info-circle'],
+      status: checkGeneralInfoComplete() ? 'complete' : 'incomplete'
+    },
+    {
+      id: 'dates',
+      label: t('activities.sections.dates'),
+      icon: ['fas', 'calendar'],
+      status: checkDatesComplete() ? 'complete' : 'incomplete'
+    },
+    {
+      id: 'speakers',
+      label: t('activities.sections.speakers'),
+      icon: ['fas', 'users'],
+      count: props.speakersCount,
+      status: props.speakersCount > 0 ? 'complete' : 'incomplete'
+    },
+    {
+      id: 'documents',
+      label: t('activities.sections.documents'),
+      icon: ['fas', 'file-alt'],
+      count: props.documentsCount,
+      status: props.documentsCount > 0 ? 'complete' : 'optional'
+    },
+    {
+      id: 'tags',
+      label: t('activities.sections.tags'),
+      icon: ['fas', 'tags'],
+      count: props.tagsCount,
+      status: props.tagsCount > 0 ? 'complete' : 'optional'
+    }
+  ]
+
+  // Ajouter la section galerie uniquement si l'activité est terminée
+  if (props.validationStatus === 'completed') {
+    baseSections.push({
+      id: 'media-gallery',
+      label: t('activities.sections.mediaGallery'),
+      icon: ['fas', 'images'],
+      count: props.mediasCount,
+      status: props.mediasCount > 0 ? 'complete' : 'optional'
+    })
   }
-])
+
+  return baseSections
+})
 
 // Vérifications de complétude
 function checkGeneralInfoComplete() {

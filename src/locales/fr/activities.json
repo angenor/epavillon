@@ -8,7 +8,8 @@
       "dates": "Dates et horaires",
       "speakers": "Intervenants",
       "documents": "Documents",
-      "tags": "Tags"
+      "tags": "Tags",
+      "mediaGallery": "Galerie de photos"
     },
     "quickActions": "Actions rapides",
     "preview": "Prévisualiser",
@@ -407,7 +408,25 @@
       "registerNow": "Inscrivez-vous maintenant !",
       "errorCopyUrl": "Erreur lors de la copie de l'URL",
       "errorDownloadQR": "Erreur lors du téléchargement du QR Code"
-    }
+    },
+    "mediaGallery": "Galerie de photos",
+    "mediaGalleryDescription": "Photos de l'activité terminée",
+    "addPhoto": "Ajouter une photo",
+    "addFirstPhoto": "Ajouter la première photo",
+    "noMediaYet": "Aucune photo pour le moment",
+    "photoBy": "Photo par",
+    "selectImage": "Sélectionner une image",
+    "clickToSelectImage": "Cliquez pour sélectionner une image",
+    "imageFormatsSupported": "Formats supportés : JPG, PNG, WebP (compression automatique à 1 Mo max)",
+    "photoTitle": "Titre de la photo",
+    "photoTitlePlaceholder": "Ex: Vue d'ensemble de la conférence",
+    "photoDescription": "Description",
+    "photoDescriptionPlaceholder": "Décrivez la photo (optionnel)",
+    "photoAuthor": "Auteur/Photographe",
+    "photoAuthorPlaceholder": "Ex: Jean Dupont",
+    "uploading": "Upload en cours",
+    "imageTooLarge": "Image trop volumineuse",
+    "imageWillBeCompressed": "L'image sera automatiquement compressée à moins de 1 Mo avant l'upload"
   },
   "activity": {
     "title": "Activité",
@@ -818,7 +837,25 @@
         "title": "Erreur de prévisualisation",
         "message": "Impossible de charger la prévisualisation de cette activité."
       }
-    }
+    },
+    "mediaGallery": "Galerie de photos",
+    "mediaGalleryDescription": "Photos de l'activité terminée",
+    "addPhoto": "Ajouter une photo",
+    "addFirstPhoto": "Ajouter la première photo",
+    "noMediaYet": "Aucune photo pour le moment",
+    "photoBy": "Photo par",
+    "selectImage": "Sélectionner une image",
+    "clickToSelectImage": "Cliquez pour sélectionner une image",
+    "imageFormatsSupported": "Formats supportés : JPG, PNG, WebP (compression automatique à 1 Mo max)",
+    "photoTitle": "Titre de la photo",
+    "photoTitlePlaceholder": "Ex: Vue d'ensemble de la conférence",
+    "photoDescription": "Description",
+    "photoDescriptionPlaceholder": "Décrivez la photo (optionnel)",
+    "photoAuthor": "Auteur/Photographe",
+    "photoAuthorPlaceholder": "Ex: Jean Dupont",
+    "uploading": "Upload en cours",
+    "imageTooLarge": "Image trop volumineuse",
+    "imageWillBeCompressed": "L'image sera automatiquement compressée à moins de 1 Mo avant l'upload"
   },
   "activityDatesManager": {
     "title": "Gestion des dates d'activités",

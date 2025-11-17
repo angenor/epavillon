@@ -18,6 +18,7 @@
             :speakers-count="speakerManagement.speakers.value.length"
             :documents-count="documentManagement.documents.value.length"
             :tags-count="tagManagement.tags.value.length"
+            :medias-count="mediaGallery.medias.value.length"
             :validation-status="activity.validation_status"
             :can-edit="!isActivityApproved"
             @scroll-to="handleScrollTo"
@@ -143,6 +144,18 @@
               @update:newTag="tagManagement.newTag.value = $event"
               @key-press="handleTagKeyPress"
             />
+
+            <!-- Media Gallery Section (uniquement pour les activités terminées) -->
+            <ActivityMediaGallerySection
+              v-if="isActivityCompleted"
+              id="media-gallery"
+              :medias="mediaGallery.medias.value"
+              :isActivityApproved="isActivityApproved"
+              :canAddMedia="true"
+              @add-media="mediaGallery.openAddMediaModal"
+              @remove-media="handleRemoveMedia"
+              @view-media="mediaGallery.viewMedia"
+            />
           </div>
         </div>
       </div>
@@ -180,6 +193,25 @@
       @save="handleAddNewSpeaker"
     />
 
+    <!-- Add Media Modal -->
+    <AddMediaModal
+      :show="mediaGallery.showAddMediaModal.value"
+      :form="mediaGallery.newMediaForm.value"
+      :selected-file="mediaGallery.selectedMediaFile.value"
+      :uploading="mediaGallery.uploadingMedia.value"
+      :upload-progress="mediaGallery.uploadProgress.value"
+      @submit="handleSubmitNewMedia"
+      @cancel="mediaGallery.closeAddMediaModal"
+      @file-selected="mediaGallery.onMediaFileSelected"
+    />
+
+    <!-- Media Viewer Modal -->
+    <MediaViewerModal
+      :show="mediaGallery.showMediaViewerModal.value"
+      :media="mediaGallery.selectedMedia.value"
+      @close="mediaGallery.closeMediaViewer"
+    />
+
     <!-- Comment Floating Button for Submitters -->
     <CommentFloatingButtonUser
       v-if="activity"
@@ -205,6 +237,7 @@ import { useSpeakerManagement } from '@/composables/useSpeakerManagement'
 import { useDocumentManagement } from '@/composables/useDocumentManagement'
 import { useActivityDates } from '@/composables/useActivityDates'
 import { useTagManagement } from '@/composables/useTagManagement'
+import { useMediaGallery } from '@/composables/useMediaGallery'
 import useUserActivities from '@/composables/useUserActivities'
 
 // UI Components
@@ -221,6 +254,9 @@ import AddDocumentModal from '@/components/activity/AddDocumentModal.vue'
 import SpeakerPhotoModal from '@/components/activity/SpeakerPhotoModal.vue'
 import AddSpeakerModal from '@/components/activity/AddSpeakerModal.vue'
 import ActivityManagementSidebar from '@/components/activity/ActivityManagementSidebar.vue'
+import ActivityMediaGallerySection from '@/components/activity/ActivityMediaGallerySection.vue'
+import AddMediaModal from '@/components/activity/AddMediaModal.vue'
+import MediaViewerModal from '@/components/activity/MediaViewerModal.vue'
 import BrowserRecommendation from '@/components/BrowserRecommendation.vue'
 import CommentFloatingButtonUser from '@/components/CommentFloatingButtonUser.vue'
 
@@ -262,6 +298,9 @@ const documentManagement = useDocumentManagement(activityId.value)
 // Tag management
 const tagManagement = useTagManagement(activityId.value)
 
+// Media gallery management
+const mediaGallery = useMediaGallery(activityId.value)
+
 // Activity dates
 const activityDates = useActivityDates(activity, computed(() => eventData.value?.timezone))
 
@@ -274,6 +313,10 @@ const eventTimezone = computed(() => {
 const isActivityApproved = computed(() => {
   const approvedStatuses = ['approved', 'live', 'completed']
   return activity.value && approvedStatuses.includes(activity.value.validation_status)
+})
+
+const isActivityCompleted = computed(() => {
+  return activity.value && activity.value.validation_status === 'completed'
 })
 
 const canEditDates = computed(() => {
@@ -425,6 +468,23 @@ const handleTagKeyPress = (event) => {
   tagManagement.handleKeyPress(event)
 }
 
+// Media gallery handlers
+const handleRemoveMedia = async (mediaId) => {
+  try {
+    await mediaGallery.removeMedia(mediaId)
+  } catch (error) {
+    alert(`Erreur lors de la suppression: ${error.message}`)
+  }
+}
+
+const handleSubmitNewMedia = async () => {
+  try {
+    await mediaGallery.submitNewMedia()
+  } catch (error) {
+    alert(error.message)
+  }
+}
+
 // Banner management
 const onBannerImageProcessed = async (fileOrBlob) => {
   try {
@@ -470,6 +530,11 @@ const loadActivity = async () => {
 
     // Initialize dates
     activityDates.initializeDates()
+
+    // Load media gallery if activity is completed
+    if (data.validation_status === 'completed') {
+      await mediaGallery.loadMedias()
+    }
   } catch (error) {
     console.error('Error loading activity:', error)
     router.push('/events/dashboard')
