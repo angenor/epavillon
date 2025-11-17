@@ -145,6 +145,19 @@
               @key-press="handleTagKeyPress"
             />
 
+            <!-- Activity Completion Report Section (uniquement pour les activités terminées) -->
+            <ActivityCompletionSection
+              v-if="isActivityCompleted"
+              :completion-report="activityCompletion.completionReport.value"
+              :testimonials="activityCompletion.testimonials.value"
+              :validation-result="activityCompletion.validationResult.value"
+              :saving="activityCompletion.loading.value"
+              @save-report="handleSaveReport"
+              @add-testimonial="handleAddTestimonial"
+              @remove-testimonial="handleRemoveTestimonial"
+              class="mb-6"
+            />
+
             <!-- Media Gallery Section (uniquement pour les activités terminées) -->
             <ActivityMediaGallerySection
               v-if="isActivityCompleted"
@@ -212,6 +225,26 @@
       @close="mediaGallery.closeMediaViewer"
     />
 
+    <!-- Activity Completion Report Modal -->
+    <ActivityCompletionReportModal
+      :show="activityCompletion.showCompletionModal.value"
+      :validation-result="activityCompletion.validationResult.value"
+      :has-report="activityCompletion.hasReport.value"
+      :has-enough-testimonials="activityCompletion.hasEnoughTestimonials.value"
+      :has-photos="activityCompletion.hasPhotos.value"
+      :current-testimonials-count="activityCompletion.testimonials.value.length"
+      @close="activityCompletion.closeModal"
+    />
+
+    <!-- Add Testimonial Modal -->
+    <AddTestimonialModal
+      :show="showAddTestimonialModal"
+      :saving="activityCompletion.loading.value"
+      @close="showAddTestimonialModal = false"
+      @submit="handleSubmitTestimonial"
+      @upload-photo="handleUploadTestimonialPhoto"
+    />
+
     <!-- Comment Floating Button for Submitters -->
     <CommentFloatingButtonUser
       v-if="activity"
@@ -238,6 +271,7 @@ import { useDocumentManagement } from '@/composables/useDocumentManagement'
 import { useActivityDates } from '@/composables/useActivityDates'
 import { useTagManagement } from '@/composables/useTagManagement'
 import { useMediaGallery } from '@/composables/useMediaGallery'
+import { useActivityCompletion } from '@/composables/useActivityCompletion'
 import useUserActivities from '@/composables/useUserActivities'
 
 // UI Components
@@ -257,6 +291,9 @@ import ActivityManagementSidebar from '@/components/activity/ActivityManagementS
 import ActivityMediaGallerySection from '@/components/activity/ActivityMediaGallerySection.vue'
 import AddMediaModal from '@/components/activity/AddMediaModal.vue'
 import MediaViewerModal from '@/components/activity/MediaViewerModal.vue'
+import ActivityCompletionSection from '@/components/activity/ActivityCompletionSection.vue'
+import ActivityCompletionReportModal from '@/components/activity/ActivityCompletionReportModal.vue'
+import AddTestimonialModal from '@/components/activity/AddTestimonialModal.vue'
 import BrowserRecommendation from '@/components/BrowserRecommendation.vue'
 import CommentFloatingButtonUser from '@/components/CommentFloatingButtonUser.vue'
 
@@ -300,6 +337,10 @@ const tagManagement = useTagManagement(activityId.value)
 
 // Media gallery management
 const mediaGallery = useMediaGallery(activityId.value)
+
+// Activity completion management
+const activityCompletion = useActivityCompletion(activityId.value)
+const showAddTestimonialModal = ref(false)
 
 // Activity dates
 const activityDates = useActivityDates(activity, computed(() => eventData.value?.timezone))
@@ -534,6 +575,10 @@ const loadActivity = async () => {
     // Load media gallery if activity is completed
     if (data.validation_status === 'completed') {
       await mediaGallery.loadMedias()
+
+      // Load completion data and check if modal should be shown
+      await activityCompletion.loadCompletionData()
+      await activityCompletion.checkAndShowModal(data.validation_status)
     }
   } catch (error) {
     console.error('Error loading activity:', error)
@@ -586,6 +631,56 @@ const handleSubmitValidation = async () => {
   } catch (error) {
     console.error('Error submitting for validation:', error)
     alert(t('activities.errorSubmittingValidation'))
+  }
+}
+
+// Activity Completion Report Handlers
+const handleSaveReport = async (reportText) => {
+  try {
+    const success = await activityCompletion.saveReport(reportText)
+    if (success) {
+      // Rafraîchir les données pour mettre à jour l'UI
+      await activityCompletion.loadCompletionData()
+    }
+  } catch (error) {
+    console.error('Error saving completion report:', error)
+    alert(t('activity.completion.errors.saveReportFailed'))
+  }
+}
+
+const handleAddTestimonial = () => {
+  showAddTestimonialModal.value = true
+}
+
+const handleSubmitTestimonial = async (testimonialData) => {
+  try {
+    await activityCompletion.addTestimonial(testimonialData)
+    showAddTestimonialModal.value = false
+    activityCompletion.resetTestimonialForm()
+  } catch (error) {
+    console.error('Error adding testimonial:', error)
+    alert(t('activity.completion.errors.addTestimonialFailed'))
+  }
+}
+
+const handleRemoveTestimonial = async (testimonialId) => {
+  try {
+    await activityCompletion.removeTestimonial(testimonialId)
+  } catch (error) {
+    console.error('Error removing testimonial:', error)
+    alert(t('activity.completion.errors.removeTestimonialFailed'))
+  }
+}
+
+const handleUploadTestimonialPhoto = async (file, callback) => {
+  try {
+    // Créer un ID temporaire pour le participant
+    const tempUserId = `temp-${Date.now()}`
+    const photoUrl = await activityCompletion.uploadTestimonialPhoto(file, tempUserId)
+    if (callback) callback(photoUrl)
+  } catch (error) {
+    console.error('Error uploading testimonial photo:', error)
+    alert(t('activity.completion.errors.uploadPhotoFailed'))
   }
 }
 

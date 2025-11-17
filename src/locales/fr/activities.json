@@ -859,7 +859,60 @@
     "photoAuthorPlaceholder": "Ex: Jean Dupont",
     "uploading": "Upload en cours",
     "imageTooLarge": "Image trop volumineuse",
-    "imageWillBeCompressed": "L'image sera automatiquement compressée à moins de 1 Mo avant l'upload"
+    "imageWillBeCompressed": "L'image sera automatiquement compressée à moins de 1 Mo avant l'upload",
+    "completion": {
+      "modal": {
+        "title": "Rapport de fin d'activité",
+        "subtitle": "Votre activité est terminée ! Veuillez fournir les éléments suivants",
+        "allComplete": "Rapport complet",
+        "allCompleteDesc": "Tous les éléments requis ont été fournis. Merci pour votre collaboration !",
+        "missing": "Éléments manquants",
+        "requirements": "Éléments requis",
+        "req1": "Un compte rendu synthétique de l'activité",
+        "req2": "Au moins 2 témoignages des participants",
+        "req3": "Au moins 1 photo de l'activité",
+        "action1": "Compte rendu",
+        "action2": "Témoignages",
+        "action3": "Photos",
+        "footerNote": "Ces éléments sont essentiels pour valoriser votre activité",
+        "startNow": "Commencer maintenant"
+      },
+      "section": {
+        "title": "Rapport de fin d'activité",
+        "subtitle": "Fournissez un compte rendu et des témoignages de votre activité",
+        "complete": "Complet",
+        "incomplete": "Incomplet",
+        "reportLabel": "Compte rendu synthétique",
+        "reportPlaceholder": "Décrivez les résultats, les apprentissages clés et l'impact de votre activité. Incluez des données chiffrées si possible (nombre de participants, pays représentés, etc.)",
+        "reportHint": "Minimum 200 caractères recommandés. Ce compte rendu sera utilisé pour valoriser votre activité.",
+        "testimonialsTitle": "Témoignages des participants",
+        "testimonialsSubtitle": "Minimum 2 témoignages requis",
+        "addTestimonial": "Ajouter un témoignage",
+        "addFirstTestimonial": "Ajouter le premier témoignage",
+        "noTestimonials": "Aucun témoignage pour le moment",
+        "confirmDeleteTestimonial": "Êtes-vous sûr de vouloir supprimer ce témoignage ?",
+        "anonymous": "Anonyme"
+      },
+      "testimonial": {
+        "addTitle": "Ajouter un témoignage",
+        "addSubtitle": "Recueillez le témoignage d'un participant à votre activité",
+        "participantName": "Nom du participant",
+        "participantNamePlaceholder": "Ex: Marie Dubois",
+        "participantEmail": "Email du participant",
+        "participantEmailPlaceholder": "Ex: marie.dubois@exemple.com",
+        "text": "Témoignage",
+        "textPlaceholder": "Partagez votre expérience, ce que vous avez appris, et comment cette activité vous a aidé...",
+        "themes": "Thématiques abordées",
+        "photo": "Photo du participant",
+        "uploadPhoto": "Ajouter une photo"
+      },
+      "errors": {
+        "saveReportFailed": "Erreur lors de la sauvegarde du compte rendu",
+        "addTestimonialFailed": "Erreur lors de l'ajout du témoignage",
+        "removeTestimonialFailed": "Erreur lors de la suppression du témoignage",
+        "uploadPhotoFailed": "Erreur lors de l'upload de la photo"
+      }
+    }
   },
   "activityDatesManager": {
     "title": "Gestion des dates d'activités",

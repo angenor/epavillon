@@ -825,7 +825,60 @@
     "photoAuthorPlaceholder": "Ex: John Doe",
     "uploading": "Uploading",
     "imageTooLarge": "Image too large",
-    "imageWillBeCompressed": "The image will be automatically compressed to less than 1 MB before upload"
+    "imageWillBeCompressed": "The image will be automatically compressed to less than 1 MB before upload",
+    "completion": {
+      "modal": {
+        "title": "Activity Completion Report",
+        "subtitle": "Your activity is complete! Please provide the following elements",
+        "allComplete": "Report Complete",
+        "allCompleteDesc": "All required elements have been provided. Thank you for your collaboration!",
+        "missing": "Missing Elements",
+        "requirements": "Required Elements",
+        "req1": "A summary report of the activity",
+        "req2": "At least 2 participant testimonials",
+        "req3": "At least 1 photo from the activity",
+        "action1": "Report",
+        "action2": "Testimonials",
+        "action3": "Photos",
+        "footerNote": "These elements are essential to showcase your activity",
+        "startNow": "Start Now"
+      },
+      "section": {
+        "title": "Activity Completion Report",
+        "subtitle": "Provide a report and testimonials for your activity",
+        "complete": "Complete",
+        "incomplete": "Incomplete",
+        "reportLabel": "Summary Report",
+        "reportPlaceholder": "Describe the results, key learnings, and impact of your activity. Include quantitative data if possible (number of participants, countries represented, etc.)",
+        "reportHint": "Minimum 200 characters recommended. This report will be used to showcase your activity.",
+        "testimonialsTitle": "Participant Testimonials",
+        "testimonialsSubtitle": "Minimum 2 testimonials required",
+        "addTestimonial": "Add Testimonial",
+        "addFirstTestimonial": "Add First Testimonial",
+        "noTestimonials": "No testimonials yet",
+        "confirmDeleteTestimonial": "Are you sure you want to delete this testimonial?",
+        "anonymous": "Anonymous"
+      },
+      "testimonial": {
+        "addTitle": "Add Testimonial",
+        "addSubtitle": "Collect a testimonial from a participant in your activity",
+        "participantName": "Participant Name",
+        "participantNamePlaceholder": "Ex: Mary Smith",
+        "participantEmail": "Participant Email",
+        "participantEmailPlaceholder": "Ex: mary.smith@example.com",
+        "text": "Testimonial",
+        "textPlaceholder": "Share your experience, what you learned, and how this activity helped you...",
+        "themes": "Topics Covered",
+        "photo": "Participant Photo",
+        "uploadPhoto": "Add Photo"
+      },
+      "errors": {
+        "saveReportFailed": "Error saving completion report",
+        "addTestimonialFailed": "Error adding testimonial",
+        "removeTestimonialFailed": "Error removing testimonial",
+        "uploadPhotoFailed": "Error uploading photo"
+      }
+    }
   },
   "activityDatesManager": {
     "title": "Activity Dates Management",

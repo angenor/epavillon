@@ -93,6 +93,8 @@
     "view": "Voir",
     "delete": "Supprimer",
     "deleting": "Suppression...",
+    "added": "ajouté",
+    "completed": "Terminé",
     "goBack": "Retour",
     "goHome": "Accueil",
     "editPost": {
@@ -400,5 +402,13 @@
     "registrationClosed": "Inscriptions fermées",
     "cancelled": "Annulé",
     "inProgress": "En cours"
+  },
+  "themes": {
+    "pertes_et_prejudices": "Pertes et Préjudices",
+    "adaptation": "Adaptation",
+    "attenuation": "Atténuation",
+    "financement_climatique": "Financement Climatique",
+    "transfert_technologique": "Transfert Technologique",
+    "renforcement_capacites": "Renforcement des Capacités"
   }
 }

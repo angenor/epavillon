@@ -73,6 +73,8 @@
     "view": "View",
     "delete": "Delete",
     "deleting": "Deleting...",
+    "added": "added",
+    "completed": "Completed",
     "goBack": "Go Back",
     "goHome": "Home",
     "close": "Close",
@@ -339,5 +341,13 @@
     "registrationClosed": "Registration closed",
     "cancelled": "Cancelled",
     "inProgress": "In progress"
+  },
+  "themes": {
+    "pertes_et_prejudices": "Loss and Damage",
+    "adaptation": "Adaptation",
+    "attenuation": "Mitigation",
+    "financement_climatique": "Climate Finance",
+    "transfert_technologique": "Technology Transfer",
+    "renforcement_capacites": "Capacity Building"
   }
 }

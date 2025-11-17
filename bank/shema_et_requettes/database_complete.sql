@@ -335,6 +335,7 @@ CREATE TABLE public.activities (
     final_end_date TIMESTAMPTZ,
     activites_view_count  NUMBER DEFAULT 0,
     validation_status validation_status DEFAULT 'draft',
+    completion_report TEXT, -- Compte rendu synthétique fourni après completion
     cover_image_high_url TEXT,
     cover_image_low_url TEXT,
     banner_url TEXT,
@@ -916,7 +917,7 @@ CREATE TABLE public.innovations_practices (
 );
 
 -- Types de contexte pour témoignages et commentaires
-CREATE TYPE testimonial_context_type AS ENUM ('innovation_practice', 'training', 'event', 'platform');
+CREATE TYPE testimonial_context_type AS ENUM ('innovation_practice', 'training', 'event', 'platform', 'activity');
 CREATE TYPE thematique_type AS ENUM (
     'pertes_et_prejudices',
     'adaptation',
