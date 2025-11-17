@@ -231,6 +231,11 @@
         </div>
         <div class="p-4 sm:p-6 md:p-8">
 
+          <!-- Galerie de photos (uniquement pour les activités terminées) -->
+          <div v-if="activity && activity.validation_status === 'completed'" class="mb-8">
+            <ActivityPublicMediaGallery :medias="mediaGallery.medias.value" />
+          </div>
+
           <!-- Objectifs -->
           <div v-if="activity?.objectives" class="mb-6">
             <h3 class="font-semibold text-gray-900 dark:text-white mb-2 flex items-center text-xl uppercase">
@@ -1041,7 +1046,9 @@ import { useSupabase } from '@/composables/useSupabase'
 import { useAuthStore } from '@/stores/auth'
 import { useCountdown } from '@/composables/useCountdown'
 import { useActivities } from '@/composables/useActivities'
+import { useMediaGallery } from '@/composables/useMediaGallery'
 import CommentFloatingButtonUser from '@/components/CommentFloatingButtonUser.vue'
+import ActivityPublicMediaGallery from '@/components/activity/ActivityPublicMediaGallery.vue'
 import { getYoutubeEmbedUrl } from '@/utils/youtube'
 
 const { t, locale } = useI18n()
@@ -1050,6 +1057,10 @@ const router = useRouter()
 const supabase = useSupabase()
 const authStore = useAuthStore()
 const { isLive } = useActivities()
+
+// Initialize media gallery composable
+const activityId = computed(() => route.params.id)
+const mediaGallery = useMediaGallery(activityId.value)
 
 // État
 const activity = ref(null)
@@ -1651,6 +1662,11 @@ const loadActivity = async () => {
 
     if (!docsError && docsData) {
       documents.value = docsData
+    }
+
+    // Charger les médias (uniquement si l'activité est terminée)
+    if (activityData.validation_status === 'completed') {
+      await mediaGallery.loadMedias()
     }
 
     // Vérifier si l'utilisateur est inscrit
