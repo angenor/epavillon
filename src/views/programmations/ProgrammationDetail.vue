@@ -776,7 +776,7 @@ const event = ref(null)
 const activities = ref([])
 const viewMode = ref(isMobile ? 'grid' : 'calendar') // 'grid' sur mobile, 'calendar' sur desktop
 const selectedDate = ref(new Date())
-const currentWeek = ref(1) // Semaine actuelle (1 ou 2)
+const currentWeek = ref(2) // Semaine actuelle (1 ou 2)
 const week1StartDate = ref(null)
 const week2StartDate = ref(null)
 const isSearchModalOpen = ref(false)
@@ -1389,16 +1389,9 @@ const calculateWeekDates = () => {
   week2Date.setDate(week2Date.getDate() + 7)
   week2StartDate.value = week2Date
 
-  // Définir la date sélectionnée par défaut sur le jour actuel (15 novembre 2025)
-  const today = new Date(2025, 10, 15) // 15 novembre 2025 (mois 10 = novembre car 0-indexed)
-  selectedDate.value = today
-
-  // Déterminer dans quelle semaine se trouve aujourd'hui
-  if (today >= week2StartDate.value) {
-    currentWeek.value = 2
-  } else {
-    currentWeek.value = 1
-  }
+  // Toujours sélectionner la semaine 2 par défaut
+  currentWeek.value = 2
+  selectedDate.value = new Date(week2StartDate.value)
 }
 
 const loadEvent = async () => {
