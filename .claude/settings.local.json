@@ -38,7 +38,14 @@
       "Bash(export PATH=\"/usr/local/bin:/opt/homebrew/bin:/usr/bin:$PATH\")",
       "Bash(/usr/local/bin/npm run build)",
       "Bash(export PATH=\"/usr/local/bin:$PATH\")",
-      "Bash(/usr/bin/git push)"
+      "Bash(/usr/bin/git push)",
+      "Bash(/usr/bin/git --version)",
+      "Bash(brew list:*)",
+      "Bash(brew reinstall:*)",
+      "Bash(git fetch:*)",
+      "Bash(echo:*)",
+      "Bash(source ~/.zshrc)",
+      "Bash(git --version:*)"
     ],
     "deny": [],
     "ask": []
