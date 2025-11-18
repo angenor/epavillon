@@ -259,9 +259,10 @@ export function usePdfExport() {
         doc.setFontSize(fontSizes.title)
         doc.setFont('helvetica', 'bold')
 
-        // Découper le titre si trop long
-        const titleLines = doc.splitTextToSize(activity.title || '', columnWidth - 4)
-        doc.text(titleLines, columnX + 2, currentY)
+        // Découper le titre si trop long - avec marge de sécurité augmentée
+        const titleMaxWidth = columnWidth - 6 // Marge de 3mm de chaque côté
+        const titleLines = doc.splitTextToSize(activity.title || '', titleMaxWidth)
+        doc.text(titleLines, columnX + 3, currentY)
         currentY += titleLines.length * fontSizes.lineSpacing + 1
 
         // Espacement avant organisation
@@ -285,7 +286,8 @@ export function usePdfExport() {
           doc.setFontSize(fontSizes.organization)
           doc.setTextColor(...darkText)
           const orgText = activity.organization.name
-          const orgLines = doc.splitTextToSize(orgText, columnWidth - 8)
+          const orgMaxWidth = columnWidth - 10 // Marge de sécurité augmentée
+          const orgLines = doc.splitTextToSize(orgText, orgMaxWidth)
           doc.text(orgLines, columnX + 5, currentY)
           currentY += orgLines.length * (fontSizes.lineSpacing * 0.75)
         }
@@ -312,16 +314,18 @@ export function usePdfExport() {
           doc.setFontSize(fontSizes.speaker)
           doc.setTextColor(...darkText)
 
+          const speakerMaxWidth = columnWidth - 10 // Marge de sécurité augmentée
+
           activitySpeakers.forEach(speaker => {
             const speakerText = `• ${speaker.first_name} ${speaker.last_name}`
-            const speakerLines = doc.splitTextToSize(speakerText, columnWidth - 8)
+            const speakerLines = doc.splitTextToSize(speakerText, speakerMaxWidth)
             doc.text(speakerLines, columnX + 5, currentY)
             currentY += speakerLines.length * (fontSizes.lineSpacing * 0.75)
 
             if (speaker.position) {
               doc.setFontSize(fontSizes.position)
               doc.setTextColor(...grayText)
-              const posLines = doc.splitTextToSize(`  ${speaker.position}`, columnWidth - 8)
+              const posLines = doc.splitTextToSize(`  ${speaker.position}`, speakerMaxWidth)
               doc.text(posLines, columnX + 5, currentY)
               currentY += posLines.length * (fontSizes.lineSpacing * 0.7)
               doc.setFontSize(fontSizes.speaker)

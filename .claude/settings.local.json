@@ -37,7 +37,8 @@
       "Bash(export PATH=\"/usr/local/bin:/opt/homebrew/bin:$PATH\")",
       "Bash(export PATH=\"/usr/local/bin:/opt/homebrew/bin:/usr/bin:$PATH\")",
       "Bash(/usr/local/bin/npm run build)",
-      "Bash(export PATH=\"/usr/local/bin:$PATH\")"
+      "Bash(export PATH=\"/usr/local/bin:$PATH\")",
+      "Bash(/usr/bin/git push)"
     ],
     "deny": [],
     "ask": []
