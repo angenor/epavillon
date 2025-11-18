@@ -216,18 +216,99 @@
               <span class="hidden sm:inline">{{ t('programmations.viewCalendar') }}</span>
             </button>
 
-            <!-- Bouton Export PDF - visible uniquement pour les admins -->
-            <button
-              v-if="authStore.isAdmin"
-              @click="exportDayProgramToPdf(event, activities, selectedDate, locale, t)"
-              class="px-4 py-2 rounded-lg font-medium bg-green-600 hover:bg-green-700 text-white transition-all flex items-center gap-2 cursor-pointer"
-              title="Télécharger le programme du jour en PDF (format 16:9)"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <span class="hidden sm:inline">{{ t('programmations.exportDayProgramPdf') }}</span>
-            </button>
+            <!-- Bouton Export PDF avec paramètres - visible uniquement pour les admins -->
+            <div v-if="authStore.isAdmin" class="relative">
+              <!-- Bouton principal Export PDF -->
+              <div class="flex gap-1">
+                <button
+                  @click="exportDayProgramToPdf(event, activities, selectedDate, locale, t, pdfScale)"
+                  class="px-4 py-2 rounded-l-lg font-medium bg-green-600 hover:bg-green-700 text-white transition-all flex items-center gap-2 cursor-pointer"
+                  title="Télécharger le programme du jour en PDF (format 16:9)"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span class="hidden sm:inline">{{ t('programmations.exportDayProgramPdf') }}</span>
+                </button>
+
+                <!-- Bouton paramètres -->
+                <button
+                  @click="showPdfSettings = !showPdfSettings"
+                  class="px-2 py-2 rounded-r-lg font-medium bg-green-600 hover:bg-green-700 text-white transition-all cursor-pointer border-l border-green-500"
+                  title="Paramètres d'export PDF"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Menu des paramètres PDF -->
+              <div
+                v-if="showPdfSettings"
+                class="absolute top-full right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 p-4 z-50"
+              >
+                <div class="space-y-4">
+                  <!-- Titre -->
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
+                      {{ locale === 'fr' ? 'Paramètres d\'export PDF' : 'PDF Export Settings' }}
+                    </h3>
+                    <button
+                      @click="showPdfSettings = false"
+                      class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer"
+                    >
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  <!-- Slider d'échelle -->
+                  <div>
+                    <div class="flex items-center justify-between mb-2">
+                      <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {{ locale === 'fr' ? 'Échelle du contenu' : 'Content Scale' }}
+                      </label>
+                      <span class="text-sm font-semibold text-green-600 dark:text-green-400">
+                        {{ Math.round(pdfScale * 100) }}%
+                      </span>
+                    </div>
+
+                    <input
+                      type="range"
+                      v-model.number="pdfScale"
+                      min="0.6"
+                      max="1.4"
+                      step="0.05"
+                      class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-green-600"
+                    />
+
+                    <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      <span>60%</span>
+                      <span>100%</span>
+                      <span>140%</span>
+                    </div>
+
+                    <!-- Description -->
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                      {{ locale === 'fr'
+                        ? 'Réduisez l\'échelle si le contenu déborde de la page'
+                        : 'Reduce scale if content overflows the page' }}
+                    </p>
+                  </div>
+
+                  <!-- Bouton Reset -->
+                  <button
+                    @click="pdfScale = 1.0"
+                    class="w-full px-3 py-2 text-sm rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+                  >
+                    {{ locale === 'fr' ? 'Réinitialiser (100%)' : 'Reset (100%)' }}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -781,6 +862,8 @@ const week1StartDate = ref(null)
 const week2StartDate = ref(null)
 const isSearchModalOpen = ref(false)
 const incidentMessages = ref([]) // Messages d'alerte/incidents
+const pdfScale = ref(1.0) // Facteur d'échelle pour l'export PDF (0.6 à 1.4)
+const showPdfSettings = ref(false) // Afficher/masquer les paramètres PDF
 
 // Paramètres de route
 const year = computed(() => parseInt(route.params.year))

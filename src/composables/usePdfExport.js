@@ -14,10 +14,12 @@ export function usePdfExport() {
   /**
    * Génère un PDF du programme du jour au format 16:9 (paysage)
    * Inspiré du design de la Journée Finance Durable
+   * @param {number} customScale - Facteur d'échelle personnalisé (0.6 à 1.4), par défaut 1.0
    */
-  const exportDayProgramToPdf = async (event, activities, selectedDate, locale, t) => {
+  const exportDayProgramToPdf = async (event, activities, selectedDate, locale, t, customScale = 1.0) => {
     console.log('PDF Export - Date sélectionnée:', selectedDate)
     console.log('PDF Export - Nombre total d\'activités:', activities.length)
+    console.log('PDF Export - Échelle personnalisée:', customScale, `(${Math.round(customScale * 100)}%)`)
 
     // Format 16:9 vrai paysage (297mm x 167mm)
     const doc = new jsPDF({
@@ -183,8 +185,30 @@ export function usePdfExport() {
     const columnWidth = (totalWidth - (2 * columnGap)) / 3
     const startY = 30 // Ajusté pour format 16:9 avec en-tête de 25mm
 
+    // Fonction pour calculer les tailles de police adaptées
+    const calculateFontSizes = () => {
+      // Utiliser le customScale fourni par l'utilisateur
+      // Le customScale va de 0.6 (60%) à 1.4 (140%)
+      const scaleFactor = customScale
+
+      return {
+        title: Math.max(5, 9.5 * scaleFactor),
+        organization: Math.max(4.5, 7.5 * scaleFactor),
+        organizationLabel: Math.max(4, 7 * scaleFactor),
+        speaker: Math.max(4.5, 7.5 * scaleFactor),
+        speakerLabel: Math.max(4, 7 * scaleFactor),
+        position: Math.max(4, 6.5 * scaleFactor),
+        time: Math.max(6, 10 * scaleFactor),
+        lineSpacing: Math.max(2, 4 * scaleFactor),
+        sectionSpacing: Math.max(1.5, 4 * scaleFactor)
+      }
+    }
+
     // Fonction pour dessiner une colonne
     const drawColumn = async (activities, columnX, title, partNumber) => {
+      // Calculer les tailles adaptées avec l'échelle personnalisée
+      const fontSizes = calculateFontSizes()
+
       // Bande verte du titre avec coins légèrement arrondis
       doc.setFillColor(...greenBand)
       doc.roundedRect(columnX, startY, columnWidth, 8, 1, 1, 'F')
@@ -210,7 +234,7 @@ export function usePdfExport() {
           doc.setDrawColor(220, 220, 220)
           doc.setLineWidth(0.1)
           doc.line(columnX + 2, currentY - 1, columnX + columnWidth - 2, currentY - 1)
-          currentY += 3 // Plus d'espace pour ne pas toucher l'heure suivante
+          currentY += fontSizes.sectionSpacing
         }
 
         // Heure en vert avec fond léger pour meilleure visibilité
@@ -222,7 +246,7 @@ export function usePdfExport() {
         doc.roundedRect(timeBoxX, timeBoxY, timeBoxWidth, timeBoxHeight, 1, 1, 'F')
 
         doc.setTextColor(...greenTime)
-        doc.setFontSize(10)
+        doc.setFontSize(fontSizes.time)
         doc.setFont('helvetica', 'bold')
         // Centrer l'heure dans le rectangle (horizontalement et verticalement)
         const timeTextX = timeBoxX + timeBoxWidth / 2
@@ -232,20 +256,20 @@ export function usePdfExport() {
 
         // Titre de l'activité en noir avec meilleure lisibilité
         doc.setTextColor(...darkText)
-        doc.setFontSize(9.5)
+        doc.setFontSize(fontSizes.title)
         doc.setFont('helvetica', 'bold')
 
         // Découper le titre si trop long
         const titleLines = doc.splitTextToSize(activity.title || '', columnWidth - 4)
         doc.text(titleLines, columnX + 2, currentY)
-        currentY += titleLines.length * 4 + 1
+        currentY += titleLines.length * fontSizes.lineSpacing + 1
 
         // Espacement avant organisation
-        currentY += 1.5
+        currentY += fontSizes.sectionSpacing * 0.5
 
         // Organisation avec icône
         if (activity.organization?.name) {
-          doc.setFontSize(7)
+          doc.setFontSize(fontSizes.organizationLabel)
           doc.setFont('helvetica', 'bold')
           doc.setTextColor(...grayText)
 
@@ -255,24 +279,24 @@ export function usePdfExport() {
 
           const orgLabel = locale === 'fr' ? 'Organisation :' : 'Organization:'
           doc.text(orgLabel, columnX + 5, currentY)
-          currentY += 3
+          currentY += fontSizes.lineSpacing * 0.75
 
           doc.setFont('helvetica', 'normal')
-          doc.setFontSize(7.5)
+          doc.setFontSize(fontSizes.organization)
           doc.setTextColor(...darkText)
           const orgText = activity.organization.name
           const orgLines = doc.splitTextToSize(orgText, columnWidth - 8)
           doc.text(orgLines, columnX + 5, currentY)
-          currentY += orgLines.length * 3
+          currentY += orgLines.length * (fontSizes.lineSpacing * 0.75)
         }
 
         // Espacement avant intervenants
-        currentY += 1.5
+        currentY += fontSizes.sectionSpacing * 0.5
 
         // Panélistes avec icône
         const activitySpeakers = speakersByActivity[activity.id] || []
         if (activitySpeakers.length > 0) {
-          doc.setFontSize(7)
+          doc.setFontSize(fontSizes.speakerLabel)
           doc.setFont('helvetica', 'bold')
           doc.setTextColor(...grayText)
 
@@ -282,31 +306,31 @@ export function usePdfExport() {
 
           const speakersLabel = locale === 'fr' ? 'Intervenants :' : 'Speakers:'
           doc.text(speakersLabel, columnX + 5, currentY)
-          currentY += 3
+          currentY += fontSizes.lineSpacing * 0.75
 
           doc.setFont('helvetica', 'normal')
-          doc.setFontSize(7.5)
+          doc.setFontSize(fontSizes.speaker)
           doc.setTextColor(...darkText)
 
           activitySpeakers.forEach(speaker => {
             const speakerText = `• ${speaker.first_name} ${speaker.last_name}`
             const speakerLines = doc.splitTextToSize(speakerText, columnWidth - 8)
             doc.text(speakerLines, columnX + 5, currentY)
-            currentY += speakerLines.length * 3
+            currentY += speakerLines.length * (fontSizes.lineSpacing * 0.75)
 
             if (speaker.position) {
-              doc.setFontSize(6.5)
+              doc.setFontSize(fontSizes.position)
               doc.setTextColor(...grayText)
               const posLines = doc.splitTextToSize(`  ${speaker.position}`, columnWidth - 8)
               doc.text(posLines, columnX + 5, currentY)
-              currentY += posLines.length * 2.8
-              doc.setFontSize(7.5)
+              currentY += posLines.length * (fontSizes.lineSpacing * 0.7)
+              doc.setFontSize(fontSizes.speaker)
               doc.setTextColor(...darkText)
             }
           })
         }
 
-        currentY += 4 // Espacement entre activités
+        currentY += fontSizes.sectionSpacing // Espacement entre activités
 
         // Vérifier si on dépasse la page
         if (currentY > pageHeight - 20) {
