@@ -221,7 +221,7 @@
               <!-- Bouton principal Export PDF -->
               <div class="flex gap-1">
                 <button
-                  @click="exportDayProgramToPdf(event, activities, selectedDate, locale, t, pdfScale)"
+                  @click="exportDayProgramToPdf(event, activities, pdfExportDate, locale, t, pdfScale)"
                   class="px-4 py-2 rounded-l-lg font-medium bg-green-600 hover:bg-green-700 text-white transition-all flex items-center gap-2 cursor-pointer"
                   title="Télécharger le programme du jour en PDF (format 16:9)"
                 >
@@ -263,6 +263,23 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>
+                  </div>
+
+                  <!-- Sélecteur de date -->
+                  <div>
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-2">
+                      {{ locale === 'fr' ? 'Date du programme' : 'Program Date' }}
+                    </label>
+                    <input
+                      type="date"
+                      v-model="pdfExportDateString"
+                      class="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-transparent cursor-pointer"
+                    />
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                      {{ locale === 'fr'
+                        ? 'Sélectionnez le jour à exporter en PDF'
+                        : 'Select the day to export as PDF' }}
+                    </p>
                   </div>
 
                   <!-- Slider d'échelle -->
@@ -864,6 +881,7 @@ const isSearchModalOpen = ref(false)
 const incidentMessages = ref([]) // Messages d'alerte/incidents
 const pdfScale = ref(1.0) // Facteur d'échelle pour l'export PDF (0.6 à 1.4)
 const showPdfSettings = ref(false) // Afficher/masquer les paramètres PDF
+const pdfExportDate = ref(new Date()) // Date sélectionnée pour l'export PDF
 
 // Paramètres de route
 const year = computed(() => parseInt(route.params.year))
@@ -871,6 +889,23 @@ const eventId = computed(() => route.params.eventId)
 
 // Locale pour vue-cal
 const currentLocale = computed(() => locale.value)
+
+// Computed pour gérer la date d'export PDF au format YYYY-MM-DD pour l'input type="date"
+const pdfExportDateString = computed({
+  get() {
+    const date = pdfExportDate.value
+    if (!date) return ''
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  },
+  set(value) {
+    if (value) {
+      pdfExportDate.value = new Date(value + 'T00:00:00')
+    }
+  }
+})
 
 // Vérifie si l'événement est une CdP
 const isCopEvent = computed(() => {
@@ -1770,6 +1805,13 @@ watch(() => viewMode.value, (newMode) => {
   const isMobileNow = window.matchMedia('(max-width: 768px)').matches
   if (isMobileNow && newMode === 'list') {
     viewMode.value = 'grid'
+  }
+})
+
+// Watcher pour synchroniser la date d'export PDF avec la date sélectionnée quand on ouvre les paramètres
+watch(showPdfSettings, (isOpen) => {
+  if (isOpen) {
+    pdfExportDate.value = new Date(selectedDate.value)
   }
 })
 
