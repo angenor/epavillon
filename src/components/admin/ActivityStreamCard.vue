@@ -35,6 +35,26 @@
           </span>
         </div>
 
+        <!-- Validation Status Selector -->
+        <div class="flex items-center gap-2 mb-3">
+          <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            {{ t('admin.youtube.validationStatus') }}:
+          </label>
+          <select
+            v-model="selectedValidationStatus"
+            @change="handleValidationStatusChange"
+            :disabled="isUpdatingStatus"
+            class="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <option v-for="status in validationStatuses" :key="status.value" :value="status.value">
+              {{ status.label }}
+            </option>
+          </select>
+          <span v-if="isUpdatingStatus" class="text-xs text-gray-500 dark:text-gray-400">
+            {{ t('common.saving') }}...
+          </span>
+        </div>
+
         <!-- Date Info -->
         <div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
           <div class="flex items-center">
@@ -177,7 +197,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { extractYoutubeVideoId, getYoutubeWatchUrl, fetchCurrentLiveStreamId } from '@/utils/youtube'
 import { useActivityEmailTemplates } from '@/composables/useActivityEmailTemplates'
@@ -199,12 +219,44 @@ const props = defineProps({
 })
 
 // Emits
-const emit = defineEmits(['update-link', 'remove-link', 'auto-fetch-link'])
+const emit = defineEmits(['update-link', 'remove-link', 'auto-fetch-link', 'update-validation-status'])
 
 // État
 const videoIdInput = ref('')
 const isUpdating = ref(false)
 const isFetching = ref(false)
+const isUpdatingStatus = ref(false)
+const selectedValidationStatus = ref(props.activity.validation_status || 'approved')
+
+// Mettre à jour le statut sélectionné quand l'activité change
+watch(() => props.activity.validation_status, (newStatus) => {
+  if (newStatus) {
+    selectedValidationStatus.value = newStatus
+  }
+})
+
+// Liste des statuts de validation disponibles
+const validationStatuses = computed(() => [
+  { value: 'approved', label: t('activity.status.approved') },
+  { value: 'live', label: t('activity.status.live') },
+  { value: 'completed', label: t('activity.status.completed') },
+  { value: 'cancelled', label: t('activity.status.cancelled') }
+])
+
+// Gestion du changement de statut de validation
+const handleValidationStatusChange = async () => {
+  if (isUpdatingStatus.value) return
+
+  isUpdatingStatus.value = true
+  try {
+    emit('update-validation-status', {
+      activityId: props.activity.id,
+      status: selectedValidationStatus.value
+    })
+  } finally {
+    isUpdatingStatus.value = false
+  }
+}
 
 // Méthodes
 const formatDate = (dateString) => {

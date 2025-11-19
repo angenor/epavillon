@@ -51,7 +51,8 @@
       "Bash(env)",
       "Bash(alias git=/usr/bin/git)",
       "Bash(env -i HOME=\"$HOME\" PATH=\"/usr/bin:/bin:/usr/sbin:/sbin\" /usr/bin/git fetch:*)",
-      "Bash(/usr/bin/git fetch)"
+      "Bash(/usr/bin/git fetch)",
+      "Bash(/usr/bin/git status)"
     ],
     "deny": [],
     "ask": []

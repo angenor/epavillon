@@ -66,6 +66,7 @@
             @update-link="handleUpdateLink"
             @remove-link="handleRemoveLink"
             @auto-fetch-link="handleAutoFetchLink"
+            @update-validation-status="handleUpdateValidationStatus"
           />
         </div>
       </div>
@@ -102,6 +103,7 @@
             @update-link="handleUpdateLink"
             @remove-link="handleRemoveLink"
             @auto-fetch-link="handleAutoFetchLink"
+            @update-validation-status="handleUpdateValidationStatus"
           />
         </div>
       </div>
@@ -138,6 +140,7 @@
             @update-link="handleUpdateLink"
             @remove-link="handleRemoveLink"
             @auto-fetch-link="handleAutoFetchLink"
+            @update-validation-status="handleUpdateValidationStatus"
           />
         </div>
       </div>
@@ -163,6 +166,8 @@ import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useYoutubeLivestream } from '@/composables/useYoutubeLivestream'
 import useEvents from '@/composables/useEvents'
+import { useAdmin } from '@/composables/useAdmin'
+import { useAuthStore } from '@/stores/auth'
 import ActivityStreamCard from '@/components/admin/ActivityStreamCard.vue'
 
 const { t } = useI18n()
@@ -178,6 +183,8 @@ const {
 } = useYoutubeLivestream()
 
 const { fetchActiveEvents, events: availableEvents } = useEvents()
+const { validateActivity } = useAdmin()
+const authStore = useAuthStore()
 
 // État
 const selectedEventId = ref('')
@@ -222,6 +229,27 @@ const handleRemoveLink = async (activityId) => {
 const handleAutoFetchLink = async (activityId) => {
   // Cette fonctionnalité sera gérée dans le composant enfant
   // et appellera handleUpdateLink avec l'ID récupéré
+}
+
+const handleUpdateValidationStatus = async ({ activityId, status }) => {
+  if (!authStore.user) {
+    alert(t('common.errors.notAuthenticated'))
+    return
+  }
+
+  const result = await validateActivity(activityId, status, authStore.user.id)
+
+  if (result.success) {
+    // Mettre à jour l'activité dans la liste locale
+    const activityIndex = activities.value.findIndex(a => a.id === activityId)
+    if (activityIndex !== -1) {
+      activities.value[activityIndex].validation_status = status
+    }
+    // Recharger pour recalculer les catégories (future/finished/cancelled)
+    await loadActivities()
+  } else {
+    alert(t('admin.youtube.statusUpdateError'))
+  }
 }
 
 // Lifecycle

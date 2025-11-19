@@ -438,7 +438,9 @@
       "alertImminence": "Alerter de l'imminence",
       "cancelForAbsence": "Annuler pour absence",
       "requestPostElements": "Demander éléments post-activité",
-      "confirmCancellationEmail": "Êtes-vous sûr de vouloir envoyer un email d'annulation pour absence ?"
+      "confirmCancellationEmail": "Êtes-vous sûr de vouloir envoyer un email d'annulation pour absence ?",
+      "validationStatus": "Statut de validation",
+      "statusUpdateError": "Erreur lors de la mise à jour du statut"
     },
     "incidentMessages": {
       "title": "Messages d'Incidents",
