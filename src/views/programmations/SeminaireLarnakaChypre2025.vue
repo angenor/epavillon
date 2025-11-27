@@ -239,23 +239,47 @@
               <!-- Contenu du jour 1 -->
               <div class="md:grid md:grid-cols-2 md:gap-8 items-start">
                 <!-- En-tête (mobile) / Gauche (desktop) -->
-                <div class="md:text-right mb-6 md:mb-0 md:pr-12">
-                  <div class="relative inline-block">
-                    <!-- Badge date moderne -->
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border-2 border-orange-500 transform hover:scale-105 transition-all duration-300">
-                      <div class="text-center">
-                        <div class="text-orange-600 dark:text-orange-400 text-sm font-bold uppercase tracking-wider mb-2">Jour 1</div>
-                        <div class="text-4xl font-black text-gray-900 dark:text-white mb-1">01</div>
-                        <div class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Décembre</div>
-                        <div class="text-sm text-gray-500 dark:text-gray-400">2025</div>
-                        <div class="mt-3 pt-3 border-t border-orange-200 dark:border-orange-800">
-                          <div class="text-xs font-medium text-orange-600 dark:text-orange-400">{{ t('cyprusSeminar.day1.title') }}</div>
+                <div class="mb-6 md:mb-0 md:pr-12">
+                  <!-- Version Mobile : Badge horizontal compact -->
+                  <div class="md:hidden bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl shadow-lg p-4 mb-6">
+                    <div class="flex items-center justify-between text-white">
+                      <div class="flex items-center gap-4">
+                        <div class="bg-white/20 backdrop-blur-sm rounded-xl p-3 flex flex-col items-center min-w-[70px]">
+                          <div class="text-3xl font-black">01</div>
+                          <div class="text-xs font-semibold uppercase">Déc</div>
+                        </div>
+                        <div>
+                          <div class="text-xs font-semibold uppercase tracking-wide opacity-90">Jour 1</div>
+                          <div class="text-lg font-bold">{{ t('cyprusSeminar.day1.title') }}</div>
+                          <div class="text-xs opacity-75">2025</div>
                         </div>
                       </div>
+                      <div class="bg-white/20 backdrop-blur-sm rounded-full p-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
                     </div>
-                    <!-- Petit triangle pointer vers les sessions -->
-                    <div class="hidden md:block absolute -right-3 top-1/2 transform -translate-y-1/2">
-                      <div class="w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-l-8 border-l-orange-500"></div>
+                  </div>
+
+                  <!-- Version Desktop : Badge vertical -->
+                  <div class="hidden md:block md:text-right">
+                    <div class="relative inline-block">
+                      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border-2 border-orange-500 transform hover:scale-105 transition-all duration-300">
+                        <div class="text-center">
+                          <div class="text-orange-600 dark:text-orange-400 text-sm font-bold uppercase tracking-wider mb-2">Jour 1</div>
+                          <div class="text-4xl font-black text-gray-900 dark:text-white mb-1">01</div>
+                          <div class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Décembre</div>
+                          <div class="text-sm text-gray-500 dark:text-gray-400">2025</div>
+                          <div class="mt-3 pt-3 border-t border-orange-200 dark:border-orange-800">
+                            <div class="text-xs font-medium text-orange-600 dark:text-orange-400">{{ t('cyprusSeminar.day1.title') }}</div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Petit triangle pointer vers les sessions -->
+                      <div class="absolute -right-3 top-1/2 transform -translate-y-1/2">
+                        <div class="w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-l-8 border-l-orange-500"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -335,10 +359,56 @@
 
               <!-- Contenu du jour 2 (inversé sur desktop) -->
               <div class="md:grid md:grid-cols-2 md:gap-8 items-start">
-                <!-- Sessions (à gauche sur desktop) -->
+                <!-- En-tête (mobile en premier, desktop à droite) -->
+                <div class="order-first md:order-2 mb-6 md:mb-0 md:pl-12">
+                  <!-- Version Mobile : Badge horizontal compact -->
+                  <div class="md:hidden bg-gradient-to-r from-green-500 to-green-600 rounded-2xl shadow-lg p-4 mb-6">
+                    <div class="flex items-center justify-between text-white">
+                      <div class="flex items-center gap-4">
+                        <div class="bg-white/20 backdrop-blur-sm rounded-xl p-3 flex flex-col items-center min-w-[70px]">
+                          <div class="text-3xl font-black">02</div>
+                          <div class="text-xs font-semibold uppercase">Déc</div>
+                        </div>
+                        <div>
+                          <div class="text-xs font-semibold uppercase tracking-wide opacity-90">Jour 2</div>
+                          <div class="text-lg font-bold">{{ t('cyprusSeminar.day2.title') }}</div>
+                          <div class="text-xs opacity-75">2025</div>
+                        </div>
+                      </div>
+                      <div class="bg-white/20 backdrop-blur-sm rounded-full p-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Version Desktop : Badge vertical -->
+                  <div class="hidden md:block">
+                    <div class="relative inline-block">
+                      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border-2 border-green-500 transform hover:scale-105 transition-all duration-300">
+                        <div class="text-center">
+                          <div class="text-green-600 dark:text-green-400 text-sm font-bold uppercase tracking-wider mb-2">Jour 2</div>
+                          <div class="text-4xl font-black text-gray-900 dark:text-white mb-1">02</div>
+                          <div class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Décembre</div>
+                          <div class="text-sm text-gray-500 dark:text-gray-400">2025</div>
+                          <div class="mt-3 pt-3 border-t border-green-200 dark:border-green-800">
+                            <div class="text-xs font-medium text-green-600 dark:text-green-400">{{ t('cyprusSeminar.day2.title') }}</div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Petit triangle pointer vers les sessions (à gauche pour jour 2) -->
+                      <div class="absolute -left-3 top-1/2 transform -translate-y-1/2">
+                        <div class="w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-r-8 border-r-green-500"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Sessions (à gauche sur desktop, après date sur mobile) -->
                 <div class="md:order-1 md:pr-12 space-y-4">
                   <!-- Matinée culturelle -->
-                  <div class="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 shadow-md hover:shadow-xl border-r-4 md:border-r-4 md:border-l-0 border-l-4 border-green-500 transition-all duration-300 hover:scale-[1.02]">
+                  <div class="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 shadow-md hover:shadow-xl border-l-4 md:border-l-0 md:border-r-4 border-green-500 transition-all duration-300 hover:scale-[1.02]">
                     <div class="flex items-center gap-3 mb-4">
                       <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
                         <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -354,7 +424,7 @@
                   </div>
 
                   <!-- Après-midi -->
-                  <div class="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 shadow-md hover:shadow-xl border-r-4 md:border-r-4 md:border-l-0 border-l-4 border-green-500 transition-all duration-300 hover:scale-[1.02]">
+                  <div class="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 shadow-md hover:shadow-xl border-l-4 md:border-l-0 md:border-r-4 border-green-500 transition-all duration-300 hover:scale-[1.02]">
                     <div class="flex items-center gap-3 mb-4">
                       <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
                         <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -376,7 +446,7 @@
                   </div>
 
                   <!-- Soirée -->
-                  <div class="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 shadow-md hover:shadow-xl border-r-4 md:border-r-4 md:border-l-0 border-l-4 border-green-500 transition-all duration-300 hover:scale-[1.02]">
+                  <div class="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 shadow-md hover:shadow-xl border-l-4 md:border-l-0 md:border-r-4 border-green-500 transition-all duration-300 hover:scale-[1.02]">
                     <div class="flex items-center gap-3 mb-4">
                       <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
                         <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -397,28 +467,6 @@
                     </div>
                   </div>
                 </div>
-
-                <!-- En-tête (mobile en haut) / Droite (desktop) -->
-                <div class="md:order-2 md:pl-12 mb-6 md:mb-0">
-                  <div class="relative inline-block">
-                    <!-- Badge date moderne -->
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border-2 border-green-500 transform hover:scale-105 transition-all duration-300">
-                      <div class="text-center">
-                        <div class="text-green-600 dark:text-green-400 text-sm font-bold uppercase tracking-wider mb-2">Jour 2</div>
-                        <div class="text-4xl font-black text-gray-900 dark:text-white mb-1">02</div>
-                        <div class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Décembre</div>
-                        <div class="text-sm text-gray-500 dark:text-gray-400">2025</div>
-                        <div class="mt-3 pt-3 border-t border-green-200 dark:border-green-800">
-                          <div class="text-xs font-medium text-green-600 dark:text-green-400">{{ t('cyprusSeminar.day2.title') }}</div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Petit triangle pointer vers les sessions (à gauche pour jour 2) -->
-                    <div class="hidden md:block absolute -left-3 top-1/2 transform -translate-y-1/2">
-                      <div class="w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-r-8 border-r-green-500"></div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -434,23 +482,47 @@
               <!-- Contenu du jour 3 -->
               <div class="md:grid md:grid-cols-2 md:gap-8 items-start">
                 <!-- En-tête (mobile) / Gauche (desktop) -->
-                <div class="md:text-right mb-6 md:mb-0 md:pr-12">
-                  <div class="relative inline-block">
-                    <!-- Badge date moderne -->
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border-2 border-blue-500 transform hover:scale-105 transition-all duration-300">
-                      <div class="text-center">
-                        <div class="text-blue-600 dark:text-blue-400 text-sm font-bold uppercase tracking-wider mb-2">Jour 3</div>
-                        <div class="text-4xl font-black text-gray-900 dark:text-white mb-1">03</div>
-                        <div class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Décembre</div>
-                        <div class="text-sm text-gray-500 dark:text-gray-400">2025</div>
-                        <div class="mt-3 pt-3 border-t border-blue-200 dark:border-blue-800">
-                          <div class="text-xs font-medium text-blue-600 dark:text-blue-400">{{ t('cyprusSeminar.day3.title') }}</div>
+                <div class="mb-6 md:mb-0 md:pr-12">
+                  <!-- Version Mobile : Badge horizontal compact -->
+                  <div class="md:hidden bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl shadow-lg p-4 mb-6">
+                    <div class="flex items-center justify-between text-white">
+                      <div class="flex items-center gap-4">
+                        <div class="bg-white/20 backdrop-blur-sm rounded-xl p-3 flex flex-col items-center min-w-[70px]">
+                          <div class="text-3xl font-black">03</div>
+                          <div class="text-xs font-semibold uppercase">Déc</div>
+                        </div>
+                        <div>
+                          <div class="text-xs font-semibold uppercase tracking-wide opacity-90">Jour 3</div>
+                          <div class="text-lg font-bold">{{ t('cyprusSeminar.day3.title') }}</div>
+                          <div class="text-xs opacity-75">2025</div>
                         </div>
                       </div>
+                      <div class="bg-white/20 backdrop-blur-sm rounded-full p-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
                     </div>
-                    <!-- Petit triangle pointer vers les sessions -->
-                    <div class="hidden md:block absolute -right-3 top-1/2 transform -translate-y-1/2">
-                      <div class="w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-l-8 border-l-blue-500"></div>
+                  </div>
+
+                  <!-- Version Desktop : Badge vertical -->
+                  <div class="hidden md:block md:text-right">
+                    <div class="relative inline-block">
+                      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border-2 border-blue-500 transform hover:scale-105 transition-all duration-300">
+                        <div class="text-center">
+                          <div class="text-blue-600 dark:text-blue-400 text-sm font-bold uppercase tracking-wider mb-2">Jour 3</div>
+                          <div class="text-4xl font-black text-gray-900 dark:text-white mb-1">03</div>
+                          <div class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Décembre</div>
+                          <div class="text-sm text-gray-500 dark:text-gray-400">2025</div>
+                          <div class="mt-3 pt-3 border-t border-blue-200 dark:border-blue-800">
+                            <div class="text-xs font-medium text-blue-600 dark:text-blue-400">{{ t('cyprusSeminar.day3.title') }}</div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Petit triangle pointer vers les sessions -->
+                      <div class="absolute -right-3 top-1/2 transform -translate-y-1/2">
+                        <div class="w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-l-8 border-l-blue-500"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
