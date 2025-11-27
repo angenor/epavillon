@@ -6,7 +6,7 @@
       <img src="/images/example/banner-chypre.jpg" alt="Chypre" class="absolute inset-0 w-full h-full object-cover">
 
       <!-- Overlay gradient -->
-      <div class="absolute inset-0 bg-gradient-to-br from-blue-600/50 via-blue-700/50 to-blue-900/50 dark:from-blue-900/50 dark:via-blue-950/50 dark:to-gray-900/50"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-blue-600/90 via-blue-700/85 to-blue-900/90 dark:from-blue-900/95 dark:via-blue-950/90 dark:to-gray-900/95"></div>
 
       <div class="relative max-w-7xl mx-auto px-4 py-16 md:py-24">
         <div class="text-center max-w-4xl mx-auto">
