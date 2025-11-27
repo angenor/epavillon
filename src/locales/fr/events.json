@@ -527,6 +527,185 @@
     "registerDescription": "Participez à la Journée Action Jeunesse pour le Climat via Zoom",
     "registerButton": "S'inscrire sur Zoom"
   },
+  "cyprusSeminar": {
+    "title": "Séminaire francophone sur le financement durable pour le climat, la biodiversité et l'eau",
+    "shortTitle": "Séminaire Finance Durable - Chypre",
+    "dates": "01-03 décembre 2025",
+    "location": "Larnaka et Nicosie, Chypre",
+    "liveStream": "Direct en cours",
+    "liveStreamDay": "Direct du Jour {day}",
+    "liveStreamInfo": "Suivez le séminaire en direct. Activez le son pour écouter les interventions.",
+    "generalInfo": "Informations générales",
+    "fullTitle": "Titre complet",
+    "subtitle": "Mobiliser les compétences et les innovations francophones",
+    "dateLabel": "Dates",
+    "date": "01-03 décembre 2025",
+    "scheduleLabel": "Format",
+    "schedule": "Séminaire stratégique et formatif de 3 jours",
+    "locationLabel": "Lieu",
+    "organizerLabel": "Organisateurs",
+    "organizer": "République de Chypre en partenariat avec l'Institut de la Francophonie pour le développement durable (IFDD), organe subsidiaire de l'Organisation internationale de la Francophonie (OIF)",
+    "participantsLabel": "Participants",
+    "participants": "40 participants de 35 pays ciblés",
+    "contextTitle": "Contexte et justification",
+    "context": "Dans la dynamique de son adhésion en tant que membre de plein droit de l'Organisation internationale de la Francophonie (OIF) lors du XIXe Sommet de la Francophonie à Paris (France) en 2024, la République de Chypre souhaite impulser une dynamique d'échanges et de coopération francophone sur les défis planétaires de notre époque tels que le développement durable, le changement climatique, la préservation de la biodiversité ou la gestion durable des ressources en eau. En prélude de sa présidence tournante de l'Union européenne en 2026, le gouvernement de Chypre, en partenariat avec l'IFDD-OIF, organise ce séminaire stratégique qui vise à valoriser les modèles novateurs de financement durable, à renforcer les compétences techniques, à décloisonner les dialogues entre institutions, territoires et communautés financières et à catalyser l'action francophone sur les mécanismes innovants de financement durable.",
+    "context2": "Dans un contexte climatique critique où les États doivent concrétiser leurs engagements de neutralité carbone et de protection des ressources naturelles, notamment l'eau et où les fenêtres de financement internationaux se rarifient, l'enjeu est double : faire le point sur les progrès réalisés à mi-parcours de la programmation 2024–2027 sur la finance durable et identifier les leviers de transformation financière pour l'environnement, le climat et l'eau.",
+    "objectivesTitle": "Objectifs du séminaire",
+    "objectives": {
+      "0": {
+        "title": "Partage d'expérience",
+        "description": "Partager des retours d'expérience sur les mécanismes internationaux de financement vert (FVC, GEF, Fonds d'adaptation)"
+      },
+      "1": {
+        "title": "Modèles hybrides",
+        "description": "Favoriser l'émergence de modèles hybrides de financement (fonds fiduciaires, financement philanthropique, budget vert, RSE, etc.)"
+      },
+      "2": {
+        "title": "Innovation insulaire",
+        "description": "Stimuler une approche innovante de la finance climatique, en particulier dans les milieux insulaires"
+      },
+      "3": {
+        "title": "Réseau francophone",
+        "description": "Renforcer le réseau francophone d'expertise et de coopération sur les financements liés au climat, à la biodiversité, à la désertification et à l'eau"
+      }
+    },
+    "programTitle": "Programme provisoire",
+    "moderation": "Modérateur",
+    "moderator": "Adel BEN YOUSSEF",
+    "moderationLabel": "Modération :",
+    "themeLabel": "Thème :",
+    "speakerLabel": "Intervenant :",
+    "speakersLabel": "Intervenants :",
+    "animationLabel": "Animation :",
+    "day1": {
+      "title": "Jour 1 - Inspirer et connecter",
+      "date": "Lundi 01 décembre 2025",
+      "morning": {
+        "title": "Matinée",
+        "opening": {
+          "title": "Discours d'ouverture",
+          "organizers": "Gouvernement chypriote, OIF-IFDD"
+        },
+        "panel": {
+          "title": "Panel inaugural sur les tendances mondiales de la finance durable et les priorités francophones",
+          "speakers": "Mohamed Adil Youssfi, POTONGO Emmanu KIMPUKI et Mathieu BIAOU"
+        }
+      },
+      "afternoon": {
+        "title": "Après-midi",
+        "session1": {
+          "title": "Session thématique : Panorama des mécanismes internationaux de financement (FVC, FA, GBFF du FEM, etc.)",
+          "speaker": "Alioune SEYDI"
+        },
+        "session2": {
+          "title": "Échange interactif : Défis d'accès aux financements pour les petits États et territoires insulaires et perspectives francophones",
+          "speakers": "Bryan CHUNG-KAI-TO, Manuel ROSÁRIO et Lucie Nmara NAUKA"
+        }
+      },
+      "evening": {
+        "title": "Soirée",
+        "networking": "Cocktail de réseautage"
+      }
+    },
+    "day2": {
+      "title": "Jour 2 - Découvrir, outiller et co-créer",
+      "date": "Mardi 02 décembre 2025",
+      "morning": {
+        "title": "Matinée culturelle",
+        "visit": "Visite guidée et activité culturelle",
+        "networking": "Moment d'échanges informels entre participants (réseautage interculturel)"
+      },
+      "afternoon": {
+        "title": "Après-midi",
+        "clinic": {
+          "title": "Clinique technique : accréditation, priorisation des projets et formulation de notes conceptuelles",
+          "speakers": "Hubert RUZIBIZA et Gerard Aimé MISTOUL, expérience du Gabon"
+        },
+        "hackathon": {
+          "title": "Lancement d'un hackathon climatique. L'intelligence artificielle au service de la finance durable, de l'environnement, du climat et de l'eau",
+          "speakers": "Mohammed Amine ZAROUK et Chaimae El KOUFI"
+        }
+      },
+      "evening": {
+        "title": "Soirée",
+        "pitchSession": {
+          "title": "Rencontre inversée \"pitch à rebours\" sur le Fonds pour les Changements Climatiques en Afrique de la Banque africaine de développement",
+          "speaker": "Bela Emile KOUAKOU"
+        },
+        "testimony": {
+          "title": "Témoignage inspirant d'une bonne pratique en Francophonie : le cas de la Budgétisation verte",
+          "speaker": "Sédjidé Akouvi KOUHOUE"
+        }
+      }
+    },
+    "day3": {
+      "title": "Jour 3 - Ancrer et projeter",
+      "date": "Mercredi 03 décembre 2025",
+      "morning": {
+        "title": "Matin",
+        "session": {
+          "title": "Carrefour des solutions de financement innovant",
+          "speakers": "Alain Sandy Liva RAHARIJAONA et Abdoulaye SOUAIBOU IDRISSOU"
+        }
+      },
+      "afternoon": {
+        "title": "Après-midi",
+        "restitution": "Restitution des travaux + Recommandations stratégiques",
+        "action": "Présentation du plan d'action post-séminaire et des engagements symboliques des participants (communiqué prospectif)"
+      },
+      "closing": {
+        "title": "Clôture",
+        "ceremony": "Cérémonie de clôture officielle"
+      }
+    },
+    "targetAudienceTitle": "Public cible",
+    "audiences": {
+      "audience1": "Représentants des institutions gouvernementales bénéficiaires d'assistance technique",
+      "audience2": "Experts en environnement et en finance durable",
+      "audience3": "Représentants de bailleurs de fonds",
+      "audience4": "Acteurs francophones dynamiques dans la finance climatique"
+    },
+    "partnersTitle": "Partenaires",
+    "institutionalPartners": "Partenaires institutionnels",
+    "partners": {
+      "cyprus": "République de Chypre",
+      "cyprusAid": "Cyprus Aid",
+      "oif": "Organisation internationale de la Francophonie (OIF)",
+      "ifdd": "Institut de la Francophonie pour le développement durable (IFDD)"
+    },
+    "expectedResultsTitle": "Résultats attendus",
+    "results": {
+      "result1": "Organisation d'une session de partage d'expériences sur l'accréditation, la priorisation de projets et la formulation de notes conceptuelles",
+      "result2": "Soutenir une rencontre inversée \"pitchs à rebours\" pour donner l'occasion aux bailleurs de présenter leurs attentes en matière de priorités de financement durable",
+      "result3": "Présentation d'un parcours immersif territorial en intégrant une simulation interactive de cas concrets de financements durables autour des défis climatiques ou de biodiversité",
+      "result4": "Lancement d'un hackathon climatique francophone sur l'IA appliquée à la finance durable et l'emploi des jeunes",
+      "result5": "Soutien au co-apprentissage numérique : prolonger le séminaire via une série de micro-vidéos post-séminaire sur la contribution de Chypre à la coopération francophone"
+    },
+    "ctaTitle": "Découvrez toutes nos programmations",
+    "ctaDescription": "Explorez l'ensemble des événements et activités organisés par l'IFDD et ses partenaires",
+    "backToProgrammations": "Retour aux programmations",
+    "metaDescription": "Séminaire francophone sur le financement durable pour le climat, la biodiversité et l'eau à Chypre : mobiliser les compétences et les innovations francophones en finance durable.",
+    "registerTitle": "Inscrivez-vous dès maintenant !",
+    "registerDescription": "Participez au séminaire via Zoom (Session périodique sur les 3 jours)",
+    "registerButton": "S'inscrire sur Zoom",
+    "contactsTitle": "Personnes ressources",
+    "contacts": {
+      "cyprus": {
+        "name": "Madame Marina Christofi",
+        "role": "Correspondante nationale - Chargée de mission pour les affaires francophones",
+        "organization": "Ministère des Affaires Étrangères de Chypre",
+        "email": "machristofi@mfa.gov.cy",
+        "phone": "+357 22 651135"
+      },
+      "ifdd": {
+        "name": "Madame E. Lionelle Ngo-Samnick",
+        "role": "Coordonnatrice de projet",
+        "organization": "Institut de la Francophonie pour le développement durable (IFDD)",
+        "email": "lionelle.ngo-samnick@francophonie.org",
+        "phone": "+1 418 692-5727 Poste 8242"
+      }
+    }
+  },
   "formations": {
     "title": "Formations",
     "subtitle": "Développez vos compétences en développement durable avec nos formations certifiées",

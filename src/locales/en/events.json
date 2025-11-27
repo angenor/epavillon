@@ -496,6 +496,185 @@
     "registerDescription": "Join the Youth Climate Action Day via Zoom",
     "registerButton": "Register on Zoom"
   },
+  "cyprusSeminar": {
+    "title": "Francophone Seminar on Sustainable Financing for Climate, Biodiversity and Water",
+    "shortTitle": "Sustainable Finance Seminar - Cyprus",
+    "dates": "December 01-03, 2025",
+    "location": "Larnaka and Nicosia, Cyprus",
+    "liveStream": "Live Now",
+    "liveStreamDay": "Day {day} Live Stream",
+    "liveStreamInfo": "Follow the seminar live. Turn on the sound to listen to the presentations.",
+    "generalInfo": "General Information",
+    "fullTitle": "Full Title",
+    "subtitle": "Mobilizing Francophone Skills and Innovations",
+    "dateLabel": "Dates",
+    "date": "December 01-03, 2025",
+    "scheduleLabel": "Format",
+    "schedule": "3-day strategic and training seminar",
+    "locationLabel": "Location",
+    "organizerLabel": "Organizers",
+    "organizer": "Republic of Cyprus in partnership with the Institute of the Francophonie for Sustainable Development (IFDD), a subsidiary body of the International Organization of La Francophonie (OIF)",
+    "participantsLabel": "Participants",
+    "participants": "40 participants from 35 targeted countries",
+    "contextTitle": "Context and Justification",
+    "context": "Following its accession as a full member of the International Organization of La Francophonie (OIF) at the 19th Francophonie Summit in Paris (France) in 2024, the Republic of Cyprus wishes to stimulate a dynamic of exchanges and Francophone cooperation on the planetary challenges of our time such as sustainable development, climate change, biodiversity preservation, and sustainable water resource management. In preparation for its rotating presidency of the European Union in 2026, the Government of Cyprus, in partnership with IFDD-OIF, is organizing this strategic seminar aimed at promoting innovative sustainable financing models, strengthening technical skills, breaking down barriers between institutions, territories and financial communities, and catalyzing Francophone action on innovative sustainable financing mechanisms.",
+    "context2": "In a critical climate context where States must implement their commitments to carbon neutrality and protection of natural resources, particularly water, and where international financing windows are becoming scarce, the challenge is twofold: to take stock of progress made at the mid-term of the 2024-2027 programming on sustainable finance and to identify levers for financial transformation for the environment, climate and water.",
+    "objectivesTitle": "Seminar Objectives",
+    "objectives": {
+      "0": {
+        "title": "Experience Sharing",
+        "description": "Share feedback on international green financing mechanisms (GCF, GEF, Adaptation Fund)"
+      },
+      "1": {
+        "title": "Hybrid Models",
+        "description": "Promote the emergence of hybrid financing models (trust funds, philanthropic financing, green budget, CSR, etc.)"
+      },
+      "2": {
+        "title": "Island Innovation",
+        "description": "Stimulate an innovative approach to climate finance, particularly in island environments"
+      },
+      "3": {
+        "title": "Francophone Network",
+        "description": "Strengthen the Francophone network of expertise and cooperation on financing related to climate, biodiversity, desertification and water"
+      }
+    },
+    "programTitle": "Provisional Program",
+    "moderation": "Moderator",
+    "moderator": "Adel BEN YOUSSEF",
+    "moderationLabel": "Moderation:",
+    "themeLabel": "Theme:",
+    "speakerLabel": "Speaker:",
+    "speakersLabel": "Speakers:",
+    "animationLabel": "Animation:",
+    "day1": {
+      "title": "Day 1 - Inspire and Connect",
+      "date": "Monday, December 01, 2025",
+      "morning": {
+        "title": "Morning",
+        "opening": {
+          "title": "Opening Speeches",
+          "organizers": "Cypriot Government, OIF-IFDD"
+        },
+        "panel": {
+          "title": "Opening panel on global sustainable finance trends and Francophone priorities",
+          "speakers": "Mohamed Adil Youssfi, POTONGO Emmanu KIMPUKI and Mathieu BIAOU"
+        }
+      },
+      "afternoon": {
+        "title": "Afternoon",
+        "session1": {
+          "title": "Thematic session: Overview of international financing mechanisms (GCF, AF, GEF GBFF, etc.)",
+          "speaker": "Alioune SEYDI"
+        },
+        "session2": {
+          "title": "Interactive exchange: Challenges of access to financing for small states and island territories and Francophone perspectives",
+          "speakers": "Bryan CHUNG-KAI-TO, Manuel ROSÁRIO and Lucie Nmara NAUKA"
+        }
+      },
+      "evening": {
+        "title": "Evening",
+        "networking": "Networking cocktail"
+      }
+    },
+    "day2": {
+      "title": "Day 2 - Discover, Equip and Co-create",
+      "date": "Tuesday, December 02, 2025",
+      "morning": {
+        "title": "Cultural Morning",
+        "visit": "Guided tour and cultural activity",
+        "networking": "Informal exchanges between participants (intercultural networking)"
+      },
+      "afternoon": {
+        "title": "Afternoon",
+        "clinic": {
+          "title": "Technical clinic: accreditation, project prioritization and concept note formulation",
+          "speakers": "Hubert RUZIBIZA and Gerard Aimé MISTOUL, Gabon experience"
+        },
+        "hackathon": {
+          "title": "Launch of a climate hackathon. Artificial intelligence for sustainable finance, environment, climate and water",
+          "speakers": "Mohammed Amine ZAROUK and Chaimae El KOUFI"
+        }
+      },
+      "evening": {
+        "title": "Evening",
+        "pitchSession": {
+          "title": "Reverse meeting \"reverse pitch\" on the Africa Climate Change Fund of the African Development Bank",
+          "speaker": "Bela Emile KOUAKOU"
+        },
+        "testimony": {
+          "title": "Inspiring testimony of a good practice in the Francophonie: the case of Green Budgeting",
+          "speaker": "Sédjidé Akouvi KOUHOUE"
+        }
+      }
+    },
+    "day3": {
+      "title": "Day 3 - Anchor and Project",
+      "date": "Wednesday, December 03, 2025",
+      "morning": {
+        "title": "Morning",
+        "session": {
+          "title": "Crossroads of innovative financing solutions",
+          "speakers": "Alain Sandy Liva RAHARIJAONA and Abdoulaye SOUAIBOU IDRISSOU"
+        }
+      },
+      "afternoon": {
+        "title": "Afternoon",
+        "restitution": "Presentation of work + Strategic recommendations",
+        "action": "Presentation of post-seminar action plan and symbolic commitments of participants (forward-looking statement)"
+      },
+      "closing": {
+        "title": "Closing",
+        "ceremony": "Official closing ceremony"
+      }
+    },
+    "targetAudienceTitle": "Target Audience",
+    "audiences": {
+      "audience1": "Representatives of government institutions benefiting from technical assistance",
+      "audience2": "Experts in environment and sustainable finance",
+      "audience3": "Representatives of funding agencies",
+      "audience4": "Dynamic Francophone actors in climate finance"
+    },
+    "partnersTitle": "Partners",
+    "institutionalPartners": "Institutional Partners",
+    "partners": {
+      "cyprus": "Republic of Cyprus",
+      "cyprusAid": "Cyprus Aid",
+      "oif": "International Organization of La Francophonie (OIF)",
+      "ifdd": "Institute of the Francophonie for Sustainable Development (IFDD)"
+    },
+    "expectedResultsTitle": "Expected Results",
+    "results": {
+      "result1": "Organization of an experience-sharing session on accreditation, project prioritization and concept note formulation",
+      "result2": "Supporting a reverse meeting \"reverse pitches\" to give funders the opportunity to present their expectations in terms of sustainable financing priorities",
+      "result3": "Presentation of an immersive territorial journey integrating an interactive simulation of concrete sustainable financing cases around climate or biodiversity challenges",
+      "result4": "Launch of a Francophone climate hackathon on AI applied to sustainable finance and youth employment",
+      "result5": "Support for digital co-learning: extending the seminar through a series of post-seminar micro-videos on Cyprus's contribution to Francophone cooperation"
+    },
+    "ctaTitle": "Discover All Our Programs",
+    "ctaDescription": "Explore all events and activities organized by IFDD and its partners",
+    "backToProgrammations": "Back to programs",
+    "metaDescription": "Francophone Seminar on Sustainable Financing for Climate, Biodiversity and Water in Cyprus: mobilizing Francophone skills and innovations in sustainable finance.",
+    "registerTitle": "Register now!",
+    "registerDescription": "Join the seminar via Zoom (Recurring session over the 3 days)",
+    "registerButton": "Register on Zoom",
+    "contactsTitle": "Resource Persons",
+    "contacts": {
+      "cyprus": {
+        "name": "Mrs. Marina Christofi",
+        "role": "National Correspondent - Officer in charge of Francophonie affairs",
+        "organization": "Ministry of Foreign Affairs of Cyprus",
+        "email": "machristofi@mfa.gov.cy",
+        "phone": "+357 22 651135"
+      },
+      "ifdd": {
+        "name": "Mrs. E. Lionelle Ngo-Samnick",
+        "role": "Project Coordinator",
+        "organization": "Institute of the Francophonie for Sustainable Development (IFDD)",
+        "email": "lionelle.ngo-samnick@francophonie.org",
+        "phone": "+1 418 692-5727 Ext. 8242"
+      }
+    }
+  },
   "formations": {
     "title": "Trainings",
     "subtitle": "Develop your sustainable development skills with our certified trainings",

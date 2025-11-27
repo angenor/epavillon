@@ -130,6 +130,11 @@ const router = createRouter({
       component: () => import('../views/programmations/JourneeFinance.vue'),
     },
     {
+      path: '/programmations/2025/seminaire-chypre',
+      name: 'seminaire-chypre-2025',
+      component: () => import('../views/programmations/SeminaireLarnakaChypre2025.vue'),
+    },
+    {
       path: '/profile',
       name: 'profile',
       component: () => import('../views/profils/Profile.vue'),
