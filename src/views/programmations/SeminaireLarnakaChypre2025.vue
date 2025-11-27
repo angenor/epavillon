@@ -6,7 +6,7 @@
       <img src="/images/example/banner-chypre.jpg" alt="Chypre" class="absolute inset-0 w-full h-full object-cover">
 
       <!-- Overlay gradient -->
-      <div class="absolute inset-0 bg-gradient-to-br from-blue-600/90 via-blue-700/85 to-blue-900/90 dark:from-blue-900/95 dark:via-blue-950/90 dark:to-gray-900/95"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-blue-600/50 via-blue-700/50 to-blue-900/50 dark:from-blue-900/50 dark:via-blue-950/50 dark:to-gray-900/50"></div>
 
       <div class="relative max-w-7xl mx-auto px-4 py-16 md:py-24">
         <div class="text-center max-w-4xl mx-auto">
@@ -130,36 +130,28 @@
             <span class="text-gray-900 dark:text-white font-semibold">{{ isLiveNow ? 'En direct' : 'Bientôt en direct' }}</span>
           </div>
 
-          <!-- Container responsive pour l'iframe YouTube ou décompte (16:9) -->
-          <div class="relative w-full bg-gradient-to-br from-gray-900 to-blue-900" style="padding-bottom: 56.25%;">
-            <!-- Décompte -->
-            <div v-if="!isLiveNow" class="absolute inset-0 flex flex-col items-center justify-center p-8">
-              <!-- Fond animé -->
-              <div class="absolute inset-0 opacity-20">
-                <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500 rounded-full blur-3xl animate-pulse"></div>
-                <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-green-500 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
-              </div>
+          <!-- Décompte compact -->
+          <div v-if="!isLiveNow" class="relative bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-800 dark:to-gray-900 p-8">
+            <div class="text-center">
+              <h3 class="text-xl md:text-2xl font-bold text-white mb-6">Le direct commence dans</h3>
 
-              <div class="relative text-center">
-                <h3 class="text-2xl md:text-3xl font-bold text-white mb-8">Le direct commence dans</h3>
-
-                <!-- Compteur -->
-                <div class="grid grid-cols-4 gap-4 md:gap-6 mb-8">
-                  <div v-for="(unit, key) in timeRemaining" :key="key" class="flex flex-col items-center">
-                    <div class="bg-white/10 backdrop-blur-md rounded-xl p-4 md:p-6 min-w-[70px] md:min-w-[100px] border border-white/20">
-                      <div class="text-3xl md:text-5xl font-bold text-white tabular-nums">{{ String(unit.value).padStart(2, '0') }}</div>
-                    </div>
-                    <div class="text-white/80 text-xs md:text-sm mt-2 uppercase tracking-wide">{{ unit.label }}</div>
+              <!-- Compteur horizontal compact -->
+              <div class="flex items-center justify-center gap-3 md:gap-6 mb-4">
+                <div v-for="(unit, key) in timeRemaining" :key="key" class="flex flex-col items-center">
+                  <div class="bg-white/10 backdrop-blur-md rounded-lg px-4 py-3 min-w-[60px] md:min-w-[80px] border border-white/20">
+                    <div class="text-2xl md:text-3xl font-bold text-white tabular-nums">{{ String(unit.value).padStart(2, '0') }}</div>
                   </div>
+                  <div class="text-white/70 text-xs mt-1.5 uppercase tracking-wide">{{ unit.label }}</div>
                 </div>
-
-                <p class="text-white/60 text-sm md:text-base">La diffusion commencera automatiquement</p>
               </div>
-            </div>
 
-            <!-- Iframe YouTube -->
+              <p class="text-white/60 text-sm">La diffusion commencera automatiquement</p>
+            </div>
+          </div>
+
+          <!-- Container responsive pour l'iframe YouTube (16:9) -->
+          <div v-else class="relative w-full bg-black" style="padding-bottom: 56.25%;">
             <iframe
-              v-else
               :key="selectedDay"
               class="absolute top-0 left-0 w-full h-full"
               :src="getYoutubeEmbedUrl(selectedDay)"
