@@ -2,33 +2,12 @@
   <div v-if="isVisible" class="relative">
     <!-- Événement Widget -->
     <RouterLink
-      to="/programmations/seminaire-larnaka-chypre-2025"
-      class="block cursor-pointer"
+      to="/programmations/2025/seminaire-chypre"
+      class="block cursor-pointer group"
     >
       <div class="text-white bg-gradient-to-br from-orange-500/40 via-blue-600/40 to-blue-700/40 backdrop-blur-sm rounded-xl px-4 py-3 hover:from-orange-500/50 hover:via-blue-600/50 hover:to-blue-700/50 transition-all duration-300 shadow-lg border-2 border-orange-400/30 relative overflow-hidden">
-        <!-- Badge LIVE si en direct -->
-        <div v-if="isLiveNow" class="absolute top-2 right-2 z-10">
-          <div class="flex items-center gap-1.5 bg-red-500/90 px-2.5 py-1 rounded-md">
-            <span class="relative flex h-2 w-2">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-            </span>
-            <span class="text-white text-xs font-bold uppercase tracking-wide">En Direct</span>
-          </div>
-        </div>
-
-        <!-- Badge À VENIR si bientôt -->
-        <div v-else-if="isComingSoon" class="absolute top-2 right-2 z-10">
-          <div class="flex items-center gap-1.5 bg-orange-500/90 px-2.5 py-1 rounded-md">
-            <svg class="w-3 h-3 text-white animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span class="text-white text-xs font-bold uppercase tracking-wide">Bientôt</span>
-          </div>
-        </div>
-
         <!-- Effet de brillance animé -->
-        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 animate-shimmer"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 animate-shimmer pointer-events-none"></div>
 
         <div class="relative z-10">
           <!-- Titre -->
@@ -89,20 +68,6 @@ import { RouterLink } from 'vue-router'
 // Dates du séminaire (en heure de Chypre - UTC+2)
 const seminarStartDate = new Date('2025-12-01T09:00:00+02:00')
 const seminarEndDate = new Date('2025-12-03T18:00:00+02:00')
-
-// Vérifier si le séminaire est en direct
-const isLiveNow = computed(() => {
-  const now = new Date()
-  return now >= seminarStartDate && now <= seminarEndDate
-})
-
-// Vérifier si le séminaire est bientôt (7 jours avant)
-const isComingSoon = computed(() => {
-  const now = new Date()
-  const oneWeekBefore = new Date(seminarStartDate)
-  oneWeekBefore.setDate(oneWeekBefore.getDate() - 7)
-  return now >= oneWeekBefore && now < seminarStartDate
-})
 
 // Le widget est visible 7 jours avant le séminaire jusqu'à sa fin
 const isVisible = computed(() => {
