@@ -130,22 +130,58 @@
             <span class="text-gray-900 dark:text-white font-semibold">{{ isLiveNow ? 'En direct' : 'Bientôt en direct' }}</span>
           </div>
 
-          <!-- Décompte compact -->
-          <div v-if="!isLiveNow" class="relative bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-800 dark:to-gray-900 p-8">
-            <div class="text-center">
-              <h3 class="text-xl md:text-2xl font-bold text-white mb-6">Le direct commence dans</h3>
+          <!-- Décompte compact avec animations -->
+          <div v-if="!isLiveNow" class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 dark:from-blue-900 dark:via-purple-900 dark:to-gray-900 p-8">
+            <!-- Particules animées en arrière-plan -->
+            <div class="absolute inset-0 overflow-hidden">
+              <!-- Cercles flottants -->
+              <div class="absolute top-10 left-10 w-32 h-32 bg-white/5 rounded-full blur-xl animate-float"></div>
+              <div class="absolute top-20 right-20 w-40 h-40 bg-purple-400/10 rounded-full blur-2xl animate-float-delayed"></div>
+              <div class="absolute bottom-10 left-1/4 w-36 h-36 bg-blue-400/10 rounded-full blur-xl animate-float-slow"></div>
+              <div class="absolute bottom-20 right-1/3 w-28 h-28 bg-white/5 rounded-full blur-2xl animate-float"></div>
 
-              <!-- Compteur horizontal compact -->
-              <div class="flex items-center justify-center gap-3 md:gap-6 mb-4">
+              <!-- Grille animée -->
+              <div class="absolute inset-0 opacity-10">
+                <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]"></div>
+              </div>
+            </div>
+
+            <div class="relative text-center z-10">
+              <!-- Titre avec effet pulsant -->
+              <div class="relative inline-block mb-8">
+                <div class="absolute inset-0 bg-white/20 blur-xl animate-pulse"></div>
+                <h3 class="relative text-xl md:text-2xl font-bold text-white flex items-center gap-3 justify-center">
+                  <svg class="w-6 h-6 md:w-8 md:h-8 animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Le direct commence dans
+                </h3>
+              </div>
+
+              <!-- Compteur horizontal avec animations flip -->
+              <div class="flex items-center justify-center gap-3 md:gap-6 mb-6">
                 <div v-for="(unit, key) in timeRemaining" :key="key" class="flex flex-col items-center">
-                  <div class="bg-white/10 backdrop-blur-md rounded-lg px-4 py-3 min-w-[60px] md:min-w-[80px] border border-white/20">
-                    <div class="text-2xl md:text-3xl font-bold text-white tabular-nums">{{ String(unit.value).padStart(2, '0') }}</div>
+                  <!-- Carte flip animée -->
+                  <div class="relative perspective-1000">
+                    <div class="countdown-card bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-md rounded-xl px-4 py-3 min-w-[60px] md:min-w-[80px] border-2 border-white/30 shadow-2xl transform hover:scale-110 transition-transform duration-300">
+                      <div class="text-3xl md:text-4xl font-black text-white tabular-nums drop-shadow-lg countdown-number">
+                        {{ String(unit.value).padStart(2, '0') }}
+                      </div>
+                      <!-- Reflet -->
+                      <div class="absolute inset-0 bg-gradient-to-t from-transparent to-white/20 rounded-xl pointer-events-none"></div>
+                    </div>
                   </div>
-                  <div class="text-white/70 text-xs mt-1.5 uppercase tracking-wide">{{ unit.label }}</div>
+                  <div class="text-white/90 text-xs md:text-sm mt-2 uppercase tracking-wider font-bold">{{ unit.label }}</div>
                 </div>
               </div>
 
-              <p class="text-white/60 text-sm">La diffusion commencera automatiquement</p>
+              <!-- Message avec icône -->
+              <div class="flex items-center justify-center gap-2 text-white/70 text-sm">
+                <svg class="w-4 h-4 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                </svg>
+                <p>La diffusion commencera automatiquement</p>
+              </div>
             </div>
           </div>
 
@@ -892,5 +928,137 @@ useHead({
 <style scoped>
 .prose {
   @apply text-gray-700 dark:text-gray-300;
+}
+
+/* Animations pour les particules flottantes */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px) scale(1.05);
+  }
+  50% {
+    transform: translateY(-40px) translateX(-10px) scale(1.1);
+  }
+  75% {
+    transform: translateY(-20px) translateX(10px) scale(1.05);
+  }
+}
+
+@keyframes float-delayed {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+  }
+  25% {
+    transform: translateY(20px) translateX(-15px) scale(0.95);
+  }
+  50% {
+    transform: translateY(40px) translateX(15px) scale(0.9);
+  }
+  75% {
+    transform: translateY(20px) translateX(-15px) scale(0.95);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-30px) translateX(20px) rotate(5deg);
+  }
+  66% {
+    transform: translateY(30px) translateX(-20px) rotate(-5deg);
+  }
+}
+
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 10s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 12s ease-in-out infinite;
+}
+
+/* Animation de rotation lente pour l'horloge */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+/* Perspective pour l'effet 3D */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+/* Animation flip pour les chiffres qui changent */
+@keyframes flip {
+  0% {
+    transform: rotateX(0deg);
+  }
+  50% {
+    transform: rotateX(90deg);
+  }
+  100% {
+    transform: rotateX(0deg);
+  }
+}
+
+.countdown-card {
+  transform-style: preserve-3d;
+  transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.countdown-card:hover {
+  transform: scale(1.1) rotateY(5deg);
+}
+
+/* Animation pour les chiffres */
+.countdown-number {
+  transition: all 0.3s ease;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Animation bounce subtile */
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.countdown-card {
+  animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+.countdown-card:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.countdown-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.countdown-card:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.countdown-card:nth-child(4) {
+  animation-delay: 0.6s;
 }
 </style>
