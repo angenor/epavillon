@@ -181,9 +181,10 @@
 
 <script>
 import { useI18n } from 'vue-i18n'
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, onUnmounted, ref, computed } from 'vue'
 import { useActivities } from '@/composables/useActivities'
 import { useRouter } from 'vue-router'
+import { supabase } from '@/composables/useSupabase'
 import YouthClimateDayWidget from './YouthClimateDayWidget.vue'
 import SustainableFinanceDayWidget from './SustainableFinanceDayWidget.vue'
 
@@ -210,6 +211,78 @@ export default {
     } = useActivities()
 
     const eventActivities = ref({}) // Stocke les activités par event_id
+    let activitiesSubscription = null
+
+    // Fonction pour recharger les activités d'un événement spécifique
+    const reloadEventActivities = async (eventId) => {
+      eventActivities.value[eventId] = await fetchEventActivities(eventId)
+    }
+
+    // Fonction pour recharger toutes les activités
+    const reloadAllActivities = async () => {
+      for (const event of events.value) {
+        eventActivities.value[event.id] = await fetchEventActivities(event.id)
+      }
+    }
+
+    // Configurer la souscription realtime
+    const setupRealtimeSubscription = () => {
+      activitiesSubscription = supabase
+        .channel('activities-realtime-upcoming')
+        .on(
+          'postgres_changes',
+          {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'activities'
+          },
+          async (payload) => {
+            console.log('🔄 Realtime update received:', payload)
+
+            const updatedActivity = payload.new
+            const oldActivity = payload.old
+
+            // Vérifier si les champs importants ont changé
+            const statusChanged = updatedActivity.validation_status !== oldActivity.validation_status
+            const youtubeChanged = updatedActivity.youtube_link !== oldActivity.youtube_link
+
+            if (statusChanged || youtubeChanged) {
+              console.log('📺 Activity updated:', {
+                id: updatedActivity.id,
+                validation_status: updatedActivity.validation_status,
+                youtube_link: updatedActivity.youtube_link
+              })
+
+              // Mettre à jour l'activité dans toutes les listes d'événements
+              for (const eventId in eventActivities.value) {
+                const activities = eventActivities.value[eventId]
+                const activityIndex = activities.findIndex(a => a.id === updatedActivity.id)
+
+                if (activityIndex !== -1) {
+                  // Mettre à jour les champs modifiés
+                  eventActivities.value[eventId][activityIndex] = {
+                    ...eventActivities.value[eventId][activityIndex],
+                    validation_status: updatedActivity.validation_status,
+                    youtube_link: updatedActivity.youtube_link
+                  }
+
+                  // Si le statut a changé vers un statut non visible, recharger pour filtrer
+                  if (statusChanged) {
+                    const visibleStatuses = ['approved', 'live', 'completed']
+                    if (!visibleStatuses.includes(updatedActivity.validation_status)) {
+                      // L'activité n'est plus visible, recharger la liste
+                      await reloadEventActivities(eventId)
+                    }
+                  }
+                }
+              }
+            }
+          }
+        )
+        .subscribe((status) => {
+          console.log('📡 Realtime subscription status:', status)
+        })
+    }
 
     // Charger les données au montage
     onMounted(async () => {
@@ -217,6 +290,17 @@ export default {
       // Récupérer les activités pour chaque événement
       for (const event of events.value) {
         eventActivities.value[event.id] = await fetchEventActivities(event.id)
+      }
+
+      // Configurer la souscription realtime
+      setupRealtimeSubscription()
+    })
+
+    // Nettoyer la souscription au démontage
+    onUnmounted(() => {
+      if (activitiesSubscription) {
+        supabase.removeChannel(activitiesSubscription)
+        console.log('🔌 Realtime subscription cleaned up')
       }
     })
 

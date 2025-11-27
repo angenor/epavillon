@@ -1038,7 +1038,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useHead } from '@vueuse/head'
@@ -1129,6 +1129,77 @@ const isSubmittingAnswer = ref(false)
 // Compteurs de questions pour les speakers
 const totalQuestionsCount = ref(0)
 const questionsForMeCount = ref(0)
+
+// Realtime subscription
+let activitySubscription = null
+
+// Configurer la souscription realtime pour l'activité
+const setupRealtimeSubscription = () => {
+  if (!activityId.value) return
+
+  activitySubscription = supabase
+    .channel(`activity-realtime-${activityId.value}`)
+    .on(
+      'postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'activities',
+        filter: `id=eq.${activityId.value}`
+      },
+      (payload) => {
+        console.log('🔄 Activity realtime update received:', payload)
+
+        const updatedActivity = payload.new
+
+        if (activity.value) {
+          // Mettre à jour les champs modifiés
+          const fieldsToUpdate = [
+            'validation_status',
+            'youtube_link',
+            'title',
+            'objectives',
+            'detailed_presentation',
+            'proposed_start_date',
+            'proposed_end_date',
+            'final_start_date',
+            'final_end_date',
+            'cover_image_high_url',
+            'cover_image_low_url',
+            'main_themes',
+            'categories',
+            'format',
+            'activity_type',
+            'activity_status'
+          ]
+
+          fieldsToUpdate.forEach(field => {
+            if (updatedActivity[field] !== undefined) {
+              activity.value[field] = updatedActivity[field]
+            }
+          })
+
+          console.log('📺 Activity updated in realtime:', {
+            id: updatedActivity.id,
+            validation_status: updatedActivity.validation_status,
+            youtube_link: updatedActivity.youtube_link,
+            title: updatedActivity.title
+          })
+        }
+      }
+    )
+    .subscribe((status) => {
+      console.log('📡 Activity realtime subscription status:', status)
+    })
+}
+
+// Nettoyer la souscription
+const cleanupRealtimeSubscription = () => {
+  if (activitySubscription) {
+    supabase.removeChannel(activitySubscription)
+    console.log('🔌 Activity realtime subscription cleaned up')
+  }
+}
 
 // Computed
 // Dates à afficher (finales si disponibles, sinon proposées)
@@ -2453,6 +2524,9 @@ watch(() => authStore.user, async (newUser) => {
 onMounted(async () => {
   await loadActivity()
 
+  // Configurer la souscription realtime après le chargement de l'activité
+  setupRealtimeSubscription()
+
   // Vérifier si on doit auto-inscrire au chargement (si l'utilisateur est déjà connecté)
   if (authStore.user && route.query.autoRegister === 'true') {
     console.log('🔵 Auto-inscription au chargement (utilisateur déjà connecté)')
@@ -2466,6 +2540,11 @@ onMounted(async () => {
     // Lancer l'inscription automatiquement
     await registerToActivity()
   }
+})
+
+// Nettoyer la souscription au démontage
+onUnmounted(() => {
+  cleanupRealtimeSubscription()
 })
 </script>
 

@@ -41,7 +41,8 @@
                   </svg>
                 </div>
                 <div>
-                  <p class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">+{{ approvedActivitiesCount }}</p>
+                  <!-- <p class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">+{{ approvedActivitiesCount }}</p> -->
+                  <p class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">+{{ 60 }}</p>
                   <p class="text-[10px] md:text-xs font-medium text-white/90 leading-tight">{{ t('programmations.approvedActivitiesCount') }}</p>
                 </div>
               </div>
