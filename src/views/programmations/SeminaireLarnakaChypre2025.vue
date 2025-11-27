@@ -221,262 +221,259 @@
           </p>
         </div>
 
-        <!-- Timeline des 3 jours -->
-        <div class="space-y-10">
-          <!-- Jour 1 -->
-          <div class="relative">
-            <!-- Badge du jour -->
-            <div class="flex flex-wrap items-center gap-4 mb-6">
-              <div class="flex items-center gap-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-xl shadow-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <span class="font-bold text-lg">{{ t('cyprusSeminar.day1.date') }}</span>
-              </div>
-              <h3 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
-                {{ t('cyprusSeminar.day1.title') }}
-              </h3>
-            </div>
+        <!-- Timeline verticale moderne -->
+        <div class="relative">
+          <!-- Ligne de temps verticale (cachée sur mobile) -->
+          <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-orange-500 via-green-500 to-blue-500 h-full rounded-full opacity-30"></div>
 
-            <!-- Card du jour -->
-            <div class="bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl shadow border-l-4 border-orange-500 overflow-hidden">
-              <div class="p-6 md:p-8 space-y-8">
-                <!-- Matinée -->
-                <div>
-                  <div class="flex items-center gap-3 mb-4">
-                    <div class="w-2 h-2 rounded-full bg-orange-500"></div>
-                    <h4 class="text-xl font-bold text-gray-900 dark:text-white">
-                      {{ t('cyprusSeminar.day1.morning.title') }}
-                    </h4>
-                  </div>
-                  <div class="space-y-4 pl-5">
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                      <p class="font-semibold text-gray-900 dark:text-white mb-2">
-                        {{ t('cyprusSeminar.day1.morning.opening.title') }}
-                      </p>
-                      <p class="text-gray-600 dark:text-gray-400 text-sm">
-                        {{ t('cyprusSeminar.day1.morning.opening.organizers') }}
-                      </p>
-                    </div>
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                      <p class="font-semibold text-gray-900 dark:text-white mb-2">
-                        {{ t('cyprusSeminar.day1.morning.panel.title') }}
-                      </p>
-                      <p class="text-gray-600 dark:text-gray-400 text-sm">
-                        <span class="font-medium text-orange-600 dark:text-orange-400">{{ t('cyprusSeminar.speakersLabel') }}:</span> {{ t('cyprusSeminar.day1.morning.panel.speakers') }}
-                      </p>
+          <div class="space-y-16">
+            <!-- JOUR 1 -->
+            <div class="relative">
+              <!-- Marqueur central -->
+              <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 -translate-y-3 items-center justify-center z-10">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 shadow-lg flex items-center justify-center border-4 border-white dark:border-gray-900">
+                  <span class="text-white font-bold text-xl">1</span>
+                </div>
+              </div>
+
+              <!-- Contenu du jour 1 -->
+              <div class="md:grid md:grid-cols-2 md:gap-8 items-start">
+                <!-- En-tête (mobile) / Gauche (desktop) -->
+                <div class="md:text-right mb-6 md:mb-0 md:pr-12">
+                  <div class="inline-flex md:flex md:flex-col items-center md:items-end gap-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-4 rounded-2xl shadow-lg mb-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <div>
+                      <div class="font-bold text-xl">{{ t('cyprusSeminar.day1.date') }}</div>
+                      <div class="text-orange-100 text-sm">{{ t('cyprusSeminar.day1.title') }}</div>
                     </div>
                   </div>
                 </div>
 
-                <!-- Après-midi -->
-                <div>
-                  <div class="flex items-center gap-3 mb-4">
-                    <div class="w-2 h-2 rounded-full bg-orange-500"></div>
-                    <h4 class="text-xl font-bold text-gray-900 dark:text-white">
-                      {{ t('cyprusSeminar.day1.afternoon.title') }}
-                    </h4>
-                  </div>
-                  <div class="space-y-4 pl-5">
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                      <p class="font-semibold text-gray-900 dark:text-white mb-2">
-                        {{ t('cyprusSeminar.day1.afternoon.session1.title') }}
-                      </p>
-                      <p class="text-gray-600 dark:text-gray-400 text-sm">
-                        <span class="font-medium text-orange-600 dark:text-orange-400">{{ t('cyprusSeminar.speakerLabel') }}:</span> {{ t('cyprusSeminar.day1.afternoon.session1.speaker') }}
-                      </p>
+                <!-- Sessions (mobile et desktop à droite) -->
+                <div class="md:pl-12 space-y-4">
+                  <!-- Matinée -->
+                  <div class="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 shadow-md hover:shadow-xl border-l-4 border-orange-500 transition-all duration-300 hover:scale-[1.02]">
+                    <div class="flex items-center gap-3 mb-4">
+                      <div class="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+                        <svg class="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                      </div>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day1.morning.title') }}</h4>
                     </div>
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                      <p class="font-semibold text-gray-900 dark:text-white mb-2">
-                        {{ t('cyprusSeminar.day1.afternoon.session2.title') }}
-                      </p>
-                      <p class="text-gray-600 dark:text-gray-400 text-sm">
-                        <span class="font-medium text-orange-600 dark:text-orange-400">{{ t('cyprusSeminar.speakersLabel') }}:</span> {{ t('cyprusSeminar.day1.afternoon.session2.speakers') }}
-                      </p>
+                    <div class="space-y-3">
+                      <div class="bg-orange-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-orange-200/30 dark:border-orange-800/30">
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day1.morning.opening.title') }}</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs">{{ t('cyprusSeminar.day1.morning.opening.organizers') }}</p>
+                      </div>
+                      <div class="bg-orange-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-orange-200/30 dark:border-orange-800/30">
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day1.morning.panel.title') }}</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-orange-600 dark:text-orange-400">{{ t('cyprusSeminar.speakersLabel') }}:</span> {{ t('cyprusSeminar.day1.morning.panel.speakers') }}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <!-- Soirée -->
-                <div>
-                  <div class="flex items-center gap-3 mb-4">
-                    <div class="w-2 h-2 rounded-full bg-orange-500"></div>
-                    <h4 class="text-xl font-bold text-gray-900 dark:text-white">
-                      {{ t('cyprusSeminar.day1.evening.title') }}
-                    </h4>
+                  <!-- Après-midi -->
+                  <div class="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 shadow-md hover:shadow-xl border-l-4 border-orange-500 transition-all duration-300 hover:scale-[1.02]">
+                    <div class="flex items-center gap-3 mb-4">
+                      <div class="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+                        <svg class="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                      </div>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day1.afternoon.title') }}</h4>
+                    </div>
+                    <div class="space-y-3">
+                      <div class="bg-orange-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-orange-200/30 dark:border-orange-800/30">
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day1.afternoon.session1.title') }}</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-orange-600 dark:text-orange-400">{{ t('cyprusSeminar.speakerLabel') }}:</span> {{ t('cyprusSeminar.day1.afternoon.session1.speaker') }}</p>
+                      </div>
+                      <div class="bg-orange-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-orange-200/30 dark:border-orange-800/30">
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day1.afternoon.session2.title') }}</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-orange-600 dark:text-orange-400">{{ t('cyprusSeminar.speakersLabel') }}:</span> {{ t('cyprusSeminar.day1.afternoon.session2.speakers') }}</p>
+                      </div>
+                    </div>
                   </div>
-                  <div class="pl-5">
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                      <p class="text-gray-600 dark:text-gray-400 text-sm">
-                        {{ t('cyprusSeminar.day1.evening.networking') }}
-                      </p>
+
+                  <!-- Soirée -->
+                  <div class="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 shadow-md hover:shadow-xl border-l-4 border-orange-500 transition-all duration-300 hover:scale-[1.02]">
+                    <div class="flex items-center gap-3 mb-4">
+                      <div class="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+                        <svg class="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                      </div>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day1.evening.title') }}</h4>
+                    </div>
+                    <div class="bg-orange-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-orange-200/30 dark:border-orange-800/30">
+                      <p class="text-gray-600 dark:text-gray-400 text-sm">{{ t('cyprusSeminar.day1.evening.networking') }}</p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Jour 2 -->
-          <div class="relative">
-            <!-- Badge du jour -->
-            <div class="flex flex-wrap items-center gap-4 mb-6">
-              <div class="flex items-center gap-3 bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-xl shadow-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <span class="font-bold text-lg">{{ t('cyprusSeminar.day2.date') }}</span>
+            <!-- JOUR 2 -->
+            <div class="relative">
+              <!-- Marqueur central -->
+              <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 -translate-y-3 items-center justify-center z-10">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-green-400 to-green-600 shadow-lg flex items-center justify-center border-4 border-white dark:border-gray-900">
+                  <span class="text-white font-bold text-xl">2</span>
+                </div>
               </div>
-              <h3 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
-                {{ t('cyprusSeminar.day2.title') }}
-              </h3>
-            </div>
 
-            <!-- Card du jour -->
-            <div class="bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl shadow border-l-4 border-green-500 overflow-hidden">
-              <div class="p-6 md:p-8 space-y-8">
-                <!-- Matinée culturelle -->
-                <div>
-                  <div class="flex items-center gap-3 mb-4">
-                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                    <h4 class="text-xl font-bold text-gray-900 dark:text-white">
-                      {{ t('cyprusSeminar.day2.morning.title') }}
-                    </h4>
-                  </div>
-                  <div class="space-y-4 pl-5">
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+              <!-- Contenu du jour 2 (inversé sur desktop) -->
+              <div class="md:grid md:grid-cols-2 md:gap-8 items-start">
+                <!-- Sessions (à gauche sur desktop) -->
+                <div class="md:order-1 md:pr-12 space-y-4 mb-6 md:mb-0">
+                  <!-- Matinée culturelle -->
+                  <div class="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 shadow-md hover:shadow-xl border-r-4 md:border-r-4 md:border-l-0 border-l-4 border-green-500 transition-all duration-300 hover:scale-[1.02]">
+                    <div class="flex items-center gap-3 mb-4">
+                      <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                        <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                      </div>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day2.morning.title') }}</h4>
+                    </div>
+                    <div class="bg-green-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-green-200/30 dark:border-green-800/30">
                       <p class="text-gray-600 dark:text-gray-400 text-sm">• {{ t('cyprusSeminar.day2.morning.visit') }}</p>
                       <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">• {{ t('cyprusSeminar.day2.morning.networking') }}</p>
                     </div>
                   </div>
+
+                  <!-- Après-midi -->
+                  <div class="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 shadow-md hover:shadow-xl border-r-4 md:border-r-4 md:border-l-0 border-l-4 border-green-500 transition-all duration-300 hover:scale-[1.02]">
+                    <div class="flex items-center gap-3 mb-4">
+                      <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                        <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                      </div>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day2.afternoon.title') }}</h4>
+                    </div>
+                    <div class="space-y-3">
+                      <div class="bg-green-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-green-200/30 dark:border-green-800/30">
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day2.afternoon.clinic.title') }}</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">{{ t('cyprusSeminar.speakersLabel') }}:</span> {{ t('cyprusSeminar.day2.afternoon.clinic.speakers') }}</p>
+                      </div>
+                      <div class="bg-green-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-green-200/30 dark:border-green-800/30">
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day2.afternoon.hackathon.title') }}</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">{{ t('cyprusSeminar.speakersLabel') }}:</span> {{ t('cyprusSeminar.day2.afternoon.hackathon.speakers') }}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Soirée -->
+                  <div class="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 shadow-md hover:shadow-xl border-r-4 md:border-r-4 md:border-l-0 border-l-4 border-green-500 transition-all duration-300 hover:scale-[1.02]">
+                    <div class="flex items-center gap-3 mb-4">
+                      <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                        <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                      </div>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day2.evening.title') }}</h4>
+                    </div>
+                    <div class="space-y-3">
+                      <div class="bg-green-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-green-200/30 dark:border-green-800/30">
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day2.evening.pitchSession.title') }}</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">{{ t('cyprusSeminar.speakerLabel') }}:</span> {{ t('cyprusSeminar.day2.evening.pitchSession.speaker') }}</p>
+                      </div>
+                      <div class="bg-green-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-green-200/30 dark:border-green-800/30">
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day2.evening.testimony.title') }}</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">{{ t('cyprusSeminar.speakerLabel') }}:</span> {{ t('cyprusSeminar.day2.evening.testimony.speaker') }}</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <!-- Après-midi -->
-                <div>
-                  <div class="flex items-center gap-3 mb-4">
-                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                    <h4 class="text-xl font-bold text-gray-900 dark:text-white">
-                      {{ t('cyprusSeminar.day2.afternoon.title') }}
-                    </h4>
-                  </div>
-                  <div class="space-y-4 pl-5">
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                      <p class="font-semibold text-gray-900 dark:text-white mb-2">
-                        {{ t('cyprusSeminar.day2.afternoon.clinic.title') }}
-                      </p>
-                      <p class="text-gray-600 dark:text-gray-400 text-sm">
-                        <span class="font-medium text-green-600 dark:text-green-400">{{ t('cyprusSeminar.speakersLabel') }}:</span> {{ t('cyprusSeminar.day2.afternoon.clinic.speakers') }}
-                      </p>
-                    </div>
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                      <p class="font-semibold text-gray-900 dark:text-white mb-2">
-                        {{ t('cyprusSeminar.day2.afternoon.hackathon.title') }}
-                      </p>
-                      <p class="text-gray-600 dark:text-gray-400 text-sm">
-                        <span class="font-medium text-green-600 dark:text-green-400">{{ t('cyprusSeminar.speakersLabel') }}:</span> {{ t('cyprusSeminar.day2.afternoon.hackathon.speakers') }}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Soirée -->
-                <div>
-                  <div class="flex items-center gap-3 mb-4">
-                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                    <h4 class="text-xl font-bold text-gray-900 dark:text-white">
-                      {{ t('cyprusSeminar.day2.evening.title') }}
-                    </h4>
-                  </div>
-                  <div class="space-y-4 pl-5">
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                      <p class="font-semibold text-gray-900 dark:text-white mb-2">
-                        {{ t('cyprusSeminar.day2.evening.pitchSession.title') }}
-                      </p>
-                      <p class="text-gray-600 dark:text-gray-400 text-sm">
-                        <span class="font-medium text-green-600 dark:text-green-400">{{ t('cyprusSeminar.speakerLabel') }}:</span> {{ t('cyprusSeminar.day2.evening.pitchSession.speaker') }}
-                      </p>
-                    </div>
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                      <p class="font-semibold text-gray-900 dark:text-white mb-2">
-                        {{ t('cyprusSeminar.day2.evening.testimony.title') }}
-                      </p>
-                      <p class="text-gray-600 dark:text-gray-400 text-sm">
-                        <span class="font-medium text-green-600 dark:text-green-400">{{ t('cyprusSeminar.speakerLabel') }}:</span> {{ t('cyprusSeminar.day2.evening.testimony.speaker') }}
-                      </p>
+                <!-- En-tête (mobile en haut) / Droite (desktop) -->
+                <div class="md:order-2 md:pl-12 mb-6 md:mb-0">
+                  <div class="inline-flex md:flex md:flex-col items-center md:items-start gap-3 bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-2xl shadow-lg mb-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <div>
+                      <div class="font-bold text-xl">{{ t('cyprusSeminar.day2.date') }}</div>
+                      <div class="text-green-100 text-sm">{{ t('cyprusSeminar.day2.title') }}</div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Jour 3 -->
-          <div class="relative">
-            <!-- Badge du jour -->
-            <div class="flex flex-wrap items-center gap-4 mb-6">
-              <div class="flex items-center gap-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl shadow-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <span class="font-bold text-lg">{{ t('cyprusSeminar.day3.date') }}</span>
+            <!-- JOUR 3 -->
+            <div class="relative">
+              <!-- Marqueur central -->
+              <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 -translate-y-3 items-center justify-center z-10">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 shadow-lg flex items-center justify-center border-4 border-white dark:border-gray-900">
+                  <span class="text-white font-bold text-xl">3</span>
+                </div>
               </div>
-              <h3 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
-                {{ t('cyprusSeminar.day3.title') }}
-              </h3>
-            </div>
 
-            <!-- Card du jour -->
-            <div class="bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl shadow border-l-4 border-blue-500 overflow-hidden">
-              <div class="p-6 md:p-8 space-y-8">
-                <!-- Matin -->
-                <div>
-                  <div class="flex items-center gap-3 mb-4">
-                    <div class="w-2 h-2 rounded-full bg-blue-500"></div>
-                    <h4 class="text-xl font-bold text-gray-900 dark:text-white">
-                      {{ t('cyprusSeminar.day3.morning.title') }}
-                    </h4>
-                  </div>
-                  <div class="space-y-4 pl-5">
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                      <p class="font-semibold text-gray-900 dark:text-white mb-2">
-                        {{ t('cyprusSeminar.day3.morning.session.title') }}
-                      </p>
-                      <p class="text-gray-600 dark:text-gray-400 text-sm">
-                        <span class="font-medium text-blue-600 dark:text-blue-400">{{ t('cyprusSeminar.speakersLabel') }}:</span> {{ t('cyprusSeminar.day3.morning.session.speakers') }}
-                      </p>
+              <!-- Contenu du jour 3 -->
+              <div class="md:grid md:grid-cols-2 md:gap-8 items-start">
+                <!-- En-tête (mobile) / Gauche (desktop) -->
+                <div class="md:text-right mb-6 md:mb-0 md:pr-12">
+                  <div class="inline-flex md:flex md:flex-col items-center md:items-end gap-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-4 rounded-2xl shadow-lg mb-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <div>
+                      <div class="font-bold text-xl">{{ t('cyprusSeminar.day3.date') }}</div>
+                      <div class="text-blue-100 text-sm">{{ t('cyprusSeminar.day3.title') }}</div>
                     </div>
                   </div>
                 </div>
 
-                <!-- Après-midi -->
-                <div>
-                  <div class="flex items-center gap-3 mb-4">
-                    <div class="w-2 h-2 rounded-full bg-blue-500"></div>
-                    <h4 class="text-xl font-bold text-gray-900 dark:text-white">
-                      {{ t('cyprusSeminar.day3.afternoon.title') }}
-                    </h4>
+                <!-- Sessions (mobile et desktop à droite) -->
+                <div class="md:pl-12 space-y-4">
+                  <!-- Matin -->
+                  <div class="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 shadow-md hover:shadow-xl border-l-4 border-blue-500 transition-all duration-300 hover:scale-[1.02]">
+                    <div class="flex items-center gap-3 mb-4">
+                      <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                      </div>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day3.morning.title') }}</h4>
+                    </div>
+                    <div class="bg-blue-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-blue-200/30 dark:border-blue-800/30">
+                      <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day3.morning.session.title') }}</p>
+                      <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-blue-600 dark:text-blue-400">{{ t('cyprusSeminar.speakersLabel') }}:</span> {{ t('cyprusSeminar.day3.morning.session.speakers') }}</p>
+                    </div>
                   </div>
-                  <div class="space-y-4 pl-5">
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+
+                  <!-- Après-midi -->
+                  <div class="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 shadow-md hover:shadow-xl border-l-4 border-blue-500 transition-all duration-300 hover:scale-[1.02]">
+                    <div class="flex items-center gap-3 mb-4">
+                      <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                      </div>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day3.afternoon.title') }}</h4>
+                    </div>
+                    <div class="bg-blue-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-blue-200/30 dark:border-blue-800/30">
                       <p class="text-gray-600 dark:text-gray-400 text-sm">• {{ t('cyprusSeminar.day3.afternoon.restitution') }}</p>
                       <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">• {{ t('cyprusSeminar.day3.afternoon.action') }}</p>
                     </div>
                   </div>
-                </div>
 
-                <!-- Clôture -->
-                <div>
-                  <div class="flex items-center gap-3 mb-4">
-                    <div class="w-2 h-2 rounded-full bg-blue-500"></div>
-                    <h4 class="text-xl font-bold text-gray-900 dark:text-white">
-                      {{ t('cyprusSeminar.day3.closing.title') }}
-                    </h4>
-                  </div>
-                  <div class="pl-5">
-                    <div class="bg-gradient-to-r from-blue-50 to-blue-100/50 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg p-4 border border-blue-200 dark:border-blue-700">
-                      <p class="text-gray-700 dark:text-gray-300 text-sm font-medium">
-                        {{ t('cyprusSeminar.day3.closing.ceremony') }}
-                      </p>
+                  <!-- Clôture -->
+                  <div class="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 shadow-md hover:shadow-xl border-l-4 border-blue-500 transition-all duration-300 hover:scale-[1.02]">
+                    <div class="flex items-center gap-3 mb-4">
+                      <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                        </svg>
+                      </div>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day3.closing.title') }}</h4>
+                    </div>
+                    <div class="bg-gradient-to-r from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/20 rounded-lg p-4 border-2 border-blue-300 dark:border-blue-700">
+                      <p class="text-gray-800 dark:text-gray-200 text-sm font-medium">{{ t('cyprusSeminar.day3.closing.ceremony') }}</p>
                     </div>
                   </div>
                 </div>
