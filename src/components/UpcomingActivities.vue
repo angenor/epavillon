@@ -29,6 +29,9 @@
         <!-- Widget Journée Finance Durable (visible uniquement le 14 novembre 2025) -->
         <SustainableFinanceDayWidget />
 
+        <!-- Widget Séminaire Chypre (visible 7 jours avant et pendant l'événement : 1-3 décembre 2025) -->
+        <CyprusSeminarWidget />
+
         <!-- Boucle sur les événements avec leurs activités (max 3) -->
         <div
           v-for="(event, index) in eventsWithActivities.slice(0, 3)"
@@ -187,12 +190,14 @@ import { useRouter } from 'vue-router'
 import { supabase } from '@/composables/useSupabase'
 import YouthClimateDayWidget from './YouthClimateDayWidget.vue'
 import SustainableFinanceDayWidget from './SustainableFinanceDayWidget.vue'
+import CyprusSeminarWidget from './CyprusSeminarWidget.vue'
 
 export default {
   name: 'UpcomingActivities',
   components: {
     YouthClimateDayWidget,
-    SustainableFinanceDayWidget
+    SustainableFinanceDayWidget,
+    CyprusSeminarWidget
   },
   setup() {
     const { t, locale } = useI18n()
