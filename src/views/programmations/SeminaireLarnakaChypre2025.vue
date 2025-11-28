@@ -16,17 +16,17 @@
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
               <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
             </span>
-            <span class="text-white/90 text-sm font-medium">{{ t('cyprusSeminar.dates') }}</span>
+            <span class="text-white/90 text-sm font-medium">1-3 décembre 2025</span>
           </div>
 
           <!-- Titre principal -->
           <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-            {{ t('cyprusSeminar.title') }}
+            Séminaire sur le climat à Larnaka, Chypre
           </h1>
 
           <!-- Sous-titre -->
           <p class="text-lg md:text-xl text-white/90 mb-8 leading-relaxed">
-            {{ t('cyprusSeminar.subtitle') }}
+            Renforcement des capacités francophones en matière de climat et développement durable
           </p>
 
           <!-- Informations clés -->
@@ -35,20 +35,20 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <span class="text-sm md:text-base font-medium">{{ t('cyprusSeminar.date') }}</span>
+              <span class="text-sm md:text-base font-medium">1-3 décembre 2025</span>
             </div>
             <div class="flex items-center gap-2 text-white/90">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              <span class="text-sm md:text-base font-medium">{{ t('cyprusSeminar.location') }}</span>
+              <span class="text-sm md:text-base font-medium">Larnaka, Chypre</span>
             </div>
             <div class="flex items-center gap-2 text-white/90">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
-              <span class="text-sm md:text-base font-medium">{{ t('cyprusSeminar.participants') }}</span>
+              <span class="text-sm md:text-base font-medium">50 participants</span>
             </div>
           </div>
 
@@ -63,7 +63,7 @@
               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M3 7v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm16 10H5V7h14v10zm-7-7c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6-2v6l-2.5-2.5L13 14v-6l2.5 2.5L18 8z"/>
               </svg>
-              <span>{{ t('cyprusSeminar.registerButton') }}</span>
+              <span>S'inscrire au direct Zoom</span>
               <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
@@ -78,14 +78,14 @@
       <div class="max-w-7xl mx-auto px-4 py-3">
         <nav class="flex items-center space-x-2 text-sm">
           <RouterLink to="/" class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            {{ t('common.home') }}
+            Accueil
           </RouterLink>
           <span class="text-gray-400 dark:text-gray-500">/</span>
           <RouterLink to="/programmations" class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            {{ t('programmations.title') }}
+            Programmations
           </RouterLink>
           <span class="text-gray-400 dark:text-gray-500">/</span>
-          <span class="text-gray-900 dark:text-white font-medium">{{ t('cyprusSeminar.shortTitle') }}</span>
+          <span class="text-gray-900 dark:text-white font-medium">Séminaire Larnaka 2025</span>
         </nav>
       </div>
     </div>
@@ -96,27 +96,47 @@
       <section class="mb-16">
         <div class="text-center mb-8">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3">
-            {{ t('cyprusSeminar.liveStreamDay', { day: selectedDay }) }}
+            Direct - Jour {{ selectedDay }}
           </h2>
           <p class="text-gray-600 dark:text-gray-400">
-            {{ t('cyprusSeminar.liveStreamInfo') }}
+            Suivez le séminaire en direct sur YouTube
           </p>
         </div>
 
         <!-- Tabs pour les 3 jours -->
         <div class="flex flex-wrap justify-center gap-3 mb-8">
           <button
-            v-for="day in [1, 2, 3]"
-            :key="day"
-            @click="selectedDay = day"
+            @click="selectedDay = 1"
             :class="[
               'px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 cursor-pointer',
-              selectedDay === day
+              selectedDay === 1
                 ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-105'
                 : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
             ]"
           >
-            {{ t(`cyprusSeminar.day${day}.title`) }}
+            Jour 1 - Ouverture
+          </button>
+          <button
+            @click="selectedDay = 2"
+            :class="[
+              'px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 cursor-pointer',
+              selectedDay === 2
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-105'
+                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
+            ]"
+          >
+            Jour 2 - Ateliers
+          </button>
+          <button
+            @click="selectedDay = 3"
+            :class="[
+              'px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 cursor-pointer',
+              selectedDay === 3
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-105'
+                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
+            ]"
+          >
+            Jour 3 - Clôture
           </button>
         </div>
 
@@ -191,7 +211,7 @@
               :key="selectedDay"
               class="absolute top-0 left-0 w-full h-full"
               :src="getYoutubeEmbedUrl(selectedDay)"
-              :title="`Direct YouTube - ${t('cyprusSeminar.day' + selectedDay + '.title')}`"
+              :title="`Direct YouTube - Jour ${selectedDay}`"
               frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowfullscreen
@@ -204,16 +224,16 @@
       <section class="mb-16">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            {{ t('cyprusSeminar.contextTitle') }}
+            Contexte et Justification
           </h2>
         </div>
         <div class="bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-8 md:p-10 shadow border border-gray-200/50 dark:border-gray-700/50">
           <div class="prose prose-lg dark:prose-invert max-w-none">
             <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6 text-lg">
-              {{ t('cyprusSeminar.context') }}
+              Ce séminaire s'inscrit dans le cadre du renforcement des capacités francophones en matière de lutte contre les changements climatiques et de développement durable. Il vise à créer un espace d'échange et de collaboration entre les acteurs clés de la Francophonie.
             </p>
             <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">
-              {{ t('cyprusSeminar.context2') }}
+              Face aux défis climatiques croissants, il est essentiel de mobiliser l'ensemble des parties prenantes et de partager les meilleures pratiques pour une action climatique efficace et durable dans l'espace francophone.
             </p>
           </div>
         </div>
@@ -223,22 +243,66 @@
       <section class="mb-16">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            {{ t('cyprusSeminar.objectivesTitle') }}
+            Objectifs du Séminaire
           </h2>
         </div>
         <div class="grid md:grid-cols-2 gap-6">
-          <div v-for="index in [0, 1, 2, 3]" :key="index"
-               class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
+          <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
             <div class="flex items-start gap-4">
               <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                <span class="text-white font-bold text-lg">{{ index + 1 }}</span>
+                <span class="text-white font-bold text-lg">1</span>
               </div>
               <div class="flex-1">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">
-                  {{ t(`cyprusSeminar.objectives.${index}.title`) }}
+                  Renforcer les capacités
                 </h3>
                 <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  {{ t(`cyprusSeminar.objectives.${index}.description`) }}
+                  Renforcer les capacités des acteurs francophones en matière d'action climatique et de développement durable.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <span class="text-white font-bold text-lg">2</span>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">
+                  Favoriser l'échange
+                </h3>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  Favoriser l'échange de bonnes pratiques et d'expériences entre les différents pays membres.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <span class="text-white font-bold text-lg">3</span>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">
+                  Promouvoir la collaboration
+                </h3>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  Promouvoir la collaboration entre les institutions et les organisations travaillant sur le climat.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <span class="text-white font-bold text-lg">4</span>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">
+                  Développer des solutions
+                </h3>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  Développer des solutions innovantes adaptées aux contextes locaux francophones.
                 </p>
               </div>
             </div>
@@ -250,10 +314,10 @@
       <section class="mb-16">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            {{ t('cyprusSeminar.programTitle') }}
+            Programme Détaillé
           </h2>
           <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            {{ t('cyprusSeminar.moderation') }} : <span class="font-semibold text-gray-900 dark:text-white">{{ t('cyprusSeminar.moderator') }}</span>
+            Modération : <span class="font-semibold text-gray-900 dark:text-white">Dr. Marie Dupont, Expert climat IFDD</span>
           </p>
         </div>
 
@@ -286,7 +350,7 @@
                         </div>
                         <div>
                           <div class="text-xs font-semibold uppercase tracking-wide opacity-90">Jour 1</div>
-                          <div class="text-lg font-bold">{{ t('cyprusSeminar.day1.title') }}</div>
+                          <div class="text-lg font-bold">Ouverture</div>
                           <div class="text-xs opacity-75">2025</div>
                         </div>
                       </div>
@@ -308,7 +372,7 @@
                           <div class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Décembre</div>
                           <div class="text-sm text-gray-500 dark:text-gray-400">2025</div>
                           <div class="mt-3 pt-3 border-t border-orange-200 dark:border-orange-800">
-                            <div class="text-xs font-medium text-orange-600 dark:text-orange-400">{{ t('cyprusSeminar.day1.title') }}</div>
+                            <div class="text-xs font-medium text-orange-600 dark:text-orange-400">Ouverture</div>
                           </div>
                         </div>
                       </div>
@@ -330,16 +394,16 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
                       </div>
-                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day1.morning.title') }}</h4>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">Matinée</h4>
                     </div>
                     <div class="space-y-3">
                       <div class="bg-orange-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-orange-200/30 dark:border-orange-800/30">
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day1.morning.opening.title') }}</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-xs">{{ t('cyprusSeminar.day1.morning.opening.organizers') }}</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Cérémonie d'ouverture</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs">Autorités de Chypre et de l'IFDD</p>
                       </div>
                       <div class="bg-orange-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-orange-200/30 dark:border-orange-800/30">
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day1.morning.panel.title') }}</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-orange-600 dark:text-orange-400">{{ t('cyprusSeminar.speakersLabel') }}:</span> {{ t('cyprusSeminar.day1.morning.panel.speakers') }}</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Panel d'experts</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-orange-600 dark:text-orange-400">Intervenants :</span> Dr. Marie Dupont, Prof. Jean Martin, Dr. Sophie Bernard</p>
                       </div>
                     </div>
                   </div>
@@ -352,16 +416,16 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
                       </div>
-                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day1.afternoon.title') }}</h4>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">Après-midi</h4>
                     </div>
                     <div class="space-y-3">
                       <div class="bg-orange-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-orange-200/30 dark:border-orange-800/30">
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day1.afternoon.session1.title') }}</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-orange-600 dark:text-orange-400">{{ t('cyprusSeminar.speakerLabel') }}:</span> {{ t('cyprusSeminar.day1.afternoon.session1.speaker') }}</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Session thématique : Adaptation au climat</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-orange-600 dark:text-orange-400">Intervenant :</span> Dr. Ahmed Hassan, Expert adaptation climatique</p>
                       </div>
                       <div class="bg-orange-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-orange-200/30 dark:border-orange-800/30">
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day1.afternoon.session2.title') }}</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-orange-600 dark:text-orange-400">{{ t('cyprusSeminar.speakersLabel') }}:</span> {{ t('cyprusSeminar.day1.afternoon.session2.speakers') }}</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Atelier participatif : Solutions locales</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-orange-600 dark:text-orange-400">Intervenants :</span> Équipe IFDD et participants</p>
                       </div>
                     </div>
                   </div>
@@ -374,10 +438,10 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                         </svg>
                       </div>
-                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day1.evening.title') }}</h4>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">Soirée</h4>
                     </div>
                     <div class="bg-orange-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-orange-200/30 dark:border-orange-800/30">
-                      <p class="text-gray-600 dark:text-gray-400 text-sm">{{ t('cyprusSeminar.day1.evening.networking') }}</p>
+                      <p class="text-gray-600 dark:text-gray-400 text-sm">Cocktail de bienvenue et réseautage</p>
                     </div>
                   </div>
                 </div>
@@ -407,7 +471,7 @@
                         </div>
                         <div>
                           <div class="text-xs font-semibold uppercase tracking-wide opacity-90">Jour 2</div>
-                          <div class="text-lg font-bold">{{ t('cyprusSeminar.day2.title') }}</div>
+                          <div class="text-lg font-bold">Ateliers</div>
                           <div class="text-xs opacity-75">2025</div>
                         </div>
                       </div>
@@ -429,7 +493,7 @@
                           <div class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Décembre</div>
                           <div class="text-sm text-gray-500 dark:text-gray-400">2025</div>
                           <div class="mt-3 pt-3 border-t border-green-200 dark:border-green-800">
-                            <div class="text-xs font-medium text-green-600 dark:text-green-400">{{ t('cyprusSeminar.day2.title') }}</div>
+                            <div class="text-xs font-medium text-green-600 dark:text-green-400">Ateliers</div>
                           </div>
                         </div>
                       </div>
@@ -451,11 +515,11 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
                       </div>
-                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day2.morning.title') }}</h4>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">Matinée culturelle</h4>
                     </div>
                     <div class="bg-green-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-green-200/30 dark:border-green-800/30">
-                      <p class="text-gray-600 dark:text-gray-400 text-sm">• {{ t('cyprusSeminar.day2.morning.visit') }}</p>
-                      <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">• {{ t('cyprusSeminar.day2.morning.networking') }}</p>
+                      <p class="text-gray-600 dark:text-gray-400 text-sm">• Visite culturelle de Larnaka</p>
+                      <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">• Échange informel entre participants</p>
                     </div>
                   </div>
 
@@ -467,16 +531,16 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
                       </div>
-                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day2.afternoon.title') }}</h4>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">Après-midi</h4>
                     </div>
                     <div class="space-y-3">
                       <div class="bg-green-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-green-200/30 dark:border-green-800/30">
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day2.afternoon.clinic.title') }}</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">{{ t('cyprusSeminar.speakersLabel') }}:</span> {{ t('cyprusSeminar.day2.afternoon.clinic.speakers') }}</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Clinique de projets climatiques</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">Intervenants :</span> Experts en financement climat et participants</p>
                       </div>
                       <div class="bg-green-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-green-200/30 dark:border-green-800/30">
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day2.afternoon.hackathon.title') }}</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">{{ t('cyprusSeminar.speakersLabel') }}:</span> {{ t('cyprusSeminar.day2.afternoon.hackathon.speakers') }}</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Hackathon : Solutions innovantes</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">Intervenants :</span> Équipe technique IFDD et mentors</p>
                       </div>
                     </div>
                   </div>
@@ -489,16 +553,16 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                         </svg>
                       </div>
-                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day2.evening.title') }}</h4>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">Soirée</h4>
                     </div>
                     <div class="space-y-3">
                       <div class="bg-green-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-green-200/30 dark:border-green-800/30">
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day2.evening.pitchSession.title') }}</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">{{ t('cyprusSeminar.speakerLabel') }}:</span> {{ t('cyprusSeminar.day2.evening.pitchSession.speaker') }}</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Session de pitchs : Projets innovants</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">Intervenant :</span> Équipes de participants</p>
                       </div>
                       <div class="bg-green-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-green-200/30 dark:border-green-800/30">
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day2.evening.testimony.title') }}</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">{{ t('cyprusSeminar.speakerLabel') }}:</span> {{ t('cyprusSeminar.day2.evening.testimony.speaker') }}</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Témoignage inspirant</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">Intervenant :</span> Leader climat francophone</p>
                       </div>
                     </div>
                   </div>
@@ -529,7 +593,7 @@
                         </div>
                         <div>
                           <div class="text-xs font-semibold uppercase tracking-wide opacity-90">Jour 3</div>
-                          <div class="text-lg font-bold">{{ t('cyprusSeminar.day3.title') }}</div>
+                          <div class="text-lg font-bold">Clôture</div>
                           <div class="text-xs opacity-75">2025</div>
                         </div>
                       </div>
@@ -551,7 +615,7 @@
                           <div class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Décembre</div>
                           <div class="text-sm text-gray-500 dark:text-gray-400">2025</div>
                           <div class="mt-3 pt-3 border-t border-blue-200 dark:border-blue-800">
-                            <div class="text-xs font-medium text-blue-600 dark:text-blue-400">{{ t('cyprusSeminar.day3.title') }}</div>
+                            <div class="text-xs font-medium text-blue-600 dark:text-blue-400">Clôture</div>
                           </div>
                         </div>
                       </div>
@@ -573,11 +637,11 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
                       </div>
-                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day3.morning.title') }}</h4>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">Matin</h4>
                     </div>
                     <div class="bg-blue-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-blue-200/30 dark:border-blue-800/30">
-                      <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">{{ t('cyprusSeminar.day3.morning.session.title') }}</p>
-                      <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-blue-600 dark:text-blue-400">{{ t('cyprusSeminar.speakersLabel') }}:</span> {{ t('cyprusSeminar.day3.morning.session.speakers') }}</p>
+                      <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Restitution des travaux de groupes</p>
+                      <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-blue-600 dark:text-blue-400">Intervenants :</span> Représentants des groupes et modérateur</p>
                     </div>
                   </div>
 
@@ -589,11 +653,11 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
                       </div>
-                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day3.afternoon.title') }}</h4>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">Après-midi</h4>
                     </div>
                     <div class="bg-blue-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-blue-200/30 dark:border-blue-800/30">
-                      <p class="text-gray-600 dark:text-gray-400 text-sm">• {{ t('cyprusSeminar.day3.afternoon.restitution') }}</p>
-                      <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">• {{ t('cyprusSeminar.day3.afternoon.action') }}</p>
+                      <p class="text-gray-600 dark:text-gray-400 text-sm">• Synthèse des recommandations</p>
+                      <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">• Élaboration du plan d'action francophone</p>
                     </div>
                   </div>
 
@@ -605,10 +669,10 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                         </svg>
                       </div>
-                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">{{ t('cyprusSeminar.day3.closing.title') }}</h4>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white">Clôture</h4>
                     </div>
                     <div class="bg-gradient-to-r from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/20 rounded-lg p-4 border-2 border-blue-300 dark:border-blue-700">
-                      <p class="text-gray-800 dark:text-gray-200 text-sm font-medium">{{ t('cyprusSeminar.day3.closing.ceremony') }}</p>
+                      <p class="text-gray-800 dark:text-gray-200 text-sm font-medium">Cérémonie de clôture officielle et remise des certificats</p>
                     </div>
                   </div>
                 </div>
@@ -622,19 +686,48 @@
       <section class="mb-16">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            {{ t('cyprusSeminar.targetAudienceTitle') }}
+            Public Cible
           </h2>
         </div>
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div v-for="audience in ['audience1', 'audience2', 'audience3', 'audience4']" :key="audience"
-               class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
+          <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
             <div class="flex flex-col items-center text-center gap-4">
               <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <p class="text-gray-900 dark:text-white font-medium leading-relaxed">{{ t(`cyprusSeminar.audiences.${audience}`) }}</p>
+              <p class="text-gray-900 dark:text-white font-medium leading-relaxed">Responsables gouvernementaux des pays francophones</p>
+            </div>
+          </div>
+          <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
+            <div class="flex flex-col items-center text-center gap-4">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <p class="text-gray-900 dark:text-white font-medium leading-relaxed">Experts en développement durable et changement climatique</p>
+            </div>
+          </div>
+          <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
+            <div class="flex flex-col items-center text-center gap-4">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <p class="text-gray-900 dark:text-white font-medium leading-relaxed">Représentants d'organisations internationales</p>
+            </div>
+          </div>
+          <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
+            <div class="flex flex-col items-center text-center gap-4">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <p class="text-gray-900 dark:text-white font-medium leading-relaxed">Acteurs de la société civile et entrepreneurs verts</p>
             </div>
           </div>
         </div>
@@ -644,19 +737,58 @@
       <section class="mb-16">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            {{ t('cyprusSeminar.expectedResultsTitle') }}
+            Résultats Attendus
           </h2>
         </div>
         <div class="grid md:grid-cols-2 gap-6">
-          <div v-for="result in ['result1', 'result2', 'result3', 'result4', 'result5']" :key="result"
-               class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-green-500 dark:hover:border-green-500 transition-all duration-300 hover:shadow-md">
+          <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-green-500 dark:hover:border-green-500 transition-all duration-300 hover:shadow-md">
             <div class="flex items-start gap-4">
               <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">{{ t(`cyprusSeminar.results.${result}`) }}</p>
+              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Renforcement des compétences des participants en matière de gestion climatique</p>
+            </div>
+          </div>
+          <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-green-500 dark:hover:border-green-500 transition-all duration-300 hover:shadow-md">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Création d'un réseau francophone d'acteurs climat dynamique et solidaire</p>
+            </div>
+          </div>
+          <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-green-500 dark:hover:border-green-500 transition-all duration-300 hover:shadow-md">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Élaboration de recommandations concrètes pour l'action climatique francophone</p>
+            </div>
+          </div>
+          <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-green-500 dark:hover:border-green-500 transition-all duration-300 hover:shadow-md">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Identification de projets pilotes innovants et réplicables dans l'espace francophone</p>
+            </div>
+          </div>
+          <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-green-500 dark:hover:border-green-500 transition-all duration-300 hover:shadow-md">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Production d'un plan d'action francophone pour le climat et le développement durable</p>
             </div>
           </div>
         </div>
@@ -666,7 +798,7 @@
       <section class="mb-16">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            {{ t('cyprusSeminar.partnersTitle') }}
+            Partenaires
           </h2>
         </div>
         <div class="bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-8 md:p-10 shadow border border-gray-200/50 dark:border-gray-700/50">
@@ -685,12 +817,29 @@
 
           <!-- Liste des partenaires -->
           <div class="grid md:grid-cols-2 gap-4">
-            <div v-for="partner in ['cyprus', 'cyprusAid', 'oif', 'ifdd']" :key="partner"
-                class="flex items-center gap-3 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+            <div class="flex items-center gap-3 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
               <svg class="w-6 h-6 text-green-600 dark:text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span class="font-medium">{{ t(`cyprusSeminar.partners.${partner}`) }}</span>
+              <span class="font-medium">République de Chypre</span>
+            </div>
+            <div class="flex items-center gap-3 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+              <svg class="w-6 h-6 text-green-600 dark:text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span class="font-medium">Cyprus Aid - Agence chypriote de développement</span>
+            </div>
+            <div class="flex items-center gap-3 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+              <svg class="w-6 h-6 text-green-600 dark:text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span class="font-medium">Organisation internationale de la Francophonie (OIF)</span>
+            </div>
+            <div class="flex items-center gap-3 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+              <svg class="w-6 h-6 text-green-600 dark:text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span class="font-medium">Institut de la Francophonie pour le développement durable (IFDD)</span>
             </div>
           </div>
         </div>
@@ -700,7 +849,7 @@
       <section class="mb-16">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            {{ t('cyprusSeminar.contactsTitle') }}
+            Personnes Ressources
           </h2>
         </div>
         <div class="grid md:grid-cols-2 gap-8">
@@ -713,31 +862,31 @@
                 </svg>
               </div>
               <h3 class="text-xl font-bold text-gray-900 dark:text-white">
-                {{ t('cyprusSeminar.contacts.cyprus.name') }}
+                Maria Papadopoulos
               </h3>
             </div>
             <div class="space-y-3">
               <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Fonction</p>
                 <p class="font-semibold text-gray-900 dark:text-white">
-                  {{ t('cyprusSeminar.contacts.cyprus.role') }}
+                  Coordinatrice Programme Climat
                 </p>
               </div>
               <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Organisation</p>
                 <p class="text-gray-700 dark:text-gray-300">
-                  {{ t('cyprusSeminar.contacts.cyprus.organization') }}
+                  Cyprus Aid, République de Chypre
                 </p>
               </div>
               <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Email</p>
-                <a :href="`mailto:${t('cyprusSeminar.contacts.cyprus.email')}`" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
-                  {{ t('cyprusSeminar.contacts.cyprus.email') }}
+                <a href="mailto:m.papadopoulos@cyprusaid.gov.cy" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                  m.papadopoulos@cyprusaid.gov.cy
                 </a>
               </div>
               <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Téléphone</p>
-                <p class="text-gray-700 dark:text-gray-300 font-medium">{{ t('cyprusSeminar.contacts.cyprus.phone') }}</p>
+                <p class="text-gray-700 dark:text-gray-300 font-medium">+357 22 123 456</p>
               </div>
             </div>
           </div>
@@ -751,31 +900,31 @@
                 </svg>
               </div>
               <h3 class="text-xl font-bold text-gray-900 dark:text-white">
-                {{ t('cyprusSeminar.contacts.ifdd.name') }}
+                Jean-Pierre Ndoutoum
               </h3>
             </div>
             <div class="space-y-3">
               <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Fonction</p>
                 <p class="font-semibold text-gray-900 dark:text-white">
-                  {{ t('cyprusSeminar.contacts.ifdd.role') }}
+                  Directeur régional Afrique et Méditerranée
                 </p>
               </div>
               <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Organisation</p>
                 <p class="text-gray-700 dark:text-gray-300">
-                  {{ t('cyprusSeminar.contacts.ifdd.organization') }}
+                  Institut de la Francophonie pour le développement durable (IFDD)
                 </p>
               </div>
               <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Email</p>
-                <a :href="`mailto:${t('cyprusSeminar.contacts.ifdd.email')}`" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
-                  {{ t('cyprusSeminar.contacts.ifdd.email') }}
+                <a href="mailto:jp.ndoutoum@ifdd.francophonie.org" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                  jp.ndoutoum@ifdd.francophonie.org
                 </a>
               </div>
               <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Téléphone</p>
-                <p class="text-gray-700 dark:text-gray-300 font-medium">{{ t('cyprusSeminar.contacts.ifdd.phone') }}</p>
+                <p class="text-gray-700 dark:text-gray-300 font-medium">+1 514 987 4567</p>
               </div>
             </div>
           </div>
@@ -793,17 +942,17 @@
 
           <div class="relative">
             <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-              {{ t('cyprusSeminar.ctaTitle') }}
+              Rejoignez-nous !
             </h2>
             <p class="text-white/90 text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
-              {{ t('cyprusSeminar.ctaDescription') }}
+              Participez à cet événement majeur de la Francophonie sur le climat et contribuez à façonner l'avenir de notre planète.
             </p>
             <RouterLink to="/programmations"
                         class="group inline-flex items-center gap-3 bg-white/95 backdrop-blur-sm text-blue-600 font-bold px-8 py-4 rounded-xl hover:bg-white transition-all duration-300 cursor-pointer shadow-md hover:shadow-lg transform hover:scale-105">
               <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
-              <span>{{ t('cyprusSeminar.backToProgrammations') }}</span>
+              <span>Retour aux programmations</span>
             </RouterLink>
           </div>
         </div>
@@ -814,10 +963,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useHead } from '@vueuse/head'
-
-const { t } = useI18n()
 
 // État pour le jour sélectionné
 const selectedDay = ref(1)
@@ -903,19 +1049,19 @@ const getYoutubeEmbedUrl = (day) => {
 
 // Meta tags pour le SEO
 useHead({
-  title: () => t('cyprusSeminar.title'),
+  title: 'Séminaire sur le climat à Larnaka, Chypre 2025',
   meta: [
     {
       name: 'description',
-      content: () => t('cyprusSeminar.metaDescription')
+      content: 'Séminaire francophone sur le climat et le développement durable du 1er au 3 décembre 2025 à Larnaka, Chypre. Renforcement des capacités et échange de bonnes pratiques.'
     },
     {
       property: 'og:title',
-      content: () => t('cyprusSeminar.title')
+      content: 'Séminaire sur le climat à Larnaka, Chypre 2025'
     },
     {
       property: 'og:description',
-      content: () => t('cyprusSeminar.metaDescription')
+      content: 'Séminaire francophone sur le climat et le développement durable du 1er au 3 décembre 2025 à Larnaka, Chypre. Renforcement des capacités et échange de bonnes pratiques.'
     },
     {
       property: 'og:type',
