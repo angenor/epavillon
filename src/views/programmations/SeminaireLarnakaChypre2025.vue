@@ -1,68 +1,137 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <!-- Hero Section -->
-    <div class="relative overflow-hidden">
-      <!-- Image de fond -->
-      <img src="/images/example/banner-chypre.jpg" alt="Chypre" class="absolute inset-0 w-full h-full object-cover">
+    <!-- Hero Section - Design Glass Moderne -->
+    <div class="relative overflow-hidden min-h-[85vh] flex items-center">
+      <!-- Image de fond avec parallax -->
+      <div class="absolute inset-0">
+        <img src="/images/example/banner-chypre.jpg" alt="Chypre" class="absolute inset-0 w-full h-full object-cover scale-105">
+        <!-- Overlay gradient moderne -->
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-600/80 via-blue-700/70 to-blue-900/85 dark:from-blue-900/90 dark:via-blue-950/85 dark:to-gray-900/90"></div>
+        <!-- Effet de vignette -->
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.3)_100%)]"></div>
+      </div>
 
-      <!-- Overlay gradient -->
-      <div class="absolute inset-0 bg-gradient-to-br from-blue-600/90 via-blue-700/85 to-blue-900/90 dark:from-blue-900/95 dark:via-blue-950/90 dark:to-gray-900/95"></div>
+      <!-- Particules flottantes décoratives -->
+      <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-white/5 rounded-full blur-3xl animate-float"></div>
+        <div class="absolute top-40 right-20 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl animate-float-delayed"></div>
+        <div class="absolute bottom-20 left-1/3 w-80 h-80 bg-purple-400/5 rounded-full blur-3xl animate-float-slow"></div>
+      </div>
 
-      <div class="relative max-w-7xl mx-auto px-4 py-16 md:py-24">
-        <div class="text-center max-w-4xl mx-auto">
-          <!-- Badge -->
-          <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
-            <span class="relative flex h-2 w-2">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-            </span>
-            <span class="text-white/90 text-sm font-medium">1-3 décembre 2025</span>
-          </div>
-
-          <!-- Titre principal -->
-          <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-            Financement durable pour le climat, la biodiversité et l’eau : mobiliser les compétences et les innovations francophones
-          </h1>
-
-          <!-- Informations clés -->
-          <div class="flex flex-wrap items-center justify-center gap-4 md:gap-6 mb-10">
-            <div class="flex items-center gap-2 text-white/90">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span class="text-sm md:text-base font-medium">1-3 décembre 2025</span>
-            </div>
-            <div class="flex items-center gap-2 text-white/90">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              <span class="text-sm md:text-base font-medium">Larnaka et Nicosie, Chypre</span>
-            </div>
-            <div class="flex items-center gap-2 text-white/90">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-              <span class="text-sm md:text-base font-medium">40 participants</span>
+      <div class="relative max-w-7xl mx-auto px-4 py-20 md:py-28 w-full">
+        <div class="max-w-5xl mx-auto">
+          <!-- Badge avec effet glass moderne -->
+          <div class="flex justify-center mb-8 animate-fade-in-down">
+            <div class="inline-flex items-center gap-3 bg-white/10 backdrop-blur-xl border border-white/20 px-6 py-3 rounded-full shadow-2xl shadow-black/20 hover:bg-white/15 transition-all duration-300">
+              <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-400 shadow-lg shadow-green-400/50"></span>
+              </span>
+              <span class="text-white font-semibold text-sm md:text-base tracking-wide">1-3 décembre 2025</span>
+              <div class="h-4 w-px bg-white/30"></div>
+              <span class="text-white/90 text-sm md:text-base">Larnaka, Chypre</span>
             </div>
           </div>
 
-          <!-- Bouton d'inscription -->
-          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="https://us06web.zoom.us/meeting/register/kF1ZvrOeRcuVIaGkBwc0jw"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="group inline-flex items-center gap-3 bg-white/95 backdrop-blur-sm text-blue-600 font-bold px-8 py-4 rounded-xl hover:bg-white cursor-pointer shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300"
-            >
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M3 7v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm16 10H5V7h14v10zm-7-7c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6-2v6l-2.5-2.5L13 14v-6l2.5 2.5L18 8z"/>
-              </svg>
-              <span>S'inscrire au direct Zoom</span>
-              <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </a>
+          <!-- Carte principale avec effet glass -->
+          <div class="bg-white/10 backdrop-blur-2xl rounded-3xl border border-white/20 shadow-2xl shadow-black/30 p-8 md:p-12 mb-8 animate-fade-in-up">
+            <!-- Reflet supérieur -->
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
+
+            <!-- Titre principal avec gradient -->
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-center mb-8 leading-tight">
+              <span class="bg-gradient-to-r from-white via-blue-50 to-white bg-clip-text text-transparent drop-shadow-lg">
+                Financement durable pour le climat, la biodiversité et l'eau
+              </span>
+            </h1>
+
+            <p class="text-xl md:text-2xl text-center text-white/95 font-medium leading-relaxed mb-10 max-w-3xl mx-auto">
+              Mobiliser les compétences et les innovations francophones
+            </p>
+
+            <!-- Informations clés dans des cartes glass -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+              <!-- Dates -->
+              <div class="group bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-5 hover:bg-white/15 hover:scale-105 transition-all duration-300 shadow-lg">
+                <div class="flex items-center gap-3 mb-2">
+                  <div class="p-2 bg-white/20 rounded-lg">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div class="text-left">
+                    <p class="text-white/70 text-xs font-medium uppercase tracking-wide">Dates</p>
+                    <p class="text-white font-bold text-lg">1-3 Déc 2025</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Lieu -->
+              <div class="group bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-5 hover:bg-white/15 hover:scale-105 transition-all duration-300 shadow-lg">
+                <div class="flex items-center gap-3 mb-2">
+                  <div class="p-2 bg-white/20 rounded-lg">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <div class="text-left">
+                    <p class="text-white/70 text-xs font-medium uppercase tracking-wide">Lieu</p>
+                    <p class="text-white font-bold text-lg">Larnaka & Nicosie</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Participants -->
+              <div class="group bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-5 hover:bg-white/15 hover:scale-105 transition-all duration-300 shadow-lg">
+                <div class="flex items-center gap-3 mb-2">
+                  <div class="p-2 bg-white/20 rounded-lg">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  </div>
+                  <div class="text-left">
+                    <p class="text-white/70 text-xs font-medium uppercase tracking-wide">Participants</p>
+                    <p class="text-white font-bold text-lg">40 participants</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bouton d'inscription avec effet glass -->
+            <div class="flex justify-center">
+              <a
+                href="https://us06web.zoom.us/meeting/register/kF1ZvrOeRcuVIaGkBwc0jw"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group relative inline-flex items-center gap-3 bg-white/95 backdrop-blur-xl border-2 border-white/40 text-blue-600 font-bold px-10 py-5 rounded-2xl cursor-pointer shadow-2xl shadow-black/30 hover:shadow-blue-500/30 hover:scale-105 transition-all duration-300 overflow-hidden"
+              >
+                <!-- Effet de brillance au survol -->
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+
+                <svg class="w-7 h-7 relative z-10" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M3 7v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm16 10H5V7h14v10zm-7-7c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6-2v6l-2.5-2.5L13 14v-6l2.5 2.5L18 8z"/>
+                </svg>
+                <span class="relative z-10 text-lg">S'inscrire au direct Zoom</span>
+                <svg class="w-6 h-6 relative z-10 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Organisateurs avec effet glass -->
+          <div class="flex justify-center items-center gap-6 flex-wrap animate-fade-in">
+            <div class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl px-6 py-3 shadow-xl">
+              <p class="text-white/80 text-sm font-medium">Une initiative de</p>
+            </div>
+            <div class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl px-6 py-4 shadow-xl hover:bg-white/15 transition-all duration-300">
+              <p class="text-white font-bold text-lg">République de Chypre</p>
+            </div>
+            <div class="text-white/60 text-2xl">×</div>
+            <div class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl px-6 py-4 shadow-xl hover:bg-white/15 transition-all duration-300">
+              <p class="text-white font-bold text-lg">IFDD-OIF</p>
+            </div>
           </div>
         </div>
       </div>
@@ -1213,5 +1282,100 @@ useHead({
 
 .countdown-card:nth-child(4) {
   animation-delay: 0.6s;
+}
+
+/* Animations pour le Hero Section Glass Design */
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in-down {
+  animation: fade-in-down 0.8s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out 0.2s both;
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease-out 0.4s both;
+}
+
+/* Animation pour les particules flottantes */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  33% {
+    transform: translateY(-20px) translateX(10px);
+  }
+  66% {
+    transform: translateY(-10px) translateX(-10px);
+  }
+}
+
+@keyframes float-delayed {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  33% {
+    transform: translateY(-15px) translateX(-15px);
+  }
+  66% {
+    transform: translateY(-25px) translateX(5px);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-30px) translateX(15px);
+  }
+}
+
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 10s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 12s ease-in-out infinite;
+}
+
+/* Perspective pour les effets 3D */
+.perspective-1000 {
+  perspective: 1000px;
 }
 </style>
