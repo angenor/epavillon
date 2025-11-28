@@ -109,7 +109,7 @@
                 : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
             ]"
           >
-            Jour 1 - Ouverture
+            Jour 1 - Inspirer et connecter
           </button>
           <button
             @click="selectedDay = 2"
@@ -120,7 +120,7 @@
                 : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
             ]"
           >
-            Jour 2 - Ateliers
+            Jour 2 - Découvrir, outiller et co-créer
           </button>
           <button
             @click="selectedDay = 3"
@@ -131,7 +131,7 @@
                 : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
             ]"
           >
-            Jour 3 - Clôture
+            Jour 3 - Ancrer et projeter
           </button>
         </div>
 
@@ -345,7 +345,7 @@
                         </div>
                         <div>
                           <div class="text-xs font-semibold uppercase tracking-wide opacity-90">Jour 1</div>
-                          <div class="text-lg font-bold">Ouverture</div>
+                          <div class="text-lg font-bold">Inspirer et connecter</div>
                           <div class="text-xs opacity-75">2025</div>
                         </div>
                       </div>
@@ -367,7 +367,7 @@
                           <div class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Décembre</div>
                           <div class="text-sm text-gray-500 dark:text-gray-400">2025</div>
                           <div class="mt-3 pt-3 border-t border-orange-200 dark:border-orange-800">
-                            <div class="text-xs font-medium text-orange-600 dark:text-orange-400">Ouverture</div>
+                            <div class="text-xs font-medium text-orange-600 dark:text-orange-400">Inspirer et connecter</div>
                           </div>
                         </div>
                       </div>
@@ -466,7 +466,7 @@
                         </div>
                         <div>
                           <div class="text-xs font-semibold uppercase tracking-wide opacity-90">Jour 2</div>
-                          <div class="text-lg font-bold">Ateliers</div>
+                          <div class="text-lg font-bold">Découvrir, outiller et co-créer</div>
                           <div class="text-xs opacity-75">2025</div>
                         </div>
                       </div>
@@ -488,7 +488,7 @@
                           <div class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Décembre</div>
                           <div class="text-sm text-gray-500 dark:text-gray-400">2025</div>
                           <div class="mt-3 pt-3 border-t border-green-200 dark:border-green-800">
-                            <div class="text-xs font-medium text-green-600 dark:text-green-400">Ateliers</div>
+                            <div class="text-xs font-medium text-green-600 dark:text-green-400">Découvrir, outiller et co-créer</div>
                           </div>
                         </div>
                       </div>
@@ -588,7 +588,7 @@
                         </div>
                         <div>
                           <div class="text-xs font-semibold uppercase tracking-wide opacity-90">Jour 3</div>
-                          <div class="text-lg font-bold">Clôture</div>
+                          <div class="text-lg font-bold">Ancrer et projeter</div>
                           <div class="text-xs opacity-75">2025</div>
                         </div>
                       </div>
@@ -610,7 +610,7 @@
                           <div class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Décembre</div>
                           <div class="text-sm text-gray-500 dark:text-gray-400">2025</div>
                           <div class="mt-3 pt-3 border-t border-blue-200 dark:border-blue-800">
-                            <div class="text-xs font-medium text-blue-600 dark:text-blue-400">Clôture</div>
+                            <div class="text-xs font-medium text-blue-600 dark:text-blue-400">Ancrer et projeter</div>
                           </div>
                         </div>
                       </div>
@@ -692,7 +692,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <p class="text-gray-900 dark:text-white font-medium leading-relaxed">Responsables gouvernementaux des pays francophones</p>
+              <p class="text-gray-900 dark:text-white font-medium leading-relaxed">Représentants des institutions gouvernementales bénéficiaires d'assistance technique</p>
             </div>
           </div>
           <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
@@ -753,7 +753,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Soutenir une rencontre inversée "pitchs à rebours" pour donner l'occasion aux bailleurs de présenter leurs attentes en matière de priorités de financement durable</p>
+              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Soutenir une rencontre inversée "pitchs à rebours" pour donner l'occasion aux bailleurs de présenter leurs attentes en matière de priorités de financement durable – inversant ainsi le rôle traditionnel bénéficiaire/donateur</p>
             </div>
           </div>
           <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-green-500 dark:hover:border-green-500 transition-all duration-300 hover:shadow-md">
@@ -763,7 +763,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Présentation d'un parcours immersif territorial en intégrant une simulation interactive de cas concrets de financements durables autour des défis climatiques ou de biodiversité</p>
+              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Présentation d'un parcours immersif territorial en intégrant une simulation interactive de cas concrets de financements durables autour des défis climatiques ou de biodiversité pour ancrer les apprentissages dans le réel en termes de vision, besoins et solutions</p>
             </div>
           </div>
           <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-green-500 dark:hover:border-green-500 transition-all duration-300 hover:shadow-md">
@@ -783,7 +783,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Soutien au co-apprentissage numérique : prolonger le séminaire via une série de micro-vidéos post-séminaire sur la contribution de Chypre à la coopération francophone</p>
+              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Soutien au co-apprentissage numérique : prolonger le séminaire via une série de micro-vidéos post-séminaire sur la contribution de Chypre à la coopération francophone en matière d'environnement, de climat et de finance durable dans l'espace francophone</p>
             </div>
           </div>
         </div>
@@ -857,31 +857,37 @@
                 </svg>
               </div>
               <h3 class="text-xl font-bold text-gray-900 dark:text-white">
-                Maria Papadopoulos
+                Madame Marina Christofi
               </h3>
             </div>
             <div class="space-y-3">
               <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Fonction</p>
                 <p class="font-semibold text-gray-900 dark:text-white">
-                  Coordinatrice Programme Climat
+                  Correspondante nationale, Chargée de mission pour les affaires francophones
                 </p>
               </div>
               <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Organisation</p>
                 <p class="text-gray-700 dark:text-gray-300">
-                  Cyprus Aid, République de Chypre
+                  Ministère des Affaires Etrangères, République de Chypre
+                </p>
+              </div>
+              <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Adresse</p>
+                <p class="text-gray-700 dark:text-gray-300">
+                  Avenue Proedrikou Megarou, 1447 Nicosie
                 </p>
               </div>
               <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Email</p>
-                <a href="mailto:m.papadopoulos@cyprusaid.gov.cy" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
-                  m.papadopoulos@cyprusaid.gov.cy
+                <a href="mailto:machristofi@mfa.gov.cy" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                  machristofi@mfa.gov.cy
                 </a>
               </div>
               <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Téléphone</p>
-                <p class="text-gray-700 dark:text-gray-300 font-medium">+357 22 123 456</p>
+                <p class="text-gray-700 dark:text-gray-300 font-medium">+357 22 651135</p>
               </div>
             </div>
           </div>
@@ -895,31 +901,37 @@
                 </svg>
               </div>
               <h3 class="text-xl font-bold text-gray-900 dark:text-white">
-                Jean-Pierre Ndoutoum
+                Madame E. Lionelle Ngo-Samnick
               </h3>
             </div>
             <div class="space-y-3">
               <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Fonction</p>
                 <p class="font-semibold text-gray-900 dark:text-white">
-                  Directeur régional Afrique et Méditerranée
+                  Coordonnatrice de projet
                 </p>
               </div>
               <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Organisation</p>
                 <p class="text-gray-700 dark:text-gray-300">
-                  Institut de la Francophonie pour le développement durable (IFDD)
+                  Institut de la Francophonie pour le développement durable (IFDD), Organisation internationale de la Francophonie
+                </p>
+              </div>
+              <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Adresse</p>
+                <p class="text-gray-700 dark:text-gray-300">
+                  200, Chemin Ste-Foy, bureau 1.40, Québec, QC, Canada, G1R 1T3
                 </p>
               </div>
               <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Email</p>
-                <a href="mailto:jp.ndoutoum@ifdd.francophonie.org" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
-                  jp.ndoutoum@ifdd.francophonie.org
+                <a href="mailto:lionelle.ngo-samnick@francophonie.org" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                  lionelle.ngo-samnick@francophonie.org
                 </a>
               </div>
               <div class="bg-white dark:bg-gray-900 rounded-lg p-4">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Téléphone</p>
-                <p class="text-gray-700 dark:text-gray-300 font-medium">+1 514 987 4567</p>
+                <p class="text-gray-700 dark:text-gray-300 font-medium">+1 418 692-5727 Poste 8242</p>
               </div>
             </div>
           </div>
