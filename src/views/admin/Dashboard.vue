@@ -46,7 +46,7 @@
     </div>
 
     <!-- Quick Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <div class="flex items-center">
           <div class="flex-shrink-0">
@@ -129,6 +129,29 @@
               </dt>
               <dd class="text-3xl font-bold text-gray-900 dark:text-white">
                 {{ stats.activeOrganizations || 0 }}
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-orange-600 dark:text-orange-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                {{ t('admin.dashboard.totalParticipations') }}
+              </dt>
+              <dd class="text-3xl font-bold text-gray-900 dark:text-white">
+                {{ stats.totalParticipations || 0 }}
               </dd>
             </dl>
           </div>
@@ -275,7 +298,8 @@ const stats = ref({
   totalUsers: 0,
   activitiesApproved: 0,
   activitiesPending: 0,
-  activeOrganizations: 0
+  activeOrganizations: 0,
+  totalParticipations: 0
 })
 
 const alerts = ref({
@@ -345,6 +369,18 @@ const loadStats = async () => {
 
     if (!orgsError) {
       stats.value.activeOrganizations = organizationsCount || 0
+    }
+
+    // Calculer la somme de tous les activites_view_count
+    const { data: viewCountData, error: viewCountError } = await supabase
+      .from('activities')
+      .select('activites_view_count')
+
+    if (!viewCountError && viewCountData) {
+      const totalViews = viewCountData.reduce((sum, activity) => {
+        return sum + (activity.activites_view_count || 0)
+      }, 0)
+      stats.value.totalParticipations = totalViews
     }
 
   } catch (error) {

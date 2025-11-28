@@ -21,13 +21,8 @@
 
           <!-- Titre principal -->
           <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-            Séminaire sur le climat à Larnaka, Chypre
+            Financement durable pour le climat, la biodiversité et l’eau : mobiliser les compétences et les innovations francophones
           </h1>
-
-          <!-- Sous-titre -->
-          <p class="text-lg md:text-xl text-white/90 mb-8 leading-relaxed">
-            Renforcement des capacités francophones en matière de climat et développement durable
-          </p>
 
           <!-- Informations clés -->
           <div class="flex flex-wrap items-center justify-center gap-4 md:gap-6 mb-10">
@@ -230,10 +225,10 @@
         <div class="bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-8 md:p-10 shadow border border-gray-200/50 dark:border-gray-700/50">
           <div class="prose prose-lg dark:prose-invert max-w-none">
             <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6 text-lg">
-              Ce séminaire s'inscrit dans le cadre du renforcement des capacités francophones en matière de lutte contre les changements climatiques et de développement durable. Il vise à créer un espace d'échange et de collaboration entre les acteurs clés de la Francophonie.
+              Dans la dynamique de son adhésion en tant que membre de plein droit de l'Organisation internationale de la Francophonie (OIF) lors du XIXe Sommet de la Francophonie à Paris (France) en 2024, la République de Chypre souhaite impulser une dynamique d’échanges et de coopération francophone sur les défis planétaires de notre époque tels que le développement durable, le changement climatique, la préservation de la biodiversité ou la gestion durable des ressources en eau. En prélude de sa présidence tournante de l’Union européenne en 2026, le gouvernement de Chypre, en partenariat avec l’Institut de la Francophonie pour le développement durable (IFDD), organe subsidiaire de l’Organisation internationale de la Francophonie (OIF) organise un séminaire stratégique et formatif du 01 au 03 décembre 2025 à Larnaka et à Nicosie (Chypre), qui vise à valoriser les modèles novateurs de financement durable, à renforcer les compétences techniques, à décloisonner les dialogues entre institutions, territoires et communautés financières et à catalyser l’action francophone sur les mécanismes innovants de financement durable.
             </p>
             <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">
-              Face aux défis climatiques croissants, il est essentiel de mobiliser l'ensemble des parties prenantes et de partager les meilleures pratiques pour une action climatique efficace et durable dans l'espace francophone.
+              Dans un contexte climatique critique où les États doivent concrétiser leurs engagements de neutralité carbone et de protection des ressources naturelles, notamment l’eau et où les fenêtres de financement internationaux se rarifient, l’enjeu est double : faire le point sur les progrès réalisés à mi-parcours de la programmation 2024–2027 sur la finance durable et identifier les leviers de transformation financière pour l’environnement, le climat et l’eau.
             </p>
           </div>
         </div>
@@ -1049,7 +1044,7 @@ const getYoutubeEmbedUrl = (day) => {
 
 // Meta tags pour le SEO
 useHead({
-  title: 'Séminaire sur le climat à Larnaka, Chypre 2025',
+  title: 'Financement durable pour le climat, la biodiversité et l’eau : mobiliser les compétences et les innovations francophones 2025',
   meta: [
     {
       name: 'description',
@@ -1057,7 +1052,7 @@ useHead({
     },
     {
       property: 'og:title',
-      content: 'Séminaire sur le climat à Larnaka, Chypre 2025'
+      content: 'Financement durable pour le climat, la biodiversité et l’eau : mobiliser les compétences et les innovations francophones 2025'
     },
     {
       property: 'og:description',
