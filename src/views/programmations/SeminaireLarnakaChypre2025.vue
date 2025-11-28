@@ -37,13 +37,13 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              <span class="text-sm md:text-base font-medium">Larnaka, Chypre</span>
+              <span class="text-sm md:text-base font-medium">Larnaka et Nicosie, Chypre</span>
             </div>
             <div class="flex items-center gap-2 text-white/90">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
-              <span class="text-sm md:text-base font-medium">50 participants</span>
+              <span class="text-sm md:text-base font-medium">40 participants</span>
             </div>
           </div>
 
@@ -249,10 +249,10 @@
               </div>
               <div class="flex-1">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">
-                  Renforcer les capacités
+                  Partager des retours d'expérience
                 </h3>
                 <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Renforcer les capacités des acteurs francophones en matière d'action climatique et de développement durable.
+                  Partager des retours d'expérience sur les mécanismes internationaux de financement vert (FVC, GEF, Fonds d'adaptation).
                 </p>
               </div>
             </div>
@@ -264,10 +264,10 @@
               </div>
               <div class="flex-1">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">
-                  Favoriser l'échange
+                  Favoriser l'émergence de modèles hybrides
                 </h3>
                 <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Favoriser l'échange de bonnes pratiques et d'expériences entre les différents pays membres.
+                  Favoriser l'émergence de modèles hybrides de financement (fonds fiduciaires, financement philanthropique, budget vert, RSE, etc.).
                 </p>
               </div>
             </div>
@@ -279,10 +279,10 @@
               </div>
               <div class="flex-1">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">
-                  Promouvoir la collaboration
+                  Stimuler une approche innovante
                 </h3>
                 <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Promouvoir la collaboration entre les institutions et les organisations travaillant sur le climat.
+                  Stimuler une approche innovante de la finance climatique, en particulier dans les milieux insulaires.
                 </p>
               </div>
             </div>
@@ -294,10 +294,10 @@
               </div>
               <div class="flex-1">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">
-                  Développer des solutions
+                  Renforcer le réseau francophone
                 </h3>
                 <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Développer des solutions innovantes adaptées aux contextes locaux francophones.
+                  Renforcer le réseau francophone d'expertise et de coopération sur les financements liés au climat, à la biodiversité, à la désertification et à l'eau.
                 </p>
               </div>
             </div>
@@ -312,7 +312,7 @@
             Programme Détaillé
           </h2>
           <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Modération : <span class="font-semibold text-gray-900 dark:text-white">Dr. Marie Dupont, Expert climat IFDD</span>
+            Modération : <span class="font-semibold text-gray-900 dark:text-white">Adel BEN YOUSSEF</span>
           </p>
         </div>
 
@@ -393,12 +393,12 @@
                     </div>
                     <div class="space-y-3">
                       <div class="bg-orange-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-orange-200/30 dark:border-orange-800/30">
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Cérémonie d'ouverture</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-xs">Autorités de Chypre et de l'IFDD</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Discours d'ouverture</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs">Gouvernement chypriote, OIF-IFDD</p>
                       </div>
                       <div class="bg-orange-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-orange-200/30 dark:border-orange-800/30">
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Panel d'experts</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-orange-600 dark:text-orange-400">Intervenants :</span> Dr. Marie Dupont, Prof. Jean Martin, Dr. Sophie Bernard</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Panel inaugural sur les tendances mondiales de la finance durable et les priorités francophones</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-orange-600 dark:text-orange-400">Intervenants :</span> Mohamed Adil Youssfi, POTONGO Emmanu KIMPUKI et Mathieu BIAOU</p>
                       </div>
                     </div>
                   </div>
@@ -415,12 +415,12 @@
                     </div>
                     <div class="space-y-3">
                       <div class="bg-orange-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-orange-200/30 dark:border-orange-800/30">
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Session thématique : Adaptation au climat</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-orange-600 dark:text-orange-400">Intervenant :</span> Dr. Ahmed Hassan, Expert adaptation climatique</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Session thématique : Panorama des mécanismes internationaux de financement (FVC, FA, GBFF du FEM, etc.)</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-orange-600 dark:text-orange-400">Intervenant :</span> Alioune SEYDI</p>
                       </div>
                       <div class="bg-orange-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-orange-200/30 dark:border-orange-800/30">
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Atelier participatif : Solutions locales</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-orange-600 dark:text-orange-400">Intervenants :</span> Équipe IFDD et participants</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Échange interactif : Défis d'accès aux financements pour les petits États et territoires insulaires et perspectives francophones</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-orange-600 dark:text-orange-400">Intervenants :</span> Bryan CHUNG-KAI-TO, Manuel ROSÁRIO et Lucie Nmara NAUKA</p>
                       </div>
                     </div>
                   </div>
@@ -436,7 +436,7 @@
                       <h4 class="text-lg font-bold text-gray-900 dark:text-white">Soirée</h4>
                     </div>
                     <div class="bg-orange-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-orange-200/30 dark:border-orange-800/30">
-                      <p class="text-gray-600 dark:text-gray-400 text-sm">Cocktail de bienvenue et réseautage</p>
+                      <p class="text-gray-600 dark:text-gray-400 text-sm">Cocktail de réseautage</p>
                     </div>
                   </div>
                 </div>
@@ -513,8 +513,8 @@
                       <h4 class="text-lg font-bold text-gray-900 dark:text-white">Matinée culturelle</h4>
                     </div>
                     <div class="bg-green-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-green-200/30 dark:border-green-800/30">
-                      <p class="text-gray-600 dark:text-gray-400 text-sm">• Visite culturelle de Larnaka</p>
-                      <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">• Échange informel entre participants</p>
+                      <p class="text-gray-600 dark:text-gray-400 text-sm">• Visite guidée et activité culturelle</p>
+                      <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">• Moment d'échanges informels entre participants (réseautage interculturel)</p>
                     </div>
                   </div>
 
@@ -530,12 +530,12 @@
                     </div>
                     <div class="space-y-3">
                       <div class="bg-green-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-green-200/30 dark:border-green-800/30">
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Clinique de projets climatiques</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">Intervenants :</span> Experts en financement climat et participants</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Clinique technique : accréditation, priorisation des projets et formulation de notes conceptuelles</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">Intervenants :</span> Hubert RUZIBIZA et Gerard Aimé MISTOUL, expérience du Gabon</p>
                       </div>
                       <div class="bg-green-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-green-200/30 dark:border-green-800/30">
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Hackathon : Solutions innovantes</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">Intervenants :</span> Équipe technique IFDD et mentors</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Lancement d'un hackathon climatique. L'intelligence artificielle au service de la finance durable, de l'environnement, du climat et de l'eau</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">Intervenants :</span> Mohammed Amine ZAROUK et Chaimae El KOUFI</p>
                       </div>
                     </div>
                   </div>
@@ -552,12 +552,12 @@
                     </div>
                     <div class="space-y-3">
                       <div class="bg-green-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-green-200/30 dark:border-green-800/30">
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Session de pitchs : Projets innovants</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">Intervenant :</span> Équipes de participants</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Rencontre inversée "pitch à rebours" sur le Fonds pour les Changements Climatiques en Afrique de la Banque africaine de développement</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">Intervenant :</span> Bela Emile KOUAKOU</p>
                       </div>
                       <div class="bg-green-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-green-200/30 dark:border-green-800/30">
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Témoignage inspirant</p>
-                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">Intervenant :</span> Leader climat francophone</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Témoignage inspirant d'une bonne pratique en Francophonie : le cas de la Budgétisation verte</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-green-600 dark:text-green-400">Intervenante :</span> Sédjidé Akouvi KOUHOUE</p>
                       </div>
                     </div>
                   </div>
@@ -635,8 +635,8 @@
                       <h4 class="text-lg font-bold text-gray-900 dark:text-white">Matin</h4>
                     </div>
                     <div class="bg-blue-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-blue-200/30 dark:border-blue-800/30">
-                      <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Restitution des travaux de groupes</p>
-                      <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-blue-600 dark:text-blue-400">Intervenants :</span> Représentants des groupes et modérateur</p>
+                      <p class="font-semibold text-gray-900 dark:text-white text-sm mb-1">Carrefour des solutions de financement innovant</p>
+                      <p class="text-gray-600 dark:text-gray-400 text-xs"><span class="font-medium text-blue-600 dark:text-blue-400">Intervenants :</span> Alain Sandy Liva RAHARIJAONA et Abdoulaye SOUAIBOU IDRISSOU</p>
                     </div>
                   </div>
 
@@ -651,8 +651,8 @@
                       <h4 class="text-lg font-bold text-gray-900 dark:text-white">Après-midi</h4>
                     </div>
                     <div class="bg-blue-50/50 dark:bg-gray-900/50 rounded-lg p-4 border border-blue-200/30 dark:border-blue-800/30">
-                      <p class="text-gray-600 dark:text-gray-400 text-sm">• Synthèse des recommandations</p>
-                      <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">• Élaboration du plan d'action francophone</p>
+                      <p class="text-gray-600 dark:text-gray-400 text-sm">• Restitution des travaux + Recommandations stratégiques</p>
+                      <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">• Présentation du plan d'action post-séminaire et des engagements symboliques des participants (communiqué prospectif)</p>
                     </div>
                   </div>
 
@@ -702,7 +702,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <p class="text-gray-900 dark:text-white font-medium leading-relaxed">Experts en développement durable et changement climatique</p>
+              <p class="text-gray-900 dark:text-white font-medium leading-relaxed">Experts en environnement et en finance durable</p>
             </div>
           </div>
           <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
@@ -712,7 +712,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <p class="text-gray-900 dark:text-white font-medium leading-relaxed">Représentants d'organisations internationales</p>
+              <p class="text-gray-900 dark:text-white font-medium leading-relaxed">Représentants de bailleurs de fonds</p>
             </div>
           </div>
           <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
@@ -722,7 +722,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <p class="text-gray-900 dark:text-white font-medium leading-relaxed">Acteurs de la société civile et entrepreneurs verts</p>
+              <p class="text-gray-900 dark:text-white font-medium leading-relaxed">Acteurs francophones dynamiques dans la finance climatique</p>
             </div>
           </div>
         </div>
@@ -743,7 +743,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Renforcement des compétences des participants en matière de gestion climatique</p>
+              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Organisation d'une session de partage d'expériences sur l'accréditation, la priorisation de projets et la formulation de notes conceptuelles</p>
             </div>
           </div>
           <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-green-500 dark:hover:border-green-500 transition-all duration-300 hover:shadow-md">
@@ -753,7 +753,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Création d'un réseau francophone d'acteurs climat dynamique et solidaire</p>
+              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Soutenir une rencontre inversée "pitchs à rebours" pour donner l'occasion aux bailleurs de présenter leurs attentes en matière de priorités de financement durable</p>
             </div>
           </div>
           <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-green-500 dark:hover:border-green-500 transition-all duration-300 hover:shadow-md">
@@ -763,7 +763,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Élaboration de recommandations concrètes pour l'action climatique francophone</p>
+              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Présentation d'un parcours immersif territorial en intégrant une simulation interactive de cas concrets de financements durables autour des défis climatiques ou de biodiversité</p>
             </div>
           </div>
           <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-green-500 dark:hover:border-green-500 transition-all duration-300 hover:shadow-md">
@@ -773,7 +773,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Identification de projets pilotes innovants et réplicables dans l'espace francophone</p>
+              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Lancement d'un hackathon climatique francophone sur l'IA appliquée à la finance durable et l'emploi des jeunes</p>
             </div>
           </div>
           <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-green-500 dark:hover:border-green-500 transition-all duration-300 hover:shadow-md">
@@ -783,7 +783,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Production d'un plan d'action francophone pour le climat et le développement durable</p>
+              <p class="flex-1 text-gray-700 dark:text-gray-300 leading-relaxed">Soutien au co-apprentissage numérique : prolonger le séminaire via une série de micro-vidéos post-séminaire sur la contribution de Chypre à la coopération francophone</p>
             </div>
           </div>
         </div>
@@ -1048,7 +1048,7 @@ useHead({
   meta: [
     {
       name: 'description',
-      content: 'Séminaire francophone sur le climat et le développement durable du 1er au 3 décembre 2025 à Larnaka, Chypre. Renforcement des capacités et échange de bonnes pratiques.'
+      content: 'Séminaire francophone sur le climat et le développement durable du 1er au 3 décembre 2025 à Larnaka et Nicosie, Chypre. Renforcement des capacités et échange de bonnes pratiques.'
     },
     {
       property: 'og:title',
@@ -1056,7 +1056,7 @@ useHead({
     },
     {
       property: 'og:description',
-      content: 'Séminaire francophone sur le climat et le développement durable du 1er au 3 décembre 2025 à Larnaka, Chypre. Renforcement des capacités et échange de bonnes pratiques.'
+      content: 'Séminaire francophone sur le climat et le développement durable du 1er au 3 décembre 2025 à Larnaka et Nicosie, Chypre. Renforcement des capacités et échange de bonnes pratiques.'
     },
     {
       property: 'og:type',
