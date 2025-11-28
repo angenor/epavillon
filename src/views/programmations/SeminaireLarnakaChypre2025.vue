@@ -6,7 +6,7 @@
       <div class="absolute inset-0">
         <img src="/images/example/banner-chypre.jpg" alt="Chypre" class="absolute inset-0 w-full h-full object-cover scale-105">
         <!-- Overlay gradient moderne -->
-        <div class="absolute inset-0 bg-gradient-to-br from-blue-600/80 via-blue-700/70 to-blue-900/85 dark:from-blue-900/90 dark:via-blue-950/85 dark:to-gray-900/90"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-600/50 via-blue-700/50 to-blue-900/50 dark:from-blue-900/50 dark:via-blue-950/50 dark:to-gray-900/50"></div>
         <!-- Effet de vignette -->
         <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.3)_100%)]"></div>
       </div>
@@ -112,7 +112,7 @@
                 <svg class="w-7 h-7 relative z-10" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M3 7v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm16 10H5V7h14v10zm-7-7c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6-2v6l-2.5-2.5L13 14v-6l2.5 2.5L18 8z"/>
                 </svg>
-                <span class="relative z-10 text-lg">S'inscrire au direct Zoom</span>
+                <span class="relative z-10 text-lg">S'inscrire sur Zoom</span>
                 <svg class="w-6 h-6 relative z-10 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
@@ -157,7 +157,7 @@
     <!-- Contenu principal -->
     <div class="max-w-7xl mx-auto px-4 py-12 md:py-16">
       <!-- Sélecteur de jours avec vidéos YouTube -->
-      <section class="mb-16">
+      <section class="mb-16" data-animate data-animation="fade-up">
         <div class="text-center mb-8">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3">
             Direct - Jour {{ selectedDay }}
@@ -285,7 +285,7 @@
       </section>
 
       <!-- Contexte et justification -->
-      <section class="mb-16">
+      <section class="mb-16" data-animate data-animation="fade-up">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Contexte et Justification
@@ -304,14 +304,14 @@
       </section>
 
       <!-- Objectifs -->
-      <section class="mb-16">
+      <section class="mb-16" data-animate data-animation="fade-up">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Objectifs du Séminaire
           </h2>
         </div>
         <div class="grid md:grid-cols-2 gap-6">
-          <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
+          <div data-animate data-animation="fade-up" class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
             <div class="flex items-start gap-4">
               <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <span class="text-white font-bold text-lg">1</span>
@@ -326,7 +326,7 @@
               </div>
             </div>
           </div>
-          <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
+          <div data-animate data-animation="fade-up" class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
             <div class="flex items-start gap-4">
               <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <span class="text-white font-bold text-lg">2</span>
@@ -341,7 +341,7 @@
               </div>
             </div>
           </div>
-          <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
+          <div data-animate data-animation="fade-up" class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
             <div class="flex items-start gap-4">
               <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <span class="text-white font-bold text-lg">3</span>
@@ -356,7 +356,7 @@
               </div>
             </div>
           </div>
-          <div class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
+          <div data-animate data-animation="fade-up" class="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow border-2 border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-md">
             <div class="flex items-start gap-4">
               <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                 <span class="text-white font-bold text-lg">4</span>
@@ -375,7 +375,7 @@
       </section>
 
       <!-- Programme détaillé -->
-      <section class="mb-16">
+      <section class="mb-16" data-animate data-animation="fade-up">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Programme Détaillé
@@ -747,7 +747,7 @@
       </section>
 
       <!-- Public cible -->
-      <section class="mb-16">
+      <section class="mb-16" data-animate data-animation="fade-up">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Public Cible
@@ -798,7 +798,7 @@
       </section>
 
       <!-- Résultats attendus -->
-      <section class="mb-16">
+      <section class="mb-16" data-animate data-animation="fade-up">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Résultats Attendus
@@ -859,7 +859,7 @@
       </section>
 
       <!-- Partenaires -->
-      <section class="mb-16">
+      <section class="mb-16" data-animate data-animation="fade-up">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Partenaires
@@ -1040,6 +1040,13 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useHead } from '@vueuse/head'
+import { useScrollAnimations } from '@/composables/useScrollAnimations'
+
+// Animations au scroll
+useScrollAnimations('[data-animate]', {
+  threshold: 0.15,
+  rootMargin: '0px 0px -100px 0px'
+})
 
 // État pour le jour sélectionné
 const selectedDay = ref(1)
@@ -1146,6 +1153,96 @@ useHead({
   ]
 })
 </script>
+
+<!-- Styles pour les animations au scroll (NON SCOPED pour fonctionner correctement) -->
+<style>
+/* ===========================
+   ANIMATIONS AU SCROLL
+   =========================== */
+
+/* État initial des éléments animés */
+[data-animate] {
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+/* Animation fade-up (apparition depuis le bas) */
+[data-animate][data-animation="fade-up"] {
+  transform: translateY(40px);
+}
+
+/* Animation fade-left (apparition depuis la droite) */
+[data-animate][data-animation="fade-left"] {
+  transform: translateX(40px);
+}
+
+/* Animation fade-right (apparition depuis la gauche) */
+[data-animate][data-animation="fade-right"] {
+  transform: translateX(-40px);
+}
+
+/* Animation scale (zoom) */
+[data-animate][data-animation="scale"] {
+  transform: scale(0.95);
+}
+
+/* État animé (quand l'élément entre dans le viewport) */
+[data-animate].animate-in {
+  opacity: 1;
+  transform: translateY(0) translateX(0) scale(1);
+}
+
+/* Animations avec délais pour effet de cascade */
+[data-animate][data-delay="100"].animate-in {
+  transition-delay: 100ms;
+}
+
+[data-animate][data-delay="200"].animate-in {
+  transition-delay: 200ms;
+}
+
+[data-animate][data-delay="300"].animate-in {
+  transition-delay: 300ms;
+}
+
+[data-animate][data-delay="400"].animate-in {
+  transition-delay: 400ms;
+}
+
+[data-animate][data-delay="500"].animate-in {
+  transition-delay: 500ms;
+}
+
+/* Animation pour les cartes dans les grilles */
+.grid > [data-animate]:nth-child(1) {
+  transition-delay: 100ms;
+}
+
+.grid > [data-animate]:nth-child(2) {
+  transition-delay: 200ms;
+}
+
+.grid > [data-animate]:nth-child(3) {
+  transition-delay: 300ms;
+}
+
+.grid > [data-animate]:nth-child(4) {
+  transition-delay: 400ms;
+}
+
+.grid > [data-animate]:nth-child(5) {
+  transition-delay: 500ms;
+}
+
+.grid > [data-animate]:nth-child(6) {
+  transition-delay: 600ms;
+}
+
+/* ===========================
+   FIN ANIMATIONS AU SCROLL
+   =========================== */
+</style>
 
 <style scoped>
 .prose {

@@ -335,7 +335,7 @@ const loadStats = async () => {
     let approvedQuery = supabase
       .from('activities')
       .select('id', { count: 'exact', head: true })
-      .eq('validation_status', 'approved')
+      .in('validation_status', ['approved', 'completed'])
 
     if (selectedEventId.value) {
       approvedQuery = approvedQuery.eq('event_id', selectedEventId.value)
