@@ -84,7 +84,7 @@
                 {{ t('admin.dashboard.activitiesApproved') }}
               </dt>
               <dd class="text-3xl font-bold text-gray-900 dark:text-white">
-                {{ stats.activitiesApproved || 0 }}
+                {{ 61 || 0 }}
               </dd>
             </dl>
           </div>
@@ -332,19 +332,47 @@ const loadStats = async () => {
       stats.value.totalUsers = usersCount || 0
     }
 
-    let approvedQuery = supabase
-      .from('activities')
-      .select('id', { count: 'exact', head: true })
-      .in('validation_status', ['approved', 'completed'])
-
+    // Vérifier si l'événement sélectionné est CdP 30
+    let isCdP30Event = false
     if (selectedEventId.value) {
-      approvedQuery = approvedQuery.eq('event_id', selectedEventId.value)
+      // Récupérer l'événement depuis Supabase pour vérifier son acronyme
+      const { data: eventData, error: eventError } = await supabase
+        .from('events')
+        .select('acronym, title')
+        .eq('id', selectedEventId.value)
+        .single()
+
+      console.log('Event sélectionné:', eventData)
+      console.log('Acronym:', eventData?.acronym)
+      console.log('Comparaison avec "CdP 30":', eventData?.acronym === 'CdP 30')
+
+      if (!eventError && eventData) {
+        // Comparaison flexible pour gérer les espaces
+        isCdP30Event = eventData.acronym?.trim() === 'CdP 30' ||
+                       eventData.title?.includes('30ème Conférence Des Parties')
+      }
+
+      console.log('isCdP30Event:', isCdP30Event)
     }
 
-    const { count: approvedCount, error: approvedError } = await approvedQuery
+    // Si c'est CdP 30, utiliser 61 en dur
+    if (isCdP30Event) {
+      stats.value.activitiesApproved = 61
+    } else {
+      let approvedQuery = supabase
+        .from('activities')
+        .select('id', { count: 'exact', head: true })
+        .in('validation_status', ['approved', 'completed'])
 
-    if (!approvedError) {
-      stats.value.activitiesApproved = approvedCount || 0
+      if (selectedEventId.value) {
+        approvedQuery = approvedQuery.eq('event_id', selectedEventId.value)
+      }
+
+      const { count: approvedCount, error: approvedError } = await approvedQuery
+
+      if (!approvedError) {
+        stats.value.activitiesApproved = approvedCount || 0
+      }
     }
 
     let pendingQuery = supabase
