@@ -885,10 +885,42 @@
         </div>
       </section>
     </div>
+
+    <!-- Compte à rebours flottant -->
+    <div v-if="!eventStarted" class="fixed bottom-6 right-6 z-50 hidden md:block">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border-2 border-blue-500 dark:border-blue-600 p-4 backdrop-blur-sm">
+        <!-- Header -->
+        <div class="flex items-center gap-2 mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
+          <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-gray-900 dark:text-white leading-tight">Début du séminaire</p>
+          </div>
+        </div>
+
+        <!-- Compteur compact -->
+        <div class="grid grid-cols-4 gap-2">
+          <div v-for="(unit, key) in timeRemaining" :key="key" class="text-center">
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/40 dark:to-blue-800/40 rounded-lg p-2 border border-blue-200 dark:border-blue-700">
+              <div class="text-lg font-bold text-blue-600 dark:text-blue-400 tabular-nums">
+                {{ String(unit.value).padStart(2, '0') }}
+              </div>
+              <div class="text-[10px] text-gray-600 dark:text-gray-400 uppercase mt-0.5 font-medium">
+                {{ unit.label.substring(0, 1) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useHead } from '@vueuse/head'
 import { useScrollAnimations } from '@/composables/useScrollAnimations'
 
@@ -896,6 +928,63 @@ import { useScrollAnimations } from '@/composables/useScrollAnimations'
 useScrollAnimations('[data-animate]', {
   threshold: 0.15,
   rootMargin: '0px 0px -100px 0px'
+})
+
+// Compte à rebours
+const eventStartDate = new Date('2025-12-01T09:00:00+02:00') // Date de début du séminaire
+
+const timeRemaining = ref({
+  days: { value: 0, label: 'Jours' },
+  hours: { value: 0, label: 'Heures' },
+  minutes: { value: 0, label: 'Minutes' },
+  seconds: { value: 0, label: 'Secondes' }
+})
+
+const eventStarted = computed(() => {
+  const now = new Date()
+  return now >= eventStartDate
+})
+
+// Calculer le temps restant
+const updateCountdown = () => {
+  const now = new Date()
+  const diff = eventStartDate - now
+
+  if (diff <= 0) {
+    timeRemaining.value = {
+      days: { value: 0, label: 'Jours' },
+      hours: { value: 0, label: 'Heures' },
+      minutes: { value: 0, label: 'Minutes' },
+      seconds: { value: 0, label: 'Secondes' }
+    }
+    return
+  }
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+
+  timeRemaining.value = {
+    days: { value: days, label: 'Jours' },
+    hours: { value: hours, label: 'Heures' },
+    minutes: { value: minutes, label: 'Minutes' },
+    seconds: { value: seconds, label: 'Secondes' }
+  }
+}
+
+// Interval pour mettre à jour le décompte
+let countdownInterval = null
+
+onMounted(() => {
+  updateCountdown()
+  countdownInterval = setInterval(updateCountdown, 1000)
+})
+
+onUnmounted(() => {
+  if (countdownInterval) {
+    clearInterval(countdownInterval)
+  }
 })
 
 // Meta tags pour le SEO
