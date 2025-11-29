@@ -97,27 +97,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- Bouton d'inscription avec effet glass -->
-            <div class="flex justify-center">
-              <a
-                href="https://us06web.zoom.us/meeting/register/kF1ZvrOeRcuVIaGkBwc0jw"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="group relative inline-flex items-center gap-3 bg-white/95 backdrop-blur-xl border-2 border-white/40 text-blue-600 font-bold px-10 py-5 rounded-2xl cursor-pointer shadow-2xl shadow-black/30 hover:shadow-blue-500/30 hover:scale-105 transition-all duration-300 overflow-hidden"
-              >
-                <!-- Effet de brillance au survol -->
-                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-
-                <svg class="w-7 h-7 relative z-10" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M3 7v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm16 10H5V7h14v10zm-7-7c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6-2v6l-2.5-2.5L13 14v-6l2.5 2.5L18 8z"/>
-                </svg>
-                <span class="relative z-10 text-lg">S'inscrire sur Zoom</span>
-                <svg class="w-6 h-6 relative z-10 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </a>
-            </div>
           </div>
 
           <!-- Organisateurs avec effet glass -->
@@ -156,134 +135,6 @@
 
     <!-- Contenu principal -->
     <div class="max-w-7xl mx-auto px-4 py-12 md:py-16">
-      <!-- Sélecteur de jours avec vidéos YouTube -->
-      <section class="mb-16" data-animate data-animation="fade-up">
-        <div class="text-center mb-8">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3">
-            Direct - Jour {{ selectedDay }}
-          </h2>
-          <p class="text-gray-600 dark:text-gray-400">
-            Suivez le séminaire en direct sur YouTube
-          </p>
-        </div>
-
-        <!-- Tabs pour les 3 jours -->
-        <div class="flex flex-wrap justify-center gap-3 mb-8">
-          <button
-            @click="selectedDay = 1"
-            :class="[
-              'px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 cursor-pointer',
-              selectedDay === 1
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-105'
-                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
-            ]"
-          >
-            Jour 1 - Inspirer et connecter
-          </button>
-          <button
-            @click="selectedDay = 2"
-            :class="[
-              'px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 cursor-pointer',
-              selectedDay === 2
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-105'
-                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
-            ]"
-          >
-            Jour 2 - Découvrir, outiller et co-créer
-          </button>
-          <button
-            @click="selectedDay = 3"
-            :class="[
-              'px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 cursor-pointer',
-              selectedDay === 3
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-105'
-                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
-            ]"
-          >
-            Jour 3 - Ancrer et projeter
-          </button>
-        </div>
-
-        <!-- Vidéo YouTube ou Décompte -->
-        <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl overflow-hidden shadow border border-gray-200/50 dark:border-gray-700/50">
-          <div class="flex items-center gap-3 px-6 py-4 bg-white/40 dark:bg-gray-900/40 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-700/50">
-            <span class="relative flex h-3 w-3">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-            </span>
-            <span class="text-gray-900 dark:text-white font-semibold">{{ isLiveNow ? 'En direct' : 'Bientôt en direct' }}</span>
-          </div>
-
-          <!-- Décompte compact avec animations -->
-          <div v-if="!isLiveNow" class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 dark:from-blue-900 dark:via-purple-900 dark:to-gray-900 p-8">
-            <!-- Particules animées en arrière-plan -->
-            <div class="absolute inset-0 overflow-hidden">
-              <!-- Cercles flottants -->
-              <div class="absolute top-10 left-10 w-32 h-32 bg-white/5 rounded-full blur-xl animate-float"></div>
-              <div class="absolute top-20 right-20 w-40 h-40 bg-purple-400/10 rounded-full blur-2xl animate-float-delayed"></div>
-              <div class="absolute bottom-10 left-1/4 w-36 h-36 bg-blue-400/10 rounded-full blur-xl animate-float-slow"></div>
-              <div class="absolute bottom-20 right-1/3 w-28 h-28 bg-white/5 rounded-full blur-2xl animate-float"></div>
-
-              <!-- Grille animée -->
-              <div class="absolute inset-0 opacity-10">
-                <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]"></div>
-              </div>
-            </div>
-
-            <div class="relative text-center z-10">
-              <!-- Titre avec effet pulsant -->
-              <div class="relative inline-block mb-8">
-                <div class="absolute inset-0 bg-white/20 blur-xl animate-pulse"></div>
-                <h3 class="relative text-xl md:text-2xl font-bold text-white flex items-center gap-3 justify-center">
-                  <svg class="w-6 h-6 md:w-8 md:h-8 animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Le direct commence dans
-                </h3>
-              </div>
-
-              <!-- Compteur horizontal avec animations flip -->
-              <div class="flex items-center justify-center gap-3 md:gap-6 mb-6">
-                <div v-for="(unit, key) in timeRemaining" :key="key" class="flex flex-col items-center">
-                  <!-- Carte flip animée -->
-                  <div class="relative perspective-1000">
-                    <div class="countdown-card bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-md rounded-xl px-4 py-3 min-w-[60px] md:min-w-[80px] border-2 border-white/30 shadow-2xl transform hover:scale-110 transition-transform duration-300">
-                      <div class="text-3xl md:text-4xl font-black text-white tabular-nums drop-shadow-lg countdown-number">
-                        {{ String(unit.value).padStart(2, '0') }}
-                      </div>
-                      <!-- Reflet -->
-                      <div class="absolute inset-0 bg-gradient-to-t from-transparent to-white/20 rounded-xl pointer-events-none"></div>
-                    </div>
-                  </div>
-                  <div class="text-white/90 text-xs md:text-sm mt-2 uppercase tracking-wider font-bold">{{ unit.label }}</div>
-                </div>
-              </div>
-
-              <!-- Message avec icône -->
-              <div class="flex items-center justify-center gap-2 text-white/70 text-sm">
-                <svg class="w-4 h-4 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-                </svg>
-                <p>La diffusion commencera automatiquement</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Container responsive pour l'iframe YouTube (16:9) -->
-          <div v-else class="relative w-full bg-black" style="padding-bottom: 56.25%;">
-            <iframe
-              :key="selectedDay"
-              class="absolute top-0 left-0 w-full h-full"
-              :src="getYoutubeEmbedUrl(selectedDay)"
-              :title="`Direct YouTube - Jour ${selectedDay}`"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen
-            ></iframe>
-          </div>
-        </div>
-      </section>
-
       <!-- Contexte et justification -->
       <section class="mb-16" data-animate data-animation="fade-up">
         <div class="text-center mb-12">
@@ -1038,7 +889,6 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useHead } from '@vueuse/head'
 import { useScrollAnimations } from '@/composables/useScrollAnimations'
 
@@ -1047,88 +897,6 @@ useScrollAnimations('[data-animate]', {
   threshold: 0.15,
   rootMargin: '0px 0px -100px 0px'
 })
-
-// État pour le jour sélectionné
-const selectedDay = ref(1)
-
-// IDs YouTube pour chaque jour
-const youtubeIds = {
-  1: '314lUbLOlK4',
-  2: 'DOIHJvXb_hc',
-  3: 'RxUFNUT5sRw'
-}
-
-// Dates/heures de début pour chaque jour (en heure de Chypre - UTC+2)
-const liveStartTimes = {
-  1: new Date('2025-12-01T09:00:00+02:00'), // Jour 1 : 01 décembre 2025 à 9h
-  2: new Date('2025-12-02T09:00:00+02:00'), // Jour 2 : 02 décembre 2025 à 9h
-  3: new Date('2025-12-03T09:00:00+02:00')  // Jour 3 : 03 décembre 2025 à 9h
-}
-
-// Temps restant jusqu'au direct
-const timeRemaining = ref({
-  days: { value: 0, label: 'Jours' },
-  hours: { value: 0, label: 'Heures' },
-  minutes: { value: 0, label: 'Minutes' },
-  seconds: { value: 0, label: 'Secondes' }
-})
-
-// Vérifier si le direct est en cours (10 minutes avant le début)
-const isLiveNow = computed(() => {
-  const now = new Date()
-  const liveStart = liveStartTimes[selectedDay.value]
-  const tenMinutesBefore = new Date(liveStart.getTime() - 10 * 60 * 1000)
-  return now >= tenMinutesBefore
-})
-
-// Calculer le temps restant
-const updateCountdown = () => {
-  const now = new Date()
-  const liveStart = liveStartTimes[selectedDay.value]
-  const diff = liveStart - now
-
-  if (diff <= 0) {
-    timeRemaining.value = {
-      days: { value: 0, label: 'Jours' },
-      hours: { value: 0, label: 'Heures' },
-      minutes: { value: 0, label: 'Minutes' },
-      seconds: { value: 0, label: 'Secondes' }
-    }
-    return
-  }
-
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-  const seconds = Math.floor((diff % (1000 * 60)) / 1000)
-
-  timeRemaining.value = {
-    days: { value: days, label: 'Jours' },
-    hours: { value: hours, label: 'Heures' },
-    minutes: { value: minutes, label: 'Minutes' },
-    seconds: { value: seconds, label: 'Secondes' }
-  }
-}
-
-// Interval pour mettre à jour le décompte
-let countdownInterval = null
-
-onMounted(() => {
-  updateCountdown()
-  countdownInterval = setInterval(updateCountdown, 1000)
-})
-
-onUnmounted(() => {
-  if (countdownInterval) {
-    clearInterval(countdownInterval)
-  }
-})
-
-// Fonction pour générer l'URL embed YouTube
-const getYoutubeEmbedUrl = (day) => {
-  const videoId = youtubeIds[day]
-  return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=1&rel=0&modestbranding=1`
-}
 
 // Meta tags pour le SEO
 useHead({
