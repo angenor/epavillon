@@ -886,32 +886,47 @@
       </section>
     </div>
 
-    <!-- Compte à rebours flottant -->
-    <div v-if="!eventStarted" class="fixed bottom-6 right-6 z-50 hidden md:block">
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border-2 border-blue-500 dark:border-blue-600 p-4 backdrop-blur-sm">
-        <!-- Header -->
-        <div class="flex items-center gap-2 mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
-          <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
-            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <div>
-            <p class="text-xs font-semibold text-gray-900 dark:text-white leading-tight">Début du séminaire</p>
-          </div>
-        </div>
+    <!-- Compte à rebours flottant - Glassmorphism -->
+    <div v-if="!eventStarted" class="fixed bottom-4 right-4 z-40 hidden md:block group">
+      <!-- Conteneur avec effet glassmorphism -->
+      <div class="relative bg-gradient-to-br from-white/30 via-white/20 to-white/10 dark:from-blue-900/30 dark:via-blue-800/20 dark:to-blue-950/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/40 dark:border-white/20 p-3 transition-all duration-500 hover:shadow-blue-500/20 hover:scale-105">
+        <!-- Reflet supérieur (glassmorphism) -->
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
 
-        <!-- Compteur compact -->
-        <div class="grid grid-cols-4 gap-2">
-          <div v-for="(unit, key) in timeRemaining" :key="key" class="text-center">
-            <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/40 dark:to-blue-800/40 rounded-lg p-2 border border-blue-200 dark:border-blue-700">
-              <div class="text-lg font-bold text-blue-600 dark:text-blue-400 tabular-nums">
-                {{ String(unit.value).padStart(2, '0') }}
+        <!-- Contenu -->
+        <div class="relative">
+          <!-- Header avec icône -->
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+              <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <span class="text-[10px] font-semibold text-gray-700 dark:text-white/90 uppercase tracking-wide">Début dans</span>
+          </div>
+
+          <!-- Compteur avec labels -->
+          <div class="flex items-center gap-2">
+            <div v-for="(unit, key) in timeRemaining" :key="key" class="flex flex-col items-center">
+              <!-- Valeur -->
+              <div class="bg-gradient-to-br from-white/60 to-white/30 dark:from-blue-800/40 dark:to-blue-900/30 backdrop-blur-sm rounded-lg px-2 py-1.5 min-w-[32px] border border-white/50 dark:border-white/20 shadow-lg">
+                <div class="text-base font-black text-blue-600 dark:text-blue-300 tabular-nums leading-none">
+                  {{ String(unit.value).padStart(2, '0') }}
+                </div>
               </div>
-              <div class="text-[10px] text-gray-600 dark:text-gray-400 uppercase mt-0.5 font-medium">
+              <!-- Label -->
+              <div class="text-[9px] text-gray-600 dark:text-gray-300 uppercase font-bold mt-1 tracking-tight">
                 {{ unit.label.substring(0, 1) }}
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- Tooltip au hover -->
+        <div class="absolute bottom-full right-0 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <div class="bg-gradient-to-br from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-900 text-white text-xs rounded-xl px-3 py-2 whitespace-nowrap shadow-2xl border border-white/10 backdrop-blur-sm">
+            Séminaire Larnaka 2025
+            <div class="absolute top-full right-4 w-0 h-0 border-l-[6px] border-r-[6px] border-t-[6px] border-transparent border-t-gray-900 dark:border-t-gray-800"></div>
           </div>
         </div>
       </div>
