@@ -496,6 +496,28 @@
     "registerDescription": "Join the Youth Climate Action Day via Zoom",
     "registerButton": "Register on Zoom"
   },
+  "cop30Workshop": {
+    "title": "Workshop on the 30th United Nations Conference on Climate Change in Belém - Review and Analysis",
+    "shortTitle": "COP 30 Review Workshop",
+    "cop30": "COP 30",
+    "generalInfo": "General Information",
+    "fullTitle": "Title",
+    "subtitle": "Review and analysis of COP 30 outcomes in Belém",
+    "scheduleLabel": "Time",
+    "schedule": "1:30 PM GMT",
+    "formatLabel": "Format",
+    "format": "Online via Zoom",
+    "organizerLabel": "Organizer",
+    "organizer": "Institute of La Francophonie for Sustainable Development (IFDD) - Subsidiary Body of the International Organization of La Francophonie (OIF)",
+    "programTitle": "Program",
+    "programComingSoon": "Program coming soon",
+    "programDetails": "The detailed program and concept of this workshop will be announced soon. Register now to stay informed.",
+    "ctaTitle": "Join this review workshop",
+    "ctaDescription": "Register now to participate in the COP 30 review and analysis workshop",
+    "registerButton": "Register on Zoom",
+    "backToProgrammations": "Back to programs",
+    "metaDescription": "Workshop on the 30th United Nations Conference on Climate Change in Belém (COP 30) - Review and Analysis. Join online at 1:30 PM GMT."
+  },
   "cyprusSeminar": {
     "title": "Francophone Seminar on Sustainable Financing for Climate, Biodiversity and Water",
     "shortTitle": "Sustainable Finance Seminar - Cyprus",

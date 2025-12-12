@@ -135,6 +135,11 @@ const router = createRouter({
       component: () => import('../views/programmations/SeminaireLarnakaChypre2025.vue'),
     },
     {
+      path: '/programmations/2025/atelier-bilan-cop30',
+      name: 'atelier-bilan-cop30',
+      component: () => import('../views/programmations/AtelierBilanCOP30.vue'),
+    },
+    {
       path: '/profile',
       name: 'profile',
       component: () => import('../views/profils/Profile.vue'),

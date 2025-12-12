@@ -32,6 +32,9 @@
         <!-- Widget Séminaire Chypre (visible 7 jours avant et pendant l'événement : 1-3 décembre 2025) -->
         <CyprusSeminarWidget />
 
+        <!-- Widget Atelier Bilan CdP 30 -->
+        <COP30WorkshopWidget />
+
         <!-- Boucle sur les événements avec leurs activités (max 3) -->
         <div
           v-for="(event, index) in eventsWithActivities.slice(0, 3)"
@@ -191,13 +194,15 @@ import { supabase } from '@/composables/useSupabase'
 import YouthClimateDayWidget from './YouthClimateDayWidget.vue'
 import SustainableFinanceDayWidget from './SustainableFinanceDayWidget.vue'
 import CyprusSeminarWidget from './CyprusSeminarWidget.vue'
+import COP30WorkshopWidget from './COP30WorkshopWidget.vue'
 
 export default {
   name: 'UpcomingActivities',
   components: {
     YouthClimateDayWidget,
     SustainableFinanceDayWidget,
-    CyprusSeminarWidget
+    CyprusSeminarWidget,
+    COP30WorkshopWidget
   },
   setup() {
     const { t, locale } = useI18n()
