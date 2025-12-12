@@ -991,9 +991,8 @@ const lastUpdateDate = computed(() => {
 const displayItems = computed(() => {
   const items = []
 
-  // Ajouter toutes les activités approuvées
-  const approvedActivities = activities.value.filter(a => a.validation_status === 'approved')
-  items.push(...approvedActivities.map(activity => ({
+  // Ajouter toutes les activités (comme le calendrier)
+  items.push(...activities.value.map(activity => ({
     ...activity,
     type: 'activity',
     isSpecialDay: false
