@@ -34,3 +34,7 @@ playwright-report/
 
 # Generated files
 prerender-routes.json
+
+laravel.env
+.env.local
+.env.*.local
