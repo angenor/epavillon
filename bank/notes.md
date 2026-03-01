@@ -45,3 +45,18 @@ Le lien youtube doit être l'id de la vidéo youtube (ex: pour le lien https://w
 
 . la card de l'activité dans la liste des activités si l'activité est en direct ou un bouton "Regarder l'enregistrement" si l'activité est terminée.
 
+
+
+
+Nous devons avoir une activité qui ne rentre pas dans le cadre de nos activités habituelles. Nous ne voulons cependant pas créer une rubrique spécialement pour cette activité en question. Nous voulons donc forcer l'utilisation de l'existant pour organiser cette activité. Il s'agit d'un webinaires de PACO(Priorités d'Adaptation en Afrique Centrale et de l'Ouest).
+Ce que je veux qu'on fasse, c'est qu'on ne crée pas l'activité, mais qu'on utilise un ID imaginaire. Étant donné que nous aurons besoin de cet ID pour la table activity_registrations. Cette table(activity_registrations) est très importante parce que nous aurons besoin de recueillir la liste des participants. Les participants devront en fait s'inscrire afin de recevoir le lien de connexion. Nous avons vraiment besoin de cette statistique très importante.
+Toutes ces fonctionnalités doivent être développées dans des dossiers spécifiques pour que nous puissions les supprimer facilement après l'activité. Il s'agit d'un événement unique.
+
+Alors voici un peu le workflow. Un utilisateur arrive sur la page que nous avons créée, la page du PACO Il s'agira d'une page statique avec un ID imaginaire. Lorsqu'il arrive, il trouve la présentation du webinaire. Il trouve un formulaire pour s'y inscrire. Lorsqu'il s'inscrit, ces informations sont enregistrées dans Activity Registration. Et un email contenant le lien de connexion lui est envoyé.
+
+L'objectif étant d'obtenir des statistiques très fiables et d'empêcher que un utilisateur puisse partager son lien de connexion afin que d autres personnes puisse se connecter et ainsi fausser les statistiques. Voici comment je veux qu'on procède.
+
+cas1: Lorsque l'utilisateur arrive sur la page de webinaire, s'il n'est pas encore connecté, un formulaire lui demande d'entrer son email. Lorsqu'il entre son email Le système vérifie s'il est déjà inscrit à partir de son email. S'il est déjà inscrit, alors le formulaire de connexion s'affiche et lui demande d'entrer son email et son mot de passe afin de pouvoir intégrer la session.
+Lorsqu'il entre email et mot de passe, il est automatiquement connecté. Et le bouton rejoindre la session s'affiche.
+
+cas2:
