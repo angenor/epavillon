@@ -250,3 +250,10 @@ Consultez `DEPLOYMENT_SEO.md` pour :
 - **PeerJS** : https://www.npmjs.com/package/peerjs - Bibliothèque pour connexions peer-to-peer WebRTC
 - **Zoom API** : https://developers.zoom.us/docs/api/meetings/#tag/meetings/post/meetings/{meetingId}/open_apps - API REST pour gestion des réunions Zoom
 - **Zoom Webhooks** : https://developers.zoom.us/docs/api/meetings/events/#tag/meeting/postmeeting.alert - Webhooks pour événements de réunions Zoom
+
+## Active Technologies
+- JavaScript (Vue 3.5+) + TypeScript (Edge Function Deno) + Vue 3, Vue Router 4, Pinia, Supabase JS, TailwindCSS v4, Vue i18n, Font Awesome (001-paco-webinar)
+- PostgreSQL via Supabase (tables existantes `events`, `activities`, `activity_registrations`, `users`) (001-paco-webinar)
+
+## Recent Changes
+- 001-paco-webinar: Added JavaScript (Vue 3.5+) + TypeScript (Edge Function Deno) + Vue 3, Vue Router 4, Pinia, Supabase JS, TailwindCSS v4, Vue i18n, Font Awesome
