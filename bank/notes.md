@@ -56,7 +56,7 @@ Alors voici un peu le workflow. Un utilisateur arrive sur la page que nous avons
 
 L'objectif étant d'obtenir des statistiques très fiables et d'empêcher que un utilisateur puisse partager son lien de connexion afin que d autres personnes puisse se connecter et ainsi fausser les statistiques. Voici comment je veux qu'on procède.
 
-cas1: Lorsque l'utilisateur arrive sur la page de webinaire, s'il n'est pas encore connecté, un formulaire lui demande d'entrer son email. Lorsqu'il entre son email Le système vérifie s'il est déjà inscrit à partir de son email. S'il est déjà inscrit, alors le formulaire de connexion s'affiche et lui demande d'entrer son email et son mot de passe afin de pouvoir intégrer la session.
+cas1: Lorsque l'utilisateur arrive sur la page de webinaire, s'il n'est pas encore connecté, un formulaire lui demande d'entrer son email. Lorsqu'il entre son email Le système vérifie s'il est déjà inscrit à partir de son email. S'il est déjà inscrit, alors le formulaire de connexion s'affiche et lui demande d'entrer son email et son mot de passe(qui sera le formulaire de la page de login repris pour ne pas faire d'aller-retour) afin de pouvoir intégrer la session. s'il n'est pas inscrit, le systeme l'invitera a s'inscrire(formulaire d'inscription de la plateforme repris pour ne pas faire d'aller retour et activity_registrations) et des qu'il s'inscrit, il recoit par email le lien de connexion par email.
 Lorsqu'il entre email et mot de passe, il est automatiquement connecté. Et le bouton rejoindre la session s'affiche.
 
 cas2:
