@@ -63,4 +63,4 @@ cas2: lorsqu'il est déjà connecté, s'il est inscrit, le bouton de connexion s
 
 Tu as remarqué que les inscriptions à l'activité impliquent nécessairement une inscription sur la plateforme. Pour les envoi d'email, tu pourras t'inspirer du backend de @src/views/admin/EmailManager.vue
 
-Ne pas oublier que toutes les fonctionnalités implémentées devront être dans des dossiers spécifiques parce qu'il s'agit d'une activité isolée qui ne rentre pas dans le cadre de cette application et qui Qui sera supprimé
+Ne pas oublier que toutes les fonctionnalités implémentées devront être dans des dossiers spécifiques parce qu'il s'agit d'une activité isolée qui ne rentre pas dans le cadre de cette application et qui Qui sera supprimé. le lien de l'activité en ligne sera un lien team
