@@ -27,37 +27,23 @@ function jsonResponse(body: Record<string, unknown>, status: number) {
   })
 }
 
-function buildPacoEmailHtml(recipientName: string, teamsLink: string, webinarTitle: string, webinarDate: string): string {
-  return `
-<!DOCTYPE html>
-<html lang="fr">
-<head><meta charset="UTF-8"></head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <div style="background-color: #1a5632; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
-    <h1 style="color: #ffffff; margin: 0; font-size: 22px;">${webinarTitle}</h1>
-  </div>
-  <div style="padding: 30px; background-color: #f9f9f9; border: 1px solid #e0e0e0;">
-    <p>Bonjour <strong>${recipientName}</strong>,</p>
-    <p>Votre inscription au webinaire PACO est confirmée ! Voici les informations pour rejoindre l'événement :</p>
-    <div style="background-color: #ffffff; border: 1px solid #ddd; border-radius: 6px; padding: 20px; margin: 20px 0;">
-      <p style="margin: 5px 0;"><strong>Événement :</strong> ${webinarTitle}</p>
-      <p style="margin: 5px 0;"><strong>Date :</strong> ${webinarDate}</p>
-      <p style="margin: 5px 0;"><strong>Format :</strong> En ligne via Microsoft Teams</p>
-    </div>
-    <div style="text-align: center; margin: 25px 0;">
-      <a href="${teamsLink}" style="display: inline-block; background-color: #5b5fc7; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 6px; font-size: 16px; font-weight: bold;">Rejoindre le webinaire Teams</a>
-    </div>
-    <p style="font-size: 13px; color: #666;">Si le bouton ne fonctionne pas, copiez-collez ce lien dans votre navigateur :<br>
-      <a href="${teamsLink}" style="color: #5b5fc7; word-break: break-all;">${teamsLink}</a>
-    </p>
-    <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 20px 0;">
-    <p style="font-size: 12px; color: #999; text-align: center;">
-      Cet email a été envoyé automatiquement par la plateforme ePavilion de l'IFDD.<br>
-      Institut de la Francophonie pour le Développement Durable
-    </p>
-  </div>
-</body>
-</html>`
+function buildPacoEmailText(recipientName: string, teamsLink: string, webinarTitle: string, webinarDate: string): string {
+  return `Bonjour ${recipientName},
+
+Votre inscription au webinaire PACO est confirmée !
+
+Événement : ${webinarTitle}
+Date : ${webinarDate}
+Format : En ligne via Microsoft Teams
+
+Lien pour rejoindre le webinaire :
+${teamsLink}
+
+Conservez cet email pour le jour de l'événement.
+
+---
+Cet email a été envoyé automatiquement par la plateforme ePavilion de l'IFDD.
+Institut de la Francophonie pour le Développement Durable`
 }
 
 Deno.serve(async (req) => {
@@ -123,7 +109,7 @@ Deno.serve(async (req) => {
 
     // 6. Build the PACO email
     const teamsLink = PACO_TEAMS_LINK || 'https://teams.microsoft.com'
-    const emailHtml = buildPacoEmailHtml(recipient_name, teamsLink, PACO_WEBINAR_TITLE, PACO_WEBINAR_DATE)
+    const emailText = buildPacoEmailText(recipient_name, teamsLink, PACO_WEBINAR_TITLE, PACO_WEBINAR_DATE)
 
     // 7. Send via Laravel endpoint
     const controller = new AbortController()
@@ -138,7 +124,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         email_type: 'simple',
         subject: `Confirmation d'inscription — ${PACO_WEBINAR_TITLE}`,
-        content: emailHtml,
+        content: emailText,
         recipients: {
           to: [recipient_email]
         },
