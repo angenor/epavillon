@@ -375,6 +375,12 @@ const router = createRouter({
         }
       ]
     },
+    // PACO Webinar — page d'inscription isolée (pas de garde auth)
+    {
+      path: '/paco',
+      name: 'paco-webinar',
+      component: () => import('../views/paco/PacoWebinar.vue'),
+    },
     // Page d'erreur 403 - Accès refusé
     {
       path: '/403',

@@ -2651,3 +2651,27 @@ COMMENT ON TABLE public.ai_chat_feedback IS 'Feedbacks des utilisateurs sur les 
 COMMENT ON FUNCTION search_similar_documents IS 'Recherche de documents similaires par similarité cosinus';
 COMMENT ON FUNCTION has_chatbot_access IS 'Vérifie si un utilisateur a accès au chatbot (négociateurs, admins)';
 
+-- =============================================
+-- PACO WEBINAR — RPC function for anonymous email checking
+-- =============================================
+
+-- Fonction RPC pour vérifier l'existence d'un email (accessible aux anonymes)
+-- Utilisée par la page d'inscription au webinaire PACO
+-- SECURITY DEFINER bypass RLS — ne retourne qu'un booléen
+CREATE OR REPLACE FUNCTION public.check_paco_email(email_input TEXT)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.users WHERE email = lower(trim(email_input))
+  );
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.check_paco_email(TEXT) TO anon;
+GRANT EXECUTE ON FUNCTION public.check_paco_email(TEXT) TO authenticated;
+
+COMMENT ON FUNCTION public.check_paco_email IS 'Vérifie si un email existe dans la table users (PACO webinar — accessible aux anonymes)';
+

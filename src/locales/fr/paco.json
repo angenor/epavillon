@@ -1,0 +1,88 @@
+{
+  "paco": {
+    "title": "Webinaire PACO",
+    "subtitle": "Priorités d'Adaptation en Afrique Centrale et de l'Ouest",
+    "description": "Rejoignez-nous pour un webinaire dédié aux priorités d'adaptation au changement climatique en Afrique Centrale et de l'Ouest. Cet événement rassemblera des experts, décideurs et praticiens pour discuter des stratégies d'adaptation les plus urgentes pour la région.",
+    "date": "Date à confirmer",
+    "time": "Horaire à confirmer (UTC)",
+    "duration": "2 heures",
+    "format": "En ligne via Microsoft Teams",
+    "speakers": {
+      "title": "Intervenants",
+      "tba": "Intervenants à confirmer"
+    },
+    "organized_by": "Organisé par l'IFDD",
+    "emailCheck": {
+      "title": "Inscrivez-vous au webinaire",
+      "subtitle": "Entrez votre adresse email pour commencer",
+      "emailLabel": "Adresse email",
+      "emailPlaceholder": "votre.email{'@'}exemple.com",
+      "submit": "Continuer",
+      "checking": "Vérification en cours...",
+      "invalidEmail": "Veuillez entrer une adresse email valide"
+    },
+    "login": {
+      "title": "Connectez-vous pour vous inscrire",
+      "subtitle": "Un compte existe déjà avec cet email. Connectez-vous pour accéder au webinaire.",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "Votre mot de passe",
+      "submit": "Se connecter",
+      "submitting": "Connexion en cours...",
+      "forgotPassword": "Mot de passe oublié ?",
+      "error": "Identifiants incorrects. Veuillez réessayer.",
+      "backToEmail": "Utiliser un autre email"
+    },
+    "register": {
+      "title": "Créez votre compte",
+      "subtitle": "Inscrivez-vous à la plateforme et au webinaire en une seule étape.",
+      "firstNameLabel": "Prénom",
+      "firstNamePlaceholder": "Votre prénom",
+      "lastNameLabel": "Nom",
+      "lastNamePlaceholder": "Votre nom",
+      "emailLabel": "Email",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "Minimum 6 caractères",
+      "countryLabel": "Pays",
+      "countryPlaceholder": "Sélectionnez votre pays",
+      "organizationLabel": "Organisation",
+      "organizationPlaceholder": "Nom de votre organisation",
+      "submit": "S'inscrire",
+      "submitting": "Inscription en cours...",
+      "error": "Une erreur est survenue lors de l'inscription. Veuillez réessayer.",
+      "emailUsed": "Cet email est déjà associé à un compte. Essayez de vous connecter.",
+      "backToEmail": "Utiliser un autre email"
+    },
+    "activityRegister": {
+      "title": "Inscrivez-vous au webinaire",
+      "subtitle": "Vérifiez vos informations et inscrivez-vous au webinaire PACO.",
+      "countryLabel": "Pays",
+      "countryPlaceholder": "Sélectionnez votre pays",
+      "organizationLabel": "Organisation",
+      "organizationPlaceholder": "Nom de votre organisation",
+      "submit": "S'inscrire au webinaire",
+      "submitting": "Inscription en cours..."
+    },
+    "join": {
+      "title": "Vous êtes inscrit(e) !",
+      "subtitle": "Vous êtes inscrit(e) au webinaire PACO. Utilisez le bouton ci-dessous pour rejoindre la réunion Teams le jour de l'événement.",
+      "joinButton": "Rejoindre le webinaire",
+      "copyLink": "Copier le lien",
+      "linkCopied": "Lien copié !",
+      "resendEmail": "Renvoyer l'email de confirmation",
+      "resending": "Envoi en cours...",
+      "emailSent": "Email envoyé avec succès !",
+      "emailError": "Erreur lors de l'envoi de l'email. Veuillez réessayer."
+    },
+    "success": {
+      "title": "Inscription réussie !",
+      "message": "Votre inscription au webinaire PACO est confirmée. Un email contenant le lien de connexion Teams vous a été envoyé. Veuillez également vérifier votre boîte de réception pour confirmer votre compte.",
+      "checkEmail": "Vérifiez votre boîte email"
+    },
+    "errors": {
+      "generic": "Une erreur est survenue. Veuillez réessayer.",
+      "registration": "Erreur lors de l'inscription au webinaire.",
+      "emailSend": "Erreur lors de l'envoi de l'email de confirmation.",
+      "alreadyRegistered": "Vous êtes déjà inscrit(e) à ce webinaire."
+    }
+  }
+}

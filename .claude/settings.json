@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(bash .specify/scripts/bash/update-agent-context.sh claude)"
+      "Bash(bash .specify/scripts/bash/update-agent-context.sh claude)",
+      "Bash(bash /Users/mac/Documents/projets/IFDD/epavillonvue/.specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks)"
     ]
   }
 }

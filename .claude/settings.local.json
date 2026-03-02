@@ -53,9 +53,15 @@
       "Bash(env -i HOME=\"$HOME\" PATH=\"/usr/bin:/bin:/usr/sbin:/sbin\" /usr/bin/git fetch:*)",
       "Bash(/usr/bin/git fetch)",
       "Bash(/usr/bin/git status)",
-      "Bash(bash .specify/scripts/bash/check-prerequisites.sh --json --paths-only)"
+      "Bash(bash .specify/scripts/bash/check-prerequisites.sh --json --paths-only)",
+      "Bash(bash .specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks)",
+      "Bash(git -C /Users/mac/Documents/projets/IFDD/epavillonvue rev-parse --git-dir)",
+      "Bash(lsof -ti:5173)"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "additionalDirectories": [
+      "/Users/mac/Documents/projets/IFDD/epavillonvue/src/views"
+    ]
   }
 }

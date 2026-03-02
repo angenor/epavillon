@@ -17,7 +17,7 @@ Page d'inscription isolée pour le webinaire PACO (Priorités d'Adaptation en Af
 **Project Type**: Web application (Vue 3 SPA + Supabase Edge Functions)
 **Performance Goals**: Email envoyé dans les 30 secondes post-inscription, page chargée en < 2s
 **Constraints**: Tout le code PACO doit être isolé dans des dossiers dédiés pour suppression post-événement
-**Scale/Scope**: ~6 composants Vue, 1 composable, 1 edge function, 1 script SQL, 2 fichiers i18n
+**Scale/Scope**: ~6 composants Vue, 2 composables, 1 fichier constants, 1 edge function, 1 script SQL, 2 fichiers i18n
 
 ## Constitution Check
 

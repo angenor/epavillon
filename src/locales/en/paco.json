@@ -1,0 +1,88 @@
+{
+  "paco": {
+    "title": "PACO Webinar",
+    "subtitle": "Adaptation Priorities in Central and West Africa",
+    "description": "Join us for a webinar dedicated to climate change adaptation priorities in Central and West Africa. This event will bring together experts, decision-makers and practitioners to discuss the most urgent adaptation strategies for the region.",
+    "date": "Date to be confirmed",
+    "time": "Time to be confirmed (UTC)",
+    "duration": "2 hours",
+    "format": "Online via Microsoft Teams",
+    "speakers": {
+      "title": "Speakers",
+      "tba": "Speakers to be announced"
+    },
+    "organized_by": "Organized by IFDD",
+    "emailCheck": {
+      "title": "Register for the webinar",
+      "subtitle": "Enter your email address to get started",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "your.email{'@'}example.com",
+      "submit": "Continue",
+      "checking": "Checking...",
+      "invalidEmail": "Please enter a valid email address"
+    },
+    "login": {
+      "title": "Log in to register",
+      "subtitle": "An account already exists with this email. Log in to access the webinar.",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Your password",
+      "submit": "Log in",
+      "submitting": "Logging in...",
+      "forgotPassword": "Forgot password?",
+      "error": "Invalid credentials. Please try again.",
+      "backToEmail": "Use a different email"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Sign up for the platform and the webinar in one step.",
+      "firstNameLabel": "First name",
+      "firstNamePlaceholder": "Your first name",
+      "lastNameLabel": "Last name",
+      "lastNamePlaceholder": "Your last name",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Minimum 6 characters",
+      "countryLabel": "Country",
+      "countryPlaceholder": "Select your country",
+      "organizationLabel": "Organization",
+      "organizationPlaceholder": "Your organization name",
+      "submit": "Sign up",
+      "submitting": "Signing up...",
+      "error": "An error occurred during registration. Please try again.",
+      "emailUsed": "This email is already associated with an account. Try logging in.",
+      "backToEmail": "Use a different email"
+    },
+    "activityRegister": {
+      "title": "Register for the webinar",
+      "subtitle": "Verify your information and register for the PACO webinar.",
+      "countryLabel": "Country",
+      "countryPlaceholder": "Select your country",
+      "organizationLabel": "Organization",
+      "organizationPlaceholder": "Your organization name",
+      "submit": "Register for the webinar",
+      "submitting": "Registering..."
+    },
+    "join": {
+      "title": "You are registered!",
+      "subtitle": "You are registered for the PACO webinar. Use the button below to join the Teams meeting on the day of the event.",
+      "joinButton": "Join the webinar",
+      "copyLink": "Copy link",
+      "linkCopied": "Link copied!",
+      "resendEmail": "Resend confirmation email",
+      "resending": "Sending...",
+      "emailSent": "Email sent successfully!",
+      "emailError": "Error sending the email. Please try again."
+    },
+    "success": {
+      "title": "Registration successful!",
+      "message": "Your registration for the PACO webinar is confirmed. An email with the Teams connection link has been sent to you. Please also check your inbox to confirm your account.",
+      "checkEmail": "Check your email"
+    },
+    "errors": {
+      "generic": "An error occurred. Please try again.",
+      "registration": "Error during webinar registration.",
+      "emailSend": "Error sending the confirmation email.",
+      "alreadyRegistered": "You are already registered for this webinar."
+    }
+  }
+}

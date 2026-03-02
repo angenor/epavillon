@@ -49,7 +49,7 @@ Un utilisateur déjà connecté à la plateforme arrive sur la page PACO. Le sys
 
 **Acceptance Scenarios**:
 
-1. **Given** un utilisateur connecté arrive sur la page PACO et est déjà inscrit au webinaire, **When** la page se charge, **Then** le bouton de connexion Teams et le lien personnel à copier-coller s'affichent.
+1. **Given** un utilisateur connecté arrive sur la page PACO et est déjà inscrit au webinaire, **When** la page se charge, **Then** le bouton de connexion Teams et le lien de connexion à copier-coller s'affichent.
 2. **Given** un utilisateur connecté arrive sur la page PACO et n'est pas inscrit au webinaire, **When** la page se charge, **Then** un formulaire d'inscription à l'activité s'affiche avec les champs pré-remplis depuis son profil (organisation, pays) et modifiables.
 3. **Given** un utilisateur connecté non inscrit remplit/vérifie le formulaire d'inscription pré-rempli, **When** il soumet le formulaire, **Then** une entrée est ajoutée dans `activity_registrations`, les éventuelles corrections de profil sont sauvegardées, et un email contenant le lien Teams est envoyé.
 
@@ -142,7 +142,7 @@ Tout visiteur (connecté ou non) arrivant sur la page PACO voit une présentatio
 
 - Le lien de connexion Teams est un lien unique fourni par l'organisateur et sera le même pour tous les participants (fonctionnement standard de Teams). La protection contre le partage repose sur le fait que seuls les inscrits reçoivent le lien par email, réduisant significativement la diffusion non autorisée.
 - La contrainte de clé étrangère `activity_id REFERENCES activities(id)` dans `activity_registrations` est satisfaite en créant une entrée minimale dans `events` et `activities` via un script SQL avec des UUIDs connus et documentés. Ces entrées servent uniquement de support technique pour l'inscription et n'apparaissent pas dans les interfaces de gestion des événements/activités.
-- L'envoi d'email utilise l'infrastructure existante (Edge Function `send-email`).
+- L'envoi d'email utilise une Edge Function dédiée `send-paco-email` (isolée et supprimable), qui appelle le même backend Laravel que l'Edge Function existante `send-email`.
 - L'inscription à la plateforme via le formulaire intégré suit le même processus que l'inscription standard (création d'authentification, trigger de création de profil).
 - Les données du webinaire (titre, description, date, intervenants) sont hardcodées dans les fichiers de traduction i18n.
 - Après l'événement, seuls les fichiers frontend seront supprimés. Les données dans `activity_registrations` resteront en base pour les statistiques.
