@@ -56,7 +56,11 @@ Alors voici un peu le workflow. Un utilisateur arrive sur la page que nous avons
 
 L'objectif étant d'obtenir des statistiques très fiables et d'empêcher que un utilisateur puisse partager son lien de connexion afin que d autres personnes puisse se connecter et ainsi fausser les statistiques. Voici comment je veux qu'on procède.
 
-cas1: Lorsque l'utilisateur arrive sur la page de webinaire, s'il n'est pas encore connecté, un formulaire lui demande d'entrer son email. Lorsqu'il entre son email Le système vérifie s'il est déjà inscrit à partir de son email. S'il est déjà inscrit, alors le formulaire de connexion s'affiche et lui demande d'entrer son email et son mot de passe(qui sera le formulaire de la page de login repris pour ne pas faire d'aller-retour) afin de pouvoir intégrer la session. s'il n'est pas inscrit, le systeme l'invitera a s'inscrire(formulaire d'inscription de la plateforme repris pour ne pas faire d'aller retour et activity_registrations) et des qu'il s'inscrit, il recoit par email le lien de connexion par email.
-Lorsqu'il entre email et mot de passe, il est automatiquement connecté. Et le bouton rejoindre la session s'affiche.
+cas1: Lorsque l'utilisateur arrive sur la page de webinaire, s'il n'est pas encore connecté, un formulaire lui demande d'entrer son email. Lorsqu'il entre son email Le système vérifie s'il est déjà inscrit à partir de son email. S'il est déjà inscrit, alors le formulaire de connexion s'affiche et lui demande d'entrer son email et son mot de passe(qui sera le formulaire de la page de login repris pour ne pas faire d'aller-retour) afin de pouvoir intégrer la session. s'il n'est pas inscrit, le systeme l'invitera a s'inscrire(formulaire d'inscription de la plateforme repris pour ne pas faire d'aller retour et ajoute de quelques champs de activity_registrations) et dès qu'il s'inscrit, il recoit le lien de connexion par email.
 
-cas2:
+cas2: lorsqu'il est déjà connecté, s'il est inscrit, le bouton de connexion s'afffiche et ainsi que le lien a copier coller pour se connecter. lorsqu'il est déjà connecté et n'est pas inscript, on se retrouve dans le cas1.
+
+
+Tu as remarqué que les inscriptions à l'activité impliquent nécessairement une inscription sur la plateforme. Pour les envoi d'email, tu pourras t'inspirer du backend de @src/views/admin/EmailManager.vue
+
+Ne pas oublier que toutes les fonctionnalités implémentées devront être dans des dossiers spécifiques parce qu'il s'agit d'une activité isolée qui ne rentre pas dans le cadre de cette application et qui Qui sera supprimé
