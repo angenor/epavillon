@@ -1,51 +1,51 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 sm:p-8">
-    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-1">
+  <div>
+    <h2 class="text-xl font-bold text-white mb-1">
       {{ t('paco.activityRegister.title') }}
     </h2>
-    <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
+    <p class="text-sm text-white/50 mb-5">
       {{ t('paco.activityRegister.subtitle') }}
     </p>
 
-    <form @submit.prevent="handleSubmit" class="space-y-4">
+    <form @submit.prevent="handleSubmit" class="space-y-3">
       <!-- Name (read-only, from profile) -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label class="block text-sm font-medium text-white/70 mb-1">
           {{ t('paco.register.firstNameLabel') }} / {{ t('paco.register.lastNameLabel') }}
         </label>
         <input
           :value="displayName"
           type="text"
           readonly
-          class="w-full px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300 outline-none cursor-not-allowed"
+          class="w-full px-3 py-2 rounded-xl border border-white/10 bg-white/5 text-white/50 outline-none cursor-not-allowed text-sm"
         />
       </div>
 
       <!-- Email (read-only) -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label class="block text-sm font-medium text-white/70 mb-1">
           {{ t('paco.register.emailLabel') }}
         </label>
         <input
           :value="user?.email"
           type="email"
           readonly
-          class="w-full px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300 outline-none cursor-not-allowed"
+          class="w-full px-3 py-2 rounded-xl border border-white/10 bg-white/5 text-white/50 outline-none cursor-not-allowed text-sm"
         />
       </div>
 
       <!-- Country (editable, pre-filled from profile) -->
       <div>
-        <label for="paco-activity-country" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label for="paco-activity-country" class="block text-sm font-medium text-white/70 mb-1">
           {{ t('paco.activityRegister.countryLabel') }}
         </label>
         <select
           id="paco-activity-country"
           v-model="form.countryId"
-          class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition cursor-pointer"
+          class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition cursor-pointer text-sm"
         >
-          <option value="" disabled>{{ t('paco.activityRegister.countryPlaceholder') }}</option>
-          <option v-for="country in countries" :key="country.id" :value="country.id">
+          <option value="" disabled class="bg-gray-800 text-white">{{ t('paco.activityRegister.countryPlaceholder') }}</option>
+          <option v-for="country in countries" :key="country.id" :value="country.id" class="bg-gray-800 text-white">
             {{ locale === 'fr' ? country.name_fr : country.name_en }}
           </option>
         </select>
@@ -53,7 +53,7 @@
 
       <!-- Organization (editable, pre-filled from profile) -->
       <div>
-        <label for="paco-activity-org" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label for="paco-activity-org" class="block text-sm font-medium text-white/70 mb-1">
           {{ t('paco.activityRegister.organizationLabel') }}
         </label>
         <input
@@ -61,12 +61,12 @@
           v-model="form.organizationName"
           type="text"
           :placeholder="t('paco.activityRegister.organizationPlaceholder')"
-          class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition"
+          class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white placeholder-white/30 focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition backdrop-blur-sm text-sm"
         />
       </div>
 
       <!-- Error message -->
-      <p v-if="errorMessage" class="text-sm text-red-600 dark:text-red-400">
+      <p v-if="errorMessage" class="text-sm text-red-300">
         {{ errorMessage }}
       </p>
 
@@ -74,7 +74,7 @@
       <button
         type="submit"
         :disabled="submitting"
-        class="w-full cursor-pointer bg-green-700 hover:bg-green-800 dark:bg-green-600 dark:hover:bg-green-700 text-white font-medium py-2.5 px-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+        class="w-full cursor-pointer bg-green-600 hover:bg-green-500 text-white font-semibold py-3 px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {{ submitting ? t('paco.activityRegister.submitting') : t('paco.activityRegister.submit') }}
       </button>

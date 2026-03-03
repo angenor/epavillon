@@ -1,71 +1,89 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-2xl mx-auto space-y-6">
-      <!-- Presentation section (always visible) -->
-      <PacoPresentation />
+  <div class="relative min-h-[calc(100vh-4rem)]">
+    <!-- Fixed background image -->
+    <div
+      class="fixed inset-x-0 top-16 bottom-0 bg-gray-900 bg-cover bg-center bg-no-repeat"
+      style="background-image: url('https://www.aip.ci/wp-content/uploads/2025/07/Lancement-du-PACO-a-Abidjan.jpg')"
+    >
+      <div class="absolute inset-0 bg-gradient-to-br from-black/75 via-black/55 to-green-950/65"></div>
+    </div>
 
-      <!-- Dynamic section based on state -->
+    <!-- Content -->
+    <div class="relative z-10 flex items-center justify-center min-h-[calc(100vh-4rem)] py-6 px-4 sm:px-6 lg:py-8 lg:px-8">
+      <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-12 items-center">
 
-      <!-- Loading state (checking auth / registration) -->
-      <div v-if="pageLoading" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 text-center">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-4"></div>
-        <p class="text-gray-600 dark:text-gray-400">{{ t('paco.emailCheck.checking') }}</p>
-      </div>
-
-      <!-- Step: email-check (unauthenticated, no email entered yet) -->
-      <PacoEmailCheck
-        v-else-if="step === 'email-check'"
-        :loading="emailCheckLoading"
-        @email-checked="handleEmailChecked"
-      />
-
-      <!-- Step: login (email exists, show login form) -->
-      <PacoLoginForm
-        v-else-if="step === 'login'"
-        :email="checkedEmail"
-        @login-success="handleLoginSuccess"
-        @back="resetToEmailCheck"
-      />
-
-      <!-- Step: register (email doesn't exist, show registration form) -->
-      <PacoRegisterForm
-        v-else-if="step === 'register'"
-        :email="checkedEmail"
-        @register-success="handleRegisterSuccess"
-        @back="resetToEmailCheck"
-      />
-
-      <!-- Step: activity-register (authenticated but not registered for PACO) -->
-      <PacoActivityRegister
-        v-else-if="step === 'activity-register'"
-        :user="user"
-        :profile="profile"
-        @registration-complete="handleActivityRegistrationComplete"
-      />
-
-      <!-- Step: success (just registered as new user) -->
-      <div v-else-if="step === 'success'" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 sm:p-8 text-center">
-        <div class="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-          <font-awesome-icon :icon="['fas', 'check']" class="text-green-600 dark:text-green-400 text-2xl" />
+        <!-- Left: PACO Info -->
+        <div class="lg:col-span-3">
+          <PacoPresentation />
         </div>
-        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
-          {{ t('paco.success.title') }}
-        </h2>
-        <p class="text-gray-600 dark:text-gray-400 mb-4">
-          {{ t('paco.success.message') }}
-        </p>
-        <p class="text-sm text-green-700 dark:text-green-400 font-medium">
-          <font-awesome-icon :icon="['fas', 'envelope']" class="mr-1" />
-          {{ t('paco.success.checkEmail') }}
-        </p>
-      </div>
 
-      <!-- Step: join (authenticated + registered for PACO) -->
-      <PacoJoinSection v-else-if="step === 'join'" />
+        <!-- Right: Action panel -->
+        <div class="lg:col-span-2">
+          <div class="bg-white/10 backdrop-blur-2xl border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/20">
 
-      <!-- Error state -->
-      <div v-if="globalError" class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-        <p class="text-sm text-red-700 dark:text-red-400">{{ globalError }}</p>
+            <!-- Loading -->
+            <div v-if="pageLoading" class="text-center py-12">
+              <div class="animate-spin rounded-full h-8 w-8 border-2 border-white/20 border-t-white mx-auto mb-4"></div>
+              <p class="text-white/60 text-sm">{{ t('paco.emailCheck.checking') }}</p>
+            </div>
+
+            <!-- Step: email-check -->
+            <PacoEmailCheck
+              v-else-if="step === 'email-check'"
+              :loading="emailCheckLoading"
+              @email-checked="handleEmailChecked"
+            />
+
+            <!-- Step: login -->
+            <PacoLoginForm
+              v-else-if="step === 'login'"
+              :email="checkedEmail"
+              @login-success="handleLoginSuccess"
+              @back="resetToEmailCheck"
+            />
+
+            <!-- Step: register -->
+            <PacoRegisterForm
+              v-else-if="step === 'register'"
+              :email="checkedEmail"
+              @register-success="handleRegisterSuccess"
+              @back="resetToEmailCheck"
+            />
+
+            <!-- Step: activity-register -->
+            <PacoActivityRegister
+              v-else-if="step === 'activity-register'"
+              :user="user"
+              :profile="profile"
+              @registration-complete="handleActivityRegistrationComplete"
+            />
+
+            <!-- Step: success -->
+            <div v-else-if="step === 'success'" class="text-center py-4">
+              <div class="w-16 h-16 bg-green-500/20 border border-green-400/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                <font-awesome-icon :icon="['fas', 'check']" class="text-green-400 text-2xl" />
+              </div>
+              <h2 class="text-xl font-bold text-white mb-2">
+                {{ t('paco.success.title') }}
+              </h2>
+              <p class="text-white/60 text-sm mb-4 leading-relaxed">
+                {{ t('paco.success.message') }}
+              </p>
+              <p class="text-sm text-green-400 font-medium">
+                <font-awesome-icon :icon="['fas', 'envelope']" class="mr-1" />
+                {{ t('paco.success.checkEmail') }}
+              </p>
+            </div>
+
+            <!-- Step: join -->
+            <PacoJoinSection v-else-if="step === 'join'" />
+
+            <!-- Error -->
+            <div v-if="globalError" class="mt-4 bg-red-500/15 border border-red-400/20 rounded-xl p-3">
+              <p class="text-sm text-red-300">{{ globalError }}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

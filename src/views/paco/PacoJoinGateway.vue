@@ -1,93 +1,114 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md mx-auto space-y-6">
+  <div class="relative min-h-[calc(100vh-4rem)]">
+    <!-- Fixed background image -->
+    <div
+      class="fixed inset-x-0 top-16 bottom-0 bg-gray-900 bg-cover bg-center bg-no-repeat"
+      style="background-image: url('https://www.aip.ci/wp-content/uploads/2025/07/Lancement-du-PACO-a-Abidjan.jpg')"
+    >
+      <div class="absolute inset-0 bg-gradient-to-br from-black/75 via-black/55 to-green-950/65"></div>
+    </div>
 
-      <!-- Loading state -->
-      <div v-if="state === 'loading'" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 text-center">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-4"></div>
-        <p class="text-gray-600 dark:text-gray-400">{{ t('paco.gateway.loading') }}</p>
-      </div>
+    <!-- Content -->
+    <div class="relative z-10 flex items-center justify-center min-h-[calc(100vh-4rem)] py-6 px-4 sm:px-6 lg:py-8 lg:px-8">
+      <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-12 items-center">
 
-      <!-- Login state -->
-      <template v-else-if="state === 'login'">
-        <!-- Contextual message -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 sm:p-8 text-center">
-          <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-            <font-awesome-icon :icon="['fas', 'lock']" class="text-blue-600 dark:text-blue-400 text-2xl" />
-          </div>
-          <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
-            {{ t('paco.gateway.loginTitle') }}
-          </h2>
-          <p class="text-gray-600 dark:text-gray-400">
-            {{ t('paco.gateway.loginSubtitle') }}
-          </p>
+        <!-- Left: PACO Info -->
+        <div class="lg:col-span-3">
+          <PacoPresentation />
         </div>
 
-        <!-- Email input (before showing PacoLoginForm) -->
-        <div v-if="!gatewayEmail" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 sm:p-8">
-          <form @submit.prevent="handleGatewayEmailSubmit" class="space-y-4">
-            <div>
-              <label for="gateway-email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {{ t('paco.emailCheck.emailLabel') }}
-              </label>
-              <input
-                id="gateway-email"
-                v-model="gatewayEmailInput"
-                type="email"
-                :placeholder="t('paco.emailCheck.emailPlaceholder')"
-                required
-                class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition"
-              />
+        <!-- Right: Gateway panel -->
+        <div class="lg:col-span-2">
+          <div class="bg-white/10 backdrop-blur-2xl border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/20">
+
+            <!-- Loading state -->
+            <div v-if="state === 'loading'" class="text-center py-12">
+              <div class="animate-spin rounded-full h-8 w-8 border-2 border-white/20 border-t-white mx-auto mb-4"></div>
+              <p class="text-white/60 text-sm">{{ t('paco.gateway.loading') }}</p>
             </div>
-            <button
-              type="submit"
-              class="w-full cursor-pointer bg-green-700 hover:bg-green-800 dark:bg-green-600 dark:hover:bg-green-700 text-white font-medium py-2.5 px-4 rounded-lg transition"
-            >
-              {{ t('paco.emailCheck.submit') }}
-            </button>
-          </form>
+
+            <!-- Login state -->
+            <template v-else-if="state === 'login'">
+              <!-- Contextual header -->
+              <div class="text-center mb-6">
+                <div class="w-14 h-14 bg-blue-500/20 border border-blue-400/30 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <font-awesome-icon :icon="['fas', 'lock']" class="text-blue-400 text-xl" />
+                </div>
+                <h2 class="text-xl font-bold text-white mb-1">
+                  {{ t('paco.gateway.loginTitle') }}
+                </h2>
+                <p class="text-white/50 text-sm">
+                  {{ t('paco.gateway.loginSubtitle') }}
+                </p>
+              </div>
+
+              <!-- Email input (before showing PacoLoginForm) -->
+              <div v-if="!gatewayEmail">
+                <form @submit.prevent="handleGatewayEmailSubmit" class="space-y-4">
+                  <div>
+                    <label for="gateway-email" class="block text-sm font-medium text-white/70 mb-1">
+                      {{ t('paco.emailCheck.emailLabel') }}
+                    </label>
+                    <input
+                      id="gateway-email"
+                      v-model="gatewayEmailInput"
+                      type="email"
+                      :placeholder="t('paco.emailCheck.emailPlaceholder')"
+                      required
+                      class="w-full px-4 py-2.5 rounded-xl border border-white/15 bg-white/10 text-white placeholder-white/30 focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition backdrop-blur-sm"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    class="w-full cursor-pointer bg-green-600 hover:bg-green-500 text-white font-semibold py-3 px-4 rounded-xl transition"
+                  >
+                    {{ t('paco.emailCheck.submit') }}
+                  </button>
+                </form>
+              </div>
+
+              <!-- PacoLoginForm (after email entered) -->
+              <PacoLoginForm
+                v-else
+                :email="gatewayEmail"
+                @login-success="handleLoginSuccess"
+                @back="gatewayEmail = ''"
+              />
+            </template>
+
+            <!-- Not-registered state -->
+            <div v-else-if="state === 'not-registered'" class="text-center py-4">
+              <div class="w-14 h-14 bg-amber-500/20 border border-amber-400/30 rounded-full flex items-center justify-center mx-auto mb-3">
+                <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="text-amber-400 text-xl" />
+              </div>
+              <h2 class="text-xl font-bold text-white mb-2">
+                {{ t('paco.gateway.notRegisteredTitle') }}
+              </h2>
+              <p class="text-white/50 text-sm mb-6 leading-relaxed">
+                {{ t('paco.gateway.notRegisteredMessage') }}
+              </p>
+              <router-link
+                to="/paco"
+                class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white font-semibold py-3 px-6 rounded-xl transition cursor-pointer"
+              >
+                <font-awesome-icon :icon="['fas', 'pen-to-square']" />
+                {{ t('paco.gateway.registerButton') }}
+              </router-link>
+            </div>
+
+            <!-- Redirecting state -->
+            <div v-else-if="state === 'redirecting'" class="text-center py-12">
+              <div class="animate-spin rounded-full h-8 w-8 border-2 border-white/20 border-t-white mx-auto mb-4"></div>
+              <p class="text-white/60 text-sm">{{ t('paco.gateway.redirecting') }}</p>
+            </div>
+
+            <!-- Error state -->
+            <div v-if="errorMessage" class="mt-4 bg-red-500/15 border border-red-400/20 rounded-xl p-3">
+              <p class="text-sm text-red-300">{{ errorMessage }}</p>
+            </div>
+          </div>
         </div>
-
-        <!-- PacoLoginForm (after email entered) -->
-        <PacoLoginForm
-          v-else
-          :email="gatewayEmail"
-          @login-success="handleLoginSuccess"
-          @back="gatewayEmail = ''"
-        />
-      </template>
-
-      <!-- Not-registered state -->
-      <div v-else-if="state === 'not-registered'" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 sm:p-8 text-center">
-        <div class="w-16 h-16 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-          <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="text-amber-600 dark:text-amber-400 text-2xl" />
-        </div>
-        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
-          {{ t('paco.gateway.notRegisteredTitle') }}
-        </h2>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">
-          {{ t('paco.gateway.notRegisteredMessage') }}
-        </p>
-        <router-link
-          to="/paco"
-          class="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 dark:bg-green-600 dark:hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg transition cursor-pointer"
-        >
-          <font-awesome-icon :icon="['fas', 'pen-to-square']" />
-          {{ t('paco.gateway.registerButton') }}
-        </router-link>
       </div>
-
-      <!-- Redirecting state -->
-      <div v-else-if="state === 'redirecting'" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 text-center">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-4"></div>
-        <p class="text-gray-600 dark:text-gray-400">{{ t('paco.gateway.redirecting') }}</p>
-      </div>
-
-      <!-- Error state -->
-      <div v-if="errorMessage" class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-        <p class="text-sm text-red-700 dark:text-red-400">{{ errorMessage }}</p>
-      </div>
-
     </div>
   </div>
 </template>
@@ -98,6 +119,7 @@ import { useI18n } from 'vue-i18n'
 import { useAuth } from '@/composables/useAuth'
 import { usePacoRegistration } from '@/composables/paco/usePacoRegistration'
 import { PACO_TEAMS_LINK } from '@/composables/paco/constants'
+import PacoPresentation from '@/components/paco/PacoPresentation.vue'
 import PacoLoginForm from '@/components/paco/PacoLoginForm.vue'
 
 const { t } = useI18n()

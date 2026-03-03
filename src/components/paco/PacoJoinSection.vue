@@ -1,38 +1,38 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 sm:p-8 text-center">
-    <div class="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-      <font-awesome-icon :icon="['fas', 'video']" class="text-green-600 dark:text-green-400 text-2xl" />
+  <div class="text-center py-2">
+    <div class="w-16 h-16 bg-green-500/20 border border-green-400/30 rounded-full flex items-center justify-center mx-auto mb-4">
+      <font-awesome-icon :icon="['fas', 'video']" class="text-green-400 text-2xl" />
     </div>
-    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+    <h2 class="text-xl font-bold text-white mb-2">
       {{ t('paco.join.title') }}
     </h2>
-    <p class="text-gray-600 dark:text-gray-400 mb-6">
+    <p class="text-white/50 text-sm mb-6 leading-relaxed">
       {{ t('paco.join.subtitle') }}
     </p>
 
     <!-- Join button -->
     <router-link
       :to="platformJoinLink"
-      class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white font-medium py-3 px-6 rounded-lg transition cursor-pointer"
+      class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 px-8 rounded-xl transition cursor-pointer shadow-lg shadow-indigo-600/20"
     >
       <font-awesome-icon :icon="['fas', 'video']" />
       {{ t('paco.join.joinButton') }}
     </router-link>
 
     <!-- Copy link + Resend email -->
-    <div class="mt-4 flex items-center justify-center gap-3">
+    <div class="mt-5 flex items-center justify-center gap-3">
       <button
         @click="copyTeamsLink"
-        class="text-sm text-green-700 dark:text-green-400 hover:underline cursor-pointer"
+        class="text-sm text-green-400 hover:text-green-300 hover:underline cursor-pointer transition"
       >
         <font-awesome-icon :icon="['fas', 'copy']" class="mr-1" />
         {{ linkCopied ? t('paco.join.linkCopied') : t('paco.join.copyLink') }}
       </button>
-      <span class="text-gray-300 dark:text-gray-600">|</span>
+      <span class="text-white/20">|</span>
       <button
         @click="handleResendEmail"
         :disabled="resendingEmail"
-        class="text-sm text-green-700 dark:text-green-400 hover:underline cursor-pointer disabled:opacity-50"
+        class="text-sm text-green-400 hover:text-green-300 hover:underline cursor-pointer disabled:opacity-50 transition"
       >
         <font-awesome-icon :icon="['fas', 'envelope']" class="mr-1" />
         {{ resendingEmail ? t('paco.join.resending') : t('paco.join.resendEmail') }}
@@ -40,7 +40,7 @@
     </div>
 
     <!-- Resend feedback -->
-    <p v-if="resendMessage" class="mt-2 text-sm" :class="resendError ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'">
+    <p v-if="resendMessage" class="mt-2 text-sm" :class="resendError ? 'text-red-300' : 'text-green-400'">
       {{ resendMessage }}
     </p>
   </div>
