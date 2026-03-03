@@ -11,6 +11,7 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
 // PACO constants — hardcoded in edge function for security
 const PACO_ACTIVITY_ID = '00000000-0000-4000-a000-00000000a002'
 const PACO_TEAMS_LINK = Deno.env.get('PACO_TEAMS_LINK') ?? ''
+const PACO_PLATFORM_JOIN_URL = 'https://epavillonclimatique.francophonie.org/paco/join'
 const PACO_WEBINAR_TITLE = 'Webinaire PACO — Priorités d\'Adaptation en Afrique Centrale et de l\'Ouest'
 const PACO_WEBINAR_DATE = 'Date à confirmer' // À mettre à jour avec la date réelle
 
@@ -27,7 +28,7 @@ function jsonResponse(body: Record<string, unknown>, status: number) {
   })
 }
 
-function buildPacoEmailText(recipientName: string, teamsLink: string, webinarTitle: string, webinarDate: string): string {
+function buildPacoEmailText(recipientName: string, platformJoinUrl: string, webinarTitle: string, webinarDate: string): string {
   return `Bonjour ${recipientName},
 
 Votre inscription au webinaire PACO est confirmée !
@@ -36,10 +37,10 @@ Votre inscription au webinaire PACO est confirmée !
 Date : ${webinarDate}
 Format : En ligne via Microsoft Teams
 
-Lien pour rejoindre le webinaire :
-${teamsLink}
+Lien pour accéder au webinaire :
+${platformJoinUrl}
 
-Conservez cet email pour le jour de l'événement.
+Cliquez sur le lien ci-dessus le jour du webinaire. Vous devrez être connecté(e) à votre compte ePavilion pour accéder à la réunion.
 
 ---
 Cet email a été envoyé automatiquement par la plateforme ePavilion de l'IFDD.
@@ -108,8 +109,7 @@ Deno.serve(async (req) => {
     }
 
     // 6. Build the PACO email
-    const teamsLink = PACO_TEAMS_LINK || 'https://teams.microsoft.com'
-    const emailText = buildPacoEmailText(recipient_name, teamsLink, PACO_WEBINAR_TITLE, PACO_WEBINAR_DATE)
+    const emailText = buildPacoEmailText(recipient_name, PACO_PLATFORM_JOIN_URL, PACO_WEBINAR_TITLE, PACO_WEBINAR_DATE)
 
     // 7. Send via Laravel endpoint
     const controller = new AbortController()

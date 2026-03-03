@@ -78,6 +78,16 @@
       "message": "Votre inscription au webinaire PACO est confirmée. Un email contenant le lien de connexion Teams vous a été envoyé. Veuillez également vérifier votre boîte de réception pour confirmer votre compte.",
       "checkEmail": "Vérifiez votre boîte email"
     },
+    "gateway": {
+      "loading": "Vérification en cours...",
+      "loginTitle": "Connexion requise",
+      "loginSubtitle": "Veuillez vous connecter pour accéder au webinaire PACO.",
+      "notRegisteredTitle": "Inscription requise",
+      "notRegisteredMessage": "Vous devez être inscrit(e) au webinaire PACO pour accéder à la réunion.",
+      "registerButton": "S'inscrire au webinaire",
+      "redirecting": "Redirection vers la réunion Teams...",
+      "error": "Une erreur est survenue. Veuillez réessayer."
+    },
     "errors": {
       "generic": "Une erreur est survenue. Veuillez réessayer.",
       "registration": "Erreur lors de l'inscription au webinaire.",

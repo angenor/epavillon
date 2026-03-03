@@ -78,6 +78,16 @@
       "message": "Your registration for the PACO webinar is confirmed. An email with the Teams connection link has been sent to you. Please also check your inbox to confirm your account.",
       "checkEmail": "Check your email"
     },
+    "gateway": {
+      "loading": "Verifying access...",
+      "loginTitle": "Login required",
+      "loginSubtitle": "Please log in to access the PACO webinar.",
+      "notRegisteredTitle": "Registration required",
+      "notRegisteredMessage": "You must be registered for the PACO webinar to access the meeting.",
+      "registerButton": "Register for the webinar",
+      "redirecting": "Redirecting to the Teams meeting...",
+      "error": "An error occurred. Please try again."
+    },
     "errors": {
       "generic": "An error occurred. Please try again.",
       "registration": "Error during webinar registration.",

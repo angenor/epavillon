@@ -11,15 +11,13 @@
     </p>
 
     <!-- Join button -->
-    <a
-      :href="teamsLink"
-      target="_blank"
-      rel="noopener noreferrer"
+    <router-link
+      :to="platformJoinLink"
       class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white font-medium py-3 px-6 rounded-lg transition cursor-pointer"
     >
       <font-awesome-icon :icon="['fas', 'video']" />
       {{ t('paco.join.joinButton') }}
-    </a>
+    </router-link>
 
     <!-- Copy link + Resend email -->
     <div class="mt-4 flex items-center justify-center gap-3">
@@ -53,26 +51,26 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuth } from '@/composables/useAuth'
 import { usePacoEmail } from '@/composables/paco/usePacoEmail'
-import { PACO_TEAMS_LINK } from '@/composables/paco/constants'
 
 const { t } = useI18n()
 const { user, profile } = useAuth()
 const { sendPacoEmail } = usePacoEmail()
 
-const teamsLink = PACO_TEAMS_LINK
+const platformJoinLink = '/paco/join'
 const linkCopied = ref(false)
 const resendingEmail = ref(false)
 const resendMessage = ref('')
 const resendError = ref(false)
 
 async function copyTeamsLink() {
+  const fullUrl = window.location.origin + platformJoinLink
   try {
-    await navigator.clipboard.writeText(teamsLink)
+    await navigator.clipboard.writeText(fullUrl)
     linkCopied.value = true
     setTimeout(() => { linkCopied.value = false }, 2000)
   } catch {
     const input = document.createElement('input')
-    input.value = teamsLink
+    input.value = fullUrl
     document.body.appendChild(input)
     input.select()
     document.execCommand('copy')

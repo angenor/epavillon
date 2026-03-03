@@ -375,6 +375,12 @@ const router = createRouter({
         }
       ]
     },
+    // PACO Webinar — gateway de vérification (pas de garde auth)
+    {
+      path: '/paco/join',
+      name: 'paco-join-gateway',
+      component: () => import('../views/paco/PacoJoinGateway.vue'),
+    },
     // PACO Webinar — page d'inscription isolée (pas de garde auth)
     {
       path: '/paco',

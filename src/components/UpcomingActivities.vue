@@ -189,6 +189,7 @@ import { onMounted, onUnmounted, ref, computed } from 'vue'
 import { useActivities } from '@/composables/useActivities'
 import { useRouter } from 'vue-router'
 import { supabase } from '@/composables/useSupabase'
+import { PACO_EVENT_ID } from '@/composables/paco/constants'
 import YouthClimateDayWidget from './YouthClimateDayWidget.vue'
 import SustainableFinanceDayWidget from './SustainableFinanceDayWidget.vue'
 import CyprusSeminarWidget from './CyprusSeminarWidget.vue'
@@ -412,7 +413,9 @@ export default {
       }))
 
       // Filtrer pour ne garder que les événements avec des activités à afficher
+      // Exclure l'événement PACO (page dédiée /paco)
       return mappedEvents.filter(event =>
+        event.id !== PACO_EVENT_ID &&
         event.filteredActivities && event.filteredActivities.activities.length > 0
       )
     })
