@@ -56,7 +56,8 @@
       "Bash(bash .specify/scripts/bash/check-prerequisites.sh --json --paths-only)",
       "Bash(bash .specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks)",
       "Bash(git -C /Users/mac/Documents/projets/IFDD/epavillonvue rev-parse --git-dir)",
-      "Bash(lsof -ti:5173)"
+      "Bash(lsof -ti:5173)",
+      "Bash(git merge 002-secure-teams-link)"
     ],
     "deny": [],
     "ask": [],
