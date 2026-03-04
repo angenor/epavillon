@@ -223,6 +223,20 @@ export default {
         featured: true
       },
       {
+        id: 'mock-written-kaully',
+        type: 'written',
+        photo_url: '/images/temoignages/Mme_Kaully_Tirouvi_Maurice.png',
+        testimonial_text: 'Les sessions de formation que j\'ai suivies à Maurice et au Ghana se sont révélées particulièrement pertinentes et efficaces, les simulations de négociation reflétant les réalités rencontrées lors de la CdP30.',
+        user: {
+          first_name: 'Kaully',
+          last_name: 'Tirouvi',
+          organization: {
+            name: 'Négociatrice bénéficiaire, île Maurice'
+          }
+        },
+        featured: true
+      },
+      {
         id: 'mock-written-2',
         type: 'written',
         photo_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800',
