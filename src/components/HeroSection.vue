@@ -237,6 +237,20 @@ export default {
         featured: true
       },
       {
+        id: 'mock-written-constance',
+        type: 'written',
+        photo_url: '/images/temoignages/Mme_Constance_Constance_Genevee.jpg',
+        testimonial_text: 'Cette année encore, l\'OIF a permis à ma délégation à la COP 30, de porter la voix des communautés vulnérables face aux changements climatiques. Je suis fière d\'avoir été impliquée dans l\'organisation de la Journée de la Jeunesse qui a connu un franc succès, ainsi que d\'avoir pris part à des temps forts tels que la Journée de la Finance et le Bilan de la première semaine de négociations. Dans un contexte largement dominé par l\'anglais, le pavillon de l\'OIF offre aux francophones un espace essentiel d\'expression et de visibilité.',
+        user: {
+          first_name: 'Constance',
+          last_name: 'Genevée',
+          organization: {
+            name: 'Délégation du Bénin'
+          }
+        },
+        featured: true
+      },
+      {
         id: 'mock-written-2',
         type: 'written',
         photo_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800',
