@@ -4,10 +4,11 @@
     <div class="flex items-start justify-center py-6 px-4 sm:px-6 lg:py-8 lg:px-8">
       <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-12 items-start">
 
-        <!-- Left: PACO Info (below on mobile, left on desktop) -->
+        <!-- Left : PACO Info (below on mobile, left on desktop) -->
         <div class="lg:col-span-3 order-2 lg:order-1">
           <PacoPresentation />
         </div>
+
 
         <!-- Right: Action panel (top on mobile, sticky right on desktop) -->
         <div class="lg:col-span-2 lg:sticky lg:top-24 order-1 lg:order-2 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:scrollbar-thin lg:scrollbar-thumb-white/20 lg:scrollbar-track-transparent">
