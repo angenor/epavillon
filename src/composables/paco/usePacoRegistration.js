@@ -66,38 +66,82 @@ export function usePacoRegistration() {
   /**
    * Register a user for the PACO webinar activity.
    * @param {string} userId
-   * @returns {Promise<boolean>} true if registration succeeded
+   * @returns {Promise<string|null>} registration_id (UUID) on success, null on failure
    */
   const registerForPaco = async (userId) => {
     loading.value = true
     error.value = null
 
     try {
-      const { error: insertError } = await supabase
+      const { data, error: insertError } = await supabase
         .from('activity_registrations')
         .insert({
           activity_id: PACO_ACTIVITY_ID,
           user_id: userId,
           registration_type: 'user'
         })
+        .select('id')
+        .single()
 
       if (insertError) {
         // Unique constraint violation means already registered
         if (insertError.code === '23505') {
           isRegistered.value = true
-          return true
+          const { data: existing } = await supabase
+            .from('activity_registrations')
+            .select('id')
+            .eq('activity_id', PACO_ACTIVITY_ID)
+            .eq('user_id', userId)
+            .single()
+          return existing?.id || null
         }
         throw insertError
       }
 
       isRegistered.value = true
-      return true
+      return data?.id || null
     } catch (err) {
       console.error('Error registering for PACO:', err)
       error.value = err.message
-      return false
+      return null
     } finally {
       loading.value = false
+    }
+  }
+
+  /**
+   * Insert demographic data for a PACO registration.
+   * @param {string} registrationId - UUID from activity_registrations
+   * @param {Object} demographicData - { gender, ageProfile, city, countryId, professionalStatus, organization, recordingConsent }
+   * @returns {Promise<boolean>} true if insert succeeded
+   */
+  const insertDemographicData = async (registrationId, demographicData) => {
+    try {
+      const { error: insertError } = await supabase
+        .from('paco_demographic_data')
+        .insert({
+          registration_id: registrationId,
+          gender: demographicData.gender,
+          age_profile: demographicData.ageProfile,
+          city: demographicData.city.trim(),
+          country_id: demographicData.countryId,
+          professional_status: demographicData.professionalStatus,
+          organization: demographicData.organization?.trim() || null,
+          recording_consent: demographicData.recordingConsent
+        })
+
+      if (insertError) {
+        if (insertError.code === '23505') {
+          console.warn('Demographic data already exists for this registration')
+          return true
+        }
+        throw insertError
+      }
+
+      return true
+    } catch (err) {
+      console.error('Error inserting demographic data:', err)
+      return false
     }
   }
 
@@ -107,6 +151,7 @@ export function usePacoRegistration() {
     isRegistered,
     checkEmailExists,
     checkPacoRegistration,
-    registerForPaco
+    registerForPaco,
+    insertDemographicData
   }
 }

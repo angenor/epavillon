@@ -108,7 +108,7 @@ const { t } = useI18n()
 const { isAuthenticated, user, profile } = useAuth()
 
 // PACO composables
-const { checkEmailExists, checkPacoRegistration, registerForPaco } = usePacoRegistration()
+const { checkEmailExists, checkPacoRegistration, registerForPaco, insertDemographicData } = usePacoRegistration()
 const { sendPacoEmail } = usePacoEmail()
 
 // State machine
@@ -183,25 +183,8 @@ async function handleLoginSuccess({ userId, email }) {
     if (alreadyRegistered) {
       step.value = 'join'
     } else {
-      // Register for PACO
-      const registered = await registerForPaco(userId)
-      if (!registered) {
-        globalError.value = t('paco.errors.registration')
-        step.value = 'email-check'
-        return
-      }
-
-      // Send confirmation email (best-effort — don't block join on failure)
-      try {
-        const userName = profile.value
-          ? `${profile.value.first_name || ''} ${profile.value.last_name || ''}`.trim()
-          : email
-        await sendPacoEmail(email, userName || email)
-      } catch (emailErr) {
-        console.warn('Email sending failed (non-blocking):', emailErr)
-      }
-
-      step.value = 'join'
+      // Redirect to activity-register so user fills demographic form
+      step.value = 'activity-register'
     }
   } catch (err) {
     console.error('Post-login flow error:', err)
@@ -215,17 +198,22 @@ async function handleLoginSuccess({ userId, email }) {
  * Handle successful registration from PacoRegisterForm.
  * Register for PACO activity and send email.
  */
-async function handleRegisterSuccess({ userId, email, name }) {
+async function handleRegisterSuccess({ userId, email, name, demographicData }) {
   pageLoading.value = true
   globalError.value = ''
 
   try {
     // Register for PACO activity
-    const registered = await registerForPaco(userId)
-    if (!registered) {
+    const registrationId = await registerForPaco(userId)
+    if (!registrationId) {
       globalError.value = t('paco.errors.registration')
       step.value = 'email-check'
       return
+    }
+
+    // Insert demographic data (graceful — don't block success if it fails)
+    if (demographicData) {
+      await insertDemographicData(registrationId, demographicData)
     }
 
     // Send confirmation email (best-effort — don't block success on failure)

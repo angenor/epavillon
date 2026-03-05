@@ -68,6 +68,55 @@
         />
       </div>
 
+      <!-- Gender -->
+      <div>
+        <label class="block text-sm font-medium text-white/70 mb-1">
+          {{ t('paco.demographic.genderLabel') }}
+        </label>
+        <div class="flex gap-4">
+          <label class="flex items-center gap-2 cursor-pointer text-sm text-white/80">
+            <input type="radio" v-model="form.gender" value="male" required class="accent-green-500" />
+            {{ t('paco.demographic.male') }}
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-sm text-white/80">
+            <input type="radio" v-model="form.gender" value="female" required class="accent-green-500" />
+            {{ t('paco.demographic.female') }}
+          </label>
+        </div>
+      </div>
+
+      <!-- Age Profile -->
+      <div>
+        <label class="block text-sm font-medium text-white/70 mb-1">
+          {{ t('paco.demographic.ageProfileLabel') }}
+        </label>
+        <div class="flex gap-4">
+          <label class="flex items-center gap-2 cursor-pointer text-sm text-white/80">
+            <input type="radio" v-model="form.ageProfile" value="over_35" required class="accent-green-500" />
+            {{ t('paco.demographic.over35') }}
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-sm text-white/80">
+            <input type="radio" v-model="form.ageProfile" value="under_35" required class="accent-green-500" />
+            {{ t('paco.demographic.under35') }}
+          </label>
+        </div>
+      </div>
+
+      <!-- City -->
+      <div>
+        <label for="paco-city" class="block text-sm font-medium text-white/70 mb-1">
+          {{ t('paco.demographic.cityLabel') }}
+        </label>
+        <input
+          id="paco-city"
+          v-model="form.city"
+          type="text"
+          :placeholder="t('paco.demographic.cityPlaceholder')"
+          required
+          class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white placeholder-white/30 focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition backdrop-blur-sm text-sm"
+        />
+      </div>
+
       <!-- Country -->
       <div>
         <label for="paco-country" class="block text-sm font-medium text-white/70 mb-1">
@@ -86,6 +135,25 @@
         </select>
       </div>
 
+      <!-- Professional Status -->
+      <div>
+        <label for="paco-status" class="block text-sm font-medium text-white/70 mb-1">
+          {{ t('paco.demographic.professionalStatusLabel') }}
+        </label>
+        <select
+          id="paco-status"
+          v-model="form.professionalStatus"
+          required
+          class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition cursor-pointer text-sm"
+        >
+          <option value="" disabled class="bg-gray-800 text-white">{{ t('paco.demographic.professionalStatusPlaceholder') }}</option>
+          <option value="employed" class="bg-gray-800 text-white">{{ t('paco.demographic.employed') }}</option>
+          <option value="student" class="bg-gray-800 text-white">{{ t('paco.demographic.student') }}</option>
+          <option value="unemployed" class="bg-gray-800 text-white">{{ t('paco.demographic.unemployed') }}</option>
+          <option value="entrepreneur" class="bg-gray-800 text-white">{{ t('paco.demographic.entrepreneur') }}</option>
+        </select>
+      </div>
+
       <!-- Organization -->
       <div>
         <label for="paco-organization" class="block text-sm font-medium text-white/70 mb-1">
@@ -98,6 +166,19 @@
           :placeholder="t('paco.register.organizationPlaceholder')"
           class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white placeholder-white/30 focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition backdrop-blur-sm text-sm"
         />
+      </div>
+
+      <!-- Recording Consent -->
+      <div>
+        <label class="flex items-start gap-2 cursor-pointer text-sm text-white/80">
+          <input
+            type="checkbox"
+            v-model="form.recordingConsent"
+            required
+            class="accent-green-500 mt-0.5 shrink-0"
+          />
+          <span>{{ t('paco.demographic.recordingConsent') }}</span>
+        </label>
       </div>
 
       <!-- Error message -->
@@ -147,7 +228,12 @@ const form = reactive({
   lastName: '',
   password: '',
   countryId: '',
-  organizationName: ''
+  organizationName: '',
+  gender: '',
+  ageProfile: '',
+  city: '',
+  professionalStatus: '',
+  recordingConsent: false
 })
 
 const submitting = ref(false)
@@ -215,11 +301,20 @@ const handleSubmit = async () => {
         .eq('id', authData.user.id)
     }
 
-    // 4. Emit success with user data
+    // 4. Emit success with user data and demographic data
     emit('register-success', {
       userId: authData.user.id,
       email: props.email,
-      name: `${form.firstName} ${form.lastName}`.trim()
+      name: `${form.firstName} ${form.lastName}`.trim(),
+      demographicData: {
+        gender: form.gender,
+        ageProfile: form.ageProfile,
+        city: form.city,
+        countryId: form.countryId,
+        professionalStatus: form.professionalStatus,
+        organization: form.organizationName,
+        recordingConsent: form.recordingConsent
+      }
     })
   } catch (err) {
     console.error('Registration error:', err)
