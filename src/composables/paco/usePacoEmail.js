@@ -20,32 +20,15 @@ export function usePacoEmail() {
     success.value = false
 
     const PACO_PLATFORM_JOIN_URL = 'https://epavillonclimatique.francophonie.org/paco/join'
-    const PACO_WEBINAR_TITLE = 'Webinaire PACO - Priorites d\'Adaptation en Afrique Centrale et de l\'Ouest'
-    const PACO_WEBINAR_DATE = 'Date a confirmer'
 
-    const emailContent = `Bonjour ${recipientName},
-
-Votre inscription au webinaire PACO est confirmee !
-
-Evenement : ${PACO_WEBINAR_TITLE}
-Date : ${PACO_WEBINAR_DATE}
-Format : En ligne via Microsoft Teams
-
-Lien pour acceder au webinaire :
-${PACO_PLATFORM_JOIN_URL}
-
-Cliquez sur le lien ci-dessus le jour du webinaire. Vous devrez etre connecte(e) a votre compte ePavilion pour acceder a la reunion.
-
----
-Cet email a ete envoye automatiquement par la plateforme ePavilion de l'IFDD.
-Institut de la Francophonie pour le Developpement Durable`
+    const emailContent = `Bonjour ${recipientName},\n\nVotre inscription au webinaire PACO est confirmee.\n\nLien : ${PACO_PLATFORM_JOIN_URL}\n\nCordialement,\nL'equipe IFDD`
 
     try {
       const { data, error: functionError } = await supabase.functions.invoke('send-email', {
         body: {
           mode: 'paco',
           email_type: 'simple',
-          subject: 'Confirmation d\'inscription - Webinaire PACO',
+          subject: 'Confirmation inscription - Webinaire PACO',
           content: emailContent,
           recipients: {
             to: [recipientEmail]
