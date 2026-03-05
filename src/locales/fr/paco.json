@@ -136,6 +136,19 @@
       "redirecting": "Redirection vers la réunion Teams...",
       "error": "Une erreur est survenue. Veuillez réessayer."
     },
+    "verifyEmail": {
+      "title": "Vérifiez votre email",
+      "subtitle": "Un email de vérification a été envoyé à {email}. Cliquez sur le lien dans l'email pour finaliser votre inscription au webinaire.",
+      "resendButton": "Renvoyer l'email de vérification",
+      "resending": "Envoi en cours...",
+      "resent": "Email renvoyé avec succès !",
+      "resendError": "Erreur lors de l'envoi. Veuillez réessayer.",
+      "waitingTitle": "En attente de vérification",
+      "checkInbox": "Vérifiez votre boîte de réception et vos spams",
+      "autoFinalize": "Finalisation de votre inscription...",
+      "autoFinalizeSuccess": "Inscription au webinaire finalisée !",
+      "autoFinalizeError": "Erreur lors de la finalisation. Veuillez réessayer."
+    },
     "errors": {
       "generic": "Une erreur est survenue. Veuillez réessayer.",
       "registration": "Erreur lors de l'inscription au webinaire.",

@@ -136,6 +136,19 @@
       "redirecting": "Redirecting to the Teams meeting...",
       "error": "An error occurred. Please try again."
     },
+    "verifyEmail": {
+      "title": "Verify your email",
+      "subtitle": "A verification email has been sent to {email}. Click the link in the email to complete your webinar registration.",
+      "resendButton": "Resend verification email",
+      "resending": "Sending...",
+      "resent": "Email resent successfully!",
+      "resendError": "Error sending email. Please try again.",
+      "waitingTitle": "Waiting for verification",
+      "checkInbox": "Check your inbox and spam folder",
+      "autoFinalize": "Finalizing your registration...",
+      "autoFinalizeSuccess": "Webinar registration complete!",
+      "autoFinalizeError": "Error finalizing registration. Please try again."
+    },
     "errors": {
       "generic": "An error occurred. Please try again.",
       "registration": "Error during webinar registration.",

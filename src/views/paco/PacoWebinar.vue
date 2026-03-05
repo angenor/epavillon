@@ -50,6 +50,12 @@
               @back="resetToEmailCheck"
             />
 
+            <!-- Step: verify-email -->
+            <PacoEmailVerification
+              v-else-if="step === 'verify-email'"
+              :email="checkedEmail"
+            />
+
             <!-- Step: activity-register -->
             <PacoActivityRegister
               v-else-if="step === 'activity-register'"
@@ -93,7 +99,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuth } from '@/composables/useAuth'
-import { usePacoRegistration } from '@/composables/paco/usePacoRegistration'
+import { usePacoRegistration, finalizePacoRegistration, getPendingRegistration } from '@/composables/paco/usePacoRegistration'
 import { usePacoEmail } from '@/composables/paco/usePacoEmail'
 import PacoPresentation from '@/components/paco/PacoPresentation.vue'
 import PacoEmailCheck from '@/components/paco/PacoEmailCheck.vue'
@@ -101,6 +107,7 @@ import PacoLoginForm from '@/components/paco/PacoLoginForm.vue'
 import PacoRegisterForm from '@/components/paco/PacoRegisterForm.vue'
 import PacoActivityRegister from '@/components/paco/PacoActivityRegister.vue'
 import PacoJoinSection from '@/components/paco/PacoJoinSection.vue'
+import PacoEmailVerification from '@/components/paco/PacoEmailVerification.vue'
 
 const { t } = useI18n()
 
@@ -108,11 +115,11 @@ const { t } = useI18n()
 const { isAuthenticated, user, profile } = useAuth()
 
 // PACO composables
-const { checkEmailExists, checkPacoRegistration, registerForPaco, insertDemographicData } = usePacoRegistration()
+const { checkEmailExists, checkPacoRegistration } = usePacoRegistration()
 const { sendPacoEmail } = usePacoEmail()
 
 // State machine
-const step = ref('email-check') // email-check | login | register | activity-register | success | join
+const step = ref('email-check') // email-check | login | register | verify-email | activity-register | success | join
 const pageLoading = ref(true)
 const emailCheckLoading = ref(false)
 const checkedEmail = ref('')
@@ -125,12 +132,51 @@ onMounted(async () => {
   await checkInitialState()
 })
 
-// Watch for auth state changes (e.g. login from another tab)
+// Watch for auth state changes (e.g. login from another tab or returning user)
 watch(isAuthenticated, async (newVal) => {
-  if (newVal && step.value === 'email-check') {
+  if (newVal && (step.value === 'email-check' || step.value === 'verify-email')) {
     await checkInitialState()
   }
 })
+
+// Watch for email verification (user verified in another tab or returned after verification)
+watch(
+  () => user.value?.email_confirmed_at,
+  async (newVal, oldVal) => {
+    if (newVal && !oldVal && step.value === 'verify-email') {
+      // Email just got confirmed — attempt auto-finalization
+      pageLoading.value = true
+      globalError.value = ''
+
+      try {
+        const pending = getPendingRegistration(user.value.id)
+        if (pending) {
+          const result = await finalizePacoRegistration(user.value.id)
+          if (result.success) {
+            try {
+              await sendPacoEmail(pending.email, pending.name || pending.email)
+            } catch (emailErr) {
+              console.warn('Email sending failed (non-blocking):', emailErr)
+            }
+            step.value = 'join'
+          } else {
+            step.value = 'activity-register'
+          }
+        } else {
+          // No sessionStorage data — check if already registered or go to activity-register
+          const registered = await checkPacoRegistration(user.value.id)
+          step.value = registered ? 'join' : 'activity-register'
+        }
+      } catch (err) {
+        console.error('Error during auto-finalization:', err)
+        globalError.value = t('paco.errors.registration')
+        step.value = 'activity-register'
+      } finally {
+        pageLoading.value = false
+      }
+    }
+  }
+)
 
 async function checkInitialState() {
   pageLoading.value = true
@@ -138,8 +184,38 @@ async function checkInitialState() {
 
   try {
     if (isAuthenticated.value && user.value) {
+      // Check if email is verified
+      if (!user.value.email_confirmed_at) {
+        // Email not verified yet — show verification screen
+        checkedEmail.value = user.value.email
+        step.value = 'verify-email'
+        return
+      }
+
+      // Email verified — check PACO registration
       const registered = await checkPacoRegistration(user.value.id)
-      step.value = registered ? 'join' : 'activity-register'
+      if (registered) {
+        step.value = 'join'
+      } else {
+        // Try auto-finalization from sessionStorage
+        const pending = getPendingRegistration(user.value.id)
+        if (pending) {
+          const result = await finalizePacoRegistration(user.value.id)
+          if (result.success) {
+            // Send Teams link email (best-effort)
+            try {
+              await sendPacoEmail(pending.email, pending.name || pending.email)
+            } catch (emailErr) {
+              console.warn('Email sending failed (non-blocking):', emailErr)
+            }
+            step.value = 'join'
+          } else {
+            step.value = 'activity-register'
+          }
+        } else {
+          step.value = 'activity-register'
+        }
+      }
     } else {
       step.value = 'email-check'
     }
@@ -196,40 +272,11 @@ async function handleLoginSuccess({ userId, email }) {
 
 /**
  * Handle successful registration from PacoRegisterForm.
- * Register for PACO activity and send email.
+ * Transition to verify-email step (registration will be finalized after email verification).
  */
-async function handleRegisterSuccess({ userId, email, name, demographicData }) {
-  pageLoading.value = true
-  globalError.value = ''
-
-  try {
-    // Register for PACO activity
-    const registrationId = await registerForPaco(userId)
-    if (!registrationId) {
-      globalError.value = t('paco.errors.registration')
-      step.value = 'email-check'
-      return
-    }
-
-    // Insert demographic data (graceful — don't block success if it fails)
-    if (demographicData) {
-      await insertDemographicData(registrationId, demographicData)
-    }
-
-    // Send confirmation email (best-effort — don't block success on failure)
-    try {
-      await sendPacoEmail(email, name || email)
-    } catch (emailErr) {
-      console.warn('Email sending failed (non-blocking):', emailErr)
-    }
-
-    step.value = 'success'
-  } catch (err) {
-    console.error('Post-register flow error:', err)
-    globalError.value = t('paco.errors.registration')
-  } finally {
-    pageLoading.value = false
-  }
+function handleRegisterSuccess({ userId, email, name }) {
+  checkedEmail.value = email
+  step.value = 'verify-email'
 }
 
 /**

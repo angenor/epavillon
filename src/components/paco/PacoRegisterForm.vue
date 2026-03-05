@@ -212,6 +212,7 @@ import { ref, reactive, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { supabase } from '@/composables/useSupabase'
 import { useCountries } from '@/composables/useCountries'
+import { savePendingRegistration } from '@/composables/paco/usePacoRegistration'
 
 const { t, locale } = useI18n()
 
@@ -257,7 +258,7 @@ const handleSubmit = async () => {
           first_name: form.firstName,
           last_name: form.lastName
         },
-        emailRedirectTo: `${window.location.origin}/login`
+        emailRedirectTo: `${window.location.origin}/paco`
       }
     })
 
@@ -301,8 +302,8 @@ const handleSubmit = async () => {
         .eq('id', authData.user.id)
     }
 
-    // 4. Emit success with user data and demographic data
-    emit('register-success', {
+    // 4. Save pending registration data to sessionStorage (for post-email-verification finalization)
+    savePendingRegistration({
       userId: authData.user.id,
       email: props.email,
       name: `${form.firstName} ${form.lastName}`.trim(),
@@ -315,6 +316,13 @@ const handleSubmit = async () => {
         organization: form.organizationName,
         recordingConsent: form.recordingConsent
       }
+    })
+
+    // 5. Emit success (demographic data now in sessionStorage, not in payload)
+    emit('register-success', {
+      userId: authData.user.id,
+      email: props.email,
+      name: `${form.firstName} ${form.lastName}`.trim()
     })
   } catch (err) {
     console.error('Registration error:', err)

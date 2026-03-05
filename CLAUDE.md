@@ -257,6 +257,7 @@ Consultez `DEPLOYMENT_SEO.md` pour :
 - PostgreSQL via Supabase (table existante `activity_registrations`) (002-secure-teams-link)
 - JavaScript (Vue 3.5+) + Vue 3, Vue Router 4, Pinia, Supabase JS, TailwindCSS v4, Vue i18n, Font Awesome (003-paco-registration-stats)
 - PostgreSQL via Supabase (table existante `activity_registrations`, nouvelle table `paco_demographic_data`) (003-paco-registration-stats)
+- PostgreSQL via Supabase (tables existantes `activity_registrations`, `paco_demographic_data`, `users`) + sessionStorage côté client pour données temporaires (004-paco-email-verify)
 
 ## Recent Changes
 - 001-paco-webinar: Added JavaScript (Vue 3.5+) + TypeScript (Edge Function Deno) + Vue 3, Vue Router 4, Pinia, Supabase JS, TailwindCSS v4, Vue i18n, Font Awesome

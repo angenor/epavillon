@@ -2,6 +2,92 @@ import { ref } from 'vue'
 import { supabase } from '@/composables/useSupabase'
 import { PACO_ACTIVITY_ID } from '@/composables/paco/constants'
 
+const PENDING_REGISTRATION_KEY = 'paco_pending_registration'
+const PENDING_MAX_AGE_MS = 24 * 60 * 60 * 1000 // 24 hours
+
+/**
+ * Save pending registration data to sessionStorage.
+ * @param {Object} data - { userId, email, name, demographicData, timestamp? }
+ */
+export function savePendingRegistration(data) {
+  const payload = {
+    ...data,
+    timestamp: data.timestamp || new Date().toISOString()
+  }
+  sessionStorage.setItem(PENDING_REGISTRATION_KEY, JSON.stringify(payload))
+}
+
+/**
+ * Retrieve pending registration from sessionStorage.
+ * Returns null if missing, expired (>24h), or userId mismatch.
+ * @param {string} [currentUserId] - optional userId to validate against
+ * @returns {Object|null}
+ */
+export function getPendingRegistration(currentUserId) {
+  try {
+    const raw = sessionStorage.getItem(PENDING_REGISTRATION_KEY)
+    if (!raw) return null
+
+    const data = JSON.parse(raw)
+    if (!data || !data.userId || !data.timestamp) return null
+
+    // Check expiration
+    const age = Date.now() - new Date(data.timestamp).getTime()
+    if (age > PENDING_MAX_AGE_MS) {
+      clearPendingRegistration()
+      return null
+    }
+
+    // Check userId match if provided
+    if (currentUserId && data.userId !== currentUserId) {
+      return null
+    }
+
+    return data
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Remove pending registration from sessionStorage.
+ */
+export function clearPendingRegistration() {
+  sessionStorage.removeItem(PENDING_REGISTRATION_KEY)
+}
+
+/**
+ * Finalize a PACO registration after email verification.
+ * Reads pending data from sessionStorage, registers for the webinar, inserts demographic data, then clears storage.
+ * @param {string} userId
+ * @returns {Promise<{ success: boolean, registrationId: string|null }>}
+ */
+export async function finalizePacoRegistration(userId) {
+  const pending = getPendingRegistration(userId)
+  if (!pending) {
+    return { success: false, registrationId: null }
+  }
+
+  try {
+    const { registerForPaco, insertDemographicData } = usePacoRegistration()
+
+    const registrationId = await registerForPaco(userId)
+    if (!registrationId) {
+      return { success: false, registrationId: null }
+    }
+
+    if (pending.demographicData) {
+      await insertDemographicData(registrationId, pending.demographicData)
+    }
+
+    clearPendingRegistration()
+    return { success: true, registrationId }
+  } catch (err) {
+    console.error('Error finalizing PACO registration:', err)
+    return { success: false, registrationId: null }
+  }
+}
+
 export function usePacoRegistration() {
   const loading = ref(false)
   const error = ref(null)
