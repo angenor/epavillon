@@ -116,6 +116,7 @@ const pageLoading = ref(true)
 const emailCheckLoading = ref(false)
 const checkedEmail = ref('')
 const globalError = ref('')
+const pacoEmailSent = ref(false) // Guard to prevent sending the PACO email multiple times
 
 /**
  * On mount: check if already authenticated and registered
@@ -145,10 +146,13 @@ watch(
         if (pending) {
           const result = await finalizePacoRegistration(user.value.id)
           if (result.success) {
-            try {
-              await sendPacoEmail(pending.email, pending.name || pending.email)
-            } catch (emailErr) {
-              console.warn('Email sending failed (non-blocking):', emailErr)
+            if (!pacoEmailSent.value) {
+              pacoEmailSent.value = true
+              try {
+                await sendPacoEmail(pending.email, pending.name || pending.email)
+              } catch (emailErr) {
+                console.warn('Email sending failed (non-blocking):', emailErr)
+              }
             }
             step.value = 'join'
           } else {
@@ -194,11 +198,13 @@ async function checkInitialState() {
         if (pending) {
           const result = await finalizePacoRegistration(user.value.id)
           if (result.success) {
-            // Send Teams link email (best-effort)
-            try {
-              await sendPacoEmail(pending.email, pending.name || pending.email)
-            } catch (emailErr) {
-              console.warn('Email sending failed (non-blocking):', emailErr)
+            if (!pacoEmailSent.value) {
+              pacoEmailSent.value = true
+              try {
+                await sendPacoEmail(pending.email, pending.name || pending.email)
+              } catch (emailErr) {
+                console.warn('Email sending failed (non-blocking):', emailErr)
+              }
             }
             step.value = 'join'
           } else {
