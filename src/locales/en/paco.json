@@ -12,6 +12,59 @@
       "tba": "Speakers to be announced"
     },
     "organized_by": "Organized by IFDD",
+    "presentation": {
+      "title": "Local Authorities Facing Climate Change",
+      "subtitle": "Governance, Planning and Financing for Adaptation",
+      "seriesLabel": "Climate Webinars",
+      "editionLabel": "Societies and Communities",
+      "contextTitle": "Context",
+      "context": "In French-speaking countries, decentralized authorities play a strategic role in the concrete implementation of climate change adaptation policies. Located closest to the populations, they are responsible for local planning, land use management and coordination of essential services. However, despite their central position, local authorities face several challenges: limited financial resources, insufficient technical capacities, poor access to climate data and lack of integration of local knowledge into territorial plans.",
+      "objectivesTitle": "Objectives",
+      "objectiveGeneral": "Strengthen the capacities of local authorities to plan, finance and implement climate change adaptation actions.",
+      "objectives": {
+        "0": "Present the roles, responsibilities and levers of action of local authorities in climate adaptation",
+        "1": "Highlight successful experiences in territorial adaptation planning and financing",
+        "2": "Identify needs for capacity building, financing and local governance tools",
+        "3": "Present innovative approaches to financing adaptation at the local level"
+      },
+      "contentTitle": "Content and Themes",
+      "content": {
+        "0": { "title": "Local Governance", "desc": "Contribution of local authorities to the implementation of NDCs, NAPs and sectoral policies" },
+        "1": { "title": "Territorial Planning", "desc": "Territorial diagnostics, climate risk management and resilient infrastructure" },
+        "2": { "title": "Local Financing", "desc": "Access to international funds, green budgets, local taxation and public-private partnerships" },
+        "3": { "title": "Case Studies", "desc": "Experiences of rural and urban municipalities: water management, resilient agriculture, nature-based solutions" }
+      },
+      "targetTitle": "Target Audience",
+      "targets": {
+        "0": "Local authorities",
+        "1": "Public institutions",
+        "2": "Civil society",
+        "3": "Young leaders",
+        "4": "Academics and researchers",
+        "5": "Donors and funders",
+        "6": "Media"
+      },
+      "panelistsTitle": "Panelists",
+      "panelists": {
+        "martin-phipps": { "role": "Director, IFDD" },
+        "houdanon": { "role": "PACO Program Representative (GIZ)" },
+        "vallier": { "role": "Secretary General, AIMF" },
+        "lazare": { "role": "Project Officer, AIMF" }
+      },
+      "partnersTitle": "Partners",
+      "shareButton": "Share the webinar",
+      "shareCopied": "Link copied!",
+      "dateLabel": "March 26, 2026",
+      "timeLabel": "2:00 PM – 3:30 PM GMT",
+      "formatLabel": "Online",
+      "languageLabel": "French",
+      "bannerPlaceholder": "PACO Webinar",
+      "status": {
+        "upcoming": "Upcoming",
+        "live": "Live",
+        "ended": "Ended"
+      }
+    },
     "emailCheck": {
       "title": "Register for the webinar",
       "subtitle": "Enter your email address to get started",

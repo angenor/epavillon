@@ -5,20 +5,20 @@
       class="fixed inset-x-0 top-16 bottom-0 bg-gray-900 bg-cover bg-center bg-no-repeat"
       style="background-image: url('https://www.aip.ci/wp-content/uploads/2025/07/Lancement-du-PACO-a-Abidjan.jpg')"
     >
-      <div class="absolute inset-0 bg-gradient-to-br from-black/75 via-black/55 to-green-950/65"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-black/85 via-black/75 to-green-950/80"></div>
     </div>
 
     <!-- Content -->
-    <div class="relative z-10 flex items-center justify-center min-h-[calc(100vh-4rem)] py-6 px-4 sm:px-6 lg:py-8 lg:px-8">
-      <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-12 items-center">
+    <div class="relative z-10 flex items-start justify-center min-h-[calc(100vh-4rem)] py-6 px-4 sm:px-6 lg:py-8 lg:px-8">
+      <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-12 items-start">
 
         <!-- Left: PACO Info -->
         <div class="lg:col-span-3">
           <PacoPresentation />
         </div>
 
-        <!-- Right: Action panel -->
-        <div class="lg:col-span-2">
+        <!-- Right: Action panel (sticky on desktop) -->
+        <div class="lg:col-span-2 lg:sticky lg:top-24">
           <div class="bg-white/10 backdrop-blur-2xl border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/20">
 
             <!-- Loading -->

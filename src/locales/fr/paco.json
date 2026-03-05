@@ -12,6 +12,59 @@
       "tba": "Intervenants à confirmer"
     },
     "organized_by": "Organisé par l'IFDD",
+    "presentation": {
+      "title": "Collectivités locales face au changement climatique",
+      "subtitle": "Gouvernance, planification et financements pour l'adaptation",
+      "seriesLabel": "Webinaires sur le climat",
+      "editionLabel": "Sociétés et communautés",
+      "contextTitle": "Contexte",
+      "context": "Dans les pays francophones, les collectivités décentralisées jouent un rôle stratégique dans la mise en œuvre concrète des politiques d'adaptation au changement climatique. Situées au plus près des populations, elles sont responsables de la planification locale, de l'aménagement du territoire et de la coordination des services essentiels. Pourtant, malgré leur position centrale, les collectivités font face à plusieurs défis : ressources financières limitées, capacités techniques insuffisantes, faible accès aux données climatiques et manque d'intégration des savoirs locaux dans les plans territoriaux.",
+      "objectivesTitle": "Objectifs",
+      "objectiveGeneral": "Renforcer les capacités des collectivités locales pour planifier, financer et mettre en œuvre des actions d'adaptation au changement climatique.",
+      "objectives": {
+        "0": "Présenter les rôles, responsabilités et leviers d'action des collectivités locales dans l'adaptation climatique",
+        "1": "Mettre en lumière des expériences réussies de planification et de financement territorial de l'adaptation",
+        "2": "Identifier les besoins en renforcement de capacités, en financement et en outils de gouvernance locale",
+        "3": "Présenter des démarches innovantes de financement de l'adaptation à l'échelle locale"
+      },
+      "contentTitle": "Contenu et axes thématiques",
+      "content": {
+        "0": { "title": "Gouvernance locale", "desc": "Contribution des collectivités à la mise en œuvre des CDN, PNA et politiques sectorielles" },
+        "1": { "title": "Planification territoriale", "desc": "Diagnostics territoriaux, gestion des risques climatiques et infrastructures résilientes" },
+        "2": { "title": "Financement local", "desc": "Accès aux fonds internationaux, budgets verts, fiscalité locale et partenariats public-privé" },
+        "3": { "title": "Études de cas", "desc": "Expériences de communes rurales et urbaines : gestion de l'eau, agriculture résiliente, solutions fondées sur la nature" }
+      },
+      "targetTitle": "Public cible",
+      "targets": {
+        "0": "Collectivités locales",
+        "1": "Institutions publiques",
+        "2": "Société civile",
+        "3": "Jeunes leaders",
+        "4": "Universitaires et chercheurs",
+        "5": "Bailleurs de fonds",
+        "6": "Médias"
+      },
+      "panelistsTitle": "Panélistes",
+      "panelists": {
+        "martin-phipps": { "role": "Directrice IFDD" },
+        "houdanon": { "role": "Représentant du programme PACO (GIZ)" },
+        "vallier": { "role": "Délégué général, AIMF" },
+        "lazare": { "role": "Chargé de mission, AIMF" }
+      },
+      "partnersTitle": "Partenaires",
+      "shareButton": "Partager le webinaire",
+      "shareCopied": "Lien copié !",
+      "dateLabel": "26 mars 2026",
+      "timeLabel": "14h00 – 15h30 GMT",
+      "formatLabel": "En ligne",
+      "languageLabel": "Français",
+      "bannerPlaceholder": "Webinaire PACO",
+      "status": {
+        "upcoming": "À venir",
+        "live": "En cours",
+        "ended": "Terminé"
+      }
+    },
     "emailCheck": {
       "title": "Inscrivez-vous au webinaire",
       "subtitle": "Entrez votre adresse email pour commencer",
