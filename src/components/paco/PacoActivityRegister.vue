@@ -130,6 +130,7 @@
           v-model="form.organizationName"
           type="text"
           :placeholder="t('paco.activityRegister.organizationPlaceholder')"
+          required
           class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white placeholder-white/30 focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition backdrop-blur-sm text-sm"
         />
       </div>
