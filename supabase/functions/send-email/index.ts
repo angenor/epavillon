@@ -7,6 +7,9 @@ const LARAVEL_KEY = Deno.env.get('SUPABASE_CUSTOM_AUTH_LARAVEL_KEY') ?? '';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
+// PACO constants
+const PACO_ACTIVITY_ID = '00000000-0000-4000-a000-00000000a002';
+
 console.info('send-email function started');
 console.info('Environment check:', {
   hasSupabaseUrl: !!SUPABASE_URL,
@@ -146,30 +149,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Vérifier le rôle super_admin dans la table user_roles
-    const { data: userRoles, error: rolesError } = await supabaseClient
-      .from('user_roles')
-      .select('role, is_active')
-      .eq('user_id', user.id)
-      .eq('role', 'super_admin')
-      .eq('is_active', true)
-      .single();
-
-    if (rolesError || !userRoles) {
-      console.error('Unauthorized: User is not super_admin', { userId: user.id, error: rolesError });
-      return new Response(JSON.stringify({
-        error: 'Unauthorized: Only super administrators can send bulk emails'
-      }), {
-        status: 403,
-        headers: {
-          'Content-Type': 'application/json',
-          ...corsHeaders
-        }
-      });
-    }
-
-    console.log('Authenticated super_admin:', user.id);
-
+    // Parse payload first to check mode
     let payload;
     try {
       payload = await req.json();
@@ -185,6 +165,69 @@ Deno.serve(async (req) => {
           ...corsHeaders
         }
       });
+    }
+
+    // Authorization: PACO mode checks PACO registration, default mode checks super_admin
+    if (payload.mode === 'paco') {
+      // PACO mode: verify user is registered for the PACO webinar
+      const { data: registration, error: regError } = await supabaseClient
+        .from('activity_registrations')
+        .select('id')
+        .eq('activity_id', PACO_ACTIVITY_ID)
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (regError || !registration) {
+        console.error('Unauthorized: User not registered for PACO', { userId: user.id, error: regError });
+        return new Response(JSON.stringify({
+          error: 'Unauthorized: User not registered for PACO webinar'
+        }), {
+          status: 403,
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders
+          }
+        });
+      }
+
+      // PACO mode: restrict to single recipient (the user themselves)
+      if (payload.recipients?.to?.length > 1 || payload.recipients?.cc || payload.recipients?.bcc) {
+        return new Response(JSON.stringify({
+          error: 'PACO mode only allows sending to a single recipient'
+        }), {
+          status: 400,
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders
+          }
+        });
+      }
+
+      console.log('Authenticated PACO user:', user.id);
+    } else {
+      // Default mode: verify super_admin role
+      const { data: userRoles, error: rolesError } = await supabaseClient
+        .from('user_roles')
+        .select('role, is_active')
+        .eq('user_id', user.id)
+        .eq('role', 'super_admin')
+        .eq('is_active', true)
+        .single();
+
+      if (rolesError || !userRoles) {
+        console.error('Unauthorized: User is not super_admin', { userId: user.id, error: rolesError });
+        return new Response(JSON.stringify({
+          error: 'Unauthorized: Only super administrators can send bulk emails'
+        }), {
+          status: 403,
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders
+          }
+        });
+      }
+
+      console.log('Authenticated super_admin:', user.id);
     }
 
     // Extraire les données de l'email

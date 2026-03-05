@@ -57,12 +57,15 @@
       "Bash(bash .specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks)",
       "Bash(git -C /Users/mac/Documents/projets/IFDD/epavillonvue rev-parse --git-dir)",
       "Bash(lsof -ti:5173)",
-      "Bash(.specify/scripts/bash/update-agent-context.sh claude)"
+      "Bash(.specify/scripts/bash/update-agent-context.sh claude)",
+      "Bash(supabase secrets list)",
+      "Bash(npx supabase secrets list)"
     ],
     "deny": [],
     "ask": [],
     "additionalDirectories": [
-      "/Users/mac/Documents/projets/IFDD/epavillonvue/src/views"
+      "/Users/mac/Documents/projets/IFDD/epavillonvue/src/views",
+      "/Users/mac/.claude/projects/-Users-mac-Documents-projets-IFDD-epavillonvue"
     ]
   }
 }
