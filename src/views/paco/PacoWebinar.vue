@@ -18,7 +18,7 @@
         </div>
 
         <!-- Right: Action panel (top on mobile, sticky right on desktop) -->
-        <div class="lg:col-span-2 lg:sticky lg:top-24 order-1 lg:order-2">
+        <div class="lg:col-span-2 lg:sticky lg:top-24 order-1 lg:order-2 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:scrollbar-thin lg:scrollbar-thumb-white/20 lg:scrollbar-track-transparent">
           <div class="bg-white/10 backdrop-blur-2xl border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/20">
 
             <!-- Loading -->
