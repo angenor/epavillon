@@ -169,7 +169,7 @@
       "joinButton": "Rejoindre le webinaire",
       "copyLink": "Copier le lien",
       "linkCopied": "Lien copié !",
-      "resendEmail": "Renvoyer l'email de confirmation",
+      "resendEmail": "Renvoyer le lien de connexion",
       "resending": "Envoi en cours...",
       "emailSent": "Email envoyé avec succès !",
       "emailError": "Erreur lors de l'envoi de l'email. Veuillez réessayer."

@@ -21,7 +21,7 @@ export function usePacoEmail() {
 
     const PACO_PLATFORM_JOIN_URL = 'https://epavillonclimatique.francophonie.org/paco/join'
 
-    const emailContent = `Bonjour ${recipientName},\n\nVotre inscription au webinaire PACO est confirmee.\n\nLien : ${PACO_PLATFORM_JOIN_URL}\n\nCordialement,\nL'equipe IFDD`
+    const emailContent = `Bonjour ${recipientName},\n\nVotre inscription au webinaire PACO est confirmee.\n\nLien de connexion : ${PACO_PLATFORM_JOIN_URL}\n\nCordialement,\nL'equipe IFDD`
 
     try {
       const { data, error: functionError } = await supabase.functions.invoke('send-email', {

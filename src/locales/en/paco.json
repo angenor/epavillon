@@ -169,7 +169,7 @@
       "joinButton": "Join the webinar",
       "copyLink": "Copy link",
       "linkCopied": "Link copied!",
-      "resendEmail": "Resend confirmation email",
+      "resendEmail": "Resend connection link",
       "resending": "Sending...",
       "emailSent": "Email sent successfully!",
       "emailError": "Error sending the email. Please try again."
