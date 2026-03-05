@@ -43,6 +43,11 @@
     <p v-if="resendMessage" class="mt-2 text-sm" :class="resendError ? 'text-red-300' : 'text-green-400'">
       {{ resendMessage }}
     </p>
+
+    <!-- Partner logos -->
+    <div class="mt-8 pt-6 border-t border-white/10">
+      <PacoPartnerLogos :partners="webinar.partners" />
+    </div>
   </div>
 </template>
 
@@ -51,8 +56,11 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuth } from '@/composables/useAuth'
 import { usePacoEmail } from '@/composables/paco/usePacoEmail'
+import { usePacoWebinarData } from '@/composables/paco/usePacoWebinarData'
+import PacoPartnerLogos from './PacoPartnerLogos.vue'
 
 const { t } = useI18n()
+const { webinar } = usePacoWebinarData()
 const { user, profile } = useAuth()
 const { sendPacoEmail } = usePacoEmail()
 

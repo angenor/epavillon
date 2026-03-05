@@ -47,10 +47,11 @@ const WEBINAR_DATA = {
   ],
 
   partners: [
-    { id: 'ifdd', name: 'IFDD', logoUrl: null },
-    { id: 'giz', name: 'GIZ', logoUrl: null },
-    { id: 'aimf', name: 'AIMF', logoUrl: null },
-    { id: 'fonds-adaptation', name: 'Fonds d\'adaptation', logoUrl: null },
+    { id: 'ifdd', name: 'IFDD', logoUrl: '/logos/logo_paco/download.png' },
+    { id: 'giz', name: 'GIZ', logoUrl: '/logos/logo_paco/gizlogo-unternehmen-de-rgb-300.jpg' },
+    { id: 'iki', name: 'IKI', logoUrl: '/logos/logo_paco/csm_IKI_logo_GB_rgb_94743c4a81.png' },
+    { id: 'bmu', name: 'BMU', logoUrl: '/logos/logo_paco/BMU_2018_supported_Office_Farbe_fr300s.jpg' },
+    { id: 'pic', name: 'PIC', logoUrl: '/logos/logo_paco/Logo_PIC.png' },
   ],
 }
 

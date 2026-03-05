@@ -9,7 +9,7 @@
           v-if="partner.logoUrl"
           :src="partner.logoUrl"
           :alt="partner.name"
-          class="h-8 object-contain rounded"
+          class="h-20 object-contain rounded"
           loading="lazy"
         />
         <span
