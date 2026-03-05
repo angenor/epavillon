@@ -182,18 +182,39 @@ export function useActivities() {
     })
   }
 
-  // Computed pour déterminer le statut
+  // Computed pour déterminer le statut basé sur les dates réelles
+  // Logique alignée avec Detail.vue (actualEventStatus)
   const getEventStatus = (event) => {
-    const now = new Date()
-    const startDate = event.online_start_datetime || event.in_person_start_date
+    if (event.event_status === 'cancelled') return 'cancelled'
 
-    if (!startDate) return 'unknown'
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
 
-    const start = new Date(startDate)
+    let startDate = null
+    let endDate = null
 
-    if (event.event_status === 'ongoing') return 'ongoing'
-    if (start > now) return 'upcoming'
-    return 'past'
+    if (event.online_start_datetime) {
+      startDate = new Date(event.online_start_datetime)
+    } else if (event.in_person_start_date) {
+      startDate = new Date(event.in_person_start_date)
+    }
+
+    if (event.online_end_datetime) {
+      endDate = new Date(event.online_end_datetime)
+    } else if (event.in_person_end_date) {
+      endDate = new Date(event.in_person_end_date)
+    }
+
+    if (!startDate) return event.event_status || 'upcoming'
+
+    startDate.setHours(0, 0, 0, 0)
+    if (endDate) {
+      endDate.setHours(23, 59, 59, 999)
+    }
+
+    if (endDate && today > endDate) return 'completed'
+    if (today >= startDate && (!endDate || today <= endDate)) return 'ongoing'
+    return 'upcoming'
   }
 
   // Vérifier si une activité est en direct maintenant

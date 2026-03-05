@@ -47,7 +47,7 @@
             >
               <div class="flex items-center justify-between mb-2">
                 <span class="text-sm font-semibold" :class="getEventStatusColorClass(event)">
-                  {{ t(`events.status.${event.event_status}`) }}
+                  {{ t(`events.status.${getEventStatus(event)}`) }}
                 </span>
                 <span class="text-sm text-gray-500 dark:text-gray-400">
                   {{ formatEventDateRange(event) }}
@@ -94,6 +94,7 @@
 import { useI18n } from 'vue-i18n'
 import { onMounted, computed } from 'vue'
 import { useActivities } from '@/composables/useActivities'
+import { PACO_EVENT_ID } from '@/composables/paco/constants'
 
 export default {
   name: 'EventsSection',
@@ -117,9 +118,12 @@ export default {
     const displayedEvents = computed(() => {
       if (!events.value.length) return []
 
-      const ongoing = events.value.filter(e => getEventStatus(e) === 'ongoing')
-      const upcoming = events.value.filter(e => getEventStatus(e) === 'upcoming')
-      const completed = events.value.filter(e => getEventStatus(e) === 'completed')
+      // Exclude special PACO event (temporary event with dedicated page)
+      const filtered = events.value.filter(e => e.id !== PACO_EVENT_ID)
+
+      const ongoing = filtered.filter(e => getEventStatus(e) === 'ongoing')
+      const upcoming = filtered.filter(e => getEventStatus(e) === 'upcoming')
+      const completed = filtered.filter(e => getEventStatus(e) === 'completed')
 
       const result = []
       if (ongoing.length > 0) result.push(ongoing[0])
@@ -127,7 +131,7 @@ export default {
       if (completed.length > 0) result.push(completed[0])
 
       // Si on n'a pas 3 événements, compléter avec les autres
-      const remaining = events.value.filter(e => !result.includes(e))
+      const remaining = filtered.filter(e => !result.includes(e))
       while (result.length < 3 && remaining.length > 0) {
         result.push(remaining.shift())
       }
