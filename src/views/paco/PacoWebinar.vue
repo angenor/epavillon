@@ -1,15 +1,7 @@
 <template>
-  <div class="relative min-h-[calc(100vh-4rem)]">
-    <!-- Fixed background image -->
-    <div
-      class="fixed inset-x-0 top-16 bottom-0 bg-gray-900 bg-cover bg-center bg-no-repeat"
-      style="background-image: url('https://www.aip.ci/wp-content/uploads/2025/07/Lancement-du-PACO-a-Abidjan.jpg')"
-    >
-      <div class="absolute inset-0 bg-gradient-to-br from-black/92 via-black/85 to-green-950/88"></div>
-    </div>
-
+  <div class="min-h-[calc(100vh-4rem)] bg-gray-900">
     <!-- Content -->
-    <div class="relative z-10 flex items-start justify-center min-h-[calc(100vh-4rem)] py-6 px-4 sm:px-6 lg:py-8 lg:px-8">
+    <div class="flex items-start justify-center py-6 px-4 sm:px-6 lg:py-8 lg:px-8">
       <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-12 items-start">
 
         <!-- Left: PACO Info (below on mobile, left on desktop) -->

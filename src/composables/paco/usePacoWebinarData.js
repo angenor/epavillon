@@ -13,7 +13,7 @@ const WEBINAR_DATA = {
   endTime: '15:30',
   timezone: 'GMT',
   language: 'fr',
-  bannerUrl: 'https://www.aip.ci/wp-content/uploads/2025/07/Lancement-du-PACO-a-Abidjan.jpg',
+  bannerUrl: '/images/banniere_paco.jpg',
 
   panelists: [
     {
