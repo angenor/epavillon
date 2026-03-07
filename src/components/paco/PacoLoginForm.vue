@@ -82,7 +82,7 @@ const props = defineProps({
   email: { type: String, required: true }
 })
 
-const emit = defineEmits(['login-success', 'back'])
+const emit = defineEmits(['login-success', 'back', 'needs-verification'])
 
 const password = ref('')
 const submitting = ref(false)
@@ -99,6 +99,10 @@ const handleSubmit = async () => {
     })
 
     if (error) {
+      if (error.message?.includes('Email not confirmed')) {
+        emit('needs-verification', { email: props.email })
+        return
+      }
       errorMessage.value = t('paco.login.error')
       return
     }

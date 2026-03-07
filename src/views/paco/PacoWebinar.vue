@@ -32,6 +32,7 @@
               v-else-if="step === 'login'"
               :email="checkedEmail"
               @login-success="handleLoginSuccess"
+              @needs-verification="handleNeedsVerification"
               @back="resetToEmailCheck"
             />
 
@@ -271,6 +272,15 @@ async function handleEmailChecked(email) {
   } finally {
     emailCheckLoading.value = false
   }
+}
+
+/**
+ * Handle unverified email from PacoLoginForm.
+ * Redirect to verify-email step so user can enter OTP code.
+ */
+function handleNeedsVerification({ email }) {
+  checkedEmail.value = email
+  step.value = 'verify-email'
 }
 
 /**
