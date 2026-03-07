@@ -170,7 +170,13 @@
       "noRegistrants": "Aucun inscrit pour le moment.",
       "noStats": "Aucune statistique disponible.",
       "notSpecified": "Non renseigné",
-      "withDemographics": "Avec données démographiques"
+      "withDemographics": "Avec données démographiques",
+      "actions": "Actions",
+      "deleteRegistrant": "Supprimer l'inscrit",
+      "deleteConfirmTitle": "Confirmer la suppression",
+      "deleteConfirmMessage": "Voulez-vous vraiment supprimer cet inscrit ? Cette action est irréversible.",
+      "deleteConfirm": "Supprimer",
+      "deleting": "Suppression..."
     },
     "join": {
       "title": "Vous êtes inscrit(e) !",

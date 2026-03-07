@@ -126,6 +126,17 @@ export function usePacoStats() {
     }
   }
 
+  const deleteRegistrant = async (registrationId) => {
+    const { error: deleteError } = await supabase
+      .from('activity_registrations')
+      .delete()
+      .eq('id', registrationId)
+
+    if (deleteError) throw deleteError
+
+    registrants.value = registrants.value.filter(r => r.id !== registrationId)
+  }
+
   return {
     stats,
     loading,
@@ -134,6 +145,7 @@ export function usePacoStats() {
     registrants,
     registrantsLoading,
     registrantsError,
-    fetchPacoRegistrants
+    fetchPacoRegistrants,
+    deleteRegistrant
   }
 }

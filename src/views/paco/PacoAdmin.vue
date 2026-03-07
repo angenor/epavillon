@@ -143,6 +143,7 @@
                   <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('paco.admin.professionalStatus') }}</th>
                   <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('paco.admin.organization') }}</th>
                   <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('paco.admin.registrationDate') }}</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('paco.admin.actions') }}</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -157,9 +158,47 @@
                   <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{{ statusLabel(r.professionalStatus) }}</td>
                   <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{{ r.organization || notSpecified }}</td>
                   <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{{ formatDate(r.registrationDate) }}</td>
+                  <td class="px-4 py-3 text-sm whitespace-nowrap">
+                    <button
+                      @click="confirmDelete(r)"
+                      :disabled="deleting === r.id"
+                      class="cursor-pointer text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 disabled:opacity-50"
+                      :title="t('paco.admin.deleteRegistrant')"
+                    >
+                      <font-awesome-icon :icon="['fas', 'trash-alt']" />
+                    </button>
+                  </td>
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete Confirmation Modal -->
+      <div v-if="registrantToDelete" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" @click.self="registrantToDelete = null">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 max-w-md w-full mx-4">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">{{ t('paco.admin.deleteConfirmTitle') }}</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-300 mb-1">
+            {{ t('paco.admin.deleteConfirmMessage') }}
+          </p>
+          <p class="text-sm font-semibold text-gray-900 dark:text-white mb-4">
+            {{ registrantToDelete.firstName }} {{ registrantToDelete.lastName }} ({{ registrantToDelete.email }})
+          </p>
+          <div class="flex justify-end gap-3">
+            <button
+              @click="registrantToDelete = null"
+              class="cursor-pointer px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition"
+            >
+              {{ t('common.cancel') }}
+            </button>
+            <button
+              @click="handleDelete"
+              :disabled="deleting"
+              class="cursor-pointer px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-500 rounded-lg transition disabled:opacity-50"
+            >
+              {{ deleting ? t('paco.admin.deleting') : t('paco.admin.deleteConfirm') }}
+            </button>
           </div>
         </div>
       </div>
@@ -173,7 +212,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { usePacoStats } from '@/composables/paco/usePacoStats'
 import { usePacoCsvExport } from '@/composables/paco/usePacoCsvExport'
@@ -181,7 +220,8 @@ import { usePacoCsvExport } from '@/composables/paco/usePacoCsvExport'
 const { t, locale } = useI18n()
 const {
   stats, loading, error, fetchPacoStats,
-  registrants, registrantsLoading, registrantsError, fetchPacoRegistrants
+  registrants, registrantsLoading, registrantsError, fetchPacoRegistrants,
+  deleteRegistrant
 } = usePacoStats()
 const { exportToCsv } = usePacoCsvExport()
 
@@ -227,5 +267,26 @@ const formatDate = (dateStr) => {
 
 const handleExport = () => {
   exportToCsv(registrants.value)
+}
+
+const registrantToDelete = ref(null)
+const deleting = ref(null)
+
+const confirmDelete = (registrant) => {
+  registrantToDelete.value = registrant
+}
+
+const handleDelete = async () => {
+  const id = registrantToDelete.value.id
+  deleting.value = id
+  try {
+    await deleteRegistrant(id)
+    registrantToDelete.value = null
+    fetchPacoStats()
+  } catch (err) {
+    console.error('Error deleting registrant:', err)
+  } finally {
+    deleting.value = null
+  }
 }
 </script>

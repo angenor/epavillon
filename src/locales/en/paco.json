@@ -170,7 +170,13 @@
       "noRegistrants": "No registrants yet.",
       "noStats": "No statistics available.",
       "notSpecified": "Not specified",
-      "withDemographics": "With demographic data"
+      "withDemographics": "With demographic data",
+      "actions": "Actions",
+      "deleteRegistrant": "Delete registrant",
+      "deleteConfirmTitle": "Confirm deletion",
+      "deleteConfirmMessage": "Are you sure you want to delete this registrant? This action cannot be undone.",
+      "deleteConfirm": "Delete",
+      "deleting": "Deleting..."
     },
     "join": {
       "title": "You are registered!",

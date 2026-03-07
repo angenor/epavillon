@@ -1658,6 +1658,16 @@ CREATE POLICY "Admins can view all activity registrations" ON public.activity_re
         )
     );
 
+CREATE POLICY "Admins can delete activity registrations" ON public.activity_registrations
+    FOR DELETE USING (
+        EXISTS (
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
+            AND role IN ('admin', 'super_admin')
+            AND is_active = true
+        )
+    );
+
 -- Politiques pour les questions d'activités
 CREATE POLICY "Users can view activity questions" ON public.activity_questions
     FOR SELECT USING (is_visible = TRUE);
