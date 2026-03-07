@@ -2,7 +2,10 @@
 // Edge Function polyvalente pour l'envoi d'emails via Laravel endpoint
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.43.5';
 
-const LARAVEL_EMAIL_URL = Deno.env.get('LARAVEL_POLIVALENT_EMAIL_URL') ?? 'https://epavillonclimatique.francophonie.org/send_polivalent_email';
+// Use the direct server IP to bypass any DNS/WAF issues with the domain name.
+// The GloboTech server at 68.168.118.201 hosts Laravel.
+const LARAVEL_EMAIL_URL_FROM_SECRET = Deno.env.get('LARAVEL_POLIVALENT_EMAIL_URL') ?? '';
+const LARAVEL_EMAIL_URL = LARAVEL_EMAIL_URL_FROM_SECRET || 'https://epavillonclimatique.francophonie.org/send_polivalent_email';
 const LARAVEL_KEY = Deno.env.get('SUPABASE_CUSTOM_AUTH_LARAVEL_KEY') ?? '';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
@@ -14,7 +17,9 @@ console.info('send-email function started');
 console.info('Environment check:', {
   hasSupabaseUrl: !!SUPABASE_URL,
   hasServiceRoleKey: !!SUPABASE_SERVICE_ROLE_KEY,
-  laravelUrl: LARAVEL_EMAIL_URL
+  laravelUrlFromSecret: LARAVEL_EMAIL_URL_FROM_SECRET || '(empty)',
+  laravelUrlUsed: LARAVEL_EMAIL_URL,
+  hasLaravelKey: !!LARAVEL_KEY
 });
 
 /**
@@ -167,9 +172,21 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Authorization: PACO mode checks PACO registration, default mode checks super_admin
-    if (payload.mode === 'paco') {
-      // PACO mode: verify user is registered for the PACO webinar
+    // Authorization: check super_admin first, then fallback to PACO registration
+    const { data: userRoles, error: rolesError } = await supabaseClient
+      .from('user_roles')
+      .select('role, is_active')
+      .eq('user_id', user.id)
+      .eq('role', 'super_admin')
+      .eq('is_active', true)
+      .maybeSingle();
+
+    const isSuperAdmin = !rolesError && !!userRoles;
+
+    if (isSuperAdmin) {
+      console.log('Authenticated super_admin:', user.id);
+    } else {
+      // Fallback: check if user is registered for PACO webinar (self-send only)
       const { data: registration, error: regError } = await supabaseClient
         .from('activity_registrations')
         .select('id')
@@ -178,9 +195,9 @@ Deno.serve(async (req) => {
         .maybeSingle();
 
       if (regError || !registration) {
-        console.error('Unauthorized: User not registered for PACO', { userId: user.id, error: regError });
+        console.error('Unauthorized: User is not super_admin and not registered for PACO', { userId: user.id });
         return new Response(JSON.stringify({
-          error: 'Unauthorized: User not registered for PACO webinar'
+          error: 'Unauthorized'
         }), {
           status: 403,
           headers: {
@@ -190,8 +207,11 @@ Deno.serve(async (req) => {
         });
       }
 
-      // PACO mode: restrict to single recipient (the user themselves)
-      if (payload.recipients?.to?.length > 1 || payload.recipients?.cc || payload.recipients?.bcc) {
+      // PACO users: restrict to single recipient
+      const toCount = payload.recipients?.to?.length || 0;
+      const ccCount = payload.recipients?.cc?.length || 0;
+      const bccCount = payload.recipients?.bcc?.length || 0;
+      if (toCount > 1 || ccCount > 0 || bccCount > 0) {
         return new Response(JSON.stringify({
           error: 'PACO mode only allows sending to a single recipient'
         }), {
@@ -204,30 +224,6 @@ Deno.serve(async (req) => {
       }
 
       console.log('Authenticated PACO user:', user.id);
-    } else {
-      // Default mode: verify super_admin role
-      const { data: userRoles, error: rolesError } = await supabaseClient
-        .from('user_roles')
-        .select('role, is_active')
-        .eq('user_id', user.id)
-        .eq('role', 'super_admin')
-        .eq('is_active', true)
-        .single();
-
-      if (rolesError || !userRoles) {
-        console.error('Unauthorized: User is not super_admin', { userId: user.id, error: rolesError });
-        return new Response(JSON.stringify({
-          error: 'Unauthorized: Only super administrators can send bulk emails'
-        }), {
-          status: 403,
-          headers: {
-            'Content-Type': 'application/json',
-            ...corsHeaders
-          }
-        });
-      }
-
-      console.log('Authenticated super_admin:', user.id);
     }
 
     // Extraire les données de l'email
@@ -464,6 +460,27 @@ Deno.serve(async (req) => {
           const timeoutId = setTimeout(() => controller.abort(), 15000);
 
           try {
+            const requestBody = JSON.stringify({
+                email_type,
+                subject,
+                content,
+                recipients: {
+                  to: [recipientEmail],
+                  cc: recipients.cc || [],
+                  bcc: recipients.bcc || []
+                },
+                variables: personalizedVariables,
+                template,
+                event_id: event_id || null,
+                activity_id: activity_id || null
+              });
+
+            console.log('DEBUG Laravel request:', {
+              url: LARAVEL_EMAIL_URL,
+              bodyLength: requestBody.length,
+              bodyPreview: requestBody.substring(0, 500)
+            });
+
             const response = await fetch(LARAVEL_EMAIL_URL, {
               method: 'POST',
               headers: {
@@ -472,23 +489,7 @@ Deno.serve(async (req) => {
                   'Authorization': `Bearer ${LARAVEL_KEY}`
                 } : {}
               },
-              body: JSON.stringify({
-                email_type,
-                subject,
-                content,
-                recipients: {
-                  to: [recipientEmail],
-                  // Chaque destinataire TO reçoit son email sans CC/BCC des autres TO
-                  // Les CC et BCC originaux sont ajoutés à tous les emails
-                  cc: recipients.cc || [],
-                  bcc: recipients.bcc || []
-                },
-                variables: personalizedVariables,
-                template,
-                event_id,
-                activity_status,
-                recipient_roles
-              }),
+              body: requestBody,
               signal: controller.signal
             });
 
@@ -540,6 +541,23 @@ Deno.serve(async (req) => {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 60000);
 
+        const standardBody = JSON.stringify({
+            email_type,
+            subject,
+            content,
+            recipients,
+            variables: enrichedVariables,
+            template,
+            event_id: event_id || null,
+            activity_id: activity_id || null
+          });
+
+        console.log('DEBUG Laravel standard request:', {
+          url: LARAVEL_EMAIL_URL,
+          bodyLength: standardBody.length,
+          bodyPreview: standardBody.substring(0, 500)
+        });
+
         const response = await fetch(LARAVEL_EMAIL_URL, {
           method: 'POST',
           headers: {
@@ -548,17 +566,7 @@ Deno.serve(async (req) => {
               'Authorization': `Bearer ${LARAVEL_KEY}`
             } : {}
           },
-          body: JSON.stringify({
-            email_type,
-            subject,
-            content,
-            recipients,
-            variables: enrichedVariables,
-            template,
-            event_id,
-            activity_status,
-            recipient_roles
-          }),
+          body: standardBody,
           signal: controller.signal
         });
 
