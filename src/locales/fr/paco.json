@@ -100,7 +100,7 @@
       "confirmPasswordLabel": "Confirmer le mot de passe",
       "confirmPasswordPlaceholder": "Retapez votre mot de passe",
       "passwordMismatch": "Les mots de passe ne correspondent pas.",
-      "passwordWarning": "Retenez bien votre mot de passe ! Vous en aurez besoin le jour de l'événement pour vous connecter et accéder au webinaire.",
+      "passwordWarning": "Retenez bien ce mot de passe ! Il sera nécessaire le jour de l'événement pour vous connecter. Attention : ce mot de passe est différent du code de vérification que vous recevrez par email à l'étape suivante.",
       "countryLabel": "Pays",
       "countryPlaceholder": "Sélectionnez votre pays",
       "organizationLabel": "Organisation",
