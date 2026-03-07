@@ -1,44 +1,5 @@
 import { ref } from 'vue'
 import { supabase } from '@/composables/useSupabase'
-import { PACO_ACTIVITY_ID } from '@/composables/paco/constants'
-
-// ASCII-safe French names (no accents) to avoid WAF/ModSecurity blocking
-const JOURS = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi']
-const MOIS = ['janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre']
-
-/**
- * Format a Date to ASCII-safe French string (e.g. "vendredi 13 mars 2026")
- */
-function formatDateFrSafe(dt) {
-  return `${JOURS[dt.getUTCDay()]} ${dt.getUTCDate()} ${MOIS[dt.getUTCMonth()]} ${dt.getUTCFullYear()}`
-}
-
-/**
- * Fetch PACO activity details (date, time) from Supabase.
- */
-async function fetchPacoActivityDetails() {
-  try {
-    const { data, error } = await supabase
-      .from('activities')
-      .select('title, final_start_date, proposed_start_date')
-      .eq('id', PACO_ACTIVITY_ID)
-      .single()
-
-    if (error || !data) return null
-
-    const startDate = data.final_start_date || data.proposed_start_date
-    if (!startDate) return { title: data.title, date: null, time: null }
-
-    const dt = new Date(startDate)
-    const date = formatDateFrSafe(dt)
-    const hours = String(dt.getUTCHours()).padStart(2, '0')
-    const minutes = String(dt.getUTCMinutes()).padStart(2, '0')
-
-    return { title: data.title, date, time: `${hours}:${minutes} UTC` }
-  } catch {
-    return null
-  }
-}
 
 export function usePacoEmail() {
   const loading = ref(false)
@@ -59,15 +20,7 @@ export function usePacoEmail() {
 
     const PACO_PLATFORM_JOIN_URL = 'https://epavillonclimatique.francophonie.org/paco/join'
 
-    // Fetch activity details for date/time
-    const activity = await fetchPacoActivityDetails()
-
-    let dateTimeInfo = ''
-    if (activity?.date && activity?.time) {
-      dateTimeInfo = `\n\nDate : ${activity.date}\nHeure : ${activity.time}`
-    }
-
-    const emailContent = `Bonjour {recipient_name}, votre inscription est confirmee.\n\nLien de connexion : ${PACO_PLATFORM_JOIN_URL}\n\nIMPORTANT : Veuillez installer le logiciel Microsoft Teams avant la session.\nVous en aurez besoin pour rejoindre le webinaire.\n\nCordialement,\nL equipe IFDD`
+    const emailContent = `Bonjour {recipient_name}, votre inscription est confirmee. Le webinaire aura lieu le 26 mars 2026 de 14h00 a 15h30 GMT.\n\nLien de connexion : ${PACO_PLATFORM_JOIN_URL}\n\nIMPORTANT : Veuillez installer le logiciel Microsoft Teams avant la session. Vous en aurez besoin pour rejoindre le webinaire.\n\nCordialement,\nL equipe IFDD`
 
     try {
       // Use the exact same payload structure as admin EmailManager (no mode field)
