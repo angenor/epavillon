@@ -67,8 +67,7 @@ export function usePacoEmail() {
       dateTimeInfo = `\n\nDate : ${activity.date}\nHeure : ${activity.time}`
     }
 
-    // TEMPORARY: test with URL to check WAF trigger
-    const emailContent = `Bonjour {recipient_name}, votre inscription est confirmee.\n\nLien de connexion : ${PACO_PLATFORM_JOIN_URL}`
+    const emailContent = `Bonjour {recipient_name}, votre inscription est confirmee.\n\nLien de connexion : ${PACO_PLATFORM_JOIN_URL}\n\nIMPORTANT : Veuillez installer le logiciel Microsoft Teams avant la session.\nVous en aurez besoin pour rejoindre le webinaire.\n\nCordialement,\nL equipe IFDD`
 
     try {
       // Use the exact same payload structure as admin EmailManager (no mode field)
