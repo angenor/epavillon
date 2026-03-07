@@ -257,7 +257,8 @@ const handleSubmit = async () => {
       options: {
         data: {
           first_name: form.firstName,
-          last_name: form.lastName
+          last_name: form.lastName,
+          source: 'paco'
         },
         emailRedirectTo: `${window.location.origin}/paco`
       }
@@ -266,6 +267,8 @@ const handleSubmit = async () => {
     if (signUpError) {
       if (signUpError.message?.includes('already registered')) {
         errorMessage.value = t('paco.register.emailUsed')
+      } else if (signUpError.message?.includes('rate limit')) {
+        errorMessage.value = t('paco.register.rateLimited')
       } else {
         errorMessage.value = signUpError.message || t('paco.register.error')
       }

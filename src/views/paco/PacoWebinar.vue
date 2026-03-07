@@ -47,6 +47,7 @@
             <PacoEmailVerification
               v-else-if="step === 'verify-email'"
               :email="checkedEmail"
+              @verified="handleOtpVerified"
             />
 
             <!-- Step: activity-register -->
@@ -118,11 +119,35 @@ const emailCheckLoading = ref(false)
 const checkedEmail = ref('')
 const globalError = ref('')
 const pacoEmailSent = ref(false) // Guard to prevent sending the PACO email multiple times
+const otpExpired = ref(false) // Flag when OTP link has expired
 
 /**
- * On mount: check if already authenticated and registered
+ * Parse URL hash for Supabase auth errors (e.g. otp_expired after email confirmation link)
+ */
+function handleUrlHashError() {
+  const hash = window.location.hash
+  if (!hash) return
+
+  const params = new URLSearchParams(hash.substring(1))
+  const errorCode = params.get('error_code')
+
+  if (errorCode === 'otp_expired') {
+    otpExpired.value = true
+    // Try to recover email from pending registration in localStorage
+    const pending = getPendingRegistration()
+    if (pending?.email) {
+      checkedEmail.value = pending.email
+    }
+    // Clean the hash from the URL
+    window.history.replaceState(null, '', window.location.pathname)
+  }
+}
+
+/**
+ * On mount: check URL hash for auth errors, then check initial state
  */
 onMounted(async () => {
+  handleUrlHashError()
   await checkInitialState()
 })
 
@@ -215,6 +240,10 @@ async function checkInitialState() {
           step.value = 'activity-register'
         }
       }
+    } else if (otpExpired.value && checkedEmail.value) {
+      // OTP expired — show verify-email so user can resend
+      step.value = 'verify-email'
+      globalError.value = t('paco.errors.otpExpired')
     } else {
       step.value = 'email-check'
     }
@@ -276,6 +305,18 @@ async function handleLoginSuccess({ userId, email }) {
 function handleRegisterSuccess({ userId, email, name }) {
   checkedEmail.value = email
   step.value = 'verify-email'
+}
+
+/**
+ * Handle OTP verification success from PacoEmailVerification.
+ * The user is now authenticated — finalize registration or go to activity-register.
+ */
+async function handleOtpVerified() {
+  pageLoading.value = true
+  globalError.value = ''
+
+  // Re-check auth state after OTP verification created a session
+  await checkInitialState()
 }
 
 /**

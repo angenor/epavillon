@@ -105,6 +105,7 @@
       "submitting": "Inscription en cours...",
       "error": "Une erreur est survenue lors de l'inscription. Veuillez réessayer.",
       "emailUsed": "Cet email est déjà associé à un compte. Essayez de vous connecter.",
+      "rateLimited": "Trop de tentatives. Veuillez patienter quelques minutes avant de réessayer.",
       "backToEmail": "Utiliser un autre email"
     },
     "activityRegister": {
@@ -193,7 +194,12 @@
     },
     "verifyEmail": {
       "title": "Vérifiez votre email",
-      "subtitle": "Un email de vérification a été envoyé à {email}. Cliquez sur le lien dans l'email pour finaliser votre inscription au webinaire.",
+      "subtitle": "Un email de vérification a été envoyé à {email}. Entrez le code à 6 chiffres reçu par email pour finaliser votre inscription.",
+      "otpLabel": "Code de vérification",
+      "otpPlaceholder": "000000",
+      "verifyButton": "Vérifier",
+      "otpError": "Code invalide. Veuillez réessayer.",
+      "or": "ou",
       "resendButton": "Renvoyer l'email de vérification",
       "resending": "Envoi en cours...",
       "resent": "Email renvoyé avec succès !",
@@ -208,7 +214,8 @@
       "generic": "Une erreur est survenue. Veuillez réessayer.",
       "registration": "Erreur lors de l'inscription au webinaire.",
       "emailSend": "Erreur lors de l'envoi de l'email de confirmation.",
-      "alreadyRegistered": "Vous êtes déjà inscrit(e) à ce webinaire."
+      "alreadyRegistered": "Vous êtes déjà inscrit(e) à ce webinaire.",
+      "otpExpired": "Le lien de confirmation a expiré. Veuillez renvoyer un nouvel email de vérification."
     }
   }
 }

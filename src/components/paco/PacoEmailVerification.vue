@@ -18,6 +18,45 @@
       {{ t('paco.verifyEmail.checkInbox') }}
     </p>
 
+    <!-- OTP Code input -->
+    <form @submit.prevent="handleVerifyOtp" class="mb-4">
+      <label for="otp-code" class="block text-sm font-medium text-white/70 mb-2 text-left">
+        {{ t('paco.verifyEmail.otpLabel') }}
+      </label>
+      <div class="flex gap-2">
+        <input
+          id="otp-code"
+          v-model="otpCode"
+          type="text"
+          inputmode="numeric"
+          maxlength="6"
+          :placeholder="t('paco.verifyEmail.otpPlaceholder')"
+          required
+          class="flex-1 px-3 py-2.5 rounded-xl border border-white/15 bg-white/10 text-white text-center text-lg tracking-[0.3em] font-mono placeholder-white/30 focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition backdrop-blur-sm"
+        />
+        <button
+          type="submit"
+          :disabled="verifying || otpCode.length < 6"
+          class="px-4 py-2.5 rounded-xl bg-green-600 hover:bg-green-500 text-white font-medium transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-sm"
+        >
+          <font-awesome-icon v-if="verifying" :icon="['fas', 'spinner']" spin />
+          <template v-else>{{ t('paco.verifyEmail.verifyButton') }}</template>
+        </button>
+      </div>
+    </form>
+
+    <!-- Verify success -->
+    <p v-if="verifyError" class="text-sm text-red-300 mb-4">
+      {{ verifyError }}
+    </p>
+
+    <!-- Separator -->
+    <div class="flex items-center gap-3 my-4">
+      <div class="flex-1 border-t border-white/10"></div>
+      <span class="text-xs text-white/30">{{ t('paco.verifyEmail.or') }}</span>
+      <div class="flex-1 border-t border-white/10"></div>
+    </div>
+
     <!-- Resend button -->
     <button
       @click="handleResend"
@@ -43,7 +82,7 @@
 
     <!-- Error message -->
     <p v-if="resendError" class="text-sm text-red-300 mt-3">
-      {{ t('paco.verifyEmail.resendError') }}
+      {{ resendError }}
     </p>
   </div>
 </template>
@@ -59,17 +98,49 @@ const props = defineProps({
   email: { type: String, required: true }
 })
 
+const emit = defineEmits(['verified'])
+
+// OTP verification
+const otpCode = ref('')
+const verifying = ref(false)
+const verifyError = ref('')
+
+// Resend
 const resending = ref(false)
 const resendSuccess = ref(false)
-const resendError = ref(false)
+const resendError = ref('')
 const resendCooldown = ref(0)
 
 let cooldownInterval = null
 
+async function handleVerifyOtp() {
+  verifying.value = true
+  verifyError.value = ''
+
+  try {
+    const { data, error } = await supabase.auth.verifyOtp({
+      email: props.email,
+      token: otpCode.value.trim(),
+      type: 'signup'
+    })
+
+    if (error) throw error
+
+    if (data?.session) {
+      emit('verified')
+    }
+  } catch (err) {
+    console.error('OTP verification error:', err)
+    verifyError.value = err.message || t('paco.verifyEmail.otpError')
+  } finally {
+    verifying.value = false
+  }
+}
+
 async function handleResend() {
   resending.value = true
   resendSuccess.value = false
-  resendError.value = false
+  resendError.value = ''
 
   try {
     const { error } = await supabase.auth.resend({
@@ -96,7 +167,7 @@ async function handleResend() {
     }, 1000)
   } catch (err) {
     console.error('Error resending verification email:', err)
-    resendError.value = true
+    resendError.value = err.message || t('paco.verifyEmail.resendError')
   } finally {
     resending.value = false
   }

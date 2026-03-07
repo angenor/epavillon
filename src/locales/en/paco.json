@@ -105,6 +105,7 @@
       "submitting": "Signing up...",
       "error": "An error occurred during registration. Please try again.",
       "emailUsed": "This email is already associated with an account. Try logging in.",
+      "rateLimited": "Too many attempts. Please wait a few minutes before trying again.",
       "backToEmail": "Use a different email"
     },
     "activityRegister": {
@@ -193,7 +194,12 @@
     },
     "verifyEmail": {
       "title": "Verify your email",
-      "subtitle": "A verification email has been sent to {email}. Click the link in the email to complete your webinar registration.",
+      "subtitle": "A verification email has been sent to {email}. Enter the 6-digit code from the email to complete your registration.",
+      "otpLabel": "Verification code",
+      "otpPlaceholder": "000000",
+      "verifyButton": "Verify",
+      "otpError": "Invalid code. Please try again.",
+      "or": "or",
       "resendButton": "Resend verification email",
       "resending": "Sending...",
       "resent": "Email resent successfully!",
@@ -208,7 +214,8 @@
       "generic": "An error occurred. Please try again.",
       "registration": "Error during webinar registration.",
       "emailSend": "Error sending the confirmation email.",
-      "alreadyRegistered": "You are already registered for this webinar."
+      "alreadyRegistered": "You are already registered for this webinar.",
+      "otpExpired": "The confirmation link has expired. Please resend a new verification email."
     }
   }
 }
