@@ -191,6 +191,10 @@
                             class="px-3 py-1 text-xs font-medium text-white bg-green-600 hover:bg-green-700 rounded cursor-pointer">
                       Activer
                     </button>
+                    <button @click="confirmDeleteUser(user)"
+                            class="px-3 py-1 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded cursor-pointer">
+                      {{ t('admin.users.delete') }}
+                    </button>
                   </div>
                 </div>
               </div>
@@ -214,6 +218,52 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal de confirmation de suppression -->
+  <Teleport to="body">
+    <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="fixed inset-0 bg-black/50" @click="showDeleteModal = false"></div>
+      <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6">
+        <div class="flex items-center mb-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+            <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+            </svg>
+          </div>
+          <h3 class="ml-3 text-lg font-semibold text-gray-900 dark:text-white">
+            {{ t('admin.users.deleteConfirmTitle') }}
+          </h3>
+        </div>
+
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">
+          {{ t('admin.users.deleteConfirmMessage') }}
+        </p>
+        <p class="text-sm font-semibold text-gray-900 dark:text-white mb-4">
+          {{ userToDelete?.first_name }} {{ userToDelete?.last_name }} ({{ userToDelete?.email }})
+        </p>
+        <p class="text-xs text-red-600 dark:text-red-400 mb-6">
+          {{ t('admin.users.deleteWarning') }}
+        </p>
+
+        <div class="flex justify-end space-x-3">
+          <button @click="showDeleteModal = false"
+                  :disabled="isDeleting"
+                  class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 cursor-pointer">
+            {{ t('common.cancel') }}
+          </button>
+          <button @click="deleteUser"
+                  :disabled="isDeleting"
+                  class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg disabled:opacity-50 cursor-pointer">
+            <span v-if="isDeleting" class="flex items-center">
+              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              {{ t('admin.users.deleting') }}
+            </span>
+            <span v-else>{{ t('admin.users.confirmDelete') }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </Teleport>
 </template>
 
 <script setup>
@@ -237,6 +287,10 @@ const pageSize = 20
 const hasMore = ref(true)
 const infiniteScrollTrigger = ref(null)
 const observer = ref(null)
+
+const showDeleteModal = ref(false)
+const userToDelete = ref(null)
+const isDeleting = ref(false)
 
 const filters = ref({
   search: '',
@@ -490,6 +544,39 @@ const suspendUser = (user) => {
 const unsuspendUser = (user) => {
   // TODO: Implémenter la levée de suspension
   console.log('Lever suspension utilisateur:', user.id)
+}
+
+const confirmDeleteUser = (user) => {
+  userToDelete.value = user
+  showDeleteModal.value = true
+}
+
+const deleteUser = async () => {
+  if (!userToDelete.value) return
+
+  isDeleting.value = true
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) throw new Error('Not authenticated')
+
+    const { data, error } = await supabase.functions.invoke('delete-user', {
+      body: { user_id: userToDelete.value.id },
+      headers: { Authorization: `Bearer ${session.access_token}` }
+    })
+
+    if (error) throw error
+    if (data?.error) throw new Error(data.error)
+
+    // Remove user from displayed list
+    displayedUsers.value = displayedUsers.value.filter(u => u.id !== userToDelete.value.id)
+    showDeleteModal.value = false
+    userToDelete.value = null
+  } catch (error) {
+    console.error('Erreur lors de la suppression:', error)
+    alert(t('admin.users.deleteError') + ': ' + error.message)
+  } finally {
+    isDeleting.value = false
+  }
 }
 
 const exportUsers = () => {
