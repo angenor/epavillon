@@ -69,7 +69,9 @@
     },
     "emailCheck": {
       "title": "Inscrivez-vous au webinaire",
+      "titleJoin": "Connectez-vous pour rejoindre le webinaire",
       "subtitle": "Entrez votre adresse email pour commencer",
+      "subtitleJoin": "Entrez votre adresse email pour acceder au webinaire",
       "emailLabel": "Adresse email",
       "emailPlaceholder": "votre.email{'@'}exemple.com",
       "submit": "Continuer",

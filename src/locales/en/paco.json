@@ -69,7 +69,9 @@
     },
     "emailCheck": {
       "title": "Register for the webinar",
+      "titleJoin": "Log in to join the webinar",
       "subtitle": "Enter your email address to get started",
+      "subtitleJoin": "Enter your email address to access the webinar",
       "emailLabel": "Email address",
       "emailPlaceholder": "your.email{'@'}example.com",
       "submit": "Continue",

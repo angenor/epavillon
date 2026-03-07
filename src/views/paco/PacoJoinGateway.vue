@@ -23,7 +23,7 @@ const { checkPacoRegistration } = usePacoRegistration()
 onMounted(async () => {
   try {
     if (!isAuthenticated.value || !user.value) {
-      router.replace('/paco')
+      router.replace('/paco?from=join')
       return
     }
 
@@ -31,10 +31,10 @@ onMounted(async () => {
     if (registered) {
       window.location.href = PACO_TEAMS_LINK
     } else {
-      router.replace('/paco')
+      router.replace('/paco?from=join')
     }
   } catch {
-    router.replace('/paco')
+    router.replace('/paco?from=join')
   }
 })
 </script>
