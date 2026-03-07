@@ -14,7 +14,7 @@ export function savePendingRegistration(data) {
     ...data,
     timestamp: data.timestamp || new Date().toISOString()
   }
-  sessionStorage.setItem(PENDING_REGISTRATION_KEY, JSON.stringify(payload))
+  localStorage.setItem(PENDING_REGISTRATION_KEY, JSON.stringify(payload))
 }
 
 /**
@@ -25,7 +25,7 @@ export function savePendingRegistration(data) {
  */
 export function getPendingRegistration(currentUserId) {
   try {
-    const raw = sessionStorage.getItem(PENDING_REGISTRATION_KEY)
+    const raw = localStorage.getItem(PENDING_REGISTRATION_KEY)
     if (!raw) return null
 
     const data = JSON.parse(raw)
@@ -53,7 +53,7 @@ export function getPendingRegistration(currentUserId) {
  * Remove pending registration from sessionStorage.
  */
 export function clearPendingRegistration() {
-  sessionStorage.removeItem(PENDING_REGISTRATION_KEY)
+  localStorage.removeItem(PENDING_REGISTRATION_KEY)
 }
 
 /**

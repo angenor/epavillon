@@ -14,34 +14,28 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
     const supabaseServiceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') ?? ''
 
-    // Verify caller is authenticated admin
+    const adminClient = createClient(supabaseUrl, supabaseServiceRoleKey, {
+      auth: { autoRefreshToken: false, persistSession: false }
+    })
+
+    // Verify caller is authenticated
     const authHeader = req.headers.get('Authorization')
-    if (!authHeader) {
+    const token = authHeader?.replace('Bearer ', '')
+    if (!token) {
       return new Response(
         JSON.stringify({ error: 'Authorization header required' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
-    const callerClient = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } },
-      auth: { autoRefreshToken: false, persistSession: false }
-    })
-
-    const { data: { user: caller }, error: authError } = await callerClient.auth.getUser()
+    const { data: { user: caller }, error: authError } = await adminClient.auth.getUser(token)
     if (authError || !caller) {
       return new Response(
         JSON.stringify({ error: 'Unauthorized' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
-
-    // Check caller has admin or super_admin role
-    const adminClient = createClient(supabaseUrl, supabaseServiceRoleKey, {
-      auth: { autoRefreshToken: false, persistSession: false }
-    })
 
     const { data: callerRoles, error: rolesError } = await adminClient
       .from('user_roles')

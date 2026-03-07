@@ -556,12 +556,8 @@ const deleteUser = async () => {
 
   isDeleting.value = true
   try {
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session) throw new Error('Not authenticated')
-
     const { data, error } = await supabase.functions.invoke('delete-user', {
-      body: { user_id: userToDelete.value.id },
-      headers: { Authorization: `Bearer ${session.access_token}` }
+      body: { user_id: userToDelete.value.id }
     })
 
     if (error) throw error
