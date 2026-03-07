@@ -475,12 +475,6 @@ Deno.serve(async (req) => {
                 activity_id: activity_id || null
               });
 
-            console.log('DEBUG Laravel request:', {
-              url: LARAVEL_EMAIL_URL,
-              bodyLength: requestBody.length,
-              bodyPreview: requestBody.substring(0, 500)
-            });
-
             const response = await fetch(LARAVEL_EMAIL_URL, {
               method: 'POST',
               headers: {
@@ -552,11 +546,6 @@ Deno.serve(async (req) => {
             activity_id: activity_id || null
           });
 
-        console.log('DEBUG Laravel standard request:', {
-          url: LARAVEL_EMAIL_URL,
-          bodyLength: standardBody.length,
-          bodyPreview: standardBody.substring(0, 500)
-        });
 
         const response = await fetch(LARAVEL_EMAIL_URL, {
           method: 'POST',
