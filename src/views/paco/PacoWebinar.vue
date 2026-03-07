@@ -94,6 +94,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuth } from '@/composables/useAuth'
+import { useSEO } from '@/composables/useSEO'
 import { usePacoRegistration, finalizePacoRegistration, getPendingRegistration } from '@/composables/paco/usePacoRegistration'
 import { usePacoEmail } from '@/composables/paco/usePacoEmail'
 import PacoPresentation from '@/components/paco/PacoPresentation.vue'
@@ -105,6 +106,18 @@ import PacoJoinSection from '@/components/paco/PacoJoinSection.vue'
 import PacoEmailVerification from '@/components/paco/PacoEmailVerification.vue'
 
 const { t } = useI18n()
+
+// SEO - OG meta tags pour le partage sur les réseaux sociaux
+const PACO_OG_IMAGE = 'https://epavillonclimatique.francophonie.org/images/og_affiche_paco_avec_ecriture.jpg'
+useSEO({
+  title: 'Webinaire PACO - Collectivités locales face au changement climatique',
+  description: 'Collectivites locales face au changement climatique : gouvernance, planification et financements pour l\'adaptation. Jeudi 26 mars 2026, en ligne, 14h00-15h30 GMT.',
+  image: PACO_OG_IMAGE,
+  url: 'https://epavillonclimatique.francophonie.org/paco',
+  type: 'website',
+  og: { type: 'website' },
+  twitter: { card: 'summary_large_image' }
+})
 
 // Auth state
 const { isAuthenticated, user, profile } = useAuth()
