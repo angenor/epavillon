@@ -266,7 +266,18 @@ async function handleEmailChecked(email) {
 
   try {
     const exists = await checkEmailExists(email)
-    step.value = exists ? 'login' : 'register'
+    if (exists) {
+      // Check if there's a pending registration for this email (user created account
+      // but hasn't confirmed email yet — e.g. refreshed page during OTP step)
+      const pending = getPendingRegistration()
+      if (pending?.email?.toLowerCase() === email.toLowerCase()) {
+        step.value = 'verify-email'
+      } else {
+        step.value = 'login'
+      }
+    } else {
+      step.value = 'register'
+    }
   } catch (err) {
     globalError.value = t('paco.errors.generic')
   } finally {
