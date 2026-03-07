@@ -100,7 +100,7 @@
       "confirmPasswordLabel": "Confirm password",
       "confirmPasswordPlaceholder": "Re-enter your password",
       "passwordMismatch": "Passwords do not match.",
-      "passwordWarning": "Remember this password! You will need it on the day of the event to log in. Note: this password is different from the verification code you will receive by email in the next step.",
+      "passwordWarning": "Remember this password! You will need it on the day of the event to log in and access the webinar.",
       "countryLabel": "Country",
       "countryPlaceholder": "Select your country",
       "organizationLabel": "Organization",
