@@ -7,12 +7,20 @@
       {{ t('paco.register.subtitle') }}
     </p>
 
+    <!-- Password warning -->
+    <div class="bg-amber-500/15 border border-amber-400/30 rounded-xl p-3 mb-4">
+      <p class="text-sm text-amber-300 flex items-start gap-2">
+        <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="mt-0.5 shrink-0" />
+        <span>{{ t('paco.register.passwordWarning') }}</span>
+      </p>
+    </div>
+
     <form @submit.prevent="handleSubmit" class="space-y-3">
       <!-- Name fields -->
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label for="paco-firstname" class="block text-sm font-medium text-white/70 mb-1">
-            {{ t('paco.register.firstNameLabel') }}
+            {{ t('paco.register.firstNameLabel') }} <span class="text-red-400">*</span>
           </label>
           <input
             id="paco-firstname"
@@ -25,7 +33,7 @@
         </div>
         <div>
           <label for="paco-lastname" class="block text-sm font-medium text-white/70 mb-1">
-            {{ t('paco.register.lastNameLabel') }}
+            {{ t('paco.register.lastNameLabel') }} <span class="text-red-400">*</span>
           </label>
           <input
             id="paco-lastname"
@@ -41,7 +49,7 @@
       <!-- Email (pre-filled, read-only) -->
       <div>
         <label for="paco-register-email" class="block text-sm font-medium text-white/70 mb-1">
-          {{ t('paco.register.emailLabel') }}
+          {{ t('paco.register.emailLabel') }} <span class="text-red-400">*</span>
         </label>
         <input
           id="paco-register-email"
@@ -55,7 +63,7 @@
       <!-- Password -->
       <div>
         <label for="paco-register-password" class="block text-sm font-medium text-white/70 mb-1">
-          {{ t('paco.register.passwordLabel') }}
+          {{ t('paco.register.passwordLabel') }} <span class="text-red-400">*</span>
         </label>
         <input
           id="paco-register-password"
@@ -68,10 +76,29 @@
         />
       </div>
 
+      <!-- Confirm Password -->
+      <div>
+        <label for="paco-register-confirm-password" class="block text-sm font-medium text-white/70 mb-1">
+          {{ t('paco.register.confirmPasswordLabel') }} <span class="text-red-400">*</span>
+        </label>
+        <input
+          id="paco-register-confirm-password"
+          v-model="form.confirmPassword"
+          type="password"
+          :placeholder="t('paco.register.confirmPasswordPlaceholder')"
+          required
+          minlength="6"
+          class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white placeholder-white/30 focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition backdrop-blur-sm text-sm"
+        />
+        <p v-if="form.confirmPassword && form.password !== form.confirmPassword" class="text-xs text-red-400 mt-1">
+          {{ t('paco.register.passwordMismatch') }}
+        </p>
+      </div>
+
       <!-- Gender -->
       <div>
         <label class="block text-sm font-medium text-white/70 mb-1">
-          {{ t('paco.demographic.genderLabel') }}
+          {{ t('paco.demographic.genderLabel') }} <span class="text-red-400">*</span>
         </label>
         <div class="flex gap-4">
           <label class="flex items-center gap-2 cursor-pointer text-sm text-white/80">
@@ -88,7 +115,7 @@
       <!-- Age Profile -->
       <div>
         <label class="block text-sm font-medium text-white/70 mb-1">
-          {{ t('paco.demographic.ageProfileLabel') }}
+          {{ t('paco.demographic.ageProfileLabel') }} <span class="text-red-400">*</span>
         </label>
         <div class="flex gap-4">
           <label class="flex items-center gap-2 cursor-pointer text-sm text-white/80">
@@ -105,7 +132,7 @@
       <!-- City -->
       <div>
         <label for="paco-city" class="block text-sm font-medium text-white/70 mb-1">
-          {{ t('paco.demographic.cityLabel') }}
+          {{ t('paco.demographic.cityLabel') }} <span class="text-red-400">*</span>
         </label>
         <input
           id="paco-city"
@@ -120,7 +147,7 @@
       <!-- Country -->
       <div>
         <label for="paco-country" class="block text-sm font-medium text-white/70 mb-1">
-          {{ t('paco.register.countryLabel') }}
+          {{ t('paco.register.countryLabel') }} <span class="text-red-400">*</span>
         </label>
         <select
           id="paco-country"
@@ -138,7 +165,7 @@
       <!-- Professional Status -->
       <div>
         <label for="paco-status" class="block text-sm font-medium text-white/70 mb-1">
-          {{ t('paco.demographic.professionalStatusLabel') }}
+          {{ t('paco.demographic.professionalStatusLabel') }} <span class="text-red-400">*</span>
         </label>
         <select
           id="paco-status"
@@ -157,7 +184,7 @@
       <!-- Organization -->
       <div>
         <label for="paco-organization" class="block text-sm font-medium text-white/70 mb-1">
-          {{ t('paco.register.organizationLabel') }}
+          {{ t('paco.register.organizationLabel') }} <span class="text-red-400">*</span>
         </label>
         <input
           id="paco-organization"
@@ -229,6 +256,7 @@ const form = reactive({
   firstName: '',
   lastName: '',
   password: '',
+  confirmPassword: '',
   countryId: '',
   organizationName: '',
   gender: '',
@@ -248,6 +276,12 @@ onMounted(() => {
 const handleSubmit = async () => {
   submitting.value = true
   errorMessage.value = ''
+
+  if (form.password !== form.confirmPassword) {
+    errorMessage.value = t('paco.register.passwordMismatch')
+    submitting.value = false
+    return
+  }
 
   try {
     // 1. Create auth user via Supabase Auth
