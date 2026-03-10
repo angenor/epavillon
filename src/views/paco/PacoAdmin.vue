@@ -158,16 +158,16 @@
           </div>
 
           <!-- Registrant Table -->
-          <div v-else class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden">
-            <table class="w-full divide-y divide-gray-200 dark:divide-gray-700 table-fixed">
+          <div v-else class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-x-auto">
+            <table class="min-w-[800px] w-full divide-y divide-gray-200 dark:divide-gray-700 table-fixed">
               <thead class="bg-gray-50 dark:bg-gray-900">
                 <tr>
                   <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[18%]">{{ t('paco.admin.name') }}</th>
                   <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[18%]">{{ t('paco.admin.email') }}</th>
-                  <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden lg:table-cell w-[10%]">{{ t('paco.admin.gender') }} / {{ t('paco.admin.ageProfile') }}</th>
+                  <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[10%]">{{ t('paco.admin.gender') }} / {{ t('paco.admin.ageProfile') }}</th>
                   <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[16%]">{{ t('paco.admin.location') }}</th>
-                  <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden md:table-cell w-[14%]">{{ t('paco.admin.professionalStatus') }}</th>
-                  <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden xl:table-cell w-[12%]">{{ t('paco.admin.organization') }}</th>
+                  <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[14%]">{{ t('paco.admin.professionalStatus') }}</th>
+                  <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[12%]">{{ t('paco.admin.organization') }}</th>
                   <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[10%]">{{ t('paco.admin.registrationDate') }}</th>
                   <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[4%]"></th>
                 </tr>
@@ -182,8 +182,8 @@
                   <td class="px-3 py-3 text-sm text-gray-600 dark:text-gray-300">
                     <div class="truncate">{{ r.email }}</div>
                   </td>
-                  <!-- Gender / Age (hidden on small) -->
-                  <td class="px-3 py-3 text-sm text-gray-600 dark:text-gray-300 hidden lg:table-cell">
+                  <!-- Gender / Age -->
+                  <td class="px-3 py-3 text-sm text-gray-600 dark:text-gray-300">
                     <div class="truncate">{{ genderLabel(r.gender) }}</div>
                     <div class="truncate text-xs text-gray-400 dark:text-gray-500">{{ ageLabel(r.ageProfile) }}</div>
                   </td>
@@ -192,12 +192,12 @@
                     <div class="truncate">{{ r.city || notSpecified }}</div>
                     <div class="truncate text-xs text-gray-400 dark:text-gray-500">{{ countryName(r) }}</div>
                   </td>
-                  <!-- Professional Status (hidden on small) -->
-                  <td class="px-3 py-3 text-sm text-gray-600 dark:text-gray-300 hidden md:table-cell">
+                  <!-- Professional Status -->
+                  <td class="px-3 py-3 text-sm text-gray-600 dark:text-gray-300">
                     <div class="truncate">{{ statusLabel(r.professionalStatus) }}</div>
                   </td>
-                  <!-- Organization (hidden on small/medium) -->
-                  <td class="px-3 py-3 text-sm text-gray-600 dark:text-gray-300 hidden xl:table-cell">
+                  <!-- Organization -->
+                  <td class="px-3 py-3 text-sm text-gray-600 dark:text-gray-300">
                     <div class="truncate">{{ r.organization || notSpecified }}</div>
                   </td>
                   <!-- Date -->
