@@ -158,8 +158,8 @@
           <p class="text-sm opacity-75">{{ t('activities.checkBackLater') || 'Revenez plus tard pour découvrir de nouvelles activités' }}</p>
         </div>
 
-        <!-- Bouton Voir toutes les activités -->
-        <div v-if="eventsWithActivities && eventsWithActivities.length > 0" class="pt-4 pb-2 ml-4 pl-6 relative">
+        <!-- Bouton Voir toutes les activités (masqué temporairement) -->
+        <div v-if="false && eventsWithActivities && eventsWithActivities.length > 0" class="pt-4 pb-2 ml-4 pl-6 relative">
           <!-- Point de connexion à la ligne -->
           <div class="absolute left-4 top-7 w-2 h-2 rounded-full bg-ifdd-bleu border-2 border-white" style="margin-left: 0.25rem;"></div>
 
