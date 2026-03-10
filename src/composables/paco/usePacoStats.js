@@ -97,7 +97,7 @@ export function usePacoStats() {
   /**
    * Fetch detailed registrant list with user info and demographic data.
    */
-  const fetchPacoRegistrants = async (page = 1) => {
+  const fetchPacoRegistrants = async (page = 1, loadAll = false) => {
     registrantsLoading.value = true
     registrantsError.value = null
     registrantsPage.value = page
@@ -106,7 +106,7 @@ export function usePacoStats() {
     const to = from + registrantsPerPage - 1
 
     try {
-      const { data, error: queryError, count } = await supabase
+      let query = supabase
         .from('activity_registrations')
         .select(`
           id,
@@ -128,7 +128,12 @@ export function usePacoStats() {
         `, { count: 'exact' })
         .eq('activity_id', PACO_ACTIVITY_ID)
         .order('registration_date', { ascending: false })
-        .range(from, to)
+
+      if (!loadAll) {
+        query = query.range(from, to)
+      }
+
+      const { data, error: queryError, count } = await query
 
       if (queryError) throw queryError
 

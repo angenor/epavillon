@@ -120,18 +120,36 @@
 
         <!-- Registrant List Section -->
         <div>
-          <div class="flex items-center justify-between mb-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
             <h2 class="text-xl font-bold text-gray-900 dark:text-white">
               {{ t('paco.admin.registrantList') }}
             </h2>
-            <button
-              @click="handleExport"
-              :disabled="!registrants.length"
-              class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-500 text-white text-sm font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <font-awesome-icon :icon="['fas', 'file-csv']" />
-              {{ t('paco.admin.exportCsv') }}
-            </button>
+            <div class="flex items-center gap-3">
+              <div class="relative">
+                <font-awesome-icon :icon="['fas', 'search']" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
+                <input
+                  v-model="searchQuery"
+                  type="text"
+                  :placeholder="t('paco.admin.searchPlaceholder')"
+                  class="pl-9 pr-8 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+                />
+                <button
+                  v-if="searchQuery"
+                  @click="searchQuery = ''"
+                  class="cursor-pointer absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                >
+                  <font-awesome-icon :icon="['fas', 'times']" class="text-sm" />
+                </button>
+              </div>
+              <button
+                @click="handleExport"
+                :disabled="!registrants.length"
+                class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-500 text-white text-sm font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <font-awesome-icon :icon="['fas', 'file-csv']" />
+                {{ t('paco.admin.exportCsv') }}
+              </button>
+            </div>
           </div>
 
           <!-- Table Loading Skeleton -->
@@ -173,7 +191,7 @@
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                <tr v-for="r in registrants" :key="r.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                <tr v-for="r in filteredRegistrants" :key="r.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                   <!-- Name (merged first + last) -->
                   <td class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100">
                     <div class="truncate font-medium">{{ r.firstName || notSpecified }} {{ r.lastName || '' }}</div>
@@ -221,10 +239,15 @@
             </table>
 
             <!-- Pagination -->
-            <div v-if="totalPages > 1" class="flex items-center justify-between px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+            <div v-if="totalPages > 1 || isSearching" class="flex items-center justify-between px-4 py-3 border-t border-gray-200 dark:border-gray-700">
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                {{ (registrantsPage - 1) * registrantsPerPage + 1 }}–{{ Math.min(registrantsPage * registrantsPerPage, registrantsTotal) }}
-                {{ t('paco.admin.paginationOf') }} {{ registrantsTotal }}
+                <template v-if="isSearching">
+                  {{ displayedTotal }} {{ t('paco.admin.searchResults') }}
+                </template>
+                <template v-else>
+                  {{ (registrantsPage - 1) * registrantsPerPage + 1 }}–{{ Math.min(registrantsPage * registrantsPerPage, registrantsTotal) }}
+                  {{ t('paco.admin.paginationOf') }} {{ registrantsTotal }}
+                </template>
               </p>
               <div class="flex gap-1">
                 <button
@@ -295,7 +318,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { usePacoStats } from '@/composables/paco/usePacoStats'
 import { usePacoCsvExport } from '@/composables/paco/usePacoCsvExport'
@@ -310,7 +333,33 @@ const {
   allRegistrationDates, fetchAllRegistrationDates
 } = usePacoStats()
 
-const totalPages = computed(() => Math.ceil(registrantsTotal.value / registrantsPerPage))
+const searchQuery = ref('')
+let searchDebounce = null
+
+const isSearching = computed(() => searchQuery.value.trim().length > 0)
+
+const filteredRegistrants = computed(() => {
+  if (!isSearching.value) return registrants.value
+  const q = searchQuery.value.toLowerCase().trim()
+  return registrants.value.filter(r =>
+    [r.firstName, r.lastName, r.email, r.city, r.countryFr, r.countryEn, r.organization]
+      .some(v => v && v.toLowerCase().includes(q))
+  )
+})
+
+watch(searchQuery, () => {
+  clearTimeout(searchDebounce)
+  searchDebounce = setTimeout(() => {
+    if (isSearching.value) {
+      fetchPacoRegistrants(1, true)
+    } else {
+      fetchPacoRegistrants(1)
+    }
+  }, 300)
+})
+
+const displayedTotal = computed(() => isSearching.value ? filteredRegistrants.value.length : registrantsTotal.value)
+const totalPages = computed(() => isSearching.value ? 1 : Math.ceil(registrantsTotal.value / registrantsPerPage))
 
 const goToPage = (page) => {
   if (page < 1 || page > totalPages.value) return

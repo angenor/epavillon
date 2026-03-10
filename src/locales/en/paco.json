@@ -184,7 +184,9 @@
       "chartByHour": "By hour",
       "chartByDay": "By day",
       "chartByMonth": "By month",
-      "paginationOf": "of"
+      "paginationOf": "of",
+      "searchPlaceholder": "Search registrant...",
+      "searchResults": "result(s) found"
     },
     "join": {
       "title": "You are registered!",
