@@ -458,9 +458,9 @@ const dismissToast = () => {
   clearTimeout(toastTimer)
 }
 
-const refreshAll = () => {
-  fetchPacoStats()
-  fetchPacoRegistrants(registrantsPage.value)
+const refreshAll = ({ silent = false } = {}) => {
+  fetchPacoStats({ silent })
+  fetchPacoRegistrants(registrantsPage.value, isSearching.value, { silent })
   fetchAllRegistrationDates()
 }
 
@@ -469,7 +469,7 @@ let initialLoadDone = false
 onMounted(() => {
   refreshAll()
   subscribeToPacoChanges((payload) => {
-    refreshAll()
+    refreshAll({ silent: true })
     if (initialLoadDone && payload?.eventType === 'INSERT') {
       showToast()
     }

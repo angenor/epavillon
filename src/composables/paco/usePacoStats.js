@@ -19,8 +19,8 @@ export function usePacoStats() {
    * Fetch aggregate statistics for PACO registrations.
    * Computes total, withDemographics, and percentage breakdowns.
    */
-  const fetchPacoStats = async () => {
-    loading.value = true
+  const fetchPacoStats = async ({ silent = false } = {}) => {
+    if (!silent) loading.value = true
     error.value = null
 
     try {
@@ -71,7 +71,7 @@ export function usePacoStats() {
       console.error('Error fetching PACO stats:', err)
       error.value = err.message
     } finally {
-      loading.value = false
+      if (!silent) loading.value = false
     }
   }
 
@@ -97,8 +97,8 @@ export function usePacoStats() {
   /**
    * Fetch detailed registrant list with user info and demographic data.
    */
-  const fetchPacoRegistrants = async (page = 1, loadAll = false) => {
-    registrantsLoading.value = true
+  const fetchPacoRegistrants = async (page = 1, loadAll = false, { silent = false } = {}) => {
+    if (!silent) registrantsLoading.value = true
     registrantsError.value = null
     registrantsPage.value = page
 
@@ -157,7 +157,7 @@ export function usePacoStats() {
       console.error('Error fetching PACO registrants:', err)
       registrantsError.value = err.message
     } finally {
-      registrantsLoading.value = false
+      if (!silent) registrantsLoading.value = false
     }
   }
 

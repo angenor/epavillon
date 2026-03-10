@@ -77,7 +77,11 @@ export async function finalizePacoRegistration(userId) {
     }
 
     if (pending.demographicData) {
-      await insertDemographicData(registrationId, pending.demographicData)
+      const demographicSaved = await insertDemographicData(registrationId, pending.demographicData)
+      if (!demographicSaved) {
+        // Demographics failed — don't clear pending data, let user fill the form manually
+        return { success: false, registrationId }
+      }
     }
 
     clearPendingRegistration()
