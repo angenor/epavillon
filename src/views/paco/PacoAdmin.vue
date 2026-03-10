@@ -81,9 +81,10 @@
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
             <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('paco.admin.statusDistribution') }}</p>
             <div class="mt-3 space-y-2">
-              <div v-for="(value, key) in stats.professionalStatus" :key="key" class="flex justify-between items-center">
-                <span class="text-sm text-gray-600 dark:text-gray-300">{{ statusLabel(key) }}</span>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ value }}%</span>
+              <div v-for="(value, key) in stats.professionalStatus" :key="key" class="flex items-baseline gap-1">
+                <span class="text-sm text-gray-600 dark:text-gray-300 shrink-0">{{ statusLabel(key) }}</span>
+                <span class="flex-1 border-b border-dotted border-gray-300 dark:border-gray-600 min-w-4 translate-y-[-3px]"></span>
+                <span class="text-sm font-semibold text-gray-900 dark:text-white shrink-0">{{ value }}%</span>
               </div>
             </div>
           </div>
