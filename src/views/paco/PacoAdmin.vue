@@ -158,36 +158,55 @@
           </div>
 
           <!-- Registrant Table -->
-          <div v-else class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <div v-else class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden">
+            <table class="w-full divide-y divide-gray-200 dark:divide-gray-700 table-fixed">
               <thead class="bg-gray-50 dark:bg-gray-900">
                 <tr>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('paco.admin.firstName') }}</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('paco.admin.lastName') }}</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('paco.admin.email') }}</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('paco.admin.gender') }}</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('paco.admin.ageProfile') }}</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('paco.admin.city') }}</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('paco.admin.country') }}</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('paco.admin.professionalStatus') }}</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('paco.admin.organization') }}</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('paco.admin.registrationDate') }}</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ t('paco.admin.actions') }}</th>
+                  <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[18%]">{{ t('paco.admin.name') }}</th>
+                  <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[18%]">{{ t('paco.admin.email') }}</th>
+                  <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden lg:table-cell w-[10%]">{{ t('paco.admin.gender') }} / {{ t('paco.admin.ageProfile') }}</th>
+                  <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[16%]">{{ t('paco.admin.location') }}</th>
+                  <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden md:table-cell w-[14%]">{{ t('paco.admin.professionalStatus') }}</th>
+                  <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden xl:table-cell w-[12%]">{{ t('paco.admin.organization') }}</th>
+                  <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[10%]">{{ t('paco.admin.registrationDate') }}</th>
+                  <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[4%]"></th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                 <tr v-for="r in registrants" :key="r.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                  <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100 whitespace-nowrap">{{ r.firstName || notSpecified }}</td>
-                  <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100 whitespace-nowrap">{{ r.lastName || notSpecified }}</td>
-                  <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{{ r.email }}</td>
-                  <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{{ genderLabel(r.gender) }}</td>
-                  <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{{ ageLabel(r.ageProfile) }}</td>
-                  <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{{ r.city || notSpecified }}</td>
-                  <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{{ countryName(r) }}</td>
-                  <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{{ statusLabel(r.professionalStatus) }}</td>
-                  <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{{ r.organization || notSpecified }}</td>
-                  <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{{ formatDate(r.registrationDate) }}</td>
-                  <td class="px-4 py-3 text-sm whitespace-nowrap">
+                  <!-- Name (merged first + last) -->
+                  <td class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100">
+                    <div class="truncate font-medium">{{ r.firstName || notSpecified }} {{ r.lastName || '' }}</div>
+                  </td>
+                  <!-- Email -->
+                  <td class="px-3 py-3 text-sm text-gray-600 dark:text-gray-300">
+                    <div class="truncate">{{ r.email }}</div>
+                  </td>
+                  <!-- Gender / Age (hidden on small) -->
+                  <td class="px-3 py-3 text-sm text-gray-600 dark:text-gray-300 hidden lg:table-cell">
+                    <div class="truncate">{{ genderLabel(r.gender) }}</div>
+                    <div class="truncate text-xs text-gray-400 dark:text-gray-500">{{ ageLabel(r.ageProfile) }}</div>
+                  </td>
+                  <!-- Location (city + country merged) -->
+                  <td class="px-3 py-3 text-sm text-gray-600 dark:text-gray-300">
+                    <div class="truncate">{{ r.city || notSpecified }}</div>
+                    <div class="truncate text-xs text-gray-400 dark:text-gray-500">{{ countryName(r) }}</div>
+                  </td>
+                  <!-- Professional Status (hidden on small) -->
+                  <td class="px-3 py-3 text-sm text-gray-600 dark:text-gray-300 hidden md:table-cell">
+                    <div class="truncate">{{ statusLabel(r.professionalStatus) }}</div>
+                  </td>
+                  <!-- Organization (hidden on small/medium) -->
+                  <td class="px-3 py-3 text-sm text-gray-600 dark:text-gray-300 hidden xl:table-cell">
+                    <div class="truncate">{{ r.organization || notSpecified }}</div>
+                  </td>
+                  <!-- Date -->
+                  <td class="px-3 py-3 text-sm text-gray-600 dark:text-gray-300">
+                    <div class="truncate">{{ formatDate(r.registrationDate) }}</div>
+                    <div class="truncate text-xs text-gray-400 dark:text-gray-500">{{ formatTime(r.registrationDate) }}</div>
+                  </td>
+                  <!-- Actions -->
+                  <td class="px-3 py-3 text-sm text-center">
                     <button
                       @click="confirmDelete(r)"
                       :disabled="deleting === r.id"
@@ -290,10 +309,15 @@ const countryName = (r) => {
 
 const formatDate = (dateStr) => {
   if (!dateStr) return notSpecified.value
-  return new Date(dateStr).toLocaleDateString(locale.value === 'fr' ? 'fr-FR' : 'en-US', {
-    year: 'numeric', month: 'short', day: 'numeric',
-    hour: '2-digit', minute: '2-digit'
-  })
+  const loc = locale.value === 'fr' ? 'fr-FR' : 'en-US'
+  return new Date(dateStr).toLocaleDateString(loc, { year: 'numeric', month: 'short', day: 'numeric' })
+}
+
+const formatTime = (dateStr) => {
+  if (!dateStr) return ''
+  const loc = locale.value === 'fr' ? 'fr-FR' : 'en-US'
+  const time = new Date(dateStr).toLocaleTimeString(loc, { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })
+  return time
 }
 
 const handleExport = () => {
