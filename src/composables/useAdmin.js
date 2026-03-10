@@ -61,7 +61,10 @@ export const useAdmin = () => {
     if (activeRoles.some(role => role.role === 'trainer')) {
       return 'Formateur'
     }
-    
+    if (activeRoles.some(role => role.role === 'paco')) {
+      return 'Gestionnaire PACO'
+    }
+
     return 'Utilisateur'
   }
 

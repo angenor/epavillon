@@ -68,6 +68,7 @@ CREATE TYPE user_role_type AS ENUM (
     'unfccc_focal_point',
     'negotiator',
     'trainer',
+    'paco',
     'revisionniste',
     'admin',
     'super_admin'
@@ -1653,7 +1654,7 @@ CREATE POLICY "Admins can view all activity registrations" ON public.activity_re
         EXISTS (
             SELECT 1 FROM public.user_roles
             WHERE user_id = auth.uid()
-            AND role IN ('admin', 'super_admin')
+            AND role IN ('paco', 'admin', 'super_admin')
             AND is_active = true
         )
     );
@@ -1663,7 +1664,7 @@ CREATE POLICY "Admins can delete activity registrations" ON public.activity_regi
         EXISTS (
             SELECT 1 FROM public.user_roles
             WHERE user_id = auth.uid()
-            AND role IN ('admin', 'super_admin')
+            AND role IN ('paco', 'admin', 'super_admin')
             AND is_active = true
         )
     );
@@ -2735,7 +2736,7 @@ USING (
     EXISTS (
         SELECT 1 FROM public.user_roles
         WHERE user_id = auth.uid()
-        AND role IN ('admin', 'super_admin')
+        AND role IN ('paco', 'admin', 'super_admin')
         AND is_active = true
     )
 );

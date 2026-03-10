@@ -386,7 +386,7 @@ const router = createRouter({
       path: '/paco/admin',
       name: 'paco-admin',
       component: () => import('../views/paco/PacoAdmin.vue'),
-      meta: { requiresAuth: true, requiresRole: ['admin', 'super_admin'] },
+      meta: { requiresAuth: true, requiresRole: ['paco', 'admin', 'super_admin'] },
     },
     // PACO Webinar — page d'inscription isolée (pas de garde auth)
     {

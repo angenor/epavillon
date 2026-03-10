@@ -14,9 +14,10 @@ export function useRoles() {
   // Liste des rôles disponibles selon le modèle de données
   const availableRoles = [
     'standard',
-    'unfccc_focal_point', 
+    'unfccc_focal_point',
     'negotiator',
     'trainer',
+    'paco',
     'admin',
     'super_admin'
   ]
@@ -275,6 +276,7 @@ export function useRoles() {
       negotiator: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
       unfccc_focal_point: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
       trainer: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+      paco: 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300',
       admin: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
       super_admin: 'bg-red-200 text-red-900 dark:bg-red-800 dark:text-red-200'
     }
