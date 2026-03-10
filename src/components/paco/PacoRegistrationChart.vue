@@ -162,6 +162,22 @@ const createChart = () => {
     return chart.get('colors').getIndex(series.columns.indexOf(target))
   })
 
+  series.bullets.push(() => {
+    return am5.Bullet.new(root, {
+      locationY: 1,
+      sprite: am5.Label.new(root, {
+        text: '{valueY}',
+        populateText: true,
+        fill: am5.color(0x555555),
+        centerX: am5.p50,
+        centerY: am5.p100,
+        dy: -5,
+        fontSize: 12,
+        fontWeight: '600'
+      })
+    })
+  })
+
   series.data.setAll(groupedData.value)
 
   chart.set('cursor', am5xy.XYCursor.new(root, { behavior: 'zoomX' }))
