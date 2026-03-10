@@ -183,6 +183,7 @@
       "chartSubtitle": "Number of registrations per period",
       "chartByHour": "By hour",
       "chartByDay": "By day",
+      "chartByWeek": "By week",
       "chartByMonth": "By month",
       "paginationOf": "of",
       "searchPlaceholder": "Search registrant...",

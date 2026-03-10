@@ -183,6 +183,7 @@
       "chartSubtitle": "Nombre d'inscriptions par période",
       "chartByHour": "Par heure",
       "chartByDay": "Par jour",
+      "chartByWeek": "Par semaine",
       "chartByMonth": "Par mois",
       "paginationOf": "sur",
       "searchPlaceholder": "Rechercher un inscrit...",

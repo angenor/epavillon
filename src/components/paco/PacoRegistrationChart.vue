@@ -53,6 +53,7 @@ let root = null
 const modes = computed(() => [
   { key: 'hour', label: t('paco.admin.chartByHour') },
   { key: 'day', label: t('paco.admin.chartByDay') },
+  { key: 'week', label: t('paco.admin.chartByWeek') },
   { key: 'month', label: t('paco.admin.chartByMonth') }
 ])
 
@@ -68,6 +69,12 @@ const groupedData = computed(() => {
       key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}T${String(d.getHours()).padStart(2, '0')}:00`
     } else if (activeMode.value === 'day') {
       key = d.toISOString().split('T')[0]
+    } else if (activeMode.value === 'week') {
+      const monday = new Date(d)
+      const day = monday.getDay()
+      const diff = day === 0 ? -6 : 1 - day
+      monday.setDate(monday.getDate() + diff)
+      key = monday.toISOString().split('T')[0]
     } else {
       key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
     }
@@ -111,17 +118,21 @@ const createChart = () => {
     paddingTop: 20
   }))
 
-  const baseInterval = activeMode.value === 'hour'
-    ? { timeUnit: 'hour', count: 1 }
-    : activeMode.value === 'day'
-      ? { timeUnit: 'day', count: 1 }
-      : { timeUnit: 'month', count: 1 }
+  const intervalMap = {
+    hour: { timeUnit: 'hour', count: 1 },
+    day: { timeUnit: 'day', count: 1 },
+    week: { timeUnit: 'week', count: 1 },
+    month: { timeUnit: 'month', count: 1 }
+  }
+  const baseInterval = intervalMap[activeMode.value]
 
-  const dateFormat = activeMode.value === 'hour'
-    ? 'dd/MM HH:mm'
-    : activeMode.value === 'day'
-      ? 'dd/MM/yyyy'
-      : 'MMM yyyy'
+  const formatMap = {
+    hour: 'dd/MM HH:mm',
+    day: 'dd/MM/yyyy',
+    week: 'dd/MM/yyyy',
+    month: 'MMM yyyy'
+  }
+  const dateFormat = formatMap[activeMode.value]
 
   const xAxis = chart.xAxes.push(am5xy.DateAxis.new(root, {
     baseInterval,
@@ -130,6 +141,7 @@ const createChart = () => {
     dateFormats: {
       hour: 'HH:mm',
       day: 'dd MMM',
+      week: 'dd MMM',
       month: 'MMM yyyy'
     }
   }))
