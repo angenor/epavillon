@@ -45,54 +45,71 @@
 
           <!-- Gender Distribution -->
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('paco.admin.genderDistribution') }}</p>
-            <div class="mt-3 space-y-2">
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-gray-600 dark:text-gray-300">{{ t('paco.admin.percentMale') }}</span>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ stats.gender.male }}%</span>
+            <div class="flex items-center gap-2 mb-3">
+              <font-awesome-icon :icon="['fas', 'venus-mars']" class="text-pink-500" />
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('paco.admin.genderDistribution') }}</p>
+            </div>
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-sm text-gray-600 dark:text-gray-300">{{ t('paco.admin.percentMale') }}</span>
+                  <span class="text-sm font-bold text-gray-900 dark:text-white">{{ stats.gender.male }}%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <div class="bg-blue-500 h-2 rounded-full transition-all duration-500" :style="{ width: stats.gender.male + '%' }"></div>
+                </div>
               </div>
-              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div class="bg-blue-500 h-2 rounded-full" :style="{ width: stats.gender.male + '%' }"></div>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-gray-600 dark:text-gray-300">{{ t('paco.admin.percentFemale') }}</span>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ stats.gender.female }}%</span>
-              </div>
-              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div class="bg-pink-500 h-2 rounded-full" :style="{ width: stats.gender.female + '%' }"></div>
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-sm text-gray-600 dark:text-gray-300">{{ t('paco.admin.percentFemale') }}</span>
+                  <span class="text-sm font-bold text-gray-900 dark:text-white">{{ stats.gender.female }}%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <div class="bg-pink-500 h-2 rounded-full transition-all duration-500" :style="{ width: stats.gender.female + '%' }"></div>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- Age Distribution -->
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('paco.admin.ageDistribution') }}</p>
-            <div class="mt-3 space-y-2">
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-gray-600 dark:text-gray-300">{{ t('paco.admin.percentUnder35') }}</span>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ stats.ageProfile.under35 }}%</span>
+            <div class="flex items-center gap-2 mb-3">
+              <font-awesome-icon :icon="['fas', 'calendar-alt']" class="text-emerald-500" />
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('paco.admin.ageDistribution') }}</p>
+            </div>
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-sm text-gray-600 dark:text-gray-300">{{ t('paco.admin.percentUnder35') }}</span>
+                  <span class="text-sm font-bold text-gray-900 dark:text-white">{{ stats.ageProfile.under35 }}%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <div class="bg-green-500 h-2 rounded-full transition-all duration-500" :style="{ width: stats.ageProfile.under35 + '%' }"></div>
+                </div>
               </div>
-              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div class="bg-green-500 h-2 rounded-full" :style="{ width: stats.ageProfile.under35 + '%' }"></div>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-gray-600 dark:text-gray-300">{{ t('paco.admin.percentOver35') }}</span>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ stats.ageProfile.over35 }}%</span>
-              </div>
-              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div class="bg-amber-500 h-2 rounded-full" :style="{ width: stats.ageProfile.over35 + '%' }"></div>
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-sm text-gray-600 dark:text-gray-300">{{ t('paco.admin.percentOver35') }}</span>
+                  <span class="text-sm font-bold text-gray-900 dark:text-white">{{ stats.ageProfile.over35 }}%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <div class="bg-amber-500 h-2 rounded-full transition-all duration-500" :style="{ width: stats.ageProfile.over35 + '%' }"></div>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- Professional Status Distribution -->
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('paco.admin.statusDistribution') }}</p>
-            <div class="mt-3 space-y-2">
+            <div class="flex items-center gap-2 mb-3">
+              <font-awesome-icon :icon="['fas', 'briefcase']" class="text-amber-500" />
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('paco.admin.statusDistribution') }}</p>
+            </div>
+            <div class="space-y-2">
               <div v-for="(value, key) in stats.professionalStatus" :key="key" class="flex items-baseline gap-1">
                 <span class="text-sm text-gray-600 dark:text-gray-300 shrink-0">{{ statusLabel(key) }}</span>
                 <span class="flex-1 overflow-hidden whitespace-nowrap text-xs text-gray-300 dark:text-gray-600 tracking-widest">{{ '_'.repeat(50) }}</span>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white shrink-0">{{ value }}%</span>
+                <span class="text-sm font-bold text-gray-900 dark:text-white shrink-0">{{ value }}%</span>
               </div>
             </div>
           </div>
