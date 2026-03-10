@@ -183,7 +183,8 @@
       "chartSubtitle": "Nombre d'inscriptions par période",
       "chartByHour": "Par heure",
       "chartByDay": "Par jour",
-      "chartByMonth": "Par mois"
+      "chartByMonth": "Par mois",
+      "paginationOf": "sur"
     },
     "join": {
       "title": "Vous êtes inscrit(e) !",

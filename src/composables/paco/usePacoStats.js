@@ -10,6 +10,10 @@ export function usePacoStats() {
   const registrants = ref([])
   const registrantsLoading = ref(false)
   const registrantsError = ref(null)
+  const registrantsTotal = ref(0)
+  const registrantsPage = ref(1)
+  const registrantsPerPage = 50
+  const allRegistrationDates = ref([])
 
   /**
    * Fetch aggregate statistics for PACO registrations.
@@ -72,14 +76,37 @@ export function usePacoStats() {
   }
 
   /**
-   * Fetch detailed registrant list with user info and demographic data.
+   * Fetch all registration dates for chart display (lightweight query).
    */
-  const fetchPacoRegistrants = async () => {
-    registrantsLoading.value = true
-    registrantsError.value = null
-
+  const fetchAllRegistrationDates = async () => {
     try {
       const { data, error: queryError } = await supabase
+        .from('activity_registrations')
+        .select('registration_date')
+        .eq('activity_id', PACO_ACTIVITY_ID)
+        .order('registration_date', { ascending: true })
+
+      if (queryError) throw queryError
+
+      allRegistrationDates.value = data.map(r => ({ registrationDate: r.registration_date }))
+    } catch (err) {
+      console.error('Error fetching registration dates:', err)
+    }
+  }
+
+  /**
+   * Fetch detailed registrant list with user info and demographic data.
+   */
+  const fetchPacoRegistrants = async (page = 1) => {
+    registrantsLoading.value = true
+    registrantsError.value = null
+    registrantsPage.value = page
+
+    const from = (page - 1) * registrantsPerPage
+    const to = from + registrantsPerPage - 1
+
+    try {
+      const { data, error: queryError, count } = await supabase
         .from('activity_registrations')
         .select(`
           id,
@@ -98,11 +125,14 @@ export function usePacoStats() {
             professional_status,
             organization
           )
-        `)
+        `, { count: 'exact' })
         .eq('activity_id', PACO_ACTIVITY_ID)
         .order('registration_date', { ascending: false })
+        .range(from, to)
 
       if (queryError) throw queryError
+
+      registrantsTotal.value = count
 
       registrants.value = data.map(r => ({
         id: r.id,
@@ -145,7 +175,12 @@ export function usePacoStats() {
     registrants,
     registrantsLoading,
     registrantsError,
+    registrantsTotal,
+    registrantsPage,
+    registrantsPerPage,
     fetchPacoRegistrants,
-    deleteRegistrant
+    deleteRegistrant,
+    allRegistrationDates,
+    fetchAllRegistrationDates
   }
 }

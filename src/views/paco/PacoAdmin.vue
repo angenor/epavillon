@@ -116,7 +116,7 @@
         </div>
 
         <!-- Registration Chart -->
-        <PacoRegistrationChart :data="registrants" />
+        <PacoRegistrationChart :data="allRegistrationDates" />
 
         <!-- Registrant List Section -->
         <div>
@@ -219,6 +219,46 @@
                 </tr>
               </tbody>
             </table>
+
+            <!-- Pagination -->
+            <div v-if="totalPages > 1" class="flex items-center justify-between px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                {{ (registrantsPage - 1) * registrantsPerPage + 1 }}–{{ Math.min(registrantsPage * registrantsPerPage, registrantsTotal) }}
+                {{ t('paco.admin.paginationOf') }} {{ registrantsTotal }}
+              </p>
+              <div class="flex gap-1">
+                <button
+                  @click="goToPage(registrantsPage - 1)"
+                  :disabled="registrantsPage <= 1"
+                  class="cursor-pointer px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <font-awesome-icon :icon="['fas', 'chevron-left']" />
+                </button>
+                <template v-for="p in totalPages" :key="p">
+                  <button
+                    v-if="p === 1 || p === totalPages || (p >= registrantsPage - 1 && p <= registrantsPage + 1)"
+                    @click="goToPage(p)"
+                    class="cursor-pointer px-3 py-1.5 text-sm rounded-lg transition"
+                    :class="p === registrantsPage
+                      ? 'bg-blue-600 text-white'
+                      : 'border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'"
+                  >
+                    {{ p }}
+                  </button>
+                  <span
+                    v-else-if="p === 2 && registrantsPage > 3 || p === totalPages - 1 && registrantsPage < totalPages - 2"
+                    class="px-2 py-1.5 text-sm text-gray-400"
+                  >…</span>
+                </template>
+                <button
+                  @click="goToPage(registrantsPage + 1)"
+                  :disabled="registrantsPage >= totalPages"
+                  class="cursor-pointer px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <font-awesome-icon :icon="['fas', 'chevron-right']" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -250,11 +290,6 @@
           </div>
         </div>
       </div>
-
-      <!-- No stats empty state -->
-      <div v-else class="bg-white dark:bg-gray-800 rounded-xl shadow p-8 text-center">
-        <p class="text-gray-500 dark:text-gray-400">{{ t('paco.admin.noStats') }}</p>
-      </div>
     </div>
   </div>
 </template>
@@ -269,9 +304,18 @@ import PacoRegistrationChart from '@/components/paco/PacoRegistrationChart.vue'
 const { t, locale } = useI18n()
 const {
   stats, loading, error, fetchPacoStats,
-  registrants, registrantsLoading, registrantsError, fetchPacoRegistrants,
-  deleteRegistrant
+  registrants, registrantsLoading, registrantsError,
+  registrantsTotal, registrantsPage, registrantsPerPage,
+  fetchPacoRegistrants, deleteRegistrant,
+  allRegistrationDates, fetchAllRegistrationDates
 } = usePacoStats()
+
+const totalPages = computed(() => Math.ceil(registrantsTotal.value / registrantsPerPage))
+
+const goToPage = (page) => {
+  if (page < 1 || page > totalPages.value) return
+  fetchPacoRegistrants(page)
+}
 const { exportToCsv } = usePacoCsvExport()
 
 const notSpecified = computed(() => t('paco.admin.notSpecified'))
@@ -279,6 +323,7 @@ const notSpecified = computed(() => t('paco.admin.notSpecified'))
 onMounted(() => {
   fetchPacoStats()
   fetchPacoRegistrants()
+  fetchAllRegistrationDates()
 })
 
 const genderLabel = (value) => {
@@ -338,6 +383,8 @@ const handleDelete = async () => {
     await deleteRegistrant(id)
     registrantToDelete.value = null
     fetchPacoStats()
+    fetchPacoRegistrants(registrantsPage.value)
+    fetchAllRegistrationDates()
   } catch (err) {
     console.error('Error deleting registrant:', err)
   } finally {

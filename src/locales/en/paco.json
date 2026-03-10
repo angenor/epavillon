@@ -183,7 +183,8 @@
       "chartSubtitle": "Number of registrations per period",
       "chartByHour": "By hour",
       "chartByDay": "By day",
-      "chartByMonth": "By month"
+      "chartByMonth": "By month",
+      "paginationOf": "of"
     },
     "join": {
       "title": "You are registered!",
