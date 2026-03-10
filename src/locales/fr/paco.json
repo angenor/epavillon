@@ -176,7 +176,12 @@
       "deleteConfirmTitle": "Confirmer la suppression",
       "deleteConfirmMessage": "Voulez-vous vraiment supprimer cet inscrit ? Cette action est irréversible.",
       "deleteConfirm": "Supprimer",
-      "deleting": "Suppression..."
+      "deleting": "Suppression...",
+      "chartTitle": "Inscriptions dans le temps",
+      "chartSubtitle": "Nombre d'inscriptions par période",
+      "chartByHour": "Par heure",
+      "chartByDay": "Par jour",
+      "chartByMonth": "Par mois"
     },
     "join": {
       "title": "Vous êtes inscrit(e) !",

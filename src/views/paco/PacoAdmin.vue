@@ -89,6 +89,9 @@
           </div>
         </div>
 
+        <!-- Registration Chart -->
+        <PacoRegistrationChart :data="registrants" />
+
         <!-- Registrant List Section -->
         <div>
           <div class="flex items-center justify-between mb-4">
@@ -216,6 +219,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { usePacoStats } from '@/composables/paco/usePacoStats'
 import { usePacoCsvExport } from '@/composables/paco/usePacoCsvExport'
+import PacoRegistrationChart from '@/components/paco/PacoRegistrationChart.vue'
 
 const { t, locale } = useI18n()
 const {

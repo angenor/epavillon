@@ -176,7 +176,12 @@
       "deleteConfirmTitle": "Confirm deletion",
       "deleteConfirmMessage": "Are you sure you want to delete this registrant? This action cannot be undone.",
       "deleteConfirm": "Delete",
-      "deleting": "Deleting..."
+      "deleting": "Deleting...",
+      "chartTitle": "Registrations over time",
+      "chartSubtitle": "Number of registrations per period",
+      "chartByHour": "By hour",
+      "chartByDay": "By day",
+      "chartByMonth": "By month"
     },
     "join": {
       "title": "You are registered!",
