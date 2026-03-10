@@ -261,7 +261,8 @@ const countryName = (r) => {
 const formatDate = (dateStr) => {
   if (!dateStr) return notSpecified.value
   return new Date(dateStr).toLocaleDateString(locale.value === 'fr' ? 'fr-FR' : 'en-US', {
-    year: 'numeric', month: 'short', day: 'numeric'
+    year: 'numeric', month: 'short', day: 'numeric',
+    hour: '2-digit', minute: '2-digit'
   })
 }
 
