@@ -152,6 +152,51 @@
             </div>
           </div>
 
+          <!-- Top Pagination -->
+          <div v-if="!registrantsLoading && !registrantsError && filteredRegistrants.length && (totalPages > 1 || isSearching)" class="flex items-center justify-between mb-3">
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              <template v-if="isSearching">
+                {{ displayedTotal }} {{ t('paco.admin.searchResults') }}
+              </template>
+              <template v-else>
+                {{ (registrantsPage - 1) * registrantsPerPage + 1 }}–{{ Math.min(registrantsPage * registrantsPerPage, registrantsTotal) }}
+                {{ t('paco.admin.paginationOf') }} {{ registrantsTotal }}
+              </template>
+            </p>
+            <div v-if="totalPages > 1 && !isSearching" class="flex gap-1">
+              <button
+                @click="goToPage(registrantsPage - 1)"
+                :disabled="registrantsPage <= 1"
+                class="cursor-pointer px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <font-awesome-icon :icon="['fas', 'chevron-left']" />
+              </button>
+              <template v-for="p in totalPages" :key="'top-' + p">
+                <button
+                  v-if="p === 1 || p === totalPages || (p >= registrantsPage - 1 && p <= registrantsPage + 1)"
+                  @click="goToPage(p)"
+                  class="cursor-pointer px-3 py-1.5 text-sm rounded-lg transition"
+                  :class="p === registrantsPage
+                    ? 'bg-blue-600 text-white'
+                    : 'border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'"
+                >
+                  {{ p }}
+                </button>
+                <span
+                  v-else-if="p === 2 && registrantsPage > 3 || p === totalPages - 1 && registrantsPage < totalPages - 2"
+                  class="px-2 py-1.5 text-sm text-gray-400"
+                >…</span>
+              </template>
+              <button
+                @click="goToPage(registrantsPage + 1)"
+                :disabled="registrantsPage >= totalPages"
+                class="cursor-pointer px-3 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <font-awesome-icon :icon="['fas', 'chevron-right']" />
+              </button>
+            </div>
+          </div>
+
           <!-- Table Loading Skeleton -->
           <div v-if="registrantsLoading" class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden">
             <div class="p-6 space-y-4 animate-pulse">
