@@ -177,7 +177,7 @@
       "deleteConfirmMessage": "Voulez-vous vraiment supprimer cet inscrit ? Cette action est irréversible.",
       "deleteConfirm": "Supprimer",
       "deleting": "Suppression...",
-      "chartTitle": "Inscriptions dans le temps",
+      "chartTitlePrefix": "Inscriptions",
       "chartSubtitle": "Nombre d'inscriptions par période",
       "chartByHour": "Par heure",
       "chartByDay": "Par jour",

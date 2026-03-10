@@ -177,7 +177,7 @@
       "deleteConfirmMessage": "Are you sure you want to delete this registrant? This action cannot be undone.",
       "deleteConfirm": "Delete",
       "deleting": "Deleting...",
-      "chartTitle": "Registrations over time",
+      "chartTitlePrefix": "Registrations",
       "chartSubtitle": "Number of registrations per period",
       "chartByHour": "By hour",
       "chartByDay": "By day",
