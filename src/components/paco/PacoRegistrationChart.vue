@@ -107,7 +107,8 @@ const createChart = () => {
     panY: false,
     wheelX: 'panX',
     wheelY: 'zoomX',
-    pinchZoomX: true
+    pinchZoomX: true,
+    paddingTop: 20
   }))
 
   const baseInterval = activeMode.value === 'hour'
@@ -136,7 +137,8 @@ const createChart = () => {
   const yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
     renderer: am5xy.AxisRendererY.new(root, {}),
     min: 0,
-    maxPrecision: 0
+    maxPrecision: 0,
+    extraMax: 0.1
   }))
 
   const tooltipLabel = locale.value === 'fr'
