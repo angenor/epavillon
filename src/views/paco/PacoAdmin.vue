@@ -363,7 +363,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { usePacoStats } from '@/composables/paco/usePacoStats'
 import { usePacoCsvExport } from '@/composables/paco/usePacoCsvExport'
@@ -375,7 +375,8 @@ const {
   registrants, registrantsLoading, registrantsError,
   registrantsTotal, registrantsPage, registrantsPerPage,
   fetchPacoRegistrants, deleteRegistrant,
-  allRegistrationDates, fetchAllRegistrationDates
+  allRegistrationDates, fetchAllRegistrationDates,
+  subscribeToPacoChanges, unsubscribePacoChanges
 } = usePacoStats()
 
 const searchQuery = ref('')
@@ -414,10 +415,19 @@ const { exportToCsv } = usePacoCsvExport()
 
 const notSpecified = computed(() => t('paco.admin.notSpecified'))
 
-onMounted(() => {
+const refreshAll = () => {
   fetchPacoStats()
-  fetchPacoRegistrants()
+  fetchPacoRegistrants(registrantsPage.value)
   fetchAllRegistrationDates()
+}
+
+onMounted(() => {
+  refreshAll()
+  subscribeToPacoChanges(refreshAll)
+})
+
+onUnmounted(() => {
+  unsubscribePacoChanges()
 })
 
 const genderLabel = (value) => {

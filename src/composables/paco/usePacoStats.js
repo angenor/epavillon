@@ -161,6 +161,33 @@ export function usePacoStats() {
     }
   }
 
+  let realtimeChannel = null
+
+  const subscribeToPacoChanges = (onChangeCallback) => {
+    realtimeChannel = supabase
+      .channel('paco-registrations')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'activity_registrations',
+          filter: `activity_id=eq.${PACO_ACTIVITY_ID}`
+        },
+        () => {
+          if (onChangeCallback) onChangeCallback()
+        }
+      )
+      .subscribe()
+  }
+
+  const unsubscribePacoChanges = () => {
+    if (realtimeChannel) {
+      supabase.removeChannel(realtimeChannel)
+      realtimeChannel = null
+    }
+  }
+
   const deleteRegistrant = async (registrationId) => {
     const { error: deleteError } = await supabase
       .from('activity_registrations')
@@ -186,6 +213,8 @@ export function usePacoStats() {
     fetchPacoRegistrants,
     deleteRegistrant,
     allRegistrationDates,
-    fetchAllRegistrationDates
+    fetchAllRegistrationDates,
+    subscribeToPacoChanges,
+    unsubscribePacoChanges
   }
 }
