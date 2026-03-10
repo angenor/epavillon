@@ -174,8 +174,8 @@ export function usePacoStats() {
           table: 'activity_registrations',
           filter: `activity_id=eq.${PACO_ACTIVITY_ID}`
         },
-        () => {
-          if (onChangeCallback) onChangeCallback()
+        (payload) => {
+          if (onChangeCallback) onChangeCallback(payload)
         }
       )
       .subscribe()

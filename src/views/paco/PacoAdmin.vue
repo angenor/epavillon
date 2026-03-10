@@ -359,6 +359,33 @@
         </div>
       </div>
     </div>
+
+    <!-- Realtime Toast Notification -->
+    <Transition
+      enter-active-class="transition ease-out duration-300"
+      enter-from-class="translate-y-4 opacity-0"
+      enter-to-class="translate-y-0 opacity-100"
+      leave-active-class="transition ease-in duration-200"
+      leave-from-class="translate-y-0 opacity-100"
+      leave-to-class="translate-y-4 opacity-0"
+    >
+      <div
+        v-if="toastCount > 0"
+        class="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-green-600 text-white px-5 py-3 rounded-xl shadow-lg cursor-pointer"
+        @click="dismissToast"
+      >
+        <font-awesome-icon :icon="['fas', 'user-plus']" />
+        <div>
+          <p class="text-sm font-semibold">
+            <template v-if="toastCount === 1">{{ t('paco.admin.newRegistration') }}</template>
+            <template v-else>{{ toastCount }} {{ t('paco.admin.newRegistrations') }}</template>
+          </p>
+        </div>
+        <button class="cursor-pointer ml-2 text-white/70 hover:text-white" @click.stop="dismissToast">
+          <font-awesome-icon :icon="['fas', 'times']" class="text-sm" />
+        </button>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -415,15 +442,39 @@ const { exportToCsv } = usePacoCsvExport()
 
 const notSpecified = computed(() => t('paco.admin.notSpecified'))
 
+const toastCount = ref(0)
+let toastTimer = null
+
+const showToast = () => {
+  toastCount.value++
+  clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => {
+    toastCount.value = 0
+  }, 5000)
+}
+
+const dismissToast = () => {
+  toastCount.value = 0
+  clearTimeout(toastTimer)
+}
+
 const refreshAll = () => {
   fetchPacoStats()
   fetchPacoRegistrants(registrantsPage.value)
   fetchAllRegistrationDates()
 }
 
+let initialLoadDone = false
+
 onMounted(() => {
   refreshAll()
-  subscribeToPacoChanges(refreshAll)
+  subscribeToPacoChanges((payload) => {
+    refreshAll()
+    if (initialLoadDone && payload?.eventType === 'INSERT') {
+      showToast()
+    }
+  })
+  setTimeout(() => { initialLoadDone = true }, 2000)
 })
 
 onUnmounted(() => {

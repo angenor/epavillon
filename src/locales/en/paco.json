@@ -186,7 +186,9 @@
       "chartByMonth": "By month",
       "paginationOf": "of",
       "searchPlaceholder": "Search registrant...",
-      "searchResults": "result(s) found"
+      "searchResults": "result(s) found",
+      "newRegistration": "New registration",
+      "newRegistrations": "New registrations"
     },
     "join": {
       "title": "You are registered!",

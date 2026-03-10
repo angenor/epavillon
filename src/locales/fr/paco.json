@@ -186,7 +186,9 @@
       "chartByMonth": "Par mois",
       "paginationOf": "sur",
       "searchPlaceholder": "Rechercher un inscrit...",
-      "searchResults": "résultat(s) trouvé(s)"
+      "searchResults": "résultat(s) trouvé(s)",
+      "newRegistration": "Nouvelle inscription",
+      "newRegistrations": "Nouvelles inscriptions"
     },
     "join": {
       "title": "Vous êtes inscrit(e) !",
