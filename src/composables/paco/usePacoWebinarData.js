@@ -44,6 +44,27 @@ const WEBINAR_DATA = {
       organization: 'AIMF',
       email: null,
     },
+    {
+      id: 'ayi-nkamgna',
+      name: 'Monique AYI NKAMGNA',
+      photoUrl: null,
+      organization: 'REMCESS',
+      email: null,
+    },
+    {
+      id: 'betchem',
+      name: 'Jean Paul BETCHEM',
+      photoUrl: null,
+      organization: 'REMCESS',
+      email: null,
+    },
+    {
+      id: 'sall',
+      name: 'Aissata SALL',
+      photoUrl: null,
+      organization: 'CSE',
+      email: null,
+    },
   ],
 
   partners: [
