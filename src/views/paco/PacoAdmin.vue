@@ -3,10 +3,16 @@
     <div class="max-w-7xl mx-auto">
 
       <!-- Header -->
-      <div class="mb-8">
+      <div class="mb-8 flex items-baseline justify-between">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
           {{ t('paco.admin.title') }}
         </h1>
+        <div v-if="pageViewCount > 0" class="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500" :title="t('paco.admin.viewCountSince')">
+          <font-awesome-icon :icon="['fas', 'eye']" class="text-[10px]" />
+          <span>{{ pageViewCount }}</span>
+          <span class="text-gray-300 dark:text-gray-600">·</span>
+          <span>{{ t('paco.admin.viewCountSince') }}</span>
+        </div>
       </div>
 
       <!-- Stats Loading Skeleton -->
@@ -403,6 +409,7 @@ const {
   registrantsTotal, registrantsPage, registrantsPerPage,
   fetchPacoRegistrants, deleteRegistrant,
   allRegistrationDates, fetchAllRegistrationDates,
+  pageViewCount, fetchPageViewCount,
   subscribeToPacoChanges, unsubscribePacoChanges
 } = usePacoStats()
 
@@ -462,6 +469,7 @@ const refreshAll = ({ silent = false } = {}) => {
   fetchPacoStats({ silent })
   fetchPacoRegistrants(registrantsPage.value, isSearching.value, { silent })
   fetchAllRegistrationDates()
+  fetchPageViewCount()
 }
 
 let initialLoadDone = false

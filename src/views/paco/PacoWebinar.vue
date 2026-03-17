@@ -97,6 +97,8 @@ import { useAuth } from '@/composables/useAuth'
 import { useSEO } from '@/composables/useSEO'
 import { usePacoRegistration, finalizePacoRegistration, getPendingRegistration } from '@/composables/paco/usePacoRegistration'
 import { usePacoEmail } from '@/composables/paco/usePacoEmail'
+import { supabase } from '@/composables/useSupabase'
+import { PACO_ACTIVITY_ID } from '@/composables/paco/constants'
 import PacoPresentation from '@/components/paco/PacoPresentation.vue'
 import PacoEmailCheck from '@/components/paco/PacoEmailCheck.vue'
 import PacoLoginForm from '@/components/paco/PacoLoginForm.vue'
@@ -158,10 +160,30 @@ function handleUrlHashError() {
 }
 
 /**
+ * Track unique page view using localStorage to avoid counting the same visitor twice.
+ */
+async function trackUniqueView() {
+  const STORAGE_KEY = 'paco_page_viewed'
+  if (localStorage.getItem(STORAGE_KEY)) return
+
+  try {
+    const { error } = await supabase.rpc('increment_activity_view_count', {
+      activity_uuid: PACO_ACTIVITY_ID
+    })
+    if (!error) {
+      localStorage.setItem(STORAGE_KEY, '1')
+    }
+  } catch (err) {
+    // Non-blocking — don't prevent page from loading
+  }
+}
+
+/**
  * On mount: check URL hash for auth errors, then check initial state
  */
 onMounted(async () => {
   handleUrlHashError()
+  trackUniqueView()
   await checkInitialState()
 })
 

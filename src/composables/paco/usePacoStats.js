@@ -14,6 +14,25 @@ export function usePacoStats() {
   const registrantsPage = ref(1)
   const registrantsPerPage = 50
   const allRegistrationDates = ref([])
+  const pageViewCount = ref(0)
+
+  /**
+   * Fetch the unique page view count from the activities table.
+   */
+  const fetchPageViewCount = async () => {
+    try {
+      const { data, error: queryError } = await supabase
+        .from('activities')
+        .select('activites_view_count')
+        .eq('id', PACO_ACTIVITY_ID)
+        .single()
+
+      if (queryError) throw queryError
+      pageViewCount.value = data?.activites_view_count || 0
+    } catch (err) {
+      console.error('Error fetching page view count:', err)
+    }
+  }
 
   /**
    * Fetch aggregate statistics for PACO registrations.
@@ -214,6 +233,8 @@ export function usePacoStats() {
     deleteRegistrant,
     allRegistrationDates,
     fetchAllRegistrationDates,
+    pageViewCount,
+    fetchPageViewCount,
     subscribeToPacoChanges,
     unsubscribePacoChanges
   }

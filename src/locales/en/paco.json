@@ -192,7 +192,8 @@
       "searchPlaceholder": "Search registrant...",
       "searchResults": "result(s) found",
       "newRegistration": "New registration",
-      "newRegistrations": "New registrations"
+      "newRegistrations": "New registrations",
+      "viewCountSince": "since March 17, 2026, 3:00 PM GMT"
     },
     "join": {
       "title": "You are registered!",
