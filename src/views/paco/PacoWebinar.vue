@@ -14,9 +14,15 @@
         <div class="lg:col-span-2 lg:sticky lg:top-24 order-1 lg:order-2 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:scrollbar-thin lg:scrollbar-thumb-white/20 lg:scrollbar-track-transparent">
           <div class="bg-white/10 backdrop-blur-2xl border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/20">
 
+            <!-- Loading -->
+            <div v-if="pageLoading" class="text-center py-12">
+              <div class="animate-spin rounded-full h-8 w-8 border-2 border-white/20 border-t-white mx-auto mb-4"></div>
+              <p class="text-white/60 text-sm">{{ t('paco.emailCheck.checking') }}</p>
+            </div>
+
             <!-- Step: form (inscription rapide sans auth) -->
             <PacoQuickRegister
-              v-if="step === 'form'"
+              v-else-if="step === 'form'"
               @registration-complete="handleRegistrationComplete"
             />
 
@@ -32,13 +38,17 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useAuth } from '@/composables/useAuth'
 import { useSEO } from '@/composables/useSEO'
-import { isPacoRegisteredLocally } from '@/composables/paco/usePacoRegistration'
+import { usePacoRegistration, isPacoRegisteredLocally, markPacoRegistered } from '@/composables/paco/usePacoRegistration'
 import { supabase } from '@/composables/useSupabase'
 import { PACO_ACTIVITY_ID } from '@/composables/paco/constants'
 import PacoPresentation from '@/components/paco/PacoPresentation.vue'
 import PacoQuickRegister from '@/components/paco/PacoQuickRegister.vue'
 import PacoJoinSection from '@/components/paco/PacoJoinSection.vue'
+
+const { t } = useI18n()
 
 // SEO - OG meta tags pour le partage sur les réseaux sociaux
 const PACO_OG_IMAGE = 'https://epavillonclimatique.francophonie.org/images/og_affiche_paco_avec_ecriture.jpg'
@@ -52,17 +62,54 @@ useSEO({
   twitter: { card: 'summary_large_image' }
 })
 
-// State : form | join
+const { isAuthenticated, user } = useAuth()
+const { checkPacoRegistration } = usePacoRegistration()
+
+// State : loading | form | join
 const step = ref('form')
+const pageLoading = ref(true)
 
-onMounted(() => {
+onMounted(async () => {
   trackUniqueView()
-
-  // Si déjà inscrit (localStorage), aller directement au bouton join
-  if (isPacoRegisteredLocally()) {
-    step.value = 'join'
-  }
+  await checkInitialState()
 })
+
+/**
+ * Vérifie l'état initial :
+ * 1. Si authentifié → vérifier inscription PACO en BD
+ * 2. Sinon → vérifier localStorage
+ * 3. Sinon → formulaire d'inscription rapide
+ */
+async function checkInitialState() {
+  pageLoading.value = true
+
+  try {
+    // 1. Utilisateur authentifié → vérifier en BD
+    if (isAuthenticated.value && user.value) {
+      const registered = await checkPacoRegistration(user.value.id)
+      if (registered) {
+        markPacoRegistered()
+        step.value = 'join'
+        return
+      }
+    }
+
+    // 2. Vérifier localStorage (inscriptions sans auth)
+    if (isPacoRegisteredLocally()) {
+      step.value = 'join'
+      return
+    }
+
+    // 3. Aucune inscription trouvée → formulaire
+    step.value = 'form'
+  } catch (err) {
+    console.error('Error checking initial state:', err)
+    // En cas d'erreur, vérifier localStorage en fallback
+    step.value = isPacoRegisteredLocally() ? 'join' : 'form'
+  } finally {
+    pageLoading.value = false
+  }
+}
 
 /**
  * Track unique page view using localStorage to avoid counting the same visitor twice.
