@@ -11,30 +11,18 @@
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { useAuth } from '@/composables/useAuth'
-import { usePacoRegistration } from '@/composables/paco/usePacoRegistration'
+import { isPacoRegisteredLocally } from '@/composables/paco/usePacoRegistration'
 import { PACO_TEAMS_LINK } from '@/composables/paco/constants'
 
 const { t } = useI18n()
 const router = useRouter()
-const { isAuthenticated, user } = useAuth()
-const { checkPacoRegistration } = usePacoRegistration()
 
-onMounted(async () => {
-  try {
-    if (!isAuthenticated.value || !user.value) {
-      router.replace('/paco?from=join')
-      return
-    }
-
-    const registered = await checkPacoRegistration(user.value.id)
-    if (registered) {
-      window.location.href = PACO_TEAMS_LINK
-    } else {
-      router.replace('/paco?from=join')
-    }
-  } catch {
-    router.replace('/paco?from=join')
+onMounted(() => {
+  // URGENCE: vérification par localStorage uniquement (pas d'auth)
+  if (isPacoRegisteredLocally()) {
+    window.location.href = PACO_TEAMS_LINK
+  } else {
+    router.replace('/paco')
   }
 })
 </script>

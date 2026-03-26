@@ -4,6 +4,22 @@ import { PACO_ACTIVITY_ID } from '@/composables/paco/constants'
 
 const PENDING_REGISTRATION_KEY = 'paco_pending_registration'
 const PENDING_MAX_AGE_MS = 24 * 60 * 60 * 1000 // 24 hours
+const PACO_REGISTERED_KEY = 'paco_registration_complete'
+
+/**
+ * Mark PACO registration as complete in localStorage.
+ * Allows bypassing auth check on page refresh (urgence: email server down).
+ */
+export function markPacoRegistered() {
+  localStorage.setItem(PACO_REGISTERED_KEY, '1')
+}
+
+/**
+ * Check if PACO registration is marked complete in localStorage.
+ */
+export function isPacoRegisteredLocally() {
+  return localStorage.getItem(PACO_REGISTERED_KEY) === '1'
+}
 
 /**
  * Save pending registration data to sessionStorage.

@@ -130,6 +130,9 @@ export function usePacoStats() {
         .select(`
           id,
           registration_date,
+          guest_email,
+          guest_first_name,
+          guest_last_name,
           users (
             first_name,
             last_name,
@@ -160,9 +163,9 @@ export function usePacoStats() {
 
       registrants.value = data.map(r => ({
         id: r.id,
-        firstName: r.users?.first_name || '',
-        lastName: r.users?.last_name || '',
-        email: r.users?.email || '',
+        firstName: r.users?.first_name || r.guest_first_name || '',
+        lastName: r.users?.last_name || r.guest_last_name || '',
+        email: r.users?.email || r.guest_email || '',
         gender: r.paco_demographic_data?.gender || null,
         ageProfile: r.paco_demographic_data?.age_profile || null,
         city: r.paco_demographic_data?.city || null,

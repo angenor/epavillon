@@ -117,6 +117,9 @@
       "rateLimited": "Trop de tentatives. Veuillez patienter quelques minutes avant de réessayer.",
       "backToEmail": "Utiliser un autre email"
     },
+    "quickRegister": {
+      "subtitle": "Remplissez le formulaire ci-dessous pour accéder au webinaire."
+    },
     "activityRegister": {
       "title": "Inscrivez-vous au webinaire",
       "subtitle": "Vérifiez vos informations et inscrivez-vous au webinaire PACO.",

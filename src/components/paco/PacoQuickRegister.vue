@@ -4,26 +4,18 @@
       {{ t('paco.register.title') }}
     </h2>
     <p class="text-sm text-white/50 mb-5">
-      {{ t('paco.register.subtitle') }}
+      {{ t('paco.quickRegister.subtitle') }}
     </p>
-
-    <!-- Password warning -->
-    <div class="bg-amber-500/15 border border-amber-400/30 rounded-xl p-3 mb-4">
-      <p class="text-sm text-amber-300 flex items-start gap-2">
-        <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="mt-0.5 shrink-0" />
-        <span>{{ t('paco.register.passwordWarning') }}</span>
-      </p>
-    </div>
 
     <form @submit.prevent="handleSubmit" class="space-y-3">
       <!-- Name fields -->
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label for="paco-firstname" class="block text-sm font-medium text-white/70 mb-1">
+          <label for="paco-quick-firstname" class="block text-sm font-medium text-white/70 mb-1">
             {{ t('paco.register.firstNameLabel') }} <span class="text-red-400">*</span>
           </label>
           <input
-            id="paco-firstname"
+            id="paco-quick-firstname"
             v-model="form.firstName"
             type="text"
             :placeholder="t('paco.register.firstNamePlaceholder')"
@@ -32,11 +24,11 @@
           />
         </div>
         <div>
-          <label for="paco-lastname" class="block text-sm font-medium text-white/70 mb-1">
+          <label for="paco-quick-lastname" class="block text-sm font-medium text-white/70 mb-1">
             {{ t('paco.register.lastNameLabel') }} <span class="text-red-400">*</span>
           </label>
           <input
-            id="paco-lastname"
+            id="paco-quick-lastname"
             v-model="form.lastName"
             type="text"
             :placeholder="t('paco.register.lastNamePlaceholder')"
@@ -46,53 +38,19 @@
         </div>
       </div>
 
-      <!-- Email (pre-filled, read-only) -->
+      <!-- Email -->
       <div>
-        <label for="paco-register-email" class="block text-sm font-medium text-white/70 mb-1">
+        <label for="paco-quick-email" class="block text-sm font-medium text-white/70 mb-1">
           {{ t('paco.register.emailLabel') }} <span class="text-red-400">*</span>
         </label>
         <input
-          id="paco-register-email"
-          :value="email"
+          id="paco-quick-email"
+          v-model="form.email"
           type="email"
-          readonly
-          class="w-full px-3 py-2 rounded-xl border border-white/10 bg-white/5 text-white/50 outline-none cursor-not-allowed text-sm"
-        />
-      </div>
-
-      <!-- Password -->
-      <div>
-        <label for="paco-register-password" class="block text-sm font-medium text-white/70 mb-1">
-          {{ t('paco.register.passwordLabel') }} <span class="text-red-400">*</span>
-        </label>
-        <input
-          id="paco-register-password"
-          v-model="form.password"
-          type="password"
-          :placeholder="t('paco.register.passwordPlaceholder')"
+          :placeholder="t('paco.emailCheck.placeholder')"
           required
-          minlength="6"
           class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white placeholder-white/30 focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition backdrop-blur-sm text-sm"
         />
-      </div>
-
-      <!-- Confirm Password -->
-      <div>
-        <label for="paco-register-confirm-password" class="block text-sm font-medium text-white/70 mb-1">
-          {{ t('paco.register.confirmPasswordLabel') }} <span class="text-red-400">*</span>
-        </label>
-        <input
-          id="paco-register-confirm-password"
-          v-model="form.confirmPassword"
-          type="password"
-          :placeholder="t('paco.register.confirmPasswordPlaceholder')"
-          required
-          minlength="6"
-          class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white placeholder-white/30 focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition backdrop-blur-sm text-sm"
-        />
-        <p v-if="form.confirmPassword && form.password !== form.confirmPassword" class="text-xs text-red-400 mt-1">
-          {{ t('paco.register.passwordMismatch') }}
-        </p>
       </div>
 
       <!-- Gender -->
@@ -131,11 +89,11 @@
 
       <!-- City -->
       <div>
-        <label for="paco-city" class="block text-sm font-medium text-white/70 mb-1">
+        <label for="paco-quick-city" class="block text-sm font-medium text-white/70 mb-1">
           {{ t('paco.demographic.cityLabel') }} <span class="text-red-400">*</span>
         </label>
         <input
-          id="paco-city"
+          id="paco-quick-city"
           v-model="form.city"
           type="text"
           :placeholder="t('paco.demographic.cityPlaceholder')"
@@ -146,11 +104,11 @@
 
       <!-- Country -->
       <div>
-        <label for="paco-country" class="block text-sm font-medium text-white/70 mb-1">
+        <label for="paco-quick-country" class="block text-sm font-medium text-white/70 mb-1">
           {{ t('paco.register.countryLabel') }} <span class="text-red-400">*</span>
         </label>
         <select
-          id="paco-country"
+          id="paco-quick-country"
           v-model="form.countryId"
           required
           class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition cursor-pointer text-sm"
@@ -164,11 +122,11 @@
 
       <!-- Professional Status -->
       <div>
-        <label for="paco-status" class="block text-sm font-medium text-white/70 mb-1">
+        <label for="paco-quick-status" class="block text-sm font-medium text-white/70 mb-1">
           {{ t('paco.demographic.professionalStatusLabel') }} <span class="text-red-400">*</span>
         </label>
         <select
-          id="paco-status"
+          id="paco-quick-status"
           v-model="form.professionalStatus"
           required
           class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition cursor-pointer text-sm"
@@ -183,11 +141,11 @@
 
       <!-- Organization -->
       <div>
-        <label for="paco-organization" class="block text-sm font-medium text-white/70 mb-1">
+        <label for="paco-quick-org" class="block text-sm font-medium text-white/70 mb-1">
           {{ t('paco.register.organizationLabel') }} <span class="text-red-400">*</span>
         </label>
         <input
-          id="paco-organization"
+          id="paco-quick-org"
           v-model="form.organizationName"
           type="text"
           :placeholder="t('paco.register.organizationPlaceholder')"
@@ -222,15 +180,6 @@
       >
         {{ submitting ? t('paco.register.submitting') : t('paco.register.submit') }}
       </button>
-
-      <!-- Back link -->
-      <button
-        type="button"
-        @click="$emit('back')"
-        class="w-full cursor-pointer text-sm text-green-400 hover:text-green-300 hover:underline transition"
-      >
-        {{ t('paco.register.backToEmail') }}
-      </button>
     </form>
   </div>
 </template>
@@ -238,31 +187,26 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { supabase } from '@/composables/useSupabase'
 import { useCountries } from '@/composables/useCountries'
-import { savePendingRegistration } from '@/composables/paco/usePacoRegistration'
+import { supabase } from '@/composables/useSupabase'
+import { markPacoRegistered } from '@/composables/paco/usePacoRegistration'
 
 const { t, locale } = useI18n()
 
-const props = defineProps({
-  email: { type: String, required: true }
-})
-
-const emit = defineEmits(['register-success', 'back'])
+const emit = defineEmits(['registration-complete'])
 
 const { countries, fetchCountries } = useCountries()
 
 const form = reactive({
   firstName: '',
   lastName: '',
-  password: '',
-  confirmPassword: '',
-  countryId: '',
-  organizationName: '',
+  email: '',
   gender: '',
   ageProfile: '',
   city: '',
+  countryId: '',
   professionalStatus: '',
+  organizationName: '',
   recordingConsent: false
 })
 
@@ -277,103 +221,41 @@ const handleSubmit = async () => {
   submitting.value = true
   errorMessage.value = ''
 
-  if (form.password !== form.confirmPassword) {
-    errorMessage.value = t('paco.register.passwordMismatch')
-    submitting.value = false
-    return
-  }
-
   try {
-    // 1. Create auth user via Supabase Auth
-    const { data: authData, error: signUpError } = await supabase.auth.signUp({
-      email: props.email,
-      password: form.password,
-      options: {
-        data: {
-          first_name: form.firstName,
-          last_name: form.lastName,
-          source: 'paco'
-        },
-        emailRedirectTo: `${window.location.origin}/paco`
-      }
+    // Enregistrer en base de données via RPC (guest, sans auth)
+    const { data: registrationId, error: rpcError } = await supabase.rpc('register_paco_quick', {
+      p_email: form.email,
+      p_first_name: form.firstName,
+      p_last_name: form.lastName,
+      p_gender: form.gender,
+      p_age_profile: form.ageProfile,
+      p_city: form.city,
+      p_country_id: form.countryId,
+      p_professional_status: form.professionalStatus,
+      p_organization: form.organizationName,
+      p_recording_consent: form.recordingConsent
     })
 
-    if (signUpError) {
-      if (signUpError.message?.includes('already registered')) {
-        errorMessage.value = t('paco.register.emailUsed')
-      } else if (signUpError.message?.includes('rate limit')) {
-        errorMessage.value = t('paco.register.rateLimited')
-      } else {
-        errorMessage.value = signUpError.message || t('paco.register.error')
-      }
+    if (rpcError) {
+      console.error('RPC error:', rpcError)
+      errorMessage.value = t('paco.errors.registration')
       return
     }
 
-    if (!authData?.user) {
-      errorMessage.value = t('paco.register.error')
-      return
-    }
+    // Sauvegarder en localStorage pour persistance côté client
+    localStorage.setItem('paco_registration_data', JSON.stringify({
+      registrationId,
+      email: form.email,
+      firstName: form.firstName,
+      lastName: form.lastName,
+      registeredAt: new Date().toISOString()
+    }))
+    markPacoRegistered()
 
-    // 2. URGENCE: auto-login après signup (bypass vérification email)
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: props.email,
-      password: form.password
-    })
-    if (signInError) {
-      console.warn('Auto-login after signup failed:', signInError.message)
-    }
-
-    // Wait for the trigger to create the profile in public.users
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    // 3. Update profile with additional fields (country, organization)
-    const updateData = {}
-    if (form.countryId) updateData.country_id = form.countryId
-    if (form.organizationName) {
-      // Search for existing organization or leave as text in profile
-      const { data: orgData } = await supabase
-        .from('organizations')
-        .select('id')
-        .ilike('name', form.organizationName)
-        .eq('is_active', true)
-        .limit(1)
-        .maybeSingle()
-
-      if (orgData) updateData.organization_id = orgData.id
-    }
-
-    if (Object.keys(updateData).length > 0) {
-      await supabase
-        .from('users')
-        .update(updateData)
-        .eq('id', authData.user.id)
-    }
-
-    // 4. Save pending registration data to sessionStorage (for post-email-verification finalization)
-    savePendingRegistration({
-      userId: authData.user.id,
-      email: props.email,
-      name: `${form.firstName} ${form.lastName}`.trim(),
-      demographicData: {
-        gender: form.gender,
-        ageProfile: form.ageProfile,
-        city: form.city,
-        countryId: form.countryId,
-        professionalStatus: form.professionalStatus,
-        organization: form.organizationName,
-        recordingConsent: form.recordingConsent
-      }
-    })
-
-    // 5. Emit success (demographic data now in sessionStorage, not in payload)
-    emit('register-success', {
-      userId: authData.user.id,
-      email: props.email,
-      name: `${form.firstName} ${form.lastName}`.trim()
-    })
+    emit('registration-complete')
   } catch (err) {
     console.error('Registration error:', err)
-    errorMessage.value = t('paco.register.error')
+    errorMessage.value = t('paco.errors.registration')
   } finally {
     submitting.value = false
   }
