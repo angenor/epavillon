@@ -118,7 +118,9 @@
       "backToEmail": "Use a different email"
     },
     "quickRegister": {
-      "subtitle": "Fill in the form below to access the webinar."
+      "subtitle": "Fill in the form below to access the webinar.",
+      "helpText": "Having trouble registering? Contact us:",
+      "copied": "Copied!"
     },
     "activityRegister": {
       "title": "Register for the webinar",
@@ -204,10 +206,14 @@
       "joinButton": "Join the webinar",
       "copyLink": "Copy link",
       "linkCopied": "Link copied!",
-      "resendEmail": "Resend connection link",
-      "resending": "Sending...",
-      "emailSent": "Email sent successfully!",
-      "emailError": "Error sending the email. Please try again."
+      "timeGmt": "2:00 PM – 3:30 PM GMT",
+      "localTime": "local time",
+      "countdown": "The webinar starts in",
+      "days": "days",
+      "hours": "hours",
+      "minutes": "min",
+      "seconds": "sec",
+      "waitingRoom": "The webinar starts soon! Take your seat in the waiting room."
     },
     "success": {
       "title": "Registration successful!",

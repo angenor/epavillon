@@ -66,6 +66,4 @@ async function copyTeamsLink() {
     setTimeout(() => { linkCopied.value = false }, 2000)
   }
 }
-
-
 </script>

@@ -118,7 +118,9 @@
       "backToEmail": "Utiliser un autre email"
     },
     "quickRegister": {
-      "subtitle": "Remplissez le formulaire ci-dessous pour accéder au webinaire."
+      "subtitle": "Remplissez le formulaire ci-dessous pour accéder au webinaire.",
+      "helpText": "Vous rencontrez des difficultés pour vous inscrire ? Contactez-nous :",
+      "copied": "Copié !"
     },
     "activityRegister": {
       "title": "Inscrivez-vous au webinaire",
@@ -204,10 +206,14 @@
       "joinButton": "Rejoindre le webinaire",
       "copyLink": "Copier le lien",
       "linkCopied": "Lien copié !",
-      "resendEmail": "Renvoyer le lien de connexion",
-      "resending": "Envoi en cours...",
-      "emailSent": "Email envoyé avec succès !",
-      "emailError": "Erreur lors de l'envoi de l'email. Veuillez réessayer."
+      "timeGmt": "14h00 – 15h30 GMT",
+      "localTime": "heure locale",
+      "countdown": "Le webinaire commence dans",
+      "days": "jours",
+      "hours": "heures",
+      "minutes": "min",
+      "seconds": "sec",
+      "waitingRoom": "Le webinaire commence bientôt ! Prenez place dans la salle d'attente."
     },
     "success": {
       "title": "Inscription réussie !",

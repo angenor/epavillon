@@ -14,6 +14,9 @@
         <div class="lg:col-span-2 lg:sticky lg:top-24 order-1 lg:order-2 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:scrollbar-thin lg:scrollbar-thumb-white/20 lg:scrollbar-track-transparent">
           <div class="bg-white/10 backdrop-blur-2xl border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/20">
 
+            <!-- Countdown / horaires (toujours visible) -->
+            <PacoCountdown />
+
             <!-- Loading -->
             <div v-if="pageLoading" class="text-center py-12">
               <div class="animate-spin rounded-full h-8 w-8 border-2 border-white/20 border-t-white mx-auto mb-4"></div>
@@ -45,6 +48,7 @@ import { usePacoRegistration, isPacoRegisteredLocally, markPacoRegistered } from
 import { supabase } from '@/composables/useSupabase'
 import { PACO_ACTIVITY_ID } from '@/composables/paco/constants'
 import PacoPresentation from '@/components/paco/PacoPresentation.vue'
+import PacoCountdown from '@/components/paco/PacoCountdown.vue'
 import PacoQuickRegister from '@/components/paco/PacoQuickRegister.vue'
 import PacoJoinSection from '@/components/paco/PacoJoinSection.vue'
 

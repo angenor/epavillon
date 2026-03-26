@@ -181,6 +181,25 @@
         {{ submitting ? t('paco.register.submitting') : t('paco.register.submit') }}
       </button>
     </form>
+
+    <!-- Contact support -->
+    <div class="mt-4 pt-4 border-t border-white/10">
+      <p class="text-xs text-white/40 text-center leading-relaxed mb-1">
+        {{ t('paco.quickRegister.helpText') }}
+      </p>
+      <div class="flex items-center justify-center gap-1">
+        <a :href="supportMailto" class="text-xs text-green-400 hover:text-green-300 hover:underline transition">
+          Fidele.Ananivi@francophonie.org
+        </a>
+        <button
+          @click="copyEmail"
+          class="text-green-400 hover:text-green-300 cursor-pointer transition p-0.5"
+          :title="t('paco.join.copyLink')"
+        >
+          <font-awesome-icon :icon="['fas', emailCopied ? 'check' : 'copy']" class="text-xs" />
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -197,6 +216,8 @@ const emit = defineEmits(['registration-complete'])
 
 const { countries, fetchCountries } = useCountries()
 
+const supportMailto = 'mailto:Fidele.Ananivi@francophonie.org?cc=Angenor99@gmail.com&subject=Aide%20inscription%20webinaire%20PACO'
+
 const form = reactive({
   firstName: '',
   lastName: '',
@@ -212,6 +233,14 @@ const form = reactive({
 
 const submitting = ref(false)
 const errorMessage = ref('')
+const emailCopied = ref(false)
+
+function copyEmail() {
+  navigator.clipboard.writeText('Fidele.Ananivi@francophonie.org').then(() => {
+    emailCopied.value = true
+    setTimeout(() => { emailCopied.value = false }, 2000)
+  }).catch(() => {})
+}
 
 onMounted(() => {
   fetchCountries()
