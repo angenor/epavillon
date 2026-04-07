@@ -59,10 +59,12 @@
       "shareCopied": "Link copied!",
       "shareCopyLink": "Copy link",
       "shareOn": "Share on",
-      "dateLabel": "March 26, 2026",
+      "dateLabel": "April 26, 2026",
       "timeLabel": "2:00 PM – 3:30 PM GMT",
       "formatLabel": "Online",
       "languageLabel": "French",
+      "timelineTitle": "Sessions",
+      "timelineCurrent": "Next session",
       "bannerPlaceholder": "PACO Webinar",
       "status": {
         "upcoming": "Upcoming",

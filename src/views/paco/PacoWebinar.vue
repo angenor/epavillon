@@ -17,6 +17,38 @@
             <!-- Countdown / horaires (toujours visible) -->
             <PacoCountdown />
 
+            <!-- Timeline horizontale des sessions -->
+            <div class="mb-5">
+              <p class="text-[10px] text-white/40 uppercase tracking-widest mb-3 text-center">{{ t('paco.presentation.timelineTitle') }}</p>
+              <div class="relative flex items-start">
+                <div class="absolute top-3 h-px bg-white/15" :style="{ left: `calc(50% / ${webinar.pastSessions.length + 1})`, right: `calc(50% / ${webinar.pastSessions.length + 1})` }"></div>
+                <div
+                  v-for="session in webinar.pastSessions"
+                  :key="session.edition"
+                  class="relative flex flex-col items-center text-center flex-1"
+                >
+                  <div class="w-6 h-6 rounded-full bg-green-500/20 border border-green-400/50 flex items-center justify-center z-10">
+                    <font-awesome-icon :icon="['fas', 'check']" class="text-green-400 text-[10px]" />
+                  </div>
+                  <span class="text-white/50 font-medium text-xs mt-2">#{{ session.edition }}</span>
+                  <span class="text-white/40 text-[11px] leading-tight">{{ formatSessionDate(session.date) }}</span>
+                  <span class="bg-green-500/15 text-green-400 text-[9px] uppercase tracking-wide font-semibold rounded-full px-2 py-0.5 mt-1">
+                    {{ t('paco.presentation.status.ended') }}
+                  </span>
+                </div>
+                <div class="relative flex flex-col items-center text-center flex-1">
+                  <div class="w-6 h-6 rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center z-10 animate-pulse">
+                    <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+                  </div>
+                  <span class="text-white font-semibold text-xs mt-2">#{{ webinar.edition }}</span>
+                  <span class="text-white text-[11px] font-medium leading-tight">{{ t('paco.presentation.dateLabel') }}</span>
+                  <span class="bg-amber-500/15 text-amber-400 text-[9px] uppercase tracking-wide font-semibold rounded-full px-2 py-0.5 mt-1">
+                    {{ t('paco.presentation.timelineCurrent') }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
             <!-- Loading -->
             <div v-if="pageLoading" class="text-center py-12">
               <div class="animate-spin rounded-full h-8 w-8 border-2 border-white/20 border-t-white mx-auto mb-4"></div>
@@ -47,18 +79,29 @@ import { useSEO } from '@/composables/useSEO'
 import { usePacoRegistration, isPacoRegisteredLocally, markPacoRegistered } from '@/composables/paco/usePacoRegistration'
 import { supabase } from '@/composables/useSupabase'
 import { PACO_ACTIVITY_ID } from '@/composables/paco/constants'
+import { usePacoWebinarData } from '@/composables/paco/usePacoWebinarData'
 import PacoPresentation from '@/components/paco/PacoPresentation.vue'
 import PacoCountdown from '@/components/paco/PacoCountdown.vue'
 import PacoQuickRegister from '@/components/paco/PacoQuickRegister.vue'
 import PacoJoinSection from '@/components/paco/PacoJoinSection.vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const { webinar } = usePacoWebinarData()
+
+function formatSessionDate(dateStr) {
+  const date = new Date(dateStr + 'T12:00:00Z')
+  return date.toLocaleDateString(locale.value === 'fr' ? 'fr-FR' : 'en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  })
+}
 
 // SEO - OG meta tags pour le partage sur les réseaux sociaux
 const PACO_OG_IMAGE = 'https://epavillonclimatique.francophonie.org/images/og_affiche_paco_avec_ecriture.jpg'
 useSEO({
   title: 'Webinaire PACO - Collectivités locales face au changement climatique',
-  description: 'Collectivites locales face au changement climatique : gouvernance, planification et financements pour l\'adaptation. Jeudi 26 mars 2026, en ligne, 14h00-15h30 GMT.',
+  description: 'Collectivites locales face au changement climatique : gouvernance, planification et financements pour l\'adaptation. Dimanche 26 avril 2026, en ligne, 14h00-15h30 GMT.',
   image: PACO_OG_IMAGE,
   url: 'https://epavillonclimatique.francophonie.org/paco',
   type: 'website',

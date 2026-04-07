@@ -2,13 +2,13 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 /**
- * Webinar #3 configuration data
+ * Webinar #2 configuration data
  * Non-translatable fields (dates, URLs, emails, names) are here.
  * Translatable fields (titles, descriptions, roles) are in i18n under paco.presentation.*
  */
 const WEBINAR_DATA = {
-  edition: 3,
-  date: '2026-03-26',
+  edition: 2,
+  date: '2026-04-26',
   startTime: '14:00',
   endTime: '15:30',
   timezone: 'GMT',
@@ -65,6 +65,10 @@ const WEBINAR_DATA = {
       organization: 'CSE',
       email: null,
     },
+  ],
+
+  pastSessions: [
+    { edition: 1, date: '2026-03-26', completed: true },
   ],
 
   partners: [
