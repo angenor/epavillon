@@ -20,7 +20,7 @@ export function usePacoEmail() {
 
     const PACO_PLATFORM_JOIN_URL = 'https://epavillonclimatique.francophonie.org/paco/join'
 
-    const emailContent = `Bonjour {recipient_name}, votre inscription est confirmee. Le webinaire aura lieu le 26 avril 2026 de 14h00 a 15h30 GMT.\n\nLien de connexion : ${PACO_PLATFORM_JOIN_URL}\n\nIMPORTANT : Veuillez installer le logiciel Microsoft Teams avant la session. Vous en aurez besoin pour rejoindre le webinaire.`
+    const emailContent = `Bonjour {recipient_name}, votre inscription est confirmee. Le webinaire aura lieu le 30 avril 2026 de 14h00 a 15h30 GMT.\n\nLien de connexion : ${PACO_PLATFORM_JOIN_URL}\n\nIMPORTANT : Veuillez installer le logiciel Microsoft Teams avant la session. Vous en aurez besoin pour rejoindre le webinaire.`
 
     try {
       // Use the exact same payload structure as admin EmailManager (no mode field)

@@ -101,7 +101,7 @@ function formatSessionDate(dateStr) {
 const PACO_OG_IMAGE = 'https://epavillonclimatique.francophonie.org/images/og_affiche_paco_avec_ecriture.jpg'
 useSEO({
   title: 'Webinaire PACO - Collectivités locales face au changement climatique',
-  description: 'Collectivites locales face au changement climatique : gouvernance, planification et financements pour l\'adaptation. Dimanche 26 avril 2026, en ligne, 14h00-15h30 GMT.',
+  description: 'Collectivites locales face au changement climatique : gouvernance, planification et financements pour l\'adaptation. Jeudi 30 avril 2026, en ligne, 14h00-15h30 GMT.',
   image: PACO_OG_IMAGE,
   url: 'https://epavillonclimatique.francophonie.org/paco',
   type: 'website',

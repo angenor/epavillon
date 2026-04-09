@@ -8,7 +8,7 @@ import { useI18n } from 'vue-i18n'
  */
 const WEBINAR_DATA = {
   edition: 2,
-  date: '2026-04-26',
+  date: '2026-04-30',
   startTime: '14:00',
   endTime: '15:30',
   timezone: 'GMT',
