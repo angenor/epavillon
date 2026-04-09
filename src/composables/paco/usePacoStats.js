@@ -221,6 +221,55 @@ export function usePacoStats() {
     registrants.value = registrants.value.filter(r => r.id !== registrationId)
   }
 
+  /**
+   * Fetch ALL registrants for CSV export (does not mutate paginated state).
+   * @returns {Promise<Array>} all registrant objects
+   */
+  const fetchAllRegistrantsForExport = async () => {
+    const { data, error: queryError } = await supabase
+      .from('activity_registrations')
+      .select(`
+        id,
+        registration_date,
+        guest_email,
+        guest_first_name,
+        guest_last_name,
+        users (
+          first_name,
+          last_name,
+          email
+        ),
+        paco_demographic_data (
+          gender,
+          age_profile,
+          city,
+          country_id,
+          countries ( name_fr, name_en ),
+          professional_status,
+          organization
+        )
+      `)
+      .eq('activity_id', PACO_ACTIVITY_ID)
+      .order('registration_date', { ascending: true })
+
+    if (queryError) throw queryError
+
+    return data.map(r => ({
+      id: r.id,
+      firstName: r.users?.first_name || r.guest_first_name || '',
+      lastName: r.users?.last_name || r.guest_last_name || '',
+      email: r.users?.email || r.guest_email || '',
+      gender: r.paco_demographic_data?.gender || null,
+      ageProfile: r.paco_demographic_data?.age_profile || null,
+      city: r.paco_demographic_data?.city || null,
+      countryFr: r.paco_demographic_data?.countries?.name_fr || null,
+      countryEn: r.paco_demographic_data?.countries?.name_en || null,
+      professionalStatus: r.paco_demographic_data?.professional_status || null,
+      organization: r.paco_demographic_data?.organization || null,
+      registrationDate: r.registration_date
+    }))
+  }
+
   return {
     stats,
     loading,
@@ -233,6 +282,7 @@ export function usePacoStats() {
     registrantsPage,
     registrantsPerPage,
     fetchPacoRegistrants,
+    fetchAllRegistrantsForExport,
     deleteRegistrant,
     allRegistrationDates,
     fetchAllRegistrationDates,

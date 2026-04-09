@@ -407,7 +407,7 @@ const {
   stats, loading, error, fetchPacoStats,
   registrants, registrantsLoading, registrantsError,
   registrantsTotal, registrantsPage, registrantsPerPage,
-  fetchPacoRegistrants, deleteRegistrant,
+  fetchPacoRegistrants, fetchAllRegistrantsForExport, deleteRegistrant,
   allRegistrationDates, fetchAllRegistrationDates,
   pageViewCount, fetchPageViewCount,
   subscribeToPacoChanges, unsubscribePacoChanges
@@ -528,8 +528,13 @@ const formatTime = (dateStr) => {
   return time
 }
 
-const handleExport = () => {
-  exportToCsv(registrants.value)
+const handleExport = async () => {
+  try {
+    const allRegistrants = await fetchAllRegistrantsForExport()
+    exportToCsv(allRegistrants)
+  } catch (err) {
+    console.error('Error exporting registrants:', err)
+  }
 }
 
 const registrantToDelete = ref(null)
