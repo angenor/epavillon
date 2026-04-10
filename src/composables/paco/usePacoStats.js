@@ -53,6 +53,8 @@ export function usePacoStats() {
         .from('activity_registrations')
         .select(`
           id,
+          fallback_payload,
+          recovered_at,
           paco_demographic_data (
             gender,
             age_profile,
@@ -70,6 +72,13 @@ export function usePacoStats() {
       if (queryError) throw queryError
 
       const total = data.length
+      // Une ligne est "de secours" si fallback_payload IS NOT NULL.
+      const fallbackRows = data.filter(r => r.fallback_payload !== null && r.fallback_payload !== undefined)
+      const fallbackTotal = fallbackRows.length
+      const recoveredTotal = fallbackRows.filter(r => r.recovered_at !== null && r.recovered_at !== undefined).length
+      const fallbackPending = fallbackTotal - recoveredTotal
+      // Les stats démographiques n'incluent que les lignes standard avec
+      // données démographiques (les fallback n'ont pas encore été promues).
       const withDemo = data.filter(r => r.paco_demographic_data)
       const demoCount = withDemo.length
 
@@ -89,6 +98,9 @@ export function usePacoStats() {
       stats.value = {
         total,
         withDemographics: demoCount,
+        fallbackTotal,
+        recoveredTotal,
+        fallbackPending,
         gender: { male: pct(genderCounts.male), female: pct(genderCounts.female) },
         ageProfile: { under35: pct(ageCounts.under_35), over35: pct(ageCounts.over_35) },
         professionalStatus: {
@@ -105,6 +117,34 @@ export function usePacoStats() {
       if (!silent) loading.value = false
     }
   }
+
+  /**
+   * Map a raw activity_registrations row (with nested users + paco_demographic_data)
+   * into the flat registrant object used by the admin UI and CSV export.
+   * Includes the feature 005 fallback fields.
+   *
+   * @param {Object} r raw row from supabase
+   */
+  const mapRegistrantRow = (r) => ({
+    id: r.id,
+    firstName: r.users?.first_name || r.guest_first_name || '',
+    lastName: r.users?.last_name || r.guest_last_name || '',
+    email: r.users?.email || r.guest_email || '',
+    gender: r.paco_demographic_data?.gender || null,
+    ageProfile: r.paco_demographic_data?.age_profile || null,
+    city: r.paco_demographic_data?.city || null,
+    countryFr: r.paco_demographic_data?.countries?.name_fr || null,
+    countryEn: r.paco_demographic_data?.countries?.name_en || null,
+    professionalStatus: r.paco_demographic_data?.professional_status || null,
+    organization: r.paco_demographic_data?.organization || r.guest_organization || null,
+    sessionEdition: r.session_edition,
+    registrationDate: r.registration_date,
+    // Feature 005 : champs de secours
+    isFallback: r.fallback_payload !== null && r.fallback_payload !== undefined,
+    fallbackPayload: r.fallback_payload || null,
+    fallbackError: r.fallback_error || null,
+    recoveredAt: r.recovered_at || null
+  })
 
   /**
    * Fetch all registration dates for chart display (lightweight query).
@@ -152,6 +192,10 @@ export function usePacoStats() {
           guest_email,
           guest_first_name,
           guest_last_name,
+          guest_organization,
+          fallback_payload,
+          fallback_error,
+          recovered_at,
           users (
             first_name,
             last_name,
@@ -184,21 +228,7 @@ export function usePacoStats() {
 
       registrantsTotal.value = count
 
-      registrants.value = data.map(r => ({
-        id: r.id,
-        firstName: r.users?.first_name || r.guest_first_name || '',
-        lastName: r.users?.last_name || r.guest_last_name || '',
-        email: r.users?.email || r.guest_email || '',
-        gender: r.paco_demographic_data?.gender || null,
-        ageProfile: r.paco_demographic_data?.age_profile || null,
-        city: r.paco_demographic_data?.city || null,
-        countryFr: r.paco_demographic_data?.countries?.name_fr || null,
-        countryEn: r.paco_demographic_data?.countries?.name_en || null,
-        professionalStatus: r.paco_demographic_data?.professional_status || null,
-        organization: r.paco_demographic_data?.organization || null,
-        sessionEdition: r.session_edition,
-        registrationDate: r.registration_date
-      }))
+      registrants.value = data.map(mapRegistrantRow)
     } catch (err) {
       console.error('Error fetching PACO registrants:', err)
       registrantsError.value = err.message
@@ -259,6 +289,10 @@ export function usePacoStats() {
         guest_email,
         guest_first_name,
         guest_last_name,
+        guest_organization,
+        fallback_payload,
+        fallback_error,
+        recovered_at,
         users (
           first_name,
           last_name,
@@ -285,21 +319,7 @@ export function usePacoStats() {
 
     if (queryError) throw queryError
 
-    return data.map(r => ({
-      id: r.id,
-      firstName: r.users?.first_name || r.guest_first_name || '',
-      lastName: r.users?.last_name || r.guest_last_name || '',
-      email: r.users?.email || r.guest_email || '',
-      gender: r.paco_demographic_data?.gender || null,
-      ageProfile: r.paco_demographic_data?.age_profile || null,
-      city: r.paco_demographic_data?.city || null,
-      countryFr: r.paco_demographic_data?.countries?.name_fr || null,
-      countryEn: r.paco_demographic_data?.countries?.name_en || null,
-      professionalStatus: r.paco_demographic_data?.professional_status || null,
-      organization: r.paco_demographic_data?.organization || null,
-      sessionEdition: r.session_edition,
-      registrationDate: r.registration_date
-    }))
+    return data.map(mapRegistrantRow)
   }
 
   return {

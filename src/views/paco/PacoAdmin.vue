@@ -47,6 +47,22 @@
             {{ t('paco.admin.filterSession', { n: 2 }) }}
           </button>
         </div>
+
+        <!-- Feature 005 : filtre par type d'inscription -->
+        <span class="text-sm font-medium text-gray-600 dark:text-gray-400 ml-2">{{ t('paco.admin.filter.type.label') }} :</span>
+        <div class="inline-flex rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden shadow-sm">
+          <button
+            v-for="option in typeFilterOptions"
+            :key="option.value"
+            @click="typeFilter = option.value"
+            class="cursor-pointer px-4 py-2 text-sm font-medium transition border-l border-gray-300 dark:border-gray-600 first:border-l-0"
+            :class="typeFilter === option.value
+              ? 'bg-amber-600 text-white'
+              : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'"
+          >
+            {{ t(option.labelKey) }}
+          </button>
+        </div>
       </div>
 
       <!-- Stats Loading Skeleton -->
@@ -115,6 +131,7 @@
             :deleting="deleting"
             @page-change="goToPage"
             @delete="confirmDelete"
+            @recovered="handleRegistrantRecovered"
           />
         </div>
       </div>
@@ -201,15 +218,45 @@ const {
 const searchQuery = ref('')
 let searchDebounce = null
 
-const isSearching = computed(() => searchQuery.value.trim().length > 0)
+// Feature 005 : filtre par type (standard / fallback / fallback_pending)
+const typeFilter = ref('all')
+const typeFilterOptions = [
+  { value: 'all', labelKey: 'paco.admin.filter.type.all' },
+  { value: 'standard', labelKey: 'paco.admin.filter.type.standard' },
+  { value: 'fallback', labelKey: 'paco.admin.filter.type.fallback' },
+  { value: 'fallback_pending', labelKey: 'paco.admin.filter.type.fallbackPending' }
+]
+
+const isSearching = computed(() =>
+  searchQuery.value.trim().length > 0 || typeFilter.value !== 'all'
+)
+
+const matchesTypeFilter = (r) => {
+  switch (typeFilter.value) {
+    case 'standard':
+      return !r.isFallback
+    case 'fallback':
+      return r.isFallback
+    case 'fallback_pending':
+      return r.isFallback && !r.recoveredAt
+    default:
+      return true
+  }
+}
 
 const filteredRegistrants = computed(() => {
-  if (!isSearching.value) return registrants.value
+  let result = registrants.value
+  if (typeFilter.value !== 'all') {
+    result = result.filter(matchesTypeFilter)
+  }
   const q = searchQuery.value.toLowerCase().trim()
-  return registrants.value.filter(r =>
-    [r.firstName, r.lastName, r.email, r.city, r.countryFr, r.countryEn, r.organization]
-      .some(v => v && v.toLowerCase().includes(q))
-  )
+  if (q) {
+    result = result.filter(r =>
+      [r.firstName, r.lastName, r.email, r.city, r.countryFr, r.countryEn, r.organization]
+        .some(v => v && v.toLowerCase().includes(q))
+    )
+  }
+  return result
 })
 
 watch(searchQuery, () => {
@@ -217,6 +264,13 @@ watch(searchQuery, () => {
   searchDebounce = setTimeout(() => {
     fetchPacoRegistrants(1, isSearching.value)
   }, 300)
+})
+
+watch(typeFilter, () => {
+  // Lorsqu'un filtre type est actif (!= 'all'), on charge tous les inscrits
+  // (loadAll) afin que le filtrage client voie l'ensemble. Sinon on revient
+  // au mode paginé classique.
+  fetchPacoRegistrants(1, isSearching.value)
 })
 
 const applySessionFilter = (edition) => {
@@ -288,6 +342,12 @@ const deleting = ref(null)
 
 const confirmDelete = (registrant) => {
   registrantToDelete.value = registrant
+}
+
+// Feature 005 : rafraîchir stats après marquage rattrapé
+const handleRegistrantRecovered = () => {
+  fetchPacoStats({ silent: true })
+  fetchPacoRegistrants(registrantsPage.value, isSearching.value, { silent: true })
 }
 
 const handleDelete = async () => {

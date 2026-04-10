@@ -10,7 +10,7 @@
     <!-- Info -->
     <div class="min-w-0">
       <p class="text-sm font-semibold text-white truncate">{{ panelist.name }}</p>
-      <p class="text-xs text-green-400 truncate">{{ roleLabel }}</p>
+      <p class="text-xs text-green-400 line-clamp-2">{{ roleLabel }}</p>
       <p class="text-xs text-white/50 truncate">{{ panelist.organization }}</p>
       <a
         v-if="panelist.email"

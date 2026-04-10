@@ -1,5 +1,6 @@
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  <div class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
     <!-- Total Registrants -->
     <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl shadow-lg p-6 text-white relative overflow-hidden">
       <div class="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-8 translate-x-8"></div>
@@ -87,17 +88,83 @@
         </div>
       </div>
     </div>
+    </div>
+
+    <!-- Feature 005 : cartes inscriptions de secours -->
+    <div
+      v-if="hasFallbackStats"
+      class="grid grid-cols-1 md:grid-cols-3 gap-6"
+    >
+      <!-- Total secours -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border-l-4 border-amber-400">
+        <div class="flex items-center gap-2 mb-3">
+          <font-awesome-icon :icon="['fas', 'life-ring']" class="text-amber-500" />
+          <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+            {{ t('paco.admin.stats.fallbackTotal') }}
+          </p>
+        </div>
+        <p class="text-4xl font-extrabold text-gray-900 dark:text-white">
+          {{ stats.fallbackTotal ?? 0 }}
+        </p>
+        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+          {{ t('paco.admin.stats.fallbackTooltip') }}
+        </p>
+      </div>
+
+      <!-- Rattrapées -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border-l-4 border-green-500">
+        <div class="flex items-center gap-2 mb-3">
+          <font-awesome-icon :icon="['fas', 'circle-check']" class="text-green-500" />
+          <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+            {{ t('paco.admin.stats.recoveredTotal') }}
+          </p>
+        </div>
+        <p class="text-4xl font-extrabold text-gray-900 dark:text-white">
+          {{ stats.recoveredTotal ?? 0 }}
+        </p>
+      </div>
+
+      <!-- À rattraper -->
+      <div
+        class="rounded-xl shadow p-6 border-l-4"
+        :class="pendingCount > 0
+          ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-500'
+          : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600'"
+      >
+        <div class="flex items-center gap-2 mb-3">
+          <font-awesome-icon
+            :icon="['fas', 'triangle-exclamation']"
+            :class="pendingCount > 0 ? 'text-amber-500' : 'text-gray-400'"
+          />
+          <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+            {{ t('paco.admin.stats.fallbackPending') }}
+          </p>
+        </div>
+        <p
+          class="text-4xl font-extrabold"
+          :class="pendingCount > 0 ? 'text-amber-700 dark:text-amber-300' : 'text-gray-900 dark:text-white'"
+        >
+          {{ pendingCount }}
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-defineProps({
+const props = defineProps({
   stats: { type: Object, required: true }
 })
+
+const hasFallbackStats = computed(() =>
+  props.stats.fallbackTotal != null || props.stats.recoveredTotal != null
+)
+const pendingCount = computed(() => props.stats.fallbackPending ?? 0)
 
 const statusLabel = (value) => {
   if (!value) return t('paco.admin.notSpecified')

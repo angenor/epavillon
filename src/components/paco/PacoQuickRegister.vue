@@ -58,7 +58,7 @@
           id="paco-quick-email"
           v-model="form.email"
           type="email"
-          :placeholder="t('paco.emailCheck.placeholder')"
+          :placeholder="t('paco.emailCheck.emailPlaceholder')"
           required
           class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white placeholder-white/30 focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition backdrop-blur-sm text-sm"
         />
@@ -218,8 +218,7 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useCountries } from '@/composables/useCountries'
-import { supabase } from '@/composables/useSupabase'
-import { markPacoRegistered } from '@/composables/paco/usePacoRegistration'
+import { registerPacoWithFallback } from '@/composables/paco/usePacoRegistration'
 
 const { t, locale } = useI18n()
 
@@ -269,45 +268,29 @@ const handleSubmit = async () => {
   submitting.value = true
   errorMessage.value = ''
 
-  try {
-    // Enregistrer en base de données via RPC (guest, sans auth)
-    const { data: registrationId, error: rpcError } = await supabase.rpc('register_paco_quick', {
-      p_email: form.email,
-      p_first_name: form.firstName,
-      p_last_name: form.lastName,
-      p_gender: form.gender,
-      p_age_profile: form.ageProfile,
-      p_city: form.city,
-      p_country_id: form.countryId,
-      p_professional_status: form.professionalStatus,
-      p_organization: form.organizationName,
-      p_recording_consent: form.recordingConsent,
-      p_session_edition: props.sessionEdition
-    })
+  // registerPacoWithFallback ne lève jamais d'exception : elle encapsule
+  // la cascade RPC standard → RPC de secours → localStorage uniquement.
+  // L'utilisateur n'est jamais bloqué, aucune erreur n'est affichée.
+  const result = await registerPacoWithFallback({
+    email: form.email,
+    firstName: form.firstName,
+    lastName: form.lastName,
+    gender: form.gender,
+    ageProfile: form.ageProfile,
+    city: form.city,
+    countryId: form.countryId,
+    professionalStatus: form.professionalStatus,
+    organizationName: form.organizationName,
+    recordingConsent: form.recordingConsent,
+    sessionEdition: props.sessionEdition
+  })
 
-    if (rpcError) {
-      console.error('RPC error:', rpcError)
-      errorMessage.value = t('paco.errors.registration')
-      return
-    }
-
-    // Sauvegarder en localStorage pour persistance côté client
-    localStorage.setItem(`paco_registration_data_session_${props.sessionEdition}`, JSON.stringify({
-      registrationId,
-      email: form.email,
-      firstName: form.firstName,
-      lastName: form.lastName,
-      sessionEdition: props.sessionEdition,
-      registeredAt: new Date().toISOString()
-    }))
-    markPacoRegistered(props.sessionEdition)
-
-    emit('registration-complete')
-  } catch (err) {
-    console.error('Registration error:', err)
-    errorMessage.value = t('paco.errors.registration')
-  } finally {
-    submitting.value = false
+  // Le status est uniquement utilisé pour la télémétrie / logging.
+  if (result.status !== 'standard') {
+    console.warn('[PACO] Registration completed via fallback path:', result.status, result.technicalError)
   }
+
+  emit('registration-complete')
+  submitting.value = false
 }
 </script>

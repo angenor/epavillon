@@ -207,7 +207,37 @@
       "viewCountSince": "depuis le 17 mars 2026, 15h00 GMT",
       "session": "Session",
       "filterAllSessions": "Toutes les sessions",
-      "filterSession": "Session {n}"
+      "filterSession": "Session {n}",
+      "filter": {
+        "type": {
+          "label": "Type",
+          "all": "Tous",
+          "standard": "Standard",
+          "fallback": "Secours",
+          "fallbackPending": "Secours à rattraper"
+        }
+      },
+      "stats": {
+        "fallbackTotal": "Inscriptions de secours",
+        "recoveredTotal": "Secours rattrapées",
+        "fallbackPending": "Secours à rattraper",
+        "fallbackTooltip": "Inscriptions captées en mode dégradé (WAF, erreurs techniques) en attente de rattrapage manuel."
+      },
+      "fallback": {
+        "badgeFallback": "Secours",
+        "badgeRecovered": "Rattrapé",
+        "detailsTitle": "Détails de l'inscription de secours",
+        "payloadLabel": "Données brutes capturées",
+        "errorLabel": "Erreur technique",
+        "recoveredAt": "Rattrapé le",
+        "markRecovered": "Marquer comme rattrapée",
+        "markRecoveredConfirm": "Confirmer le rattrapage de cette inscription ?",
+        "markRecoveredError": "Impossible de marquer l'inscription comme rattrapée : {error}",
+        "exportType": "Type",
+        "exportError": "Erreur technique",
+        "exportRecoveredAt": "Rattrapé le",
+        "exportPayload": "Payload JSON (secours)"
+      }
     },
     "join": {
       "title": "Vous êtes inscrit(e) !",
@@ -341,7 +371,8 @@
       "panelists": {
         "kiri": { "role": "Coordonnateur principal" },
         "baglhi": { "role": "Directeur de la Composante Bénin du programme PACO" },
-        "ka": { "role": "Directrice du Hub francophone, Natural Justice" }
+        "ka": { "role": "Directrice du Hub francophone, Natural Justice" },
+        "elisa-mairet": { "role": "Collaboratrice spécialisée en gestion de projets et programmes" }
       }
     }
   }

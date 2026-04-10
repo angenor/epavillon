@@ -26,10 +26,22 @@ export function usePacoCsvExport() {
    * @param {Array} registrants - flat registrant objects from usePacoStats
    * @param {string} filename - desired filename (without extension)
    */
+  /**
+   * Determine the CSV type label for a registrant based on its fallback state.
+   * - 'fallback_pending' : ligne de secours non rattrapée
+   * - 'fallback_recovered' : ligne de secours déjà rattrapée
+   * - 'standard' : inscription standard (chemin nominal)
+   */
+  const getTypeLabel = (r) => {
+    if (!r.isFallback) return 'Standard'
+    return r.recoveredAt ? 'Secours rattrapé' : 'Secours en attente'
+  }
+
   const exportToCsv = (registrants, filename = 'paco-inscrits') => {
     const headers = [
       'Session', 'Prénom', 'Nom', 'Email', 'Genre', "Profil d'âge",
-      'Ville', 'Pays', 'Statut professionnel', 'Organisation', "Date d'inscription"
+      'Ville', 'Pays', 'Statut professionnel', 'Organisation', "Date d'inscription",
+      'Type', 'Erreur technique', 'Rattrapé le', 'Payload JSON (secours)'
     ]
 
     const rows = registrants.map(r => [
@@ -43,7 +55,11 @@ export function usePacoCsvExport() {
       escapeCsv(r.countryFr),
       escapeCsv(STATUS_MAP[r.professionalStatus] || ''),
       escapeCsv(r.organization),
-      escapeCsv(r.registrationDate ? new Date(r.registrationDate).toLocaleDateString('fr-FR') : '')
+      escapeCsv(r.registrationDate ? new Date(r.registrationDate).toLocaleDateString('fr-FR') : ''),
+      escapeCsv(getTypeLabel(r)),
+      escapeCsv(r.fallbackError || ''),
+      escapeCsv(r.recoveredAt ? new Date(r.recoveredAt).toLocaleDateString('fr-FR') : ''),
+      escapeCsv(r.fallbackPayload ? JSON.stringify(r.fallbackPayload) : '')
     ])
 
     const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n')

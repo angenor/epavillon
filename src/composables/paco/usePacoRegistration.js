@@ -9,6 +9,8 @@ const PENDING_MAX_AGE_MS = 24 * 60 * 60 * 1000 // 24 hours
 const LEGACY_PACO_REGISTERED_KEY = 'paco_registration_complete'
 // Clés actuelles indexées par session
 const PACO_REGISTERED_PREFIX = 'paco_registered_session_'
+// Préfixe des données d'inscription persistées par session
+const PACO_REGISTRATION_DATA_PREFIX = 'paco_registration_data_session_'
 
 /**
  * Migrate the legacy localStorage key to the per-session key for session 1.
@@ -90,6 +92,219 @@ export function getPendingRegistration(currentUserId) {
  */
 export function clearPendingRegistration() {
   localStorage.removeItem(PENDING_REGISTRATION_KEY)
+}
+
+/**
+ * Persiste localement les données d'inscription PACO pour une session donnée.
+ * Utilisé à la fois par le flux standard et le flux de secours — dans tous les
+ * cas on stocke l'état côté client pour que l'utilisateur voie l'écran de
+ * confirmation et le bouton « Rejoindre » au prochain chargement.
+ *
+ * @param {Object} params
+ * @param {string|null} params.registrationId
+ * @param {string} params.email
+ * @param {string} params.firstName
+ * @param {string} params.lastName
+ * @param {number} params.sessionEdition
+ */
+function persistLocalRegistration({ registrationId, email, firstName, lastName, sessionEdition }) {
+  if (typeof localStorage === 'undefined') return
+  localStorage.setItem(
+    `${PACO_REGISTRATION_DATA_PREFIX}${sessionEdition}`,
+    JSON.stringify({
+      registrationId,
+      email,
+      firstName,
+      lastName,
+      sessionEdition,
+      registeredAt: new Date().toISOString()
+    })
+  )
+  markPacoRegistered(sessionEdition)
+}
+
+/**
+ * @typedef {Object} PacoRegistrationInput
+ * @property {string} email
+ * @property {string} firstName
+ * @property {string} lastName
+ * @property {'male'|'female'} gender
+ * @property {'under_35'|'over_35'} ageProfile
+ * @property {string} city
+ * @property {string} countryId
+ * @property {'employed'|'student'|'unemployed'|'entrepreneur'} professionalStatus
+ * @property {string} organizationName
+ * @property {boolean} recordingConsent
+ * @property {number} sessionEdition
+ */
+
+/**
+ * @typedef {Object} PacoRegistrationResult
+ * @property {'standard'|'fallback'|'local_only'} status
+ * @property {string|null} registrationId
+ * @property {string|null} technicalError
+ */
+
+/**
+ * Tente une inscription PACO en garantissant que l'utilisateur n'est jamais
+ * bloqué, même en cas d'échec technique de la RPC standard.
+ *
+ * Ordre des tentatives :
+ *   1. RPC `register_paco_quick` (chemin nominal)
+ *   2. Si (1) échoue : RPC `register_paco_fallback` (inscription de secours)
+ *   3. Si (2) échoue : localStorage-only (flag uniquement, pas de trace DB)
+ *
+ * Dans tous les cas, retourne une promesse *résolue* (jamais rejetée). Le
+ * composant appelant se fie uniquement au champ `status` pour son affichage.
+ *
+ * @param {PacoRegistrationInput} input
+ * @returns {Promise<PacoRegistrationResult>}
+ */
+export async function registerPacoWithFallback(input) {
+  const normalizedEmail = (input.email || '').toLowerCase().trim()
+
+  // Étape 1 — RPC standard
+  let technicalError = null
+  try {
+    const { data: registrationId, error: rpcError } = await supabase.rpc('register_paco_quick', {
+      p_email: normalizedEmail,
+      p_first_name: input.firstName,
+      p_last_name: input.lastName,
+      p_gender: input.gender,
+      p_age_profile: input.ageProfile,
+      p_city: input.city,
+      p_country_id: input.countryId,
+      p_professional_status: input.professionalStatus,
+      p_organization: input.organizationName,
+      p_recording_consent: input.recordingConsent,
+      p_session_edition: input.sessionEdition
+    })
+
+    if (rpcError) throw rpcError
+
+    persistLocalRegistration({
+      registrationId: registrationId || null,
+      email: normalizedEmail,
+      firstName: input.firstName,
+      lastName: input.lastName,
+      sessionEdition: input.sessionEdition
+    })
+
+    return {
+      status: 'standard',
+      registrationId: registrationId || null,
+      technicalError: null
+    }
+  } catch (err) {
+    technicalError = err?.message || String(err)
+    console.warn('[PACO] register_paco_quick failed, trying fallback:', technicalError)
+  }
+
+  // Étape 2 — RPC de secours
+  const fallbackPayload = {
+    email: normalizedEmail,
+    firstName: input.firstName,
+    lastName: input.lastName,
+    organization: input.organizationName,
+    sessionEdition: input.sessionEdition,
+    countryId: input.countryId,
+    demographic: {
+      gender: input.gender,
+      ageProfile: input.ageProfile,
+      city: input.city,
+      professionalStatus: input.professionalStatus,
+      organization: input.organizationName,
+      recordingConsent: input.recordingConsent
+    },
+    capturedAt: new Date().toISOString(),
+    clientVersion: 'paco-fallback-v1'
+  }
+
+  try {
+    const { data: fallbackRegistrationId, error: fallbackError } = await supabase.rpc(
+      'register_paco_fallback',
+      {
+        p_email: normalizedEmail,
+        p_session_edition: input.sessionEdition,
+        p_fallback_payload: fallbackPayload,
+        p_error_message: technicalError
+      }
+    )
+
+    if (fallbackError) throw fallbackError
+
+    persistLocalRegistration({
+      registrationId: fallbackRegistrationId || null,
+      email: normalizedEmail,
+      firstName: input.firstName,
+      lastName: input.lastName,
+      sessionEdition: input.sessionEdition
+    })
+
+    return {
+      status: 'fallback',
+      registrationId: fallbackRegistrationId || null,
+      technicalError
+    }
+  } catch (fallbackErr) {
+    const fallbackMessage = fallbackErr?.message || String(fallbackErr)
+    technicalError = `${technicalError || 'unknown'} / ${fallbackMessage}`
+  }
+
+  // Étape 3 — localStorage uniquement (aucune trace DB)
+  console.error('[PACO] fallback double failure, persisting local_only:', technicalError)
+  persistLocalRegistration({
+    registrationId: null,
+    email: normalizedEmail,
+    firstName: input.firstName,
+    lastName: input.lastName,
+    sessionEdition: input.sessionEdition
+  })
+
+  return {
+    status: 'local_only',
+    registrationId: null,
+    technicalError
+  }
+}
+
+/**
+ * Marque une inscription de secours comme « rattrapée » par l'équipe admin
+ * (envoi manuel du lien, correction des données, etc.).
+ *
+ * Le filtre `fallback_payload IS NOT NULL` empêche de marquer une inscription
+ * standard comme rattrapée. Le filtre `recovered_at IS NULL` garantit
+ * l'idempotence (un second appel retourne `not_found_or_already_recovered`).
+ *
+ * @param {string} registrationId UUID de la ligne activity_registrations
+ * @returns {Promise<{ success: boolean, error: string | null }>}
+ */
+export async function markRegistrationRecovered(registrationId) {
+  if (!registrationId) {
+    return { success: false, error: 'invalid_registration_id' }
+  }
+
+  try {
+    const { data, error: updateError } = await supabase
+      .from('activity_registrations')
+      .update({ recovered_at: new Date().toISOString() })
+      .eq('id', registrationId)
+      .not('fallback_payload', 'is', null)
+      .is('recovered_at', null)
+      .select('id')
+
+    if (updateError) {
+      return { success: false, error: updateError.message }
+    }
+
+    if (!data || data.length === 0) {
+      return { success: false, error: 'not_found_or_already_recovered' }
+    }
+
+    return { success: true, error: null }
+  } catch (err) {
+    return { success: false, error: err?.message || String(err) }
+  }
 }
 
 /**

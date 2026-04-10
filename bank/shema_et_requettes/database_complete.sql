@@ -441,6 +441,14 @@ CREATE TABLE public.activity_registrations (
     -- Default 1 pour les inscriptions historiques
     session_edition INTEGER NOT NULL DEFAULT 1,
 
+    -- Feature 005 : inscription PACO non bloquante avec recuperation des echecs
+    -- Une ligne est consideree "de secours" si fallback_payload IS NOT NULL.
+    -- Elle contient le payload brut du formulaire lorsque register_paco_quick
+    -- a echoue techniquement (WAF, contrainte SQL, panne reseau).
+    fallback_payload JSONB,
+    fallback_error TEXT,
+    recovered_at TIMESTAMPTZ,
+
     -- Contraintes
     CONSTRAINT check_user_or_guest CHECK (
         (user_id IS NOT NULL AND guest_email IS NULL) OR
@@ -460,6 +468,11 @@ CREATE UNIQUE INDEX activity_registrations_user_session_unique
 CREATE UNIQUE INDEX activity_registrations_guest_session_unique
     ON public.activity_registrations(activity_id, guest_email, session_edition)
     WHERE guest_email IS NOT NULL AND user_id IS NULL;
+
+-- Feature 005 : index partiel pour les requetes admin "inscriptions de secours a rattraper"
+CREATE INDEX IF NOT EXISTS activity_registrations_fallback_pending_idx
+    ON public.activity_registrations(activity_id, session_edition)
+    WHERE fallback_payload IS NOT NULL AND recovered_at IS NULL;
 
 -- Documents supports des activités
 CREATE TABLE public.activity_documents (
@@ -1665,6 +1678,26 @@ CREATE POLICY "Admins can view all activity registrations" ON public.activity_re
 
 CREATE POLICY "Admins can delete activity registrations" ON public.activity_registrations
     FOR DELETE USING (
+        EXISTS (
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
+            AND role IN ('paco', 'admin', 'super_admin')
+            AND is_active = true
+        )
+    );
+
+-- Feature 005 : les admins PACO peuvent marquer les inscriptions de secours
+-- comme rattrapees (recovered_at) et corriger les donnees guest_*.
+CREATE POLICY "Admins can update activity registrations" ON public.activity_registrations
+    FOR UPDATE USING (
+        EXISTS (
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
+            AND role IN ('paco', 'admin', 'super_admin')
+            AND is_active = true
+        )
+    )
+    WITH CHECK (
         EXISTS (
             SELECT 1 FROM public.user_roles
             WHERE user_id = auth.uid()

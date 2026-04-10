@@ -81,3 +81,6 @@ Ne pas oublier que toutes les fonctionnalités implémentées devront être dans
 Le problème était bien les caractères spéciaux (em dash —, accents é, è) dans le body JSON qui déclenchaient une règle de sécurité (WAF) sur le serveur.
 
 Maintenant, remettons le contenu complet de l'email PACO mais avec des caractères ASCII-safe :
+
+
+`agent-browser --headed`

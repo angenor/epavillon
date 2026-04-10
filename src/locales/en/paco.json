@@ -207,7 +207,37 @@
       "viewCountSince": "since March 17, 2026, 3:00 PM GMT",
       "session": "Session",
       "filterAllSessions": "All sessions",
-      "filterSession": "Session {n}"
+      "filterSession": "Session {n}",
+      "filter": {
+        "type": {
+          "label": "Type",
+          "all": "All",
+          "standard": "Standard",
+          "fallback": "Fallback",
+          "fallbackPending": "Fallback pending"
+        }
+      },
+      "stats": {
+        "fallbackTotal": "Fallback registrations",
+        "recoveredTotal": "Fallback recovered",
+        "fallbackPending": "Fallback pending",
+        "fallbackTooltip": "Registrations captured in degraded mode (WAF, technical errors) awaiting manual recovery."
+      },
+      "fallback": {
+        "badgeFallback": "Fallback",
+        "badgeRecovered": "Recovered",
+        "detailsTitle": "Fallback registration details",
+        "payloadLabel": "Raw captured data",
+        "errorLabel": "Technical error",
+        "recoveredAt": "Recovered at",
+        "markRecovered": "Mark as recovered",
+        "markRecoveredConfirm": "Confirm recovery of this registration?",
+        "markRecoveredError": "Unable to mark the registration as recovered: {error}",
+        "exportType": "Type",
+        "exportError": "Technical error",
+        "exportRecoveredAt": "Recovered at",
+        "exportPayload": "Fallback JSON payload"
+      }
     },
     "join": {
       "title": "You are registered!",
@@ -341,7 +371,8 @@
       "panelists": {
         "kiri": { "role": "Main Coordinator" },
         "baglhi": { "role": "Director of the Benin Component of the PACO program" },
-        "ka": { "role": "Director of the Francophone Hub, Natural Justice" }
+        "ka": { "role": "Director of the Francophone Hub, Natural Justice" },
+        "elisa-mairet": { "role": "Project and Program Management Specialist" }
       }
     }
   }
