@@ -226,7 +226,9 @@ const loadEvents = async () => {
 
     if (error) throw error
 
-    events.value = data || []
+    // Exclude special PACO event (temporary event with dedicated page)
+    const PACO_EVENT_ID = '00000000-0000-4000-a000-00000000e001'
+    events.value = (data || []).filter(e => e.id !== PACO_EVENT_ID)
 
     // Extraire les années disponibles
     const years = [...new Set(data.map(event => event.year))].sort((a, b) => b - a)

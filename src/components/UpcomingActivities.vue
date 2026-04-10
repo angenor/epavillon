@@ -158,8 +158,8 @@
           <p class="text-sm opacity-75">{{ t('activities.checkBackLater') || 'Revenez plus tard pour découvrir de nouvelles activités' }}</p>
         </div>
 
-        <!-- Bouton Voir toutes les activités -->
-        <div v-if="eventsWithActivities && eventsWithActivities.length > 0" class="pt-4 pb-2 ml-4 pl-6 relative">
+        <!-- Bouton Voir toutes les activités (masqué temporairement) -->
+        <div v-if="false && eventsWithActivities && eventsWithActivities.length > 0" class="pt-4 pb-2 ml-4 pl-6 relative">
           <!-- Point de connexion à la ligne -->
           <div class="absolute left-4 top-7 w-2 h-2 rounded-full bg-ifdd-bleu border-2 border-white" style="margin-left: 0.25rem;"></div>
 
@@ -189,7 +189,7 @@ import { onMounted, onUnmounted, ref, computed } from 'vue'
 import { useActivities } from '@/composables/useActivities'
 import { useRouter } from 'vue-router'
 import { supabase } from '@/composables/useSupabase'
-import { PACO_EVENT_ID } from '@/composables/paco/constants'
+import { PACO_EVENT_ID, PACO_ACTIVITY_ID } from '@/composables/paco/constants'
 import YouthClimateDayWidget from './YouthClimateDayWidget.vue'
 import SustainableFinanceDayWidget from './SustainableFinanceDayWidget.vue'
 import CyprusSeminarWidget from './CyprusSeminarWidget.vue'
@@ -413,9 +413,7 @@ export default {
       }))
 
       // Filtrer pour ne garder que les événements avec des activités à afficher
-      // Exclure l'événement PACO (page dédiée /paco)
       return mappedEvents.filter(event =>
-        event.id !== PACO_EVENT_ID &&
         event.filteredActivities && event.filteredActivities.activities.length > 0
       )
     })
@@ -480,6 +478,12 @@ export default {
     // Gérer le clic sur un événement avec redirection conditionnelle
     const handleEventClick = (event) => {
       if (!event?.id) return
+
+      // Cas spécial : événement PACO — rediriger vers la page dédiée
+      if (event.id === PACO_EVENT_ID) {
+        router.push('/paco')
+        return
+      }
 
       // Cas spécial : événement virtuel CdP 2025
       // Rediriger vers la liste des programmations pour laisser l'utilisateur choisir
@@ -547,6 +551,12 @@ export default {
     // Gérer le clic sur une activité
     const handleActivityClick = (activity, event) => {
       if (!activity?.id) return
+
+      // Cas spécial : activité PACO — rediriger vers la page dédiée
+      if (activity.id === PACO_ACTIVITY_ID) {
+        router.push('/paco')
+        return
+      }
 
       // Si c'est une journée spéciale avec un lien interne, rediriger vers cette page
       if (activity.isSpecialDay && activity.internalLink) {

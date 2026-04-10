@@ -115,6 +115,43 @@
           </div>
         </div>
 
+        <!-- Message email non confirmé -->
+        <div v-if="emailNotConfirmed" class="rounded-lg bg-amber-50 dark:bg-amber-900/30 p-4">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <font-awesome-icon icon="circle-exclamation" class="h-5 w-5 text-amber-400" />
+            </div>
+            <div class="ml-3">
+              <p class="text-sm font-medium text-amber-800 dark:text-amber-300">
+                {{ t('auth.errors.emailNotConfirmed') }}
+              </p>
+              <p class="mt-1 text-sm text-amber-700 dark:text-amber-400">
+                {{ t('auth.errors.emailNotConfirmedHint') }}
+              </p>
+              <button
+                type="button"
+                @click="handleResendConfirmation"
+                :disabled="resending || resendCooldown > 0"
+                class="mt-3 inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg cursor-pointer text-white bg-amber-600 hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <font-awesome-icon v-if="resending" icon="spinner" class="h-4 w-4 mr-2 animate-spin" />
+                <template v-if="resendCooldown > 0">
+                  {{ t('auth.verifyEmail.resendIn', { seconds: resendCooldown }) }}
+                </template>
+                <template v-else>
+                  {{ resending ? t('auth.verifyEmail.resending') : t('auth.verifyEmail.resendEmail') }}
+                </template>
+              </button>
+              <p v-if="resendSuccess" class="mt-2 text-sm text-green-600 dark:text-green-400">
+                {{ t('auth.verifyEmail.emailSent') }}
+              </p>
+              <p v-if="resendError" class="mt-2 text-sm text-red-600 dark:text-red-400">
+                {{ t('auth.verifyEmail.resendError') }}
+              </p>
+            </div>
+          </div>
+        </div>
+
         <!-- Message d'erreur -->
         <div v-if="error" class="rounded-lg bg-red-50 dark:bg-red-900/50 p-4">
           <div class="flex">
@@ -192,6 +229,11 @@ const { auth } = useSupabase()
 const loading = ref(false)
 const error = ref('')
 const showPassword = ref(false)
+const emailNotConfirmed = ref(false)
+const resending = ref(false)
+const resendCooldown = ref(0)
+const resendSuccess = ref(false)
+const resendError = ref(false)
 
 const form = reactive({
   email: '',
@@ -202,6 +244,9 @@ const form = reactive({
 const handleLogin = async () => {
   loading.value = true
   error.value = ''
+  emailNotConfirmed.value = false
+  resendSuccess.value = false
+  resendError.value = false
 
   try {
     const { data, error: signInError } = await auth.signInWithPassword({
@@ -217,9 +262,41 @@ const handleLogin = async () => {
     router.push(redirectTo)
   } catch (err) {
     console.error('Login error:', err)
-    error.value = t('auth.errors.invalidCredentials')
+    if (err.message?.includes('Email not confirmed')) {
+      emailNotConfirmed.value = true
+    } else {
+      error.value = t('auth.errors.invalidCredentials')
+    }
   } finally {
     loading.value = false
+  }
+}
+
+const handleResendConfirmation = async () => {
+  resending.value = true
+  resendSuccess.value = false
+  resendError.value = false
+
+  try {
+    const { error: resendErr } = await auth.resend({
+      type: 'signup',
+      email: form.email
+    })
+
+    if (resendErr) throw resendErr
+
+    resendSuccess.value = true
+    // Cooldown de 60 secondes
+    resendCooldown.value = 60
+    const interval = setInterval(() => {
+      resendCooldown.value--
+      if (resendCooldown.value <= 0) clearInterval(interval)
+    }, 1000)
+  } catch (err) {
+    console.error('Resend confirmation error:', err)
+    resendError.value = true
+  } finally {
+    resending.value = false
   }
 }
 

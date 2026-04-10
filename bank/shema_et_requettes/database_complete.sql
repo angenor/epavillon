@@ -68,6 +68,7 @@ CREATE TYPE user_role_type AS ENUM (
     'unfccc_focal_point',
     'negotiator',
     'trainer',
+    'paco',
     'revisionniste',
     'admin',
     'super_admin'
@@ -436,6 +437,10 @@ CREATE TABLE public.activity_registrations (
     attended BOOLEAN DEFAULT FALSE,
     attendance_duration INTEGER, -- en minutes
 
+    -- Numéro de session pour les activités multi-sessions (PACO, etc.)
+    -- Default 1 pour les inscriptions historiques
+    session_edition INTEGER NOT NULL DEFAULT 1,
+
     -- Contraintes
     CONSTRAINT check_user_or_guest CHECK (
         (user_id IS NOT NULL AND guest_email IS NULL) OR
@@ -447,13 +452,13 @@ CREATE TABLE public.activity_registrations (
     )
 );
 
--- Index uniques pour éviter les doublons
-CREATE UNIQUE INDEX activity_registrations_user_unique
-    ON public.activity_registrations(activity_id, user_id)
+-- Index uniques pour éviter les doublons (incluant session_edition pour multi-sessions)
+CREATE UNIQUE INDEX activity_registrations_user_session_unique
+    ON public.activity_registrations(activity_id, user_id, session_edition)
     WHERE user_id IS NOT NULL;
 
-CREATE UNIQUE INDEX activity_registrations_guest_unique
-    ON public.activity_registrations(activity_id, guest_email)
+CREATE UNIQUE INDEX activity_registrations_guest_session_unique
+    ON public.activity_registrations(activity_id, guest_email, session_edition)
     WHERE guest_email IS NOT NULL AND user_id IS NULL;
 
 -- Documents supports des activités
@@ -1648,6 +1653,26 @@ CREATE POLICY "Users can view their own registrations" ON public.activity_regist
 CREATE POLICY "Users can register to activities" ON public.activity_registrations
     FOR INSERT WITH CHECK (user_id = auth.uid());
 
+CREATE POLICY "Admins can view all activity registrations" ON public.activity_registrations
+    FOR SELECT USING (
+        EXISTS (
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
+            AND role IN ('paco', 'admin', 'super_admin')
+            AND is_active = true
+        )
+    );
+
+CREATE POLICY "Admins can delete activity registrations" ON public.activity_registrations
+    FOR DELETE USING (
+        EXISTS (
+            SELECT 1 FROM public.user_roles
+            WHERE user_id = auth.uid()
+            AND role IN ('paco', 'admin', 'super_admin')
+            AND is_active = true
+        )
+    );
+
 -- Politiques pour les questions d'activités
 CREATE POLICY "Users can view activity questions" ON public.activity_questions
     FOR SELECT USING (is_visible = TRUE);
@@ -2674,4 +2699,57 @@ GRANT EXECUTE ON FUNCTION public.check_paco_email(TEXT) TO anon;
 GRANT EXECUTE ON FUNCTION public.check_paco_email(TEXT) TO authenticated;
 
 COMMENT ON FUNCTION public.check_paco_email IS 'Vérifie si un email existe dans la table users (PACO webinar — accessible aux anonymes)';
+
+-- ============================================================================
+-- PACO DEMOGRAPHIC DATA — Données démographiques des inscrits PACO
+-- Feature: 003-paco-registration-stats
+-- ============================================================================
+
+CREATE TABLE public.paco_demographic_data (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    registration_id UUID NOT NULL UNIQUE
+        REFERENCES public.activity_registrations(id) ON DELETE CASCADE,
+    gender TEXT NOT NULL CHECK (gender IN ('male', 'female')),
+    age_profile TEXT NOT NULL CHECK (age_profile IN ('over_35', 'under_35')),
+    city TEXT NOT NULL,
+    country_id UUID NOT NULL REFERENCES public.countries(id),
+    professional_status TEXT NOT NULL
+        CHECK (professional_status IN ('employed', 'student', 'unemployed', 'entrepreneur')),
+    organization TEXT,
+    recording_consent BOOLEAN NOT NULL CHECK (recording_consent = true),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE public.paco_demographic_data ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can insert own paco demographic data"
+ON public.paco_demographic_data FOR INSERT
+WITH CHECK (
+    (SELECT user_id FROM public.activity_registrations WHERE id = registration_id) = auth.uid()
+);
+
+CREATE POLICY "Users can read own paco demographic data"
+ON public.paco_demographic_data FOR SELECT
+USING (
+    (SELECT user_id FROM public.activity_registrations WHERE id = registration_id) = auth.uid()
+);
+
+CREATE POLICY "Admins can read all paco demographic data"
+ON public.paco_demographic_data FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1 FROM public.user_roles
+        WHERE user_id = auth.uid()
+        AND role IN ('paco', 'admin', 'super_admin')
+        AND is_active = true
+    )
+);
+
+CREATE INDEX idx_paco_demographic_registration
+ON public.paco_demographic_data(registration_id);
+
+COMMENT ON TABLE public.paco_demographic_data IS 'Données démographiques des inscrits au webinaire PACO (genre, âge, ville, statut professionnel, consentement)';
+
+-- CLEANUP (run after the event to remove PACO demographic data)
+-- DROP TABLE IF EXISTS public.paco_demographic_data;
 

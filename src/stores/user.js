@@ -31,6 +31,10 @@ export const useUserStore = defineStore('user', () => {
     return hasRole.value('trainer')
   })
 
+  const isPaco = computed(() => {
+    return hasRole.value('paco')
+  })
+
   // Actions
   const loadUserData = async (userId) => {
     if (!userId) return
@@ -285,6 +289,7 @@ export const useUserStore = defineStore('user', () => {
     isNegotiator,
     isFocalPoint,
     isTrainer,
+    isPaco,
 
     // Actions
     loadUserData,

@@ -8,28 +8,44 @@ export function usePacoEmail() {
 
   /**
    * Send the PACO webinar confirmation email with the Teams link.
-   * Calls the dedicated edge function send-paco-email.
+   * Uses the send-email edge function (same as EmailManager admin emails).
    * @param {string} recipientEmail
    * @param {string} recipientName
    * @returns {Promise<boolean>} true if the email was sent successfully
    */
-  const sendPacoEmail = async (recipientEmail, recipientName) => {
+  const sendPacoEmail = async (recipientEmail, _recipientName) => {
     loading.value = true
     error.value = null
     success.value = false
 
+    const PACO_PLATFORM_JOIN_URL = 'https://epavillonclimatique.francophonie.org/paco/join'
+
+    const emailContent = `Bonjour {recipient_name}, votre inscription est confirmee. Le webinaire aura lieu le 30 avril 2026 de 14h00 a 15h30 GMT.\n\nLien de connexion : ${PACO_PLATFORM_JOIN_URL}\n\nIMPORTANT : Veuillez installer le logiciel Microsoft Teams avant la session. Vous en aurez besoin pour rejoindre le webinaire.`
+
     try {
-      const { data, error: functionError } = await supabase.functions.invoke('send-paco-email', {
+      // Use the exact same payload structure as admin EmailManager (no mode field)
+      // The edge function will auto-detect PACO user via activity_registrations fallback
+      const { data, error: sendError } = await supabase.functions.invoke('send-email', {
         body: {
-          recipient_email: recipientEmail,
-          recipient_name: recipientName
+          email_type: 'simple',
+          subject: 'Confirmation inscription - Webinaire PACO',
+          content: emailContent,
+          recipients: {
+            to: [recipientEmail],
+            cc: [],
+            bcc: []
+          },
+          variables: {},
+          template: 'simple_email',
+          event_id: null,
+          activity_id: null
         }
       })
 
-      if (functionError) throw functionError
+      if (sendError) throw sendError
 
-      if (data?.error) {
-        throw new Error(data.error)
+      if (!data?.success) {
+        throw new Error(data?.error || data?.message || 'Email send failed')
       }
 
       success.value = true

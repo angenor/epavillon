@@ -19,8 +19,8 @@
       {{ t('paco.join.joinButton') }}
     </router-link>
 
-    <!-- Copy link + Resend email -->
-    <div class="mt-5 flex items-center justify-center gap-3">
+    <!-- Copy link -->
+    <div class="mt-5 flex items-center justify-center">
       <button
         @click="copyTeamsLink"
         class="text-sm text-green-400 hover:text-green-300 hover:underline cursor-pointer transition"
@@ -28,39 +28,32 @@
         <font-awesome-icon :icon="['fas', 'copy']" class="mr-1" />
         {{ linkCopied ? t('paco.join.linkCopied') : t('paco.join.copyLink') }}
       </button>
-      <span class="text-white/20">|</span>
-      <button
-        @click="handleResendEmail"
-        :disabled="resendingEmail"
-        class="text-sm text-green-400 hover:text-green-300 hover:underline cursor-pointer disabled:opacity-50 transition"
-      >
-        <font-awesome-icon :icon="['fas', 'envelope']" class="mr-1" />
-        {{ resendingEmail ? t('paco.join.resending') : t('paco.join.resendEmail') }}
-      </button>
     </div>
 
-    <!-- Resend feedback -->
-    <p v-if="resendMessage" class="mt-2 text-sm" :class="resendError ? 'text-red-300' : 'text-green-400'">
-      {{ resendMessage }}
-    </p>
+    <!-- Partner logos -->
+    <div class="mt-8 pt-6 border-t border-white/10">
+      <PacoPartnerLogos :partners="session.partners" />
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useAuth } from '@/composables/useAuth'
-import { usePacoEmail } from '@/composables/paco/usePacoEmail'
+import { usePacoWebinarData } from '@/composables/paco/usePacoWebinarData'
+import PacoPartnerLogos from './PacoPartnerLogos.vue'
+
+const props = defineProps({
+  sessionData: { type: Object, default: null }
+})
 
 const { t } = useI18n()
-const { user, profile } = useAuth()
-const { sendPacoEmail } = usePacoEmail()
+const { currentSession } = usePacoWebinarData()
+
+const session = computed(() => props.sessionData || currentSession.value)
 
 const platformJoinLink = '/paco/join'
 const linkCopied = ref(false)
-const resendingEmail = ref(false)
-const resendMessage = ref('')
-const resendError = ref(false)
 
 async function copyTeamsLink() {
   const fullUrl = window.location.origin + platformJoinLink
@@ -77,32 +70,6 @@ async function copyTeamsLink() {
     document.body.removeChild(input)
     linkCopied.value = true
     setTimeout(() => { linkCopied.value = false }, 2000)
-  }
-}
-
-async function handleResendEmail() {
-  resendingEmail.value = true
-  resendMessage.value = ''
-  resendError.value = false
-
-  try {
-    const email = user.value?.email
-    const name = profile.value
-      ? `${profile.value.first_name || ''} ${profile.value.last_name || ''}`.trim()
-      : email
-
-    const sent = await sendPacoEmail(email, name || email)
-    if (sent) {
-      resendMessage.value = t('paco.join.emailSent')
-    } else {
-      resendMessage.value = t('paco.join.emailError')
-      resendError.value = true
-    }
-  } catch {
-    resendMessage.value = t('paco.join.emailError')
-    resendError.value = true
-  } finally {
-    resendingEmail.value = false
   }
 }
 </script>

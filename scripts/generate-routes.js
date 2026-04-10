@@ -35,6 +35,7 @@ async function generateRoutes() {
   const routes = [
     '/', // Page d'accueil
     '/programmations', // Liste des événements
+    '/paco', // Webinaire PACO
   ]
 
   try {

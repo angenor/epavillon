@@ -67,6 +67,7 @@
         "negotiator": "Négociateur",
         "unfccc_focal_point": "Point Focal UNFCCC",
         "trainer": "Formateur",
+        "paco": "Gestionnaire PACO",
         "revisionniste": "Révisionniste",
         "admin": "Administrateur",
         "super_admin": "Super Administrateur"
@@ -78,6 +79,14 @@
       "edit": "Modifier",
       "suspend": "Suspendre",
       "unsuspend": "Lever la suspension",
+      "delete": "Supprimer",
+      "deleteConfirmTitle": "Supprimer l'utilisateur",
+      "deleteConfirmMessage": "Vous \u00eates sur le point de supprimer d\u00e9finitivement cet utilisateur :",
+      "deleteWarning": "Cette action est irr\u00e9versible. Toutes les donn\u00e9es associ\u00e9es seront supprim\u00e9es.",
+      "confirmDelete": "Supprimer d\u00e9finitivement",
+      "deleting": "Suppression...",
+      "deleteError": "Erreur lors de la suppression",
+      "deleteSuccess": "Utilisateur supprim\u00e9 avec succ\u00e8s",
       "showing": "Affichage de",
       "to": "à",
       "of": "sur",
@@ -161,6 +170,7 @@
         "unfccc_focal_point": "Point Focal CCNUCC",
         "negotiator": "Négociateur",
         "trainer": "Formateur",
+        "paco": "Gestionnaire PACO",
         "revisionniste": "Révisionniste",
         "admin": "Administrateur",
         "super_admin": "Super Administrateur"
@@ -170,6 +180,7 @@
         "unfccc_focal_point": "Point focal national pour la CCNUCC",
         "negotiator": "Négociateur climat participant aux COP",
         "trainer": "Formateur autorisé à créer et animer des formations",
+        "paco": "Gestionnaire PACO autorisé à consulter les statistiques et gérer les inscrits",
         "revisionniste": "Révisionniste autorisé à examiner et noter les activités non validées",
         "admin": "Administrateur avec accès aux fonctions de gestion",
         "super_admin": "Super administrateur avec tous les droits"

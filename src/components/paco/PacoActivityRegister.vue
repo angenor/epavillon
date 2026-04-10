@@ -34,6 +34,55 @@
         />
       </div>
 
+      <!-- Gender -->
+      <div>
+        <label class="block text-sm font-medium text-white/70 mb-1">
+          {{ t('paco.demographic.genderLabel') }}
+        </label>
+        <div class="flex gap-4">
+          <label class="flex items-center gap-2 cursor-pointer text-sm text-white/80">
+            <input type="radio" v-model="form.gender" value="male" required class="accent-green-500" />
+            {{ t('paco.demographic.male') }}
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-sm text-white/80">
+            <input type="radio" v-model="form.gender" value="female" required class="accent-green-500" />
+            {{ t('paco.demographic.female') }}
+          </label>
+        </div>
+      </div>
+
+      <!-- Age Profile -->
+      <div>
+        <label class="block text-sm font-medium text-white/70 mb-1">
+          {{ t('paco.demographic.ageProfileLabel') }}
+        </label>
+        <div class="flex gap-4">
+          <label class="flex items-center gap-2 cursor-pointer text-sm text-white/80">
+            <input type="radio" v-model="form.ageProfile" value="over_35" required class="accent-green-500" />
+            {{ t('paco.demographic.over35') }}
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-sm text-white/80">
+            <input type="radio" v-model="form.ageProfile" value="under_35" required class="accent-green-500" />
+            {{ t('paco.demographic.under35') }}
+          </label>
+        </div>
+      </div>
+
+      <!-- City -->
+      <div>
+        <label for="paco-activity-city" class="block text-sm font-medium text-white/70 mb-1">
+          {{ t('paco.demographic.cityLabel') }}
+        </label>
+        <input
+          id="paco-activity-city"
+          v-model="form.city"
+          type="text"
+          :placeholder="t('paco.demographic.cityPlaceholder')"
+          required
+          class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white placeholder-white/30 focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition backdrop-blur-sm text-sm"
+        />
+      </div>
+
       <!-- Country (editable, pre-filled from profile) -->
       <div>
         <label for="paco-activity-country" class="block text-sm font-medium text-white/70 mb-1">
@@ -42,12 +91,32 @@
         <select
           id="paco-activity-country"
           v-model="form.countryId"
+          required
           class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition cursor-pointer text-sm"
         >
           <option value="" disabled class="bg-gray-800 text-white">{{ t('paco.activityRegister.countryPlaceholder') }}</option>
           <option v-for="country in countries" :key="country.id" :value="country.id" class="bg-gray-800 text-white">
             {{ locale === 'fr' ? country.name_fr : country.name_en }}
           </option>
+        </select>
+      </div>
+
+      <!-- Professional Status -->
+      <div>
+        <label for="paco-activity-status" class="block text-sm font-medium text-white/70 mb-1">
+          {{ t('paco.demographic.professionalStatusLabel') }}
+        </label>
+        <select
+          id="paco-activity-status"
+          v-model="form.professionalStatus"
+          required
+          class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition cursor-pointer text-sm"
+        >
+          <option value="" disabled class="bg-gray-800 text-white">{{ t('paco.demographic.professionalStatusPlaceholder') }}</option>
+          <option value="employed" class="bg-gray-800 text-white">{{ t('paco.demographic.employed') }}</option>
+          <option value="student" class="bg-gray-800 text-white">{{ t('paco.demographic.student') }}</option>
+          <option value="unemployed" class="bg-gray-800 text-white">{{ t('paco.demographic.unemployed') }}</option>
+          <option value="entrepreneur" class="bg-gray-800 text-white">{{ t('paco.demographic.entrepreneur') }}</option>
         </select>
       </div>
 
@@ -61,8 +130,22 @@
           v-model="form.organizationName"
           type="text"
           :placeholder="t('paco.activityRegister.organizationPlaceholder')"
+          required
           class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white placeholder-white/30 focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition backdrop-blur-sm text-sm"
         />
+      </div>
+
+      <!-- Recording Consent -->
+      <div>
+        <label class="flex items-start gap-2 cursor-pointer text-sm text-white/80">
+          <input
+            type="checkbox"
+            v-model="form.recordingConsent"
+            required
+            class="accent-green-500 mt-0.5 shrink-0"
+          />
+          <span>{{ t('paco.demographic.recordingConsent') }}</span>
+        </label>
       </div>
 
       <!-- Error message -->
@@ -100,12 +183,17 @@ const props = defineProps({
 const emit = defineEmits(['registration-complete'])
 
 const { countries, fetchCountries } = useCountries()
-const { registerForPaco } = usePacoRegistration()
+const { registerForPaco, insertDemographicData } = usePacoRegistration()
 const { sendPacoEmail } = usePacoEmail()
 
 const form = reactive({
   countryId: '',
-  organizationName: ''
+  organizationName: '',
+  gender: '',
+  ageProfile: '',
+  city: '',
+  professionalStatus: '',
+  recordingConsent: false
 })
 
 const submitting = ref(false)
@@ -135,13 +223,24 @@ const handleSubmit = async () => {
 
   try {
     // 1. Register for PACO activity
-    const registered = await registerForPaco(props.user.id)
-    if (!registered) {
+    const registrationId = await registerForPaco(props.user.id)
+    if (!registrationId) {
       errorMessage.value = t('paco.errors.registration')
       return
     }
 
-    // 2. Update profile with country/organization if changed
+    // 2. Insert demographic data (graceful — don't block if it fails)
+    await insertDemographicData(registrationId, {
+      gender: form.gender,
+      ageProfile: form.ageProfile,
+      city: form.city,
+      countryId: form.countryId,
+      professionalStatus: form.professionalStatus,
+      organization: form.organizationName,
+      recordingConsent: form.recordingConsent
+    })
+
+    // 3. Update profile with country/organization if changed
     const updateData = {}
     if (form.countryId && form.countryId !== props.profile?.country_id) {
       updateData.country_id = form.countryId
@@ -165,7 +264,7 @@ const handleSubmit = async () => {
         .eq('id', props.user.id)
     }
 
-    // 3. Send confirmation email (best-effort — don't block on failure)
+    // 4. Send confirmation email (best-effort — don't block on failure)
     try {
       const email = props.user.email
       const name = displayName.value || email
@@ -174,7 +273,7 @@ const handleSubmit = async () => {
       console.warn('Email sending failed (non-blocking):', emailErr)
     }
 
-    // 4. Emit success
+    // 5. Emit success
     emit('registration-complete')
   } catch (err) {
     console.error('Activity registration error:', err)

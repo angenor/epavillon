@@ -117,6 +117,7 @@
         "unfccc_focal_point": "UNFCCC Focal Point",
         "negotiator": "Negotiator",
         "trainer": "Trainer",
+        "paco": "PACO Manager",
         "revisionniste": "Reviewer",
         "admin": "Administrator",
         "super_admin": "Super Administrator"
@@ -126,6 +127,7 @@
         "unfccc_focal_point": "National focal point for UNFCCC",
         "negotiator": "Climate negotiator participating in COPs",
         "trainer": "Authorized trainer to create and lead training sessions",
+        "paco": "PACO manager authorized to view statistics and manage registrants",
         "revisionniste": "Reviewer authorized to examine and rate unvalidated activities",
         "admin": "Administrator with access to management functions",
         "super_admin": "Super administrator with all rights"
@@ -385,6 +387,7 @@
         "negotiator": "Negotiator",
         "unfccc_focal_point": "UNFCCC Focal Point",
         "trainer": "Trainer",
+        "paco": "PACO Manager",
         "admin": "Administrator",
         "super_admin": "Super Administrator"
       },
@@ -395,6 +398,14 @@
       "edit": "Edit",
       "suspend": "Suspend",
       "unsuspend": "Unsuspend",
+      "delete": "Delete",
+      "deleteConfirmTitle": "Delete user",
+      "deleteConfirmMessage": "You are about to permanently delete this user:",
+      "deleteWarning": "This action is irreversible. All associated data will be deleted.",
+      "confirmDelete": "Delete permanently",
+      "deleting": "Deleting...",
+      "deleteError": "Error deleting user",
+      "deleteSuccess": "User deleted successfully",
       "showing": "Showing",
       "to": "to",
       "of": "of",

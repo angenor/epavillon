@@ -38,3 +38,8 @@ prerender-routes.json
 laravel.env
 .env.local
 .env.*.local
+
+# Database backups
+*.dump
+*.sql
+backup*

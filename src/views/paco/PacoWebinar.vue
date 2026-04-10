@@ -1,89 +1,23 @@
 <template>
-  <div class="relative min-h-[calc(100vh-4rem)]">
-    <!-- Fixed background image -->
-    <div
-      class="fixed inset-x-0 top-16 bottom-0 bg-gray-900 bg-cover bg-center bg-no-repeat"
-      style="background-image: url('https://www.aip.ci/wp-content/uploads/2025/07/Lancement-du-PACO-a-Abidjan.jpg')"
-    >
-      <div class="absolute inset-0 bg-gradient-to-br from-black/75 via-black/55 to-green-950/65"></div>
-    </div>
+  <div class="min-h-[calc(100vh-4rem)] bg-gray-900">
+    <div class="py-6 px-4 sm:px-6 lg:py-8 lg:px-8">
+      <div class="w-full max-w-6xl mx-auto">
+        <PacoSessionTabs v-model="activeEdition" :sessions="sessions" />
 
-    <!-- Content -->
-    <div class="relative z-10 flex items-center justify-center min-h-[calc(100vh-4rem)] py-6 px-4 sm:px-6 lg:py-8 lg:px-8">
-      <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-12 items-center">
+        <!-- Session 1: replay vidéo -->
+        <PacoSession1
+          v-if="activeEdition === 1"
+          :session-data="sessions[0]"
+        />
 
-        <!-- Left: PACO Info -->
-        <div class="lg:col-span-3">
-          <PacoPresentation />
-        </div>
-
-        <!-- Right: Action panel -->
-        <div class="lg:col-span-2">
-          <div class="bg-white/10 backdrop-blur-2xl border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/20">
-
-            <!-- Loading -->
-            <div v-if="pageLoading" class="text-center py-12">
-              <div class="animate-spin rounded-full h-8 w-8 border-2 border-white/20 border-t-white mx-auto mb-4"></div>
-              <p class="text-white/60 text-sm">{{ t('paco.emailCheck.checking') }}</p>
-            </div>
-
-            <!-- Step: email-check -->
-            <PacoEmailCheck
-              v-else-if="step === 'email-check'"
-              :loading="emailCheckLoading"
-              @email-checked="handleEmailChecked"
-            />
-
-            <!-- Step: login -->
-            <PacoLoginForm
-              v-else-if="step === 'login'"
-              :email="checkedEmail"
-              @login-success="handleLoginSuccess"
-              @back="resetToEmailCheck"
-            />
-
-            <!-- Step: register -->
-            <PacoRegisterForm
-              v-else-if="step === 'register'"
-              :email="checkedEmail"
-              @register-success="handleRegisterSuccess"
-              @back="resetToEmailCheck"
-            />
-
-            <!-- Step: activity-register -->
-            <PacoActivityRegister
-              v-else-if="step === 'activity-register'"
-              :user="user"
-              :profile="profile"
-              @registration-complete="handleActivityRegistrationComplete"
-            />
-
-            <!-- Step: success -->
-            <div v-else-if="step === 'success'" class="text-center py-4">
-              <div class="w-16 h-16 bg-green-500/20 border border-green-400/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                <font-awesome-icon :icon="['fas', 'check']" class="text-green-400 text-2xl" />
-              </div>
-              <h2 class="text-xl font-bold text-white mb-2">
-                {{ t('paco.success.title') }}
-              </h2>
-              <p class="text-white/60 text-sm mb-4 leading-relaxed">
-                {{ t('paco.success.message') }}
-              </p>
-              <p class="text-sm text-green-400 font-medium">
-                <font-awesome-icon :icon="['fas', 'envelope']" class="mr-1" />
-                {{ t('paco.success.checkEmail') }}
-              </p>
-            </div>
-
-            <!-- Step: join -->
-            <PacoJoinSection v-else-if="step === 'join'" />
-
-            <!-- Error -->
-            <div v-if="globalError" class="mt-4 bg-red-500/15 border border-red-400/20 rounded-xl p-3">
-              <p class="text-sm text-red-300">{{ globalError }}</p>
-            </div>
-          </div>
-        </div>
+        <!-- Session 2: inscription -->
+        <PacoSession2
+          v-else-if="activeEdition === 2"
+          :session-data="sessions[1]"
+          :step="step"
+          :page-loading="pageLoading"
+          @registration-complete="handleRegistrationComplete"
+        />
       </div>
     </div>
   </div>
@@ -91,173 +25,102 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useAuth } from '@/composables/useAuth'
-import { usePacoRegistration } from '@/composables/paco/usePacoRegistration'
-import { usePacoEmail } from '@/composables/paco/usePacoEmail'
-import PacoPresentation from '@/components/paco/PacoPresentation.vue'
-import PacoEmailCheck from '@/components/paco/PacoEmailCheck.vue'
-import PacoLoginForm from '@/components/paco/PacoLoginForm.vue'
-import PacoRegisterForm from '@/components/paco/PacoRegisterForm.vue'
-import PacoActivityRegister from '@/components/paco/PacoActivityRegister.vue'
-import PacoJoinSection from '@/components/paco/PacoJoinSection.vue'
+import { useSEO } from '@/composables/useSEO'
+import {
+  usePacoRegistration,
+  isPacoRegisteredLocally,
+  markPacoRegistered,
+  migrateLegacyLocalStorage,
+} from '@/composables/paco/usePacoRegistration'
+import { supabase } from '@/composables/useSupabase'
+import { PACO_ACTIVITY_ID } from '@/composables/paco/constants'
+import { usePacoWebinarData } from '@/composables/paco/usePacoWebinarData'
+import PacoSessionTabs from '@/components/paco/PacoSessionTabs.vue'
+import PacoSession1 from '@/components/paco/PacoSession1.vue'
+import PacoSession2 from '@/components/paco/PacoSession2.vue'
 
-const { t } = useI18n()
+const { sessions, currentSession } = usePacoWebinarData()
 
-// Auth state
-const { isAuthenticated, user, profile } = useAuth()
+// SEO - OG meta tags pour le partage sur les réseaux sociaux
+const PACO_OG_IMAGE = 'https://epavillonclimatique.francophonie.org/images/og_affiche_paco_avec_ecriture.jpg'
+useSEO({
+  title: 'Webinaire PACO - Justice climatique et inclusion sociale',
+  description: 'Webinaire PACO sur la justice climatique et l\'inclusion sociale dans l\'adaptation. Jeudi 30 avril 2026, en ligne, 14h00-15h30 GMT.',
+  image: PACO_OG_IMAGE,
+  url: 'https://epavillonclimatique.francophonie.org/paco',
+  type: 'website',
+  og: { type: 'website' },
+  twitter: { card: 'summary_large_image' }
+})
 
-// PACO composables
-const { checkEmailExists, checkPacoRegistration, registerForPaco } = usePacoRegistration()
-const { sendPacoEmail } = usePacoEmail()
+const { isAuthenticated, user } = useAuth()
+const { checkPacoRegistration } = usePacoRegistration()
 
-// State machine
-const step = ref('email-check') // email-check | login | register | activity-register | success | join
+// État
+const activeEdition = ref(currentSession.value.edition)
+const step = ref('form')
 const pageLoading = ref(true)
-const emailCheckLoading = ref(false)
-const checkedEmail = ref('')
-const globalError = ref('')
+
+onMounted(async () => {
+  migrateLegacyLocalStorage()
+  trackUniqueView()
+  await checkInitialState(activeEdition.value)
+})
+
+watch(activeEdition, async (newEdition) => {
+  await checkInitialState(newEdition)
+})
 
 /**
- * On mount: check if already authenticated and registered
+ * Vérifie l'état initial pour la session active.
+ * Session 1 (terminée) → état neutre (replay), pas de check inscription.
+ * Session 2 (à venir) → check inscription DB ou localStorage.
  */
-onMounted(async () => {
-  await checkInitialState()
-})
-
-// Watch for auth state changes (e.g. login from another tab)
-watch(isAuthenticated, async (newVal) => {
-  if (newVal && step.value === 'email-check') {
-    await checkInitialState()
-  }
-})
-
-async function checkInitialState() {
+async function checkInitialState(edition) {
   pageLoading.value = true
-  globalError.value = ''
 
   try {
     if (isAuthenticated.value && user.value) {
-      const registered = await checkPacoRegistration(user.value.id)
-      step.value = registered ? 'join' : 'activity-register'
-    } else {
-      step.value = 'email-check'
-    }
-  } catch (err) {
-    console.error('Error checking initial state:', err)
-    step.value = 'email-check'
-  } finally {
-    pageLoading.value = false
-  }
-}
-
-/**
- * Handle email check result from PacoEmailCheck
- */
-async function handleEmailChecked(email) {
-  emailCheckLoading.value = true
-  globalError.value = ''
-  checkedEmail.value = email
-
-  try {
-    const exists = await checkEmailExists(email)
-    step.value = exists ? 'login' : 'register'
-  } catch (err) {
-    globalError.value = t('paco.errors.generic')
-  } finally {
-    emailCheckLoading.value = false
-  }
-}
-
-/**
- * Handle successful login from PacoLoginForm.
- * Auto-register for PACO if not already registered, then send email.
- */
-async function handleLoginSuccess({ userId, email }) {
-  pageLoading.value = true
-  globalError.value = ''
-
-  try {
-    const alreadyRegistered = await checkPacoRegistration(userId)
-
-    if (alreadyRegistered) {
-      step.value = 'join'
-    } else {
-      // Register for PACO
-      const registered = await registerForPaco(userId)
-      if (!registered) {
-        globalError.value = t('paco.errors.registration')
-        step.value = 'email-check'
+      const registered = await checkPacoRegistration(user.value.id, edition)
+      if (registered) {
+        markPacoRegistered(edition)
+        step.value = 'join'
         return
       }
-
-      // Send confirmation email (best-effort — don't block join on failure)
-      try {
-        const userName = profile.value
-          ? `${profile.value.first_name || ''} ${profile.value.last_name || ''}`.trim()
-          : email
-        await sendPacoEmail(email, userName || email)
-      } catch (emailErr) {
-        console.warn('Email sending failed (non-blocking):', emailErr)
-      }
-
-      step.value = 'join'
     }
-  } catch (err) {
-    console.error('Post-login flow error:', err)
-    globalError.value = t('paco.errors.generic')
-  } finally {
-    pageLoading.value = false
-  }
-}
 
-/**
- * Handle successful registration from PacoRegisterForm.
- * Register for PACO activity and send email.
- */
-async function handleRegisterSuccess({ userId, email, name }) {
-  pageLoading.value = true
-  globalError.value = ''
-
-  try {
-    // Register for PACO activity
-    const registered = await registerForPaco(userId)
-    if (!registered) {
-      globalError.value = t('paco.errors.registration')
-      step.value = 'email-check'
+    if (isPacoRegisteredLocally(edition)) {
+      step.value = 'join'
       return
     }
 
-    // Send confirmation email (best-effort — don't block success on failure)
-    try {
-      await sendPacoEmail(email, name || email)
-    } catch (emailErr) {
-      console.warn('Email sending failed (non-blocking):', emailErr)
-    }
-
-    step.value = 'success'
+    step.value = 'form'
   } catch (err) {
-    console.error('Post-register flow error:', err)
-    globalError.value = t('paco.errors.registration')
+    console.error('Error checking initial state:', err)
+    step.value = isPacoRegisteredLocally(edition) ? 'join' : 'form'
   } finally {
     pageLoading.value = false
   }
 }
 
-/**
- * Handle activity registration complete from PacoActivityRegister.
- * Transition to join section.
- */
-function handleActivityRegistrationComplete() {
-  step.value = 'join'
+async function trackUniqueView() {
+  const STORAGE_KEY = 'paco_page_viewed'
+  if (localStorage.getItem(STORAGE_KEY)) return
+
+  try {
+    const { error } = await supabase.rpc('increment_activity_view_count', {
+      activity_uuid: PACO_ACTIVITY_ID
+    })
+    if (!error) {
+      localStorage.setItem(STORAGE_KEY, '1')
+    }
+  } catch {
+    // Non-blocking
+  }
 }
 
-/**
- * Reset to email check step
- */
-function resetToEmailCheck() {
-  step.value = 'email-check'
-  checkedEmail.value = ''
-  globalError.value = ''
+function handleRegistrationComplete() {
+  step.value = 'join'
 }
 </script>

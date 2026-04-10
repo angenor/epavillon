@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(bash .specify/scripts/bash/update-agent-context.sh claude)",
-      "Bash(bash /Users/mac/Documents/projets/IFDD/epavillonvue/.specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks)"
+      "Bash(bash /Users/mac/Documents/projets/IFDD/epavillonvue/.specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks)",
+      "Bash(.specify/scripts/bash/create-new-feature.sh --json --number 4 --short-name \"paco-email-verify\" \"Fix PACO registration for new users: add email verification step in webinar signup workflow so unverified users can complete registration, and automatically send Teams link upon email confirmation\")"
     ]
   }
 }

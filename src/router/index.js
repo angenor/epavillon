@@ -381,6 +381,13 @@ const router = createRouter({
       name: 'paco-join-gateway',
       component: () => import('../views/paco/PacoJoinGateway.vue'),
     },
+    // PACO Webinar — administration et statistiques
+    {
+      path: '/paco/admin',
+      name: 'paco-admin',
+      component: () => import('../views/paco/PacoAdmin.vue'),
+      meta: { requiresAuth: true, requiresRole: ['paco', 'admin', 'super_admin'] },
+    },
     // PACO Webinar — page d'inscription isolée (pas de garde auth)
     {
       path: '/paco',

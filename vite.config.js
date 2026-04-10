@@ -1,14 +1,27 @@
 import { fileURLToPath, URL } from 'node:url'
+import { writeFileSync } from 'node:fs'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
+
+// Plugin : met à jour version.json automatiquement à chaque build
+function versionPlugin() {
+  return {
+    name: 'auto-version',
+    closeBundle() {
+      const version = new Date().toISOString()
+      writeFileSync('dist/version.json', JSON.stringify({ version }) + '\n')
+    }
+  }
+}
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
     vueDevTools(),
+    versionPlugin(),
   ],
   resolve: {
     alias: {

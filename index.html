@@ -47,5 +47,18 @@
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
+    <script>
+      // Auto-reload si la page est blanche après 3 secondes (fix cache navigateur)
+      setTimeout(function() {
+        var app = document.getElementById('app');
+        if (app && app.children.length === 0) {
+          var key = 'epavillon-reload-' + window.location.pathname;
+          if (!sessionStorage.getItem(key)) {
+            sessionStorage.setItem(key, '1');
+            window.location.reload();
+          }
+        }
+      }, 3000);
+    </script>
   </body>
 </html>

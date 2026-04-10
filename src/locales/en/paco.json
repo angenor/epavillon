@@ -12,9 +12,73 @@
       "tba": "Speakers to be announced"
     },
     "organized_by": "Organized by IFDD",
+    "presentation": {
+      "title": "Local Authorities Facing Climate Change",
+      "subtitle": "Governance, Planning and Financing for Adaptation",
+      "seriesLabel": "Climate Webinars",
+      "editionLabel": "Societies and Communities",
+      "contextTitle": "Context",
+      "context": "In French-speaking countries, decentralized authorities play a strategic role in the concrete implementation of climate change adaptation policies. Located closest to the populations, they are responsible for local planning, land use management and coordination of essential services. However, despite their central position, local authorities face several challenges: limited financial resources, insufficient technical capacities, poor access to climate data and lack of integration of local knowledge into territorial plans.",
+      "objectivesTitle": "Objectives",
+      "objectiveGeneralLabel": "General Objective",
+      "specificObjectivesLabel": "Specific Objectives",
+      "objectiveGeneral": "Strengthen the capacities of local authorities to plan, finance and implement climate change adaptation actions.",
+      "objectives": {
+        "0": "Present the roles, responsibilities and levers of action of local authorities in climate adaptation",
+        "1": "Highlight successful experiences in territorial adaptation planning and financing",
+        "2": "Identify needs for capacity building, financing and local governance tools",
+        "3": "Present innovative approaches to financing adaptation at the local level"
+      },
+      "contentTitle": "Content and Themes",
+      "content": {
+        "0": { "title": "Local Governance", "desc": "Contribution of local authorities to the implementation of NDCs, NAPs and sectoral policies" },
+        "1": { "title": "Territorial Planning", "desc": "Territorial diagnostics, climate risk management and resilient infrastructure" },
+        "2": { "title": "Local Financing", "desc": "Access to international funds, green budgets, local taxation and public-private partnerships" },
+        "3": { "title": "Case Studies", "desc": "Experiences of rural and urban municipalities: water management, resilient agriculture, nature-based solutions" }
+      },
+      "targetTitle": "Target Audience",
+      "targets": {
+        "0": "Local authorities",
+        "1": "Public institutions",
+        "2": "Civil society",
+        "3": "Young leaders",
+        "4": "Academics and researchers",
+        "5": "Donors and funders",
+        "6": "Media"
+      },
+      "panelistsTitle": "Panelists",
+      "panelists": {
+        "martin-phipps": { "role": "Director, IFDD" },
+        "houdanon": { "role": "PACO Program Representative (GIZ)" },
+        "vallier": { "role": "Secretary General, AIMF" },
+        "lazare": { "role": "Project Officer, AIMF" },
+        "ayi-nkamgna": { "role": "Mayor of Dzeng and President of REMCESS" },
+        "betchem": { "role": "Permanent Secretary of REMCESS" },
+        "sall": { "role": "Climate Finance Unit Head, CSE" }
+      },
+      "partnersTitle": "Partners",
+      "shareButton": "Share the webinar",
+      "shareCopied": "Link copied!",
+      "shareCopyLink": "Copy link",
+      "shareOn": "Share on",
+      "dateLabel": "April 26, 2026",
+      "timeLabel": "2:00 PM – 3:30 PM GMT",
+      "formatLabel": "Online",
+      "languageLabel": "French",
+      "timelineTitle": "Sessions",
+      "timelineCurrent": "Next session",
+      "bannerPlaceholder": "PACO Webinar",
+      "status": {
+        "upcoming": "Upcoming",
+        "live": "Live",
+        "ended": "Ended"
+      }
+    },
     "emailCheck": {
       "title": "Register for the webinar",
+      "titleJoin": "Log in to join the webinar",
       "subtitle": "Enter your email address to get started",
+      "subtitleJoin": "Enter your email address to access the webinar",
       "emailLabel": "Email address",
       "emailPlaceholder": "your.email{'@'}example.com",
       "submit": "Continue",
@@ -42,6 +106,10 @@
       "emailLabel": "Email",
       "passwordLabel": "Password",
       "passwordPlaceholder": "Minimum 6 characters",
+      "confirmPasswordLabel": "Confirm password",
+      "confirmPasswordPlaceholder": "Re-enter your password",
+      "passwordMismatch": "Passwords do not match.",
+      "passwordWarning": "Remember this password! You will need it on the day of the event to log in and access the webinar.",
       "countryLabel": "Country",
       "countryPlaceholder": "Select your country",
       "organizationLabel": "Organization",
@@ -50,7 +118,15 @@
       "submitting": "Signing up...",
       "error": "An error occurred during registration. Please try again.",
       "emailUsed": "This email is already associated with an account. Try logging in.",
-      "backToEmail": "Use a different email"
+      "rateLimited": "Too many attempts. Please wait a few minutes before trying again.",
+      "backToEmail": "Use a different email",
+      "sessionLabel": "Session",
+      "sessionBadge": "Session {edition} — {date}"
+    },
+    "quickRegister": {
+      "subtitle": "Fill in the form below to access the webinar.",
+      "helpText": "Having trouble registering? Contact us:",
+      "copied": "Copied!"
     },
     "activityRegister": {
       "title": "Register for the webinar",
@@ -62,16 +138,91 @@
       "submit": "Register for the webinar",
       "submitting": "Registering..."
     },
+    "demographic": {
+      "genderLabel": "Gender",
+      "male": "Male",
+      "female": "Female",
+      "ageProfileLabel": "Age profile",
+      "over35": "Over 35 years old",
+      "under35": "Under 35 years old",
+      "cityLabel": "City",
+      "cityPlaceholder": "Your city",
+      "professionalStatusLabel": "Professional status",
+      "employed": "Employed",
+      "student": "Student",
+      "unemployed": "Unemployed",
+      "entrepreneur": "Entrepreneur",
+      "professionalStatusPlaceholder": "Select your status",
+      "recordingConsent": "I am informed that this webinar will be recorded and I give my consent to be recorded."
+    },
+    "admin": {
+      "title": "PACO Administration",
+      "totalRegistrants": "Total registrants",
+      "genderDistribution": "Gender distribution",
+      "ageDistribution": "Age distribution",
+      "statusDistribution": "Professional status distribution",
+      "percentMale": "Male",
+      "percentFemale": "Female",
+      "percentUnder35": "Under 35",
+      "percentOver35": "Over 35",
+      "percentEmployed": "Employed",
+      "percentStudent": "Students",
+      "percentEntrepreneur": "Entrepreneurs",
+      "percentUnemployed": "Unemployed",
+      "registrantList": "Registrant list",
+      "name": "Full name",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "location": "Location",
+      "email": "Email",
+      "gender": "Gender",
+      "ageProfile": "Age profile",
+      "city": "City",
+      "country": "Country",
+      "professionalStatus": "Professional status",
+      "organization": "Organization",
+      "registrationDate": "Registration date",
+      "exportCsv": "Export to CSV",
+      "noRegistrants": "No registrants yet.",
+      "noStats": "No statistics available.",
+      "notSpecified": "Not specified",
+      "withDemographics": "With demographic data",
+      "actions": "Actions",
+      "deleteRegistrant": "Delete registrant",
+      "deleteConfirmTitle": "Confirm deletion",
+      "deleteConfirmMessage": "Are you sure you want to delete this registrant? This action cannot be undone.",
+      "deleteConfirm": "Delete",
+      "deleting": "Deleting...",
+      "chartTitlePrefix": "Registrations",
+      "chartSubtitle": "Number of registrations per period",
+      "chartByHour": "By hour",
+      "chartByDay": "By day",
+      "chartByWeek": "By week",
+      "chartByMonth": "By month",
+      "paginationOf": "of",
+      "searchPlaceholder": "Search registrant...",
+      "searchResults": "result(s) found",
+      "newRegistration": "New registration",
+      "newRegistrations": "New registrations",
+      "viewCountSince": "since March 17, 2026, 3:00 PM GMT",
+      "session": "Session",
+      "filterAllSessions": "All sessions",
+      "filterSession": "Session {n}"
+    },
     "join": {
       "title": "You are registered!",
       "subtitle": "You are registered for the PACO webinar. Use the button below to join the Teams meeting on the day of the event.",
       "joinButton": "Join the webinar",
       "copyLink": "Copy link",
       "linkCopied": "Link copied!",
-      "resendEmail": "Resend confirmation email",
-      "resending": "Sending...",
-      "emailSent": "Email sent successfully!",
-      "emailError": "Error sending the email. Please try again."
+      "timeGmt": "2:00 PM – 3:30 PM GMT",
+      "localTime": "local time",
+      "countdown": "The webinar starts in",
+      "days": "days",
+      "hours": "hours",
+      "minutes": "min",
+      "seconds": "sec",
+      "waitingRoom": "The webinar starts soon! Take your seat in the waiting room."
     },
     "success": {
       "title": "Registration successful!",
@@ -88,11 +239,110 @@
       "redirecting": "Redirecting to the Teams meeting...",
       "error": "An error occurred. Please try again."
     },
+    "verifyEmail": {
+      "title": "Verify your email",
+      "subtitle": "A verification email has been sent to {email}. Enter the 6-digit code from the email to complete your registration.",
+      "otpLabel": "Verification code",
+      "otpPlaceholder": "000000",
+      "verifyButton": "Verify",
+      "otpError": "Invalid code. Please try again.",
+      "or": "or",
+      "resendButton": "Resend verification email",
+      "resending": "Sending...",
+      "resent": "Email resent successfully!",
+      "resendError": "Error sending email. Please try again.",
+      "waitingTitle": "Waiting for verification",
+      "checkInbox": "Check your inbox and spam folder",
+      "autoFinalize": "Finalizing your registration...",
+      "autoFinalizeSuccess": "Webinar registration complete!",
+      "autoFinalizeError": "Error finalizing registration. Please try again."
+    },
     "errors": {
       "generic": "An error occurred. Please try again.",
       "registration": "Error during webinar registration.",
       "emailSend": "Error sending the confirmation email.",
-      "alreadyRegistered": "You are already registered for this webinar."
+      "alreadyRegistered": "You are already registered for this webinar.",
+      "otpExpired": "The confirmation link has expired. Please resend a new verification email."
+    },
+    "tabs": {
+      "session1": "Session 1",
+      "session2": "Session 2",
+      "status": {
+        "ended": "Ended",
+        "upcoming": "Upcoming",
+        "live": "Live"
+      }
+    },
+    "session1": {
+      "title": "Local Authorities Facing Climate Change",
+      "subtitle": "Governance, Planning and Financing for Adaptation",
+      "editionLabel": "Societies and Communities",
+      "dateLabel": "Thursday, March 26, 2026",
+      "timeLabel": "2:00 PM – 3:30 PM GMT",
+      "replay": "Watch recording",
+      "replayTitle": "Webinar replay",
+      "replayLoading": "Loading video...",
+      "replayError": "Video temporarily unavailable",
+      "replayUnavailable": "Replay will be available soon.",
+      "context": "In French-speaking countries, decentralized authorities play a strategic role in the concrete implementation of climate change adaptation policies. Located closest to the populations, they are responsible for local planning, land use management and coordination of essential services. However, despite their central position, local authorities face several challenges: limited financial resources, insufficient technical capacities, poor access to climate data and lack of integration of local knowledge into territorial plans.",
+      "objectiveGeneral": "Strengthen the capacities of local authorities to plan, finance and implement climate change adaptation actions.",
+      "objectives": {
+        "0": "Present the roles, responsibilities and levers of action of local authorities in climate adaptation",
+        "1": "Highlight successful experiences in territorial adaptation planning and financing",
+        "2": "Identify needs for capacity building, financing and local governance tools",
+        "3": "Present innovative approaches to financing adaptation at the local level"
+      },
+      "content": {
+        "0": { "title": "Local Governance", "desc": "Contribution of local authorities to the implementation of NDCs, NAPs and sectoral policies" },
+        "1": { "title": "Territorial Planning", "desc": "Territorial diagnostics, climate risk management and resilient infrastructure" },
+        "2": { "title": "Local Financing", "desc": "Access to international funds, green budgets, local taxation and public-private partnerships" },
+        "3": { "title": "Case Studies", "desc": "Experiences of rural and urban municipalities: water management, resilient agriculture, nature-based solutions" }
+      },
+      "panelists": {
+        "martin-phipps": { "role": "Director, IFDD" },
+        "houdanon": { "role": "PACO Program Representative (GIZ)" },
+        "vallier": { "role": "Secretary General, AIMF" },
+        "lazare": { "role": "Project Officer, AIMF" },
+        "ayi-nkamgna": { "role": "Mayor of Dzeng and President of REMCESS" },
+        "betchem": { "role": "Permanent Secretary of REMCESS" },
+        "sall": { "role": "Climate Finance Unit Head, CSE" }
+      }
+    },
+    "session2": {
+      "title": "Climate justice and social inclusion in adaptation",
+      "subtitle": "Climate Webinars – Societies and Communities",
+      "editionLabel": "Societies and Communities",
+      "dateLabel": "Thursday, April 30, 2026",
+      "timeLabel": "2:00 PM – 3:30 PM GMT",
+      "context": "Climate change exacerbates social and territorial inequalities, disproportionately affecting vulnerable communities, women, youth, rural populations and marginalized groups. Adaptation can only be effective and sustainable if it integrates the principles of climate justice and social inclusion, ensuring that the benefits of policies and financing actually reach those who need them most.\n\nIn the French-speaking world, many local and regional initiatives demonstrate that integrating human rights, equity and inclusive participation strengthens collective resilience. This webinar is part of the initiative « Strengthening the capacities and collaboration of French-speaking countries on climate change adaptation and access to financing », implemented by the Institute of the Francophonie for Sustainable Development (IFDD) with the support of the regional programme « Implementation of Regional and National Adaptation Priorities in Central and West Africa (PACO) », a programme funded by the German Federal Ministry for the Environment, Climate Action, Nature Conservation and Nuclear Safety (BMUKN) under the « International Climate Initiative (IKI) » and implemented by the Deutsche Gesellschaft für Internationale Zusammenarbeit (GIZ) GmbH. It aims to create a space for dialogue on the challenges of climate justice and social inclusion in adaptation strategies.",
+      "objectiveGeneral": "Promote an inclusive and equitable approach to climate change adaptation, highlighting climate justice as a lever for resilience and social cohesion.",
+      "objectives": {
+        "0": "Highlight social and territorial inequalities linked to climate impacts.",
+        "1": "Present initiatives integrating equity, gender and inclusion in adaptation projects.",
+        "2": "Foster dialogue between institutions, civil society and vulnerable communities on climate justice.",
+        "3": "Identify financing and governance mechanisms that promote social inclusion.",
+        "4": "Encourage the creation of Francophone networks to convey a common voice on climate justice."
+      },
+      "content": {
+        "0": { "title": "Climate Justice and Human Rights", "desc": "Principles, issues and integration into public policies." },
+        "1": { "title": "Social Inclusion in Adaptation", "desc": "Gender, youth, rural and marginalized populations." },
+        "2": { "title": "Case Studies", "desc": "Local and regional initiatives promoting equity and citizen participation." },
+        "3": { "title": "Financing and Partnerships", "desc": "Mechanisms to support inclusive and socially just projects." },
+        "4": { "title": "Multi-stakeholder Dialogue", "desc": "Synergies between institutions, local authorities, CSOs and communities." }
+      },
+      "targets": {
+        "0": "Civil society organizations and citizen movements",
+        "1": "Local authorities and public institutions",
+        "2": "Young leaders and women's associations",
+        "3": "Researchers and academics",
+        "4": "Donors and technical partners",
+        "5": "Media and social communication actors"
+      },
+      "panelists": {
+        "kiri": { "role": "Main Coordinator" },
+        "baglhi": { "role": "Director of the Benin Component of the PACO program" },
+        "ka": { "role": "Director of the Francophone Hub, Natural Justice" }
+      }
     }
   }
 }

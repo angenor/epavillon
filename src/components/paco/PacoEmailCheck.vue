@@ -1,10 +1,10 @@
 <template>
   <div>
     <h2 class="text-xl font-bold text-white mb-1">
-      {{ t('paco.emailCheck.title') }}
+      {{ fromJoin ? t('paco.emailCheck.titleJoin') : t('paco.emailCheck.title') }}
     </h2>
     <p class="text-sm text-white/50 mb-6">
-      {{ t('paco.emailCheck.subtitle') }}
+      {{ fromJoin ? t('paco.emailCheck.subtitleJoin') : t('paco.emailCheck.subtitle') }}
     </p>
 
     <form @submit.prevent="handleSubmit" class="space-y-4">
@@ -38,10 +38,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 
 const { t } = useI18n()
+const route = useRoute()
+
+const fromJoin = computed(() => route.query.from === 'join')
 
 const props = defineProps({
   loading: { type: Boolean, default: false }
