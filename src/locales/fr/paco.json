@@ -117,7 +117,9 @@
       "error": "Une erreur est survenue lors de l'inscription. Veuillez réessayer.",
       "emailUsed": "Cet email est déjà associé à un compte. Essayez de vous connecter.",
       "rateLimited": "Trop de tentatives. Veuillez patienter quelques minutes avant de réessayer.",
-      "backToEmail": "Utiliser un autre email"
+      "backToEmail": "Utiliser un autre email",
+      "sessionLabel": "Session",
+      "sessionBadge": "Session {edition} — {date}"
     },
     "quickRegister": {
       "subtitle": "Remplissez le formulaire ci-dessous pour accéder au webinaire.",
@@ -200,7 +202,10 @@
       "searchResults": "résultat(s) trouvé(s)",
       "newRegistration": "Nouvelle inscription",
       "newRegistrations": "Nouvelles inscriptions",
-      "viewCountSince": "depuis le 17 mars 2026, 15h00 GMT"
+      "viewCountSince": "depuis le 17 mars 2026, 15h00 GMT",
+      "session": "Session",
+      "filterAllSessions": "Toutes les sessions",
+      "filterSession": "Session {n}"
     },
     "join": {
       "title": "Vous êtes inscrit(e) !",
@@ -256,6 +261,76 @@
       "emailSend": "Erreur lors de l'envoi de l'email de confirmation.",
       "alreadyRegistered": "Vous êtes déjà inscrit(e) à ce webinaire.",
       "otpExpired": "Le lien de confirmation a expiré. Veuillez renvoyer un nouvel email de vérification."
+    },
+    "tabs": {
+      "session1": "Session 1",
+      "session2": "Session 2",
+      "status": {
+        "ended": "Terminée",
+        "upcoming": "À venir",
+        "live": "En direct"
+      }
+    },
+    "session1": {
+      "title": "Collectivités locales face au changement climatique",
+      "subtitle": "Gouvernance, planification et financements pour l'adaptation",
+      "editionLabel": "Sociétés et communautés",
+      "dateLabel": "Jeudi 26 mars 2026",
+      "timeLabel": "14h00 – 15h30 GMT",
+      "replay": "Voir l'enregistrement",
+      "replayTitle": "Replay du webinaire",
+      "replayLoading": "Chargement de la vidéo...",
+      "replayError": "Vidéo temporairement indisponible",
+      "replayUnavailable": "Le replay sera bientôt disponible.",
+      "context": "Dans les pays francophones, les collectivités décentralisées jouent un rôle stratégique dans la mise en œuvre concrète des politiques d'adaptation au changement climatique. Situées au plus près des populations, elles sont responsables de la planification locale, de l'aménagement du territoire et de la coordination des services essentiels. Pourtant, malgré leur position centrale, les collectivités font face à plusieurs défis : ressources financières limitées, capacités techniques insuffisantes, faible accès aux données climatiques et manque d'intégration des savoirs locaux dans les plans territoriaux.",
+      "objectiveGeneral": "Renforcer les capacités des collectivités locales pour planifier, financer et mettre en œuvre des actions d'adaptation au changement climatique.",
+      "objectives": {
+        "0": "Présenter les rôles, responsabilités et leviers d'action des collectivités locales dans l'adaptation climatique.",
+        "1": "Mettre en lumière des expériences réussies de planification et de financement territorial de l'adaptation.",
+        "2": "Identifier les besoins en renforcement de capacités, en financement et en outils de gouvernance locale",
+        "3": "Présenter des démarches innovantes de financement de l'adaptation à l'échelle locale"
+      },
+      "content": {
+        "0": { "title": "Gouvernance locale", "desc": "Contribution des collectivités à la mise en œuvre des CDN, PNA et politiques sectorielles" },
+        "1": { "title": "Planification territoriale", "desc": "Diagnostics territoriaux, gestion des risques climatiques et infrastructures résilientes" },
+        "2": { "title": "Financement local", "desc": "Accès aux fonds internationaux, budgets verts, fiscalité locale et partenariats public-privé" },
+        "3": { "title": "Études de cas", "desc": "Expériences de communes rurales et urbaines : gestion de l'eau, agriculture résiliente, solutions fondées sur la nature" }
+      },
+      "panelists": {
+        "martin-phipps": { "role": "Directrice IFDD" },
+        "houdanon": { "role": "Représentant du programme PACO (GIZ)" },
+        "vallier": { "role": "Délégué général, AIMF" },
+        "lazare": { "role": "Chargé de mission, AIMF" },
+        "ayi-nkamgna": { "role": "Maire de Dzeng et Présidente du REMCESS" },
+        "betchem": { "role": "Secrétaire Permanent du REMCESS" },
+        "sall": { "role": "Chef d'unité Finance climat, CSE" }
+      }
+    },
+    "session2": {
+      "title": "Justice climatique et inclusion sociale dans l'adaptation",
+      "subtitle": "Promouvoir une approche inclusive et équitable de l'adaptation au changement climatique",
+      "editionLabel": "Sociétés et communautés",
+      "dateLabel": "Jeudi 30 avril 2026",
+      "timeLabel": "14h00 – 15h30 GMT",
+      "context": "Le changement climatique accentue les inégalités sociales et territoriales, touchant de manière disproportionnée les communautés vulnérables, les femmes, les jeunes, les populations rurales et les groupes marginalisés. L'adaptation ne peut être efficace et durable que si elle intègre les principes de justice climatique et d'inclusion sociale, garantissant que les bénéfices des politiques et financements atteignent réellement celles et ceux qui en ont le plus besoin. Dans l'espace francophone, de nombreuses initiatives locales et régionales démontrent que l'intégration des droits humains, de l'équité et de la participation inclusive renforce la résilience collective.",
+      "objectiveGeneral": "Promouvoir une approche inclusive et équitable de l'adaptation au changement climatique, en mettant en avant la justice climatique comme levier de résilience et de cohésion sociale.",
+      "objectives": {
+        "0": "Mettre en lumière les inégalités sociales et territoriales liées aux impacts climatiques",
+        "1": "Présenter des initiatives intégrant l'équité, le genre et l'inclusion dans les projets d'adaptation",
+        "2": "Favoriser le dialogue entre institutions, société civile et communautés vulnérables sur la justice climatique",
+        "3": "Identifier des mécanismes de financement et de gouvernance favorisant l'inclusion sociale"
+      },
+      "content": {
+        "0": { "title": "Justice climatique et droits humains", "desc": "Principes, enjeux et intégration dans les politiques publiques" },
+        "1": { "title": "Inclusion sociale dans l'adaptation", "desc": "Genre, jeunesse, populations rurales et marginalisées" },
+        "2": { "title": "Études de cas", "desc": "Initiatives locales et régionales favorisant l'équité et la participation citoyenne" },
+        "3": { "title": "Financements et partenariats", "desc": "Mécanismes pour soutenir des projets inclusifs et socialement justes" }
+      },
+      "panelists": {
+        "kiri": { "role": "Coordonnateur principal, PACO" },
+        "baglhi": { "role": "Directeur de la Composante Bénin du programme PACO" },
+        "ka": { "role": "Directrice du Hub francophone, Natural Justice" }
+      }
     }
   }
 }

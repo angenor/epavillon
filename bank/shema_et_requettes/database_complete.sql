@@ -437,6 +437,10 @@ CREATE TABLE public.activity_registrations (
     attended BOOLEAN DEFAULT FALSE,
     attendance_duration INTEGER, -- en minutes
 
+    -- Numéro de session pour les activités multi-sessions (PACO, etc.)
+    -- Default 1 pour les inscriptions historiques
+    session_edition INTEGER NOT NULL DEFAULT 1,
+
     -- Contraintes
     CONSTRAINT check_user_or_guest CHECK (
         (user_id IS NOT NULL AND guest_email IS NULL) OR
@@ -448,13 +452,13 @@ CREATE TABLE public.activity_registrations (
     )
 );
 
--- Index uniques pour éviter les doublons
-CREATE UNIQUE INDEX activity_registrations_user_unique
-    ON public.activity_registrations(activity_id, user_id)
+-- Index uniques pour éviter les doublons (incluant session_edition pour multi-sessions)
+CREATE UNIQUE INDEX activity_registrations_user_session_unique
+    ON public.activity_registrations(activity_id, user_id, session_edition)
     WHERE user_id IS NOT NULL;
 
-CREATE UNIQUE INDEX activity_registrations_guest_unique
-    ON public.activity_registrations(activity_id, guest_email)
+CREATE UNIQUE INDEX activity_registrations_guest_session_unique
+    ON public.activity_registrations(activity_id, guest_email, session_edition)
     WHERE guest_email IS NOT NULL AND user_id IS NULL;
 
 -- Documents supports des activités

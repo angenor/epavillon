@@ -117,7 +117,9 @@
       "error": "An error occurred during registration. Please try again.",
       "emailUsed": "This email is already associated with an account. Try logging in.",
       "rateLimited": "Too many attempts. Please wait a few minutes before trying again.",
-      "backToEmail": "Use a different email"
+      "backToEmail": "Use a different email",
+      "sessionLabel": "Session",
+      "sessionBadge": "Session {edition} — {date}"
     },
     "quickRegister": {
       "subtitle": "Fill in the form below to access the webinar.",
@@ -200,7 +202,10 @@
       "searchResults": "result(s) found",
       "newRegistration": "New registration",
       "newRegistrations": "New registrations",
-      "viewCountSince": "since March 17, 2026, 3:00 PM GMT"
+      "viewCountSince": "since March 17, 2026, 3:00 PM GMT",
+      "session": "Session",
+      "filterAllSessions": "All sessions",
+      "filterSession": "Session {n}"
     },
     "join": {
       "title": "You are registered!",
@@ -256,6 +261,76 @@
       "emailSend": "Error sending the confirmation email.",
       "alreadyRegistered": "You are already registered for this webinar.",
       "otpExpired": "The confirmation link has expired. Please resend a new verification email."
+    },
+    "tabs": {
+      "session1": "Session 1",
+      "session2": "Session 2",
+      "status": {
+        "ended": "Ended",
+        "upcoming": "Upcoming",
+        "live": "Live"
+      }
+    },
+    "session1": {
+      "title": "Local Authorities Facing Climate Change",
+      "subtitle": "Governance, Planning and Financing for Adaptation",
+      "editionLabel": "Societies and Communities",
+      "dateLabel": "Thursday, March 26, 2026",
+      "timeLabel": "2:00 PM – 3:30 PM GMT",
+      "replay": "Watch recording",
+      "replayTitle": "Webinar replay",
+      "replayLoading": "Loading video...",
+      "replayError": "Video temporarily unavailable",
+      "replayUnavailable": "Replay will be available soon.",
+      "context": "In French-speaking countries, decentralized authorities play a strategic role in the concrete implementation of climate change adaptation policies. Located closest to the populations, they are responsible for local planning, land use management and coordination of essential services. However, despite their central position, local authorities face several challenges: limited financial resources, insufficient technical capacities, poor access to climate data and lack of integration of local knowledge into territorial plans.",
+      "objectiveGeneral": "Strengthen the capacities of local authorities to plan, finance and implement climate change adaptation actions.",
+      "objectives": {
+        "0": "Present the roles, responsibilities and levers of action of local authorities in climate adaptation",
+        "1": "Highlight successful experiences in territorial adaptation planning and financing",
+        "2": "Identify needs for capacity building, financing and local governance tools",
+        "3": "Present innovative approaches to financing adaptation at the local level"
+      },
+      "content": {
+        "0": { "title": "Local Governance", "desc": "Contribution of local authorities to the implementation of NDCs, NAPs and sectoral policies" },
+        "1": { "title": "Territorial Planning", "desc": "Territorial diagnostics, climate risk management and resilient infrastructure" },
+        "2": { "title": "Local Financing", "desc": "Access to international funds, green budgets, local taxation and public-private partnerships" },
+        "3": { "title": "Case Studies", "desc": "Experiences of rural and urban municipalities: water management, resilient agriculture, nature-based solutions" }
+      },
+      "panelists": {
+        "martin-phipps": { "role": "Director, IFDD" },
+        "houdanon": { "role": "PACO Program Representative (GIZ)" },
+        "vallier": { "role": "Secretary General, AIMF" },
+        "lazare": { "role": "Project Officer, AIMF" },
+        "ayi-nkamgna": { "role": "Mayor of Dzeng and President of REMCESS" },
+        "betchem": { "role": "Permanent Secretary of REMCESS" },
+        "sall": { "role": "Climate Finance Unit Head, CSE" }
+      }
+    },
+    "session2": {
+      "title": "Climate justice and social inclusion in adaptation",
+      "subtitle": "Promoting an inclusive and equitable approach to climate change adaptation",
+      "editionLabel": "Societies and Communities",
+      "dateLabel": "Thursday, April 30, 2026",
+      "timeLabel": "2:00 PM – 3:30 PM GMT",
+      "context": "Climate change exacerbates social and territorial inequalities, disproportionately affecting vulnerable communities, women, youth, rural populations and marginalized groups. Adaptation can only be effective and sustainable if it integrates the principles of climate justice and social inclusion, ensuring that the benefits of policies and financing actually reach those who need them most. In the French-speaking world, many local and regional initiatives demonstrate that integrating human rights, equity and inclusive participation strengthens collective resilience.",
+      "objectiveGeneral": "Promote an inclusive and equitable approach to climate change adaptation, highlighting climate justice as a lever for resilience and social cohesion.",
+      "objectives": {
+        "0": "Highlight social and territorial inequalities linked to climate impacts",
+        "1": "Present initiatives integrating equity, gender and inclusion in adaptation projects",
+        "2": "Foster dialogue between institutions, civil society and vulnerable communities on climate justice",
+        "3": "Identify financing and governance mechanisms that promote social inclusion"
+      },
+      "content": {
+        "0": { "title": "Climate Justice and Human Rights", "desc": "Principles, issues and integration into public policies" },
+        "1": { "title": "Social Inclusion in Adaptation", "desc": "Gender, youth, rural and marginalized populations" },
+        "2": { "title": "Case Studies", "desc": "Local and regional initiatives promoting equity and citizen participation" },
+        "3": { "title": "Financing and Partnerships", "desc": "Mechanisms to support inclusive and socially just projects" }
+      },
+      "panelists": {
+        "kiri": { "role": "Main Coordinator, PACO" },
+        "baglhi": { "role": "Director of the Benin Component of the PACO program" },
+        "ka": { "role": "Director of the Francophone Hub, Natural Justice" }
+      }
     }
   }
 }

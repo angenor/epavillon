@@ -3,9 +3,20 @@
     <h2 class="text-xl font-bold text-white mb-1">
       {{ t('paco.register.title') }}
     </h2>
-    <p class="text-sm text-white/50 mb-5">
+    <p class="text-sm text-white/50 mb-3">
       {{ t('paco.quickRegister.subtitle') }}
     </p>
+
+    <!-- Session badge (read-only) -->
+    <div class="mb-5 flex items-center gap-2 px-3 py-2 rounded-xl bg-green-500/15 border border-green-400/30">
+      <font-awesome-icon :icon="['fas', 'calendar-check']" class="text-green-400 text-sm" />
+      <span class="text-xs font-semibold text-green-200 uppercase tracking-wide">
+        {{ t('paco.register.sessionLabel') }}
+      </span>
+      <span class="text-sm text-white/90">
+        {{ t('paco.register.sessionBadge', { edition: sessionEdition, date: sessionDateLabel }) }}
+      </span>
+    </div>
 
     <form @submit.prevent="handleSubmit" class="space-y-3">
       <!-- Name fields -->
@@ -204,7 +215,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useCountries } from '@/composables/useCountries'
 import { supabase } from '@/composables/useSupabase'
@@ -212,7 +223,15 @@ import { markPacoRegistered } from '@/composables/paco/usePacoRegistration'
 
 const { t, locale } = useI18n()
 
+const props = defineProps({
+  sessionEdition: { type: Number, required: true }
+})
+
 const emit = defineEmits(['registration-complete'])
+
+const sessionDateLabel = computed(() =>
+  t(`paco.session${props.sessionEdition}.dateLabel`)
+)
 
 const { countries, fetchCountries } = useCountries()
 
@@ -262,7 +281,8 @@ const handleSubmit = async () => {
       p_country_id: form.countryId,
       p_professional_status: form.professionalStatus,
       p_organization: form.organizationName,
-      p_recording_consent: form.recordingConsent
+      p_recording_consent: form.recordingConsent,
+      p_session_edition: props.sessionEdition
     })
 
     if (rpcError) {
@@ -272,14 +292,15 @@ const handleSubmit = async () => {
     }
 
     // Sauvegarder en localStorage pour persistance côté client
-    localStorage.setItem('paco_registration_data', JSON.stringify({
+    localStorage.setItem(`paco_registration_data_session_${props.sessionEdition}`, JSON.stringify({
       registrationId,
       email: form.email,
       firstName: form.firstName,
       lastName: form.lastName,
+      sessionEdition: props.sessionEdition,
       registeredAt: new Date().toISOString()
     }))
-    markPacoRegistered()
+    markPacoRegistered(props.sessionEdition)
 
     emit('registration-complete')
   } catch (err) {

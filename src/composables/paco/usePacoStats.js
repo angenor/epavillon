@@ -16,6 +16,12 @@ export function usePacoStats() {
   const allRegistrationDates = ref([])
   const pageViewCount = ref(0)
 
+  // Filter by session edition (null = all sessions)
+  const sessionFilter = ref(null)
+  const setSessionFilter = (edition) => {
+    sessionFilter.value = edition
+  }
+
   /**
    * Fetch the unique page view count from the activities table.
    */
@@ -130,6 +136,7 @@ export function usePacoStats() {
         .select(`
           id,
           registration_date,
+          session_edition,
           guest_email,
           guest_first_name,
           guest_last_name,
@@ -150,6 +157,10 @@ export function usePacoStats() {
         `, { count: 'exact' })
         .eq('activity_id', PACO_ACTIVITY_ID)
         .order('registration_date', { ascending: false })
+
+      if (sessionFilter.value !== null) {
+        query = query.eq('session_edition', sessionFilter.value)
+      }
 
       if (!loadAll) {
         query = query.range(from, to)
@@ -173,6 +184,7 @@ export function usePacoStats() {
         countryEn: r.paco_demographic_data?.countries?.name_en || null,
         professionalStatus: r.paco_demographic_data?.professional_status || null,
         organization: r.paco_demographic_data?.organization || null,
+        sessionEdition: r.session_edition,
         registrationDate: r.registration_date
       }))
     } catch (err) {
@@ -226,11 +238,12 @@ export function usePacoStats() {
    * @returns {Promise<Array>} all registrant objects
    */
   const fetchAllRegistrantsForExport = async () => {
-    const { data, error: queryError } = await supabase
+    let query = supabase
       .from('activity_registrations')
       .select(`
         id,
         registration_date,
+        session_edition,
         guest_email,
         guest_first_name,
         guest_last_name,
@@ -252,6 +265,12 @@ export function usePacoStats() {
       .eq('activity_id', PACO_ACTIVITY_ID)
       .order('registration_date', { ascending: true })
 
+    if (sessionFilter.value !== null) {
+      query = query.eq('session_edition', sessionFilter.value)
+    }
+
+    const { data, error: queryError } = await query
+
     if (queryError) throw queryError
 
     return data.map(r => ({
@@ -266,6 +285,7 @@ export function usePacoStats() {
       countryEn: r.paco_demographic_data?.countries?.name_en || null,
       professionalStatus: r.paco_demographic_data?.professional_status || null,
       organization: r.paco_demographic_data?.organization || null,
+      sessionEdition: r.session_edition,
       registrationDate: r.registration_date
     }))
   }
@@ -289,6 +309,8 @@ export function usePacoStats() {
     pageViewCount,
     fetchPageViewCount,
     subscribeToPacoChanges,
-    unsubscribePacoChanges
+    unsubscribePacoChanges,
+    sessionFilter,
+    setSessionFilter
   }
 }

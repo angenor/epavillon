@@ -4,21 +4,41 @@ import { PACO_ACTIVITY_ID } from '@/composables/paco/constants'
 
 const PENDING_REGISTRATION_KEY = 'paco_pending_registration'
 const PENDING_MAX_AGE_MS = 24 * 60 * 60 * 1000 // 24 hours
-const PACO_REGISTERED_KEY = 'paco_registration_complete'
+
+// Clé legacy (mono-session, pré-multi-sessions)
+const LEGACY_PACO_REGISTERED_KEY = 'paco_registration_complete'
+// Clés actuelles indexées par session
+const PACO_REGISTERED_PREFIX = 'paco_registered_session_'
 
 /**
- * Mark PACO registration as complete in localStorage.
- * Allows bypassing auth check on page refresh (urgence: email server down).
+ * Migrate the legacy localStorage key to the per-session key for session 1.
+ * Idempotent: safe to call multiple times.
  */
-export function markPacoRegistered() {
-  localStorage.setItem(PACO_REGISTERED_KEY, '1')
+export function migrateLegacyLocalStorage() {
+  if (typeof localStorage === 'undefined') return
+  if (localStorage.getItem(LEGACY_PACO_REGISTERED_KEY) === '1') {
+    localStorage.setItem(`${PACO_REGISTERED_PREFIX}1`, '1')
+    localStorage.removeItem(LEGACY_PACO_REGISTERED_KEY)
+  }
 }
 
 /**
- * Check if PACO registration is marked complete in localStorage.
+ * Mark PACO registration as complete in localStorage for a given session.
+ * @param {number} sessionEdition
  */
-export function isPacoRegisteredLocally() {
-  return localStorage.getItem(PACO_REGISTERED_KEY) === '1'
+export function markPacoRegistered(sessionEdition) {
+  if (!sessionEdition) return
+  localStorage.setItem(`${PACO_REGISTERED_PREFIX}${sessionEdition}`, '1')
+}
+
+/**
+ * Check if PACO registration is marked complete in localStorage for a given session.
+ * @param {number} sessionEdition
+ * @returns {boolean}
+ */
+export function isPacoRegisteredLocally(sessionEdition) {
+  if (!sessionEdition) return false
+  return localStorage.getItem(`${PACO_REGISTERED_PREFIX}${sessionEdition}`) === '1'
 }
 
 /**
@@ -140,11 +160,12 @@ export function usePacoRegistration() {
   }
 
   /**
-   * Check if a user is already registered for the PACO webinar.
+   * Check if a user is already registered for a specific PACO session.
    * @param {string} userId
-   * @returns {Promise<boolean>} true if registered
+   * @param {number} sessionEdition
+   * @returns {Promise<boolean>} true if registered for the given session
    */
-  const checkPacoRegistration = async (userId) => {
+  const checkPacoRegistration = async (userId, sessionEdition) => {
     loading.value = true
     error.value = null
 
@@ -154,6 +175,7 @@ export function usePacoRegistration() {
         .select('id')
         .eq('activity_id', PACO_ACTIVITY_ID)
         .eq('user_id', userId)
+        .eq('session_edition', sessionEdition)
         .maybeSingle()
 
       if (queryError) throw queryError

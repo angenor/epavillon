@@ -28,11 +28,12 @@ export function usePacoCsvExport() {
    */
   const exportToCsv = (registrants, filename = 'paco-inscrits') => {
     const headers = [
-      'Prénom', 'Nom', 'Email', 'Genre', "Profil d'âge",
+      'Session', 'Prénom', 'Nom', 'Email', 'Genre', "Profil d'âge",
       'Ville', 'Pays', 'Statut professionnel', 'Organisation', "Date d'inscription"
     ]
 
     const rows = registrants.map(r => [
+      escapeCsv(r.sessionEdition != null ? `Session ${r.sessionEdition}` : ''),
       escapeCsv(r.firstName),
       escapeCsv(r.lastName),
       escapeCsv(r.email),

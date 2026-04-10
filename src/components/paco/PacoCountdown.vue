@@ -52,14 +52,22 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { usePacoWebinarData } from '@/composables/paco/usePacoWebinarData'
 
-const { t } = useI18n()
-const { webinar } = usePacoWebinarData()
+const props = defineProps({
+  sessionData: { type: Object, default: null }
+})
 
-const webinarStart = new Date(`${webinar.date}T${webinar.startTime}:00Z`)
+const { t } = useI18n()
+const { currentSession } = usePacoWebinarData()
+
+const session = computed(() => props.sessionData || currentSession.value)
+
+const webinarStart = computed(() =>
+  new Date(`${session.value.date}T${session.value.startTime}:00Z`)
+)
 
 const localTimeLabel = computed(() => {
-  const startLocal = new Date(`${webinar.date}T${webinar.startTime}:00Z`)
-  const endLocal = new Date(`${webinar.date}T${webinar.endTime}:00Z`)
+  const startLocal = new Date(`${session.value.date}T${session.value.startTime}:00Z`)
+  const endLocal = new Date(`${session.value.date}T${session.value.endTime}:00Z`)
 
   const opts = { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' }
   const startStr = startLocal.toLocaleTimeString(undefined, opts)
@@ -72,7 +80,7 @@ const now = ref(Date.now())
 let timer = null
 
 const countdown = computed(() => {
-  const diff = webinarStart.getTime() - now.value
+  const diff = webinarStart.value.getTime() - now.value
   if (diff <= 0) return { active: false, days: 0, hours: 0, minutes: 0, seconds: 0 }
 
   const totalSec = Math.floor(diff / 1000)
@@ -85,7 +93,7 @@ const countdown = computed(() => {
 })
 
 const showWaitingRoomMessage = computed(() => {
-  const diff = webinarStart.getTime() - now.value
+  const diff = webinarStart.value.getTime() - now.value
   return diff > 0 && diff <= 30 * 60 * 1000
 })
 

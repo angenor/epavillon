@@ -10,7 +10,7 @@
     <!-- Info -->
     <div class="min-w-0">
       <p class="text-sm font-semibold text-white truncate">{{ panelist.name }}</p>
-      <p class="text-xs text-green-400 truncate">{{ t(`paco.presentation.panelists.${panelist.id}.role`) }}</p>
+      <p class="text-xs text-green-400 truncate">{{ roleLabel }}</p>
       <p class="text-xs text-white/50 truncate">{{ panelist.organization }}</p>
       <a
         v-if="panelist.email"
@@ -24,11 +24,21 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n()
-
-defineProps({
+const props = defineProps({
   panelist: { type: Object, required: true },
+  i18nPrefix: { type: String, default: 'paco.presentation' },
+})
+
+const { t, te } = useI18n()
+
+const roleLabel = computed(() => {
+  const key = `${props.i18nPrefix}.panelists.${props.panelist.id}.role`
+  if (te(key)) return t(key)
+  // Fallback vers le préfixe historique
+  const fallback = `paco.presentation.panelists.${props.panelist.id}.role`
+  return te(fallback) ? t(fallback) : ''
 })
 </script>

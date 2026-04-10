@@ -32,19 +32,25 @@
 
     <!-- Partner logos -->
     <div class="mt-8 pt-6 border-t border-white/10">
-      <PacoPartnerLogos :partners="webinar.partners" />
+      <PacoPartnerLogos :partners="session.partners" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { usePacoWebinarData } from '@/composables/paco/usePacoWebinarData'
 import PacoPartnerLogos from './PacoPartnerLogos.vue'
 
+const props = defineProps({
+  sessionData: { type: Object, default: null }
+})
+
 const { t } = useI18n()
-const { webinar } = usePacoWebinarData()
+const { currentSession } = usePacoWebinarData()
+
+const session = computed(() => props.sessionData || currentSession.value)
 
 const platformJoinLink = '/paco/join'
 const linkCopied = ref(false)
