@@ -198,6 +198,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { usePacoStats } from '@/composables/paco/usePacoStats'
+import { usePacoWebinarData } from '@/composables/paco/usePacoWebinarData'
 import { usePacoCsvExport } from '@/composables/paco/usePacoCsvExport'
 import PacoRegistrationChart from '@/components/paco/PacoRegistrationChart.vue'
 import PacoStatsCards from '@/components/paco/PacoStatsCards.vue'
@@ -214,6 +215,11 @@ const {
   subscribeToPacoChanges, unsubscribePacoChanges,
   sessionFilter, setSessionFilter
 } = usePacoStats()
+
+const { currentSession } = usePacoWebinarData()
+
+// Sélectionne par défaut la prochaine session (non terminée).
+sessionFilter.value = currentSession.value?.edition ?? null
 
 const searchQuery = ref('')
 let searchDebounce = null
