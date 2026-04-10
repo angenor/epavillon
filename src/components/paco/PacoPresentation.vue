@@ -59,8 +59,20 @@
         <font-awesome-icon :icon="['fas', 'bullseye']" class="mr-1.5" />
         {{ t('paco.presentation.objectivesTitle') }}
       </h2>
-      <p class="text-xs text-white/50 mb-3 italic">
-        {{ t(`${i18nPrefix}.objectiveGeneral`) }}
+
+      <!-- Objectif général mis en évidence -->
+      <div class="bg-green-500/10 border-l-4 border-green-400 rounded-r-xl px-4 py-3 mb-4">
+        <p class="text-[11px] font-semibold uppercase tracking-wider text-green-400 mb-1">
+          {{ t('paco.presentation.objectiveGeneralLabel') }}
+        </p>
+        <p class="text-sm sm:text-base text-white font-medium leading-relaxed">
+          {{ t(`${i18nPrefix}.objectiveGeneral`) }}
+        </p>
+      </div>
+
+      <!-- Objectifs spécifiques -->
+      <p class="text-[11px] font-semibold uppercase tracking-wider text-green-400/80 mb-2">
+        {{ t('paco.presentation.specificObjectivesLabel') }}
       </p>
       <ul class="space-y-2">
         <li

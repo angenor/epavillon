@@ -20,6 +20,8 @@
       "contextTitle": "Context",
       "context": "In French-speaking countries, decentralized authorities play a strategic role in the concrete implementation of climate change adaptation policies. Located closest to the populations, they are responsible for local planning, land use management and coordination of essential services. However, despite their central position, local authorities face several challenges: limited financial resources, insufficient technical capacities, poor access to climate data and lack of integration of local knowledge into territorial plans.",
       "objectivesTitle": "Objectives",
+      "objectiveGeneralLabel": "General Objective",
+      "specificObjectivesLabel": "Specific Objectives",
       "objectiveGeneral": "Strengthen the capacities of local authorities to plan, finance and implement climate change adaptation actions.",
       "objectives": {
         "0": "Present the roles, responsibilities and levers of action of local authorities in climate adaptation",

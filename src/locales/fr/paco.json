@@ -20,6 +20,8 @@
       "contextTitle": "Contexte",
       "context": "Dans les pays francophones, les collectivités décentralisées jouent un rôle stratégique dans la mise en œuvre concrète des politiques d'adaptation au changement climatique. Situées au plus près des populations, elles sont responsables de la planification locale, de l'aménagement du territoire et de la coordination des services essentiels. Pourtant, malgré leur position centrale, les collectivités font face à plusieurs défis : ressources financières limitées, capacités techniques insuffisantes, faible accès aux données climatiques et manque d'intégration des savoirs locaux dans les plans territoriaux.",
       "objectivesTitle": "Objectifs",
+      "objectiveGeneralLabel": "Objectif général",
+      "specificObjectivesLabel": "Objectifs spécifiques",
       "objectiveGeneral": "Renforcer les capacités des collectivités locales pour planifier, financer et mettre en œuvre des actions d'adaptation au changement climatique.",
       "objectives": {
         "0": "Présenter les rôles, responsabilités et leviers d'action des collectivités locales dans l'adaptation climatique.",
