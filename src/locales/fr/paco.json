@@ -204,7 +204,7 @@
       "searchResults": "résultat(s) trouvé(s)",
       "newRegistration": "Nouvelle inscription",
       "newRegistrations": "Nouvelles inscriptions",
-      "viewCountSince": "depuis le 17 mars 2026, 15h00 GMT",
+      "viewCountSince": "depuis le 10 avril 2026, 21h00 GMT",
       "session": "Session",
       "filterAllSessions": "Toutes les sessions",
       "filterSession": "Session {n}",
@@ -295,8 +295,8 @@
       "otpExpired": "Le lien de confirmation a expiré. Veuillez renvoyer un nouvel email de vérification."
     },
     "tabs": {
-      "session1": "Session 1",
-      "session2": "Session 2",
+      "session1": "Session 3",
+      "session2": "Session 4",
       "status": {
         "ended": "Terminée",
         "upcoming": "À venir",

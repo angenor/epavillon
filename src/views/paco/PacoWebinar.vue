@@ -4,13 +4,13 @@
       <div class="w-full max-w-6xl mx-auto">
         <PacoSessionTabs v-model="activeEdition" :sessions="sessions" />
 
-        <!-- Session 1: replay vidéo -->
+        <!-- Session 3: replay vidéo -->
         <PacoSession1
           v-if="activeEdition === 1"
           :session-data="sessions[0]"
         />
 
-        <!-- Session 2: inscription -->
+        <!-- Session 4: inscription -->
         <PacoSession2
           v-else-if="activeEdition === 2"
           :session-data="sessions[1]"
@@ -74,8 +74,8 @@ watch(activeEdition, async (newEdition) => {
 
 /**
  * Vérifie l'état initial pour la session active.
- * Session 1 (terminée) → état neutre (replay), pas de check inscription.
- * Session 2 (à venir) → check inscription DB ou localStorage.
+ * Session 3 (terminée) → état neutre (replay), pas de check inscription.
+ * Session 4 (à venir) → check inscription DB ou localStorage.
  */
 async function checkInitialState(edition) {
   pageLoading.value = true

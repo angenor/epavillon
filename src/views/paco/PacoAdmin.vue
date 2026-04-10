@@ -35,7 +35,7 @@
               ? 'bg-blue-600 text-white'
               : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'"
           >
-            {{ t('paco.admin.filterSession', { n: 1 }) }}
+            {{ t('paco.admin.filterSession', { n: 3 }) }}
           </button>
           <button
             @click="applySessionFilter(2)"
@@ -44,7 +44,7 @@
               ? 'bg-blue-600 text-white'
               : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'"
           >
-            {{ t('paco.admin.filterSession', { n: 2 }) }}
+            {{ t('paco.admin.filterSession', { n: 4 }) }}
           </button>
         </div>
 
