@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto">
 
       <!-- Header -->
-      <div class="mb-8 flex items-baseline justify-between">
+      <div class="mb-6 flex items-baseline justify-between">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
           {{ t('paco.admin.title') }}
         </h1>
@@ -12,6 +12,40 @@
           <span>{{ pageViewCount }}</span>
           <span class="text-gray-300 dark:text-gray-600">·</span>
           <span>{{ t('paco.admin.viewCountSince') }}</span>
+        </div>
+      </div>
+
+      <!-- Global Session Filter (applies to all stats, chart and list) -->
+      <div class="mb-6 flex flex-wrap items-center gap-3">
+        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ t('paco.admin.session') }} :</span>
+        <div class="inline-flex rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden shadow-sm">
+          <button
+            @click="applySessionFilter(null)"
+            class="cursor-pointer px-4 py-2 text-sm font-medium transition"
+            :class="sessionFilter === null
+              ? 'bg-blue-600 text-white'
+              : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'"
+          >
+            {{ t('paco.admin.filterAllSessions') }}
+          </button>
+          <button
+            @click="applySessionFilter(1)"
+            class="cursor-pointer px-4 py-2 text-sm font-medium border-l border-gray-300 dark:border-gray-600 transition"
+            :class="sessionFilter === 1
+              ? 'bg-blue-600 text-white'
+              : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'"
+          >
+            {{ t('paco.admin.filterSession', { n: 1 }) }}
+          </button>
+          <button
+            @click="applySessionFilter(2)"
+            class="cursor-pointer px-4 py-2 text-sm font-medium border-l border-gray-300 dark:border-gray-600 transition"
+            :class="sessionFilter === 2
+              ? 'bg-blue-600 text-white'
+              : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'"
+          >
+            {{ t('paco.admin.filterSession', { n: 2 }) }}
+          </button>
         </div>
       </div>
 
@@ -42,36 +76,6 @@
               {{ t('paco.admin.registrantList') }}
             </h2>
             <div class="flex flex-wrap items-center gap-3">
-              <!-- Session filter buttons -->
-              <div class="inline-flex rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden">
-                <button
-                  @click="applySessionFilter(null)"
-                  class="cursor-pointer px-3 py-2 text-xs font-medium transition"
-                  :class="sessionFilter === null
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'"
-                >
-                  {{ t('paco.admin.filterAllSessions') }}
-                </button>
-                <button
-                  @click="applySessionFilter(1)"
-                  class="cursor-pointer px-3 py-2 text-xs font-medium border-l border-gray-300 dark:border-gray-600 transition"
-                  :class="sessionFilter === 1
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'"
-                >
-                  {{ t('paco.admin.filterSession', { n: 1 }) }}
-                </button>
-                <button
-                  @click="applySessionFilter(2)"
-                  class="cursor-pointer px-3 py-2 text-xs font-medium border-l border-gray-300 dark:border-gray-600 transition"
-                  :class="sessionFilter === 2
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'"
-                >
-                  {{ t('paco.admin.filterSession', { n: 2 }) }}
-                </button>
-              </div>
               <div class="relative">
                 <font-awesome-icon :icon="['fas', 'search']" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
                 <input

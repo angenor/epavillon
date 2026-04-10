@@ -49,7 +49,7 @@ export function usePacoStats() {
     error.value = null
 
     try {
-      const { data, error: queryError } = await supabase
+      let query = supabase
         .from('activity_registrations')
         .select(`
           id,
@@ -60,6 +60,12 @@ export function usePacoStats() {
           )
         `)
         .eq('activity_id', PACO_ACTIVITY_ID)
+
+      if (sessionFilter.value !== null) {
+        query = query.eq('session_edition', sessionFilter.value)
+      }
+
+      const { data, error: queryError } = await query
 
       if (queryError) throw queryError
 
@@ -105,11 +111,17 @@ export function usePacoStats() {
    */
   const fetchAllRegistrationDates = async () => {
     try {
-      const { data, error: queryError } = await supabase
+      let query = supabase
         .from('activity_registrations')
         .select('registration_date')
         .eq('activity_id', PACO_ACTIVITY_ID)
         .order('registration_date', { ascending: true })
+
+      if (sessionFilter.value !== null) {
+        query = query.eq('session_edition', sessionFilter.value)
+      }
+
+      const { data, error: queryError } = await query
 
       if (queryError) throw queryError
 
