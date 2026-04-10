@@ -308,26 +308,36 @@
     },
     "session2": {
       "title": "Climate justice and social inclusion in adaptation",
-      "subtitle": "Promoting an inclusive and equitable approach to climate change adaptation",
+      "subtitle": "Climate Webinars – Societies and Communities",
       "editionLabel": "Societies and Communities",
       "dateLabel": "Thursday, April 30, 2026",
       "timeLabel": "2:00 PM – 3:30 PM GMT",
-      "context": "Climate change exacerbates social and territorial inequalities, disproportionately affecting vulnerable communities, women, youth, rural populations and marginalized groups. Adaptation can only be effective and sustainable if it integrates the principles of climate justice and social inclusion, ensuring that the benefits of policies and financing actually reach those who need them most. In the French-speaking world, many local and regional initiatives demonstrate that integrating human rights, equity and inclusive participation strengthens collective resilience.",
+      "context": "Climate change exacerbates social and territorial inequalities, disproportionately affecting vulnerable communities, women, youth, rural populations and marginalized groups. Adaptation can only be effective and sustainable if it integrates the principles of climate justice and social inclusion, ensuring that the benefits of policies and financing actually reach those who need them most.\n\nIn the French-speaking world, many local and regional initiatives demonstrate that integrating human rights, equity and inclusive participation strengthens collective resilience. This webinar is part of the initiative « Strengthening the capacities and collaboration of French-speaking countries on climate change adaptation and access to financing », implemented by the Institute of the Francophonie for Sustainable Development (IFDD) with the support of the regional programme « Implementation of Regional and National Adaptation Priorities in Central and West Africa (PACO) », a programme funded by the German Federal Ministry for the Environment, Climate Action, Nature Conservation and Nuclear Safety (BMUKN) under the « International Climate Initiative (IKI) » and implemented by the Deutsche Gesellschaft für Internationale Zusammenarbeit (GIZ) GmbH. It aims to create a space for dialogue on the challenges of climate justice and social inclusion in adaptation strategies.",
       "objectiveGeneral": "Promote an inclusive and equitable approach to climate change adaptation, highlighting climate justice as a lever for resilience and social cohesion.",
       "objectives": {
-        "0": "Highlight social and territorial inequalities linked to climate impacts",
-        "1": "Present initiatives integrating equity, gender and inclusion in adaptation projects",
-        "2": "Foster dialogue between institutions, civil society and vulnerable communities on climate justice",
-        "3": "Identify financing and governance mechanisms that promote social inclusion"
+        "0": "Highlight social and territorial inequalities linked to climate impacts.",
+        "1": "Present initiatives integrating equity, gender and inclusion in adaptation projects.",
+        "2": "Foster dialogue between institutions, civil society and vulnerable communities on climate justice.",
+        "3": "Identify financing and governance mechanisms that promote social inclusion.",
+        "4": "Encourage the creation of Francophone networks to convey a common voice on climate justice."
       },
       "content": {
-        "0": { "title": "Climate Justice and Human Rights", "desc": "Principles, issues and integration into public policies" },
-        "1": { "title": "Social Inclusion in Adaptation", "desc": "Gender, youth, rural and marginalized populations" },
-        "2": { "title": "Case Studies", "desc": "Local and regional initiatives promoting equity and citizen participation" },
-        "3": { "title": "Financing and Partnerships", "desc": "Mechanisms to support inclusive and socially just projects" }
+        "0": { "title": "Climate Justice and Human Rights", "desc": "Principles, issues and integration into public policies." },
+        "1": { "title": "Social Inclusion in Adaptation", "desc": "Gender, youth, rural and marginalized populations." },
+        "2": { "title": "Case Studies", "desc": "Local and regional initiatives promoting equity and citizen participation." },
+        "3": { "title": "Financing and Partnerships", "desc": "Mechanisms to support inclusive and socially just projects." },
+        "4": { "title": "Multi-stakeholder Dialogue", "desc": "Synergies between institutions, local authorities, CSOs and communities." }
+      },
+      "targets": {
+        "0": "Civil society organizations and citizen movements",
+        "1": "Local authorities and public institutions",
+        "2": "Young leaders and women's associations",
+        "3": "Researchers and academics",
+        "4": "Donors and technical partners",
+        "5": "Media and social communication actors"
       },
       "panelists": {
-        "kiri": { "role": "Main Coordinator, PACO" },
+        "kiri": { "role": "Main Coordinator" },
         "baglhi": { "role": "Director of the Benin Component of the PACO program" },
         "ka": { "role": "Director of the Francophone Hub, Natural Justice" }
       }

@@ -48,7 +48,7 @@
         <font-awesome-icon :icon="['fas', 'circle-info']" class="mr-1.5" />
         {{ t('paco.presentation.contextTitle') }}
       </h2>
-      <p class="text-sm text-white/70 leading-relaxed">
+      <p class="text-sm text-white/70 leading-relaxed whitespace-pre-line">
         {{ t(`${i18nPrefix}.context`) }}
       </p>
     </section>
@@ -64,12 +64,12 @@
       </p>
       <ul class="space-y-2">
         <li
-          v-for="i in 4"
-          :key="i"
+          v-for="(obj, idx) in objectivesList"
+          :key="idx"
           class="flex items-start gap-2 text-sm text-white/70"
         >
           <font-awesome-icon :icon="['fas', 'check']" class="text-green-400 text-xs mt-1 shrink-0" />
-          <span>{{ t(`${i18nPrefix}.objectives.${i - 1}`) }}</span>
+          <span>{{ obj }}</span>
         </li>
       </ul>
     </section>
@@ -82,15 +82,15 @@
       </h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <div
-          v-for="i in 4"
-          :key="i"
+          v-for="(item, idx) in contentList"
+          :key="idx"
           class="bg-white/5 border border-white/10 rounded-xl p-3"
         >
           <p class="text-sm font-medium text-white mb-0.5">
-            {{ t(`${i18nPrefix}.content.${i - 1}.title`) }}
+            {{ item.title }}
           </p>
           <p class="text-xs text-white/50 leading-relaxed">
-            {{ t(`${i18nPrefix}.content.${i - 1}.desc`) }}
+            {{ item.desc }}
           </p>
         </div>
       </div>
@@ -104,11 +104,11 @@
       </h2>
       <div class="flex flex-wrap gap-2">
         <span
-          v-for="i in 7"
-          :key="i"
+          v-for="(target, idx) in targetsList"
+          :key="idx"
           class="bg-white/10 border border-white/10 rounded-full px-3 py-1 text-xs text-white/70"
         >
-          {{ t(`paco.presentation.targets.${i - 1}`) }}
+          {{ target }}
         </span>
       </div>
     </section>
@@ -151,7 +151,7 @@ const props = defineProps({
   sessionData: { type: Object, default: null }
 })
 
-const { t } = useI18n()
+const { t, te } = useI18n()
 const { currentSession, getSessionStatus, getStatusLabel, getStatusColor } = usePacoWebinarData()
 
 // Source de données: prop sessionData OU session courante (rétrocompatibilité)
@@ -166,4 +166,42 @@ const partners = computed(() => session.value?.partners || [])
 const status = computed(() => getSessionStatus(session.value))
 const statusLabel = computed(() => getStatusLabel(status.value))
 const statusColor = computed(() => getStatusColor(status.value))
+
+// Listes dynamiques basées sur les clés i18n disponibles (supporte un nombre variable d'items par session)
+const objectivesList = computed(() => {
+  const list = []
+  let i = 0
+  while (te(`${i18nPrefix.value}.objectives.${i}`)) {
+    list.push(t(`${i18nPrefix.value}.objectives.${i}`))
+    i++
+  }
+  return list
+})
+
+const contentList = computed(() => {
+  const list = []
+  let i = 0
+  while (te(`${i18nPrefix.value}.content.${i}.title`)) {
+    list.push({
+      title: t(`${i18nPrefix.value}.content.${i}.title`),
+      desc: t(`${i18nPrefix.value}.content.${i}.desc`)
+    })
+    i++
+  }
+  return list
+})
+
+const targetsList = computed(() => {
+  // Priorité aux publics cibles spécifiques à la session, sinon liste globale
+  const prefix = te(`${i18nPrefix.value}.targets.0`)
+    ? `${i18nPrefix.value}.targets`
+    : 'paco.presentation.targets'
+  const list = []
+  let i = 0
+  while (te(`${prefix}.${i}`)) {
+    list.push(t(`${prefix}.${i}`))
+    i++
+  }
+  return list
+})
 </script>
