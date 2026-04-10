@@ -1,7 +1,7 @@
 # Tasks: PACO Webinar Multi-Sessions avec Navigation par Onglets
 
-**Input**: Design documents from `/specs/001-paco-multi-sessions/`  
-**Branch**: `001-paco-multi-sessions`  
+**Input**: Design documents from `/specs/001-paco-multi-sessions/`
+**Branch**: `001-paco-multi-sessions`
 **Spec**: [spec.md](./spec.md) | **Plan**: [plan.md](./plan.md)
 
 ## Format: `[ID] [P?] [Story?] Description`
@@ -21,7 +21,7 @@
 - [X] T001 Créer `bank/shema_et_requettes/migration_001_add_session_edition.sql` : ADD COLUMN `session_edition INTEGER NOT NULL DEFAULT 1` sur `activity_registrations`, UPDATE existants à 1, DROP anciens index `activity_registrations_guest_unique` et `activity_registrations_user_unique`, CREATE nouveaux index `activity_registrations_guest_session_unique(activity_id, guest_email, session_edition)` et `activity_registrations_user_session_unique(activity_id, user_id, session_edition)`
 - [X] T002 [P] Mettre à jour `bank/shema_et_requettes/rpc_register_paco_quick.sql` : ajouter paramètre `p_session_edition INTEGER DEFAULT 2`, mettre à jour la vérification d'unicité (`WHERE session_edition = p_session_edition`) et l'INSERT (`session_edition`) dans la fonction `register_paco_quick`
 - [X] T003 [P] Mettre à jour `bank/shema_et_requettes/database_complete.sql` : ajouter la colonne `session_edition INTEGER NOT NULL DEFAULT 1` dans la définition de `activity_registrations`, remplacer les deux anciens index par les deux nouveaux incluant `session_edition`
-- [X] T004 [P] Refactoriser `src/composables/paco/usePacoWebinarData.js` : remplacer `WEBINAR_DATA` (objet unique) par `SESSIONS_DATA` (tableau de 2 sessions) — session 1 avec `edition:1`, `date:'2026-03-26'`, `completed:true`, `replayUrl:'https://www.youtube.com/embed/482HTq49tlQ?autoplay=1&mute=1'`, `coverImage:'/images/banniere_paco.jpg'`, `i18nPrefix:'paco.session1'`, panelists session 1 (MARTIN-PHIPPS, HOUDANON, VALLIER, LAZARE, AYI NKAMGNA, BETCHEM, SALL) ; session 2 avec `edition:2`, `date:'2026-04-30'`, `completed:false`, `replayUrl:null`, `coverImage:'/images/image_paco_session_2.jpg'`, `i18nPrefix:'paco.session2'`, panelists session 2 (Tounao KIRI/PACO, Abdallah BAGLHI/PACO Bénin, Sokhna Dié KA/Natural Justice) ; exposer `sessions` (ref tableau), `currentSession` (computed: dernière session non terminée), `getSessionStatus(session)`, `getStatusLabel(status)`, `getStatusColor(status)` — supprimer `webinar` de l'export
+- [X] T004 [P] Refactoriser `src/composables/paco/usePacoWebinarData.js` : remplacer `WEBINAR_DATA` (objet unique) par `SESSIONS_DATA` (tableau de 2 sessions) — session 1 avec `edition:1`, `date:'2026-03-26'`, `completed:true`, `replayUrl:'https://www.youtube.com/embed/482HTq49tlQ?autoplay=1&mute=1'`, `coverImage:'/images/banniere_paco.jpg'`, `i18nPrefix:'paco.session1'`, panelists session 1 (MARTIN-PHIPPS, HOUDANON, VALLIER, LAZARE, AYI NKAMGNA, BETCHEM, SALL) ; session 2 avec `edition:2`, `date:'2026-04-30'`, `completed:false`, `replayUrl:null`, `coverImage:'/images/image_paco_session_2_v2.jpg'`, `i18nPrefix:'paco.session2'`, panelists session 2 (Tounao KIRI/PACO, Abdallah BAGLHI/PACO Bénin, Sokhna Dié KA/Natural Justice) ; exposer `sessions` (ref tableau), `currentSession` (computed: dernière session non terminée), `getSessionStatus(session)`, `getStatusLabel(status)`, `getStatusColor(status)` — supprimer `webinar` de l'export
 - [X] T005 [P] Ajouter les clés i18n des onglets dans `src/locales/fr/paco.json` et `src/locales/en/paco.json` : section `paco.tabs` avec `session1:"Session 1"`, `session2:"Session 2"`, `status.ended:"Terminée"/"Ended"`, `status.upcoming:"À venir"/"Upcoming"`, `status.live:"En direct"/"Live"`
 
 **Checkpoint**: Fondations prêtes — les phases US1–US4 peuvent démarrer

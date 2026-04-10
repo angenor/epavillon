@@ -7,7 +7,7 @@
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
           {{ t('paco.admin.title') }}
         </h1>
-        <div v-if="pageViewCount > 0" class="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500" :title="t('paco.admin.viewCountSince')">
+        <div class="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500" :title="t('paco.admin.viewCountSince')">
           <font-awesome-icon :icon="['fas', 'eye']" class="text-[10px]" />
           <span>{{ pageViewCount }}</span>
           <span class="text-gray-300 dark:text-gray-600">·</span>

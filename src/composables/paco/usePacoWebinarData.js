@@ -63,8 +63,8 @@ const SESSIONS_DATA = [
     timezone: 'GMT',
     language: 'fr',
     completed: false,
-    coverImage: '/images/image_paco_session_2.jpg',
-    bannerUrl: '/images/image_paco_session_2.jpg',
+    coverImage: '/images/image_paco_session_2_v2.jpg',
+    bannerUrl: '/images/image_paco_session_2_v2.jpg',
     replayUrl: null,
     i18nPrefix: 'paco.session2',
     panelists: [

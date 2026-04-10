@@ -1,6 +1,6 @@
 # Research: PACO Webinar Multi-Sessions
 
-**Feature**: 001-paco-multi-sessions  
+**Feature**: 001-paco-multi-sessions
 **Date**: 2026-04-09
 
 ---
@@ -114,7 +114,7 @@ const SESSIONS_DATA = [
     date: '2026-04-30',
     completed: false,
     replayUrl: null,
-    coverImage: '/images/image_paco_session_2.jpg',
+    coverImage: '/images/image_paco_session_2_v2.jpg',
     // ...panelists, etc.
   }
 ]

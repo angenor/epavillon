@@ -1,6 +1,6 @@
 # Data Model: PACO Webinar Multi-Sessions
 
-**Feature**: 001-paco-multi-sessions  
+**Feature**: 001-paco-multi-sessions
 **Date**: 2026-04-09
 
 ---
@@ -32,7 +32,7 @@ CREATE UNIQUE INDEX activity_registrations_user_session_unique
   WHERE user_id IS NOT NULL;
 ```
 
-**Fichier à créer**: `bank/shema_et_requettes/migration_001_add_session_edition.sql`  
+**Fichier à créer**: `bank/shema_et_requettes/migration_001_add_session_edition.sql`
 **Fichier à mettre à jour**: `bank/shema_et_requettes/database_complete.sql`
 
 ---
@@ -98,9 +98,9 @@ La vérification d'unicité et l'insertion doivent filtrer par `session_edition`
   endTime: '15:30',
   timezone: 'GMT',
   language: 'fr',
-  coverImage: '/images/image_paco_session_2.jpg',
+  coverImage: '/images/image_paco_session_2_v2.jpg',
   replayUrl: null,
-  bannerUrl: '/images/image_paco_session_2.jpg',
+  bannerUrl: '/images/image_paco_session_2_v2.jpg',
   i18nPrefix: 'paco.session2',
   panelists: [
     { id: 'kiri', name: 'Tounao KIRI', organization: 'PACO', photoUrl: null, email: null },

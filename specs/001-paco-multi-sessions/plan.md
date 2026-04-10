@@ -12,13 +12,13 @@ Refactoriser les pages PACO Webinar pour supporter plusieurs sessions via une na
 
 ## Technical Context
 
-**Language/Version**: JavaScript (Vue 3.5+)  
-**Primary Dependencies**: Vue 3, Vue i18n, Supabase JS, TailwindCSS v4, Font Awesome  
-**Storage**: PostgreSQL via Supabase — table `activity_registrations` (ajout colonne `session_edition`), RPC `register_paco_quick` (mise à jour)  
-**Testing**: Vitest (unitaire), Playwright (E2E)  
-**Target Platform**: Web SPA, Firebase Hosting  
-**Project Type**: Web application (SPA Vue 3)  
-**Performance Goals**: Navigation entre onglets < 1 seconde (état interne, pas de requête réseau)  
+**Language/Version**: JavaScript (Vue 3.5+)
+**Primary Dependencies**: Vue 3, Vue i18n, Supabase JS, TailwindCSS v4, Font Awesome
+**Storage**: PostgreSQL via Supabase — table `activity_registrations` (ajout colonne `session_edition`), RPC `register_paco_quick` (mise à jour)
+**Testing**: Vitest (unitaire), Playwright (E2E)
+**Target Platform**: Web SPA, Firebase Hosting
+**Project Type**: Web application (SPA Vue 3)
+**Performance Goals**: Navigation entre onglets < 1 seconde (état interne, pas de requête réseau)
 **Constraints**: Fichiers < 400 lignes, i18n obligatoire (fr + en), pas de paramètre URL pour l'onglet actif
 
 ---
@@ -129,7 +129,7 @@ Refléter la nouvelle colonne `session_edition` et les nouveaux index.
 
 - Remplacer `WEBINAR_DATA` (objet unique) par `SESSIONS_DATA` (tableau de 2 sessions)
 - Session 1: `edition:1`, `date:'2026-03-26'`, `completed:true`, `replayUrl:'https://www.youtube.com/embed/482HTq49tlQ?autoplay=1&mute=1'`, `coverImage:'/images/banniere_paco.jpg'`, `i18nPrefix:'paco.session1'`, panelists session 1
-- Session 2: `edition:2`, `date:'2026-04-30'`, `completed:false`, `replayUrl:null`, `coverImage:'/images/image_paco_session_2.jpg'`, `i18nPrefix:'paco.session2'`, panelists session 2 (Kiri, Baglhi, Ka)
+- Session 2: `edition:2`, `date:'2026-04-30'`, `completed:false`, `replayUrl:null`, `coverImage:'/images/image_paco_session_2_v2.jpg'`, `i18nPrefix:'paco.session2'`, panelists session 2 (Kiri, Baglhi, Ka)
 - Exposer: `sessions` (tableau), `currentSession` (computed: dernière session non terminée), `getSessionStatus(session)`, `getStatusLabel(status)`, `getStatusColor(status)`
 
 **B2. Modifier `usePacoRegistration.js`**
