@@ -68,9 +68,10 @@ const SESSIONS_DATA = [
     replayUrl: null,
     i18nPrefix: 'paco.session2',
     panelists: [
-      { id: 'kiri', name: 'Tounao KIRI', photoUrl: null, organization: 'PACO', email: null },
-      { id: 'baglhi', name: 'Abdallah BAGLHI', photoUrl: null, organization: 'PACO Bénin', email: null },
+      { id: 'kiri', name: 'Tounao KIRI', photoUrl: '/images/tounao_kiri.jpg', organization: 'PACO', email: null },
+      { id: 'baglhi', name: 'Abdallah BAGLHI', photoUrl: '/images/1607849368193.jpeg', organization: 'PACO Bénin', email: null },
       { id: 'ka', name: 'Sokhna Dié KA', photoUrl: null, organization: 'Natural Justice', email: null },
+      { id: 'elisa-mairet', name: 'Elisa Mairet', photoUrl: '/images/1740072412756.jpeg', organization: '', email: null },
     ],
     partners: COMMON_PARTNERS,
   },
