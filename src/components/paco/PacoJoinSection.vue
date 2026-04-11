@@ -11,13 +11,13 @@
     </p>
 
     <!-- Join button -->
-    <router-link
-      :to="platformJoinLink"
+    <a
+      :href="PACO_TEAMS_LINK"
       class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 px-8 rounded-xl transition cursor-pointer shadow-lg shadow-indigo-600/20"
     >
       <font-awesome-icon :icon="['fas', 'video']" />
       {{ t('paco.join.joinButton') }}
-    </router-link>
+    </a>
 
     <!-- Copy link -->
     <div class="mt-5 flex items-center justify-center">
@@ -41,6 +41,7 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { usePacoWebinarData } from '@/composables/paco/usePacoWebinarData'
+import { PACO_TEAMS_LINK } from '@/composables/paco/constants'
 import PacoPartnerLogos from './PacoPartnerLogos.vue'
 
 const props = defineProps({
@@ -52,11 +53,11 @@ const { currentSession } = usePacoWebinarData()
 
 const session = computed(() => props.sessionData || currentSession.value)
 
-const platformJoinLink = '/paco/join'
+const PACO_PUBLIC_URL = 'https://epavillonclimatique.francophonie.org/paco'
 const linkCopied = ref(false)
 
 async function copyTeamsLink() {
-  const fullUrl = window.location.origin + platformJoinLink
+  const fullUrl = PACO_PUBLIC_URL
   try {
     await navigator.clipboard.writeText(fullUrl)
     linkCopied.value = true
