@@ -138,6 +138,27 @@
       "submit": "S'inscrire au webinaire",
       "submitting": "Inscription en cours..."
     },
+    "referralSource": {
+      "label": "Comment avez-vous connu ce webinaire ?",
+      "placeholder": "Sélectionnez un canal",
+      "required": "Veuillez sélectionner un canal pour finaliser votre inscription.",
+      "otherLabel": "Précisez (facultatif)",
+      "otherPlaceholder": "Ex. Recommandation d'un collègue",
+      "otherMaxLengthHint": "120 caractères maximum.",
+      "options": {
+        "ifdd_website": "Site web de l'IFDD",
+        "ifdd_linkedin": "LinkedIn de l'IFDD",
+        "ifdd_facebook": "Facebook de l'IFDD",
+        "ifdd_x": "X de l'IFDD",
+        "email_newsletter": "Email / Newsletter",
+        "other": "Autre"
+      },
+      "chartTitle": "Canal d'acquisition",
+      "chartSubtitle": "Répartition des inscrits par canal de découverte",
+      "notSpecified": "Non renseigné",
+      "csvHeader": "Canal d'acquisition",
+      "csvOtherHeader": "Canal — précision"
+    },
     "demographic": {
       "genderLabel": "Genre",
       "male": "Homme",

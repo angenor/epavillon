@@ -1,6 +1,54 @@
 import { ref } from 'vue'
 import { supabase } from '@/composables/useSupabase'
 import { PACO_ACTIVITY_ID } from '@/composables/paco/constants'
+import {
+  PACO_REFERRAL_SOURCES,
+  PACO_REFERRAL_NOT_SPECIFIED
+} from '@/composables/paco/referralSources'
+
+/**
+ * Agrege les inscriptions par canal d'acquisition en preservant l'ordre
+ * canonique (6 canaux officiels + bucket `not_specified` pour les lignes
+ * historiques ou pour les inscriptions dont la ligne fallback n'a pas de
+ * canal renseigne).
+ *
+ * Chaque canal est TOUJOURS present dans le resultat (count = 0 par defaut)
+ * pour que le donut chart affiche les 6 categories quoi qu'il arrive (FR-008).
+ * Le bucket `not_specified` n'apparait que si count > 0.
+ *
+ * @param {Array<{ referral_source: string|null }>} rows
+ * @returns {{ buckets: Array<{ key: string, count: number }>, total: number }}
+ */
+function buildReferralSourceBreakdown(rows) {
+  const counts = new Map()
+  // Initialise les 6 canaux a 0 dans l'ordre canonique.
+  for (const source of PACO_REFERRAL_SOURCES) {
+    counts.set(source, 0)
+  }
+  let notSpecifiedCount = 0
+
+  for (const row of rows) {
+    const source = row?.referral_source
+    if (source && counts.has(source)) {
+      counts.set(source, counts.get(source) + 1)
+    } else {
+      // NULL, undefined, ou valeur non canonique (historique avant la
+      // CHECK constraint ou donnee corrompue) -> bucket "not_specified".
+      notSpecifiedCount += 1
+    }
+  }
+
+  const buckets = []
+  for (const source of PACO_REFERRAL_SOURCES) {
+    buckets.push({ key: source, count: counts.get(source) })
+  }
+  if (notSpecifiedCount > 0) {
+    buckets.push({ key: PACO_REFERRAL_NOT_SPECIFIED, count: notSpecifiedCount })
+  }
+
+  const total = buckets.reduce((acc, b) => acc + b.count, 0)
+  return { buckets, total }
+}
 
 export function usePacoStats() {
   const stats = ref(null)
@@ -55,6 +103,8 @@ export function usePacoStats() {
           id,
           fallback_payload,
           recovered_at,
+          referral_source,
+          referral_source_other,
           paco_demographic_data (
             gender,
             age_profile,
@@ -95,6 +145,12 @@ export function usePacoStats() {
         if (d.professional_status in statusCounts) statusCounts[d.professional_status]++
       }
 
+      // Feature 006 : agregation par canal d'acquisition.
+      // L'agregation porte sur TOUTES les lignes (standard + fallback
+      // recuperees), pas uniquement sur celles avec demographic, car le
+      // canal est porte directement par activity_registrations.
+      const referralSource = buildReferralSourceBreakdown(data)
+
       stats.value = {
         total,
         withDemographics: demoCount,
@@ -108,7 +164,8 @@ export function usePacoStats() {
           student: pct(statusCounts.student),
           unemployed: pct(statusCounts.unemployed),
           entrepreneur: pct(statusCounts.entrepreneur)
-        }
+        },
+        referralSource
       }
     } catch (err) {
       console.error('Error fetching PACO stats:', err)
@@ -143,7 +200,10 @@ export function usePacoStats() {
     isFallback: r.fallback_payload !== null && r.fallback_payload !== undefined,
     fallbackPayload: r.fallback_payload || null,
     fallbackError: r.fallback_error || null,
-    recoveredAt: r.recovered_at || null
+    recoveredAt: r.recovered_at || null,
+    // Feature 006 : canal d'acquisition (CSV export + future UI admin)
+    referralSource: r.referral_source || null,
+    referralSourceOther: r.referral_source_other || null
   })
 
   /**
@@ -293,6 +353,8 @@ export function usePacoStats() {
         fallback_payload,
         fallback_error,
         recovered_at,
+        referral_source,
+        referral_source_other,
         users (
           first_name,
           last_name,

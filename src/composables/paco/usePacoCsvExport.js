@@ -1,3 +1,5 @@
+import { getReferralSourceLabelFr } from '@/composables/paco/referralSources'
+
 /**
  * Composable for exporting PACO registrant data to CSV.
  * Generates a CSV with BOM for Excel compatibility.
@@ -38,9 +40,13 @@ export function usePacoCsvExport() {
   }
 
   const exportToCsv = (registrants, filename = 'paco-inscrits') => {
+    // Feature 006 : deux nouvelles colonnes inserees entre "Organisation"
+    // et "Date d'inscription" pour garder la chronologie coherente.
     const headers = [
       'Session', 'Prénom', 'Nom', 'Email', 'Genre', "Profil d'âge",
-      'Ville', 'Pays', 'Statut professionnel', 'Organisation', "Date d'inscription",
+      'Ville', 'Pays', 'Statut professionnel', 'Organisation',
+      "Canal d'acquisition", 'Canal — précision',
+      "Date d'inscription",
       'Type', 'Erreur technique', 'Rattrapé le', 'Payload JSON (secours)'
     ]
 
@@ -55,6 +61,10 @@ export function usePacoCsvExport() {
       escapeCsv(r.countryFr),
       escapeCsv(STATUS_MAP[r.professionalStatus] || ''),
       escapeCsv(r.organization),
+      // Feature 006 : libelle FR derive de la cle canonique ; chaine vide
+      // si NULL (lignes historiques anterieures a la feature 006).
+      escapeCsv(getReferralSourceLabelFr(r.referralSource)),
+      escapeCsv(r.referralSourceOther || ''),
       escapeCsv(r.registrationDate ? new Date(r.registrationDate).toLocaleDateString('fr-FR') : ''),
       escapeCsv(getTypeLabel(r)),
       escapeCsv(r.fallbackError || ''),

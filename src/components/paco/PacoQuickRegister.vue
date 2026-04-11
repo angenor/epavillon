@@ -178,6 +178,50 @@
         </label>
       </div>
 
+      <!-- Feature 006 : canal d'acquisition (referral source) -->
+      <div>
+        <label for="paco-quick-referral" class="block text-sm font-medium text-white/70 mb-1">
+          {{ t('paco.referralSource.label') }} <span class="text-red-400">*</span>
+        </label>
+        <select
+          id="paco-quick-referral"
+          v-model="form.referralSource"
+          required
+          class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition cursor-pointer text-sm"
+        >
+          <option value="" disabled class="bg-gray-800 text-white">
+            {{ t('paco.referralSource.placeholder') }}
+          </option>
+          <option
+            v-for="option in referralSourceOptions"
+            :key="option.value"
+            :value="option.value"
+            class="bg-gray-800 text-white"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Champ libre "Autre" (affiche uniquement si referralSource === 'other').
+           Facultatif (FR-002b, quickstart §3.2) : max 120 caracteres. -->
+      <div v-if="form.referralSource === 'other'">
+        <label for="paco-quick-referral-other" class="block text-sm font-medium text-white/70 mb-1">
+          {{ t('paco.referralSource.otherLabel') }}
+        </label>
+        <input
+          id="paco-quick-referral-other"
+          v-model="form.referralSourceOther"
+          type="text"
+          :maxlength="MAX_REFERRAL_OTHER_LENGTH"
+          :placeholder="t('paco.referralSource.otherPlaceholder')"
+          class="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white placeholder-white/30 focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 outline-none transition backdrop-blur-sm text-sm"
+        />
+        <p class="mt-1 text-xs text-white/40 text-right">
+          {{ form.referralSourceOther.length }} / {{ MAX_REFERRAL_OTHER_LENGTH }}
+        </p>
+      </div>
+
       <!-- Error message -->
       <p v-if="errorMessage" class="text-sm text-red-300">
         {{ errorMessage }}
@@ -215,10 +259,15 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useCountries } from '@/composables/useCountries'
 import { registerPacoWithFallback } from '@/composables/paco/usePacoRegistration'
+import {
+  PACO_REFERRAL_SOURCES,
+  MAX_REFERRAL_OTHER_LENGTH,
+  referralSourceI18nKey
+} from '@/composables/paco/referralSources'
 
 const { t, locale } = useI18n()
 
@@ -246,8 +295,31 @@ const form = reactive({
   countryId: '',
   professionalStatus: '',
   organizationName: '',
-  recordingConsent: false
+  recordingConsent: false,
+  // Feature 006 : canal d'acquisition (obligatoire cote Vue, nullable cote DB).
+  referralSource: '',
+  referralSourceOther: ''
 })
+
+// Liste des options referral : exposee via computed pour que le template
+// puisse iterer. La cle i18n est derivee de la constante canonique.
+const referralSourceOptions = computed(() =>
+  PACO_REFERRAL_SOURCES.map((source) => ({
+    value: source,
+    label: t(referralSourceI18nKey(source))
+  }))
+)
+
+// Reset du champ libre quand la source change pour ne pas garder un "other"
+// fantome si l'utilisateur revient sur un choix principal.
+watch(
+  () => form.referralSource,
+  (next) => {
+    if (next !== 'other') {
+      form.referralSourceOther = ''
+    }
+  }
+)
 
 const submitting = ref(false)
 const errorMessage = ref('')
@@ -268,6 +340,16 @@ const handleSubmit = async () => {
   submitting.value = true
   errorMessage.value = ''
 
+  // Feature 006 : validation cote client du canal d'acquisition.
+  // Seul le <select> est obligatoire (FR-001). Le champ libre "Precisez"
+  // reste facultatif meme quand source === 'other' (cf. quickstart §3.2),
+  // pour ne pas sur-contraindre l'utilisateur.
+  if (!form.referralSource || !PACO_REFERRAL_SOURCES.includes(form.referralSource)) {
+    errorMessage.value = t('paco.referralSource.required')
+    submitting.value = false
+    return
+  }
+
   // registerPacoWithFallback ne lève jamais d'exception : elle encapsule
   // la cascade RPC standard → RPC de secours → localStorage uniquement.
   // L'utilisateur n'est jamais bloqué, aucune erreur n'est affichée.
@@ -282,7 +364,9 @@ const handleSubmit = async () => {
     professionalStatus: form.professionalStatus,
     organizationName: form.organizationName,
     recordingConsent: form.recordingConsent,
-    sessionEdition: props.sessionEdition
+    sessionEdition: props.sessionEdition,
+    referralSource: form.referralSource,
+    referralSourceOther: form.referralSourceOther
   })
 
   // Le status est uniquement utilisé pour la télémétrie / logging.

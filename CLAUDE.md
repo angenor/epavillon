@@ -261,6 +261,8 @@ Consultez `DEPLOYMENT_SEO.md` pour :
 - PostgreSQL via Supabase (tables existantes `activity_registrations`, `paco_demographic_data`, `users`) + sessionStorage côté client pour données temporaires (004-paco-email-verify)
 - JavaScript (Vue 3.5+) + Vue 3, Vue i18n, Supabase JS, TailwindCSS v4, Font Awesome (001-paco-multi-sessions)
 - PostgreSQL via Supabase — table `activity_registrations` (ajout colonne `session_edition`), RPC `register_paco_quick` (mise à jour) (001-paco-multi-sessions)
+- JavaScript ES2022 (Vue 3.5+) + Vue 3, Vue i18n, Supabase JS, TailwindCSS v4, Font Awesome, **@amcharts/amcharts5** (déjà installé, module `percent` à importer pour le donut) (006-paco-referral-source)
+- PostgreSQL via Supabase — table existante `activity_registrations` (2 nouvelles colonnes), RPC `register_paco_quick` et `register_paco_fallback` (signatures étendues, rétro-compatibilité via DROP/CREATE) (006-paco-referral-source)
 
 ## Recent Changes
 - 001-paco-webinar: Added JavaScript (Vue 3.5+) + TypeScript (Edge Function Deno) + Vue 3, Vue Router 4, Pinia, Supabase JS, TailwindCSS v4, Vue i18n, Font Awesome

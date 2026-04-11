@@ -85,6 +85,12 @@
         <!-- Registration Chart -->
         <PacoRegistrationChart :data="allRegistrationDates" />
 
+        <!-- Feature 006 : donut canal d'acquisition -->
+        <PacoReferralSourceChart
+          v-if="stats.referralSource"
+          :breakdown="stats.referralSource"
+        />
+
         <!-- Registrant List Section -->
         <div>
           <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
@@ -201,6 +207,7 @@ import { usePacoStats } from '@/composables/paco/usePacoStats'
 import { usePacoWebinarData } from '@/composables/paco/usePacoWebinarData'
 import { usePacoCsvExport } from '@/composables/paco/usePacoCsvExport'
 import PacoRegistrationChart from '@/components/paco/PacoRegistrationChart.vue'
+import PacoReferralSourceChart from '@/components/paco/PacoReferralSourceChart.vue'
 import PacoStatsCards from '@/components/paco/PacoStatsCards.vue'
 import PacoRegistrantTable from '@/components/paco/PacoRegistrantTable.vue'
 

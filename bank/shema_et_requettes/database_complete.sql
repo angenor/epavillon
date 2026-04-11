@@ -449,6 +449,13 @@ CREATE TABLE public.activity_registrations (
     fallback_error TEXT,
     recovered_at TIMESTAMPTZ,
 
+    -- Feature 006 : canal d'acquisition PACO (referral source).
+    -- Capture le canal par lequel l'inscrit PACO a decouvert le webinaire,
+    -- parmi 6 options officielles + champ libre optionnel quand source = 'other'.
+    -- NULL = historique (pre-deploiement) ou inscription non-PACO.
+    referral_source TEXT,
+    referral_source_other TEXT,
+
     -- Contraintes
     CONSTRAINT check_user_or_guest CHECK (
         (user_id IS NOT NULL AND guest_email IS NULL) OR
@@ -457,8 +464,33 @@ CREATE TABLE public.activity_registrations (
     CONSTRAINT check_guest_data CHECK (
         (user_id IS NOT NULL) OR
         (user_id IS NULL AND guest_email IS NOT NULL AND guest_first_name IS NOT NULL AND guest_last_name IS NOT NULL)
+    ),
+    -- Feature 006 : liste canonique des canaux d'acquisition
+    CONSTRAINT check_referral_source_allowed CHECK (
+        referral_source IS NULL
+        OR referral_source IN (
+            'ifdd_website',
+            'ifdd_linkedin',
+            'ifdd_facebook',
+            'ifdd_x',
+            'email_newsletter',
+            'other'
+        )
+    ),
+    -- Feature 006 : referral_source_other autorise uniquement si source = 'other' (max 120 car.)
+    CONSTRAINT check_referral_source_other_guard CHECK (
+        referral_source_other IS NULL
+        OR (
+            referral_source = 'other'
+            AND char_length(referral_source_other) <= 120
+        )
     )
 );
+
+COMMENT ON COLUMN public.activity_registrations.referral_source IS
+    'Feature 006 — canal par lequel l''inscrit PACO a decouvert le webinaire (6 options officielles + NULL historique).';
+COMMENT ON COLUMN public.activity_registrations.referral_source_other IS
+    'Feature 006 — precision libre optionnelle lorsque referral_source = ''other'' (max 120 caracteres).';
 
 -- Index uniques pour éviter les doublons (incluant session_edition pour multi-sessions)
 CREATE UNIQUE INDEX activity_registrations_user_session_unique

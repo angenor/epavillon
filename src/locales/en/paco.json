@@ -138,6 +138,27 @@
       "submit": "Register for the webinar",
       "submitting": "Registering..."
     },
+    "referralSource": {
+      "label": "How did you hear about this webinar?",
+      "placeholder": "Select a channel",
+      "required": "Please select a channel to complete your registration.",
+      "otherLabel": "Please specify (optional)",
+      "otherPlaceholder": "E.g. A colleague's recommendation",
+      "otherMaxLengthHint": "120 characters maximum.",
+      "options": {
+        "ifdd_website": "IFDD website",
+        "ifdd_linkedin": "IFDD LinkedIn",
+        "ifdd_facebook": "IFDD Facebook",
+        "ifdd_x": "IFDD X",
+        "email_newsletter": "Email / Newsletter",
+        "other": "Other"
+      },
+      "chartTitle": "Referral channel",
+      "chartSubtitle": "Breakdown of registrants by discovery channel",
+      "notSpecified": "Not specified",
+      "csvHeader": "Referral channel",
+      "csvOtherHeader": "Channel — details"
+    },
     "demographic": {
       "genderLabel": "Gender",
       "male": "Male",

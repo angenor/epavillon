@@ -1,6 +1,10 @@
 import { ref } from 'vue'
 import { supabase } from '@/composables/useSupabase'
 import { PACO_ACTIVITY_ID } from '@/composables/paco/constants'
+import {
+  PACO_REFERRAL_SOURCES,
+  MAX_REFERRAL_OTHER_LENGTH
+} from '@/composables/paco/referralSources'
 
 const PENDING_REGISTRATION_KEY = 'paco_pending_registration'
 const PENDING_MAX_AGE_MS = 24 * 60 * 60 * 1000 // 24 hours
@@ -107,7 +111,15 @@ export function clearPendingRegistration() {
  * @param {string} params.lastName
  * @param {number} params.sessionEdition
  */
-function persistLocalRegistration({ registrationId, email, firstName, lastName, sessionEdition }) {
+function persistLocalRegistration({
+  registrationId,
+  email,
+  firstName,
+  lastName,
+  sessionEdition,
+  referralSource = null,
+  referralSourceOther = null
+}) {
   if (typeof localStorage === 'undefined') return
   localStorage.setItem(
     `${PACO_REGISTRATION_DATA_PREFIX}${sessionEdition}`,
@@ -117,6 +129,12 @@ function persistLocalRegistration({ registrationId, email, firstName, lastName, 
       firstName,
       lastName,
       sessionEdition,
+      // Feature 006 : stockage du canal pour tracabilite cote client
+      // (utile quand la branche local_only est la seule a avoir connaissance
+      // de l'inscription — permet un rattrapage manuel si l'utilisateur
+      // revient sur la page).
+      referralSource,
+      referralSourceOther,
       registeredAt: new Date().toISOString()
     })
   )
@@ -136,7 +154,37 @@ function persistLocalRegistration({ registrationId, email, firstName, lastName, 
  * @property {string} organizationName
  * @property {boolean} recordingConsent
  * @property {number} sessionEdition
+ * @property {'ifdd_website'|'ifdd_linkedin'|'ifdd_facebook'|'ifdd_x'|'email_newsletter'|'other'} referralSource
+ * @property {string|null} [referralSourceOther]
  */
+
+/**
+ * Normalise le couple (referralSource, referralSourceOther) avant envoi RPC.
+ * - Si la source est invalide/absente, on renvoie { referralSource: null, referralSourceOther: null }
+ *   pour laisser la couche serveur decider (CHECK constraint accepte NULL).
+ * - Si la source n'est pas 'other', referralSourceOther est nullifie.
+ * - Sinon, on trim + tronque a MAX_REFERRAL_OTHER_LENGTH caracteres (defensive).
+ *
+ * @param {string|null|undefined} source
+ * @param {string|null|undefined} other
+ * @returns {{ referralSource: string|null, referralSourceOther: string|null }}
+ */
+function sanitizeReferral(source, other) {
+  if (!source || !PACO_REFERRAL_SOURCES.includes(source)) {
+    return { referralSource: null, referralSourceOther: null }
+  }
+  if (source !== 'other') {
+    return { referralSource: source, referralSourceOther: null }
+  }
+  const trimmed = typeof other === 'string' ? other.trim() : ''
+  if (!trimmed) {
+    return { referralSource: 'other', referralSourceOther: null }
+  }
+  return {
+    referralSource: 'other',
+    referralSourceOther: trimmed.slice(0, MAX_REFERRAL_OTHER_LENGTH)
+  }
+}
 
 /**
  * @typedef {Object} PacoRegistrationResult
@@ -162,6 +210,10 @@ function persistLocalRegistration({ registrationId, email, firstName, lastName, 
  */
 export async function registerPacoWithFallback(input) {
   const normalizedEmail = (input.email || '').toLowerCase().trim()
+  const { referralSource, referralSourceOther } = sanitizeReferral(
+    input.referralSource,
+    input.referralSourceOther
+  )
 
   // Étape 1 — RPC standard
   let technicalError = null
@@ -177,7 +229,9 @@ export async function registerPacoWithFallback(input) {
       p_professional_status: input.professionalStatus,
       p_organization: input.organizationName,
       p_recording_consent: input.recordingConsent,
-      p_session_edition: input.sessionEdition
+      p_session_edition: input.sessionEdition,
+      p_referral_source: referralSource,
+      p_referral_source_other: referralSourceOther
     })
 
     if (rpcError) throw rpcError
@@ -187,7 +241,9 @@ export async function registerPacoWithFallback(input) {
       email: normalizedEmail,
       firstName: input.firstName,
       lastName: input.lastName,
-      sessionEdition: input.sessionEdition
+      sessionEdition: input.sessionEdition,
+      referralSource,
+      referralSourceOther
     })
 
     return {
@@ -216,8 +272,13 @@ export async function registerPacoWithFallback(input) {
       organization: input.organizationName,
       recordingConsent: input.recordingConsent
     },
+    // Feature 006 : duplication referral dans le payload pour tracabilite
+    // (la RPC duplique egalement cote serveur, cette entree est un filet
+    // de securite si l'appel RPC echoue et qu'on tombe en local_only).
+    referralSource,
+    referralSourceOther,
     capturedAt: new Date().toISOString(),
-    clientVersion: 'paco-fallback-v1'
+    clientVersion: 'paco-fallback-v2'
   }
 
   try {
@@ -227,7 +288,9 @@ export async function registerPacoWithFallback(input) {
         p_email: normalizedEmail,
         p_session_edition: input.sessionEdition,
         p_fallback_payload: fallbackPayload,
-        p_error_message: technicalError
+        p_error_message: technicalError,
+        p_referral_source: referralSource,
+        p_referral_source_other: referralSourceOther
       }
     )
 
@@ -238,7 +301,9 @@ export async function registerPacoWithFallback(input) {
       email: normalizedEmail,
       firstName: input.firstName,
       lastName: input.lastName,
-      sessionEdition: input.sessionEdition
+      sessionEdition: input.sessionEdition,
+      referralSource,
+      referralSourceOther
     })
 
     return {
@@ -258,7 +323,9 @@ export async function registerPacoWithFallback(input) {
     email: normalizedEmail,
     firstName: input.firstName,
     lastName: input.lastName,
-    sessionEdition: input.sessionEdition
+    sessionEdition: input.sessionEdition,
+    referralSource,
+    referralSourceOther
   })
 
   return {
