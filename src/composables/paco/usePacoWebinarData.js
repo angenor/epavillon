@@ -70,7 +70,7 @@ const SESSIONS_DATA = [
     panelists: [
       { id: 'kiri', name: 'Tounao KIRI', photoUrl: '/images/tounao_kiri.jpg', organization: 'IFDD', email: null },
       { id: 'baglhi', name: 'Abdallah BAGLHI', photoUrl: '/images/1607849368193.jpeg', organization: 'PACO Bénin', email: null },
-      { id: 'ka', name: 'Sokhna Dié KA', photoUrl: null, organization: 'Natural Justice', email: null },
+      { id: 'ka', name: 'Sokhna Dié KA', photoUrl: '/images/Sokhna.jpeg', organization: 'Natural Justice', email: null },
       { id: 'elisa-mairet', name: 'Elisa MAIRET', photoUrl: '/images/1740072412756.jpeg', organization: 'SUCO', email: null },
     ],
     partners: COMMON_PARTNERS,
