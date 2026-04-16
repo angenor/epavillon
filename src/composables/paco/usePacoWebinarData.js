@@ -72,6 +72,7 @@ const SESSIONS_DATA = [
       { id: 'baglhi', name: 'Abdallah BAGLHI', photoUrl: '/images/1607849368193.jpeg', organization: 'PACO Bénin', email: null },
       { id: 'ka', name: 'Sokhna Dié KA', photoUrl: '/images/Sokhna.jpeg', organization: 'Natural Justice', email: null },
       { id: 'elisa-mairet', name: 'Elisa MAIRET', photoUrl: '/images/1740072412756.jpeg', organization: 'SUCO', email: null },
+      { id: 'keita', name: 'Bakary KEITA', photoUrl: '/images/Bakary.jpeg', organization: "Projet Sectoriel Eau et Assainissement (PSEA) du Ministère de l'Hydraulique et de l'assainissement", email: null },
     ],
     partners: COMMON_PARTNERS,
   },

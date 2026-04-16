@@ -1,11 +1,11 @@
 <template>
   <div class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl p-3">
     <!-- Photo or placeholder -->
-    <div v-if="panelist.photoUrl" class="w-12 h-12 rounded-full overflow-hidden shrink-0">
+    <div v-if="panelist.photoUrl" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden shrink-0">
       <img :src="panelist.photoUrl" :alt="panelist.name" class="w-full h-full object-cover" loading="lazy" />
     </div>
-    <div v-else class="w-12 h-12 rounded-full bg-white/10 border border-white/15 flex items-center justify-center shrink-0">
-      <font-awesome-icon :icon="['fas', 'user']" class="text-white/40" />
+    <div v-else class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white/10 border border-white/15 flex items-center justify-center shrink-0">
+      <font-awesome-icon :icon="['fas', 'user']" class="text-white/40 text-2xl" />
     </div>
     <!-- Info -->
     <div class="min-w-0">
