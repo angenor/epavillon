@@ -122,6 +122,21 @@
                 <font-awesome-icon :icon="['fas', 'file-csv']" />
                 {{ t('paco.admin.exportCsv') }}
               </button>
+              <button
+                @click="handleNotifyCurrentPage"
+                :disabled="!currentPageEmails.length"
+                :title="t('paco.admin.notifyCurrentPageTitle') || `Notifier les ${currentPageEmails.length} inscrits de cette page (en CCI)`"
+                class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <font-awesome-icon :icon="['fas', 'bell']" />
+                <span>{{ t('paco.admin.notifyCurrentPage') || 'Notifier la page' }}</span>
+                <span
+                  v-if="currentPageEmails.length"
+                  class="ml-1 px-1.5 py-0.5 bg-white/20 rounded-full text-xs font-semibold"
+                >
+                  {{ currentPageEmails.length }}
+                </span>
+              </button>
             </div>
           </div>
 
@@ -203,6 +218,7 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { usePacoStats } from '@/composables/paco/usePacoStats'
 import { usePacoWebinarData } from '@/composables/paco/usePacoWebinarData'
 import { usePacoCsvExport } from '@/composables/paco/usePacoCsvExport'
@@ -212,6 +228,10 @@ import PacoStatsCards from '@/components/paco/PacoStatsCards.vue'
 import PacoRegistrantTable from '@/components/paco/PacoRegistrantTable.vue'
 
 const { t } = useI18n()
+const router = useRouter()
+
+const NOTIFY_TO = 'epavillonclimatique@francophonie.org'
+const NOTIFY_CC = 'angenor99@gmail.com'
 const {
   stats, loading, error, fetchPacoStats,
   registrants, registrantsLoading, registrantsError,
@@ -340,6 +360,35 @@ onMounted(() => {
 onUnmounted(() => {
   unsubscribePacoChanges()
 })
+
+// Emails de la page courante (uniquement, pas tout le dataset).
+// Quand un filtre/recherche est actif, on prend les inscrits filtrés affichés ;
+// sinon on prend ceux retournés par la pagination serveur.
+const currentPageEmails = computed(() => {
+  const source = isSearching.value ? filteredRegistrants.value : registrants.value
+  const seen = new Set()
+  const emails = []
+  for (const r of source) {
+    const email = (r?.email || '').trim()
+    if (email && !seen.has(email)) {
+      seen.add(email)
+      emails.push(email)
+    }
+  }
+  return emails
+})
+
+const handleNotifyCurrentPage = () => {
+  if (!currentPageEmails.value.length) return
+  router.push({
+    name: 'admin-emails',
+    query: {
+      to: NOTIFY_TO,
+      cc: NOTIFY_CC,
+      bcc: currentPageEmails.value.join(',')
+    }
+  })
+}
 
 const handleExport = async () => {
   try {
