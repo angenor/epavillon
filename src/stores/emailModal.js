@@ -14,6 +14,8 @@ export const useEmailModalStore = defineStore('emailModal', () => {
   const initialEvent = ref(null)
   const initialActivity = ref(null)
   const initialFilter = ref(null)
+  const initialSubject = ref(null)
+  const initialContent = ref(null)
 
   // Actions
   const open = (options = {}) => {
@@ -22,6 +24,8 @@ export const useEmailModalStore = defineStore('emailModal', () => {
     initialEvent.value = options.eventId || null
     initialActivity.value = options.activityId || null
     initialFilter.value = options.filter || null
+    initialSubject.value = options.subject || null
+    initialContent.value = options.content || null
 
     // Ouvrir le modal
     isOpen.value = true
@@ -36,6 +40,8 @@ export const useEmailModalStore = defineStore('emailModal', () => {
       initialEvent.value = null
       initialActivity.value = null
       initialFilter.value = null
+      initialSubject.value = null
+      initialContent.value = null
     }, 300) // Attendre la fin de l'animation
   }
 
@@ -54,6 +60,8 @@ export const useEmailModalStore = defineStore('emailModal', () => {
     initialEvent,
     initialActivity,
     initialFilter,
+    initialSubject,
+    initialContent,
 
     // Actions
     open,

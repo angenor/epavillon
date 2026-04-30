@@ -49,7 +49,9 @@ export function useEmailModal() {
       },
       eventId: options.eventId,
       activityId: options.activityId,
-      filter: options.filter
+      filter: options.filter,
+      subject: options.subject,
+      content: options.content
     }
 
     emailModalStore.open(formattedOptions)

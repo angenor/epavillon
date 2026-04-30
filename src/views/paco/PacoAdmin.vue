@@ -378,12 +378,47 @@ const currentPageEmails = computed(() => {
   return emails
 })
 
+const PACO_SESSION_URL = 'https://epavillonclimatique.francophonie.org/paco'
+
+const buildReminderEmail = () => {
+  const session = currentSession.value
+  const sessionTitle = session
+    ? (t(`${session.i18nPrefix}.title`) || `Session ${session.edition}`)
+    : ''
+  const sessionDate = session ? (t(`${session.i18nPrefix}.dateLabel`) || '') : ''
+  const sessionTime = session ? (t(`${session.i18nPrefix}.timeLabel`) || '') : ''
+
+  const subject = `Rappel - ${sessionTitle}`
+
+  const lines = [
+    'Bonjour,',
+    '',
+    `Nous avons le plaisir de vous rappeler votre inscription au prochain webinaire e-Pavillon climatique : « ${sessionTitle} »${sessionDate ? `, prévu Aujourd'hui` : ''}${sessionTime ? ` (${sessionTime})` : ''}.`,
+    '',
+    'Afin de garantir une participation fluide nous vous recommandons vivement :',
+    '',
+    "1) D'installer l'application Microsoft Teams sur votre ordinateur ou votre téléphone AVANT la session.",
+    '',
+    '2) De rejoindre la session 30 minutes avant son démarrage afin de vérifier votre matériel et de vous installer confortablement.',
+    '',
+    `Pour accéder à la session, rendez-vous sur le lien officiel ci-dessous :`,
+    PACO_SESSION_URL,
+    '',
+    'Nous vous remercions pour votre engagement et nous réjouissons de vous y retrouver.',
+  ]
+
+  return { subject, content: lines.join('\n') }
+}
+
 const handleNotifyCurrentPage = () => {
   if (!currentPageEmails.value.length) return
+  const { subject, content } = buildReminderEmail()
   openEmailModal({
     to: [NOTIFY_TO],
     cc: [NOTIFY_CC],
-    bcc: currentPageEmails.value
+    bcc: currentPageEmails.value,
+    subject,
+    content
   })
 }
 
