@@ -218,7 +218,7 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
+import { useEmailModal } from '@/composables/useEmailModal'
 import { usePacoStats } from '@/composables/paco/usePacoStats'
 import { usePacoWebinarData } from '@/composables/paco/usePacoWebinarData'
 import { usePacoCsvExport } from '@/composables/paco/usePacoCsvExport'
@@ -228,7 +228,7 @@ import PacoStatsCards from '@/components/paco/PacoStatsCards.vue'
 import PacoRegistrantTable from '@/components/paco/PacoRegistrantTable.vue'
 
 const { t } = useI18n()
-const router = useRouter()
+const { openEmailModal } = useEmailModal()
 
 const NOTIFY_TO = 'epavillonclimatique@francophonie.org'
 const NOTIFY_CC = 'angenor99@gmail.com'
@@ -380,13 +380,10 @@ const currentPageEmails = computed(() => {
 
 const handleNotifyCurrentPage = () => {
   if (!currentPageEmails.value.length) return
-  router.push({
-    name: 'admin-emails',
-    query: {
-      to: NOTIFY_TO,
-      cc: NOTIFY_CC,
-      bcc: currentPageEmails.value.join(',')
-    }
+  openEmailModal({
+    to: [NOTIFY_TO],
+    cc: [NOTIFY_CC],
+    bcc: currentPageEmails.value
   })
 }
 
