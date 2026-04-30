@@ -203,6 +203,7 @@
       "professionalStatus": "Professional status",
       "organization": "Organization",
       "registrationDate": "Registration date",
+      "joinDate": "Join date",
       "exportCsv": "Export to CSV",
       "noRegistrants": "No registrants yet.",
       "noStats": "No statistics available.",

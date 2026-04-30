@@ -336,6 +336,44 @@ export async function registerPacoWithFallback(input) {
 }
 
 /**
+ * Enregistre (best-effort) le premier clic sur le bouton « Rejoindre le
+ * webinaire » pour un inscrit PACO. Strictement non bloquant :
+ *   - jamais d'await dans le flux utilisateur (fire-and-forget cote appelant) ;
+ *   - aucune exception ne peut remonter (try/catch absorbant) ;
+ *   - le RPC SECURITY DEFINER est lui-meme idempotent et silencieux en cas
+ *     d'echec interne (first click wins).
+ *
+ * @param {Object} params
+ * @param {string|null} params.userId         UUID auth.users si authentifie
+ * @param {string|null} params.email          email guest sinon
+ * @param {number}      params.sessionEdition session active (1, 2, ...)
+ * @returns {Promise<boolean>} true si une ligne a ete mise a jour, false sinon.
+ *                             Le retour est purement informatif.
+ */
+export async function trackPacoJoinClick({ userId = null, email = null, sessionEdition }) {
+  try {
+    if (!sessionEdition) return false
+    const normalizedEmail = typeof email === 'string' ? email.toLowerCase().trim() : null
+    if (!userId && !normalizedEmail) return false
+
+    const { data, error: rpcError } = await supabase.rpc('track_paco_join_click', {
+      p_user_id: userId,
+      p_email: normalizedEmail,
+      p_session_edition: sessionEdition
+    })
+
+    if (rpcError) {
+      console.warn('[PACO] track_paco_join_click failed (non-blocking):', rpcError.message)
+      return false
+    }
+    return !!data
+  } catch (err) {
+    console.warn('[PACO] track_paco_join_click threw (non-blocking):', err?.message || err)
+    return false
+  }
+}
+
+/**
  * Marque une inscription de secours comme « rattrapée » par l'équipe admin
  * (envoi manuel du lien, correction des données, etc.).
  *

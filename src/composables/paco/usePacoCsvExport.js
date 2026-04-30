@@ -47,8 +47,17 @@ export function usePacoCsvExport() {
       'Ville', 'Pays', 'Statut professionnel', 'Organisation',
       "Canal d'acquisition", 'Canal — précision',
       "Date d'inscription",
+      'Date de connexion',
       'Type', 'Erreur technique', 'Rattrapé le', 'Payload JSON (secours)'
     ]
+
+    const formatJoinedAt = (iso) => {
+      if (!iso) return ''
+      const d = new Date(iso)
+      const datePart = d.toLocaleDateString('fr-FR')
+      const timePart = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+      return `${datePart} ${timePart}`
+    }
 
     const rows = registrants.map(r => [
       escapeCsv(r.sessionEdition != null ? `Session ${r.sessionEdition}` : ''),
@@ -66,6 +75,7 @@ export function usePacoCsvExport() {
       escapeCsv(getReferralSourceLabelFr(r.referralSource)),
       escapeCsv(r.referralSourceOther || ''),
       escapeCsv(r.registrationDate ? new Date(r.registrationDate).toLocaleDateString('fr-FR') : ''),
+      escapeCsv(formatJoinedAt(r.joinedAt)),
       escapeCsv(getTypeLabel(r)),
       escapeCsv(r.fallbackError || ''),
       escapeCsv(r.recoveredAt ? new Date(r.recoveredAt).toLocaleDateString('fr-FR') : ''),

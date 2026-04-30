@@ -456,6 +456,11 @@ CREATE TABLE public.activity_registrations (
     referral_source TEXT,
     referral_source_other TEXT,
 
+    -- Feature 007 : horodatage du premier clic « Rejoindre le webinaire ».
+    -- Permet d'estimer le taux de participation reel (clics / inscrits).
+    -- First click wins : ecrit une seule fois, jamais ecrase.
+    joined_at TIMESTAMPTZ,
+
     -- Contraintes
     CONSTRAINT check_user_or_guest CHECK (
         (user_id IS NOT NULL AND guest_email IS NULL) OR

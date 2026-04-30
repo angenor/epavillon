@@ -196,6 +196,8 @@ export function usePacoStats() {
     organization: r.paco_demographic_data?.organization || r.guest_organization || null,
     sessionEdition: r.session_edition,
     registrationDate: r.registration_date,
+    // Feature 007 : horodatage du premier clic « Rejoindre le webinaire »
+    joinedAt: r.joined_at || null,
     // Feature 005 : champs de secours
     isFallback: r.fallback_payload !== null && r.fallback_payload !== undefined,
     fallbackPayload: r.fallback_payload || null,
@@ -256,6 +258,7 @@ export function usePacoStats() {
           fallback_payload,
           fallback_error,
           recovered_at,
+          joined_at,
           users (
             first_name,
             last_name,
@@ -353,6 +356,7 @@ export function usePacoStats() {
         fallback_payload,
         fallback_error,
         recovered_at,
+        joined_at,
         referral_source,
         referral_source_other,
         users (

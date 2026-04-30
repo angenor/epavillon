@@ -13,6 +13,7 @@
     <!-- Join button -->
     <a
       :href="PACO_TEAMS_LINK"
+      @click="handleJoinClick"
       class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 px-8 rounded-xl transition cursor-pointer shadow-lg shadow-indigo-600/20"
     >
       <font-awesome-icon :icon="['fas', 'video']" />
@@ -42,6 +43,8 @@ import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { usePacoWebinarData } from '@/composables/paco/usePacoWebinarData'
 import { PACO_TEAMS_LINK } from '@/composables/paco/constants'
+import { trackPacoJoinClick } from '@/composables/paco/usePacoRegistration'
+import { useAuth } from '@/composables/useAuth'
 import PacoPartnerLogos from './PacoPartnerLogos.vue'
 
 const props = defineProps({
@@ -50,11 +53,47 @@ const props = defineProps({
 
 const { t } = useI18n()
 const { currentSession } = usePacoWebinarData()
+const { user, isAuthenticated } = useAuth()
 
 const session = computed(() => props.sessionData || currentSession.value)
 
 const PACO_PUBLIC_URL = 'https://epavillonclimatique.francophonie.org/paco'
 const linkCopied = ref(false)
+
+/**
+ * Tracking non bloquant du clic « Rejoindre le webinaire ».
+ * - On ne fait JAMAIS preventDefault : le <a href> Teams navigue normalement.
+ * - On ne lit pas le retour du RPC : echec silencieux, l'utilisateur rejoint
+ *   quand meme.
+ * - Identite : userId si authentifie, sinon email persiste localement lors
+ *   de l'inscription (cle paco_registration_data_session_<edition>).
+ */
+function handleJoinClick() {
+  try {
+    const edition = session.value?.edition
+    if (!edition) return
+
+    const userId = isAuthenticated.value ? (user.value?.id || null) : null
+    let email = null
+    if (!userId && typeof localStorage !== 'undefined') {
+      try {
+        const raw = localStorage.getItem(`paco_registration_data_session_${edition}`)
+        if (raw) {
+          const parsed = JSON.parse(raw)
+          email = parsed?.email || null
+        }
+      } catch {
+        // localStorage parse errors are non-blocking.
+      }
+    }
+
+    // Fire-and-forget : aucun await, aucun then, aucune erreur ne peut
+    // remonter (la fonction est elle-meme absorbante).
+    trackPacoJoinClick({ userId, email, sessionEdition: edition })
+  } catch {
+    // Filet de securite : si meme la lecture du contexte plante, on ignore.
+  }
+}
 
 async function copyTeamsLink() {
   const fullUrl = PACO_PUBLIC_URL

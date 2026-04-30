@@ -26,7 +26,9 @@
         @input="handleInput"
         @focus="showDropdown = true"
         @blur="handleBlur"
+        @paste="handlePaste"
         @keydown.enter.prevent="handleEnter"
+        @keydown="handleSeparatorKey"
         @keydown.escape="handleEscape"
         @keydown.down.prevent="navigateDown"
         @keydown.up.prevent="navigateUp"
@@ -34,6 +36,9 @@
         :placeholder="placeholder"
         class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent dark:bg-gray-700 dark:text-white"
       />
+      <p v-if="bulkFeedback" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+        {{ bulkFeedback }}
+      </p>
 
       <!-- Dropdown de suggestions -->
       <div
@@ -101,6 +106,8 @@ const searchQuery = ref('')
 const showDropdown = ref(false)
 const selectedIndex = ref(0)
 const inputRef = ref(null)
+const bulkFeedback = ref('')
+let bulkFeedbackTimer = null
 
 // Cache pour stocker les informations des utilisateurs trouvés
 const userCache = ref(new Map())
@@ -152,11 +159,110 @@ const navigateUp = () => {
 }
 
 const handleEnter = () => {
+  const raw = searchQuery.value || ''
+  // Si la saisie contient des séparateurs, traiter en masse
+  if (containsSeparators(raw)) {
+    const added = addEmailsBulk(raw)
+    if (added > 0) {
+      searchQuery.value = ''
+      showDropdown.value = false
+      selectedIndex.value = 0
+    }
+    return
+  }
+
   if (filteredResults.value.length > 0 && selectedIndex.value >= 0) {
     selectResult(filteredResults.value[selectedIndex.value])
-  } else if (searchQuery.value && isValidEmail(searchQuery.value)) {
-    // Si aucun résultat mais email valide, ajouter l'email directement
-    addEmail(searchQuery.value)
+  } else if (raw && isValidEmail(raw.trim())) {
+    addEmail(raw.trim())
+    searchQuery.value = ''
+  }
+}
+
+const containsSeparators = (text) => /[,;\n\r\t]/.test(text)
+
+const handleSeparatorKey = (event) => {
+  // Ajouter à la volée quand l'utilisateur tape une virgule ou un point-virgule
+  if (event.key === ',' || event.key === ';') {
+    const raw = searchQuery.value || ''
+    if (!raw.trim()) return
+    event.preventDefault()
+    const added = addEmailsBulk(raw)
+    if (added > 0) {
+      searchQuery.value = ''
+      showDropdown.value = false
+      selectedIndex.value = 0
+    }
+  }
+}
+
+const handlePaste = (event) => {
+  const pasted = event.clipboardData?.getData('text') || ''
+  if (!pasted) return
+  // Si le contenu collé contient des séparateurs, on prend le relais
+  if (containsSeparators(pasted) || extractEmails(pasted).length > 1) {
+    event.preventDefault()
+    const combined = (searchQuery.value || '') + pasted
+    const added = addEmailsBulk(combined)
+    if (added >= 0) {
+      searchQuery.value = ''
+      showDropdown.value = false
+      selectedIndex.value = 0
+    }
+  }
+}
+
+const extractEmails = (text) => {
+  if (!text) return []
+  // Découpe sur virgule, point-virgule, espace, tab, retour à la ligne
+  return text
+    .split(/[,;\s]+/)
+    .map(s => s.trim().replace(/^[<"']+|[>"'.]+$/g, ''))
+    .filter(Boolean)
+}
+
+const addEmailsBulk = (text) => {
+  const tokens = extractEmails(text)
+  if (tokens.length === 0) {
+    showBulkFeedback('')
+    return 0
+  }
+
+  const existing = new Set(props.modelValue)
+  const toAdd = []
+  const invalid = []
+  const duplicates = []
+
+  for (const token of tokens) {
+    if (!isValidEmail(token)) {
+      invalid.push(token)
+      continue
+    }
+    if (existing.has(token) || toAdd.includes(token)) {
+      duplicates.push(token)
+      continue
+    }
+    toAdd.push(token)
+  }
+
+  if (toAdd.length > 0) {
+    emit('update:modelValue', [...props.modelValue, ...toAdd])
+  }
+
+  const parts = []
+  if (toAdd.length > 0) parts.push(`${toAdd.length} ajouté(s)`)
+  if (duplicates.length > 0) parts.push(`${duplicates.length} doublon(s) ignoré(s)`)
+  if (invalid.length > 0) parts.push(`${invalid.length} invalide(s) ignoré(s)`)
+  showBulkFeedback(parts.join(' · '))
+
+  return toAdd.length
+}
+
+const showBulkFeedback = (message) => {
+  bulkFeedback.value = message
+  if (bulkFeedbackTimer) clearTimeout(bulkFeedbackTimer)
+  if (message) {
+    bulkFeedbackTimer = setTimeout(() => { bulkFeedback.value = '' }, 4000)
   }
 }
 

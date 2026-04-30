@@ -70,7 +70,7 @@
 
     <!-- Table -->
     <div v-else class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-x-auto">
-      <table class="min-w-[900px] w-full divide-y divide-gray-200 dark:divide-gray-700 table-fixed">
+      <table class="min-w-[1050px] w-full divide-y divide-gray-200 dark:divide-gray-700 table-fixed">
         <thead class="bg-gray-50 dark:bg-gray-900">
           <tr>
             <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[14%]">{{ t('paco.admin.name') }}</th>
@@ -82,6 +82,7 @@
             <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[11%]">{{ t('paco.admin.professionalStatus') }}</th>
             <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[10%]">{{ t('paco.admin.organization') }}</th>
             <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[9%]">{{ t('paco.admin.registrationDate') }}</th>
+            <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[9%]">{{ t('paco.admin.joinDate') }}</th>
             <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-[4%]"></th>
           </tr>
         </thead>
@@ -137,6 +138,13 @@
             <td class="px-3 py-3 text-sm text-gray-600 dark:text-gray-300">
               <div class="truncate">{{ formatDate(r.registrationDate) }}</div>
               <div class="truncate text-xs text-gray-400 dark:text-gray-500">{{ formatTime(r.registrationDate) }}</div>
+            </td>
+            <td class="px-3 py-3 text-sm text-gray-600 dark:text-gray-300">
+              <template v-if="r.joinedAt">
+                <div class="truncate">{{ formatDate(r.joinedAt) }}</div>
+                <div class="truncate text-xs text-gray-400 dark:text-gray-500">{{ formatTime(r.joinedAt) }}</div>
+              </template>
+              <span v-else class="text-xs text-gray-400 dark:text-gray-500">—</span>
             </td>
             <td class="px-3 py-3 text-sm text-center">
               <div class="flex items-center justify-center gap-2">
