@@ -60,7 +60,7 @@ export function usePacoStats() {
   const registrantsError = ref(null)
   const registrantsTotal = ref(0)
   const registrantsPage = ref(1)
-  const registrantsPerPage = 50
+  const registrantsPerPage = 100
   const allRegistrationDates = ref([])
   const pageViewCount = ref(0)
 
