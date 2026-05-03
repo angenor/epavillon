@@ -105,6 +105,7 @@ export function usePacoStats() {
           recovered_at,
           referral_source,
           referral_source_other,
+          joined_at,
           paco_demographic_data (
             gender,
             age_profile,
@@ -127,6 +128,9 @@ export function usePacoStats() {
       const fallbackTotal = fallbackRows.length
       const recoveredTotal = fallbackRows.filter(r => r.recovered_at !== null && r.recovered_at !== undefined).length
       const fallbackPending = fallbackTotal - recoveredTotal
+      // Nombre de participants ayant effectivement rejoint la session
+      // (joined_at IS NOT NULL) pour la session sélectionnée.
+      const joinedTotal = data.filter(r => r.joined_at !== null && r.joined_at !== undefined).length
       // Les stats démographiques n'incluent que les lignes standard avec
       // données démographiques (les fallback n'ont pas encore été promues).
       const withDemo = data.filter(r => r.paco_demographic_data)
@@ -157,6 +161,7 @@ export function usePacoStats() {
         fallbackTotal,
         recoveredTotal,
         fallbackPending,
+        joinedTotal,
         gender: { male: pct(genderCounts.male), female: pct(genderCounts.female) },
         ageProfile: { under35: pct(ageCounts.under_35), over35: pct(ageCounts.over_35) },
         professionalStatus: {

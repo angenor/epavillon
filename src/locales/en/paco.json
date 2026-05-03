@@ -179,6 +179,7 @@
     "admin": {
       "title": "PACO Administration",
       "totalRegistrants": "Total registrants",
+      "connectedParticipants": "Connected participants",
       "genderDistribution": "Gender distribution",
       "ageDistribution": "Age distribution",
       "statusDistribution": "Professional status distribution",

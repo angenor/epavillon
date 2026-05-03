@@ -179,6 +179,7 @@
     "admin": {
       "title": "Administration PACO",
       "totalRegistrants": "Total inscrits",
+      "connectedParticipants": "Participants connectés",
       "genderDistribution": "Répartition par genre",
       "ageDistribution": "Répartition par âge",
       "statusDistribution": "Répartition par statut professionnel",

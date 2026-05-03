@@ -15,6 +15,10 @@
           <font-awesome-icon :icon="['fas', 'chart-pie']" class="text-[10px]" />
           <span>{{ t('paco.admin.withDemographics') }}: {{ stats.withDemographics }}</span>
         </div>
+        <div class="mt-1.5 flex items-center gap-1.5 text-xs text-white/70">
+          <font-awesome-icon :icon="['fas', 'right-to-bracket']" class="text-[10px]" />
+          <span>{{ t('paco.admin.connectedParticipants') }}: {{ stats.joinedTotal ?? 0 }}</span>
+        </div>
       </div>
     </div>
 
