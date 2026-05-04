@@ -11,18 +11,18 @@
         <!-- Replay header -->
         <div class="mb-4 flex items-center gap-2">
           <font-awesome-icon :icon="['fas', 'circle-play']" class="text-green-400" />
-          <h2 class="text-lg font-bold text-white">{{ t('paco.session1.replayTitle') }}</h2>
+          <h2 class="text-lg font-bold text-white">{{ t(`${sessionData.i18nPrefix}.replayTitle`) }}</h2>
         </div>
 
         <!-- Date / heure -->
         <div class="mb-5 space-y-2">
           <div class="flex items-center gap-2 text-sm text-white/80">
             <font-awesome-icon :icon="['fas', 'calendar-days']" class="text-green-400 text-xs" />
-            <span>{{ t('paco.session1.dateLabel') }}</span>
+            <span>{{ t(`${sessionData.i18nPrefix}.dateLabel`) }}</span>
           </div>
           <div class="flex items-center gap-2 text-sm text-white/80">
             <font-awesome-icon :icon="['fas', 'clock']" class="text-green-400 text-xs" />
-            <span>{{ t('paco.session1.timeLabel') }}</span>
+            <span>{{ t(`${sessionData.i18nPrefix}.timeLabel`) }}</span>
           </div>
         </div>
 
@@ -34,7 +34,7 @@
             class="absolute inset-0 bg-white/5 border border-white/10 rounded-2xl flex flex-col items-center justify-center gap-3 z-10"
           >
             <div class="animate-spin rounded-full h-8 w-8 border-2 border-white/20 border-t-white"></div>
-            <p class="text-white/60 text-sm">{{ t('paco.session1.replayLoading') }}</p>
+            <p class="text-white/60 text-sm">{{ t(`${sessionData.i18nPrefix}.replayLoading`) }}</p>
           </div>
 
           <!-- Error state -->
@@ -43,13 +43,13 @@
             class="bg-red-500/10 border border-red-400/30 rounded-2xl p-6 text-center"
           >
             <font-awesome-icon :icon="['fas', 'circle-exclamation']" class="text-red-400 text-2xl mb-2" />
-            <p class="text-sm text-red-300">{{ t('paco.session1.replayError') }}</p>
+            <p class="text-sm text-red-300">{{ t(`${sessionData.i18nPrefix}.replayError`) }}</p>
           </div>
 
           <iframe
             v-show="!iframeError"
             :src="sessionData.replayUrl"
-            :title="t('paco.session1.replayTitle')"
+            :title="t(`${sessionData.i18nPrefix}.replayTitle`)"
             class="w-full aspect-video rounded-2xl border border-white/10 bg-black"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen
@@ -65,7 +65,7 @@
           class="bg-white/5 border border-white/10 rounded-2xl p-6 text-center"
         >
           <font-awesome-icon :icon="['fas', 'video-slash']" class="text-white/30 text-2xl mb-2" />
-          <p class="text-sm text-white/60">{{ t('paco.session1.replayUnavailable') }}</p>
+          <p class="text-sm text-white/60">{{ t(`${sessionData.i18nPrefix}.replayUnavailable`) }}</p>
         </div>
       </div>
     </div>

@@ -320,6 +320,7 @@
     "tabs": {
       "session1": "Session 3",
       "session2": "Session 4",
+      "session3": "Session 5",
       "status": {
         "ended": "Terminée",
         "upcoming": "À venir",
@@ -397,6 +398,50 @@
         "ka": { "role": "Directrice du Hub francophone, Natural Justice" },
         "elisa-mairet": { "role": "Collaboratrice spécialisée en gestion de projets et programmes" },
         "keita": { "role": "Expert en Sauvegarde environnementale et Sociale" }
+      },
+      "replayTitle": "Replay du webinaire",
+      "replayLoading": "Chargement de la vidéo...",
+      "replayError": "Vidéo temporairement indisponible",
+      "replayUnavailable": "Le replay sera bientôt disponible."
+    },
+    "session3": {
+      "title": "Santé publique et adaptation aux impacts climatiques",
+      "subtitle": "Canicules, maladies vectorielles et systèmes de prévention",
+      "editionLabel": "Sociétés et communautés",
+      "dateLabel": "Jeudi 28 mai 2026",
+      "timeLabel": "14h00 – 15h30 GMT",
+      "context": "Les impacts du changement climatique sur la santé publique constituent aujourd'hui l'un des défis les plus pressants pour les pays francophones, en particulier en Afrique centrale et de l'Ouest. L'augmentation de la fréquence et de l'intensité des vagues de chaleur, la recrudescence des maladies vectorielles (paludisme, dengue, chikungunya, fièvre jaune), la dégradation de la qualité de l'air, ainsi que les risques accrus de malnutrition et de maladies hydriques affectent de manière disproportionnée les populations vulnérables.\n\nComme le rappellent les notes conceptuelles précédentes, les communautés locales, les jeunes, les collectivités territoriales et les groupes marginalisés sont souvent les plus exposés aux effets climatiques. De même, les systèmes de santé de nombreux pays francophones font face à des contraintes structurelles : ressources limitées, infrastructures insuffisamment résilientes, manque de données climatiques intégrées aux systèmes d'alerte, et faible coordination intersectorielle.\n\nCe webinaire s'inscrit dans l'action « Renforcement des capacités et de la collaboration des pays francophones sur l'adaptation au changement climatique et l'accès au financement », mise en œuvre par l'Institut de la Francophonie pour le développement durable (IFDD) avec l'appui du programme régional PACO – financé par le BMUKN dans le cadre de l'Initiative internationale pour le Climat (IKI) et exécuté par la GIZ. Il vise à créer un espace d'échanges et de mobilisation autour des enjeux de santé publique liés au climat, en mettant l'accent sur les approches préventives, les systèmes d'alerte, la gouvernance sanitaire et les solutions communautaires.",
+      "objectiveGeneral": "Renforcer les capacités des acteurs de la santé publique, des collectivités locales et des organisations communautaires pour anticiper, prévenir et gérer les impacts sanitaires du changement climatique, notamment les canicules et les maladies vectorielles.",
+      "objectives": {
+        "0": "Présenter les principaux risques sanitaires liés aux vagues de chaleur, aux maladies vectorielles et aux changements environnementaux.",
+        "1": "Mettre en lumière des initiatives innovantes de surveillance épidémiologique, d'alerte précoce et de prévention communautaire.",
+        "2": "Favoriser le dialogue entre institutions de santé, climatologues, collectivités locales et organisations de la société civile.",
+        "3": "Identifier les besoins en renforcement de capacités, en financement et en outils d'aide à la décision pour la santé climatique.",
+        "4": "Encourager la collaboration régionale et la diffusion de bonnes pratiques en matière d'adaptation sanitaire."
+      },
+      "content": {
+        "0": { "title": "Canicules et santé publique", "desc": "Impacts physiologiques, groupes à risque, plans de prévention, systèmes d'alerte et communication de crise." },
+        "1": { "title": "Maladies vectorielles et climat", "desc": "Évolution des zones à risque, surveillance entomologique, stratégies de prévention communautaire, innovations technologiques." },
+        "2": { "title": "Systèmes de santé résilients", "desc": "Infrastructures adaptées, gestion des urgences climatiques, intégration des données climatiques dans les systèmes d'information sanitaire." },
+        "3": { "title": "Approches communautaires et inclusion", "desc": "Rôle des jeunes, des femmes, des agents de santé communautaires et des collectivités locales dans la prévention." },
+        "4": { "title": "Financement de l'adaptation sanitaire", "desc": "Opportunités nationales et internationales, partenariats multi-acteurs, intégration de la santé dans les plans nationaux d'adaptation." }
+      },
+      "targets": {
+        "0": "Professionnel·le·s de la santé publique et de la surveillance épidémiologique",
+        "1": "Collectivités locales et autorités sanitaires",
+        "2": "Organisations de la société civile et mouvements citoyens",
+        "3": "Jeunes leaders et associations communautaires",
+        "4": "Chercheurs·euses, universitaires et étudiant·e·s",
+        "5": "Bailleurs de fonds, ONG et partenaires techniques",
+        "6": "Médias et acteurs de la communication sanitaire"
+      },
+      "panelists": {
+        "ifdd-rep": { "role": "Représentant·e de l'IFDD" },
+        "paco-giz": { "role": "Expert·e du programme PACO (GIZ)" },
+        "sante-climat": { "role": "Spécialiste en santé publique et climat (OMS, ONG ou institut de recherche)" },
+        "surveillance-epi": { "role": "Représentant·e d'un centre national de surveillance épidémiologique" },
+        "communautaire": { "role": "Acteur·rice communautaire ou jeune leader engagé·e dans la prévention sanitaire" },
+        "collectivite": { "role": "Représentant·e d'une collectivité locale impliquée dans la gestion des risques climatiques" }
       }
     }
   }

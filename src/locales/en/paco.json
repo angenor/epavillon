@@ -320,6 +320,7 @@
     "tabs": {
       "session1": "Session 3",
       "session2": "Session 4",
+      "session3": "Session 5",
       "status": {
         "ended": "Ended",
         "upcoming": "Upcoming",
@@ -397,6 +398,50 @@
         "ka": { "role": "Director of the Francophone Hub, Natural Justice" },
         "elisa-mairet": { "role": "Project and Program Management Specialist" },
         "keita": { "role": "Environmental and Social Safeguards Expert" }
+      },
+      "replayTitle": "Webinar replay",
+      "replayLoading": "Loading video...",
+      "replayError": "Video temporarily unavailable",
+      "replayUnavailable": "Replay will be available soon."
+    },
+    "session3": {
+      "title": "Public health and adaptation to climate impacts",
+      "subtitle": "Heatwaves, vector-borne diseases and prevention systems",
+      "editionLabel": "Societies and Communities",
+      "dateLabel": "Thursday, May 28, 2026",
+      "timeLabel": "2:00 PM – 3:30 PM GMT",
+      "context": "The impacts of climate change on public health are today one of the most pressing challenges for French-speaking countries, particularly in Central and West Africa. The increased frequency and intensity of heatwaves, the resurgence of vector-borne diseases (malaria, dengue, chikungunya, yellow fever), the deterioration of air quality, as well as the increased risks of malnutrition and waterborne diseases, disproportionately affect vulnerable populations.\n\nAs previous concept notes recall, local communities, youth, territorial authorities and marginalized groups are often the most exposed to climate effects. Likewise, the health systems of many French-speaking countries face structural constraints: limited resources, insufficiently resilient infrastructure, lack of climate data integrated into alert systems, and weak intersectoral coordination.\n\nThis webinar is part of the initiative « Strengthening the capacities and collaboration of French-speaking countries on climate change adaptation and access to financing », implemented by the Institute of the Francophonie for Sustainable Development (IFDD) with the support of the regional PACO programme – funded by BMUKN under the International Climate Initiative (IKI) and implemented by GIZ. It aims to create a space for exchange and mobilization around public health issues linked to climate, focusing on preventive approaches, alert systems, health governance and community-based solutions.",
+      "objectiveGeneral": "Strengthen the capacities of public health stakeholders, local authorities and community organizations to anticipate, prevent and manage the health impacts of climate change, particularly heatwaves and vector-borne diseases.",
+      "objectives": {
+        "0": "Present the main health risks linked to heatwaves, vector-borne diseases and environmental changes.",
+        "1": "Highlight innovative initiatives in epidemiological surveillance, early warning and community-based prevention.",
+        "2": "Foster dialogue between health institutions, climatologists, local authorities and civil society organizations.",
+        "3": "Identify needs for capacity building, financing and decision-support tools for climate health.",
+        "4": "Encourage regional collaboration and the dissemination of good practices in health adaptation."
+      },
+      "content": {
+        "0": { "title": "Heatwaves and public health", "desc": "Physiological impacts, risk groups, prevention plans, alert systems and crisis communication." },
+        "1": { "title": "Vector-borne diseases and climate", "desc": "Evolution of risk areas, entomological surveillance, community prevention strategies, technological innovations." },
+        "2": { "title": "Resilient health systems", "desc": "Adapted infrastructure, climate emergency management, integration of climate data into health information systems." },
+        "3": { "title": "Community approaches and inclusion", "desc": "Role of youth, women, community health workers and local authorities in prevention." },
+        "4": { "title": "Financing health adaptation", "desc": "National and international opportunities, multi-stakeholder partnerships, integration of health into national adaptation plans." }
+      },
+      "targets": {
+        "0": "Public health and epidemiological surveillance professionals",
+        "1": "Local authorities and health authorities",
+        "2": "Civil society organizations and citizen movements",
+        "3": "Young leaders and community associations",
+        "4": "Researchers, academics and students",
+        "5": "Donors, NGOs and technical partners",
+        "6": "Media and health communication actors"
+      },
+      "panelists": {
+        "ifdd-rep": { "role": "IFDD Representative" },
+        "paco-giz": { "role": "PACO programme expert (GIZ)" },
+        "sante-climat": { "role": "Public health and climate specialist (WHO, NGO or research institute)" },
+        "surveillance-epi": { "role": "Representative of a national epidemiological surveillance centre" },
+        "communautaire": { "role": "Community actor or young leader engaged in health prevention" },
+        "collectivite": { "role": "Representative of a local authority involved in climate risk management" }
       }
     }
   }

@@ -4,16 +4,22 @@
       <div class="w-full max-w-6xl mx-auto">
         <PacoSessionTabs v-model="activeEdition" :sessions="sessions" />
 
-        <!-- Session 3: replay vidéo -->
+        <!-- Session 3 (terminée) : replay vidéo -->
         <PacoSession1
           v-if="activeEdition === 1"
           :session-data="sessions[0]"
         />
 
-        <!-- Session 4: inscription -->
-        <PacoSession2
+        <!-- Session 4 (terminée) : replay (ou message « bientôt disponible ») -->
+        <PacoSession1
           v-else-if="activeEdition === 2"
           :session-data="sessions[1]"
+        />
+
+        <!-- Session 5 (à venir) : inscription -->
+        <PacoSession2
+          v-else-if="activeEdition === 3"
+          :session-data="sessions[2]"
           :step="step"
           :page-loading="pageLoading"
           @registration-complete="handleRegistrationComplete"
@@ -43,10 +49,10 @@ import PacoSession2 from '@/components/paco/PacoSession2.vue'
 const { sessions, currentSession } = usePacoWebinarData()
 
 // SEO - OG meta tags pour le partage sur les réseaux sociaux
-const PACO_OG_IMAGE = 'https://epavillonclimatique.francophonie.org/images/og_affiche_paco_avec_ecriture.jpg'
+const PACO_OG_IMAGE = 'https://epavillonclimatique.francophonie.org/images/paco_n5.jpg'
 useSEO({
-  title: 'Webinaire PACO - Justice climatique et inclusion sociale',
-  description: 'Webinaire PACO sur la justice climatique et l\'inclusion sociale dans l\'adaptation. Jeudi 30 avril 2026, en ligne, 14h00-15h30 GMT.',
+  title: 'Webinaire PACO - Santé publique et adaptation aux impacts climatiques',
+  description: 'Webinaire PACO sur la santé publique et l\'adaptation aux impacts climatiques : canicules, maladies vectorielles et systèmes de prévention. Jeudi 28 mai 2026, en ligne, 14h00-15h30 GMT.',
   image: PACO_OG_IMAGE,
   url: 'https://epavillonclimatique.francophonie.org/paco',
   type: 'website',
