@@ -23,10 +23,10 @@
     </div>
 
     <!-- Info badges -->
-    <div class="flex flex-wrap gap-2">
-      <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-full px-3 py-1.5 text-xs sm:text-sm">
-        <font-awesome-icon :icon="['fas', 'calendar-days']" class="text-green-400 text-xs" />
-        <span class="text-white/90">{{ t(`${i18nPrefix}.dateLabel`) }}</span>
+    <div class="flex flex-wrap gap-2 items-center">
+      <div class="flex items-center gap-2 bg-gradient-to-r from-green-500/30 to-emerald-500/20 border border-green-400/50 rounded-full px-4 py-2 text-sm sm:text-base shadow-lg shadow-green-500/10">
+        <font-awesome-icon :icon="['fas', 'calendar-days']" class="text-green-300 text-sm" />
+        <span class="text-white font-bold tracking-wide">{{ t(`${i18nPrefix}.dateLabel`) }}</span>
       </div>
       <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-full px-3 py-1.5 text-xs sm:text-sm">
         <font-awesome-icon :icon="['fas', 'clock']" class="text-green-400 text-xs" />

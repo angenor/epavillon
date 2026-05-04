@@ -7,17 +7,6 @@
       {{ t('paco.quickRegister.subtitle') }}
     </p>
 
-    <!-- Session badge (read-only) -->
-    <div class="mb-5 flex items-center gap-2 px-3 py-2 rounded-xl bg-green-500/15 border border-green-400/30">
-      <font-awesome-icon :icon="['fas', 'calendar-check']" class="text-green-400 text-sm" />
-      <span class="text-xs font-semibold text-green-200 uppercase tracking-wide">
-        {{ t('paco.register.sessionLabel') }}
-      </span>
-      <span class="text-sm text-white/90">
-        {{ t('paco.register.sessionBadge', { edition: sessionEdition, date: sessionDateLabel }) }}
-      </span>
-    </div>
-
     <form @submit.prevent="handleSubmit" class="space-y-3">
       <!-- Name fields -->
       <div class="grid grid-cols-2 gap-3">
