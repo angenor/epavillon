@@ -315,7 +315,8 @@
       "registration": "Erreur lors de l'inscription au webinaire.",
       "emailSend": "Erreur lors de l'envoi de l'email de confirmation.",
       "alreadyRegistered": "Vous êtes déjà inscrit(e) à ce webinaire.",
-      "otpExpired": "Le lien de confirmation a expiré. Veuillez renvoyer un nouvel email de vérification."
+      "otpExpired": "Le lien de confirmation a expiré. Veuillez renvoyer un nouvel email de vérification.",
+      "missingDemographic": "Veuillez sélectionner votre genre et votre tranche d'âge."
     },
     "tabs": {
       "session1": "Session 3",

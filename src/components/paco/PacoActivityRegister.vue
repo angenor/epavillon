@@ -221,6 +221,15 @@ const handleSubmit = async () => {
   submitting.value = true
   errorMessage.value = ''
 
+  // Garde defensive : la CHECK constraint sur paco_demographic_data rejette
+  // toute valeur hors liste. Verifie explicitement avant l'INSERT.
+  if (!['male', 'female'].includes(form.gender) ||
+      !['over_35', 'under_35'].includes(form.ageProfile)) {
+    errorMessage.value = t('paco.errors.missingDemographic')
+    submitting.value = false
+    return
+  }
+
   try {
     // 1. Register for PACO activity
     const registrationId = await registerForPaco(props.user.id)

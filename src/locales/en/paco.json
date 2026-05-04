@@ -315,7 +315,8 @@
       "registration": "Error during webinar registration.",
       "emailSend": "Error sending the confirmation email.",
       "alreadyRegistered": "You are already registered for this webinar.",
-      "otpExpired": "The confirmation link has expired. Please resend a new verification email."
+      "otpExpired": "The confirmation link has expired. Please resend a new verification email.",
+      "missingDemographic": "Please select your gender and age range."
     },
     "tabs": {
       "session1": "Session 3",

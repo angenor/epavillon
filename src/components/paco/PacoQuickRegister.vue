@@ -340,6 +340,18 @@ const handleSubmit = async () => {
   submitting.value = true
   errorMessage.value = ''
 
+  // Garde defensive : la CHECK constraint paco_demographic_data_age_profile_check
+  // / _gender_check rejette toute valeur hors liste. Sans cette validation
+  // explicite, certains navigateurs (autofill, soumission programmatique)
+  // peuvent contourner l'attribut HTML5 `required` sur les radios et envoyer
+  // une chaine vide a la RPC -> 23514 cote serveur, fallback inutile.
+  if (!['male', 'female'].includes(form.gender) ||
+      !['over_35', 'under_35'].includes(form.ageProfile)) {
+    errorMessage.value = t('paco.errors.missingDemographic')
+    submitting.value = false
+    return
+  }
+
   // Feature 006 : validation cote client du canal d'acquisition.
   // Seul le <select> est obligatoire (FR-001). Le champ libre "Precisez"
   // reste facultatif meme quand source === 'other' (cf. quickstart §3.2),

@@ -283,6 +283,15 @@ const handleSubmit = async () => {
     return
   }
 
+  // Garde defensive : la CHECK constraint sur paco_demographic_data rejette
+  // toute valeur hors liste. Verifie explicitement avant savePendingRegistration.
+  if (!['male', 'female'].includes(form.gender) ||
+      !['over_35', 'under_35'].includes(form.ageProfile)) {
+    errorMessage.value = t('paco.errors.missingDemographic')
+    submitting.value = false
+    return
+  }
+
   try {
     // 1. Create auth user via Supabase Auth
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
