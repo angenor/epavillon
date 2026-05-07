@@ -65,7 +65,7 @@ const SESSIONS_DATA = [
     completed: true,
     coverImage: '/images/image_paco_session_2_v2.jpg',
     bannerUrl: '/images/image_paco_session_2_v2.jpg',
-    replayUrl: null,
+    replayUrl: 'https://www.youtube.com/embed/P6Xan4gdI9M?autoplay=1&mute=1',
     i18nPrefix: 'paco.session2',
     panelists: [
       { id: 'kiri', name: 'Tounao KIRI', photoUrl: '/images/tounao_kiri.jpg', organization: 'IFDD', email: null },
@@ -92,7 +92,7 @@ const SESSIONS_DATA = [
       { id: 'ifdd-rep', name: 'À confirmer', photoUrl: null, organization: 'IFDD', email: null },
       { id: 'paco-giz', name: 'À confirmer', photoUrl: null, organization: 'PACO (GIZ)', email: null },
       { id: 'sante-climat', name: 'À confirmer', photoUrl: null, organization: 'OMS / Institut de recherche', email: null },
-      { id: 'surveillance-epi', name: 'À confirmer', photoUrl: null, organization: 'Centre national de surveillance épidémiologique', email: null },
+      { id: 'surveillance-epi', name: 'Dr Didier LALAYE', photoUrl: null, organization: "Dawa Mobile Health / Julius Global Health Centre, Université d'Utrecht", email: null },
       { id: 'communautaire', name: 'À confirmer', photoUrl: null, organization: 'Acteur communautaire / Jeune leader', email: null },
       { id: 'collectivite', name: 'À confirmer', photoUrl: null, organization: 'Collectivité locale', email: null },
     ],
