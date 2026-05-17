@@ -23,6 +23,88 @@
     <!-- Activités -->
     <div v-else class="flex-1 flex flex-col relative z-10 min-h-0">
       <div class="flex-1 overflow-y-auto px-3 py-2 space-y-6 min-h-0">
+        <!-- Widget PACO — Prochain webinaire (en dur) -->
+        <div
+          @click="goToPaco"
+          class="paco-webinar-card group relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-500 hover:scale-[1.02]"
+        >
+          <!-- Image de fond -->
+          <div class="absolute inset-0 z-0">
+            <img
+              src="/images/paco_n5.jpg"
+              alt="PACO Webinar"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/85 via-teal-900/75 to-emerald-950/90"></div>
+          </div>
+
+          <!-- Effet shimmer animé -->
+          <div class="absolute inset-0 z-10 opacity-30 paco-shimmer pointer-events-none"></div>
+
+          <!-- Contenu -->
+          <div class="relative z-20 p-4">
+            <!-- Badge supérieur -->
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2 bg-emerald-400/20 backdrop-blur-md border border-emerald-300/40 px-2.5 py-1 rounded-full">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-300"></span>
+                </span>
+                <span class="text-emerald-100 text-[10px] font-bold uppercase tracking-widest">À venir</span>
+              </div>
+              <span class="text-[10px] font-semibold text-white/70 uppercase tracking-wider">Session 5</span>
+            </div>
+
+            <!-- Logo / Marque -->
+            <div class="mb-3">
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/10 backdrop-blur-sm border border-white/20">
+                <svg class="w-3 h-3 text-emerald-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm-1-9h2v3h3v2h-5V7z"/>
+                </svg>
+                <span class="text-white text-[11px] font-bold tracking-wide">PACO Webinaire</span>
+              </div>
+            </div>
+
+            <!-- Titre principal -->
+            <h3 class="text-white font-bold text-base leading-tight mb-1 line-clamp-2 font-maverick">
+              Santé publique et adaptation aux impacts climatiques
+            </h3>
+            <p class="text-emerald-100/90 text-xs italic mb-3 line-clamp-2">
+              Canicules, maladies vectorielles et systèmes de prévention
+            </p>
+
+            <!-- Infos clés -->
+            <div class="space-y-1.5 mb-3">
+              <div class="flex items-center gap-2 text-white/90 text-xs">
+                <div class="w-6 h-6 rounded-md bg-emerald-400/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
+                  <svg class="w-3 h-3 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </svg>
+                </div>
+                <span class="font-medium">Jeudi 28 mai 2026</span>
+              </div>
+              <div class="flex items-center gap-2 text-white/90 text-xs">
+                <div class="w-6 h-6 rounded-md bg-emerald-400/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
+                  <svg class="w-3 h-3 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <span class="font-medium">14h00 – 15h30 GMT</span>
+              </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="flex items-center justify-between pt-3 border-t border-white/15">
+              <span class="text-emerald-200 text-xs font-semibold">S'inscrire au webinaire</span>
+              <div class="w-7 h-7 rounded-full bg-emerald-400/30 backdrop-blur-md flex items-center justify-center group-hover:bg-emerald-400/50 group-hover:translate-x-1 transition-all duration-300">
+                <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Widget Journée Jeunesse Climat (visible uniquement le 12 novembre 2025) -->
         <YouthClimateDayWidget />
 
@@ -475,6 +557,11 @@ export default {
       }
     }
 
+    // Rediriger vers la page PACO
+    const goToPaco = () => {
+      router.push('/paco')
+    }
+
     // Gérer le clic sur un événement avec redirection conditionnelle
     const handleEventClick = (event) => {
       if (!event?.id) return
@@ -629,6 +716,7 @@ export default {
       getTrainingDuration,
       handleEventClick,
       handleActivityClick,
+      goToPaco,
       goToEventProgrammation,
       getProgrammationLink,
       isLive
@@ -651,5 +739,38 @@ export default {
 /* Applique l'animation aux cartes en direct */
 .live-activity-card {
   animation: live-glow 2s ease-in-out infinite;
+}
+
+/* Effet shimmer pour la carte PACO */
+@keyframes paco-shimmer-anim {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.paco-shimmer {
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(110, 231, 183, 0.25) 50%,
+    transparent 70%
+  );
+  animation: paco-shimmer-anim 3.5s ease-in-out infinite;
+}
+
+/* Glow doux sur la carte PACO */
+.paco-webinar-card {
+  box-shadow:
+    0 0 0 1px rgba(110, 231, 183, 0.2),
+    0 10px 30px -10px rgba(16, 185, 129, 0.4);
+}
+
+.paco-webinar-card:hover {
+  box-shadow:
+    0 0 0 1px rgba(110, 231, 183, 0.4),
+    0 20px 40px -10px rgba(16, 185, 129, 0.6);
 }
 </style>
