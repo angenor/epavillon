@@ -335,6 +335,7 @@
       "session1": "Session 3",
       "session2": "Session 4",
       "session3": "Session 5",
+      "session4": "Session 6",
       "status": {
         "ended": "Terminée",
         "upcoming": "À venir",
@@ -457,6 +458,48 @@
         "tenedja-silue": { "role": "Enseignante-Chercheure, Côte d'Ivoire" },
         "communautaire": { "role": "Acteur·rice communautaire ou jeune leader engagé·e dans la prévention sanitaire" }
       }
+    },
+    "session4": {
+      "title": "Les défis et l'utilisation des données pour l'adaptation climatique",
+      "subtitle": "Science, recherche et innovation au service de l'adaptation",
+      "editionLabel": "Science, recherche et innovation",
+      "dateLabel": "Jeudi 25 juin 2026",
+      "timeLabel": "14h00 – 15h30 GMT",
+      "context": "L'adaptation climatique repose de plus en plus sur la disponibilité, la qualité et l'utilisation stratégique des données. Pourtant, dans de nombreux pays francophones, les systèmes d'information climatique restent fragmentés, incomplets ou difficilement accessibles. Les données issues de la météorologie, de l'hydrologie, de la télédétection, des inventaires socio-économiques ou encore des savoirs locaux sont souvent sous-exploitées, faute de capacités techniques, d'outils adaptés ou de mécanismes de partage efficaces.\n\nLes défis sont multiples : insuffisance des infrastructures d'observation, manque d'interopérabilité entre institutions, faible valorisation des données locales, difficultés d'accès aux données ouvertes, ou encore absence de cadres de gouvernance clairs. Pourtant, lorsque les données sont mobilisées de manière cohérente, elles permettent d'améliorer la planification, d'anticiper les risques, de cibler les populations vulnérables et de renforcer la pertinence des projets d'adaptation.\n\nCe webinaire s'inscrit dans l'action « Renforcement des capacités et de la collaboration des pays francophones sur l'adaptation au changement climatique et l'accès au financement », mise en œuvre par l'Institut de la Francophonie pour le développement durable (IFDD) avec l'appui du programme régional PACO – financé par le BMUKN dans le cadre de l'Initiative internationale pour le Climat (IKI) et exécuté par la GIZ. Il vise à créer un espace d'échanges sur les enjeux liés aux données climatiques et à leur utilisation pour une adaptation efficace, inclusive et fondée sur des preuves.",
+      "objectiveGeneral": "Renforcer la compréhension et les capacités des acteurs francophones sur les défis, opportunités et bonnes pratiques liés à la production, la gestion et l'utilisation des données pour l'adaptation climatique.",
+      "objectives": {
+        "0": "Mettre en lumière les principaux défis liés à la disponibilité, la qualité et l'accessibilité des données climatiques et socio-économiques.",
+        "1": "Présenter des initiatives innovantes de collecte, d'analyse et de visualisation des données au service de l'adaptation.",
+        "2": "Favoriser le dialogue entre institutions publiques, centres de recherche, organisations communautaires et partenaires techniques sur la gouvernance des données.",
+        "3": "Identifier des outils, plateformes et approches permettant d'améliorer la prise de décision fondée sur les données."
+      },
+      "content": {
+        "0": { "title": "Défis structurels des systèmes de données climatiques", "desc": "Infrastructures d'observation, lacunes, fragmentation institutionnelle, accès aux données." },
+        "1": { "title": "Données pour la planification de l'adaptation", "desc": "Analyses de vulnérabilité, cartographie des risques, scénarios climatiques, données socio-économiques." },
+        "2": { "title": "Outils et plateformes numériques", "desc": "Systèmes d'information géographique (SIG), télédétection, données ouvertes, tableaux de bord décisionnels." },
+        "3": { "title": "Valorisation des données locales et savoirs communautaires", "desc": "Intégration des observations citoyennes, données participatives, savoirs endogènes." },
+        "4": { "title": "Gouvernance et partenariats", "desc": "Partage des données, interopérabilité, cadres institutionnels, collaboration entre acteurs." },
+        "5": { "title": "Études de cas", "desc": "Expériences réussies dans des pays francophones, innovations techniques, projets pilotes." }
+      },
+      "targets": {
+        "0": "Institutions publiques et collectivités locales",
+        "1": "Services météorologiques et hydrologiques",
+        "2": "Chercheurs·euses, universitaires et étudiant·e·s",
+        "3": "Organisations de la société civile",
+        "4": "Jeunes leaders et innovateurs numériques",
+        "5": "Bailleurs de fonds et partenaires techniques",
+        "6": "Médias spécialisés et acteurs de la communication scientifique"
+      },
+      "panelists": {
+        "sig-expert": { "role": "Expert·e en systèmes d'information climatique, SIG et télédétection" },
+        "data-initiative": { "role": "Représentant·e d'une initiative utilisant les données pour l'adaptation" },
+        "gouvernance-data": { "role": "Expert·e en gouvernance des données ou en données ouvertes" },
+        "communautaire-data": { "role": "Acteur·rice communautaire ou ONG valorisant les données locales et participatives" }
+      },
+      "replayTitle": "Replay du webinaire",
+      "replayLoading": "Chargement de la vidéo...",
+      "replayError": "Vidéo temporairement indisponible",
+      "replayUnavailable": "Le replay sera bientôt disponible."
     }
   }
 }

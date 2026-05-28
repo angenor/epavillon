@@ -335,6 +335,7 @@
       "session1": "Session 3",
       "session2": "Session 4",
       "session3": "Session 5",
+      "session4": "Session 6",
       "status": {
         "ended": "Ended",
         "upcoming": "Upcoming",
@@ -457,6 +458,48 @@
         "tenedja-silue": { "role": "Lecturer-Researcher, Côte d'Ivoire" },
         "communautaire": { "role": "Community actor or young leader engaged in health prevention" }
       }
+    },
+    "session4": {
+      "title": "Challenges and use of data for climate adaptation",
+      "subtitle": "Science, research and innovation for adaptation",
+      "editionLabel": "Science, research and innovation",
+      "dateLabel": "Thursday, June 25, 2026",
+      "timeLabel": "2:00 PM – 3:30 PM GMT",
+      "context": "Climate adaptation increasingly depends on the availability, quality and strategic use of data. Yet, in many French-speaking countries, climate information systems remain fragmented, incomplete or difficult to access. Data from meteorology, hydrology, remote sensing, socio-economic surveys or local knowledge are often underused, due to a lack of technical capacity, suitable tools or effective sharing mechanisms.\n\nThe challenges are multiple: insufficient observation infrastructure, lack of interoperability between institutions, low recognition of local data, difficulties in accessing open data, and absence of clear governance frameworks. However, when data are mobilized consistently, they help improve planning, anticipate risks, target vulnerable populations and strengthen the relevance of adaptation projects.\n\nThis webinar is part of the initiative « Strengthening the capacities and collaboration of French-speaking countries on climate change adaptation and access to financing », implemented by the Institute of the Francophonie for Sustainable Development (IFDD) with the support of the regional PACO programme – funded by BMUKN under the International Climate Initiative (IKI) and implemented by GIZ. It aims to create a space for exchange on issues related to climate data and their use for effective, inclusive and evidence-based adaptation.",
+      "objectiveGeneral": "Strengthen the understanding and capacities of French-speaking stakeholders on challenges, opportunities and good practices related to the production, management and use of data for climate adaptation.",
+      "objectives": {
+        "0": "Highlight the main challenges related to the availability, quality and accessibility of climate and socio-economic data.",
+        "1": "Present innovative initiatives in data collection, analysis and visualization for adaptation.",
+        "2": "Foster dialogue between public institutions, research centres, community organizations and technical partners on data governance.",
+        "3": "Identify tools, platforms and approaches to improve data-driven decision-making."
+      },
+      "content": {
+        "0": { "title": "Structural challenges of climate data systems", "desc": "Observation infrastructure, gaps, institutional fragmentation, data access." },
+        "1": { "title": "Data for adaptation planning", "desc": "Vulnerability analysis, risk mapping, climate scenarios, socio-economic data." },
+        "2": { "title": "Digital tools and platforms", "desc": "Geographic information systems (GIS), remote sensing, open data, decision dashboards." },
+        "3": { "title": "Valorisation of local data and community knowledge", "desc": "Integration of citizen observations, participatory data, endogenous knowledge." },
+        "4": { "title": "Governance and partnerships", "desc": "Data sharing, interoperability, institutional frameworks, collaboration between stakeholders." },
+        "5": { "title": "Case studies", "desc": "Successful experiences in French-speaking countries, technical innovations, pilot projects." }
+      },
+      "targets": {
+        "0": "Public institutions and local authorities",
+        "1": "Meteorological and hydrological services",
+        "2": "Researchers, academics and students",
+        "3": "Civil society organizations",
+        "4": "Young leaders and digital innovators",
+        "5": "Donors and technical partners",
+        "6": "Specialized media and science communication actors"
+      },
+      "panelists": {
+        "sig-expert": { "role": "Expert in climate information systems, GIS and remote sensing" },
+        "data-initiative": { "role": "Representative of an initiative using data for adaptation" },
+        "gouvernance-data": { "role": "Expert in data governance or open data" },
+        "communautaire-data": { "role": "Community actor or NGO valuing local and participatory data" }
+      },
+      "replayTitle": "Webinar replay",
+      "replayLoading": "Loading video...",
+      "replayError": "Video temporarily unavailable",
+      "replayUnavailable": "Replay will be available soon."
     }
   }
 }

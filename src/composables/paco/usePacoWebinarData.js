@@ -97,6 +97,26 @@ const SESSIONS_DATA = [
     ],
     partners: COMMON_PARTNERS,
   },
+  {
+    edition: 4,
+    date: '2026-06-25',
+    startTime: '14:00',
+    endTime: '15:30',
+    timezone: 'GMT',
+    language: 'fr',
+    completed: false,
+    coverImage: '/images/session_6.jpg',
+    bannerUrl: '/images/session_6.jpg',
+    replayUrl: null,
+    i18nPrefix: 'paco.session4',
+    panelists: [
+      { id: 'sig-expert', name: 'À confirmer', photoUrl: null, organization: 'Institution météorologique / hydrologique / centre de recherche', email: null },
+      { id: 'data-initiative', name: 'À confirmer', photoUrl: null, organization: 'Initiative utilisant les données pour l’adaptation', email: null },
+      { id: 'gouvernance-data', name: 'À confirmer', photoUrl: null, organization: 'Expert·e en gouvernance des données / données ouvertes', email: null },
+      { id: 'communautaire-data', name: 'À confirmer', photoUrl: null, organization: 'Acteur·rice communautaire / ONG (données locales et participatives)', email: null },
+    ],
+    partners: COMMON_PARTNERS,
+  },
 ]
 
 /**
