@@ -1,12 +1,14 @@
 <template>
   <div class="w-full mb-6">
     <div
+      ref="tablistEl"
       role="tablist"
-      class="flex w-full gap-2 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-1.5 overflow-x-auto"
+      class="flex w-full gap-2 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-1.5 overflow-x-auto scroll-smooth"
     >
       <button
         v-for="session in sessions"
         :key="session.edition"
+        :ref="(el) => setTabRef(el, session.edition)"
         type="button"
         role="tab"
         :aria-selected="modelValue === session.edition"
@@ -34,6 +36,7 @@
 </template>
 
 <script setup>
+import { nextTick, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { usePacoWebinarData } from '@/composables/paco/usePacoWebinarData'
 
@@ -46,6 +49,41 @@ const emit = defineEmits(['update:modelValue'])
 
 const { t } = useI18n()
 const { getSessionStatus } = usePacoWebinarData()
+
+const tablistEl = ref(null)
+const tabRefs = new Map()
+
+function setTabRef(el, edition) {
+  if (el) tabRefs.set(edition, el)
+  else tabRefs.delete(edition)
+}
+
+function scrollActiveIntoView() {
+  const container = tablistEl.value
+  const tab = tabRefs.get(props.modelValue)
+  if (!container || !tab) return
+  const cRect = container.getBoundingClientRect()
+  const tRect = tab.getBoundingClientRect()
+  const offset = tRect.left - cRect.left - (cRect.width - tRect.width) / 2
+  container.scrollBy({ left: offset, behavior: 'smooth' })
+}
+
+onMounted(async () => {
+  await nextTick()
+  // Saut immédiat (sans animation) au montage pour positionner l'onglet actif.
+  const container = tablistEl.value
+  const tab = tabRefs.get(props.modelValue)
+  if (container && tab) {
+    const cRect = container.getBoundingClientRect()
+    const tRect = tab.getBoundingClientRect()
+    container.scrollLeft += tRect.left - cRect.left - (cRect.width - tRect.width) / 2
+  }
+})
+
+watch(() => props.modelValue, async () => {
+  await nextTick()
+  scrollActiveIntoView()
+})
 
 function selectSession(edition) {
   if (edition !== props.modelValue) {
