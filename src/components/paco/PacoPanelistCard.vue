@@ -10,7 +10,7 @@
     <!-- Info -->
     <div class="min-w-0">
       <p class="text-sm font-semibold text-white truncate">{{ panelist.name }}</p>
-      <div class="relative group/role inline-block max-w-full">
+      <div class="relative group/role block max-w-full">
         <p class="text-xs text-green-400 line-clamp-2 cursor-help" :title="roleLabel">{{ roleLabel }}</p>
         <span
           v-if="roleLabel"
@@ -19,7 +19,7 @@
           {{ roleLabel }}
         </span>
       </div>
-      <div class="relative group/org inline-block max-w-full">
+      <div class="relative group/org block max-w-full">
         <p class="text-xs text-white/50 truncate cursor-help" :title="panelist.organization">{{ panelist.organization }}</p>
         <span
           class="pointer-events-none absolute left-0 bottom-full mb-1 z-20 hidden group-hover/org:block whitespace-normal break-words w-max max-w-xs px-2 py-1 rounded-md bg-gray-900 text-white text-xs shadow-lg border border-white/10"

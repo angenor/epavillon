@@ -437,9 +437,9 @@
         "6": "Media and health communication actors"
       },
       "panelists": {
-        "ifdd-rep": { "role": "IFDD Representative" },
-        "paco-giz": { "role": "PACO programme expert (GIZ)" },
-        "sante-climat": { "role": "Public health and climate specialist (WHO, NGO or research institute)" },
+        "ifdd-rep": { "role": "Project Coordinator" },
+        "paco-giz": { "role": "Technical Advisor" },
+        "sante-climat": { "role": "Project Manager" },
         "surveillance-epi": { "role": "Physician, epidemiologist and founder of Dawa Mobile Health, researcher at the Julius Global Health Centre, Utrecht University (Netherlands)." },
         "tenedja-silue": { "role": "Lecturer-Researcher, Côte d'Ivoire" },
         "communautaire": { "role": "Community actor or young leader engaged in health prevention" }
