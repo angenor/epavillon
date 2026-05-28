@@ -332,6 +332,8 @@
       "missingDemographic": "Veuillez sélectionner votre genre et votre tranche d'âge."
     },
     "tabs": {
+      "session5": "Session 1",
+      "session6": "Session 2",
       "session1": "Session 3",
       "session2": "Session 4",
       "session3": "Session 5",
@@ -500,6 +502,93 @@
       "replayLoading": "Chargement de la vidéo...",
       "replayError": "Vidéo temporairement indisponible",
       "replayUnavailable": "Le replay sera bientôt disponible."
+    },
+    "session5": {
+      "title": "Jeunesse et changement climatique",
+      "subtitle": "Éducation et sensibilisation citoyenne à l'adaptation",
+      "editionLabel": "Sociétés et communautés",
+      "dateLabel": "Jeudi 29 janvier 2026",
+      "timeLabel": "14h00 – 15h30 GMT",
+      "replay": "Voir l'enregistrement",
+      "replayTitle": "Replay du webinaire",
+      "replayLoading": "Chargement de la vidéo...",
+      "replayError": "Vidéo temporairement indisponible",
+      "replayUnavailable": "Le replay sera bientôt disponible.",
+      "context": "Dans les pays d'Afrique francophone, les jeunes représentent une part majeure de la population et jouent un rôle déterminant dans la transformation des sociétés. Ils·elles demeurent parmi les groupes les plus exposés aux effets du changement climatique, en raison de leur forte vulnérabilité socio-économique et de leur accès limité aux opportunités de formation, de coopération et de financement.\n\nFace à l'accélération des risques climatiques tels que les sécheresses, inondations, dégradation des terres, et l'insécurité alimentaire, le renforcement des capacités des jeunes devient un levier essentiel pour soutenir l'adaptation, encourager l'innovation locale et favoriser l'émergence de solutions durables et inclusives. L'éducation climatique, la sensibilisation citoyenne et l'engagement communautaire constituent des piliers fondamentaux pour renforcer la résilience des sociétés et promouvoir une participation active des jeunes dans les processus de décision à divers niveaux.\n\nCe webinaire s'inscrit dans le cadre de l'action « Renforcement des capacités et de la collaboration des pays francophones sur l'adaptation au changement climatique et l'accès au financement », mise en œuvre par l'IFDD avec l'appui du programme régional PACO – financé par le BMUKN dans le cadre de l'Initiative internationale pour le Climat (IKI) et exécuté par la GIZ.",
+      "objectiveGeneral": "Renforcer les connaissances, compétences et l'engagement des jeunes et des acteur·rice·s communautaires sur les enjeux de l'adaptation aux effets du changement climatique, en mettant l'accent sur l'éducation, la sensibilisation citoyenne et les initiatives locales portées par la jeunesse.",
+      "objectives": {
+        "0": "Présenter les principaux défis et opportunités liés à l'implication des jeunes dans l'adaptation aux effets du changement climatique.",
+        "1": "Mettre en lumière des initiatives innovantes de sensibilisation, d'éducation climatique et de mobilisation citoyenne dans les pays d'Afrique francophone.",
+        "2": "Favoriser le partage d'expériences entre jeunes leaders, organisations de la société civile, institutions éducatives et collectivités locales.",
+        "3": "Encourager le développement de réseaux et de collaborations régionales pour renforcer l'action climatique portée par la jeunesse francophone."
+      },
+      "content": {
+        "0": { "title": "Éducation climatique comme outil de résilience", "desc": "Intégration de l'adaptation dans les programmes éducatifs, outils pédagogiques, approches participatives." },
+        "1": { "title": "Mobilisation citoyenne des jeunes", "desc": "Campagnes de sensibilisation, actions communautaires, leadership climatique, rôle des médias et des réseaux sociaux." },
+        "2": { "title": "Initiatives locales portées par les jeunes", "desc": "Agriculture durable, gestion intégrée de l'eau, solutions fondées sur la nature, innovation sociale, économie verte, enjeu du genre." },
+        "3": { "title": "Financement et accompagnement", "desc": "Opportunités de financement climatique pour les projets initiés et menés par les jeunes." }
+      },
+      "targets": {
+        "0": "Jeunes leaders, associations et mouvements de jeunesse",
+        "1": "Organisations de la société civile",
+        "2": "Enseignant·e·s, formateur·rice·s et institutions éducatives",
+        "3": "Collectivités locales et municipalités",
+        "4": "Institutions publiques impliquées dans l'adaptation climatique",
+        "5": "Médias, influenceur·euse·s et acteur·rice·s de la communication citoyenne"
+      },
+      "panelists": {
+        "martin-phipps": { "role": "Directrice de l'IFDD, Québec" },
+        "affana": { "role": "Coordonnateur régional PACO, GIZ" },
+        "niang": { "role": "Directeur exécutif, JVE Sénégal" },
+        "itsopo-ngolet": { "role": "Coordinatrice générale du Climathon Gabon 2025, JVE Gabon / Killimo Ecologia" },
+        "daleba": { "role": "Consultant en justice sociale et climatique, JVE Côte d'Ivoire / African Climate Justice Collective" },
+        "atonde": { "role": "Directeur exécutif, JVE Bénin" }
+      }
+    },
+    "session6": {
+      "title": "Communautés autochtones et savoirs endogènes",
+      "subtitle": "Vers des stratégies d'adaptation équitables",
+      "editionLabel": "Sociétés et communautés",
+      "dateLabel": "Jeudi 26 février 2026",
+      "timeLabel": "14h00 – 15h30 GMT",
+      "replay": "Voir l'enregistrement",
+      "replayTitle": "Replay du webinaire",
+      "replayLoading": "Chargement de la vidéo...",
+      "replayError": "Vidéo temporairement indisponible",
+      "replayUnavailable": "Le replay sera bientôt disponible.",
+      "context": "Les communautés autochtones et locales détiennent des savoirs endogènes qui ont permis, depuis des générations, de gérer durablement les ressources naturelles, de préserver les écosystèmes et de s'adapter aux variations environnementales. Ces connaissances, ancrées dans l'observation fine des milieux et dans des pratiques éprouvées, constituent aujourd'hui des leviers essentiels pour renforcer la résilience face aux impacts croissants du changement climatique.\n\nPourtant, dans de nombreux pays francophones, ces savoirs restent encore insuffisamment documentés, reconnus ou intégrés dans les stratégies d'adaptation. Les transformations socioculturelles, la pression sur les ressources, la perte de biodiversité et l'érosion des pratiques traditionnelles menacent leur transmission et leur valorisation.\n\nCe webinaire s'inscrit dans l'action « Renforcement des capacités et de la collaboration des pays francophones sur l'adaptation au changement climatique et l'accès au financement », mise en œuvre par l'IFDD avec l'appui du programme régional PACO – financé par le BMUKN dans le cadre de l'IKI et exécuté par la GIZ.",
+      "objectiveGeneral": "Renforcer la compréhension, la valorisation et l'intégration des savoirs endogènes et autochtones dans les stratégies d'adaptation aux effets du changement climatique, en mettant l'accent sur les enseignements tirés d'expériences locales et autochtones.",
+      "objectives": {
+        "0": "Présenter le rôle des communautés autochtones et locales dans l'adaptation aux effets du changement climatique.",
+        "1": "Mettre en lumière des expériences concrètes illustrant l'utilisation des savoirs endogènes dans différents contextes francophones.",
+        "2": "Identifier les leçons apprises, les bonnes pratiques et les facteurs de réussite observés sur le terrain.",
+        "3": "Favoriser le dialogue entre chercheur·euse·s, institutions, organisations autochtones et acteur·rice·s de l'adaptation.",
+        "4": "Encourager la capitalisation et la diffusion des connaissances issues de ces expériences.",
+        "5": "Encourager la prise en compte des savoirs autochtones dans la conception de projets sensibles aux contextes locaux et culturels."
+      },
+      "content": {
+        "0": { "title": "Savoirs endogènes et résilience climatique", "desc": "Pratiques traditionnelles de gestion des terres, forêts, eau et biodiversité, agroécologie, transmission intergénérationnelle." },
+        "1": { "title": "Leçons apprises d'expériences locales", "desc": "Études de cas issues d'Afrique centrale et de l'Ouest, enseignements de projets pilotes, facteurs de réussite et limites." },
+        "2": { "title": "Articulation savoirs traditionnels / scientifiques", "desc": "Mécanismes de dialogue et de co-construction, documentation, capitalisation et synergies avec les innovations modernes." },
+        "3": { "title": "Intégration dans les stratégies d'adaptation", "desc": "Conditions favorables, rôle des institutions et collectivités, opportunités de financement pour les initiatives fondées sur les savoirs locaux." }
+      },
+      "targets": {
+        "0": "Organisations et représentant·e·s des communautés autochtones",
+        "1": "Chercheur·euse·s, universitaires et étudiant·e·s",
+        "2": "Institutions publiques et collectivités locales",
+        "3": "Organisations de la société civile",
+        "4": "Acteur·rice·s de la conservation et de la gestion des ressources naturelles",
+        "5": "Bailleurs de fonds, ONG et partenaires techniques et financiers",
+        "6": "Médias et acteur·rice·s de la communication environnementale"
+      },
+      "panelists": {
+        "ngo-samnick": { "role": "Coordonnatrice de projets, IFDD" },
+        "diop": { "role": "Conseiller technique au programme PACO, GIZ" },
+        "mabengo": { "role": "Chargé du Projet « Initiative pour la Conservation Inclusive » et Facilitateur Communautaire, ANAPAC-RDC" },
+        "coulibaly": { "role": "Coordonnateur du projet COLOURS_PACO, UICN" },
+        "sidibe-ba": { "role": "Directrice de projets climat & biodiversité, Écologie universelle" },
+        "toure": { "role": "Cofondatrice et Présidente d'AFR'EAU" }
+      }
     }
   }
 }

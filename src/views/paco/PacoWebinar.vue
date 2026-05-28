@@ -4,31 +4,18 @@
       <div class="w-full max-w-6xl mx-auto">
         <PacoSessionTabs v-model="activeEdition" :sessions="sessions" />
 
-        <!-- Session 3 (terminée) : replay vidéo -->
+        <!-- Sessions terminées (1, 2, 3, 4) : replay vidéo -->
         <PacoSession1
-          v-if="activeEdition === 1"
-          :session-data="sessions[0]"
+          v-if="activeSession && activeSession.completed"
+          :key="activeSession.edition"
+          :session-data="activeSession"
         />
 
-        <!-- Session 4 (terminée) : replay (ou message « bientôt disponible ») -->
-        <PacoSession1
-          v-else-if="activeEdition === 2"
-          :session-data="sessions[1]"
-        />
-
-        <!-- Session 5 (à venir / en direct) : inscription ou replay -->
+        <!-- Sessions à venir / en direct (5, 6) : inscription ou replay -->
         <PacoSession2
-          v-else-if="activeEdition === 3"
-          :session-data="sessions[2]"
-          :step="step"
-          :page-loading="pageLoading"
-          @registration-complete="handleRegistrationComplete"
-        />
-
-        <!-- Session 6 (à venir) : inscription -->
-        <PacoSession2
-          v-else-if="activeEdition === 4"
-          :session-data="sessions[3]"
+          v-else-if="activeSession"
+          :key="activeSession.edition"
+          :session-data="activeSession"
           :step="step"
           :page-loading="pageLoading"
           @registration-complete="handleRegistrationComplete"
@@ -39,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useAuth } from '@/composables/useAuth'
 import { useSEO } from '@/composables/useSEO'
 import {
@@ -74,6 +61,7 @@ const { checkPacoRegistration } = usePacoRegistration()
 
 // État
 const activeEdition = ref(currentSession.value.edition)
+const activeSession = computed(() => sessions.value.find(s => s.edition === activeEdition.value))
 const step = ref('form')
 const pageLoading = ref(true)
 
@@ -94,6 +82,13 @@ watch(activeEdition, async (newEdition) => {
  */
 async function checkInitialState(edition) {
   pageLoading.value = true
+
+  // Pour une session terminée (replay), pas d'inscription à vérifier.
+  const target = sessions.value.find(s => s.edition === edition)
+  if (target?.completed) {
+    pageLoading.value = false
+    return
+  }
 
   try {
     if (isAuthenticated.value && user.value) {

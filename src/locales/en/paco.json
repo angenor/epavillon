@@ -332,6 +332,8 @@
       "missingDemographic": "Please select your gender and age range."
     },
     "tabs": {
+      "session5": "Session 1",
+      "session6": "Session 2",
       "session1": "Session 3",
       "session2": "Session 4",
       "session3": "Session 5",
@@ -500,6 +502,93 @@
       "replayLoading": "Loading video...",
       "replayError": "Video temporarily unavailable",
       "replayUnavailable": "Replay will be available soon."
+    },
+    "session5": {
+      "title": "Youth and Climate Change",
+      "subtitle": "Education and citizen awareness for adaptation",
+      "editionLabel": "Societies and Communities",
+      "dateLabel": "Thursday, January 29, 2026",
+      "timeLabel": "2:00 PM – 3:30 PM GMT",
+      "replay": "Watch recording",
+      "replayTitle": "Webinar replay",
+      "replayLoading": "Loading video...",
+      "replayError": "Video temporarily unavailable",
+      "replayUnavailable": "Replay will be available soon.",
+      "context": "In French-speaking African countries, young people represent a major share of the population and play a decisive role in transforming societies. They remain among the groups most exposed to the effects of climate change, due to their high socio-economic vulnerability and limited access to training, cooperation and funding opportunities.\n\nFaced with accelerating climate risks such as droughts, floods, land degradation and food insecurity, strengthening the capacities of youth becomes an essential lever to support adaptation, encourage local innovation and foster sustainable and inclusive solutions. Climate education, citizen awareness and community engagement are fundamental pillars to strengthen resilience and promote active youth participation in decision-making processes at various levels.\n\nThis webinar is part of the initiative « Strengthening the capacities and collaboration of French-speaking countries on climate change adaptation and access to financing », implemented by IFDD with the support of the regional PACO programme – funded by BMUKN under the International Climate Initiative (IKI) and implemented by GIZ.",
+      "objectiveGeneral": "Strengthen the knowledge, skills and engagement of youth and community stakeholders on climate change adaptation, with a focus on education, citizen awareness and youth-led local initiatives.",
+      "objectives": {
+        "0": "Present the main challenges and opportunities related to youth involvement in climate change adaptation.",
+        "1": "Highlight innovative awareness, climate education and citizen mobilization initiatives in French-speaking African countries.",
+        "2": "Foster the sharing of experiences among young leaders, civil society organizations, educational institutions and local authorities.",
+        "3": "Encourage the development of networks and regional collaborations to strengthen climate action led by Francophone youth."
+      },
+      "content": {
+        "0": { "title": "Climate education as a resilience tool", "desc": "Integration of adaptation into educational curricula, pedagogical tools, participatory approaches." },
+        "1": { "title": "Youth citizen mobilization", "desc": "Awareness campaigns, community actions, climate leadership, role of media and social networks." },
+        "2": { "title": "Youth-led local initiatives", "desc": "Sustainable agriculture, integrated water management, nature-based solutions, social innovation, green economy, gender." },
+        "3": { "title": "Funding and support", "desc": "Climate financing opportunities for youth-led projects." }
+      },
+      "targets": {
+        "0": "Young leaders, associations and youth movements",
+        "1": "Civil society organizations",
+        "2": "Teachers, trainers and educational institutions",
+        "3": "Local authorities and municipalities",
+        "4": "Public institutions involved in climate adaptation",
+        "5": "Media, influencers and citizen communication actors"
+      },
+      "panelists": {
+        "martin-phipps": { "role": "Director, IFDD, Quebec" },
+        "affana": { "role": "PACO Regional Coordinator, GIZ" },
+        "niang": { "role": "Executive Director, JVE Senegal" },
+        "itsopo-ngolet": { "role": "General Coordinator, Climathon Gabon 2025, JVE Gabon / Killimo Ecologia" },
+        "daleba": { "role": "Consultant in social and climate justice, JVE Côte d'Ivoire / African Climate Justice Collective" },
+        "atonde": { "role": "Executive Director, JVE Benin" }
+      }
+    },
+    "session6": {
+      "title": "Indigenous communities and endogenous knowledge",
+      "subtitle": "Towards equitable adaptation strategies",
+      "editionLabel": "Societies and Communities",
+      "dateLabel": "Thursday, February 26, 2026",
+      "timeLabel": "2:00 PM – 3:30 PM GMT",
+      "replay": "Watch recording",
+      "replayTitle": "Webinar replay",
+      "replayLoading": "Loading video...",
+      "replayError": "Video temporarily unavailable",
+      "replayUnavailable": "Replay will be available soon.",
+      "context": "Indigenous and local communities hold endogenous knowledge that has enabled them, for generations, to sustainably manage natural resources, preserve ecosystems and adapt to environmental variations. This knowledge, rooted in fine observation of environments and proven practices, constitutes today essential levers to strengthen resilience in the face of growing impacts of climate change.\n\nYet, in many French-speaking countries, this knowledge remains insufficiently documented, recognized or integrated into adaptation strategies. Socio-cultural transformations, resource pressure, biodiversity loss and the erosion of traditional practices threaten its transmission and valorisation.\n\nThis webinar is part of the initiative « Strengthening the capacities and collaboration of French-speaking countries on climate change adaptation and access to financing », implemented by IFDD with the support of the regional PACO programme – funded by BMUKN under the IKI and implemented by GIZ.",
+      "objectiveGeneral": "Strengthen the understanding, valorisation and integration of endogenous and indigenous knowledge into climate change adaptation strategies, with a focus on lessons learned from local and indigenous experiences.",
+      "objectives": {
+        "0": "Present the role of indigenous and local communities in climate change adaptation.",
+        "1": "Highlight concrete experiences illustrating the use of endogenous knowledge in different French-speaking contexts.",
+        "2": "Identify lessons learned, good practices and success factors observed in the field.",
+        "3": "Foster dialogue between researchers, institutions, indigenous organizations and adaptation stakeholders.",
+        "4": "Encourage capitalisation and dissemination of knowledge from these experiences.",
+        "5": "Encourage the integration of indigenous knowledge into the design of locally and culturally sensitive adaptation projects."
+      },
+      "content": {
+        "0": { "title": "Endogenous knowledge and climate resilience", "desc": "Traditional land, forest, water and biodiversity management practices, agroecology, intergenerational transmission." },
+        "1": { "title": "Lessons learned from local experiences", "desc": "Case studies from Central and West Africa, lessons from pilot projects, success factors and limits." },
+        "2": { "title": "Linking traditional and scientific knowledge", "desc": "Dialogue and co-construction mechanisms, documentation, capitalisation and synergies with modern innovations." },
+        "3": { "title": "Integration into adaptation strategies", "desc": "Favourable conditions, role of institutions and local authorities, funding opportunities for initiatives based on local knowledge." }
+      },
+      "targets": {
+        "0": "Organizations and representatives of indigenous communities",
+        "1": "Researchers, academics and students",
+        "2": "Public institutions and local authorities",
+        "3": "Civil society organizations",
+        "4": "Conservation and natural resource management actors",
+        "5": "Donors, NGOs and technical and financial partners",
+        "6": "Media and environmental communication actors"
+      },
+      "panelists": {
+        "ngo-samnick": { "role": "Project Coordinator, IFDD" },
+        "diop": { "role": "Technical Advisor to the PACO programme, GIZ" },
+        "mabengo": { "role": "Project Officer « Inclusive Conservation Initiative » and Community Facilitator, ANAPAC-DRC" },
+        "coulibaly": { "role": "Coordinator of the COLOURS_PACO project, IUCN" },
+        "sidibe-ba": { "role": "Climate & Biodiversity Project Director, Écologie universelle" },
+        "toure": { "role": "Co-founder and President of AFR'EAU" }
+      }
     }
   }
 }
