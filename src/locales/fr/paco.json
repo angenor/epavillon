@@ -275,7 +275,20 @@
       "hours": "heures",
       "minutes": "min",
       "seconds": "sec",
-      "waitingRoom": "Le webinaire commence bientôt ! Prenez place dans la salle d'attente."
+      "waitingRoom": "Le webinaire commence bientôt ! Prenez place dans la salle d'attente.",
+      "notStarted": {
+        "title": "La session n'a pas encore commencé",
+        "message": "Vous pourrez rejoindre le webinaire à partir de 1 heure avant son démarrage. Merci de revenir un peu plus tard.",
+        "startsIn": "Le webinaire commence dans",
+        "gmtLabel": "Heure officielle (GMT)",
+        "localLabel": "Votre heure locale",
+        "close": "Fermer",
+        "joinAnyway": "Rejoindre quand même",
+        "joinNow": "Rejoindre la session",
+        "waitingRoomInvite": "Il reste moins de 30 minutes : vous pouvez dès maintenant prendre place dans la salle d'attente Teams.",
+        "waitingRoomOpenTitle": "La salle d'attente est ouverte",
+        "waitingRoomOpenMessage": "Vous pouvez dès maintenant rejoindre la session Teams. Le webinaire commencera sous peu."
+      }
     },
     "success": {
       "title": "Inscription réussie !",

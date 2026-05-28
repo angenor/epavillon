@@ -275,7 +275,20 @@
       "hours": "hours",
       "minutes": "min",
       "seconds": "sec",
-      "waitingRoom": "The webinar starts soon! Take your seat in the waiting room."
+      "waitingRoom": "The webinar starts soon! Take your seat in the waiting room.",
+      "notStarted": {
+        "title": "The session has not started yet",
+        "message": "You will be able to join the webinar starting 1 hour before it begins. Please come back a little later.",
+        "startsIn": "The webinar starts in",
+        "gmtLabel": "Official time (GMT)",
+        "localLabel": "Your local time",
+        "close": "Close",
+        "joinAnyway": "Join anyway",
+        "joinNow": "Join the session",
+        "waitingRoomInvite": "Less than 30 minutes left: you can already take your seat in the Teams waiting room.",
+        "waitingRoomOpenTitle": "The waiting room is open",
+        "waitingRoomOpenMessage": "You can already join the Teams session. The webinar will start shortly."
+      }
     },
     "success": {
       "title": "Registration successful!",
