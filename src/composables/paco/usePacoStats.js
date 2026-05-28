@@ -50,6 +50,29 @@ function buildReferralSourceBreakdown(rows) {
   return { buckets, total }
 }
 
+/**
+ * Récupère TOUTES les lignes d'une requête Supabase en contournant la
+ * limite par défaut de 1000 lignes par appel. Pagine en lots de `pageSize`
+ * via `.range(from, to)` jusqu'à ce qu'un lot revienne incomplet.
+ *
+ * @param {(from: number, to: number) => any} buildQuery
+ * @param {number} pageSize
+ */
+async function fetchAllRows(buildQuery, pageSize = 1000) {
+  const all = []
+  let from = 0
+  while (true) {
+    const to = from + pageSize - 1
+    const { data, error } = await buildQuery(from, to)
+    if (error) throw error
+    if (!data || data.length === 0) break
+    all.push(...data)
+    if (data.length < pageSize) break
+    from += pageSize
+  }
+  return all
+}
+
 export function usePacoStats() {
   const stats = ref(null)
   const loading = ref(false)
@@ -97,30 +120,30 @@ export function usePacoStats() {
     error.value = null
 
     try {
-      let query = supabase
-        .from('activity_registrations')
-        .select(`
-          id,
-          fallback_payload,
-          recovered_at,
-          referral_source,
-          referral_source_other,
-          joined_at,
-          paco_demographic_data (
-            gender,
-            age_profile,
-            professional_status
-          )
-        `)
-        .eq('activity_id', PACO_ACTIVITY_ID)
+      const data = await fetchAllRows((from, to) => {
+        let query = supabase
+          .from('activity_registrations')
+          .select(`
+            id,
+            fallback_payload,
+            recovered_at,
+            referral_source,
+            referral_source_other,
+            joined_at,
+            paco_demographic_data (
+              gender,
+              age_profile,
+              professional_status
+            )
+          `)
+          .eq('activity_id', PACO_ACTIVITY_ID)
 
-      if (sessionFilter.value !== null) {
-        query = query.eq('session_edition', sessionFilter.value)
-      }
+        if (sessionFilter.value !== null) {
+          query = query.eq('session_edition', sessionFilter.value)
+        }
 
-      const { data, error: queryError } = await query
-
-      if (queryError) throw queryError
+        return query.range(from, to)
+      })
 
       const total = data.length
       // Une ligne est "de secours" si fallback_payload IS NOT NULL.
@@ -218,19 +241,19 @@ export function usePacoStats() {
    */
   const fetchAllRegistrationDates = async () => {
     try {
-      let query = supabase
-        .from('activity_registrations')
-        .select('registration_date')
-        .eq('activity_id', PACO_ACTIVITY_ID)
-        .order('registration_date', { ascending: true })
+      const data = await fetchAllRows((from, to) => {
+        let query = supabase
+          .from('activity_registrations')
+          .select('registration_date')
+          .eq('activity_id', PACO_ACTIVITY_ID)
+          .order('registration_date', { ascending: true })
 
-      if (sessionFilter.value !== null) {
-        query = query.eq('session_edition', sessionFilter.value)
-      }
+        if (sessionFilter.value !== null) {
+          query = query.eq('session_edition', sessionFilter.value)
+        }
 
-      const { data, error: queryError } = await query
-
-      if (queryError) throw queryError
+        return query.range(from, to)
+      })
 
       allRegistrationDates.value = data.map(r => ({ registrationDate: r.registration_date }))
     } catch (err) {
@@ -348,47 +371,47 @@ export function usePacoStats() {
    * @returns {Promise<Array>} all registrant objects
    */
   const fetchAllRegistrantsForExport = async () => {
-    let query = supabase
-      .from('activity_registrations')
-      .select(`
-        id,
-        registration_date,
-        session_edition,
-        guest_email,
-        guest_first_name,
-        guest_last_name,
-        guest_organization,
-        fallback_payload,
-        fallback_error,
-        recovered_at,
-        joined_at,
-        referral_source,
-        referral_source_other,
-        users (
-          first_name,
-          last_name,
-          email
-        ),
-        paco_demographic_data (
-          gender,
-          age_profile,
-          city,
-          country_id,
-          countries ( name_fr, name_en ),
-          professional_status,
-          organization
-        )
-      `)
-      .eq('activity_id', PACO_ACTIVITY_ID)
-      .order('registration_date', { ascending: true })
+    const data = await fetchAllRows((from, to) => {
+      let query = supabase
+        .from('activity_registrations')
+        .select(`
+          id,
+          registration_date,
+          session_edition,
+          guest_email,
+          guest_first_name,
+          guest_last_name,
+          guest_organization,
+          fallback_payload,
+          fallback_error,
+          recovered_at,
+          joined_at,
+          referral_source,
+          referral_source_other,
+          users (
+            first_name,
+            last_name,
+            email
+          ),
+          paco_demographic_data (
+            gender,
+            age_profile,
+            city,
+            country_id,
+            countries ( name_fr, name_en ),
+            professional_status,
+            organization
+          )
+        `)
+        .eq('activity_id', PACO_ACTIVITY_ID)
+        .order('registration_date', { ascending: true })
 
-    if (sessionFilter.value !== null) {
-      query = query.eq('session_edition', sessionFilter.value)
-    }
+      if (sessionFilter.value !== null) {
+        query = query.eq('session_edition', sessionFilter.value)
+      }
 
-    const { data, error: queryError } = await query
-
-    if (queryError) throw queryError
+      return query.range(from, to)
+    })
 
     return data.map(mapRegistrantRow)
   }
