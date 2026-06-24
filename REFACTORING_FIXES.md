@@ -101,3 +101,7 @@ Pour vérifier que tout fonctionne :
    - ✅ Plus d'erreurs dans la console
 
 Le code refactorisé est maintenant **fonctionnel** et **sans erreurs** ! 🎉
+
+
+
+

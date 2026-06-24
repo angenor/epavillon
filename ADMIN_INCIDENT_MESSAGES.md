@@ -292,3 +292,6 @@ En cas de problème :
 **Interface prête à l'emploi !** 🎉
 
 Les administrateurs peuvent maintenant gérer facilement les messages d'incidents depuis l'interface d'administration.
+
+
+

@@ -493,10 +493,11 @@
         "6": "Médias spécialisés et acteurs de la communication scientifique"
       },
       "panelists": {
-        "sig-expert": { "role": "Expert·e en systèmes d'information climatique, SIG et télédétection" },
-        "data-initiative": { "role": "Représentant·e d'une initiative utilisant les données pour l'adaptation" },
-        "gouvernance-data": { "role": "Expert·e en gouvernance des données ou en données ouvertes" },
-        "communautaire-data": { "role": "Acteur·rice communautaire ou ONG valorisant les données locales et participatives" }
+        "issa-bado": { "role": "Spécialiste de Programme" },
+        "munduku-gabola": { "role": "Directrice de la Composante PACO" },
+        "chafil": { "role": "Experte sénior internationale en changements climatiques et développement durable auprès de plusieurs organisations internationales" },
+        "noblet": { "role": "Experte en vulnérabilité climatique et adaptation, 10 ans d'expérience en adaptation au changement climatique" },
+        "el-khatri": { "role": "Chargé de mission auprès du Directeur Général de la Météorologie Nationale du Maroc, coordonnateur national du programme RCE" }
       },
       "replayTitle": "Replay du webinaire",
       "replayLoading": "Chargement de la vidéo...",

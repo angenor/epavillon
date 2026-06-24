@@ -493,10 +493,11 @@
         "6": "Specialized media and science communication actors"
       },
       "panelists": {
-        "sig-expert": { "role": "Expert in climate information systems, GIS and remote sensing" },
-        "data-initiative": { "role": "Representative of an initiative using data for adaptation" },
-        "gouvernance-data": { "role": "Expert in data governance or open data" },
-        "communautaire-data": { "role": "Community actor or NGO valuing local and participatory data" }
+        "issa-bado": { "role": "Programme Specialist" },
+        "munduku-gabola": { "role": "Director of the PACO Component" },
+        "chafil": { "role": "Senior international expert in climate change and sustainable development with several international organizations" },
+        "noblet": { "role": "Expert in climate vulnerability and adaptation, 10 years of experience in climate change adaptation" },
+        "el-khatri": { "role": "Mission officer to the Director General of the National Meteorology of Morocco, national coordinator of the RCE programme" }
       },
       "replayTitle": "Webinar replay",
       "replayLoading": "Loading video...",
