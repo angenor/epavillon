@@ -340,6 +340,7 @@
       "session2": "Session 4",
       "session3": "Session 5",
       "session4": "Session 6",
+      "session7": "Session 7",
       "status": {
         "ended": "Terminée",
         "upcoming": "À venir",
@@ -591,6 +592,49 @@
         "coulibaly": { "role": "Coordonnateur du projet COLOURS_PACO, UICN" },
         "sidibe-ba": { "role": "Directrice de projets climat & biodiversité, Écologie universelle" },
         "toure": { "role": "Cofondatrice et Présidente d'AFR'EAU" }
+      }
+    },
+    "session7": {
+      "title": "Intelligence artificielle et adaptation climatique",
+      "subtitle": "Science, recherche et innovation au service de l'adaptation",
+      "editionLabel": "Science, recherche et innovation",
+      "dateLabel": "Jeudi 30 juillet 2026",
+      "timeLabel": "14h00 – 15h30 GMT",
+      "replay": "Voir l'enregistrement",
+      "replayTitle": "Replay du webinaire",
+      "replayLoading": "Chargement de la vidéo...",
+      "replayError": "Vidéo temporairement indisponible",
+      "replayUnavailable": "Le replay sera bientôt disponible.",
+      "context": "L'intelligence artificielle (IA) transforme profondément la manière dont les sociétés anticipent, analysent et gèrent les impacts du changement climatique. Grâce à ses capacités de traitement massif des données, de modélisation avancée et d'automatisation, l'IA ouvre de nouvelles perspectives pour renforcer l'efficacité, la précision et la rapidité des actions d'adaptation.\n\nDans les pays francophones, ces opportunités demeurent toutefois inégalement exploitées. Les défis sont multiples : accès limité aux données nécessaires à l'entraînement des modèles, faible disponibilité d'outils adaptés aux contextes locaux, manque de compétences techniques, risques éthiques liés à l'usage de l'IA, ou encore absence de cadres de gouvernance clairs. Pourtant, des initiatives émergent : systèmes d'alerte précoce basés sur l'IA, cartographie automatisée des risques, optimisation des infrastructures, intégration des savoirs locaux dans des modèles hybrides, ou encore outils d'aide à la décision pour les collectivités.\n\nCe webinaire s'inscrit dans l'action « Renforcement des capacités et de la collaboration des pays francophones sur l'adaptation au changement climatique et l'accès au financement », mise en œuvre par l'Institut de la Francophonie pour le développement durable (IFDD) avec l'appui du programme régional PACO – financé par le BMUKN dans le cadre de l'Initiative internationale pour le Climat (IKI) et exécuté par la GIZ. Il vise à offrir un espace d'échanges sur les opportunités, limites et conditions d'un usage responsable et efficace de l'IA au service de l'adaptation climatique.",
+      "objectiveGeneral": "Renforcer les connaissances et les capacités des acteurs francophones sur les applications, opportunités, défis et bonnes pratiques liés à l'utilisation de l'intelligence artificielle pour l'adaptation climatique.",
+      "objectives": {
+        "0": "Mettre en lumière les principaux usages de l'IA pour l'analyse climatique, la gestion des risques et la planification de l'adaptation.",
+        "1": "Présenter des initiatives innovantes mobilisant l'IA dans des contextes francophones (systèmes d'alerte, modélisation, agriculture intelligente, gestion des ressources naturelles).",
+        "2": "Favoriser le dialogue entre institutions publiques, centres de recherche, acteurs communautaires, innovateurs numériques et partenaires techniques.",
+        "3": "Identifier des outils, plateformes et approches permettant d'intégrer l'IA dans les politiques et projets d'adaptation.",
+        "4": "Discuter des enjeux éthiques, de gouvernance et d'équité liés à l'utilisation de l'IA dans les pays en développement."
+      },
+      "content": {
+        "0": { "title": "Données et IA", "desc": "Besoins en données, qualité, accès, interopérabilité, intégration des données locales et participatives." },
+        "1": { "title": "Applications de l'IA pour l'adaptation", "desc": "Prévision climatique, analyse de vulnérabilité, modélisation des risques, agriculture intelligente, gestion de l'eau." },
+        "2": { "title": "Outils et plateformes", "desc": "Systèmes d'alerte précoce, SIG augmentés par IA, tableaux de bord intelligents, solutions open source." },
+        "3": { "title": "Gouvernance et éthique", "desc": "Transparence des algorithmes, biais, souveraineté numérique, protection des données." },
+        "4": { "title": "Études de cas francophones", "desc": "Innovations techniques, projets pilotes, retours d'expérience institutionnels ou communautaires." }
+      },
+      "targets": {
+        "0": "Institutions publiques et collectivités locales",
+        "1": "Services météorologiques et hydrologiques",
+        "2": "Chercheur·euse·s, universitaires et étudiant·e·s",
+        "3": "Organisations de la société civile",
+        "4": "Jeunes innovateurs numériques et développeurs IA",
+        "5": "Bailleurs de fonds et partenaires techniques",
+        "6": "Médias spécialisés et acteurs de la communication scientifique"
+      },
+      "panelists": {
+        "ai-climate-specialist": { "role": "Spécialiste de l'IA appliquée au climat (université, centre de recherche ou institution technique)" },
+        "ai-adaptation-initiative": { "role": "Représentant·e d'une initiative utilisant l'IA pour l'adaptation (système d'alerte, agriculture, gestion des risques)" },
+        "digital-governance-expert": { "role": "Expert·e en gouvernance numérique, éthique ou données ouvertes" },
+        "community-innovator": { "role": "Acteur·rice communautaire ou innovateur·rice numérique valorisant les données locales et les approches participatives" }
       }
     }
   }

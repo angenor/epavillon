@@ -340,6 +340,7 @@
       "session2": "Session 4",
       "session3": "Session 5",
       "session4": "Session 6",
+      "session7": "Session 7",
       "status": {
         "ended": "Ended",
         "upcoming": "Upcoming",
@@ -591,6 +592,49 @@
         "coulibaly": { "role": "Coordinator of the COLOURS_PACO project, IUCN" },
         "sidibe-ba": { "role": "Climate & Biodiversity Project Director, Écologie universelle" },
         "toure": { "role": "Co-founder and President of AFR'EAU" }
+      }
+    },
+    "session7": {
+      "title": "Artificial intelligence and climate adaptation",
+      "subtitle": "Science, research and innovation serving adaptation",
+      "editionLabel": "Science, research and innovation",
+      "dateLabel": "Thursday, July 30, 2026",
+      "timeLabel": "2:00 PM – 3:30 PM GMT",
+      "replay": "Watch the recording",
+      "replayTitle": "Webinar replay",
+      "replayLoading": "Loading video...",
+      "replayError": "Video temporarily unavailable",
+      "replayUnavailable": "The replay will be available soon.",
+      "context": "Artificial intelligence (AI) is profoundly transforming how societies anticipate, analyze and manage the impacts of climate change. Thanks to its capacities for massive data processing, advanced modeling and automation, AI opens new prospects to strengthen the effectiveness, accuracy and speed of adaptation actions.\n\nIn French-speaking countries, however, these opportunities remain unevenly exploited. The challenges are numerous: limited access to the data needed to train models, low availability of tools suited to local contexts, lack of technical skills, ethical risks linked to the use of AI, or the absence of clear governance frameworks. Yet initiatives are emerging: AI-based early warning systems, automated risk mapping, infrastructure optimization, integration of local knowledge into hybrid models, and decision-support tools for local authorities.\n\nThis webinar is part of the action \"Strengthening the capacities and collaboration of French-speaking countries on climate change adaptation and access to financing,\" implemented by the Institute of the Francophonie for Sustainable Development (IFDD) with the support of the regional PACO programme – funded by the BMUKN within the framework of the International Climate Initiative (IKI) and implemented by GIZ. It aims to offer a space for exchange on the opportunities, limits and conditions of a responsible and effective use of AI in service of climate adaptation.",
+      "objectiveGeneral": "Strengthen the knowledge and capacities of French-speaking actors on the applications, opportunities, challenges and good practices related to the use of artificial intelligence for climate adaptation.",
+      "objectives": {
+        "0": "Highlight the main uses of AI for climate analysis, risk management and adaptation planning.",
+        "1": "Present innovative initiatives mobilizing AI in French-speaking contexts (warning systems, modeling, smart agriculture, natural resource management).",
+        "2": "Foster dialogue between public institutions, research centers, community actors, digital innovators and technical partners.",
+        "3": "Identify tools, platforms and approaches to integrate AI into adaptation policies and projects.",
+        "4": "Discuss the ethical, governance and equity issues related to the use of AI in developing countries."
+      },
+      "content": {
+        "0": { "title": "Data and AI", "desc": "Data needs, quality, access, interoperability, integration of local and participatory data." },
+        "1": { "title": "AI applications for adaptation", "desc": "Climate forecasting, vulnerability analysis, risk modeling, smart agriculture, water management." },
+        "2": { "title": "Tools and platforms", "desc": "Early warning systems, AI-augmented GIS, smart dashboards, open source solutions." },
+        "3": { "title": "Governance and ethics", "desc": "Algorithm transparency, bias, digital sovereignty, data protection." },
+        "4": { "title": "French-speaking case studies", "desc": "Technical innovations, pilot projects, institutional or community feedback." }
+      },
+      "targets": {
+        "0": "Public institutions and local authorities",
+        "1": "Meteorological and hydrological services",
+        "2": "Researchers, academics and students",
+        "3": "Civil society organizations",
+        "4": "Young digital innovators and AI developers",
+        "5": "Donors and technical partners",
+        "6": "Specialized media and science communication actors"
+      },
+      "panelists": {
+        "ai-climate-specialist": { "role": "Specialist in AI applied to climate (university, research center or technical institution)" },
+        "ai-adaptation-initiative": { "role": "Representative of an initiative using AI for adaptation (warning system, agriculture, risk management)" },
+        "digital-governance-expert": { "role": "Expert in digital governance, ethics or open data" },
+        "community-innovator": { "role": "Community actor or digital innovator promoting local data and participatory approaches" }
       }
     }
   }

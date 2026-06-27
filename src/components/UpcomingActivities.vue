@@ -31,7 +31,7 @@
           <!-- Image de fond -->
           <div class="absolute inset-0 z-0">
             <img
-              src="/images/session_6.jpg"
+              src="/images/banniere_paco.jpg"
               alt="PACO Webinar"
               class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
@@ -52,7 +52,7 @@
                 </span>
                 <span class="text-emerald-100 text-[10px] font-bold uppercase tracking-widest">À venir</span>
               </div>
-              <span class="text-[10px] font-semibold text-white/70 uppercase tracking-wider">Session 6</span>
+              <span class="text-[10px] font-semibold text-white/70 uppercase tracking-wider">Session 7</span>
             </div>
 
             <!-- Logo / Marque -->
@@ -67,7 +67,7 @@
 
             <!-- Titre principal -->
             <h3 class="text-white font-bold text-base leading-tight mb-1 line-clamp-2 font-maverick">
-              Les défis et l'utilisation des données pour l'adaptation climatique
+              Intelligence artificielle et adaptation climatique
             </h3>
             <p class="text-emerald-100/90 text-xs italic mb-3 line-clamp-2">
               Science, recherche et innovation au service de l'adaptation
@@ -81,7 +81,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                   </svg>
                 </div>
-                <span class="font-medium">Jeudi 25 juin 2026</span>
+                <span class="font-medium">Jeudi 30 juillet 2026</span>
               </div>
               <div class="flex items-center gap-2 text-white/90 text-xs">
                 <div class="w-6 h-6 rounded-md bg-emerald-400/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0">

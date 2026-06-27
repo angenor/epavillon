@@ -45,10 +45,10 @@ import PacoSession2 from '@/components/paco/PacoSession2.vue'
 const { sessions, currentSession } = usePacoWebinarData()
 
 // SEO - OG meta tags pour le partage sur les réseaux sociaux
-const PACO_OG_IMAGE = 'https://epavillonclimatique.francophonie.org/images/session_6.jpg'
+const PACO_OG_IMAGE = 'https://epavillonclimatique.francophonie.org/images/banniere_paco.jpg'
 useSEO({
-  title: 'Webinaire PACO - Les défis et l\'utilisation des données pour l\'adaptation climatique',
-  description: 'Webinaire PACO sur les défis et l\'utilisation des données pour l\'adaptation climatique : science, recherche et innovation. Jeudi 25 juin 2026, en ligne, 14h00-15h30 GMT.',
+  title: 'Webinaire PACO - Intelligence artificielle et adaptation climatique',
+  description: 'Webinaire PACO sur l\'intelligence artificielle et l\'adaptation climatique : science, recherche et innovation. Jeudi 30 juillet 2026, en ligne, 14h00-15h30 GMT.',
   image: PACO_OG_IMAGE,
   url: 'https://epavillonclimatique.francophonie.org/paco',
   type: 'website',

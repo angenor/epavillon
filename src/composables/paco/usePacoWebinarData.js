@@ -162,6 +162,29 @@ const SESSIONS_DATA = [
     ],
     partners: COMMON_PARTNERS,
   },
+  {
+    edition: 7,
+    date: '2026-07-30',
+    startTime: '14:00',
+    endTime: '15:30',
+    timezone: 'GMT',
+    language: 'fr',
+    completed: false,
+    // Pas de visuel dédié pour l'instant : `null` déclenche le placeholder
+    // dégradé de PacoBanner.vue (évite une image hors-sujet).
+    coverImage: null,
+    bannerUrl: null,
+    replayUrl: null,
+    i18nPrefix: 'paco.session7',
+    // Les noms des intervenant·e·s seront ajoutés ultérieurement (cf. note conceptuelle).
+    panelists: [
+      { id: 'ai-climate-specialist', name: 'À confirmer', photoUrl: null, organization: null, email: null },
+      { id: 'ai-adaptation-initiative', name: 'À confirmer', photoUrl: null, organization: null, email: null },
+      { id: 'digital-governance-expert', name: 'À confirmer', photoUrl: null, organization: null, email: null },
+      { id: 'community-innovator', name: 'À confirmer', photoUrl: null, organization: null, email: null },
+    ],
+    partners: COMMON_PARTNERS,
+  },
 ]
 
 /**
