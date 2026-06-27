@@ -37,7 +37,7 @@ import {
 } from '@/composables/paco/usePacoRegistration'
 import { supabase } from '@/composables/useSupabase'
 import { PACO_ACTIVITY_ID } from '@/composables/paco/constants'
-import { usePacoWebinarData } from '@/composables/paco/usePacoWebinarData'
+import { usePacoWebinarData, areRegistrationsClosed } from '@/composables/paco/usePacoWebinarData'
 import PacoSessionTabs from '@/components/paco/PacoSessionTabs.vue'
 import PacoSession1 from '@/components/paco/PacoSession1.vue'
 import PacoSession2 from '@/components/paco/PacoSession2.vue'
@@ -86,6 +86,14 @@ async function checkInitialState(edition) {
   // Pour une session terminée (replay), pas d'inscription à vérifier.
   const target = sessions.value.find(s => s.edition === edition)
   if (target?.completed) {
+    pageLoading.value = false
+    return
+  }
+
+  // Suspension automatique : 30 min après l'heure de fin, les inscriptions
+  // sont fermées même si la session n'a pas encore été marquée `completed`.
+  if (areRegistrationsClosed(target)) {
+    step.value = 'closed'
     pageLoading.value = false
     return
   }

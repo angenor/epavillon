@@ -121,7 +121,9 @@
       "rateLimited": "Too many attempts. Please wait a few minutes before trying again.",
       "backToEmail": "Use a different email",
       "sessionLabel": "Session",
-      "sessionBadge": "Session {edition} — {date}"
+      "sessionBadge": "Session {edition} — {date}",
+      "closedTitle": "Registration closed",
+      "closedMessage": "This session has ended and registration is now closed. The recording will be available soon."
     },
     "quickRegister": {
       "subtitle": "Fill in the form below to access the webinar.",

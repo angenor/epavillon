@@ -148,10 +148,10 @@ const SESSIONS_DATA = [
     endTime: '15:30',
     timezone: 'GMT',
     language: 'fr',
-    completed: false,
+    completed: true,
     coverImage: '/images/session_6.jpg',
     bannerUrl: '/images/session_6.jpg',
-    replayUrl: null,
+    replayUrl: 'https://www.youtube.com/embed/_jGfS68rOcc?autoplay=1&mute=1',
     i18nPrefix: 'paco.session4',
     panelists: [
       { id: 'issa-bado', name: 'Dr Issa BADO', photoUrl: '/images/issa_bado.jpeg', organization: 'OIF — IFDD', email: null },
@@ -163,6 +163,36 @@ const SESSIONS_DATA = [
     partners: COMMON_PARTNERS,
   },
 ]
+
+/**
+ * Délai de grâce après l'heure de fin pendant lequel les inscriptions
+ * restent ouvertes (retardataires). Passé ce délai, les inscriptions
+ * sont automatiquement suspendues.
+ */
+const REGISTRATION_GRACE_MINUTES = 30
+
+/**
+ * Date limite d'inscription : heure de fin + délai de grâce.
+ * @param {SessionData} session
+ * @returns {Date}
+ */
+function getRegistrationDeadline(session) {
+  const end = new Date(`${session.date}T${session.endTime}:00Z`)
+  return new Date(end.getTime() + REGISTRATION_GRACE_MINUTES * 60 * 1000)
+}
+
+/**
+ * Indique si les inscriptions à une session sont fermées.
+ * Une session est fermée si elle est marquée terminée (`completed`)
+ * ou si la date limite (fin + 30 min) est dépassée.
+ * @param {SessionData} session
+ * @returns {boolean}
+ */
+function areRegistrationsClosed(session) {
+  if (!session) return true
+  if (session.completed) return true
+  return new Date() > getRegistrationDeadline(session)
+}
 
 /**
  * Retourne le statut d'une session: 'upcoming' | 'live' | 'ended'
@@ -209,5 +239,9 @@ export function usePacoWebinarData() {
     getSessionStatus,
     getStatusLabel,
     getStatusColor,
+    areRegistrationsClosed,
+    getRegistrationDeadline,
   }
 }
+
+export { areRegistrationsClosed, getRegistrationDeadline }
