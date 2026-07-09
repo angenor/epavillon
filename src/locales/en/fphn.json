@@ -24,6 +24,13 @@
       "live": "The event is underway",
       "ended": "The event has ended"
     },
+    "live": {
+      "badge": "Live",
+      "noticeTitle": "Live stream on this page",
+      "noticeText": "On 14 July 2026 at 1:15 pm (New York time), watch the event live right here, in addition to joining via Zoom.",
+      "waiting": "The live stream will start shortly…",
+      "panelNote": "The live stream will also be broadcast on this page"
+    },
     "partners": {
       "title": "An event co-organised by",
       "logoPlaceholder": "Logo coming soon"

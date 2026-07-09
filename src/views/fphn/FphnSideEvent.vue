@@ -14,6 +14,52 @@
               />
             </div>
 
+            <!-- Direct YouTube (pendant l'évènement) -->
+            <section v-if="countdownState === 'live'">
+              <div class="flex items-center gap-2.5 mb-3">
+                <span class="inline-flex items-center gap-2 rounded-full bg-red-500/20 border border-red-400/40 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-red-300">
+                  <span class="relative flex h-2.5 w-2.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                  </span>
+                  {{ t('fphn.live.badge') }}
+                </span>
+                <font-awesome-icon :icon="['fab', 'youtube']" class="text-red-500 text-xl" />
+              </div>
+              <div v-if="YOUTUBE_LIVE_ID" class="aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/30 bg-black">
+                <iframe
+                  :src="`https://www.youtube-nocookie.com/embed/${YOUTUBE_LIVE_ID}?autoplay=1`"
+                  class="w-full h-full"
+                  frameborder="0"
+                  allow="autoplay; encrypted-media; picture-in-picture"
+                  allowfullscreen
+                  :title="t('fphn.live.noticeTitle')"
+                ></iframe>
+              </div>
+              <div v-else class="aspect-video rounded-2xl border border-white/10 bg-black/40 flex flex-col items-center justify-center gap-3">
+                <font-awesome-icon :icon="['fab', 'youtube']" class="text-red-500 text-4xl animate-pulse" />
+                <p class="text-sm text-white/60">{{ t('fphn.live.waiting') }}</p>
+              </div>
+            </section>
+
+            <!-- Annonce du futur direct (avant l'évènement) -->
+            <section
+              v-else-if="countdownState === 'upcoming'"
+              class="flex items-center gap-4 bg-gradient-to-r from-red-500/10 via-white/5 to-white/5 border border-red-400/25 rounded-2xl p-4"
+            >
+              <div class="relative shrink-0 w-12 h-12 rounded-xl bg-red-500/15 border border-red-400/30 flex items-center justify-center">
+                <font-awesome-icon :icon="['fab', 'youtube']" class="text-red-400 text-2xl" />
+                <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </span>
+              </div>
+              <div>
+                <p class="text-sm font-bold text-white">{{ t('fphn.live.noticeTitle') }}</p>
+                <p class="text-xs text-white/60 leading-relaxed mt-0.5">{{ t('fphn.live.noticeText') }}</p>
+              </div>
+            </section>
+
             <!-- Badge + titre -->
             <div>
               <p class="text-xs sm:text-sm font-semibold uppercase tracking-widest text-green-400 mb-1">
@@ -267,6 +313,10 @@
                 <font-awesome-icon :icon="['fas', 'language']" class="mr-1" />
                 {{ t('fphn.hero.interpretation') }}
               </p>
+              <p class="text-xs text-red-300/90 text-center mt-3 flex items-center justify-center gap-1.5">
+                <font-awesome-icon :icon="['fab', 'youtube']" class="text-red-400" />
+                {{ t('fphn.live.panelNote') }}
+              </p>
             </div>
           </div>
         </div>
@@ -287,6 +337,10 @@ const { t } = useI18n()
 const EVENT_START = '2026-07-14T13:15:00-04:00'
 const EVENT_END = '2026-07-14T14:45:00-04:00'
 const REGISTRATION_URL = 'https://meetoecd1.zoom.us/meeting/register/yu8YbosuRBC7BOnclai_dA'
+
+// ID de la vidéo YouTube du direct — à renseigner le jour J (ex. 'dQw4w9WgXcQ').
+// Tant qu'il est vide, un message d'attente s'affiche pendant l'évènement.
+const YOUTUBE_LIVE_ID = ''
 
 // Visuel officiel de diffusion (16:9) utilisé comme bannière
 const COVER_IMAGE = '/images/Visuel-Diffusion-14-juillet.jpg'
@@ -339,9 +393,12 @@ const localCity = (() => {
   return city && city !== tz ? city : null
 })()
 
-const localTimeZoneLabel = computed(() =>
-  localCity ? t('fphn.hero.localTime', { city: localCity }) : t('fphn.hero.localTimeFallback')
-)
+const localTimeZoneLabel = computed(() => {
+  if (!localCity) return t('fphn.hero.localTimeFallback')
+  // Élision française : « heure de Abidjan » → « heure d'Abidjan »
+  return t('fphn.hero.localTime', { city: localCity })
+    .replace(/\bde ([AEIOUYÀÂÄÉÈÊËÎÏÔÖÙÛÜ])/u, "d'$1")
+})
 
 // Décompteur
 const { timeRemaining, formattedTime } = useCountdown(() => EVENT_START)

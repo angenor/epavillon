@@ -24,6 +24,13 @@
       "live": "L'évènement est en cours",
       "ended": "L'évènement est terminé"
     },
+    "live": {
+      "badge": "En direct",
+      "noticeTitle": "Diffusion en direct sur cette page",
+      "noticeText": "Le 14 juillet 2026 à 13h15 (heure de New York), suivez l'évènement en direct ici même, en plus de la participation via Zoom.",
+      "waiting": "Le direct va démarrer dans quelques instants…",
+      "panelNote": "Le direct sera aussi diffusé sur cette page"
+    },
     "partners": {
       "title": "Un évènement co-organisé par",
       "logoPlaceholder": "Logo à venir"
