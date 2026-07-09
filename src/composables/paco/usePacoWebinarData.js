@@ -170,10 +170,8 @@ const SESSIONS_DATA = [
     timezone: 'GMT',
     language: 'fr',
     completed: false,
-    // Pas de visuel dédié pour l'instant : `null` déclenche le placeholder
-    // dégradé de PacoBanner.vue (évite une image hors-sujet).
-    coverImage: null,
-    bannerUrl: null,
+    coverImage: '/images/IA_adaptation.jpg',
+    bannerUrl: '/images/IA_adaptation.jpg',
     replayUrl: null,
     i18nPrefix: 'paco.session7',
     // Les noms des intervenant·e·s seront ajoutés ultérieurement (cf. note conceptuelle).
