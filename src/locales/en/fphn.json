@@ -5,6 +5,7 @@
       "title": "Access to Climate and Biodiversity Finance",
       "titleAccent": "From Global Commitments to Country Action",
       "subtitle": "Launch of the OECD–OIF/IFDD report",
+      "hook": "How can climate and biodiversity finance be made more accessible to the countries that need it most?",
       "date": "14 July 2026",
       "time": "1:15 – 2:45 pm (New York time)",
       "localTime": "{city} time",
@@ -44,6 +45,7 @@
     "about": {
       "tag": "About",
       "title": "Context and rationale",
+      "lead": "Through original analyses and case studies conducted in several Francophone countries, the report highlights the main obstacles to accessing international finance and puts forward concrete recommendations to simplify procedures, strengthen national capacities and better respond to countries' priorities.",
       "p1": "Developing countries face a dual emergency: accelerating climate action and halting biodiversity loss while pursuing their sustainable development goals. At the same time, the financing landscape has become more complex and fragmented, with multiple bilateral donors, multilateral institutions, vertical funds and new instruments (green bonds, debt-for-nature swaps, carbon markets, etc.) coexisting.",
       "p2": "The joint OECD-OIF/IFDD report “Access to climate and biodiversity finance, from global commitments to country action” provides unprecedented empirical insight into how climate and biodiversity finance is allocated, the determinants of this access (needs, merit, donor interests, language, etc.), and the obstacles countries face, particularly Francophone ones.",
       "p3": "As the Decade of Action for the Sustainable Development Goals (SDGs) draws to a close, and in the context of the climate and biodiversity agendas, the High-Level Political Forum (HLPF) offers a strategic platform to debate the conditions for better access to finance, from the perspective of both recipient countries and donors. The side event will mark the official launch of the joint report at United Nations Headquarters, and provide a space for political and technical dialogue on the reforms to be pursued by donors, countries and the multilateral system.",
@@ -73,6 +75,7 @@
       "tag": "Speakers",
       "title": "High-level speakers",
       "subtitle": "Decision-makers and experts gathered for the official launch of the report at UN Headquarters.",
+      "lead": "A high-level dialogue will bring together governments, donors, international funds and development partners to discuss the reforms needed to accelerate the implementation of the climate, biodiversity and sustainable development goals.",
       "tbc": "To be confirmed",
       "photoPlaceholder": "Photo coming soon",
       "names": {

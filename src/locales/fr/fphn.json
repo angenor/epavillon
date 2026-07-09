@@ -5,6 +5,7 @@
       "title": "Accès aux financements climat et biodiversité",
       "titleAccent": "Des engagements mondiaux à l'action pays",
       "subtitle": "Lancement du rapport OCDE–OIF/IFDD",
+      "hook": "Comment rendre les financements climat et biodiversité plus accessibles aux pays qui en ont le plus besoin ?",
       "date": "14 juillet 2026",
       "time": "13h15 – 14h45 (heure de New York)",
       "localTime": "heure de {city}",
@@ -44,6 +45,7 @@
     "about": {
       "tag": "À propos",
       "title": "Contexte et justification",
+      "lead": "À travers des analyses inédites et des études de cas menées dans plusieurs pays francophones, ce rapport met en lumière les principaux obstacles à l'accès aux financements internationaux et formule des recommandations concrètes pour simplifier les procédures, renforcer les capacités nationales et mieux répondre aux priorités des pays.",
       "p1": "Les pays en développement font face à une double urgence : accélérer l'action climatique et enrayer l'érosion de la biodiversité tout en poursuivant leurs objectifs de développement durable. Dans le même temps, le paysage des financements est devenu plus complexe et fragmenté, avec la coexistence de multiples bailleurs bilatéraux, institutions multilatérales, fonds verticaux et nouveaux instruments (obligations vertes, échanges dette-nature, marchés du carbone, etc.).",
       "p2": "Le rapport conjoint OCDE-OIF/IFDD « Accès aux financements climat et biodiversité, des engagements mondiaux à l'action pays » apporte un éclairage empirique inédit sur la manière dont les financements climat et biodiversité sont alloués, sur les déterminants de cet accès (besoins, mérite, intérêts des bailleurs, langue, etc.), ainsi que sur les obstacles rencontrés par les pays, en particulier francophones.",
       "p3": "À l'approche de la fin de la Décennie d'action pour les Objectifs de développement durable (ODD) et dans le contexte des agendas climatiques et de biodiversité, le Forum politique de haut niveau (HLPF) offre une plateforme stratégique pour débattre des conditions d'un meilleur accès aux financements, du point de vue à la fois des pays bénéficiaires et des bailleurs. L'événement parallèle constituera le lancement officiel du rapport conjoint au Siège des Nations unies, et un espace de dialogue politique et technique sur les réformes à conduire au niveau des bailleurs, des pays et du système multilatéral.",
@@ -73,6 +75,7 @@
       "tag": "Intervenants",
       "title": "Intervenants de haut niveau",
       "subtitle": "Décideurs et experts réunis pour le lancement officiel du rapport au Siège des Nations unies.",
+      "lead": "Un dialogue de haut niveau réunira gouvernements, bailleurs, fonds internationaux et partenaires du développement pour échanger sur les réformes nécessaires afin d'accélérer la mise en œuvre des objectifs climat, biodiversité et développement durable.",
       "tbc": "À confirmer",
       "photoPlaceholder": "Photo à venir",
       "names": {

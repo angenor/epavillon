@@ -76,6 +76,11 @@
               </p>
             </div>
 
+            <!-- Question d'accroche -->
+            <p class="text-lg sm:text-xl font-semibold text-white leading-snug border-l-4 border-green-400 bg-green-500/5 rounded-r-xl pl-4 pr-3 py-3">
+              {{ t('fphn.hero.hook') }}
+            </p>
+
             <!-- Badges d'infos -->
             <div class="flex flex-wrap gap-2 items-center">
               <div class="flex items-center gap-2 bg-gradient-to-r from-green-500/30 to-emerald-500/20 border border-green-400/50 rounded-full px-4 py-2 text-sm sm:text-base shadow-lg shadow-green-500/10">
@@ -106,6 +111,9 @@
                 <font-awesome-icon :icon="['fas', 'circle-info']" class="mr-1.5" />
                 {{ t('fphn.about.title') }}
               </h2>
+              <p class="text-sm sm:text-[15px] text-white/90 font-medium leading-relaxed mb-3">
+                {{ t('fphn.about.lead') }}
+              </p>
               <div class="space-y-3 text-sm text-white/70 leading-relaxed">
                 <p>{{ t('fphn.about.p1') }}</p>
                 <p>{{ t('fphn.about.p2') }}</p>
@@ -181,6 +189,10 @@
                 <font-awesome-icon :icon="['fas', 'microphone']" class="mr-1.5" />
                 {{ t('fphn.speakers.title') }}
               </h2>
+              <p class="text-sm text-white/60 leading-relaxed mb-3">
+                <font-awesome-icon :icon="['fas', 'earth-africa']" class="text-green-400 mr-1.5" />
+                {{ t('fphn.speakers.lead') }}
+              </p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div
                   v-for="speaker in speakers"
@@ -236,6 +248,17 @@
                 </div>
               </div>
             </section>
+
+            <!-- Hashtags de la campagne -->
+            <div class="flex flex-wrap justify-center gap-2 pt-1">
+              <span
+                v-for="tag in HASHTAGS"
+                :key="tag"
+                class="text-xs font-medium text-green-300/70 bg-green-500/5 border border-green-400/15 rounded-full px-3 py-1"
+              >
+                {{ tag }}
+              </span>
+            </div>
           </div>
 
           <!-- ==================== Colonne droite : panneau inscription (sticky) ==================== -->
@@ -344,6 +367,11 @@ const YOUTUBE_LIVE_ID = ''
 
 // Visuel officiel de diffusion (16:9) utilisé comme bannière
 const COVER_IMAGE = '/images/Visuel-Diffusion-14-juillet.jpg'
+
+const HASHTAGS = [
+  '#HLPF2026', '#FinanceClimat', '#Biodiversité', '#ODD',
+  '#DéveloppementDurable', '#Francophonie', '#IFDD', '#OIF', '#OCDE',
+]
 
 const partners = [
   { acronym: 'OCDE', name: 'OCDE', logo: '/images/logo_ocde-2.png' },
