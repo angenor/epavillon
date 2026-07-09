@@ -266,3 +266,7 @@ Consultez `DEPLOYMENT_SEO.md` pour :
 
 ## Recent Changes
 - 001-paco-webinar: Added JavaScript (Vue 3.5+) + TypeScript (Edge Function Deno) + Vue 3, Vue Router 4, Pinia, Supabase JS, TailwindCSS v4, Vue i18n, Font Awesome
+
+
+
+Le direct va démarrer dans quelques instants…

@@ -5,16 +5,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-12 items-start">
           <!-- ==================== Colonne gauche : présentation ==================== -->
           <div class="lg:col-span-3 order-2 lg:order-1 text-white space-y-6">
-            <!-- Bannière (visuel officiel) -->
-            <div class="w-full rounded-2xl overflow-hidden">
-              <img
-                :src="COVER_IMAGE"
-                :alt="t('fphn.hero.title')"
-                class="w-full aspect-video object-cover"
-              />
-            </div>
-
-            <!-- Direct YouTube (pendant l'évènement) -->
+            <!-- Direct YouTube (pendant l'évènement, remplace la bannière) -->
             <section v-if="countdownState === 'live'">
               <div class="flex items-center gap-2.5 mb-3">
                 <span class="inline-flex items-center gap-2 rounded-full bg-red-500/20 border border-red-400/40 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-red-300">
@@ -42,9 +33,18 @@
               </div>
             </section>
 
+            <!-- Bannière (visuel officiel, hors direct) -->
+            <div v-else class="w-full rounded-2xl overflow-hidden">
+              <img
+                :src="COVER_IMAGE"
+                :alt="t('fphn.hero.title')"
+                class="w-full aspect-video object-cover"
+              />
+            </div>
+
             <!-- Annonce du futur direct (avant l'évènement) -->
             <section
-              v-else-if="countdownState === 'upcoming'"
+              v-if="countdownState === 'upcoming'"
               class="flex items-center gap-4 bg-gradient-to-r from-red-500/10 via-white/5 to-white/5 border border-red-400/25 rounded-2xl p-4"
             >
               <div class="relative shrink-0 w-12 h-12 rounded-xl bg-red-500/15 border border-red-400/30 flex items-center justify-center">
