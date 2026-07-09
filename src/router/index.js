@@ -400,6 +400,11 @@ const router = createRouter({
       name: 'fphn-side-event',
       component: () => import('../views/fphn/FphnSideEvent.vue'),
     },
+    // Ancienne URL de comparaison — redirige vers la page finale
+    {
+      path: '/fphn2026/v2',
+      redirect: { name: 'fphn-side-event' },
+    },
     // Page d'erreur 403 - Accès refusé
     {
       path: '/403',

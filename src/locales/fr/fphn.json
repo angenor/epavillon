@@ -7,6 +7,8 @@
       "subtitle": "Lancement du rapport OCDE–OIF/IFDD",
       "date": "14 juillet 2026",
       "time": "13h15 – 14h45 (heure de New York)",
+      "localTime": "heure de {city}",
+      "localTimeFallback": "votre heure locale",
       "location": "African Union Mission to the UN, New York",
       "interpretation": "Interprétation simultanée anglais / français",
       "register": "S'inscrire à l'évènement",

@@ -7,6 +7,8 @@
       "subtitle": "Launch of the OECD–OIF/IFDD report",
       "date": "14 July 2026",
       "time": "1:15 – 2:45 pm (New York time)",
+      "localTime": "{city} time",
+      "localTimeFallback": "your local time",
       "location": "African Union Mission to the UN, New York",
       "interpretation": "Simultaneous English / French interpretation",
       "register": "Register for the event",

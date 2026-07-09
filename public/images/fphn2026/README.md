@@ -5,7 +5,7 @@
 | Fichier | Usage |
 |---|---|
 | `Visuel-Diffusion-14-juillet.jpg` | Image de couverture du héro + partage réseaux sociaux (og:image) |
-| `logo_ocde-2.png.webp` | Logo OCDE (bande partenaires) |
+| `logo_ocde-2.png` | Logo OCDE (bande partenaires) |
 | `OIF-ifdd-logo.png` | Logo combiné IFDD / OIF (bande partenaires) |
 
 ## Photos des intervenants à déposer (`speakers/`)
