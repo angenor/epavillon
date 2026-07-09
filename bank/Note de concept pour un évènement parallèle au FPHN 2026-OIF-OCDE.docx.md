@@ -1,8 +1,3 @@
-
-
-| ![Enquête de l'OCDE sur le télétravail - SMPCA CFE-CGC][image1] |   |
-| :---- | ----: |
-
 **Évènement parallèle au Forum politique de haut niveau 2026**
 
 **Accès aux financements climat et biodiversité : des engagements mondiaux à l’action pays**
