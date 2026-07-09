@@ -394,6 +394,12 @@ const router = createRouter({
       name: 'paco-webinar',
       component: () => import('../views/paco/PacoWebinar.vue'),
     },
+    // Évènement parallèle FPHN 2026 — page publique (pas de garde auth)
+    {
+      path: '/fphn2026',
+      name: 'fphn-side-event',
+      component: () => import('../views/fphn/FphnSideEvent.vue'),
+    },
     // Page d'erreur 403 - Accès refusé
     {
       path: '/403',

@@ -1,0 +1,129 @@
+{
+  "fphn": {
+    "hero": {
+      "badge": "Side event at the 2026 High-Level Political Forum",
+      "title": "Access to Climate and Biodiversity Finance",
+      "titleAccent": "From Global Commitments to Country Action",
+      "subtitle": "Launch of the OECD–OIF/IFDD report",
+      "date": "14 July 2026",
+      "time": "1:15 – 2:45 pm (New York time)",
+      "location": "African Union Mission to the UN, New York",
+      "interpretation": "Simultaneous English / French interpretation",
+      "register": "Register for the event",
+      "note": "90 minutes · Free registration",
+      "coverPlaceholder": "Cover image coming soon"
+    },
+    "countdown": {
+      "title": "Event starts in",
+      "days": "days",
+      "hours": "hours",
+      "minutes": "minutes",
+      "seconds": "seconds",
+      "live": "The event is underway",
+      "ended": "The event has ended"
+    },
+    "partners": {
+      "title": "An event co-organised by",
+      "logoPlaceholder": "Logo coming soon"
+    },
+    "tabs": {
+      "about": "About",
+      "objectives": "Objectives & audience",
+      "speakers": "Speakers",
+      "programme": "Programme"
+    },
+    "about": {
+      "tag": "About",
+      "title": "Context and rationale",
+      "p1": "Developing countries face a dual emergency: accelerating climate action and halting biodiversity loss while pursuing their sustainable development goals. At the same time, the financing landscape has become more complex and fragmented, with multiple bilateral donors, multilateral institutions, vertical funds and new instruments (green bonds, debt-for-nature swaps, carbon markets, etc.) coexisting.",
+      "p2": "The joint OECD-OIF/IFDD report “Access to climate and biodiversity finance, from global commitments to country action” provides unprecedented empirical insight into how climate and biodiversity finance is allocated, the determinants of this access (needs, merit, donor interests, language, etc.), and the obstacles countries face, particularly Francophone ones.",
+      "p3": "As the Decade of Action for the Sustainable Development Goals (SDGs) draws to a close, and in the context of the climate and biodiversity agendas, the High-Level Political Forum (HLPF) offers a strategic platform to debate the conditions for better access to finance, from the perspective of both recipient countries and donors. The side event will mark the official launch of the joint report at United Nations Headquarters, and provide a space for political and technical dialogue on the reforms to be pursued by donors, countries and the multilateral system.",
+      "caseStudies": "Case studies: Armenia, Gabon, Madagascar, Saint Lucia, Senegal, Togo"
+    },
+    "objectives": {
+      "tag": "Objectives",
+      "title": "Objectives of the event",
+      "item1": {
+        "title": "Present the report",
+        "text": "Present the key findings and recommendations of the OECD-OIF/IFDD report on access to climate and biodiversity finance."
+      },
+      "item2": {
+        "title": "High-level dialogue",
+        "text": "Give the floor to high-level decision-makers on the reforms needed to make finance more accessible, predictable and aligned with national priorities."
+      },
+      "item3": {
+        "title": "Country experiences",
+        "text": "Highlight country experiences, particularly from Francophone countries: national financing strategies, accreditation, donor coordination, private sector mobilisation and financial innovation."
+      },
+      "item4": {
+        "title": "Operational dialogue",
+        "text": "Foster an operational dialogue between countries, donors, vertical funds and multilateral development banks: simplified procedures, harmonised requirements, capacity support, language barriers."
+      }
+    },
+    "speakers": {
+      "tag": "Speakers",
+      "title": "High-level speakers",
+      "subtitle": "Decision-makers and experts gathered for the official launch of the report at UN Headquarters.",
+      "tbc": "To be confirmed",
+      "photoPlaceholder": "Photo coming soon",
+      "names": {
+        "armenia": "Armenia",
+        "france": "France",
+        "madagascar": "Madagascar",
+        "adaptationFund": "Adaptation Fund"
+      },
+      "roles": {
+        "biang": "Representative of the Organisation internationale de la Francophonie (OIF) to the United Nations in New York",
+        "schnoell": "Representative of the Organisation for Economic Co-operation and Development (OECD) to the United Nations in New York",
+        "ruzicka": "OECD Deputy Secretary-General",
+        "casado": "Policy Analyst, OECD",
+        "kiri": "Senior Coordinator, IFDD-OIF",
+        "armenia": "Minister or senior official",
+        "france": "Ministerial / high-level representative",
+        "madagascar": "Ministerial / high-level representative",
+        "adaptationFund": "Representative of the Adaptation Fund"
+      }
+    },
+    "programme": {
+      "tag": "Programme",
+      "title": "Format and agenda",
+      "subtitle": "90 minutes with simultaneous English / French interpretation.",
+      "minutes": "min",
+      "item1": {
+        "title": "Welcome and introduction",
+        "text": "Setting the HLPF context and the link between the SDGs and the climate / biodiversity agendas. By Mr Michel Xavier Biang (OIF) or Mr Thomas Schnoell (OECD)."
+      },
+      "item2": {
+        "title": "Technical presentation of the OECD-OIF/IFDD report",
+        "text": "Analysis of climate and biodiversity finance flows, allocation model results and implications for countries' access (Mr Juan Casado-Asensio, OECD). Country case study findings: national strategies, governance, accreditation, donor coordination, financial innovation and language barriers (Mr Tounao Kiri, IFDD-OIF)."
+      },
+      "item3": {
+        "title": "High-level panel",
+        "text": "Guided discussion around 2-3 central questions: how to structure an integrated national climate/biodiversity financing strategy? How to simplify access to funds? How to better coordinate donors? Moderated by an OIF/IFDD representative."
+      },
+      "item4": {
+        "title": "Exchanges with the audience",
+        "text": "Questions and reactions from the audience, responses from panellists."
+      },
+      "item5": {
+        "title": "Conclusion and way forward",
+        "text": "By Mr Michel Xavier Biang (OIF) or Mr Thomas Schnoell (OECD)."
+      }
+    },
+    "audience": {
+      "tag": "Participants",
+      "title": "Target audience",
+      "item1": "Ministerial and high-level representatives of developing countries, particularly Francophone ones",
+      "item2": "Representatives of bilateral donors (OECD DAC members)",
+      "item3": "Climate and biodiversity funds (GCF, GEF, Adaptation Fund, etc.)",
+      "item4": "Multilateral development banks and other international financial institutions",
+      "item5": "Civil society organisations, research institutes, etc."
+    },
+    "cta": {
+      "title": "Join us on 14 July 2026",
+      "text": "Take part in the official launch of the OECD–OIF/IFDD report and the high-level dialogue on access to climate and biodiversity finance.",
+      "button": "Register now",
+      "note": "Free registration — limited seats"
+    }
+  }
+}
