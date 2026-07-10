@@ -23,6 +23,100 @@
     <!-- Activités -->
     <div v-else class="flex-1 flex flex-col relative z-10 min-h-0">
       <div class="flex-1 overflow-y-auto px-3 py-2 space-y-6 min-h-0">
+        <!-- Widget FPHN 2026 — Évènement parallèle OIF-OCDE-IFDD (masqué après l'évènement) -->
+        <div
+          v-if="fphnVisible"
+          @click="goToFphn"
+          class="fphn-event-card group relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-500 hover:scale-[1.02]"
+        >
+          <!-- Image de fond (visuel officiel) -->
+          <div class="absolute inset-0 z-0">
+            <img
+              src="/images/Visuel-Diffusion-14-juillet.jpg"
+              alt="Évènement parallèle FPHN 2026"
+              class="w-full h-full object-cover object-right transition-transform duration-700 group-hover:scale-110"
+            />
+            <div class="absolute inset-0 bg-gradient-to-r from-sky-950 via-blue-950/90 to-sky-900/55"></div>
+          </div>
+
+          <!-- Effet shimmer animé -->
+          <div class="absolute inset-0 z-10 opacity-30 fphn-shimmer pointer-events-none"></div>
+
+          <!-- Contenu -->
+          <div class="relative z-20 p-4">
+            <!-- Badge supérieur -->
+            <div class="flex items-center justify-between mb-3">
+              <div
+                v-if="fphnLive"
+                class="flex items-center gap-2 bg-red-500/90 px-2.5 py-1 rounded-full"
+              >
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                </span>
+                <span class="text-white text-[10px] font-bold uppercase tracking-widest">{{ t('fphn.live.badge') }}</span>
+              </div>
+              <div v-else class="flex items-center gap-2 bg-sky-400/20 backdrop-blur-md border border-sky-300/40 px-2.5 py-1 rounded-full">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-300 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-300"></span>
+                </span>
+                <span class="text-sky-100 text-[10px] font-bold uppercase tracking-widest">À venir</span>
+              </div>
+              <span class="text-[10px] font-semibold text-white/70 uppercase tracking-wider">FPHN 2026</span>
+            </div>
+
+            <!-- Logo / Marque -->
+            <div class="mb-3">
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/10 backdrop-blur-sm border border-white/20">
+                <svg class="w-3 h-3 text-sky-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/>
+                </svg>
+                <span class="text-white text-[11px] font-bold tracking-wide">OIF · OCDE · IFDD</span>
+              </div>
+            </div>
+
+            <!-- Titre principal -->
+            <h3 class="text-white font-bold text-base leading-tight mb-1 line-clamp-2 font-maverick">
+              {{ t('fphn.hero.title') }}
+            </h3>
+            <p class="text-sky-100/90 text-xs italic mb-3 line-clamp-2">
+              {{ t('fphn.hero.titleAccent') }}
+            </p>
+
+            <!-- Infos clés -->
+            <div class="space-y-1.5 mb-3">
+              <div class="flex items-center gap-2 text-white/90 text-xs">
+                <div class="w-6 h-6 rounded-md bg-sky-400/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
+                  <svg class="w-3 h-3 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </svg>
+                </div>
+                <span class="font-medium">{{ t('fphn.hero.date') }}</span>
+              </div>
+              <div class="flex items-center gap-2 text-white/90 text-xs">
+                <div class="w-6 h-6 rounded-md bg-sky-400/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
+                  <svg class="w-3 h-3 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <span class="font-medium">{{ t('fphn.hero.time') }}</span>
+              </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="flex items-center justify-between pt-3 border-t border-white/15">
+              <span class="text-sky-200 text-xs font-semibold">{{ fphnLive ? t('fphn.live.noticeTitle') : t('fphn.hero.register') }}</span>
+              <div class="w-7 h-7 rounded-full bg-sky-400/30 backdrop-blur-md flex items-center justify-center group-hover:bg-sky-400/50 group-hover:translate-x-1 transition-all duration-300">
+                <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Widget PACO — Prochain webinaire (en dur) -->
         <div
           @click="goToPaco"
@@ -562,6 +656,28 @@ export default {
       router.push('/paco')
     }
 
+    // Widget FPHN 2026 — évènement parallèle du 14 juillet 2026 (13h15-14h45, heure de New York)
+    const FPHN_START = new Date('2026-07-14T13:15:00-04:00').getTime()
+    const FPHN_END = new Date('2026-07-14T14:45:00-04:00').getTime()
+    const nowTick = ref(Date.now())
+    let fphnTimer = null
+
+    onMounted(() => {
+      // Rafraîchit l'état (à venir / en direct / terminé) toutes les minutes
+      fphnTimer = setInterval(() => { nowTick.value = Date.now() }, 60000)
+    })
+
+    onUnmounted(() => {
+      if (fphnTimer) clearInterval(fphnTimer)
+    })
+
+    const fphnLive = computed(() => nowTick.value >= FPHN_START && nowTick.value < FPHN_END)
+    const fphnVisible = computed(() => nowTick.value < FPHN_END)
+
+    const goToFphn = () => {
+      router.push('/fphn2026')
+    }
+
     // Gérer le clic sur un événement avec redirection conditionnelle
     const handleEventClick = (event) => {
       if (!event?.id) return
@@ -717,6 +833,9 @@ export default {
       handleEventClick,
       handleActivityClick,
       goToPaco,
+      goToFphn,
+      fphnLive,
+      fphnVisible,
       goToEventProgrammation,
       getProgrammationLink,
       isLive
@@ -772,5 +891,29 @@ export default {
   box-shadow:
     0 0 0 1px rgba(110, 231, 183, 0.4),
     0 20px 40px -10px rgba(16, 185, 129, 0.6);
+}
+
+/* Effet shimmer pour la carte FPHN (variante bleue) */
+.fphn-shimmer {
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(125, 211, 252, 0.25) 50%,
+    transparent 70%
+  );
+  animation: paco-shimmer-anim 3.5s ease-in-out infinite;
+}
+
+/* Glow doux sur la carte FPHN */
+.fphn-event-card {
+  box-shadow:
+    0 0 0 1px rgba(125, 211, 252, 0.2),
+    0 10px 30px -10px rgba(14, 165, 233, 0.4);
+}
+
+.fphn-event-card:hover {
+  box-shadow:
+    0 0 0 1px rgba(125, 211, 252, 0.4),
+    0 20px 40px -10px rgba(14, 165, 233, 0.6);
 }
 </style>
