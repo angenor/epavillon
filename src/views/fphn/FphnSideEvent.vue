@@ -388,7 +388,7 @@ const speakers = [
   { name: 'S.E. M. Paruyr Hovhannisyan', roleKey: 'fphn.speakers.roles.armenia', org: 'Arménie', photo: '/images/fphn2026/speakers/Photo_Paruyr_Hovhannisyan.jpg', initials: 'PH' },
   { nameKey: 'fphn.speakers.names.france', roleKey: 'fphn.speakers.roles.france', org: 'France', photo: '/images/fphn2026/speakers/france.jpg', initials: 'FR', tbc: true },
   { name: 'M. Robert Krech', roleKey: 'fphn.speakers.roles.adaptationFund', org: 'Fonds d\'adaptation', photo: '/images/fphn2026/speakers/Photo_Robert_Krech.jpg', initials: 'RK' },
-  { name: 'M. Tounao Kiri', roleKey: 'fphn.speakers.roles.kiri', org: 'IFDD-OIF', photo: '/images/fphn2026/speakers/kiri.jpg', initials: 'TK' },
+  { name: 'M. Tounao Kiri', roleKey: 'fphn.speakers.roles.kiri', org: 'IFDD-OIF', photo: '/images/tounao_kiri.jpg', initials: 'TK' },
 ]
 
 const missingPhotos = reactive(new Set())
