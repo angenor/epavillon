@@ -79,21 +79,18 @@
       "tbc": "À confirmer",
       "photoPlaceholder": "Photo à venir",
       "names": {
-        "armenia": "Arménie",
-        "france": "France",
-        "madagascar": "Madagascar",
-        "adaptationFund": "Fonds d'Adaptation"
+        "france": "Mission permanente de la France"
       },
       "roles": {
         "biang": "Représentant de l'Organisation internationale de la Francophonie (OIF) auprès des Nations Unies à New York",
-        "schnoell": "Représentant de l'Organisation de coopération et de développement économiques (OCDE) auprès des Nations Unies à New York",
+        "schnoell": "Représentant spécial de l'Organisation de coopération et de développement économiques (OCDE) auprès des Nations Unies",
         "ruzicka": "Secrétaire général adjoint de l'OCDE",
         "casado": "Analyste des politiques, OCDE",
         "kiri": "Coordonnateur principal, IFDD-OIF",
-        "armenia": "Ministre ou haut·e responsable",
-        "france": "Représentant·e ministériel·le / haut niveau",
-        "madagascar": "Représentant·e ministériel·le / haut niveau",
-        "adaptationFund": "Représentant·e du Fonds d'Adaptation"
+        "gabon": "Ministre de la planification et de la prospective du Gabon",
+        "armenia": "Représentant permanent de l'Arménie auprès des Nations Unies",
+        "france": "Mission permanente de la France auprès des Nations Unies",
+        "adaptationFund": "Responsable de l'équipe Gouvernance et Opérations du Fonds d'adaptation"
       }
     },
     "programme": {

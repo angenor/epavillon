@@ -79,21 +79,18 @@
       "tbc": "To be confirmed",
       "photoPlaceholder": "Photo coming soon",
       "names": {
-        "armenia": "Armenia",
-        "france": "France",
-        "madagascar": "Madagascar",
-        "adaptationFund": "Adaptation Fund"
+        "france": "Permanent Mission of France"
       },
       "roles": {
         "biang": "Representative of the Organisation internationale de la Francophonie (OIF) to the United Nations in New York",
-        "schnoell": "Representative of the Organisation for Economic Co-operation and Development (OECD) to the United Nations in New York",
+        "schnoell": "Special Representative of the Organisation for Economic Co-operation and Development (OECD) to the United Nations",
         "ruzicka": "OECD Deputy Secretary-General",
         "casado": "Policy Analyst, OECD",
         "kiri": "Senior Coordinator, IFDD-OIF",
-        "armenia": "Minister or senior official",
-        "france": "Ministerial / high-level representative",
-        "madagascar": "Ministerial / high-level representative",
-        "adaptationFund": "Representative of the Adaptation Fund"
+        "gabon": "Minister of Planning and Foresight of Gabon",
+        "armenia": "Permanent Representative of Armenia to the United Nations",
+        "france": "Permanent Mission of France to the United Nations",
+        "adaptationFund": "Head of the Governance and Operations team, Adaptation Fund"
       }
     },
     "programme": {
