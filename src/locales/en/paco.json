@@ -638,9 +638,9 @@
         "6": "Specialized media and science communication actors"
       },
       "panelists": {
-        "ai-climate-specialist": { "role": "Specialist in AI applied to climate (university, research center or technical institution)" },
-        "ai-adaptation-initiative": { "role": "Representative of an initiative using AI for adaptation (warning system, agriculture, risk management)" },
-        "digital-governance-expert": { "role": "Expert in digital governance, ethics or open data" },
+        "sahi": { "role": "Design engineer in IT and telecommunications — over 18 years of operational, managerial and strategic experience in information technology" },
+        "katembo-muhasa": { "role": "Master's in Mathematical Sciences (AIMS Cameroon) — Teaching and research assistant" },
+        "omoy-kombe": { "role": "Telecommunications engineer specialized in Internet of Things, embedded AI (EdgeAI/TinyML) and embedded systems — Founder of HokTech Co, Technical Assistant at the EcoDéchets FabLab" },
         "community-innovator": { "role": "Community actor or digital innovator promoting local data and participatory approaches" }
       }
     }

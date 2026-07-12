@@ -174,11 +174,10 @@ const SESSIONS_DATA = [
     bannerUrl: '/images/IA_adaptation.jpg',
     replayUrl: null,
     i18nPrefix: 'paco.session7',
-    // Les noms des intervenant·e·s seront ajoutés ultérieurement (cf. note conceptuelle).
     panelists: [
-      { id: 'ai-climate-specialist', name: 'À confirmer', photoUrl: null, organization: null, email: null },
-      { id: 'ai-adaptation-initiative', name: 'À confirmer', photoUrl: null, organization: null, email: null },
-      { id: 'digital-governance-expert', name: 'À confirmer', photoUrl: null, organization: null, email: null },
+      { id: 'sahi', name: 'Guy-Ghislain SAHI', photoUrl: '/images/Guy_Ghislain_SAHI.jpg', organization: null, email: null },
+      { id: 'katembo-muhasa', name: 'Ernest Katembo Muhasa', photoUrl: '/images/Ernest_Katembo_Muhasa.jpg', organization: 'Université Catholique de Bukavu', email: null },
+      { id: 'omoy-kombe', name: 'Hélène OMOY KOMBE', photoUrl: '/images/Helene_OMOY_KOMBE.jpg', organization: 'HokTech Co / FabLab EcoDéchets (UEA)', email: null },
       { id: 'community-innovator', name: 'À confirmer', photoUrl: null, organization: null, email: null },
     ],
     partners: COMMON_PARTNERS,

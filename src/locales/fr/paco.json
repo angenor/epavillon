@@ -638,9 +638,9 @@
         "6": "Médias spécialisés et acteurs de la communication scientifique"
       },
       "panelists": {
-        "ai-climate-specialist": { "role": "Spécialiste de l'IA appliquée au climat (université, centre de recherche ou institution technique)" },
-        "ai-adaptation-initiative": { "role": "Représentant·e d'une initiative utilisant l'IA pour l'adaptation (système d'alerte, agriculture, gestion des risques)" },
-        "digital-governance-expert": { "role": "Expert·e en gouvernance numérique, éthique ou données ouvertes" },
+        "sahi": { "role": "Ingénieur de conception en informatique et télécommunications — plus de 18 ans d'expérience opérationnelle, managériale et stratégique dans les technologies de l'information" },
+        "katembo-muhasa": { "role": "Master en Sciences Mathématiques (AIMS Cameroun) — Assistant d'enseignement et de recherche" },
+        "omoy-kombe": { "role": "Ingénieure en télécommunications spécialisée en Internet des Objets, IA embarquée (EdgeAI/TinyML) et systèmes embarqués — Fondatrice de HokTech Co, Assistante Technique au FabLab EcoDéchets" },
         "community-innovator": { "role": "Acteur·rice communautaire ou innovateur·rice numérique valorisant les données locales et les approches participatives" }
       }
     }
