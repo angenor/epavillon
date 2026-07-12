@@ -384,7 +384,7 @@ const speakers = [
   { name: 'S.E. M. Michel Xavier Biang', roleKey: 'fphn.speakers.roles.biang', org: 'OIF', photo: '/images/fphn2026/speakers/Photo_SEM_Michel_Xavier_Biang.jpg', initials: 'MB' },
   { name: 'S.E. M. Thomas Schnöll', roleKey: 'fphn.speakers.roles.schnoell', org: 'OCDE', photo: '/images/fphn2026/speakers/schnoell.jpg', initials: 'TS' },
   { name: 'M. Frantisek Ruzicka', roleKey: 'fphn.speakers.roles.ruzicka', org: 'OCDE', photo: '/images/fphn2026/speakers/ruzicka.jpg', initials: 'FR' },
-  { name: 'S.E. Mme Louise Pierrette Mvono', roleKey: 'fphn.speakers.roles.gabon', org: 'Gabon', photo: '/images/fphn2026/speakers/Photo_SEMme_Louise_Pierrette_Mvono.jpg', initials: 'LM', tbc: true },
+  { name: 'S.E. Mme Louise Pierrette Mvono', roleKey: 'fphn.speakers.roles.gabon', org: 'Gabon', photo: '/images/fphn2026/speakers/Photo_SEMme_Louise_Pierrette_Mvono.jpg', initials: 'LM' },
   { name: 'S.E. M. Paruyr Hovhannisyan', roleKey: 'fphn.speakers.roles.armenia', org: 'Arménie', photo: '/images/fphn2026/speakers/Photo_Paruyr_Hovhannisyan.jpg', initials: 'PH' },
   { nameKey: 'fphn.speakers.names.france', roleKey: 'fphn.speakers.roles.france', org: 'France', photo: '/images/fphn2026/speakers/france.jpg', initials: 'FR', tbc: true },
   { name: 'M. Robert Krech', roleKey: 'fphn.speakers.roles.adaptationFund', org: 'Fonds d\'adaptation', photo: '/images/fphn2026/speakers/Photo_Robert_Krech.jpg', initials: 'RK' },
