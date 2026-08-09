@@ -13,6 +13,8 @@
       "location": "African Union Mission to the UN, New York",
       "interpretation": "Interprétation simultanée anglais / français",
       "register": "S'inscrire à l'évènement",
+      "join": "Rejoindre via Zoom",
+      "joinNote": "Utilisez le lien Zoom reçu par email lors de votre inscription",
       "note": "90 minutes · Inscription gratuite",
       "coverPlaceholder": "Image de couverture à venir"
     },
@@ -27,10 +29,10 @@
     },
     "live": {
       "badge": "En direct",
-      "noticeTitle": "Diffusion en direct sur cette page",
-      "noticeText": "Le 14 juillet 2026 à 13h15 (heure de New York), suivez l'évènement en direct ici même, en plus de la participation via Zoom.",
+      "noticeTitle": "Participation via Zoom",
+      "noticeText": "Le 14 juillet 2026 à 13h15 (heure de New York), rejoignez l'évènement en direct via le lien Zoom après votre inscription.",
       "waiting": "Le direct va démarrer dans quelques instants…",
-      "panelNote": "Le direct sera aussi diffusé sur cette page"
+      "panelNote": "L'accès à l'évènement se fait uniquement via Zoom"
     },
     "partners": {
       "title": "Un évènement co-organisé par",
@@ -131,6 +133,8 @@
     "cta": {
       "title": "Rejoignez-nous le 14 juillet 2026",
       "text": "Participez au lancement officiel du rapport OCDE–OIF/IFDD et au dialogue de haut niveau sur l'accès aux financements climat et biodiversité.",
+      "titleLive": "C'est le moment de nous rejoindre",
+      "textLive": "Connectez-vous au direct via le lien Zoom reçu par email. Pas encore inscrit ? L'inscription reste ouverte.",
       "button": "S'inscrire maintenant",
       "note": "Inscription gratuite — places limitées"
     }

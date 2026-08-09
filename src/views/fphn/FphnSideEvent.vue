@@ -5,36 +5,8 @@
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-12 items-start">
           <!-- ==================== Colonne gauche : présentation ==================== -->
           <div class="lg:col-span-3 order-2 lg:order-1 text-white space-y-6">
-            <!-- Direct YouTube (pendant l'évènement, remplace la bannière) -->
-            <section v-if="countdownState === 'live'">
-              <div class="flex items-center gap-2.5 mb-3">
-                <span class="inline-flex items-center gap-2 rounded-full bg-red-500/20 border border-red-400/40 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-red-300">
-                  <span class="relative flex h-2.5 w-2.5">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-                  </span>
-                  {{ t('fphn.live.badge') }}
-                </span>
-                <font-awesome-icon :icon="['fab', 'youtube']" class="text-red-500 text-xl" />
-              </div>
-              <div v-if="YOUTUBE_LIVE_ID" class="aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/30 bg-black">
-                <iframe
-                  :src="`https://www.youtube-nocookie.com/embed/${YOUTUBE_LIVE_ID}?autoplay=1`"
-                  class="w-full h-full"
-                  frameborder="0"
-                  allow="autoplay; encrypted-media; picture-in-picture"
-                  allowfullscreen
-                  :title="t('fphn.live.noticeTitle')"
-                ></iframe>
-              </div>
-              <div v-else class="aspect-video rounded-2xl border border-white/10 bg-black/40 flex flex-col items-center justify-center gap-3">
-                <font-awesome-icon :icon="['fab', 'youtube']" class="text-red-500 text-4xl animate-pulse" />
-                <p class="text-sm text-white/60">{{ t('fphn.live.waiting') }}</p>
-              </div>
-            </section>
-
-            <!-- Bannière (visuel officiel, hors direct) -->
-            <div v-else class="w-full rounded-2xl overflow-hidden">
+            <!-- Bannière (visuel officiel) -->
+            <div class="w-full rounded-2xl overflow-hidden">
               <img
                 :src="COVER_IMAGE"
                 :alt="t('fphn.hero.title')"
@@ -42,17 +14,13 @@
               />
             </div>
 
-            <!-- Annonce du futur direct (avant l'évènement) -->
+            <!-- Rappel accès Zoom (avant l'évènement) -->
             <section
               v-if="countdownState === 'upcoming'"
-              class="flex items-center gap-4 bg-gradient-to-r from-red-500/10 via-white/5 to-white/5 border border-red-400/25 rounded-2xl p-4"
+              class="flex items-center gap-4 bg-gradient-to-r from-green-500/10 via-white/5 to-white/5 border border-green-400/25 rounded-2xl p-4"
             >
-              <div class="relative shrink-0 w-12 h-12 rounded-xl bg-red-500/15 border border-red-400/30 flex items-center justify-center">
-                <font-awesome-icon :icon="['fab', 'youtube']" class="text-red-400 text-2xl" />
-                <span class="absolute -top-1 -right-1 flex h-3 w-3">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                </span>
+              <div class="shrink-0 w-12 h-12 rounded-xl bg-green-500/15 border border-green-400/30 flex items-center justify-center">
+                <font-awesome-icon :icon="['fas', 'video']" class="text-green-400 text-2xl" />
               </div>
               <div>
                 <p class="text-sm font-bold text-white">{{ t('fphn.live.noticeTitle') }}</p>
@@ -319,25 +287,25 @@
                 <span class="text-sm font-medium text-white/70">{{ t('fphn.countdown.ended') }}</span>
               </div>
 
-              <!-- Inscription -->
-              <h2 class="text-xl font-bold text-white text-center mb-2">{{ t('fphn.cta.title') }}</h2>
-              <p class="text-sm text-white/60 text-center mb-5">{{ t('fphn.cta.text') }}</p>
+              <!-- Inscription / Accès au direct -->
+              <h2 class="text-xl font-bold text-white text-center mb-2">{{ canJoin ? t('fphn.cta.titleLive') : t('fphn.cta.title') }}</h2>
+              <p class="text-sm text-white/60 text-center mb-5">{{ canJoin ? t('fphn.cta.textLive') : t('fphn.cta.text') }}</p>
               <a
                 :href="REGISTRATION_URL"
                 target="_blank"
                 rel="noopener"
                 class="w-full inline-flex items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white font-bold px-6 py-3.5 shadow-lg shadow-green-500/25 hover:shadow-xl transition-all cursor-pointer"
               >
-                <font-awesome-icon :icon="['fas', 'user-plus']" />
-                {{ t('fphn.hero.register') }}
+                <font-awesome-icon :icon="canJoin ? ['fas', 'video'] : ['fas', 'user-plus']" />
+                {{ canJoin ? t('fphn.hero.join') : t('fphn.hero.register') }}
               </a>
-              <p class="text-xs text-white/40 text-center mt-3">{{ t('fphn.hero.note') }}</p>
+              <p class="text-xs text-white/40 text-center mt-3">{{ canJoin ? t('fphn.hero.joinNote') : t('fphn.hero.note') }}</p>
               <p class="text-xs text-white/40 text-center mt-1">
                 <font-awesome-icon :icon="['fas', 'language']" class="mr-1" />
                 {{ t('fphn.hero.interpretation') }}
               </p>
-              <p class="text-xs text-red-300/90 text-center mt-3 flex items-center justify-center gap-1.5">
-                <font-awesome-icon :icon="['fab', 'youtube']" class="text-red-400" />
+              <p class="text-xs text-green-300/90 text-center mt-3 flex items-center justify-center gap-1.5">
+                <font-awesome-icon :icon="['fas', 'video']" class="text-green-400" />
                 {{ t('fphn.live.panelNote') }}
               </p>
             </div>
@@ -360,10 +328,6 @@ const { t } = useI18n()
 const EVENT_START = '2026-07-14T13:15:00-04:00'
 const EVENT_END = '2026-07-14T14:45:00-04:00'
 const REGISTRATION_URL = 'https://meetoecd1.zoom.us/meeting/register/yu8YbosuRBC7BOnclai_dA'
-
-// ID de la vidéo YouTube du direct — à renseigner le jour J (ex. 'dQw4w9WgXcQ').
-// Tant qu'il est vide, un message d'attente s'affiche pendant l'évènement.
-const YOUTUBE_LIVE_ID = ''
 
 // Visuel officiel de diffusion (16:9) utilisé comme bannière
 const COVER_IMAGE = '/images/Visuel-Diffusion-14-juillet.jpg'
@@ -432,6 +396,13 @@ const { timeRemaining, formattedTime } = useCountdown(() => EVENT_START)
 const countdownState = computed(() => {
   if (!timeRemaining.value?.isExpired) return 'upcoming'
   return Date.now() < new Date(EVENT_END).getTime() ? 'live' : 'ended'
+})
+
+// Fenêtre d'accès : 30 min avant le début et pendant le direct → on invite à rejoindre
+const JOIN_WINDOW_MS = 30 * 60 * 1000
+const canJoin = computed(() => {
+  if (countdownState.value === 'live') return true
+  return countdownState.value === 'upcoming' && (timeRemaining.value?.total ?? Infinity) <= JOIN_WINDOW_MS
 })
 
 // SEO — meta tags pour le partage sur les réseaux sociaux

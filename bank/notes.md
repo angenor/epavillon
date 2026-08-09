@@ -1,4 +1,5 @@
 `agent-browser --headed`
+`claude --dangerously-skip-permissions`
 
 migrer photo sans thumbnail compressé
 gerer rendez-vous

@@ -1,6 +1,11 @@
 # .htaccess dans le dossier racine
 RewriteEngine On
 
+# 0. Page d'accueil : servir directement l'index.html de Vue.
+#    Sans cette règle, "/" pointe sur le dossier racine (-d) et la règle 4
+#    (condition !-d) est ignorée -> le serveur affiche sa page par défaut.
+RewriteRule ^/?$ /dist/index.html [L]
+
 # 1. Rediriger les requêtes API vers Laravel
 RewriteCond %{REQUEST_URI} ^/api/.*$ [OR]
 RewriteCond %{REQUEST_URI} ^/send_email$ [OR]

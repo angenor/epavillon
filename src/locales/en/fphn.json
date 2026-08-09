@@ -13,6 +13,8 @@
       "location": "African Union Mission to the UN, New York",
       "interpretation": "Simultaneous English / French interpretation",
       "register": "Register for the event",
+      "join": "Join via Zoom",
+      "joinNote": "Use the Zoom link you received by email when registering",
       "note": "90 minutes · Free registration",
       "coverPlaceholder": "Cover image coming soon"
     },
@@ -27,10 +29,10 @@
     },
     "live": {
       "badge": "Live",
-      "noticeTitle": "Live stream on this page",
-      "noticeText": "On 14 July 2026 at 1:15 pm (New York time), watch the event live right here, in addition to joining via Zoom.",
+      "noticeTitle": "Join via Zoom",
+      "noticeText": "On 14 July 2026 at 1:15 pm (New York time), join the event live through the Zoom link after registering.",
       "waiting": "The live stream will start shortly…",
-      "panelNote": "The live stream will also be broadcast on this page"
+      "panelNote": "The event can only be joined via Zoom"
     },
     "partners": {
       "title": "An event co-organised by",
@@ -131,6 +133,8 @@
     "cta": {
       "title": "Join us on 14 July 2026",
       "text": "Take part in the official launch of the OECD–OIF/IFDD report and the high-level dialogue on access to climate and biodiversity finance.",
+      "titleLive": "It's time to join us",
+      "textLive": "Connect to the live session through the Zoom link you received by email. Not registered yet? Registration is still open.",
       "button": "Register now",
       "note": "Free registration — limited seats"
     }
