@@ -169,10 +169,10 @@ const SESSIONS_DATA = [
     endTime: '15:30',
     timezone: 'GMT',
     language: 'fr',
-    completed: false,
+    completed: true,
     coverImage: '/images/IA_adaptation.jpg',
     bannerUrl: '/images/IA_adaptation.jpg',
-    replayUrl: null,
+    replayUrl: 'https://www.youtube.com/embed/to2RTSWCdCI?autoplay=1&mute=1',
     i18nPrefix: 'paco.session7',
     panelists: [
       { id: 'sahi', name: 'Guy-Ghislain SAHI', photoUrl: '/images/Guy_Ghislain_SAHI.jpg', organization: null, email: null },
