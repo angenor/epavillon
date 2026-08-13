@@ -341,6 +341,7 @@
       "session3": "Session 5",
       "session4": "Session 6",
       "session7": "Session 7",
+      "session8": "Session 8",
       "status": {
         "ended": "Ended",
         "upcoming": "Upcoming",
@@ -642,6 +643,51 @@
         "katembo-muhasa": { "role": "Master's in Mathematical Sciences (AIMS Cameroon) — Teaching and research assistant" },
         "omoy-kombe": { "role": "Telecommunications engineer specialized in Internet of Things, embedded AI (EdgeAI/TinyML) and embedded systems — Founder of HokTech Co, Technical Assistant at the EcoDéchets FabLab" },
         "community-innovator": { "role": "Community actor or digital innovator promoting local data and participatory approaches" }
+      }
+    },
+    "session8": {
+      "title": "Introduction to carbon footprint calculation",
+      "subtitle": "Measuring emissions to act: methods, tools and first steps",
+      "editionLabel": "Science, research and innovation",
+      "dateLabel": "Thursday, August 27, 2026",
+      "shortTitle": "Carbon footprint",
+      "timeLabel": "2:00 PM – 3:30 PM GMT",
+      "replay": "Watch the recording",
+      "replayTitle": "Webinar replay",
+      "replayLoading": "Loading video...",
+      "replayError": "Video temporarily unavailable",
+      "replayUnavailable": "The replay will be available soon.",
+      "context": "Faced with the acceleration of climate impacts, reducing greenhouse gas (GHG) emissions is an essential pillar of national and local strategies to combat climate change. The carbon footprint is a methodological tool for measuring, analyzing and understanding the direct and indirect emissions of an organization, a territory, a project or an activity. It provides an indispensable basis for planning mitigation actions, tracking progress and mobilizing stakeholders around measurable objectives.\n\nIn the French-speaking world, many public, private and community actors express a growing need to strengthen their carbon accounting capacities. However, methods, frameworks and tools sometimes remain complex, and technical skills are limited. A structured introduction to carbon footprint calculation helps democratize access to these tools, foster a shared understanding and support the implementation of coherent climate strategies aligned with international standards.\n\nThis webinar is part of the action \"Strengthening the capacities and collaboration of French-speaking countries on climate change adaptation and access to financing,\" implemented by the Institute of the Francophonie for Sustainable Development (IFDD) with the support of the regional PACO programme – funded by the BMUKN within the framework of the International Climate Initiative (IKI) and implemented by GIZ. It aims to provide a first practical introduction to carbon footprint calculation, tailored to the needs of French-speaking institutions, local authorities, community organizations and young professionals.",
+      "objectiveGeneral": "Strengthen the basic knowledge of French-speaking actors on the principles, methods and steps of carbon footprint calculation, in order to facilitate its use in climate strategies.",
+      "objectives": {
+        "0": "Present the fundamentals of the carbon footprint and its role in climate policies.",
+        "1": "Explain the main methodologies (scopes, emission factors, boundaries).",
+        "2": "Illustrate the key calculation steps through simple and accessible examples.",
+        "3": "Introduce tools and resources for carrying out a first carbon footprint.",
+        "4": "Encourage the integration of the carbon footprint into projects, programmes and institutional strategies."
+      },
+      "content": {
+        "0": { "title": "Carbon footprint principles", "desc": "Definitions, objectives, organizational and operational boundaries." },
+        "1": { "title": "Recognized methodologies", "desc": "Scopes 1, 2 and 3, emission factors, activity data." },
+        "2": { "title": "Calculation steps", "desc": "Data collection, conversion into emissions, analysis and interpretation." },
+        "3": { "title": "Practical tools", "desc": "Spreadsheets, online platforms, emission factor databases." },
+        "4": { "title": "Case studies", "desc": "Examples of organizations or projects that carried out a first carbon footprint." },
+        "5": { "title": "Link with climate strategies", "desc": "Mitigation, adaptation, monitoring and evaluation, communication." }
+      },
+      "targets": {
+        "0": "Public institutions and local authorities",
+        "1": "Civil society organizations",
+        "2": "Young professionals and students",
+        "3": "Businesses and cooperatives",
+        "4": "Research centers and universities",
+        "5": "Donors and technical partners",
+        "6": "Specialized media and environmental communication actors"
+      },
+      "panelists": {
+        "carbon-specialist": { "role": "Specialist in carbon footprint or carbon accounting (institute or specialized consultancy)" },
+        "project-expert": { "role": "Expert from a project integrating carbon accounting" },
+        "organization-rep": { "role": "Representative of an organization that carried out a first carbon footprint" },
+        "digital-tools-expert": { "role": "Expert in digital emission calculation tools" }
       }
     }
   }

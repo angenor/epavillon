@@ -341,6 +341,7 @@
       "session3": "Session 5",
       "session4": "Session 6",
       "session7": "Session 7",
+      "session8": "Session 8",
       "status": {
         "ended": "Terminée",
         "upcoming": "À venir",
@@ -642,6 +643,51 @@
         "katembo-muhasa": { "role": "Master en Sciences Mathématiques (AIMS Cameroun) — Assistant d'enseignement et de recherche" },
         "omoy-kombe": { "role": "Ingénieure en télécommunications spécialisée en Internet des Objets, IA embarquée (EdgeAI/TinyML) et systèmes embarqués — Fondatrice de HokTech Co, Assistante Technique au FabLab EcoDéchets" },
         "community-innovator": { "role": "Acteur·rice communautaire ou innovateur·rice numérique valorisant les données locales et les approches participatives" }
+      }
+    },
+    "session8": {
+      "title": "Initiation au calcul du bilan carbone",
+      "subtitle": "Mesurer ses émissions pour agir : méthodes, outils et premiers pas",
+      "editionLabel": "Science, recherche et innovation",
+      "dateLabel": "Jeudi 27 août 2026",
+      "shortTitle": "Bilan carbone",
+      "timeLabel": "14h00 – 15h30 GMT",
+      "replay": "Voir l'enregistrement",
+      "replayTitle": "Replay du webinaire",
+      "replayLoading": "Chargement de la vidéo...",
+      "replayError": "Vidéo temporairement indisponible",
+      "replayUnavailable": "Le replay sera bientôt disponible.",
+      "context": "Face à l'accélération des impacts climatiques, la réduction des émissions de gaz à effet de serre (GES) constitue un pilier essentiel des stratégies nationales et locales de lutte contre le changement climatique. Le bilan carbone est un outil méthodologique permettant de mesurer, analyser et comprendre les émissions directes et indirectes d'une organisation, d'un territoire, d'un projet ou d'une activité. Il constitue une base indispensable pour planifier des actions d'atténuation, suivre les progrès réalisés et mobiliser les acteurs autour d'objectifs mesurables.\n\nDans l'espace francophone, de nombreux acteurs publics, privés et communautaires expriment un besoin croissant de renforcer leurs capacités en matière de comptabilisation carbone. Toutefois, les méthodes, référentiels et outils restent parfois complexes, et les compétences techniques limitées. Une initiation structurée au calcul du bilan carbone permet de démocratiser l'accès à ces outils, de favoriser une compréhension commune et de soutenir la mise en œuvre de stratégies climatiques cohérentes et alignées sur les standards internationaux.\n\nCe webinaire s'inscrit dans l'action « Renforcement des capacités et de la collaboration des pays francophones sur l'adaptation au changement climatique et l'accès au financement », mise en œuvre par l'Institut de la Francophonie pour le développement durable (IFDD) avec l'appui du programme régional PACO – financé par le BMUKN dans le cadre de l'Initiative internationale pour le Climat (IKI) et exécuté par la GIZ. Il vise à offrir une première introduction pratique au calcul du bilan carbone, adaptée aux besoins des institutions, collectivités, organisations communautaires et jeunes professionnels francophones.",
+      "objectiveGeneral": "Renforcer les connaissances de base des acteurs francophones sur les principes, méthodes et étapes du calcul du bilan carbone, afin de faciliter son utilisation dans les stratégies climatiques.",
+      "objectives": {
+        "0": "Présenter les fondements du bilan carbone et son rôle dans les politiques climatiques.",
+        "1": "Expliquer les principales méthodologies (scopes, facteurs d'émission, périmètres).",
+        "2": "Illustrer les étapes clés du calcul à travers des exemples simples et accessibles.",
+        "3": "Introduire des outils et ressources permettant de réaliser un premier bilan carbone.",
+        "4": "Encourager l'intégration du bilan carbone dans les projets, programmes et stratégies institutionnelles."
+      },
+      "content": {
+        "0": { "title": "Principes du bilan carbone", "desc": "Définitions, objectifs, périmètres organisationnels et opérationnels." },
+        "1": { "title": "Méthodologies reconnues", "desc": "Scopes 1, 2 et 3, facteurs d'émission, données d'activité." },
+        "2": { "title": "Étapes du calcul", "desc": "Collecte des données, conversion en émissions, analyse et interprétation." },
+        "3": { "title": "Outils pratiques", "desc": "Tableurs, plateformes en ligne, bases de données d'émission." },
+        "4": { "title": "Études de cas", "desc": "Exemples d'organisations ou projets ayant réalisé un premier bilan carbone." },
+        "5": { "title": "Lien avec les stratégies climatiques", "desc": "Atténuation, adaptation, suivi-évaluation, communication." }
+      },
+      "targets": {
+        "0": "Institutions publiques et collectivités locales",
+        "1": "Organisations de la société civile",
+        "2": "Jeunes professionnels et étudiant·e·s",
+        "3": "Entreprises et coopératives",
+        "4": "Centres de recherche et universités",
+        "5": "Bailleurs de fonds et partenaires techniques",
+        "6": "Médias spécialisés et acteurs de la communication environnementale"
+      },
+      "panelists": {
+        "carbon-specialist": { "role": "Spécialiste du bilan carbone ou de l'empreinte carbone (institut ou cabinet spécialisé)" },
+        "project-expert": { "role": "Expert·e d'un projet intégrant la comptabilisation carbone" },
+        "organization-rep": { "role": "Représentant·e d'une organisation ayant réalisé un premier bilan carbone" },
+        "digital-tools-expert": { "role": "Expert·e en outils numériques de calcul des émissions" }
       }
     }
   }

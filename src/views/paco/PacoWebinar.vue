@@ -27,6 +27,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useAuth } from '@/composables/useAuth'
 import { useSEO } from '@/composables/useSEO'
 import {
@@ -42,15 +43,21 @@ import PacoSessionTabs from '@/components/paco/PacoSessionTabs.vue'
 import PacoSession1 from '@/components/paco/PacoSession1.vue'
 import PacoSession2 from '@/components/paco/PacoSession2.vue'
 
+const { t } = useI18n()
 const { sessions, currentSession } = usePacoWebinarData()
 
-// SEO - OG meta tags pour le partage sur les réseaux sociaux
-const PACO_OG_IMAGE = 'https://epavillonclimatique.francophonie.org/images/banniere_paco.jpg'
+// SEO - OG meta tags pour le partage sur les réseaux sociaux.
+// Dérivés de la session courante afin de rester à jour à chaque nouvelle édition.
+const SITE_ORIGIN = 'https://epavillonclimatique.francophonie.org'
+// Repli sur la bannière générique : les crawlers sociaux exigent une image réelle,
+// même quand le visuel de la session n'est pas encore disponible.
+const DEFAULT_OG_IMAGE = '/images/banniere_paco.jpg'
+const seoPrefix = currentSession.value.i18nPrefix
 useSEO({
-  title: 'Webinaire PACO - Intelligence artificielle et adaptation climatique',
-  description: 'Webinaire PACO sur l\'intelligence artificielle et l\'adaptation climatique : science, recherche et innovation. Jeudi 30 juillet 2026, en ligne, 14h00-15h30 GMT.',
-  image: PACO_OG_IMAGE,
-  url: 'https://epavillonclimatique.francophonie.org/paco',
+  title: `Webinaire PACO - ${t(`${seoPrefix}.title`)}`,
+  description: `${t(`${seoPrefix}.subtitle`)}. ${t(`${seoPrefix}.dateLabel`)}, en ligne, ${t(`${seoPrefix}.timeLabel`)}.`,
+  image: `${SITE_ORIGIN}${currentSession.value.coverImage || DEFAULT_OG_IMAGE}`,
+  url: `${SITE_ORIGIN}/paco`,
   type: 'website',
   og: { type: 'website' },
   twitter: { card: 'summary_large_image' }

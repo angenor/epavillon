@@ -124,12 +124,24 @@
         >
           <!-- Image de fond -->
           <div class="absolute inset-0 z-0">
-            <img
-              src="/images/banniere_paco.jpg"
-              alt="PACO Webinar"
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            />
-            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/85 via-teal-900/75 to-emerald-950/90"></div>
+            <template v-if="pacoSession.coverImage">
+              <img
+                :src="pacoSession.coverImage"
+                alt="PACO Webinar"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/85 via-teal-900/75 to-emerald-950/90"></div>
+            </template>
+            <!-- Placeholder tant que le visuel officiel n'est pas disponible -->
+            <div
+              v-else
+              class="w-full h-full bg-gradient-to-br from-emerald-900 via-teal-900 to-emerald-950 flex items-center justify-center"
+            >
+              <font-awesome-icon
+                :icon="['fas', 'chalkboard-user']"
+                class="text-emerald-300/25 text-7xl transition-transform duration-700 group-hover:scale-110"
+              />
+            </div>
           </div>
 
           <!-- Effet shimmer animé -->
@@ -144,9 +156,9 @@
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
                   <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-300"></span>
                 </span>
-                <span class="text-emerald-100 text-[10px] font-bold uppercase tracking-widest">À venir</span>
+                <span class="text-emerald-100 text-[10px] font-bold uppercase tracking-widest">{{ t('paco.tabs.status.upcoming') }}</span>
               </div>
-              <span class="text-[10px] font-semibold text-white/70 uppercase tracking-wider">Session 7</span>
+              <span class="text-[10px] font-semibold text-white/70 uppercase tracking-wider">{{ pacoSessionLabel }}</span>
             </div>
 
             <!-- Logo / Marque -->
@@ -161,10 +173,10 @@
 
             <!-- Titre principal -->
             <h3 class="text-white font-bold text-base leading-tight mb-1 line-clamp-2 font-maverick">
-              Intelligence artificielle et adaptation climatique
+              {{ t(`${pacoSession.i18nPrefix}.title`) }}
             </h3>
             <p class="text-emerald-100/90 text-xs italic mb-3 line-clamp-2">
-              Science, recherche et innovation au service de l'adaptation
+              {{ t(`${pacoSession.i18nPrefix}.subtitle`) }}
             </p>
 
             <!-- Infos clés -->
@@ -175,7 +187,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                   </svg>
                 </div>
-                <span class="font-medium">Jeudi 30 juillet 2026</span>
+                <span class="font-medium">{{ t(`${pacoSession.i18nPrefix}.dateLabel`) }}</span>
               </div>
               <div class="flex items-center gap-2 text-white/90 text-xs">
                 <div class="w-6 h-6 rounded-md bg-emerald-400/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
@@ -183,7 +195,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                   </svg>
                 </div>
-                <span class="font-medium">14h00 – 15h30 GMT</span>
+                <span class="font-medium">{{ t(`${pacoSession.i18nPrefix}.timeLabel`) }}</span>
               </div>
             </div>
 
@@ -366,6 +378,7 @@ import { useActivities } from '@/composables/useActivities'
 import { useRouter } from 'vue-router'
 import { supabase } from '@/composables/useSupabase'
 import { PACO_EVENT_ID, PACO_ACTIVITY_ID } from '@/composables/paco/constants'
+import { usePacoWebinarData } from '@/composables/paco/usePacoWebinarData'
 import YouthClimateDayWidget from './YouthClimateDayWidget.vue'
 import SustainableFinanceDayWidget from './SustainableFinanceDayWidget.vue'
 import CyprusSeminarWidget from './CyprusSeminarWidget.vue'
@@ -651,6 +664,10 @@ export default {
       }
     }
 
+    // Widget PACO — prochain webinaire (données de la session courante)
+    const { currentSession: pacoSession } = usePacoWebinarData()
+    const pacoSessionLabel = computed(() => t(`paco.tabs.session${pacoSession.value.edition}`))
+
     // Rediriger vers la page PACO
     const goToPaco = () => {
       router.push('/paco')
@@ -833,6 +850,8 @@ export default {
       handleEventClick,
       handleActivityClick,
       goToPaco,
+      pacoSession,
+      pacoSessionLabel,
       goToFphn,
       fphnLive,
       fphnVisible,

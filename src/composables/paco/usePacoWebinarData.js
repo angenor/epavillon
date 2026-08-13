@@ -182,6 +182,26 @@ const SESSIONS_DATA = [
     ],
     partners: COMMON_PARTNERS,
   },
+  {
+    edition: 8,
+    date: '2026-08-27',
+    startTime: '14:00',
+    endTime: '15:30',
+    timezone: 'GMT',
+    language: 'fr',
+    completed: false,
+    coverImage: '/images/bilan_carbone.jpg',
+    bannerUrl: '/images/bilan_carbone.jpg',
+    replayUrl: null,
+    i18nPrefix: 'paco.session8',
+    panelists: [
+      { id: 'carbon-specialist', name: 'À confirmer', photoUrl: null, organization: null, email: null },
+      { id: 'project-expert', name: 'À confirmer', photoUrl: null, organization: null, email: null },
+      { id: 'organization-rep', name: 'À confirmer', photoUrl: null, organization: null, email: null },
+      { id: 'digital-tools-expert', name: 'À confirmer', photoUrl: null, organization: null, email: null },
+    ],
+    partners: COMMON_PARTNERS,
+  },
 ]
 
 /**

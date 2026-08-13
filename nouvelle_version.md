@@ -1,6 +1,3 @@
-
-
-
 # Module Cop
 C'est le module le plus important.
 Chaque années l'Orgnisation internationnal de la francophonie à travers son organe subsidiaire IFDD organise, participe à certains grands évènements.
@@ -17,7 +14,7 @@ Le workflow simplifé se passe ainsi:
 - l'organisation est notifié de la rétension ou non de son projet(il peut aussi faire le suivis en temps reel dans son espace peersonnel)
 - lorqu'un projet est retenu, il est programmée pour etres affiché publiquement sur notre plateforme
 
-## Espace Admin
+# Espace Admin
 - Tableau de bord
 affiche le nombre total d'utilisateur, inscription par jour etc
 - Liste des activitée
@@ -43,5 +40,35 @@ Ensuite pendant l'activité, on fait du liveStreaming sur YouTube, on recupere a
 
 - Gestion des newsletters(hors périmetre pour l'instant)
 
-- Sondage(création de sondage indépendant ou après une session zoom ou physique)
+- Outils(les doivent etre developper de facons modulaire, il peut nous arriver dans les phases à venir de les déployer sous un autre lien à part)
+Sondage(création de sondage indépendant ou après une session zoom ou physique)
+
+
+
+# Espace programmation
+
+On voit les programmations de l'évènement l'année en cours avec possibilité de swicher pour voir pour les autres années.
+Chaque evenement contient un emble d'activité et ce sont les activités soumis par les organisations et validée par l'équipe de l'IFDD/OIF.
+Pour l'affichage des activités validées, il existe une vue gride et une vue calendrier(avec vue-cal, couleur en fonction de l'état: pas encore commencé, terminé, annulé, etc)
+
+
+# Espace Publications
+- Les organisations peuvent publier des articles. Vu que nous avont un espace de stockage assez limité, il seront autorisé à publier à une certaines organisations ne seront autorisé à publier qu'une fois  par semaine, d'Autres plusieurs fois par semaine, par mois par jours. bref pour chaque organisation, il faudra pourvoir le nombre/fréquence de publication dans dans le backOffice
+
+# Espace Négociations
+C'est un espace où on publie:
+- Sessions de négociation
+- Documents d'aide
+- Réunions Francophonie
+cet espace est réservé aux personnes ayant le role négociateurs
+
+
+Intégration de google agenda(phase 2+)
+
+
+# Nouvelle stack
+- Nuxt(pour le référencement SEO)
+- Ruxt Actix web(pour la performaance)
+- PostgresSQL
+- Garage(API S3), en local d'abord et migration amazon dans les phase future
 

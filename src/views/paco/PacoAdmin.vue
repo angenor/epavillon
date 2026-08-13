@@ -29,49 +29,15 @@
             {{ t('paco.admin.filterAllSessions') }}
           </button>
           <button
-            @click="applySessionFilter(1)"
+            v-for="session in sessions"
+            :key="session.edition"
+            @click="applySessionFilter(session.edition)"
             class="cursor-pointer px-4 py-2 text-sm font-medium border-l border-gray-300 dark:border-gray-600 transition"
-            :class="sessionFilter === 1
+            :class="sessionFilter === session.edition
               ? 'bg-blue-600 text-white'
               : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'"
           >
-            {{ t('paco.admin.filterSession', { n: 3 }) }}
-          </button>
-          <button
-            @click="applySessionFilter(2)"
-            class="cursor-pointer px-4 py-2 text-sm font-medium border-l border-gray-300 dark:border-gray-600 transition"
-            :class="sessionFilter === 2
-              ? 'bg-blue-600 text-white'
-              : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'"
-          >
-            {{ t('paco.admin.filterSession', { n: 4 }) }}
-          </button>
-          <button
-            @click="applySessionFilter(3)"
-            class="cursor-pointer px-4 py-2 text-sm font-medium border-l border-gray-300 dark:border-gray-600 transition"
-            :class="sessionFilter === 3
-              ? 'bg-blue-600 text-white'
-              : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'"
-          >
-            {{ t('paco.admin.filterSession', { n: 5 }) }}
-          </button>
-          <button
-            @click="applySessionFilter(4)"
-            class="cursor-pointer px-4 py-2 text-sm font-medium border-l border-gray-300 dark:border-gray-600 transition"
-            :class="sessionFilter === 4
-              ? 'bg-blue-600 text-white'
-              : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'"
-          >
-            {{ t('paco.admin.filterSession', { n: 6 }) }}
-          </button>
-          <button
-            @click="applySessionFilter(7)"
-            class="cursor-pointer px-4 py-2 text-sm font-medium border-l border-gray-300 dark:border-gray-600 transition"
-            :class="sessionFilter === 7
-              ? 'bg-blue-600 text-white'
-              : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'"
-          >
-            {{ t('paco.admin.filterSession', { n: 7 }) }}
+            {{ t('paco.admin.filterSession', { n: sessionNumber(session.edition) }) }}
           </button>
         </div>
 
@@ -270,10 +236,19 @@ const {
   sessionFilter, setSessionFilter
 } = usePacoStats()
 
-const { currentSession } = usePacoWebinarData()
+const { sessions, currentSession } = usePacoWebinarData()
 
 // Sélectionne par défaut la prochaine session (non terminée).
 sessionFilter.value = currentSession.value?.edition ?? null
+
+/**
+ * Numéro chronologique affiché pour une édition (les `edition` historiques ne
+ * suivent pas l'ordre des sessions). Extrait du libellé i18n `paco.tabs.sessionN`.
+ */
+const sessionNumber = (edition) => {
+  const match = t(`paco.tabs.session${edition}`).match(/\d+/)
+  return match ? match[0] : String(edition)
+}
 
 const searchQuery = ref('')
 let searchDebounce = null
