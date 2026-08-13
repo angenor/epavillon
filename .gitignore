@@ -43,3 +43,6 @@ laravel.env
 *.dump
 *.sql
 backup*
+
+# Worktrees temporaires de Claude Code (dossiers de travail locaux)
+.claude/worktrees/
