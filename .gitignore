@@ -44,5 +44,8 @@ laravel.env
 *.sql
 backup*
 
+# Exception : le modèle de données de la v2 est du code source, pas une sauvegarde.
+!nouvelle_version/database/*.sql
+
 # Worktrees temporaires de Claude Code (dossiers de travail locaux)
 .claude/worktrees/
