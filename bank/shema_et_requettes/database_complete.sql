@@ -2454,6 +2454,11 @@ GROUP BY a.id, a.title, a.event_id, a.organization_id, a.submitted_by, a.validat
 --   - profile_photos/         : Photos de profil des utilisateurs
 --   - organization_logos/     : Logos des organisations
 -- Configuration: Public, RLS désactivé ou très permissif
+-- Note: les politiques RLS n'autorisent l'écriture que dans les dossiers
+-- ci-dessus. Les médias d'événements (bannière et logo) sont donc stockés dans
+-- `activities_banner/`, sous la forme `<event_id>_event_banner_*` et
+-- `<event_id>_event_logo_*`. Pour un dossier `events/` dédié, voir
+-- storage_policies_epavillonp_events.sql (optionnel).
 
 -- Bucket: documents (Documents d'activités)
 -- Utilisation: Documents uploadés pour les activités (PDF, DOC, PPT, XLS, etc.)

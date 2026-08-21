@@ -21,12 +21,14 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
+import { useAdminEvent } from '@/composables/useAdminEvent'
 import * as am5 from '@amcharts/amcharts5'
 import * as am5xy from '@amcharts/amcharts5/xy'
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated'
 
 const { t } = useI18n()
 const { supabase } = useSupabase()
+const { selectedEventId } = useAdminEvent()
 
 const chartDiv = ref(null)
 const isLoading = ref(true)
@@ -37,11 +39,16 @@ let chart = null
 
 const loadSubmissionsData = async () => {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('activities')
       .select('created_at')
       .not('created_at', 'is', null)
-      .order('created_at', { ascending: true })
+
+    if (selectedEventId.value) {
+      query = query.eq('event_id', selectedEventId.value)
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: true })
 
     if (error) throw error
 
@@ -141,13 +148,22 @@ const destroyChart = () => {
 }
 
 watch(() => chartData.value, () => {
-  if (chart && chartData.value.length > 0) {
+  if (chart) {
     const series = chart.series.getIndex(0)
     if (series) {
       series.data.setAll(chartData.value)
     }
   }
 }, { deep: true })
+
+// Recharger le graphique lorsque l'événement sélectionné change
+watch(selectedEventId, async () => {
+  isLoading.value = true
+  await loadSubmissionsData()
+  if (!chart) {
+    createChart()
+  }
+})
 
 onMounted(async () => {
   await loadSubmissionsData()

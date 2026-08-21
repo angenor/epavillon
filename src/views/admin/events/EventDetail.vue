@@ -115,6 +115,74 @@
             </dl>
           </div>
 
+          <!-- Médias -->
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold mb-4">Médias</h3>
+
+            <div v-if="mediaError" class="mb-4 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-sm text-red-700 dark:text-red-300">
+              {{ mediaError }}
+            </div>
+            <div v-if="mediaSuccess" class="mb-4 p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-sm text-green-700 dark:text-green-300">
+              {{ mediaSuccess }}
+            </div>
+
+            <!-- Bannière -->
+            <div class="mb-6">
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Bannière (32:9)</p>
+
+              <img v-if="event.banner_high_quality_32_9_url"
+                   :src="event.banner_high_quality_32_9_url"
+                   alt="Bannière de l'événement"
+                   class="w-full aspect-[32/9] object-cover rounded-lg mb-3">
+              <p v-else class="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                Aucune bannière : l'image par défaut est affichée sur le site.
+              </p>
+
+              <input ref="bannerFileInput"
+                     type="file"
+                     accept="image/*"
+                     class="hidden"
+                     @change="onBannerSelected">
+              <button type="button"
+                      @click="$refs.bannerFileInput.click()"
+                      :disabled="isUploading || isSavingMedia"
+                      class="cursor-pointer w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50">
+                {{ isUploading || isSavingMedia ? 'Envoi en cours...' : (event.banner_high_quality_32_9_url ? 'Remplacer la bannière' : 'Ajouter une bannière') }}
+              </button>
+              <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                Format recommandé : 32:9 (ex. 1920x540px). PNG, JPG ou WebP, 10 Mo max.
+              </p>
+            </div>
+
+            <!-- Logo -->
+            <div>
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Logo</p>
+
+              <img v-if="event.logo_url"
+                   :src="event.logo_url"
+                   alt="Logo de l'événement"
+                   class="w-24 h-24 object-contain rounded-lg bg-white mb-3">
+              <p v-else class="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                Aucun logo.
+              </p>
+
+              <input ref="logoFileInput"
+                     type="file"
+                     accept="image/*"
+                     class="hidden"
+                     @change="onLogoSelected">
+              <button type="button"
+                      @click="$refs.logoFileInput.click()"
+                      :disabled="isUploading || isSavingMedia"
+                      class="cursor-pointer w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50">
+                {{ isUploading || isSavingMedia ? 'Envoi en cours...' : (event.logo_url ? 'Remplacer le logo' : 'Ajouter un logo') }}
+              </button>
+              <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                PNG, JPG, SVG ou WebP, 5 Mo max.
+              </p>
+            </div>
+          </div>
+
         </div>
       </div>
       
@@ -220,14 +288,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
+import { useEventMediaUpload } from '@/composables/useEventMediaUpload'
 
 const route = useRoute()
 const { supabase } = useSupabase()
 const { hasAdminRole, isLoadingRoles, loadUserRoles } = useAdmin()
+const { isUploading, uploadError, uploadBanner, uploadLogo } = useEventMediaUpload()
 
 const isLoading = ref(true)
 const event = ref(null)
@@ -240,6 +310,8 @@ const showSubmissionStatusConfirmModal = ref(false)
 const pendingEventStatusChange = ref(null)
 const pendingSubmissionStatusChange = ref(null)
 const statusError = ref(null)
+const isSavingMedia = ref(false)
+const mediaSuccess = ref(null)
 
 const checkAccess = async () => {
   await loadUserRoles()
@@ -266,6 +338,53 @@ const loadEvent = async () => {
   } finally {
     isLoading.value = false
   }
+}
+
+// Gestion des médias (bannière et logo)
+const saveMediaError = ref(null)
+const mediaError = computed(() => uploadError.value || saveMediaError.value)
+
+const saveMediaField = async (field, url) => {
+  isSavingMedia.value = true
+  saveMediaError.value = null
+  mediaSuccess.value = null
+
+  try {
+    const { error } = await supabase
+      .from('events')
+      .update({ [field]: url, updated_at: new Date().toISOString() })
+      .eq('id', event.value.id)
+
+    if (error) throw error
+
+    event.value[field] = url
+    mediaSuccess.value = 'Image enregistrée.'
+  } catch (error) {
+    console.error('Erreur lors de l\'enregistrement du média:', error)
+    saveMediaError.value = `Erreur lors de l'enregistrement : ${error.message}`
+  } finally {
+    isSavingMedia.value = false
+  }
+}
+
+const onBannerSelected = async (fileEvent) => {
+  const file = fileEvent.target.files[0]
+  fileEvent.target.value = ''
+  mediaSuccess.value = null
+  saveMediaError.value = null
+
+  const url = await uploadBanner(file, event.value?.id)
+  if (url) await saveMediaField('banner_high_quality_32_9_url', url)
+}
+
+const onLogoSelected = async (fileEvent) => {
+  const file = fileEvent.target.files[0]
+  fileEvent.target.value = ''
+  mediaSuccess.value = null
+  saveMediaError.value = null
+
+  const url = await uploadLogo(file, event.value?.id)
+  if (url) await saveMediaField('logo_url', url)
 }
 
 const getStatusClass = (status) => {

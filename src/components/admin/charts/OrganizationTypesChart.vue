@@ -21,12 +21,14 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
+import { useAdminEvent } from '@/composables/useAdminEvent'
 import * as am5 from '@amcharts/amcharts5'
 import * as am5percent from '@amcharts/amcharts5/percent'
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated'
 
 const { t } = useI18n()
 const { supabase } = useSupabase()
+const { selectedEventId } = useAdminEvent()
 
 const chartDiv = ref(null)
 const isLoading = ref(true)
@@ -53,10 +55,33 @@ const organizationTypeColors = {
 
 const loadOrganizationTypesData = async () => {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('organizations')
       .select('organization_type')
       .eq('is_active', true)
+
+    // Restreindre aux organisations ayant une activité sur l'événement sélectionné
+    if (selectedEventId.value) {
+      const { data: activityOrgs, error: activityError } = await supabase
+        .from('activities')
+        .select('organization_id')
+        .eq('event_id', selectedEventId.value)
+        .eq('is_deleted', false)
+        .not('organization_id', 'is', null)
+
+      if (activityError) throw activityError
+
+      const organizationIds = [...new Set((activityOrgs || []).map(a => a.organization_id))]
+
+      if (organizationIds.length === 0) {
+        chartData.value = []
+        return
+      }
+
+      query = query.in('id', organizationIds)
+    }
+
+    const { data, error } = await query
 
     if (error) throw error
 
@@ -152,13 +177,22 @@ const destroyChart = () => {
 }
 
 watch(() => chartData.value, () => {
-  if (chart && chartData.value.length > 0) {
+  if (chart) {
     const series = chart.series.getIndex(0)
     if (series) {
       series.data.setAll(chartData.value)
     }
   }
 }, { deep: true })
+
+// Recharger le graphique lorsque l'événement sélectionné change
+watch(selectedEventId, async () => {
+  isLoading.value = true
+  await loadOrganizationTypesData()
+  if (!chart) {
+    createChart()
+  }
+})
 
 onMounted(async () => {
   await loadOrganizationTypesData()

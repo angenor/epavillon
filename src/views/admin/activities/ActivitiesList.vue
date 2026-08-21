@@ -17,6 +17,13 @@
         <p class="mt-2 text-base text-gray-600 dark:text-gray-400">
           {{ t('admin.activities.subtitle') }}
         </p>
+        <!-- Événement courant (sélectionné depuis la barre d'administration) -->
+        <div class="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-orange-50 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-800">
+          <font-awesome-icon :icon="['fas', 'calendar-alt']" class="h-3.5 w-3.5 text-orange-500" />
+          <span class="text-sm font-medium text-orange-800 dark:text-orange-200">
+            {{ selectedEvent ? `${selectedEvent.title} (${selectedEvent.year})` : t('admin.activities.allEvents') }}
+          </span>
+        </div>
       </div>
       <div class="mt-4 sm:mt-0 flex items-center space-x-3">
         <!-- <button @click="goToDatesManager"
@@ -121,7 +128,7 @@
 
       <!-- Filtres -->
       <div class="p-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <!-- Recherche -->
           <div class="lg:col-span-2">
             <input v-model="filters.search"
@@ -130,16 +137,6 @@
                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
           </div>
 
-          <!-- Filtre par événement -->
-          <div>
-            <select v-model="filters.event"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-              <option value="">{{ t('admin.activities.allEvents') }}</option>
-              <option v-for="event in events" :key="event.id" :value="event.id">
-                {{ event.title }} ({{ event.year }})
-              </option>
-            </select>
-          </div>
 
           <!-- Filtre par pays -->
           <div>
@@ -614,6 +611,7 @@ import { useAuth } from '@/composables/useAuth'
 import { useEmailModal } from '@/composables/useEmailModal'
 import { useRevisionViews } from '@/composables/useRevisionViews'
 import { useCommentBroadcast } from '@/composables/useCommentBroadcast'
+import { useAdminEvent } from '@/composables/useAdminEvent'
 import * as XLSX from 'xlsx'
 
 const { t } = useI18n()
@@ -624,13 +622,13 @@ const { currentUser } = useAuth()
 const { openForActivity, openWithFilter, canSendEmails } = useEmailModal()
 const { recordActivityView, loadViewedActivities, hasViewedActivity } = useRevisionViews()
 const { addListener, removeListener } = useCommentBroadcast()
+const { selectedEventId, selectedEvent, loadEvents: loadAdminEvents } = useAdminEvent()
 
 const LISTENER_ID = 'activities-list' // ID unique pour ce composant
 
 // État
 const isLoading = ref(true)
 const activities = ref([])
-const events = ref([])
 const countries = ref([])
 const currentPage = ref(1)
 const pageSize = ref(20)
@@ -652,7 +650,6 @@ const showStatusDropdown = ref(false) // État du dropdown de statut
 
 const filters = ref({
   search: '',
-  event: '',
   country: '',
   theme: ''
 })
@@ -725,13 +722,6 @@ const filteredActivities = computed(() => {
       activity.title?.toLowerCase().includes(search) ||
       activity.organization?.name?.toLowerCase().includes(search) ||
       activity.event?.title?.toLowerCase().includes(search)
-    )
-  }
-
-  // Filtrer par événement
-  if (filters.value.event) {
-    filtered = filtered.filter(activity =>
-      activity.event_id === filters.value.event
     )
   }
 
@@ -813,8 +803,9 @@ const statusesRequiringReason = ['rejected', 'cancelled']
 
 // Méthodes
 const loadActivities = async () => {
+  isLoading.value = true
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('activities')
       .select(`
         *,
@@ -828,7 +819,13 @@ const loadActivities = async () => {
         event:events(id, title, year)
       `)
       .eq('is_deleted', false)
-      .order('created_at', { ascending: false })
+
+    // Restreindre à l'événement sélectionné dans la barre d'administration
+    if (selectedEventId.value) {
+      query = query.eq('event_id', selectedEventId.value)
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false })
 
     if (error) throw error
 
@@ -856,21 +853,6 @@ const loadActivities = async () => {
     console.error('Erreur lors du chargement des activités:', error)
   } finally {
     isLoading.value = false
-  }
-}
-
-const loadEvents = async () => {
-  try {
-    const { data, error } = await supabase
-      .from('events')
-      .select('id, title, year')
-      .order('year', { ascending: false })
-
-    if (error) throw error
-
-    events.value = data || []
-  } catch (error) {
-    console.error('Erreur lors du chargement des événements:', error)
   }
 }
 
@@ -1086,7 +1068,7 @@ const closeValidationModal = () => {
 
 const exportActivities = async () => {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('activities')
       .select(`
         *,
@@ -1108,7 +1090,13 @@ const exportActivities = async () => {
         )
       `)
       .eq('is_deleted', false)
-      .order('created_at', { ascending: false })
+
+    // Exporter uniquement l'événement sélectionné
+    if (selectedEventId.value) {
+      query = query.eq('event_id', selectedEventId.value)
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false })
 
     if (error) throw error
 
@@ -1260,6 +1248,13 @@ watch([() => filters.value, activeTab], () => {
   currentPage.value = 1
 }, { deep: true })
 
+// Recharger les activités lorsque l'événement sélectionné change
+watch(selectedEventId, async () => {
+  currentPage.value = 1
+  selectedActivityIds.value = []
+  await loadActivities()
+})
+
 // Fermer le dropdown quand la sélection change
 watch(selectedActivityIds, (newVal) => {
   if (newVal.length === 0) {
@@ -1273,7 +1268,7 @@ onMounted(async () => {
     await checkAccess()
     await Promise.all([
       loadActivities(),
-      loadEvents(),
+      loadAdminEvents(),
       loadCountries(),
       loadViewedActivities() // Charger les activités déjà vues par le révisionniste
     ])

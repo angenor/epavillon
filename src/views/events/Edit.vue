@@ -876,16 +876,13 @@ const handleBannerFileChange = async (fileEvent) => {
     const eventId = route.params.id || event.value?.id || 'temp'
     // Generate unique filename for banner
     const fileExtension = file.name.split('.').pop().toLowerCase()
-    const fileName = `banner/event-${eventId}-${Date.now()}.${fileExtension}`
+    // Dossier des images de couverture des activités (cf. useEventMediaUpload.js)
+    const fileName = `activities_banner/${eventId}_event_banner_${Date.now()}.${fileExtension}`
     
     // Upload to Supabase storage
     const { error: uploadError } = await supabase.storage
       .from('epavillonp')
-      .upload(fileName, file, {
-        cacheControl: '3600',
-        upsert: true,
-        contentType: file.type
-      })
+      .upload(fileName, file)
 
     if (uploadError) {
       throw new Error(`Upload failed: ${uploadError.message}`)

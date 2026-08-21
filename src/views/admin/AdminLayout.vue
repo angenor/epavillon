@@ -103,9 +103,30 @@
         </div>
       </nav>
 
-      <!-- User Info -->
-      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
-        <div :class="[
+      <!-- Retour au site + User Info -->
+      <div class="absolute bottom-0 left-0 right-0 border-t border-gray-200 dark:border-gray-700">
+        <!-- Retour au site -->
+        <router-link
+          to="/"
+          :class="[
+            'group flex items-center px-3 py-2 mx-4 my-3 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200',
+            isActivityReviewMode || collapsed ? 'justify-center mx-2' : ''
+          ]"
+          :title="isActivityReviewMode || collapsed ? t('admin.layout.backToSite') : null"
+        >
+          <font-awesome-icon
+            :icon="['fas', 'arrow-left']"
+            :class="[
+              'h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300',
+              !isActivityReviewMode && !collapsed ? 'mr-3' : ''
+            ]" />
+          <span v-if="!isActivityReviewMode && !collapsed" class="transition-opacity duration-300">
+            {{ t('admin.layout.backToSite') }}
+          </span>
+        </router-link>
+
+        <!-- User Info -->
+        <div class="p-4 border-t border-gray-200 dark:border-gray-700" :class="[
           'flex items-center',
           isActivityReviewMode || collapsed ? 'justify-center' : ''
         ]">
@@ -182,11 +203,8 @@
               </div>
             </button>
 
-            <!-- Retour au site -->
-            <router-link to="/"
-                       class="text-sm text-gray-600 hover:text-orange-600 dark:text-gray-300 font-medium">
-              {{ t('admin.layout.backToSite') }}
-            </router-link>
+            <!-- Sélecteur d'événement global -->
+            <AdminEventSelector />
           </div>
         </div>
       </header>
@@ -207,6 +225,7 @@ import { useAuth } from '@/composables/useAuth'
 import { useAdmin } from '@/composables/useAdmin'
 import { useAdminPanel } from '@/composables/useAdminPanel'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import AdminEventSelector from '@/components/admin/AdminEventSelector.vue'
 
 const { t } = useI18n()
 const route = useRoute()

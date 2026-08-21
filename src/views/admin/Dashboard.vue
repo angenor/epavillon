@@ -20,27 +20,12 @@
           </p>
         </div>
 
-        <!-- Event Selector -->
-        <div class="min-w-[250px]">
-          <label for="admin-event-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            {{ t('events.selectEvent') }}
-          </label>
-          <select
-            id="admin-event-select"
-            v-model="selectedEventId"
-            @change="loadPendingActivities"
-            :disabled="eventsLoading"
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <option value="">{{ t('events.allEvents') }}</option>
-            <option
-              v-for="event in availableEvents"
-              :key="event.id"
-              :value="event.id"
-            >
-              {{ event.title }} ({{ event.year }})
-            </option>
-          </select>
+        <!-- Événement courant (sélectionné depuis la barre d'administration) -->
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-50 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-800">
+          <font-awesome-icon :icon="['fas', 'calendar-alt']" class="h-4 w-4 text-orange-500" />
+          <span class="text-sm font-medium text-orange-800 dark:text-orange-200">
+            {{ selectedEvent ? `${selectedEvent.title} (${selectedEvent.year})` : t('events.allEvents') }}
+          </span>
         </div>
       </div>
     </div>
@@ -276,24 +261,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
-import useEvents from '@/composables/useEvents'
+import { useAdminEvent } from '@/composables/useAdminEvent'
 import SubmissionsPerDayChart from '@/components/admin/charts/SubmissionsPerDayChart.vue'
 import OrganizationTypesChart from '@/components/admin/charts/OrganizationTypesChart.vue'
 
 const { t } = useI18n()
 const { supabase } = useSupabase()
 const { hasAdminRole, isLoadingRoles, loadUserRoles } = useAdmin()
-const { fetchActiveEvents, events: availableEvents } = useEvents()
+const { selectedEventId, selectedEvent, loadEvents } = useAdminEvent()
 
 // État
 const isLoading = ref(true)
 const isLoadingActivities = ref(true)
-const selectedEventId = ref('')
-const eventsLoading = ref(false)
 const stats = ref({
   totalUsers: 0,
   activitiesApproved: 0,
@@ -321,6 +304,23 @@ const checkAccess = async () => {
 }
 
 // Méthodes
+// Organisations ayant au moins une activité sur l'événement sélectionné
+const fetchEventOrganizationIds = async () => {
+  const { data, error } = await supabase
+    .from('activities')
+    .select('organization_id')
+    .eq('event_id', selectedEventId.value)
+    .eq('is_deleted', false)
+    .not('organization_id', 'is', null)
+
+  if (error) {
+    console.error('Erreur lors du chargement des organisations de l\'événement:', error)
+    return []
+  }
+
+  return [...new Set((data || []).map(a => a.organization_id))]
+}
+
 const loadStats = async () => {
   try {
     // Statistiques générales
@@ -390,19 +390,41 @@ const loadStats = async () => {
       stats.value.activitiesPending = pendingCount || 0
     }
 
-    const { count: organizationsCount, error: orgsError } = await supabase
+    let organizationsQuery = supabase
       .from('organizations')
       .select('id', { count: 'exact', head: true })
       .eq('is_active', true)
 
-    if (!orgsError) {
-      stats.value.activeOrganizations = organizationsCount || 0
+    // Restreindre aux organisations ayant une activité sur l'événement sélectionné
+    if (selectedEventId.value) {
+      const organizationIds = await fetchEventOrganizationIds()
+
+      if (organizationIds.length === 0) {
+        organizationsQuery = null
+        stats.value.activeOrganizations = 0
+      } else {
+        organizationsQuery = organizationsQuery.in('id', organizationIds)
+      }
+    }
+
+    if (organizationsQuery) {
+      const { count: organizationsCount, error: orgsError } = await organizationsQuery
+
+      if (!orgsError) {
+        stats.value.activeOrganizations = organizationsCount || 0
+      }
     }
 
     // Calculer la somme de tous les activites_view_count
-    const { data: viewCountData, error: viewCountError } = await supabase
+    let viewCountQuery = supabase
       .from('activities')
       .select('activites_view_count')
+
+    if (selectedEventId.value) {
+      viewCountQuery = viewCountQuery.eq('event_id', selectedEventId.value)
+    }
+
+    const { data: viewCountData, error: viewCountError } = await viewCountQuery
 
     if (!viewCountError && viewCountData) {
       const totalViews = viewCountData.reduce((sum, activity) => {
@@ -481,16 +503,14 @@ const loadPendingActivities = async () => {
   }
 }
 
-const loadAvailableEvents = async () => {
-  eventsLoading.value = true
-  try {
-    await fetchActiveEvents()
-  } catch (error) {
-    console.error('Error loading available events:', error)
-  } finally {
-    eventsLoading.value = false
-  }
-}
+// Recharger les données dépendantes de l'événement à chaque changement de sélection
+watch(selectedEventId, async () => {
+  isLoading.value = true
+  await Promise.all([
+    loadStats(),
+    loadPendingActivities()
+  ])
+})
 
 // Cycle de vie
 onMounted(async () => {
@@ -498,8 +518,8 @@ onMounted(async () => {
     // D'abord vérifier les permissions
     await checkAccess()
 
-    // Charger les événements disponibles
-    await loadAvailableEvents()
+    // Charger les événements disponibles (état partagé avec la barre d'administration)
+    await loadEvents()
 
     // Puis charger les données
     await Promise.all([
