@@ -242,7 +242,7 @@
             <button
               v-if="canSubmitActivity"
               @click="goToSubmission"
-              class="group relative w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:border-orange-500 hover:shadow-lg hover:scale-105"
+              class="submit-activity-cta group relative w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 bg-white dark:bg-gray-800 border-2 border-orange-500 dark:border-orange-400 text-orange-600 dark:text-orange-300 font-semibold rounded-xl transition-all duration-300 hover:bg-orange-500 hover:border-orange-600 hover:text-white hover:shadow-lg hover:scale-105 cursor-pointer"
             >
               <span class="relative z-10 flex items-center justify-center sm:justify-start gap-2 sm:gap-3 text-sm sm:text-base">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -250,7 +250,6 @@
                 </svg>
                 {{ t('event.submitActivity') }}
               </span>
-              <div class="absolute inset-0 bg-gradient-to-r from-orange-50 to-orange-100 dark:from-gray-600 dark:to-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
 
             <!-- Deadline countdown si applicable -->
@@ -334,6 +333,8 @@ import { useSupabase } from '@/composables/useSupabase'
 import { useAuthStore } from '@/stores/auth'
 import useUserEvents from '@/composables/useUserEvents'
 import { useSEO, generateEventStructuredData } from '@/composables/useSEO'
+import { DEFAULT_SHARE_IMAGE } from '@/utils/seo'
+import { isUuid, normalizeEventSlug, eventDetailPath } from '@/utils/eventSlug'
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -482,13 +483,13 @@ const seoData = computed(() => {
   }
 
   // Construire l'URL de la page
-  const pageUrl = `${window.location.origin}/events/${event.value.year}/${event.value.id}`
+  const pageUrl = `${window.location.origin}${eventDetailPath(event.value)}`
 
   // Construire l'image de partage (priorité à l'image 16:9 pour les réseaux sociaux)
   const shareImage = event.value.banner_high_quality_16_9_url ||
                      event.value.banner_high_quality_32_9_url ||
                      event.value.banner ||
-                     `${window.location.origin}/images/example/event_banniere_par_defaut_32_9_v3.jpg`
+                     `${window.location.origin}${DEFAULT_SHARE_IMAGE}`
 
   // Construire la description avec informations clés
   let description = event.value.description || ''
@@ -595,14 +596,39 @@ const getBannerUrl = () => {
          '/images/example/event_banniere_par_defaut_32_9_v3.jpg'
 }
 
+// Résout le paramètre d'URL : identifiant technique (ancien lien) ou
+// slug d'acronyme (/events/CdP31)
+const fetchEventByParam = async (param) => {
+  if (isUuid(param)) {
+    return supabase
+      .from('events')
+      .select('*, countries(id, name_fr, name_en)')
+      .eq('id', param)
+      .single()
+  }
+
+  // La table des événements est petite : on compare les acronymes normalisés
+  // côté client, ce que PostgREST ne permet pas de faire dans un filtre.
+  const { data, error } = await supabase
+    .from('events')
+    .select('*, countries(id, name_fr, name_en)')
+    .not('acronym', 'is', null)
+    .order('year', { ascending: false })
+
+  if (error) return { data: null, error }
+
+  const wanted = normalizeEventSlug(param)
+  const match = (data || []).find(e => normalizeEventSlug(e.acronym) === wanted)
+
+  return match
+    ? { data: match, error: null }
+    : { data: null, error: new Error(`Aucun événement pour le slug « ${param} »`) }
+}
+
 const loadEvent = async () => {
   try {
     isLoading.value = true
-    const { data, error } = await supabase
-      .from('events')
-      .select('*, countries(id, name_fr, name_en)')
-      .eq('id', route.params.id)
-      .single()
+    const { data, error } = await fetchEventByParam(route.params.id)
 
     if (error) throw error
 
@@ -628,6 +654,12 @@ const loadActivities = async () => {
   try {
     isLoadingActivities.value = true
 
+    if (!event.value.id) {
+      activities.value = []
+      isLoadingActivities.value = false
+      return
+    }
+
     // Ne charger les activités que si l'événement est ongoing ou completed
     if (actualEventStatus.value !== 'ongoing' && actualEventStatus.value !== 'completed') {
       activities.value = []
@@ -638,7 +670,7 @@ const loadActivities = async () => {
     const { data, error } = await supabase
       .from('activities')
       .select('*, organizations(id, name, logo_url)')
-      .eq('event_id', route.params.id)
+      .eq('event_id', event.value.id)
       .eq('validation_status', 'approved')
       .order('proposed_start_date', { ascending: true })
       .limit(6)
@@ -657,12 +689,14 @@ const loadActivities = async () => {
 }
 
 const loadTotalActivitiesCount = async () => {
+  if (!event.value.id) return
+
   try {
     // Compter TOUTES les activités soumises pour cet événement (validées ou non)
     const { count, error } = await supabase
       .from('activities')
       .select('*', { count: 'exact', head: true })
-      .eq('event_id', route.params.id)
+      .eq('event_id', event.value.id)
 
     if (error) throw error
 
@@ -737,6 +771,34 @@ const saveField = async (field, value) => {
 </script>
 
 <style scoped>
+/* Mise en avant du bouton « Soumettre une activité » :
+   halo orange qui se propage en boucle autour de la bordure */
+.submit-activity-cta {
+  animation: submit-activity-halo 2.4s ease-out infinite;
+}
+
+.submit-activity-cta:hover {
+  animation-play-state: paused;
+}
+
+@keyframes submit-activity-halo {
+  0% {
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(249, 115, 22, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .submit-activity-cta {
+    animation: none;
+  }
+}
+
 @keyframes subtle-zoom {
   0%, 100% { transform: scale(1.05); }
   50% { transform: scale(1.08); }

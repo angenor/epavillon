@@ -62,7 +62,7 @@
                 <span>{{ formatLocation(event) }}</span>
               </div>
               <router-link
-                :to="`/events/${event.id}`"
+                :to="eventDetailPath(event)"
                 class="text-ifdd-bleu dark:text-ifdd-bleu-light hover:text-ifdd-bleu-dark dark:hover:text-ifdd-bleu font-medium flex items-center space-x-2 transition-colors"
               >
                 <span class="text-gray-900 dark:text-gray-100">{{ t('common.seeMore') }}</span>
@@ -95,6 +95,7 @@ import { useI18n } from 'vue-i18n'
 import { onMounted, computed } from 'vue'
 import { useActivities } from '@/composables/useActivities'
 import { PACO_EVENT_ID } from '@/composables/paco/constants'
+import { eventDetailPath } from '@/utils/eventSlug'
 
 export default {
   name: 'EventsSection',
@@ -228,7 +229,8 @@ export default {
       formatLocation,
       getEventCardClass,
       getEventStatusColorClass,
-      getEventStatus
+      getEventStatus,
+      eventDetailPath
     }
   }
 }

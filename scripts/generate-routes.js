@@ -31,6 +31,15 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 
 console.log('🔍 Génération de la liste des routes à pré-rendre...\n')
 
+// Slug d'URL d'un événement : acronyme sans espaces ni ponctuation
+// (miroir de src/utils/eventSlug.js, ce script ne pouvant pas importer de source Vue)
+const buildEventSlug = (event) => {
+  const acronym = (event.acronym || '')
+    .normalize('NFD')
+    .replace(/[^a-zA-Z0-9]/g, '')
+  return acronym || event.id
+}
+
 async function generateRoutes() {
   const routes = [
     '/', // Page d'accueil
@@ -43,7 +52,7 @@ async function generateRoutes() {
     console.log('📅 Récupération des événements...')
     const { data: events, error: eventsError } = await supabase
       .from('events')
-      .select('id, year')
+      .select('id, year, acronym')
       .order('year', { ascending: false })
 
     if (eventsError) {
@@ -52,6 +61,8 @@ async function generateRoutes() {
       console.log(`✅ ${events.length} événements trouvés`)
       events.forEach(event => {
         routes.push(`/programmations/${event.year}/${event.id}`)
+        // Page de détail : slug d'acronyme (/events/CdP31) ou identifiant technique
+        routes.push(`/events/${buildEventSlug(event)}`)
       })
     }
 

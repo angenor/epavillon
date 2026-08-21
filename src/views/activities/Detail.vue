@@ -1050,6 +1050,7 @@ import { useMediaGallery } from '@/composables/useMediaGallery'
 import CommentFloatingButtonUser from '@/components/CommentFloatingButtonUser.vue'
 import ActivityPublicMediaGallery from '@/components/activity/ActivityPublicMediaGallery.vue'
 import { getYoutubeEmbedUrl } from '@/utils/youtube'
+import { DEFAULT_SHARE_IMAGE } from '@/utils/seo'
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -2372,7 +2373,10 @@ const metaTitle = computed(() => {
 })
 
 const activityImageUrl = computed(() => {
-  const posterUrl = getActivityPosterUrl()
+  // Image propre à l'activité, sinon image de partage par défaut du site
+  const posterUrl = activity.value?.cover_image_low_url ||
+                    activity.value?.cover_image_high_url ||
+                    DEFAULT_SHARE_IMAGE
 
   // Si l'URL est déjà absolue (commence par http:// ou https://), la retourner telle quelle
   if (posterUrl.startsWith('http://') || posterUrl.startsWith('https://')) {

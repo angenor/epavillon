@@ -55,6 +55,7 @@ export function useActivities() {
         .select(`
           id,
           title,
+          acronym,
           description,
           year,
           event_status,

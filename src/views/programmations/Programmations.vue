@@ -193,6 +193,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
+import { eventDetailPath } from '@/utils/eventSlug'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -255,7 +256,7 @@ const goToEventDetail = (event) => {
 const viewCall = (event) => {
   // Rediriger vers la page de l'appel à soumission ou ouvrir un PDF
   // Pour l'instant, rediriger vers la page de l'événement
-  router.push(`/events/${event.id}`)
+  router.push(eventDetailPath(event))
 }
 
 const getStatusClass = (event) => {

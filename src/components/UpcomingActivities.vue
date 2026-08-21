@@ -382,6 +382,7 @@ import { usePacoWebinarData } from '@/composables/paco/usePacoWebinarData'
 import YouthClimateDayWidget from './YouthClimateDayWidget.vue'
 import SustainableFinanceDayWidget from './SustainableFinanceDayWidget.vue'
 import CyprusSeminarWidget from './CyprusSeminarWidget.vue'
+import { eventDetailPath } from '@/utils/eventSlug'
 
 export default {
   name: 'UpcomingActivities',
@@ -720,7 +721,7 @@ export default {
         router.push(`/programmations/${event.year}/${event.id}`)
       } else {
         // Sinon, rediriger vers la page de détail de l'événement
-        router.push(`/events/${event.id}`)
+        router.push(eventDetailPath(event))
       }
     }
 

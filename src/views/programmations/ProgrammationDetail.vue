@@ -856,6 +856,7 @@ import { usePdfExport } from '@/composables/usePdfExport'
 import { useAuthStore } from '@/stores/auth'
 import SearchModal from '@/components/SearchModal.vue'
 import AlertBanner from '@/components/AlertBanner.vue'
+import { DEFAULT_SHARE_IMAGE } from '@/utils/seo'
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -1646,7 +1647,7 @@ const metaTitle = computed(() => {
 })
 
 const eventImageUrl = computed(() => {
-  const defaultImage = `${siteUrl.value}/images/example/event_banniere_par_defaut_32_9_v3.jpg`
+  const defaultImage = `${siteUrl.value}${DEFAULT_SHARE_IMAGE}`
 
   if (!event.value) return defaultImage
 

@@ -51,6 +51,7 @@ if (fs.existsSync(indexPath)) {
 
 // Vérifier que l'image par défaut existe
 const defaultImages = [
+  'images/CdP31_IFDD.jpg',
   'images/example/event_banniere_par_defaut_32_9_v3.jpg',
   'images/example/event_banniere_par_defaut_16_9.jpg',
   'images/example/event_banniere_par_defaut_16_9_reduit.jpg'

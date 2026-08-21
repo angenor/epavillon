@@ -620,6 +620,7 @@ import { useSupabase } from '@/composables/useSupabase'
 import { useAuthStore } from '@/stores/auth'
 import RichTextEditor from '@/components/ui/RichTextEditor.vue'
 import { useTimezone } from '@/composables/useTimezone'
+import { eventDetailPath } from '@/utils/eventSlug'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -835,7 +836,7 @@ const handleSubmit = async () => {
 
     // Redirect to event detail page
     setTimeout(() => {
-      router.push(`/events/${event.value.id}`)
+      router.push(eventDetailPath(event.value))
     }, 500)
 
   } catch (err) {

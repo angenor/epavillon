@@ -448,6 +448,7 @@ import { useSupabase } from '@/composables/useSupabase'
 import { useAuthStore } from '@/stores/auth'
 import { useOrganizationCheck } from '@/composables/useOrganizationCheck'
 import { useTimezone } from '@/composables/useTimezone'
+import { eventDetailPath } from '@/utils/eventSlug'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -625,7 +626,7 @@ const handleSubmit = async () => {
     if (error) throw error
 
     // Redirect to event detail page
-    router.push(`/events/${data.id}`)
+    router.push(eventDetailPath(data))
   } catch (error) {
     console.error('Error creating event:', error)
     // TODO: Show error notification
