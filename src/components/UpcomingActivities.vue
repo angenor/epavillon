@@ -117,6 +117,9 @@
           </div>
         </div>
 
+        <!-- Widget Événement à venir (CdP en cours de préparation) -->
+        <UpcomingEventWidget />
+
         <!-- Widget PACO — Prochain webinaire (en dur) -->
         <div
           @click="goToPaco"
@@ -382,6 +385,7 @@ import { usePacoWebinarData } from '@/composables/paco/usePacoWebinarData'
 import YouthClimateDayWidget from './YouthClimateDayWidget.vue'
 import SustainableFinanceDayWidget from './SustainableFinanceDayWidget.vue'
 import CyprusSeminarWidget from './CyprusSeminarWidget.vue'
+import UpcomingEventWidget from './UpcomingEventWidget.vue'
 import { eventDetailPath } from '@/utils/eventSlug'
 
 export default {
@@ -389,7 +393,8 @@ export default {
   components: {
     YouthClimateDayWidget,
     SustainableFinanceDayWidget,
-    CyprusSeminarWidget
+    CyprusSeminarWidget,
+    UpcomingEventWidget
   },
   setup() {
     const { t, locale } = useI18n()

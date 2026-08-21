@@ -42,6 +42,18 @@ export function useSEO(seoData = {}) {
   }
 
   /**
+   * Supprime un meta tag de la page (y compris ceux définis dans index.html)
+   */
+  const removeMetaTag = ({ property, name }) => {
+    const key = property || name
+    const attribute = property ? 'property' : 'name'
+
+    document.querySelectorAll(`meta[${attribute}="${key}"]`).forEach(element => {
+      element.parentNode?.removeChild(element)
+    })
+  }
+
+  /**
    * Crée ou met à jour un meta tag
    */
   const setMetaTag = (attributes) => {
@@ -125,6 +137,7 @@ export function useSEO(seoData = {}) {
       type = 'website',
       locale = 'fr_FR',
       structuredData = null,
+      noImage = false,
       twitter = {},
       og = {}
     } = data
@@ -155,7 +168,12 @@ export function useSEO(seoData = {}) {
     if (url) {
       setMetaTag({ property: 'og:url', content: url })
     }
-    if (image) {
+    if (noImage) {
+      // Aucune image de partage : retirer aussi celles héritées de index.html,
+      // qui illustreraient la page avec un visuel sans rapport
+      ;['og:image', 'og:image:secure_url', 'og:image:alt', 'og:image:width', 'og:image:height']
+        .forEach(property => removeMetaTag({ property }))
+    } else if (image) {
       setMetaTag({ property: 'og:image', content: image })
       setMetaTag({ property: 'og:image:secure_url', content: image })
       setMetaTag({ property: 'og:image:alt', content: title || 'e-Pavillon Climatique' })
@@ -169,7 +187,9 @@ export function useSEO(seoData = {}) {
     if (description) {
       setMetaTag({ name: 'twitter:description', content: metaDescription })
     }
-    if (image) {
+    if (noImage) {
+      ;['twitter:image', 'twitter:image:alt'].forEach(name => removeMetaTag({ name }))
+    } else if (image) {
       setMetaTag({ name: 'twitter:image', content: image })
       setMetaTag({ name: 'twitter:image:alt', content: title || 'e-Pavillon Climatique' })
     }

@@ -46,21 +46,20 @@ import PacoSession2 from '@/components/paco/PacoSession2.vue'
 const { t } = useI18n()
 const { sessions, currentSession } = usePacoWebinarData()
 
-// SEO - OG meta tags pour le partage sur les réseaux sociaux.
+// SEO - meta tags pour le partage sur les réseaux sociaux.
 // Dérivés de la session courante afin de rester à jour à chaque nouvelle édition.
+// Volontairement sans image : l'aperçu se limite au titre et à la description,
+// une illustration générique prêtant à confusion sur la session concernée.
 const SITE_ORIGIN = 'https://epavillonclimatique.francophonie.org'
-// Repli sur la bannière générique : les crawlers sociaux exigent une image réelle,
-// même quand le visuel de la session n'est pas encore disponible.
-const DEFAULT_OG_IMAGE = '/images/banniere_paco.jpg'
 const seoPrefix = currentSession.value.i18nPrefix
 useSEO({
   title: `Webinaire PACO - ${t(`${seoPrefix}.title`)}`,
   description: `${t(`${seoPrefix}.subtitle`)}. ${t(`${seoPrefix}.dateLabel`)}, en ligne, ${t(`${seoPrefix}.timeLabel`)}.`,
-  image: `${SITE_ORIGIN}${currentSession.value.coverImage || DEFAULT_OG_IMAGE}`,
   url: `${SITE_ORIGIN}/paco`,
   type: 'website',
+  noImage: true,
   og: { type: 'website' },
-  twitter: { card: 'summary_large_image' }
+  twitter: { card: 'summary' }
 })
 
 const { isAuthenticated, user } = useAuth()

@@ -80,7 +80,7 @@
           <!-- Bannière de l'événement -->
           <div @click.stop="goToEventDetail(event)" class="relative cursor-pointer h-48 overflow-hidden ">
             <img
-              :src="event.banner_low_quality_16_9_url || event.banner"
+              :src="getEventBannerOrDefault(event, '16_9')"
               :alt="event.title"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
             >
@@ -185,6 +185,12 @@
         </div>
       </div>
     </div>
+
+    <!-- Programmation pas encore publiée -->
+    <ProgrammationUnavailableModal
+      :event="unavailableEvent"
+      @close="unavailableEvent = null"
+    />
   </div>
 </template>
 
@@ -194,6 +200,8 @@ import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 import { eventDetailPath } from '@/utils/eventSlug'
+import { getEventBannerOrDefault } from '@/utils/eventBanner'
+import ProgrammationUnavailableModal from '@/components/programmations/ProgrammationUnavailableModal.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -205,6 +213,7 @@ const isLoading = ref(false)
 const events = ref([])
 const selectedYear = ref('all')
 const availableYears = ref([])
+const unavailableEvent = ref(null)
 
 // Computed
 const filteredEvents = computed(() => {
@@ -246,8 +255,9 @@ const loadEvents = async () => {
 }
 
 const goToEventDetail = (event) => {
-  // Vérifier si la programmation est disponible avant de naviguer
+  // Programmation pas encore publiée : expliquer et proposer l'appel
   if (!event.is_programmation_available) {
+    unavailableEvent.value = event
     return
   }
   router.push(`/programmations/${event.year}/${event.id}`)

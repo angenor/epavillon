@@ -58,6 +58,11 @@
     "error": {
       "title": "Erreur",
       "notFound": "L'événement demandé n'a pas été trouvé."
+    },
+    "unavailable": {
+      "title": "Programmation non disponible",
+      "message": "La programmation de {event} n'est pas encore publiée. Elle le sera une fois les activités sélectionnées.",
+      "submitHint": "L'appel à propositions est ouvert : vous pouvez dès maintenant soumettre une activité."
     }
   },
   "events": {

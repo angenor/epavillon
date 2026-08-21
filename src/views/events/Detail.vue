@@ -335,6 +335,7 @@ import useUserEvents from '@/composables/useUserEvents'
 import { useSEO, generateEventStructuredData } from '@/composables/useSEO'
 import { DEFAULT_SHARE_IMAGE } from '@/utils/seo'
 import { isUuid, normalizeEventSlug, eventDetailPath } from '@/utils/eventSlug'
+import { getEventBanner, getEventBannerOrDefault } from '@/utils/eventBanner'
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -486,9 +487,7 @@ const seoData = computed(() => {
   const pageUrl = `${window.location.origin}${eventDetailPath(event.value)}`
 
   // Construire l'image de partage (priorité à l'image 16:9 pour les réseaux sociaux)
-  const shareImage = event.value.banner_high_quality_16_9_url ||
-                     event.value.banner_high_quality_32_9_url ||
-                     event.value.banner ||
+  const shareImage = getEventBanner(event.value, '16_9') ||
                      `${window.location.origin}${DEFAULT_SHARE_IMAGE}`
 
   // Construire la description avec informations clés
@@ -590,11 +589,11 @@ const goToActivityDetail = (activityId) => {
   router.push(`/activities/${activityId}`)
 }
 
-const getBannerUrl = () => {
-  return event.value.banner_high_quality_32_9_url ||
-         event.value.banner ||
-         '/images/example/event_banniere_par_defaut_32_9_v3.jpg'
-}
+const getBannerUrl = () => getEventBannerOrDefault(
+  event.value,
+  '32_9',
+  '/images/example/event_banniere_par_defaut_32_9_v3.jpg'
+)
 
 // Résout le paramètre d'URL : identifiant technique (ancien lien) ou
 // slug d'acronyme (/events/CdP31)
