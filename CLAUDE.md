@@ -60,7 +60,8 @@ npm run dev        # Démarrer le serveur de développement Vite (port par défa
 ### Build & Production
 ```bash
 npm run build          # Construire pour la production (sans pre-rendering SEO)
-npm run build:seo      # Construire avec pre-rendering SEO (RECOMMANDÉ pour déploiement)
+npm run build:static   # Build + pre-rendering des seules pages à meta fixes (/paco) — rapide, sans Supabase
+npm run build:seo      # Construire avec pre-rendering SEO complet (RECOMMANDÉ pour déploiement)
 npm run preview        # Prévisualiser le build de production localement
 ```
 
@@ -70,7 +71,16 @@ npm run generate:routes  # Générer la liste des routes depuis Supabase
 npm run prerender        # Pré-rendre les pages avec Puppeteer
 npm run build:seo        # Build + pre-rendering (commande complète)
 npm run verify:seo       # Vérifier les meta tags après le build
+npm run prerender:static # Pré-rendre uniquement /paco (le script accepte des routes en argument)
 ```
+
+**Rappel** : les robots des réseaux sociaux n'exécutent pas JavaScript. Un déploiement issu
+de `npm run build` seul ne leur expose que les meta tags de `index.html`, identiques pour
+toutes les pages. Le pre-rendering est donc indispensable pour les aperçus de partage.
+
+**Apache** : `public/.htaccess` sert les fichiers pré-rendus avant la redirection SPA
+(conditions `!-f` / `!-d`). Sans ces conditions, toutes les URLs retombent sur `index.html`
+et les meta pré-rendus sont ignorés.
 
 ### Déploiement
 ```bash

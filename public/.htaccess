@@ -1,0 +1,33 @@
+# Apache — configuration pour l'application e-Pavillon Climatique (SPA Vue)
+#
+# IMPORTANT : les fichiers HTML pré-rendus (dist/paco/index.html, etc.) doivent
+# être servis tels quels. Les conditions !-f et !-d ci-dessous s'en chargent :
+# une URL correspondant à un fichier ou un dossier existant n'est pas réécrite.
+# Sans elles, toutes les URLs renvoient index.html et les réseaux sociaux
+# affichent les meta tags génériques du site au lieu de ceux de la page.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Servir directement les fichiers et dossiers existants
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Toutes les autres URLs sont gérées par le routeur de l'application
+  RewriteRule ^ /index.html [L]
+</IfModule>
+
+# Les HTML pré-rendus ne doivent pas être mis en cache trop longtemps :
+# ils changent à chaque build
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
+  # Les assets versionnés par Vite peuvent l'être indéfiniment
+  <FilesMatch "\.(js|css|woff2?|svg|png|jpe?g|webp|avif)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>

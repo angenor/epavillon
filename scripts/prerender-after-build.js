@@ -32,15 +32,24 @@ if (!existsSync(distPath)) {
   process.exit(1)
 }
 
-// Charger les routes
-if (!existsSync(routesFile)) {
-  console.error('❌ Le fichier prerender-routes.json n\'existe pas.')
-  console.error('Lancez `npm run generate:routes` d\'abord.')
-  process.exit(1)
+// Routes : celles passées en argument, sinon la liste générée depuis Supabase.
+// Passer des routes en argument évite `generate:routes` et permet de ne
+// pré-rendre que quelques pages : `node scripts/prerender-after-build.js /paco`
+const routeArgs = process.argv.slice(2).filter(arg => arg.startsWith('/'))
+
+let routes
+if (routeArgs.length > 0) {
+  routes = routeArgs
+} else {
+  if (!existsSync(routesFile)) {
+    console.error('❌ Le fichier prerender-routes.json n\'existe pas.')
+    console.error('Lancez `npm run generate:routes` d\'abord, ou passez les routes en argument.')
+    process.exit(1)
+  }
+  routes = JSON.parse(readFileSync(routesFile, 'utf-8'))
 }
 
-const routes = JSON.parse(readFileSync(routesFile, 'utf-8'))
-console.log(`📋 ${routes.length} routes à pré-rendre\n`)
+console.log(`📋 ${routes.length} route(s) à pré-rendre\n`)
 
 // Créer un serveur HTTP pour servir le dossier dist (mode SPA)
 const server = createServer(async (request, response) => {
