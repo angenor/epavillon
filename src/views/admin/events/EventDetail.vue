@@ -64,6 +64,15 @@
               </div>
             </div>
 
+            <!-- Édition complète de l'événement (dates, fuseau horaire, lieu...) -->
+            <router-link :to="`/events/${event.id}/edit`"
+                         class="inline-flex items-center px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              {{ t('common.edit') }}
+            </router-link>
+
             <!-- Indicateurs de chargement -->
             <div v-if="isUpdatingEventStatus || isUpdatingSubmissionStatus" class="flex items-center text-gray-500">
               <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-500 mr-2"></div>
@@ -290,10 +299,12 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
 import { useEventMediaUpload } from '@/composables/useEventMediaUpload'
 
+const { t } = useI18n()
 const route = useRoute()
 const { supabase } = useSupabase()
 const { hasAdminRole, isLoadingRoles, loadUserRoles } = useAdmin()

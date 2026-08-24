@@ -54,3 +54,41 @@ export const formatEventPeriod = (eventData, locale = 'fr-FR') => {
 
   return `${start.toLocaleDateString(locale, options)} - ${end.toLocaleDateString(locale, options)}`
 }
+// =============================================================================
+// Plage horaire autorisée pour les activités (exprimée dans le fuseau horaire
+// de l'événement). Utilisée pour borner les champs, valider la saisie et
+// alimenter les messages i18n `activities.validation.timeRange` et
+// `activity.submit.helpers.timeRange` (paramètres {start} et {end}).
+// =============================================================================
+export const ACTIVITY_TIME_RANGE = {
+  start: '09:00',
+  end: '17:00'
+}
+
+/**
+ * Convertit une heure en minutes depuis minuit
+ * Accepte "HH:mm" ou une valeur datetime-local "YYYY-MM-DDTHH:mm"
+ * @param {string} value
+ * @returns {number|null} Minutes depuis minuit, ou null si non analysable
+ */
+export const parseTimeToMinutes = (value) => {
+  if (!value) return null
+
+  const match = String(value).match(/^(?:\d{4}-\d{2}-\d{2}[T ])?(\d{1,2}):(\d{2})/)
+  if (!match) return null
+
+  return parseInt(match[1], 10) * 60 + parseInt(match[2], 10)
+}
+
+/**
+ * Vérifie qu'une heure est dans la plage autorisée pour les activités
+ * @param {string} value - "HH:mm" ou "YYYY-MM-DDTHH:mm"
+ * @returns {boolean}
+ */
+export const isWithinActivityTimeRange = (value) => {
+  const minutes = parseTimeToMinutes(value)
+  if (minutes === null) return false
+
+  return minutes >= parseTimeToMinutes(ACTIVITY_TIME_RANGE.start) &&
+    minutes <= parseTimeToMinutes(ACTIVITY_TIME_RANGE.end)
+}

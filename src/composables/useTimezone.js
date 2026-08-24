@@ -75,6 +75,7 @@ const timezones = [
   { value: 'Europe/Madrid', label: { fr: 'Madrid (GMT+1)', en: 'Madrid (GMT+1)' } },
   { value: 'Europe/Athens', label: { fr: 'Athènes (GMT+2)', en: 'Athens (GMT+2)' } },
   { value: 'Europe/Bucharest', label: { fr: 'Bucarest (GMT+2)', en: 'Bucharest (GMT+2)' } },
+  { value: 'Europe/Istanbul', label: { fr: 'Istanbul / Antalya (GMT+3)', en: 'Istanbul / Antalya (GMT+3)' } },
   { value: 'Europe/Moscow', label: { fr: 'Moscou (GMT+3)', en: 'Moscow (GMT+3)' } },
 
   // Asie & Océanie
@@ -297,6 +298,38 @@ export function useTimezone() {
     return offset >= 0 ? `GMT+${offset}` : `GMT${offset}`
   }
 
+  // Obtenir la clé de jour (YYYY-MM-DD) d'une date dans un fuseau horaire donné
+  // Une chaîne sans indicateur de fuseau (date SQL "2026-11-09" ou valeur d'un champ
+  // datetime-local "2026-11-09T14:00") désigne un jour calendaire / une heure murale :
+  // la convertir décalerait le jour, on garde donc la partie date telle quelle.
+  const getDayKeyInTimezone = (value, timezone = null) => {
+    if (!value) return null
+
+    if (typeof value === 'string') {
+      const naive = value.trim().match(/^(\d{4}-\d{2}-\d{2})(?:[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?)?$/)
+      if (naive) return naive[1]
+    }
+
+    const date = value instanceof Date ? value : new Date(value)
+    if (isNaN(date.getTime())) return null
+
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: timezone || undefined,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    })
+
+    const values = {}
+    formatter.formatToParts(date).forEach(part => {
+      if (part.type !== 'literal') values[part.type] = part.value
+    })
+
+    if (!values.year || !values.month || !values.day) return null
+
+    return `${values.year}-${values.month.padStart(2, '0')}-${values.day.padStart(2, '0')}`
+  }
+
   // Obtenir le label d'un fuseau horaire
   const getTimezoneLabel = (timezone, locale = 'fr') => {
     const tz = timezones.find(t => t.value === timezone)
@@ -336,6 +369,7 @@ export function useTimezone() {
     convertFromUTC,
     getTimezoneOffset,
     getTimezoneLabel,
+    getDayKeyInTimezone,
     getCityFromTimezone
   }
 }

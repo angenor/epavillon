@@ -81,6 +81,10 @@
                                class="text-orange-600 hover:text-orange-900">
                       {{ t('common.view') }}
                     </router-link>
+                    <router-link :to="`/events/${event.id}/edit`"
+                               class="text-blue-600 hover:text-blue-900">
+                      {{ t('common.edit') }}
+                    </router-link>
                     <button @click="confirmDeleteEvent(event)"
                             class="text-red-600 hover:text-red-900"
                             :disabled="isDeleting">

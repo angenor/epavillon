@@ -145,10 +145,10 @@
                   required
                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all duration-200"
                 >
-                  <option value="">{{ t('activity.submit.placeholders.selectFormat') }}</option>
-                  <option value="online">{{ t('activity.submit.formats.online') }}</option>
-                  <option value="in_person">{{ t('activity.submit.formats.in_person') }}</option>
-                  <option value="hybrid">{{ t('activity.submit.formats.hybrid') }}</option>
+                  <option v-if="availableFormats.length > 1" value="">{{ t('activity.submit.placeholders.selectFormat') }}</option>
+                  <option v-for="availableFormat in availableFormats" :key="availableFormat" :value="availableFormat">
+                    {{ t(`activity.submit.formats.${availableFormat}`) }}
+                  </option>
                 </select>
               </div>
 
@@ -362,7 +362,7 @@
                   </h3>
                   <ul class="mt-2 text-sm text-red-700 dark:text-red-300 list-disc list-inside">
                     <li v-for="error in dateValidationErrors" :key="error">
-                      {{ t(error) }}
+                      {{ t(error, ACTIVITY_TIME_RANGE) }}
                     </li>
                   </ul>
                 </div>
@@ -490,7 +490,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
@@ -498,6 +498,7 @@ import { useAuthStore } from '@/stores/auth'
 import RichTextEditor from '@/components/ui/RichTextEditor.vue'
 import { useActivityDateValidation } from '@/composables/useActivityDateValidation'
 import { useTimezone } from '@/composables/useTimezone'
+import { ACTIVITY_TIME_RANGE, isWithinActivityTimeRange } from '@/utils/activityHelpers'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -565,13 +566,39 @@ const isAdmin = computed(() => {
 })
 
 // Computed pour la plage de dates acceptables
-const dateRange = computed(() => {
-  if (!event.value) return { minDate: null, maxDate: null }
+const eventPeriod = computed(() => {
+  if (!event.value) return { startDate: null, endDate: null }
 
-  const eventStartDate = event.value.online_start_datetime || event.value.in_person_start_date
-  const eventEndDate = event.value.online_end_datetime || event.value.in_person_end_date
+  return {
+    startDate: event.value.online_start_datetime || event.value.in_person_start_date || null,
+    endDate: event.value.online_end_datetime || event.value.in_person_end_date || null
+  }
+})
 
-  return getAcceptableDateRange(eventStartDate, eventEndDate)
+const dateRange = computed(() =>
+  getAcceptableDateRange(eventPeriod.value.startDate, eventPeriod.value.endDate, event.value?.timezone)
+)
+
+// Formats d'activité proposés selon le mode de participation de l'événement
+const availableFormats = computed(() => {
+  switch (event.value?.participation_mode) {
+    case 'online':
+      return ['online']
+    case 'in_person':
+      return ['in_person']
+    default:
+      // Événement hybride (ou pas encore chargé) : tous les formats sont possibles
+      return ['online', 'in_person', 'hybrid']
+  }
+})
+
+// Un seul format possible : le présélectionner. Sinon, écarter un format devenu invalide.
+watch(availableFormats, (formats) => {
+  if (formats.length === 1) {
+    formData.value.format = formats[0]
+  } else if (formData.value.format && !formats.includes(formData.value.format)) {
+    formData.value.format = ''
+  }
 })
 
 // Methods
@@ -794,35 +821,23 @@ const validateDates = () => {
     return
   }
 
-  // Extraire les heures des datetime-local pour validation
-  const startDateTime = new Date(formData.value.proposed_start_date)
-  const endDateTime = new Date(formData.value.proposed_end_date)
-
-  const startHour = startDateTime.getHours()
-  const endHour = endDateTime.getHours()
-
-  // Validation des heures (7:00 à 19:00)
-  if (startHour < 7 || startHour > 19) {
-    errors.push('activities.validation.timeRange')
-  }
-
-  if (endHour < 7 || endHour > 19) {
+  // Validation de la plage horaire autorisée (heures saisies dans le fuseau de l'événement)
+  if (!isWithinActivityTimeRange(formData.value.proposed_start_date) ||
+      !isWithinActivityTimeRange(formData.value.proposed_end_date)) {
     errors.push('activities.validation.timeRange')
   }
 
   // Validation que l'heure de fin est après l'heure de début
-  if (endDateTime <= startDateTime) {
+  if (formData.value.proposed_end_date <= formData.value.proposed_start_date) {
     errors.push('activities.validation.endTimeAfterStart')
   }
-
-  const eventStartDate = event.value.online_start_datetime || event.value.in_person_start_date
-  const eventEndDate = event.value.online_end_datetime || event.value.in_person_end_date
 
   const validation = validateActivityDates({
     activityStartDate: formData.value.proposed_start_date,
     activityEndDate: formData.value.proposed_end_date,
-    eventStartDate: eventStartDate,
-    eventEndDate: eventEndDate
+    eventStartDate: eventPeriod.value.startDate,
+    eventEndDate: eventPeriod.value.endDate,
+    timezone: event.value.timezone
   })
 
   dateValidationErrors.value = [...errors, ...validation.errors]
@@ -865,8 +880,7 @@ const getTimezoneOffsetMinutes = (date, timezone) => {
 const formatEventDates = () => {
   if (!event.value) return ''
 
-  const startDate = event.value.online_start_datetime || event.value.in_person_start_date
-  const endDate = event.value.online_end_datetime || event.value.in_person_end_date
+  const { startDate, endDate } = eventPeriod.value
 
   if (!startDate || !endDate) return ''
 

@@ -236,10 +236,10 @@
                         required
                         class="w-full px-4 py-3 pl-11 pr-10 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 appearance-none cursor-pointer"
                       >
-                        <option value="">{{ t('activity.submit.placeholders.selectFormat') }}</option>
-                        <option disabled value="online">{{ t('activity.submit.formats.online') }}</option>
-                        <option disabled value="in_person">{{ t('activity.submit.formats.in_person') }}</option>
-                        <option value="hybrid">{{ t('activity.submit.formats.hybrid') }}</option>
+                        <option v-if="availableFormats.length > 1" value="">{{ t('activity.submit.placeholders.selectFormat') }}</option>
+                        <option v-for="availableFormat in availableFormats" :key="availableFormat" :value="availableFormat">
+                          {{ t(`activity.submit.formats.${availableFormat}`) }}
+                        </option>
                       </select>
                       <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -316,6 +316,23 @@
                 </h2>
 
                 <div class="space-y-5">
+                  <!-- Période de l'événement non définie : la validation des dates est impossible -->
+                  <div v-if="!hasEventPeriod" class="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-200 dark:border-amber-800">
+                    <div class="flex items-start">
+                      <svg class="w-5 h-5 text-amber-500 dark:text-amber-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                      </svg>
+                      <div class="ml-3">
+                        <h4 class="text-sm font-medium text-amber-900 dark:text-amber-200">
+                          {{ t('activities.validation.missingEventPeriod') }}
+                        </h4>
+                        <p class="mt-1 text-sm text-amber-800 dark:text-amber-300">
+                          {{ t('activities.validation.missingEventPeriodHelp') }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
                   <!-- Timezone Info -->
                   <div v-if="eventData?.timezone" class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
                     <div class="flex items-start">
@@ -359,7 +376,7 @@
                       </div>
                     </div>
                     <!-- Afficher la période de l'événement avec le fuseau horaire -->
-                    <p v-if="eventData" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    <p v-if="eventData && hasEventPeriod" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                       {{ t('activities.validation.eventPeriod') }}: {{ formatEventPeriod() }}
                       <span v-if="eventData.timezone" class="font-medium">({{ getTimezoneLabel(eventData.timezone, locale) }})</span>
                     </p>
@@ -377,8 +394,8 @@
                           v-model="form.start_time"
                           type="time"
                           required
-                          min="07:00"
-                          max="19:00"
+                          :min="ACTIVITY_TIME_RANGE.start"
+                          :max="ACTIVITY_TIME_RANGE.end"
                           @change="validateDates"
                           class="w-full px-4 py-3 pl-11 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
                         />
@@ -400,8 +417,8 @@
                           v-model="form.end_time"
                           type="time"
                           required
-                          min="07:00"
-                          max="19:00"
+                          :min="ACTIVITY_TIME_RANGE.start"
+                          :max="ACTIVITY_TIME_RANGE.end"
                           @change="validateDates"
                           class="w-full px-4 py-3 pl-11 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
                         />
@@ -422,7 +439,7 @@
                       </svg>
                       <div class="ml-2">
                         <p class="text-xs text-blue-800 dark:text-blue-300">
-                          {{ t('activity.submit.helpers.timeRange') || 'Les heures doivent être entre 7h00 et 19h00' }}
+                          {{ t('activity.submit.helpers.timeRange', ACTIVITY_TIME_RANGE) }}
                         </p>
                         <p v-if="form.start_time && form.end_time && !isTimeRangeValid()" class="mt-1 text-xs text-red-600 dark:text-red-400 font-medium">
                           {{ t('activity.submit.errors.invalidTimeRange') || 'Les heures saisies ne sont pas dans la plage acceptée ou l\'heure de fin est avant l\'heure de début' }}
@@ -443,7 +460,7 @@
                         </h3>
                         <ul class="mt-2 text-sm text-red-700 dark:text-red-300 list-disc list-inside">
                           <li v-for="error in dateValidationErrors" :key="error">
-                            {{ t(error) }}
+                            {{ t(error, ACTIVITY_TIME_RANGE) }}
                           </li>
                         </ul>
                       </div>
@@ -855,6 +872,7 @@ import { useActivityDateValidation } from '@/composables/useActivityDateValidati
 import ProgressBar from '@/components/ui/ProgressBar.vue'
 import RichTextEditor from '@/components/ui/RichTextEditor.vue'
 import { useTimezone } from '@/composables/useTimezone'
+import { ACTIVITY_TIME_RANGE, isWithinActivityTimeRange, parseTimeToMinutes } from '@/utils/activityHelpers'
 
 const router = useRouter()
 const route = useRoute()
@@ -964,29 +982,17 @@ const canProceedToNextStep = computed(() => {
     case 1: // Format and Themes
       return form.value.format && form.value.main_themes.length > 0 && form.value.categories.length > 0
     case 2: // Schedule and Location
-      // Vérifier que les heures sont dans la plage 7h00-19h00
       if (!form.value.activity_date || !form.value.start_time || !form.value.end_time) {
         return false
       }
 
-      const startHour = parseInt(form.value.start_time.split(':')[0])
-      const endHour = parseInt(form.value.end_time.split(':')[0])
-      const startMinute = parseInt(form.value.start_time.split(':')[1])
-      const endMinute = parseInt(form.value.end_time.split(':')[1])
-
-      // Vérifier que les heures sont dans la plage 7h00-19h00
-      if (startHour < 7 || startHour > 19 || endHour < 7 || endHour > 19) {
+      // Vérifier que les heures sont dans la plage autorisée
+      if (!isWithinActivityTimeRange(form.value.start_time) || !isWithinActivityTimeRange(form.value.end_time)) {
         return false
       }
 
       // Vérifier que l'heure de fin est après l'heure de début
-      const startTimeInMinutes = startHour * 60 + startMinute
-      const endTimeInMinutes = endHour * 60 + endMinute
-      if (endTimeInMinutes <= startTimeInMinutes) {
-        return false
-      }
-
-      return true
+      return parseTimeToMinutes(form.value.end_time) > parseTimeToMinutes(form.value.start_time)
     case 3: // Speakers
       return form.value.speakers.length > 0 && form.value.speakers.every(s =>
         s.civility &&
@@ -1018,18 +1024,44 @@ const organizationName = computed(() => {
 
 const organizationData = ref(null)
 
-// Computed pour la plage de dates acceptables
-const dateRange = computed(() => {
-  if (!eventData.value) return { minDate: null, maxDate: null }
-
-  const eventStartDate = eventData.value.online_start_datetime || eventData.value.in_person_start_date
-  const eventEndDate = eventData.value.online_end_datetime || eventData.value.in_person_end_date
-
-  // Si pas de date de fin, utiliser la date de début + 30 jours par défaut
-  const endDate = eventEndDate || new Date(new Date(eventStartDate).getTime() + 30 * 24 * 60 * 60 * 1000).toISOString()
-
-  return getAcceptableDateRange(eventStartDate, endDate)
+// Formats d'activité proposés selon le mode de participation de l'événement
+const availableFormats = computed(() => {
+  switch (eventData.value?.participation_mode) {
+    case 'online':
+      return ['online']
+    case 'in_person':
+      return ['in_person']
+    default:
+      // Événement hybride (ou pas encore chargé) : tous les formats sont possibles
+      return ['online', 'in_person', 'hybrid']
+  }
 })
+
+// Un seul format possible : le présélectionner. Sinon, écarter un format devenu invalide.
+watch(availableFormats, (formats) => {
+  if (formats.length === 1) {
+    form.value.format = formats[0]
+  } else if (form.value.format && !formats.includes(form.value.format)) {
+    form.value.format = ''
+  }
+}, { immediate: true })
+
+// Computed pour la plage de dates acceptables
+const eventPeriod = computed(() => {
+  if (!eventData.value) return { startDate: null, endDate: null }
+
+  return {
+    startDate: eventData.value.online_start_datetime || eventData.value.in_person_start_date || null,
+    endDate: eventData.value.online_end_datetime || eventData.value.in_person_end_date || null
+  }
+})
+
+// L'événement doit avoir une période définie pour pouvoir borner et valider les dates
+const hasEventPeriod = computed(() => Boolean(eventPeriod.value.startDate && eventPeriod.value.endDate))
+
+const dateRange = computed(() =>
+  getAcceptableDateRange(eventPeriod.value.startDate, eventPeriod.value.endDate, eventData.value?.timezone)
+)
 
 const addSpeaker = () => {
   form.value.speakers.push({
@@ -1061,24 +1093,13 @@ const isTimeRangeValid = () => {
     return true // Pas de validation si les heures ne sont pas définies
   }
 
-  const startHour = parseInt(form.value.start_time.split(':')[0])
-  const endHour = parseInt(form.value.end_time.split(':')[0])
-  const startMinute = parseInt(form.value.start_time.split(':')[1])
-  const endMinute = parseInt(form.value.end_time.split(':')[1])
-
-  // Vérifier que les heures sont dans la plage 7h00-19h00
-  if (startHour < 7 || startHour > 19 || endHour < 7 || endHour > 19) {
+  // Vérifier que les heures sont dans la plage autorisée
+  if (!isWithinActivityTimeRange(form.value.start_time) || !isWithinActivityTimeRange(form.value.end_time)) {
     return false
   }
 
   // Vérifier que l'heure de fin est après l'heure de début
-  const startTimeInMinutes = startHour * 60 + startMinute
-  const endTimeInMinutes = endHour * 60 + endMinute
-  if (endTimeInMinutes <= startTimeInMinutes) {
-    return false
-  }
-
-  return true
+  return parseTimeToMinutes(form.value.end_time) > parseTimeToMinutes(form.value.start_time)
 }
 
 const nextStep = () => {
@@ -1484,33 +1505,15 @@ const validateDates = () => {
     return
   }
 
-  // Validation des heures (7:00 à 19:00)
-  const startHour = parseInt(form.value.start_time.split(':')[0])
-  const endHour = parseInt(form.value.end_time.split(':')[0])
-  const startMinute = parseInt(form.value.start_time.split(':')[1])
-  const endMinute = parseInt(form.value.end_time.split(':')[1])
-
-  if (startHour < 7 || startHour > 19) {
-    errors.push('activities.validation.timeRange')
-  }
-
-  if (endHour < 7 || endHour > 19) {
+  // Validation de la plage horaire autorisée
+  if (!isWithinActivityTimeRange(form.value.start_time) || !isWithinActivityTimeRange(form.value.end_time)) {
     errors.push('activities.validation.timeRange')
   }
 
   // Validation que l'heure de fin est après l'heure de début
-  const startTimeInMinutes = startHour * 60 + startMinute
-  const endTimeInMinutes = endHour * 60 + endMinute
-
-  if (endTimeInMinutes <= startTimeInMinutes) {
+  if (parseTimeToMinutes(form.value.end_time) <= parseTimeToMinutes(form.value.start_time)) {
     errors.push('activities.validation.endTimeAfterStart')
   }
-
-  const eventStartDate = eventData.value.online_start_datetime || eventData.value.in_person_start_date
-  const eventEndDate = eventData.value.online_end_datetime || eventData.value.in_person_end_date
-
-  // Si pas de date de fin d'événement, utiliser date de début + 30 jours
-  const endDate = eventEndDate || new Date(new Date(eventStartDate).getTime() + 30 * 24 * 60 * 60 * 1000).toISOString()
 
   const proposedStartDate = buildDateTime(form.value.activity_date, form.value.start_time)
   const proposedEndDate = buildDateTime(form.value.activity_date, form.value.end_time)
@@ -1518,37 +1521,40 @@ const validateDates = () => {
   const validation = validateActivityDates({
     activityStartDate: proposedStartDate,
     activityEndDate: proposedEndDate,
-    eventStartDate: eventStartDate,
-    eventEndDate: endDate
+    eventStartDate: eventPeriod.value.startDate,
+    eventEndDate: eventPeriod.value.endDate,
+    timezone: eventData.value.timezone
   })
 
   dateValidationErrors.value = [...errors, ...validation.errors]
 }
 
-// Formater la période de l'événement
+// Formater la période de l'événement (dans le fuseau horaire de l'événement)
 const formatEventPeriod = () => {
   if (!eventData.value) return ''
 
-  const startDate = eventData.value.online_start_datetime || eventData.value.in_person_start_date
-  const endDate = eventData.value.online_end_datetime || eventData.value.in_person_end_date
+  const { startDate, endDate } = eventPeriod.value
 
   if (!startDate) return ''
 
-  const start = new Date(startDate).toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric'
-  })
+  const formatEventDay = (value) => {
+    // Une date SQL "YYYY-MM-DD" est une date calendaire : la convertir dans un fuseau
+    // décalerait le jour affiché, on l'affiche donc en UTC
+    const isDateOnly = typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value.trim())
+
+    return new Date(value).toLocaleDateString(locale.value === 'fr' ? 'fr-FR' : 'en-US', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      timeZone: isDateOnly ? 'UTC' : (eventData.value.timezone || 'UTC')
+    })
+  }
+
+  const start = formatEventDay(startDate)
 
   if (!endDate) return start
 
-  const end = new Date(endDate).toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric'
-  })
-
-  return `${start} - ${end}`
+  return `${start} - ${formatEventDay(endDate)}`
 }
 
 onMounted(async () => {

@@ -627,7 +627,7 @@ const route = useRoute()
 const router = useRouter()
 const { supabase } = useSupabase()
 const authStore = useAuthStore()
-const { getGroupedTimezones, detectUserTimezone } = useTimezone()
+const { getGroupedTimezones, detectUserTimezone, convertToUTC, convertFromUTC } = useTimezone()
 
 // Reactive data
 const isLoading = ref(true)
@@ -707,6 +707,8 @@ const loadEvent = async () => {
     event.value = eventData
     
     // Populate form data
+    const eventTimezone = eventData.timezone || detectUserTimezone()
+
     formData.value = {
       title: eventData.title || '',
       acronym: eventData.acronym || '',
@@ -717,7 +719,7 @@ const loadEvent = async () => {
       city: eventData.city || '',
       address: eventData.address || '',
       logo_url: eventData.logo_url || '',
-      timezone: eventData.timezone || detectUserTimezone(), // Ajout du fuseau horaire
+      timezone: eventTimezone, // Ajout du fuseau horaire
       // Bannières
       banner_high_quality_32_9_url: eventData.banner_high_quality_32_9_url || '',
       banner_high_quality_16_9_url: eventData.banner_high_quality_16_9_url || '',
@@ -725,19 +727,16 @@ const loadEvent = async () => {
       banner_low_quality_32_9_url: eventData.banner_low_quality_32_9_url || '',
       banner_low_quality_16_9_url: eventData.banner_low_quality_16_9_url || '',
       banner_low_quality_1_1_url: eventData.banner_low_quality_1_1_url || '',
-      // Dates en ligne
-      online_start_datetime: eventData.online_start_datetime ?
-        new Date(eventData.online_start_datetime).toISOString().slice(0, 16) : '',
-      online_end_datetime: eventData.online_end_datetime ?
-        new Date(eventData.online_end_datetime).toISOString().slice(0, 16) : '',
-      // Dates en présentiel
+      // Dates en ligne (affichées dans le fuseau horaire de l'événement)
+      online_start_datetime: convertFromUTC(eventData.online_start_datetime, eventTimezone) || '',
+      online_end_datetime: convertFromUTC(eventData.online_end_datetime, eventTimezone) || '',
+      // Dates en présentiel (dates calendaires : aucune conversion)
       in_person_start_date: eventData.in_person_start_date ?
-        new Date(eventData.in_person_start_date).toISOString().slice(0, 10) : '',
+        String(eventData.in_person_start_date).slice(0, 10) : '',
       in_person_end_date: eventData.in_person_end_date ?
-        new Date(eventData.in_person_end_date).toISOString().slice(0, 10) : '',
+        String(eventData.in_person_end_date).slice(0, 10) : '',
       // Statuts et deadline
-      submission_deadline: eventData.submission_deadline ?
-        new Date(eventData.submission_deadline).toISOString().slice(0, 16) : '',
+      submission_deadline: convertFromUTC(eventData.submission_deadline, eventTimezone) || '',
       event_status: eventData.event_status || 'upcoming',
       submission_status: eventData.submission_status || 'open'
     }
@@ -791,7 +790,7 @@ const handleSubmit = async () => {
       event_status: formData.value.event_status,
       submission_status: formData.value.submission_status,
       submission_deadline: formData.value.submission_deadline ?
-        new Date(formData.value.submission_deadline).toISOString() : null,
+        convertToUTC(formData.value.submission_deadline, formData.value.timezone) : null,
       updated_at: new Date().toISOString()
     }
     
@@ -813,10 +812,10 @@ const handleSubmit = async () => {
     
     // Gérer les dates en ligne
     if (formData.value.participation_mode === 'online' || formData.value.participation_mode === 'hybrid') {
-      updateData.online_start_datetime = formData.value.online_start_datetime ? 
-        new Date(formData.value.online_start_datetime).toISOString() : null
-      updateData.online_end_datetime = formData.value.online_end_datetime ? 
-        new Date(formData.value.online_end_datetime).toISOString() : null
+      updateData.online_start_datetime = formData.value.online_start_datetime ?
+        convertToUTC(formData.value.online_start_datetime, formData.value.timezone) : null
+      updateData.online_end_datetime = formData.value.online_end_datetime ?
+        convertToUTC(formData.value.online_end_datetime, formData.value.timezone) : null
     } else {
       // Pour les événements en présentiel uniquement, mettre à null les dates en ligne
       updateData.online_start_datetime = null

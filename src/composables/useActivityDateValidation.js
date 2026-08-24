@@ -1,76 +1,77 @@
+import { useTimezone } from '@/composables/useTimezone'
+
 export function useActivityDateValidation() {
+  const { getDayKeyInTimezone } = useTimezone()
+
   /**
    * Vérifie si les dates de l'activité sont dans les limites acceptables par rapport à l'événement
    * Les dates de début et de fin de l'activité doivent être strictement
    * dans la période de l'événement (sans tolérance)
+   *
+   * La comparaison se fait sur les jours calendaires exprimés dans le fuseau horaire
+   * de l'événement : sans cela, une activité serait rattachée au jour du navigateur
+   * du soumissionnaire et non au jour réel de l'événement.
    *
    * @param {Object} params - Les paramètres de validation
    * @param {Date|string} params.activityStartDate - Date de début proposée de l'activité
    * @param {Date|string} params.activityEndDate - Date de fin proposée de l'activité
    * @param {Date|string} params.eventStartDate - Date de début de l'événement
    * @param {Date|string} params.eventEndDate - Date de fin de l'événement
+   * @param {string} [params.timezone] - Fuseau horaire IANA de l'événement
    * @returns {Object} Résultat de la validation avec isValid et errors
    */
   const validateActivityDates = ({
     activityStartDate,
     activityEndDate,
     eventStartDate,
-    eventEndDate
+    eventEndDate,
+    timezone = null
   }) => {
     const errors = []
 
-    // Convertir toutes les dates en objets Date
-    const activityStart = new Date(activityStartDate)
-    const activityEnd = new Date(activityEndDate)
-    const eventStart = new Date(eventStartDate)
-    const eventEnd = new Date(eventEndDate)
+    // La période de l'événement doit être renseignée : sans elle, aucune comparaison
+    // n'a de sens (et un fallback arbitraire produirait des erreurs incompréhensibles)
+    if (!eventStartDate || !eventEndDate) {
+      errors.push('activities.validation.missingEventPeriod')
+      return { isValid: false, errors }
+    }
 
-    // Vérifier que les dates sont valides
-    if (isNaN(activityStart.getTime()) || isNaN(activityEnd.getTime())) {
+    // Convertir toutes les dates en jours calendaires (YYYY-MM-DD) dans le fuseau de l'événement
+    const activityStart = getDayKeyInTimezone(activityStartDate, timezone)
+    const activityEnd = getDayKeyInTimezone(activityEndDate, timezone)
+
+    if (!activityStart || !activityEnd) {
       errors.push('activities.validation.invalidDates')
       return { isValid: false, errors }
     }
 
-    if (isNaN(eventStart.getTime()) || isNaN(eventEnd.getTime())) {
+    const eventStart = getDayKeyInTimezone(eventStartDate, timezone)
+    const eventEnd = getDayKeyInTimezone(eventEndDate, timezone)
+
+    if (!eventStart || !eventEnd) {
       errors.push('activities.validation.invalidEventDates')
       return { isValid: false, errors }
     }
 
-    // Normaliser les dates pour ignorer l'heure (comparer seulement les jours)
-    const normalizeDate = (date) => {
-      const normalized = new Date(date)
-      normalized.setHours(0, 0, 0, 0)
-      return normalized
-    }
-
-    const normalizedActivityStart = normalizeDate(activityStart)
-    const normalizedActivityEnd = normalizeDate(activityEnd)
-    const normalizedEventStart = normalizeDate(eventStart)
-    const normalizedEventEnd = normalizeDate(eventEnd)
+    // Les clés YYYY-MM-DD se comparent directement (ordre lexicographique = ordre chronologique)
 
     // Vérifier que l'activité commence dans la période de l'événement (sans tolérance)
-    if (normalizedActivityStart < normalizedEventStart) {
+    if (activityStart < eventStart) {
       errors.push('activities.validation.startDateTooEarly')
-    } else if (normalizedActivityStart > normalizedEventEnd) {
+    } else if (activityStart > eventEnd) {
       errors.push('activities.validation.startDateTooLate')
     }
 
     // Vérifier que l'activité se termine dans la période de l'événement (sans tolérance)
-    if (normalizedActivityEnd < normalizedEventStart) {
+    if (activityEnd < eventStart) {
       errors.push('activities.validation.endDateTooEarly')
-    } else if (normalizedActivityEnd > normalizedEventEnd) {
+    } else if (activityEnd > eventEnd) {
       errors.push('activities.validation.endDateTooLate')
     }
 
     // Vérifier que la date de fin est après la date de début
-    if (normalizedActivityEnd < normalizedActivityStart) {
+    if (activityEnd < activityStart) {
       errors.push('activities.validation.endBeforeStart')
-    }
-
-    // Vérifier que l'activité n'est pas complètement en dehors de la période de l'événement
-    // (sans tolérance)
-    if (normalizedActivityStart > normalizedEventEnd || normalizedActivityEnd < normalizedEventStart) {
-      errors.push('activities.validation.outsideEventPeriod')
     }
 
     return {
@@ -100,30 +101,24 @@ export function useActivityDateValidation() {
    * Obtient les dates limites acceptables pour une activité basées sur l'événement
    * @param {Date|string} eventStartDate - Date de début de l'événement
    * @param {Date|string} eventEndDate - Date de fin de l'événement
-   * @returns {Object} Dates min et max acceptables
+   * @param {string} [timezone] - Fuseau horaire IANA de l'événement
+   * @returns {Object} Dates min et max acceptables au format datetime-local
    */
-  const getAcceptableDateRange = (eventStartDate, eventEndDate) => {
+  const getAcceptableDateRange = (eventStartDate, eventEndDate, timezone = null) => {
     if (!eventStartDate || !eventEndDate) {
       return { minDate: null, maxDate: null }
     }
 
-    const eventStart = new Date(eventStartDate)
-    const eventEnd = new Date(eventEndDate)
+    const startDay = getDayKeyInTimezone(eventStartDate, timezone)
+    const endDay = getDayKeyInTimezone(eventEndDate, timezone)
 
-    if (isNaN(eventStart.getTime()) || isNaN(eventEnd.getTime())) {
+    if (!startDay || !endDay) {
       return { minDate: null, maxDate: null }
     }
 
-    // Créer les dates limites sans tolérance
-    const minDate = new Date(eventStart)
-    minDate.setHours(0, 0, 0, 0)
-
-    const maxDate = new Date(eventEnd)
-    maxDate.setHours(23, 59, 59, 999)
-
     return {
-      minDate: minDate.toISOString().slice(0, 16),
-      maxDate: maxDate.toISOString().slice(0, 16)
+      minDate: `${startDay}T00:00`,
+      maxDate: `${endDay}T23:59`
     }
   }
 

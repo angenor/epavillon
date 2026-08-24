@@ -455,7 +455,7 @@ const router = useRouter()
 const { supabase } = useSupabase()
 const authStore = useAuthStore()
 const { hasAdminRole, hasOrganization, canCreateEvents, getRequirementsStatus } = useOrganizationCheck()
-const { getGroupedTimezones, detectUserTimezone } = useTimezone()
+const { getGroupedTimezones, detectUserTimezone, convertToUTC } = useTimezone()
 
 // Unique ID for form elements
 const uniqueId = Date.now()
@@ -579,7 +579,7 @@ const handleSubmit = async () => {
       year: formData.year,
       title: formData.title,
       description: formData.description,
-      submission_deadline: formData.submissionDeadline,
+      submission_deadline: convertToUTC(formData.submissionDeadline, formData.timezone),
       participation_mode: formData.participationMode,
       event_status: 'upcoming',
       submission_status: 'open',
@@ -589,8 +589,9 @@ const handleSubmit = async () => {
 
     // Add online event details if applicable
     if (['online', 'hybrid'].includes(formData.participationMode)) {
-      eventData.online_start_datetime = formData.onlineStartDatetime
-      eventData.online_end_datetime = formData.onlineEndDatetime
+      // Les heures saisies sont exprimées dans le fuseau horaire de l'événement
+      eventData.online_start_datetime = convertToUTC(formData.onlineStartDatetime, formData.timezone)
+      eventData.online_end_datetime = convertToUTC(formData.onlineEndDatetime, formData.timezone)
     }
 
     // Add in-person event details if applicable

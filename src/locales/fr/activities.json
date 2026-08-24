@@ -267,9 +267,11 @@
       "endDateTooLate": "La date de fin est après la fin de l'événement",
       "endBeforeStart": "La date de fin doit être après la date de début",
       "outsideEventPeriod": "L'activité doit se dérouler strictement pendant la période de l'événement",
+      "missingEventPeriod": "Les dates de l'événement ne sont pas encore définies",
+      "missingEventPeriodHelp": "Un administrateur doit renseigner les dates de début et de fin de l'événement avant que des activités puissent être soumises.",
       "eventPeriod": "Période de l'événement",
       "tolerance": "Les dates doivent être strictement dans la période de l'événement",
-      "timeRange": "Les heures doivent être comprises entre 7:00 et 19:00",
+      "timeRange": "Les heures doivent être comprises entre {start} et {end}",
       "endTimeAfterStart": "L'heure de fin doit être après l'heure de début"
     },
     "status": {
@@ -739,7 +741,7 @@
       },
       "helpers": {
         "organizationInfo": "L'activité sera soumise au nom de votre organisation",
-        "timeRange": "Les heures doivent être entre 7h00 et 19h00",
+        "timeRange": "Les heures doivent être comprises entre {start} et {end}",
         "countryAutoSelected": "Le pays de l'activité est automatiquement défini selon le pays de l'événement pour les formats hybride et présentiel"
       },
       "errors": {
