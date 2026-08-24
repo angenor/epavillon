@@ -684,8 +684,8 @@
         "6": "Specialized media and environmental communication actors"
       },
       "panelists": {
-        "carbon-specialist": { "role": "Specialist in carbon footprint or carbon accounting (institute or specialized consultancy)" },
-        "project-expert": { "role": "Expert from a project integrating carbon accounting" },
+        "chamarande": { "role": "Postdoctoral researcher, UMR Espace-Dev (IRD), Montpellier", "talk": "From calculation to action: lessons learned within French academic research" },
+        "diag": { "role": "Details coming soon" },
         "organization-rep": { "role": "Representative of an organization that carried out a first carbon footprint" },
         "digital-tools-expert": { "role": "Expert in digital emission calculation tools" }
       }

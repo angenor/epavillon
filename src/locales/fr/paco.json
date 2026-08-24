@@ -684,8 +684,8 @@
         "6": "Médias spécialisés et acteurs de la communication environnementale"
       },
       "panelists": {
-        "carbon-specialist": { "role": "Spécialiste du bilan carbone ou de l'empreinte carbone (institut ou cabinet spécialisé)" },
-        "project-expert": { "role": "Expert·e d'un projet intégrant la comptabilisation carbone" },
+        "chamarande": { "role": "Chercheur post-doctorant, UMR Espace-Dev (IRD), Montpellier", "talk": "Du calcul à l'action : retours d'expériences au sein de la recherche académique française" },
+        "diag": { "role": "Informations à venir" },
         "organization-rep": { "role": "Représentant·e d'une organisation ayant réalisé un premier bilan carbone" },
         "digital-tools-expert": { "role": "Expert·e en outils numériques de calcul des émissions" }
       }

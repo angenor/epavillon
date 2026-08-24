@@ -195,8 +195,8 @@ const SESSIONS_DATA = [
     replayUrl: null,
     i18nPrefix: 'paco.session8',
     panelists: [
-      { id: 'carbon-specialist', name: 'À confirmer', photoUrl: null, organization: null, email: null },
-      { id: 'project-expert', name: 'À confirmer', photoUrl: null, organization: null, email: null },
+      { id: 'chamarande', name: 'Theo CHAMARANDE', photoUrl: null, organization: 'UMR Espace-Dev (IRD) — Montpellier', email: null },
+      { id: 'diag', name: 'El hadji Mbaye DIAG', photoUrl: null, organization: null, email: null },
       { id: 'organization-rep', name: 'À confirmer', photoUrl: null, organization: null, email: null },
       { id: 'digital-tools-expert', name: 'À confirmer', photoUrl: null, organization: null, email: null },
     ],

@@ -27,6 +27,9 @@
           {{ panelist.organization }}
         </span>
       </div>
+      <p v-if="talkLabel" class="text-xs text-white/70 italic mt-1 line-clamp-2" :title="talkLabel">
+        « {{ talkLabel }} »
+      </p>
       <a
         v-if="panelist.email"
         :href="`mailto:${panelist.email}`"
@@ -55,5 +58,11 @@ const roleLabel = computed(() => {
   // Fallback vers le préfixe historique
   const fallback = `paco.presentation.panelists.${props.panelist.id}.role`
   return te(fallback) ? t(fallback) : ''
+})
+
+// Titre de l'intervention, optionnel : affiché seulement si la clé existe.
+const talkLabel = computed(() => {
+  const key = `${props.i18nPrefix}.panelists.${props.panelist.id}.talk`
+  return te(key) ? t(key) : ''
 })
 </script>
