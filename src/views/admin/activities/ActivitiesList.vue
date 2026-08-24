@@ -54,6 +54,11 @@
           </svg>
           {{ t('admin.activities.emailNotApprovedActivities') }}
         </button>
+        <button @click="openSubmitterEmailsModal"
+                class="cursor-pointer px-5 py-2.5 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors duration-200 shadow-sm">
+          <font-awesome-icon :icon="['fas', 'copy']" class="h-4 w-4 mr-2 inline-block" />
+          {{ t('admin.activities.copySubmitterEmails') }}
+        </button>
         <button @click="exportActivities"
                 class="cursor-pointer px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 transition-colors duration-200 shadow-sm">
           <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -480,6 +485,83 @@
     </div>
 
     <!-- Modal de validation -->
+    <!-- Modal de prévisualisation des emails des soumissionnaires -->
+    <div v-if="showEmailsModal" class="fixed inset-0 z-50 overflow-y-auto">
+      <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500/75 transition-opacity" @click="closeSubmitterEmailsModal"></div>
+
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+        <div class="relative inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full z-10">
+          <div class="px-4 pt-5 pb-4 sm:p-6">
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+                  {{ t('admin.activities.copySubmitterEmails') }}
+                </h3>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                  {{ selectedEvent ? `${selectedEvent.title} (${selectedEvent.year})` : t('admin.activities.allEvents') }}
+                </p>
+              </div>
+              <button @click="closeSubmitterEmailsModal"
+                      class="cursor-pointer text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                <font-awesome-icon :icon="['fas', 'xmark']" class="h-5 w-5" />
+              </button>
+            </div>
+
+            <!-- Chargement -->
+            <div v-if="isLoadingEmails" class="py-12 text-center">
+              <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-500 mx-auto mb-4"></div>
+              <p class="text-sm text-gray-500 dark:text-gray-400">{{ t('common.loading') }}...</p>
+            </div>
+
+            <!-- Erreur -->
+            <div v-else-if="emailsError" class="mt-6 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 px-4 py-3">
+              <p class="text-sm text-red-700 dark:text-red-300">
+                {{ t('admin.activities.copySubmitterEmailsError') }}
+              </p>
+            </div>
+
+            <!-- Liste vide -->
+            <div v-else-if="submitterEmails.length === 0" class="mt-6 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 px-4 py-8 text-center">
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                {{ t('admin.activities.copySubmitterEmailsEmpty') }}
+              </p>
+            </div>
+
+            <!-- Liste des emails -->
+            <div v-else class="mt-6">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {{ t('admin.activities.copySubmitterEmailsCount', { count: submitterEmails.length }) }}
+                </span>
+              </div>
+              <div class="max-h-72 overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-600 divide-y divide-gray-100 dark:divide-gray-700">
+                <div v-for="(email, index) in submitterEmails" :key="email"
+                     class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
+                  <span class="w-6 shrink-0 text-xs text-gray-400 dark:text-gray-500">{{ index + 1 }}</span>
+                  <span class="break-all">{{ email }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 dark:bg-gray-700/50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-3">
+            <button @click="copySubmitterEmails"
+                    :disabled="isLoadingEmails || submitterEmails.length === 0"
+                    class="cursor-pointer w-full sm:w-auto inline-flex justify-center items-center px-5 py-2.5 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 disabled:opacity-60 disabled:cursor-not-allowed rounded-lg transition-colors duration-200">
+              <font-awesome-icon :icon="['fas', copyFeedback === 'success' ? 'check' : 'copy']" class="h-4 w-4 mr-2" />
+              {{ copyButtonLabel }}
+            </button>
+            <button @click="closeSubmitterEmailsModal"
+                    class="cursor-pointer mt-3 sm:mt-0 w-full sm:w-auto inline-flex justify-center px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 transition-colors duration-200">
+              {{ t('common.close') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div v-if="showValidationModal" class="fixed inset-0 z-50 overflow-y-auto">
       <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="isSubmitting ? null : closeValidationModal()"></div>
@@ -661,6 +743,14 @@ const stats = ref({
   total: 0
 })
 
+// Prévisualisation et copie des emails des soumissionnaires
+const showEmailsModal = ref(false)
+const isLoadingEmails = ref(false)
+const emailsError = ref(false)
+const submitterEmails = ref([])
+const copyFeedback = ref(null) // 'success' | 'error'
+let copyFeedbackTimeout = null
+
 // Vérification des permissions (attendre le chargement des rôles)
 const checkAccess = async () => {
   await loadUserRoles()
@@ -796,6 +886,14 @@ const canChangeStatus = computed(() => {
 // Informations sur le statut cible pour le changement en masse
 const targetStatusInfo = computed(() => {
   return availableStatuses.value.find(s => s.value === bulkTargetStatus.value) || availableStatuses.value[0]
+})
+
+const copyButtonLabel = computed(() => {
+  if (copyFeedback.value === 'success') {
+    return t('admin.activities.copySubmitterEmailsCopied', { count: submitterEmails.value.length })
+  }
+  if (copyFeedback.value === 'error') return t('admin.activities.copySubmitterEmailsError')
+  return t('admin.activities.copySubmitterEmailsAction')
 })
 
 // Les statuts qui nécessitent une raison/commentaire
@@ -1168,6 +1266,89 @@ const goToEmailWithNotApprovedActivities = () => {
   openWithFilter('under-review-activities')
 }
 
+// Copie dans le presse-papiers avec repli pour les contextes non sécurisés (HTTP)
+const writeToClipboard = async (text) => {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text)
+    return
+  }
+
+  const textarea = document.createElement('textarea')
+  textarea.value = text
+  textarea.setAttribute('readonly', '')
+  textarea.style.position = 'fixed'
+  textarea.style.opacity = '0'
+  document.body.appendChild(textarea)
+  textarea.select()
+
+  try {
+    if (!document.execCommand('copy')) {
+      throw new Error('Copie non supportée par le navigateur')
+    }
+  } finally {
+    document.body.removeChild(textarea)
+  }
+}
+
+// Charger les emails des soumissionnaires des activités de l'événement sélectionné
+// (tous statuts de validation confondus) puis ouvrir la prévisualisation
+const openSubmitterEmailsModal = async () => {
+  showEmailsModal.value = true
+  isLoadingEmails.value = true
+  emailsError.value = false
+  copyFeedback.value = null
+  submitterEmails.value = []
+
+  try {
+    let query = supabase
+      .from('activities')
+      .select('submitted_by, users!submitted_by(email)')
+      .eq('is_deleted', false)
+
+    if (selectedEventId.value) {
+      query = query.eq('event_id', selectedEventId.value)
+    }
+
+    const { data, error } = await query
+
+    if (error) throw error
+
+    submitterEmails.value = [...new Set(
+      (data || [])
+        .map(activity => activity.users?.email?.trim().toLowerCase())
+        .filter(Boolean)
+    )].sort()
+  } catch (err) {
+    console.error('Erreur lors du chargement des emails des soumissionnaires:', err)
+    emailsError.value = true
+  } finally {
+    isLoadingEmails.value = false
+  }
+}
+
+const closeSubmitterEmailsModal = () => {
+  showEmailsModal.value = false
+  copyFeedback.value = null
+  if (copyFeedbackTimeout) clearTimeout(copyFeedbackTimeout)
+}
+
+const copySubmitterEmails = async () => {
+  if (submitterEmails.value.length === 0) return
+
+  try {
+    await writeToClipboard(submitterEmails.value.join(', '))
+    copyFeedback.value = 'success'
+  } catch (err) {
+    console.error('Erreur lors de la copie des emails:', err)
+    copyFeedback.value = 'error'
+  }
+
+  if (copyFeedbackTimeout) clearTimeout(copyFeedbackTimeout)
+  copyFeedbackTimeout = setTimeout(() => {
+    copyFeedback.value = null
+  }, 3000)
+}
+
 // Fonction pour mettre à jour le compteur de commentaires non lus d'une activité spécifique
 const updateActivityUnreadCount = async (activityId) => {
   if (!currentUser.value) return
@@ -1300,6 +1481,9 @@ onBeforeUnmount(() => {
 
   // Retirer le listener de clic
   document.removeEventListener('click', handleClickOutside)
+
+  // Nettoyer le timeout du feedback de copie
+  if (copyFeedbackTimeout) clearTimeout(copyFeedbackTimeout)
 })
 </script>
 
