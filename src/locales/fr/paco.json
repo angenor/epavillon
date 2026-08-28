@@ -684,8 +684,8 @@
         "6": "Médias spécialisés et acteurs de la communication environnementale"
       },
       "panelists": {
-        "chamarande": { "role": "Chercheur post-doctorant, UMR Espace-Dev (IRD), Montpellier", "talk": "Du calcul à l'action : retours d'expériences au sein de la recherche académique française" },
-        "diag": { "role": "Informations à venir" },
+        "chamarande": { "role": "Chercheur post-doctorant à Montpellier (UMR Espace Dev, IRD)" },
+        "diagne": { "role": "Directeur d'Afrique Energie Environnement" },
         "organization-rep": { "role": "Représentant·e d'une organisation ayant réalisé un premier bilan carbone" },
         "digital-tools-expert": { "role": "Expert·e en outils numériques de calcul des émissions" }
       }

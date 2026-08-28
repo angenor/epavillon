@@ -684,8 +684,8 @@
         "6": "Specialized media and environmental communication actors"
       },
       "panelists": {
-        "chamarande": { "role": "Postdoctoral researcher, UMR Espace-Dev (IRD), Montpellier", "talk": "From calculation to action: lessons learned within French academic research" },
-        "diag": { "role": "Details coming soon" },
+        "chamarande": { "role": "Postdoctoral researcher in Montpellier (UMR Espace Dev, IRD)" },
+        "diagne": { "role": "Director of Afrique Energie Environnement" },
         "organization-rep": { "role": "Representative of an organization that carried out a first carbon footprint" },
         "digital-tools-expert": { "role": "Expert in digital emission calculation tools" }
       }
