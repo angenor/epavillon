@@ -15,8 +15,8 @@ import { useI18n } from 'vue-i18n'
  * @property {string} timezone
  * @property {string} language
  * @property {boolean} completed        true si la session est terminée
- * @property {string} coverImage
- * @property {string} bannerUrl
+ * @property {string|null} coverImage
+ * @property {string|null} bannerUrl
  * @property {string|null} replayUrl
  * @property {string} i18nPrefix        ex: 'paco.session1'
  * @property {Array} panelists
@@ -198,6 +198,28 @@ const SESSIONS_DATA = [
       { id: 'chamarande', name: 'Theo CHAMARANDE', photoUrl: '/images/Theo.jpg', organization: 'UMR Espace Dev, IRD — Montpellier', email: null },
       { id: 'diagne', name: 'El Hadji Mbaye DIAGNE', photoUrl: '/images/El_Hadji_Mbaye_DIAGNE.jpg', organization: 'Afrique Energie Environnement', email: null },
       { id: 'organization-rep', name: 'À confirmer', photoUrl: null, organization: null, email: null },
+      { id: 'digital-tools-expert', name: 'À confirmer', photoUrl: null, organization: null, email: null },
+    ],
+    partners: COMMON_PARTNERS,
+  },
+  {
+    edition: 9,
+    date: '2026-09-24',
+    startTime: '14:00',
+    endTime: '15:30',
+    timezone: 'GMT',
+    language: 'fr',
+    completed: false,
+    // Pas de visuel officiel pour l'instant : les composants affichent
+    // leur placeholder (icône centrée) tant que ces champs sont null.
+    coverImage: null,
+    bannerUrl: null,
+    replayUrl: null,
+    i18nPrefix: 'paco.session9',
+    panelists: [
+      { id: 'climate-tech-specialist', name: 'À confirmer', photoUrl: null, organization: null, email: null },
+      { id: 'nbs-expert', name: 'À confirmer', photoUrl: null, organization: null, email: null },
+      { id: 'innovative-project-rep', name: 'À confirmer', photoUrl: null, organization: null, email: null },
       { id: 'digital-tools-expert', name: 'À confirmer', photoUrl: null, organization: null, email: null },
     ],
     partners: COMMON_PARTNERS,

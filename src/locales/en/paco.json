@@ -342,6 +342,7 @@
       "session4": "Session 6",
       "session7": "Session 7",
       "session8": "Session 8",
+      "session9": "Session 9",
       "status": {
         "ended": "Ended",
         "upcoming": "Upcoming",
@@ -688,6 +689,52 @@
         "diagne": { "role": "Director of Afrique Energie Environnement" },
         "organization-rep": { "role": "Representative of an organization that carried out a first carbon footprint" },
         "digital-tools-expert": { "role": "Expert in digital emission calculation tools" }
+      }
+    },
+    "session9": {
+      "title": "Scientific innovations and adaptation strategies",
+      "subtitle": "Emerging technologies, tools and methods serving resilience",
+      "editionLabel": "Science, research and innovation",
+      "dateLabel": "Thursday, September 24, 2026",
+      "shortTitle": "Scientific innovations",
+      "timeLabel": "2:00 PM – 3:30 PM GMT",
+      "replay": "Watch the recording",
+      "replayTitle": "Webinar replay",
+      "replayLoading": "Loading video...",
+      "replayError": "Video temporarily unavailable",
+      "replayUnavailable": "The replay will be available soon.",
+      "context": "The intensification of climate impacts — heatwaves, floods, droughts, coastal erosion, biodiversity loss — requires French-speaking countries to strengthen their adaptation capacities. Faced with increasingly complex risks, traditional approaches are no longer enough: institutions, local authorities and organizations must now rely on scientific innovations, advanced technological tools and integrated analysis methods to anticipate, plan and implement effective adaptation strategies.\n\nRecent advances in climate modeling, remote sensing, artificial intelligence, citizen science, ecological engineering and environmental data management open up new perspectives. They improve risk understanding, refine vulnerability assessments, optimize decision-making and strengthen community resilience. However, these innovations often remain inaccessible, poorly understood or insufficiently integrated into public policies and operational practices.\n\nAcross the French-speaking world, many stakeholders express a growing need to better understand these advances, identify solutions suited to their contexts and strengthen their skills to apply them. This webinar aims to bridge that gap by offering a structured introduction to scientific innovations serving climate adaptation.\n\nThis webinar is part of the action \"Strengthening the capacities and collaboration of French-speaking countries on climate change adaptation and access to finance\", implemented by the Institute of la Francophonie for Sustainable Development (IFDD) with the support of the regional PACO programme – funded by the BMUKN under the International Climate Initiative (IKI) and implemented by GIZ.",
+      "objectiveGeneral": "Strengthen French-speaking stakeholders' understanding of the scientific and technological innovations that support the planning and implementation of climate adaptation strategies.",
+      "objectives": {
+        "0": "Present the main scientific innovations relevant to adaptation.",
+        "1": "Explain how these innovations improve risk analysis and decision-making.",
+        "2": "Illustrate concrete applications across sectors (agriculture, water, health, infrastructure, biodiversity).",
+        "3": "Introduce emerging digital tools, platforms and methods.",
+        "4": "Encourage the integration of these innovations into policies, projects and institutional strategies."
+      },
+      "content": {
+        "0": {"title": "Overview of scientific innovations", "desc": "Climate modeling, scenarios and multi-risk analyses serving adaptation."},
+        "1": {"title": "Emerging technologies", "desc": "Remote sensing, drones, artificial intelligence, early warning systems, environmental sensors."},
+        "2": {"title": "Ecological engineering and nature-based solutions", "desc": "Ecosystem restoration, agroecology, green infrastructure."},
+        "3": {"title": "Citizen science and community data", "desc": "Involving populations in data collection and analysis."},
+        "4": {"title": "Digital tools", "desc": "Decision-support platforms, climate dashboards, open databases."},
+        "5": {"title": "Case studies from French-speaking countries", "desc": "Innovative projects that strengthened local resilience."},
+        "6": {"title": "Link with climate strategies", "desc": "Integration into national adaptation plans, sectoral policies, monitoring and evaluation."}
+      },
+      "targets": {
+        "0": "Public institutions and local authorities",
+        "1": "Civil society organizations",
+        "2": "Young professionals and students",
+        "3": "Businesses and cooperatives",
+        "4": "Research centers and universities",
+        "5": "Donors and technical partners",
+        "6": "Specialized media and environmental communication actors"
+      },
+      "panelists": {
+        "climate-tech-specialist": {"role": "Specialist in climate technologies or modeling"},
+        "nbs-expert": {"role": "Expert in nature-based solutions or ecological engineering"},
+        "innovative-project-rep": {"role": "Representative of an innovative adaptation project in a French-speaking country"},
+        "digital-tools-expert": {"role": "Expert in digital tools or decision-support platforms"}
       }
     }
   }
