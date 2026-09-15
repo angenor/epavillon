@@ -197,8 +197,6 @@ const SESSIONS_DATA = [
     panelists: [
       { id: 'chamarande', name: 'Theo CHAMARANDE', photoUrl: '/images/Theo.jpg', organization: 'UMR Espace Dev, IRD — Montpellier', email: null },
       { id: 'diagne', name: 'El Hadji Mbaye DIAGNE', photoUrl: '/images/El_Hadji_Mbaye_DIAGNE.jpg', organization: 'Afrique Energie Environnement', email: null },
-      { id: 'organization-rep', name: 'À confirmer', photoUrl: null, organization: null, email: null },
-      { id: 'digital-tools-expert', name: 'À confirmer', photoUrl: null, organization: null, email: null },
     ],
     partners: COMMON_PARTNERS,
   },
@@ -210,10 +208,8 @@ const SESSIONS_DATA = [
     timezone: 'GMT',
     language: 'fr',
     completed: false,
-    // Pas de visuel officiel pour l'instant : les composants affichent
-    // leur placeholder (icône centrée) tant que ces champs sont null.
-    coverImage: null,
-    bannerUrl: null,
+    coverImage: '/images/Innovations_scientifiques.jpg',
+    bannerUrl: '/images/Innovations_scientifiques.jpg',
     replayUrl: null,
     i18nPrefix: 'paco.session9',
     panelists: [

@@ -686,9 +686,7 @@
       },
       "panelists": {
         "chamarande": { "role": "Postdoctoral researcher in Montpellier (UMR Espace Dev, IRD)" },
-        "diagne": { "role": "Director of Afrique Energie Environnement" },
-        "organization-rep": { "role": "Representative of an organization that carried out a first carbon footprint" },
-        "digital-tools-expert": { "role": "Expert in digital emission calculation tools" }
+        "diagne": { "role": "Director of Afrique Energie Environnement" }
       }
     },
     "session9": {
