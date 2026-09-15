@@ -43,6 +43,7 @@ const loadSubmissionsData = async () => {
       .from('activities')
       .select('created_at')
       .not('created_at', 'is', null)
+      .eq('is_deleted', false)
 
     if (selectedEventId.value) {
       query = query.eq('event_id', selectedEventId.value)

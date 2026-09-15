@@ -69,7 +69,7 @@
                 {{ t('admin.dashboard.activitiesApproved') }}
               </dt>
               <dd class="text-3xl font-bold text-gray-900 dark:text-white">
-                {{ 61 || 0 }}
+                {{ stats.activitiesApproved || 0 }}
               </dd>
             </dl>
           </div>
@@ -363,6 +363,7 @@ const loadStats = async () => {
         .from('activities')
         .select('id', { count: 'exact', head: true })
         .in('validation_status', ['approved', 'completed'])
+        .eq('is_deleted', false)
 
       if (selectedEventId.value) {
         approvedQuery = approvedQuery.eq('event_id', selectedEventId.value)
@@ -379,6 +380,7 @@ const loadStats = async () => {
       .from('activities')
       .select('id', { count: 'exact', head: true })
       .in('validation_status', ['submitted', 'under_review'])
+      .eq('is_deleted', false)
 
     if (selectedEventId.value) {
       pendingQuery = pendingQuery.eq('event_id', selectedEventId.value)
@@ -419,6 +421,7 @@ const loadStats = async () => {
     let viewCountQuery = supabase
       .from('activities')
       .select('activites_view_count')
+      .eq('is_deleted', false)
 
     if (selectedEventId.value) {
       viewCountQuery = viewCountQuery.eq('event_id', selectedEventId.value)
@@ -484,6 +487,7 @@ const loadPendingActivities = async () => {
         organization:organizations(name)
       `)
       .in('validation_status', ['submitted', 'under_review'])
+      .eq('is_deleted', false)
 
     if (selectedEventId.value) {
       query = query.eq('event_id', selectedEventId.value)

@@ -810,6 +810,7 @@ import { useAuth } from '@/composables/useAuth'
 import { useAdminPanel } from '@/composables/useAdminPanel'
 import { useRevisionViews } from '@/composables/useRevisionViews'
 import { useCommentBroadcast } from '@/composables/useCommentBroadcast'
+import { useAdminEvent } from '@/composables/useAdminEvent'
 
 const props = defineProps({
   isOpen: {
@@ -830,6 +831,7 @@ const { currentUser } = useAuth()
 const { setReviewSidebarWidth } = useAdminPanel()
 const { viewedActivities, loadViewedActivities, recordActivityView, hasViewedActivity } = useRevisionViews()
 const { addListener, removeListener } = useCommentBroadcast()
+const { selectedEventId, loadEvents: loadAdminEvents } = useAdminEvent()
 
 // État
 const activities = ref([])
@@ -1004,7 +1006,7 @@ const loadActivities = async () => {
   isLoading.value = true
 
   try {
-    // Construction de la requête pour charger TOUTES les activités
+    // Construction de la requête pour charger les activités de l'événement sélectionné
     let query = supabase
       .from('activities')
       .select(`
@@ -1028,6 +1030,11 @@ const loadActivities = async () => {
         )
       `)
       .order('created_at', { ascending: false })
+
+    // Limiter aux activités de l'événement sélectionné dans la barre admin
+    if (selectedEventId.value) {
+      query = query.eq('event_id', selectedEventId.value)
+    }
 
     // Appliquer le filtre de statut si nécessaire
     if (filterStatus.value) {
@@ -1443,6 +1450,15 @@ watch(filterStatus, async () => {
   }
 })
 
+// Recharger quand l'événement sélectionné dans la barre admin change
+watch(selectedEventId, async () => {
+  await loadActivities()
+  await nextTick()
+  if (props.currentActivityId && filteredActivities.value.some(a => String(a.id) === String(props.currentActivityId))) {
+    scrollToCurrentActivity()
+  }
+})
+
 // Watcher pour le filtre de pays
 watch(filterCountry, async () => {
   await nextTick()
@@ -1501,6 +1517,9 @@ onMounted(async () => {
   if (savedWidth) {
     sidebarWidth.value = Math.max(MIN_WIDTH, parseInt(savedWidth))
   }
+
+  // S'assurer que l'événement sélectionné est résolu avant de charger les activités
+  await loadAdminEvents()
 
   await Promise.all([
     loadActivities(),
