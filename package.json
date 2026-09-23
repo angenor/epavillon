@@ -17,7 +17,8 @@
     "test:e2e": "playwright test",
     "verify:seo": "node scripts/verify-seo.js",
     "deploy": "npm run build:seo && firebase deploy",
-    "deploy:hosting": "npm run build:seo && firebase deploy --only hosting"
+    "deploy:hosting": "npm run build:seo && firebase deploy --only hosting",
+    "export:programme": "tools/export-programme/.venv/bin/python tools/export-programme/export_programme.py"
   },
   "dependencies": {
     "@amcharts/amcharts5": "^5.10.7",

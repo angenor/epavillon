@@ -203,6 +203,9 @@
               </div>
             </button>
 
+            <!-- Export du programme Word (génération locale, voir tools/export-programme) -->
+            <ProgrammeExportButton />
+
             <!-- Sélecteur d'événement global -->
             <AdminEventSelector />
           </div>
@@ -226,6 +229,7 @@ import { useAdmin } from '@/composables/useAdmin'
 import { useAdminPanel } from '@/composables/useAdminPanel'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import AdminEventSelector from '@/components/admin/AdminEventSelector.vue'
+import ProgrammeExportButton from '@/components/admin/ProgrammeExportButton.vue'
 
 const { t } = useI18n()
 const route = useRoute()

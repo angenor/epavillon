@@ -6,6 +6,14 @@
       "dashboard": "Tableau de bord",
       "backToSite": "Retour au site"
     },
+    "programmeExport": {
+      "button": "Programme Word",
+      "tooltip": "Télécharger les activités de l'événement sélectionné (tous statuts sauf brouillon, JSON) pour générer le programme Word en local",
+      "noEvent": "Sélectionnez un événement pour exporter son programme",
+      "success": "{count} activité(s) exportée(s). Générez le Word en local : npm run export:programme -- --json <fichier>",
+      "empty": "Aucune activité à exporter pour cet événement",
+      "error": "Erreur lors de l'export du programme"
+    },
     "nav": {
       "dashboard": "Tableau de bord",
       "users": "Utilisateurs",

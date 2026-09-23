@@ -6,6 +6,14 @@
       "dashboard": "Dashboard",
       "backToSite": "Back to site"
     },
+    "programmeExport": {
+      "button": "Word programme",
+      "tooltip": "Download the selected event's activities (all statuses except draft, JSON) to generate the Word programme locally",
+      "noEvent": "Select an event to export its programme",
+      "success": "{count} activity(ies) exported. Generate the Word file locally: npm run export:programme -- --json <file>",
+      "empty": "No activity to export for this event",
+      "error": "Error while exporting the programme"
+    },
     "nav": {
       "dashboard": "Dashboard",
       "users": "Users",

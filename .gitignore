@@ -49,3 +49,8 @@ backup*
 
 # Worktrees temporaires de Claude Code (dossiers de travail locaux)
 .claude/worktrees/
+
+# Outil local d'export du programme Word (environnement Python et documents générés)
+tools/export-programme/.venv/
+tools/export-programme/output/
+tools/export-programme/__pycache__/
