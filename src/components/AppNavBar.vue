@@ -23,6 +23,19 @@
               class="h-10 w-auto hidden dark:block transition-transform duration-300 group-hover:scale-105"
             >
           </router-link>
+
+          <a
+            href="https://www.ifdd.francophonie.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex-shrink-0 bg-white dark:bg-gray-300 rounded-md group cursor-pointer"
+          >
+            <img
+              src="/logos/logo-ifdd-court.svg"
+              alt="Logo IFDD"
+              class="h-10 w-auto transition-transform duration-300 group-hover:scale-105"
+            >
+          </a>
         </div>
 
         <!-- Navigation principale -->
