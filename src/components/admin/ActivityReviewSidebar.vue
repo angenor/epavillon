@@ -116,6 +116,22 @@
             <span v-if="totalUnreadComments > 0" class="font-semibold">{{ totalUnreadComments }}</span>
           </button>
 
+          <!-- Bouton Tri par date (confirmée sinon proposée) -->
+          <button
+            @click="toggleSortByDate"
+            :class="[
+              'flex items-center gap-1 px-2 py-1 text-xs rounded-lg transition-colors cursor-pointer',
+              sortByDate
+                ? 'bg-teal-500 text-white'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+            ]"
+            :title="sortByDate ? 'Revenir au tri par défaut' : 'Trier par date (confirmée sinon proposée)'"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+          </button>
+
           <!-- Bouton Notés -->
           <button
             @click="toggleRatedFilter"
@@ -630,9 +646,19 @@
 
         <!-- Affichage classique sans sections -->
         <template v-else>
+          <template v-for="(activity, index) in filteredActivities" :key="activity.id">
+          <!-- Séparateur de date (mode tri par date) -->
           <div
-            v-for="activity in filteredActivities"
-            :key="activity.id"
+            v-if="sortByDate && (index === 0 || getDayKey(activity) !== getDayKey(filteredActivities[index - 1]))"
+            class="flex items-center gap-2 pt-2"
+          >
+            <div class="flex-1 h-px bg-teal-300 dark:bg-teal-700"></div>
+            <span class="text-xs font-semibold text-teal-700 dark:text-teal-300 whitespace-nowrap capitalize">
+              {{ formatDayLabel(activity) }}
+            </span>
+            <div class="flex-1 h-px bg-teal-300 dark:bg-teal-700"></div>
+          </div>
+          <div
             :ref="el => setActivityRef(activity.id, el)"
             @click="selectActivity(activity.id)"
             :class="[
@@ -765,6 +791,7 @@
             </div>
           </div>
         </div>
+          </template>
         </template>
       </div>
     </div>
@@ -847,6 +874,7 @@ const LISTENER_ID = 'activity-review-sidebar' // ID unique pour ce composant
 const filterByComments = ref(false)
 const filterByRating = ref(false)
 const filterByValidatedDate = ref(false)
+const sortByDate = ref(false)
 
 // État pour le redimensionnement
 const MIN_WIDTH = 320 // 80 en Tailwind = 320px
@@ -939,6 +967,16 @@ const filteredActivities = computed(() => {
     // Trier par date validée (du plus ancien au plus récent)
     result.sort((a, b) => new Date(a.final_start_date) - new Date(b.final_start_date))
   }
+  // Tri par date confirmée, sinon proposée (sans date en dernier)
+  else if (sortByDate.value) {
+    result.sort((a, b) => {
+      const dateA = getScheduleDate(a)
+      const dateB = getScheduleDate(b)
+      if (!dateA) return dateB ? 1 : 0
+      if (!dateB) return -1
+      return new Date(dateA) - new Date(dateB)
+    })
+  }
   // Tri par défaut : du plus récent au plus ancien
   else {
     result.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
@@ -967,7 +1005,8 @@ const hasActiveFilters = computed(() => {
     filterRevisionist.value ||
     filterByComments.value ||
     filterByRating.value ||
-    filterByValidatedDate.value
+    filterByValidatedDate.value ||
+    sortByDate.value
   )
 })
 
@@ -1016,6 +1055,7 @@ const loadActivities = async () => {
         validation_status,
         final_start_date,
         final_end_date,
+        proposed_start_date,
         organization:organizations(
           id,
           name,
@@ -1170,6 +1210,7 @@ const clearFilters = () => {
   filterByComments.value = false
   filterByRating.value = false
   filterByValidatedDate.value = false
+  sortByDate.value = false
 }
 
 const toggleCommentsFilter = () => {
@@ -1179,6 +1220,7 @@ const toggleCommentsFilter = () => {
     filterByRating.value = false
     filterByValidatedDate.value = false
     filterRevisionist.value = ''
+    sortByDate.value = false
   }
 }
 
@@ -1193,6 +1235,7 @@ const toggleRatedFilter = () => {
   } else {
     // Réinitialiser le dropdown si on désactive le filtre
     filterRevisionist.value = ''
+    sortByDate.value = false
   }
 }
 
@@ -1203,7 +1246,38 @@ const toggleValidatedDateFilter = () => {
     filterByComments.value = false
     filterByRating.value = false
     filterRevisionist.value = ''
+    sortByDate.value = false
   }
+}
+
+const toggleSortByDate = () => {
+  sortByDate.value = !sortByDate.value
+  // Désactiver les autres filtres si celui-ci est activé
+  if (sortByDate.value) {
+    filterByComments.value = false
+    filterByRating.value = false
+    filterByValidatedDate.value = false
+    filterRevisionist.value = ''
+  }
+}
+
+// Date de programmation : confirmée si disponible, sinon proposée
+const getScheduleDate = (activity) => activity.final_start_date || activity.proposed_start_date || null
+
+const getDayKey = (activity) => {
+  const date = getScheduleDate(activity)
+  return date ? new Date(date).toDateString() : 'none'
+}
+
+const formatDayLabel = (activity) => {
+  const date = getScheduleDate(activity)
+  if (!date) return 'Sans date'
+  return new Date(date).toLocaleDateString('fr-FR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  })
 }
 
 // Fonction pour mettre à jour le compteur de commentaires non lus d'une activité spécifique
