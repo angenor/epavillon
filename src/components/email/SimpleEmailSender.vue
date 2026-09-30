@@ -209,12 +209,23 @@
 
       <!-- BCC Recipients -->
       <div class="mb-3">
-        <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">
-          {{ t('email.bcc') }} ({{ t('email.bcc_description') }})
-          <span v-if="recipients.bcc.length > 0" class="ml-2 px-2 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs font-semibold">
-            {{ recipients.bcc.length }}
-          </span>
-        </label>
+        <div class="flex items-center justify-between mb-1">
+          <label class="block text-xs text-gray-600 dark:text-gray-400">
+            {{ t('email.bcc') }} ({{ t('email.bcc_description') }})
+            <span v-if="recipients.bcc.length > 0" class="ml-2 px-2 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs font-semibold">
+              {{ recipients.bcc.length }}
+            </span>
+          </label>
+          <button
+            v-if="recipients.bcc.length > 0"
+            type="button"
+            @click="recipients.bcc = []"
+            class="px-2 py-0.5 text-xs font-medium rounded-md text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors cursor-pointer"
+            title="Retirer tous les emails du Cci"
+          >
+            Tout retirer
+          </button>
+        </div>
         <EmailAutocompleteInput
           v-model="recipients.bcc"
           :placeholder="t('email.add_bcc_placeholder')"
@@ -1322,20 +1333,40 @@ export default {
       }
     }
 
-    const loadValidDatesSubmitters = () => loadSubmittersIntoBcc(
-      query => query.not('final_start_date', 'is', null).not('final_end_date', 'is', null),
-      'dates valides'
-    )
+    // Envois groupés ouverts depuis la liste des activités : destinataires et modèle par défaut
+    const BULK_FILTERS = {
+      'valid-dates': {
+        label: 'dates valides',
+        templateId: 'bulk_valid_dates',
+        apply: query => query.not('final_start_date', 'is', null).not('final_end_date', 'is', null)
+      },
+      'approved-activities': {
+        label: 'activités approuvées',
+        templateId: 'bulk_approved',
+        apply: query => query.eq('validation_status', 'approved')
+      },
+      'under-review-activities': {
+        label: "activités en attente d'examen",
+        templateId: 'bulk_under_review',
+        apply: query => query.eq('validation_status', 'under_review')
+      }
+    }
 
-    const loadApprovedActivitiesSubmitters = () => loadSubmittersIntoBcc(
-      query => query.eq('validation_status', 'approved'),
-      'activités approuvées'
-    )
+    const applyBulkFilter = async (filterKey) => {
+      const bulkFilter = BULK_FILTERS[filterKey]
+      if (!bulkFilter) return
 
-    const loadUnderReviewActivitiesSubmitters = () => loadSubmittersIntoBcc(
-      query => query.eq('validation_status', 'under_review'),
-      "activités en attente d'examen"
-    )
+      // Pré-remplir avec l'email par défaut, sauf si un contenu a été fourni
+      if (!emailData.value.subject && !emailData.value.content) {
+        const template = emailTemplates.value.find(tpl => tpl.id === bulkFilter.templateId)
+        if (template) {
+          emailData.value.subject = template.subject
+          emailData.value.content = template.content
+        }
+      }
+
+      await loadSubmittersIntoBcc(bulkFilter.apply, bulkFilter.label)
+    }
 
     // Load events on mount
     onMounted(async () => {
@@ -1347,12 +1378,8 @@ export default {
       }
 
       // Si un filtre initial est fourni, appliquer le filtre
-      if (props.initialFilter === 'valid-dates') {
-        await loadValidDatesSubmitters()
-      } else if (props.initialFilter === 'approved-activities') {
-        await loadApprovedActivitiesSubmitters()
-      } else if (props.initialFilter === 'under-review-activities') {
-        await loadUnderReviewActivitiesSubmitters()
+      if (props.initialFilter) {
+        await applyBulkFilter(props.initialFilter)
       }
 
       // Fermer le dropdown en cliquant en dehors

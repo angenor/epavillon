@@ -172,6 +172,59 @@ Nous vous remercions de votre compréhension.
 Cordialement,
 L'équipe IFDD - Organisation de {event_name}`
     },
+    // Modèles des envois groupés (Cci) depuis la liste des activités :
+    // pas de variables propres au destinataire, non résolues en Cci
+    {
+      id: 'bulk_under_review',
+      name: 'Groupé - Activités en cours d\'examen',
+      subject: '{event_name} : votre proposition d\'activité est en cours d\'examen',
+      content: `Madame, Monsieur,
+
+Nous vous remercions d'avoir soumis une proposition d'activité pour le Pavillon de la Francophonie dans le cadre de {event_name}.
+
+Nous vous informons que votre proposition est actuellement en cours d'examen par notre comité de sélection. Au regard du nombre important de propositions reçues, cette évaluation peut prendre un peu de temps.
+
+Vous recevrez une notification dès qu'une décision aura été prise. Vous pouvez à tout moment suivre l'état de votre proposition depuis votre tableau de bord : {dashboard_url}
+
+Nous vous remercions pour votre patience et votre engagement.
+
+Cordialement,
+L'équipe IFDD - Organisation de {event_name}`
+    },
+    {
+      id: 'bulk_approved',
+      name: 'Groupé - Activités approuvées',
+      subject: '{event_name} : votre activité a été retenue',
+      content: `Madame, Monsieur,
+
+Nous avons le plaisir de vous informer que votre proposition d'activité a été retenue par notre comité de sélection pour être organisée au Pavillon de la Francophonie dans le cadre de {event_name}.
+
+Nous reviendrons très prochainement vers vous avec les informations relatives à la date et à l'horaire de votre activité, ainsi qu'avec les prochaines étapes de l'organisation.
+
+D'ici là, nous vous invitons à vérifier que les informations de votre activité (intervenants, description, documents) sont à jour sur votre tableau de bord : {dashboard_url}
+
+Nous vous remercions pour votre contribution et nous réjouissons de vous accueillir au Pavillon.
+
+Cordialement,
+L'équipe IFDD - Organisation de {event_name}`
+    },
+    {
+      id: 'bulk_valid_dates',
+      name: 'Groupé - Activités programmées',
+      subject: '{event_name} : la date de votre activité est confirmée',
+      content: `Madame, Monsieur,
+
+Nous vous informons que la date et l'horaire de votre activité au Pavillon de la Francophonie, dans le cadre de {event_name}, sont désormais confirmés.
+
+Vous pouvez consulter la programmation de votre activité depuis votre tableau de bord : {dashboard_url}
+
+Nous vous remercions de bien vouloir vérifier ces informations et de nous signaler, dans les meilleurs délais, toute contrainte éventuelle. Veuillez noter que les créneaux alternatifs sont très limités.
+
+Merci de vous assurer également que la liste de vos intervenants et les supports de présentation sont à jour.
+
+Cordialement,
+L'équipe IFDD - Organisation de {event_name}`
+    },
     {
       id: 'custom',
       name: 'Personnalisé',
