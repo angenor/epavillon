@@ -729,10 +729,10 @@
         "6": "Médias spécialisés et acteurs de la communication environnementale"
       },
       "panelists": {
-        "climate-tech-specialist": {"role": "Spécialiste des technologies climatiques ou de la modélisation"},
-        "nbs-expert": {"role": "Expert·e en solutions fondées sur la nature ou ingénierie écologique"},
-        "innovative-project-rep": {"role": "Représentant·e d'un projet innovant d'adaptation dans un pays francophone"},
-        "digital-tools-expert": {"role": "Expert·e en outils numériques ou plateformes d'aide à la décision"}
+        "maman-kane": {"role": "Entrepreneur, inventeur et innovateur spécialisé dans le Digital Farming — plus de 15 ans d'expérience en agriculture intelligente"},
+        "bokoye": {"role": "Consultant et professeur associé, expert international en changement climatique, évaluation environnementale et finance climatique"},
+        "fall": {"role": "Chercheur en climat et impacts climatiques — modélisation climatique, IA et télédétection pour l'adaptation en Afrique de l'Ouest"},
+        "modo": {"role": "Ingénieur géomètre-topographe, Ambassadeur communautaire UN Maps et fondateur de l'association Geo Wakanda"}
       }
     }
   }
