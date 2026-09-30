@@ -1255,15 +1255,15 @@ const nextPage = () => {
 }
 
 const goToEmailWithValidDates = () => {
-  openWithFilter('valid-dates')
+  openWithFilter('valid-dates', selectedEventId.value || undefined)
 }
 
 const goToEmailWithApprovedActivities = () => {
-  openWithFilter('approved-activities')
+  openWithFilter('approved-activities', selectedEventId.value || undefined)
 }
 
 const goToEmailWithNotApprovedActivities = () => {
-  openWithFilter('under-review-activities')
+  openWithFilter('under-review-activities', selectedEventId.value || undefined)
 }
 
 // Copie dans le presse-papiers avec repli pour les contextes non sécurisés (HTTP)

@@ -106,11 +106,14 @@ export function useEmailModal() {
 
   /**
    * Ouvrir le modal avec un filtre spécifique
+   * @param {String} filterType - Type de filtre à appliquer
+   * @param {String} [eventId] - Limiter les destinataires aux activités de cet événement
    */
-  const openWithFilter = (filterType) => {
+  const openWithFilter = (filterType, eventId) => {
     // Les vérifications sont faites dans openEmailModal
     openEmailModal({
-      filter: filterType
+      filter: filterType,
+      eventId
     })
   }
 
