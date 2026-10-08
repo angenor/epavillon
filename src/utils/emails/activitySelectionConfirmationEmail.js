@@ -5,6 +5,7 @@
  */
 
 const PLACEHOLDER = 'xxx'
+export const CONFIRMATION_EMAIL_CC = ['Angenor99@gmail.com', 'Issa.Bado@francophonie.org']
 const ENGAGEMENT_FORM_URL = 'https://epavillonclimatique.francophonie.org/dist/images/formulaire_engagement_pavillon_francophonie_cdp31.docx'
 
 // Heure au format français : "14 h" ou "14 h 30", dans le fuseau de l'événement

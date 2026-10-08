@@ -40,9 +40,10 @@
             </div>
 
             <div class="flex-1">
-              <p class="font-semibold text-gray-900 dark:text-white">
-                {{ activity.organization?.name }}
-              </p>
+              <OrganizationNameEditor v-if="activity.organization"
+                                      :organization="activity.organization"
+                                      :editable="hasAdminRole"
+                                      @updated="activity.organization.name = $event" />
               <!-- Pays avec drapeau -->
               <div v-if="activity.organization?.country" class="flex items-center mt-1">
                 <svg class="h-3 w-3 text-gray-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -569,6 +570,12 @@
                   </p>
                 </div>
               </div>
+              <button v-if="hasAdminRole && activity.submitted_user"
+                      @click="showChangeOrganizationModal = true"
+                      class="cursor-pointer mt-4 w-full inline-flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-md text-orange-700 dark:text-orange-300 bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors">
+                <font-awesome-icon :icon="['fas', 'building']" class="h-3.5 w-3.5" />
+                {{ t('admin.activities.changeOrganization.title') }}
+              </button>
             </div>
 
             <!-- Nombre d'intervenants et documents -->
@@ -734,6 +741,15 @@
         @update="handleSubmitterUpdate"
       />
 
+      <!-- Modal de changement d'organisation du soumissionnaire -->
+      <ChangeSubmitterOrganizationModal
+        :show="showChangeOrganizationModal"
+        :submitter="activity?.submitted_user"
+        :activity-id="activity?.id"
+        @close="showChangeOrganizationModal = false"
+        @update="handleSubmitterOrganizationUpdate"
+      />
+
       <!-- Modal d'édition des dates validées -->
       <EditValidatedDatesModal
         :show="showEditDatesModal"
@@ -762,8 +778,10 @@ import { useAdminPanel } from '@/composables/useAdminPanel'
 import { useRevisionViews } from '@/composables/useRevisionViews'
 import { useZoomMeeting } from '@/composables/zoom/useZoomMeeting'
 import { useEmailModal } from '@/composables/useEmailModal'
-import { buildActivitySelectionConfirmationEmail } from '@/utils/emails/activitySelectionConfirmationEmail'
+import { buildActivitySelectionConfirmationEmail, CONFIRMATION_EMAIL_CC } from '@/utils/emails/activitySelectionConfirmationEmail'
 import ChangeSubmitterModal from '@/components/admin/ChangeSubmitterModal.vue'
+import ChangeSubmitterOrganizationModal from '@/components/admin/ChangeSubmitterOrganizationModal.vue'
+import OrganizationNameEditor from '@/components/admin/organizations/OrganizationNameEditor.vue'
 import EditValidatedDatesModal from '@/components/admin/EditValidatedDatesModal.vue'
 import ActivityReviewSidebar from '@/components/admin/ActivityReviewSidebar.vue'
 import RatingFloatingButton from '@/components/admin/RatingFloatingButton.vue'
@@ -773,7 +791,7 @@ const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
 const { supabase } = useSupabase()
-const { hasReviewerOrAdminRole, isLoadingRoles, loadUserRoles, validateActivity, hasRole } = useAdmin()
+const { hasReviewerOrAdminRole, hasAdminRole, isLoadingRoles, loadUserRoles, validateActivity, hasRole } = useAdmin()
 const { currentUser } = useAuth()
 const { getCityFromTimezone, formatDateTimeWithTimezone, getTimezoneLabel } = useTimezone()
 const { enableActivityReviewMode, disableActivityReviewMode, closeReviewSidebar: closeReviewSidebarState, isReviewSidebarOpen, reviewSidebarWidth } = useAdminPanel()
@@ -782,15 +800,20 @@ const { createZoomMeeting, deleteZoomMeeting, isCreatingMeeting, isDeletingMeeti
 const { openEmailModal, canSendEmails } = useEmailModal()
 
 // Pour une activité "En examen", pré-remplir l'email de confirmation avec le créneau confirmé
+// et les destinataires (soumissionnaire en À, équipe IFDD en CC)
 const openActivityEmail = () => {
-  const { id, event_id, validation_status, title, final_start_date, final_end_date, event } = activity.value
+  const { id, event_id, validation_status, title, final_start_date, final_end_date, event, submitted_user } = activity.value
   const defaultEmail = validation_status === 'under_review'
-    ? buildActivitySelectionConfirmationEmail({
-        title,
-        finalStartDate: final_start_date,
-        finalEndDate: final_end_date,
-        timezone: event?.timezone
-      })
+    ? {
+        ...buildActivitySelectionConfirmationEmail({
+          title,
+          finalStartDate: final_start_date,
+          finalEndDate: final_end_date,
+          timezone: event?.timezone
+        }),
+        to: submitted_user?.email ? [submitted_user.email] : [],
+        cc: [...CONFIRMATION_EMAIL_CC]
+      }
     : {}
   openEmailModal({ activityId: id, eventId: event_id, ...defaultEmail })
 }
@@ -814,6 +837,7 @@ const speakers = ref([])
 const documents = ref([])
 const registrations = ref([])
 const showChangeSubmitterModal = ref(false)
+const showChangeOrganizationModal = ref(false)
 const showEditDatesModal = ref(false)
 const activityId = computed(() => route.params.id)
 const organizationActivities = ref([])
@@ -1407,6 +1431,15 @@ const handleSubmitterUpdate = async (newSubmitter) => {
   }
 
   console.log('Soumissionnaire mis à jour avec succès')
+}
+
+// Si l'organisation a aussi été appliquée à l'activité, rafraîchir l'en-tête et les autres activités
+const handleSubmitterOrganizationUpdate = async ({ organization, appliedToActivity }) => {
+  if (!activity.value || !appliedToActivity) return
+
+  activity.value.organization = organization
+  activity.value.organization_id = organization.id
+  await loadOrganizationActivities(organization.id)
 }
 
 // Fonction pour gérer la mise à jour des dates validées

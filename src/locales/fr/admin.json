@@ -354,6 +354,22 @@
     "activities": {
       "title": "Validation des Activités",
       "subtitle": "Gestion et validation des propositions d'activités",
+      "editOrganizationName": "Modifier le nom de l'organisation",
+      "organizationNameRequired": "Le nom de l'organisation est obligatoire",
+      "organizationNameError": "Erreur lors de la mise à jour du nom de l'organisation",
+      "changeOrganization": {
+        "title": "Changer l'organisation du soumissionnaire",
+        "current": "Organisation actuelle",
+        "none": "Aucune organisation",
+        "search": "Rechercher une organisation",
+        "searchPlaceholder": "Nom ou acronyme de l'organisation...",
+        "noResults": "Aucune organisation trouvée",
+        "selected": "Nouvelle organisation sélectionnée",
+        "applyToActivity": "Appliquer aussi cette organisation à l'activité",
+        "confirm": "Confirmer le changement",
+        "updating": "Mise à jour...",
+        "error": "Erreur lors du changement d'organisation"
+      },
       "export": "Exporter",
       "emailValidDates": "Email - Dates valides",
       "emailApprovedActivities": "Email - Activités approuvées",

@@ -301,6 +301,22 @@
     "activities": {
       "title": "Activity Validation",
       "subtitle": "Management and validation of activity proposals",
+      "editOrganizationName": "Edit organization name",
+      "organizationNameRequired": "Organization name is required",
+      "organizationNameError": "Error while updating the organization name",
+      "changeOrganization": {
+        "title": "Change the submitter's organization",
+        "current": "Current organization",
+        "none": "No organization",
+        "search": "Search for an organization",
+        "searchPlaceholder": "Organization name or acronym...",
+        "noResults": "No organization found",
+        "selected": "New organization selected",
+        "applyToActivity": "Also apply this organization to the activity",
+        "confirm": "Confirm change",
+        "updating": "Updating...",
+        "error": "Error while changing the organization"
+      },
       "export": "Export",
       "emailValidDates": "Email - Valid Dates",
       "emailApprovedActivities": "Email - Approved Activities",
