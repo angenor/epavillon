@@ -220,6 +220,25 @@ const SESSIONS_DATA = [
     ],
     partners: COMMON_PARTNERS,
   },
+  {
+    edition: 10,
+    date: '2026-10-29',
+    startTime: '14:00',
+    endTime: '15:30',
+    timezone: 'GMT',
+    language: 'fr',
+    completed: false,
+    coverImage: '/images/paco_10.jpg',
+    bannerUrl: '/images/paco_10.jpg',
+    replayUrl: null,
+    i18nPrefix: 'paco.session10',
+    panelists: [
+      { id: 'pik-researcher', name: 'À confirmer', photoUrl: null, organization: 'PIK — Potsdam', email: null },
+      { id: 'lardes-researcher', name: 'À confirmer', photoUrl: null, organization: 'LARDES — Université de Parakou', email: null },
+      { id: 'csa-researcher', name: 'À confirmer', photoUrl: null, organization: null, email: null },
+    ],
+    partners: COMMON_PARTNERS,
+  },
 ]
 
 /**

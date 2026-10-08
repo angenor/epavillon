@@ -343,6 +343,7 @@
       "session7": "Session 7",
       "session8": "Session 8",
       "session9": "Session 9",
+      "session10": "Session 10",
       "status": {
         "ended": "Ended",
         "upcoming": "Upcoming",
@@ -733,6 +734,46 @@
         "bokoye": {"role": "Consultant and associate professor, international expert in climate change, environmental assessment and climate finance"},
         "fall": {"role": "Climate and climate impacts researcher — climate modelling, AI and remote sensing for adaptation in West Africa"},
         "modo": {"role": "Surveyor-topographer engineer, UN Maps Community Ambassador and founder of the Geo Wakanda association"}
+      }
+    },
+    "session10": {
+      "title": "Impact evaluation of climate adaptation programmes",
+      "subtitle": "Randomised controlled trials to measure the real effect of programmes",
+      "editionLabel": "Science, research and innovation",
+      "dateLabel": "Thursday, October 29, 2026",
+      "shortTitle": "Impact evaluation",
+      "timeLabel": "2:00 PM – 3:30 PM GMT",
+      "replay": "Watch the recording",
+      "replayTitle": "Webinar replay",
+      "replayLoading": "Loading video...",
+      "replayError": "Video temporarily unavailable",
+      "replayUnavailable": "The replay will be available soon.",
+      "context": "In the face of climate change, many farmers struggle to adapt their agricultural practices, due to both a lack of knowledge and a lack of resources. Adaptation programmes aim to fill this gap and train farmers in adaptation techniques. At the end of these programmes, managers are often pleased to find that participants have adopted the proposed techniques, and the project is then scaled up.\n\nBut does this really mean that the programme led to increased adaptation? Not necessarily: participants have every incentive to overstate their adoption of the techniques to programme managers. Comparing adoption rates and yields before and after implementation is not enough either, since other shocks or other programmes may also have influenced them. As for comparing participants with non-participants, it is distorted by characteristics that may differ greatly from the outset.\n\nImpact evaluations, and randomised controlled trials (RCTs) in particular, are the most rigorous method for assessing a programme's effectiveness. They avoid these misleading comparisons and make it possible to isolate the effect of participating in the programme. During this webinar, researchers from the Potsdam Institute for Climate Impact Research (PIK) and LARDES will present the gold standard of impact evaluation, RCTs, and their main features (treatment and control groups, baseline and endline, random assignment), as well as their main challenges (protocol compliance, ethics, etc.) and advantages. A case study currently being implemented in Benin will be examined in detail.\n\nThis webinar is part of the action \"Strengthening the capacities and collaboration of French-speaking countries on climate change adaptation and access to finance\", implemented by the Institute of la Francophonie for Sustainable Development (IFDD) with the support of the regional PACO programme – funded by the BMUKN under the International Climate Initiative (IKI) and implemented by GIZ. It aims to provide a space for discussion on the opportunities and limits of methods for evaluating climate adaptation programmes.",
+      "objectiveGeneral": "Strengthen French-speaking stakeholders' knowledge and capacities regarding the opportunities and challenges of impact evaluation of climate adaptation programmes.",
+      "objectives": {
+        "0": "Explain why impact evaluations are necessary, highlighting the risks of simplistic comparisons, so that publications on programme impacts can be approached critically.",
+        "1": "Explain the key elements of a randomised controlled trial (RCT) and why they matter.",
+        "2": "Discuss the challenges and advantages of implementing RCTs so that policymakers can better appreciate their possible applications.",
+        "3": "Foster dialogue between public institutions, research centres, community actors, digital innovators and technical partners."
+      },
+      "content": {
+        "0": {"title": "Adaptation programmes", "desc": "Typical context."},
+        "1": {"title": "The risk of simplistic comparisons", "desc": "Before and after, participants and non-participants."},
+        "2": {"title": "Impact evaluation through RCTs", "desc": "Key concepts, challenges (ethics, implementation, etc.) and advantages."},
+        "3": {"title": "Case study in Benin", "desc": "Programme and research design, outcome indicators, timeline."}
+      },
+      "targets": {
+        "0": "Public institutions and local authorities",
+        "1": "Researchers, academics and students",
+        "2": "Civil society organizations",
+        "3": "Donors and technical partners",
+        "4": "Policymakers and programme implementers",
+        "5": "Specialized media and science communication actors"
+      },
+      "panelists": {
+        "pik-researcher": {"role": "Scientific specialist in adaptation and impact evaluation (Potsdam Institute for Climate Impact Research, Germany)"},
+        "lardes-researcher": {"role": "Researcher specialising in agricultural economics, impact evaluation and climate change (LARDES, University of Parakou, Benin)"},
+        "csa-researcher": {"role": "Researcher specialising in climate-smart agriculture, agricultural production economics and food security"}
       }
     }
   }

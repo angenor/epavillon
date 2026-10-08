@@ -343,6 +343,7 @@
       "session7": "Session 7",
       "session8": "Session 8",
       "session9": "Session 9",
+      "session10": "Session 10",
       "status": {
         "ended": "Terminée",
         "upcoming": "À venir",
@@ -733,6 +734,46 @@
         "bokoye": {"role": "Consultant et professeur associé, expert international en changement climatique, évaluation environnementale et finance climatique"},
         "fall": {"role": "Chercheur en climat et impacts climatiques — modélisation climatique, IA et télédétection pour l'adaptation en Afrique de l'Ouest"},
         "modo": {"role": "Ingénieur géomètre-topographe, Ambassadeur communautaire UN Maps et fondateur de l'association Geo Wakanda"}
+      }
+    },
+    "session10": {
+      "title": "Évaluation d'impact des programmes d'adaptation climatique",
+      "subtitle": "Les essais contrôlés randomisés pour mesurer l'effet réel des programmes",
+      "editionLabel": "Science, recherche et innovation",
+      "dateLabel": "Jeudi 29 octobre 2026",
+      "shortTitle": "Évaluation d'impact",
+      "timeLabel": "14h00 – 15h30 GMT",
+      "replay": "Voir l'enregistrement",
+      "replayTitle": "Replay du webinaire",
+      "replayLoading": "Chargement de la vidéo...",
+      "replayError": "Vidéo temporairement indisponible",
+      "replayUnavailable": "Le replay sera bientôt disponible.",
+      "context": "Face au changement climatique, de nombreux agriculteurs peinent à adapter leurs pratiques agricoles, tant par manque de connaissances que par manque de ressources. Les programmes d'adaptation visent à combler ce déficit et à former les agriculteurs aux techniques d'adaptation. À l'issue de ces programmes, les responsables constatent souvent avec satisfaction que les participants ont adopté les techniques proposées, et le projet est alors étendu à plus grande échelle.\n\nMais cela signifie-t-il pour autant que le programme a réellement entraîné une augmentation de l'adaptation ? Pas nécessairement : les participants ont tout intérêt à surestimer l'adoption des techniques auprès des responsables du programme. Comparer les taux d'adoption et les rendements avant et après la mise en œuvre ne suffit pas non plus, car d'autres chocs ou d'autres programmes ont pu les influencer. Quant à la comparaison entre participants et non-participants, elle est faussée par des caractéristiques qui peuvent être très différentes dès le départ.\n\nLes évaluations d'impact, et plus particulièrement les essais contrôlés randomisés (ECR), constituent la méthode la plus rigoureuse pour évaluer l'efficacité d'un programme. Elles évitent ces comparaisons trompeuses et permettent d'isoler l'effet induit par la participation au programme. Au cours de ce webinaire, des chercheur·e·s de l'Institut de Potsdam pour la recherche sur les impacts climatiques (PIK) et du LARDES présenteront la référence en matière d'évaluation d'impact, les ECR, et leurs principales caractéristiques (groupe de traitement et groupe témoin, situation initiale et situation finale, répartition aléatoire), ainsi que leurs principaux défis (respect du protocole, éthique, etc.) et leurs avantages. Une étude de cas actuellement mise en œuvre au Bénin sera examinée en détail.\n\nCe webinaire s'inscrit dans l'action « Renforcement des capacités et de la collaboration des pays francophones sur l'adaptation au changement climatique et l'accès au financement », mise en œuvre par l'Institut de la Francophonie pour le développement durable (IFDD) avec l'appui du programme régional PACO – financé par le BMUKN dans le cadre de l'Initiative internationale pour le Climat (IKI) et exécuté par la GIZ. Il vise à offrir un espace d'échanges sur les opportunités et les limites des méthodes d'évaluation des programmes d'adaptation climatique.",
+      "objectiveGeneral": "Renforcer les connaissances et les capacités des acteurs francophones sur les opportunités et les défis liés à l'évaluation d'impact des programmes d'adaptation climatique.",
+      "objectives": {
+        "0": "Expliquer pourquoi les évaluations d'impact sont nécessaires, en mettant l'accent sur les risques liés aux comparaisons simplistes, afin d'aborder de manière critique les publications consacrées aux programmes d'impact.",
+        "1": "Expliquer les éléments clés d'un essai contrôlé randomisé (ECR) et leur importance.",
+        "2": "Aborder les défis et les avantages liés à la mise en œuvre des ECR afin que les décideurs politiques puissent mieux en apprécier les applications possibles.",
+        "3": "Favoriser le dialogue entre institutions publiques, centres de recherche, acteurs communautaires, innovateurs numériques et partenaires techniques."
+      },
+      "content": {
+        "0": {"title": "Programmes d'adaptation", "desc": "Contexte typique."},
+        "1": {"title": "Le risque des comparaisons simplistes", "desc": "Avant et après, participants et non-participants."},
+        "2": {"title": "Évaluation d'impact par ECR", "desc": "Concepts clés, défis (éthique, mise en œuvre, etc.) et avantages."},
+        "3": {"title": "Étude de cas au Bénin", "desc": "Conception du programme et de la recherche, indicateurs de résultats, calendrier."}
+      },
+      "targets": {
+        "0": "Institutions publiques et collectivités locales",
+        "1": "Chercheur·euse·s, universitaires et étudiant·e·s",
+        "2": "Organisations de la société civile",
+        "3": "Bailleurs de fonds et partenaires techniques",
+        "4": "Décideurs politiques et responsables de la mise en œuvre des programmes",
+        "5": "Médias spécialisés et acteurs de la communication scientifique"
+      },
+      "panelists": {
+        "pik-researcher": {"role": "Spécialiste scientifique de l'adaptation et de l'évaluation d'impact (Institut de Potsdam pour la recherche sur les impacts climatiques, Allemagne)"},
+        "lardes-researcher": {"role": "Chercheur·e spécialisé·e en économie agricole, évaluation d'impact et changements climatiques (LARDES, Université de Parakou, Bénin)"},
+        "csa-researcher": {"role": "Chercheur·e spécialisé·e en agriculture adaptée au climat, économie de la production agricole et sécurité alimentaire"}
       }
     }
   }
