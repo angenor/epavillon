@@ -357,6 +357,13 @@
       "editOrganizationName": "Modifier le nom de l'organisation",
       "organizationNameRequired": "Le nom de l'organisation est obligatoire",
       "organizationNameError": "Erreur lors de la mise à jour du nom de l'organisation",
+      "validatedDates": {
+        "startDate": "Date de début",
+        "startTime": "Heure de début",
+        "endDate": "Date de fin",
+        "endTime": "Heure de fin",
+        "autoEndHint": "La fin est remplie automatiquement 1 h après le début (modifiable)."
+      },
       "changeOrganization": {
         "title": "Changer l'organisation du soumissionnaire",
         "current": "Organisation actuelle",

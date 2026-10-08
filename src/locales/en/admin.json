@@ -304,6 +304,13 @@
       "editOrganizationName": "Edit organization name",
       "organizationNameRequired": "Organization name is required",
       "organizationNameError": "Error while updating the organization name",
+      "validatedDates": {
+        "startDate": "Start date",
+        "startTime": "Start time",
+        "endDate": "End date",
+        "endTime": "End time",
+        "autoEndHint": "The end is filled in automatically 1 hour after the start (editable)."
+      },
       "changeOrganization": {
         "title": "Change the submitter's organization",
         "current": "Current organization",

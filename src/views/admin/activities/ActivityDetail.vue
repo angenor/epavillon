@@ -759,6 +759,7 @@
         :current-final-start-date="activity?.final_start_date"
         :current-final-end-date="activity?.final_end_date"
         :timezone="activity?.event?.timezone"
+        :event-start-date="activity?.event?.in_person_start_date || activity?.event?.online_start_datetime"
         @close="showEditDatesModal = false"
         @update="handleDatesUpdate"
       />
@@ -866,7 +867,7 @@ const loadActivity = async () => {
       .select(`
         *,
         organization:organizations(id, name, logo_url, email, website, organization_type, country:countries(id, name_fr, name_en, code)),
-        event:events(id, title, year, banner_high_quality_1_1_url, timezone, city, address, country:countries(name_fr, name_en)),
+        event:events(id, title, year, banner_high_quality_1_1_url, timezone, in_person_start_date, online_start_datetime, city, address, country:countries(name_fr, name_en)),
         submitted_user:users!submitted_by(id, first_name, last_name, email),
         country:countries(id, name_fr, name_en, code)
       `)

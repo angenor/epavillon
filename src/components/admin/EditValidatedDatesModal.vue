@@ -68,23 +68,46 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Date et heure de début *
+                  {{ t('admin.activities.validatedDates.startDate') }} *
                 </label>
-                <input type="datetime-local"
-                       v-model="formData.finalStartDate"
+                <input type="date"
+                       v-model="formData.startDate"
+                       @input="autoFillEnd"
                        :disabled="isLoading"
                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed">
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Date et heure de fin *
+                  {{ t('admin.activities.validatedDates.startTime') }} *
                 </label>
-                <input type="datetime-local"
-                       v-model="formData.finalEndDate"
+                <input type="time"
+                       v-model="formData.startTime"
+                       @input="autoFillEnd"
+                       :disabled="isLoading"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  {{ t('admin.activities.validatedDates.endDate') }} *
+                </label>
+                <input type="date"
+                       v-model="formData.endDate"
+                       :disabled="isLoading"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  {{ t('admin.activities.validatedDates.endTime') }} *
+                </label>
+                <input type="time"
+                       v-model="formData.endTime"
                        :disabled="isLoading"
                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed">
               </div>
             </div>
+            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+              {{ t('admin.activities.validatedDates.autoEndHint') }}
+            </p>
           </div>
 
           <!-- Actions rapides -->
@@ -148,6 +171,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useActivityModifications } from '@/composables/useActivityModifications'
 
 const props = defineProps({
@@ -178,35 +202,73 @@ const props = defineProps({
   timezone: {
     type: String,
     default: 'UTC'
+  },
+  // Date de début de l'événement (DATE "YYYY-MM-DD" ou timestamp ISO)
+  eventStartDate: {
+    type: String,
+    default: null
   }
 })
 
 const emit = defineEmits(['close', 'update'])
 
+const { t } = useI18n()
 const { updateValidatedDates, isLoading } = useActivityModifications()
 const error = ref(null)
 
 const formData = ref({
-  finalStartDate: null,
-  finalEndDate: null
+  startDate: '',
+  startTime: '',
+  endDate: '',
+  endTime: ''
 })
+
+// Valeurs au format datetime-local (YYYY-MM-DDTHH:mm), dans le fuseau de l'événement
+const finalStartLocal = computed(() =>
+  formData.value.startDate && formData.value.startTime ? `${formData.value.startDate}T${formData.value.startTime}` : null
+)
+const finalEndLocal = computed(() =>
+  formData.value.endDate && formData.value.endTime ? `${formData.value.endDate}T${formData.value.endTime}` : null
+)
+
+// Répartir une date GMT dans les champs date/heure d'un côté (start ou end)
+const setFields = (side, dateString) => {
+  const [date = '', time = ''] = formatDateTimeForInput(dateString, props.timezone).split('T')
+  formData.value[`${side}Date`] = date
+  formData.value[`${side}Time`] = time
+}
+
+// Date de début de l'événement, dans son fuseau horaire
+const getEventStartDay = () => {
+  if (!props.eventStartDate) return ''
+  if (/^\d{4}-\d{2}-\d{2}$/.test(props.eventStartDate)) return props.eventStartDate
+  return formatDateTimeForInput(props.eventStartDate, props.timezone).split('T')[0]
+}
 
 // Initialiser les données du formulaire quand le modal s'ouvre
 watch(() => props.show, (newValue) => {
   if (newValue) {
-    formData.value.finalStartDate = props.currentFinalStartDate
-      ? formatDateTimeForInput(props.currentFinalStartDate, props.timezone)
-      : null
-    formData.value.finalEndDate = props.currentFinalEndDate
-      ? formatDateTimeForInput(props.currentFinalEndDate, props.timezone)
-      : null
+    setFields('start', props.currentFinalStartDate)
+    setFields('end', props.currentFinalEndDate)
+    // Par défaut, présélectionner la date de début de l'événement
+    if (!formData.value.startDate) formData.value.startDate = getEventStartDay()
     error.value = null
   }
 })
 
+// Quand le début change, la fin = début + 1 h (même date, sauf passage à minuit)
+const autoFillEnd = () => {
+  if (!finalStartLocal.value) return
+  const [year, month, day] = formData.value.startDate.split('-').map(Number)
+  const [hour, minute] = formData.value.startTime.split(':').map(Number)
+  const end = new Date(Date.UTC(year, month - 1, day, hour + 1, minute)).toISOString()
+  formData.value.endDate = end.slice(0, 10)
+  formData.value.endTime = end.slice(11, 16)
+}
+
 // Validation du formulaire
 const isFormValid = computed(() => {
-  return formData.value.finalStartDate && formData.value.finalEndDate
+  return finalStartLocal.value && finalEndLocal.value
 })
 
 /**
@@ -313,18 +375,13 @@ const convertLocalToGMT = (localDateString, timezone = 'UTC') => {
 
 // Copier les dates proposées
 const copyProposedDates = () => {
-  if (props.proposedStartDate) {
-    formData.value.finalStartDate = formatDateTimeForInput(props.proposedStartDate, props.timezone)
-  }
-  if (props.proposedEndDate) {
-    formData.value.finalEndDate = formatDateTimeForInput(props.proposedEndDate, props.timezone)
-  }
+  if (props.proposedStartDate) setFields('start', props.proposedStartDate)
+  if (props.proposedEndDate) setFields('end', props.proposedEndDate)
 }
 
 // Effacer les dates
 const clearDates = () => {
-  formData.value.finalStartDate = null
-  formData.value.finalEndDate = null
+  formData.value = { startDate: '', startTime: '', endDate: '', endTime: '' }
 }
 
 // Sauvegarder les modifications
@@ -338,8 +395,8 @@ const handleSave = async () => {
     error.value = null
 
     // Convertir les dates saisies (dans le fuseau horaire de l'événement) vers GMT
-    const finalStartDate = convertLocalToGMT(formData.value.finalStartDate, props.timezone)
-    const finalEndDate = convertLocalToGMT(formData.value.finalEndDate, props.timezone)
+    const finalStartDate = convertLocalToGMT(finalStartLocal.value, props.timezone)
+    const finalEndDate = convertLocalToGMT(finalEndLocal.value, props.timezone)
 
     if (!finalStartDate || !finalEndDate) {
       error.value = 'Erreur lors de la conversion des dates'
@@ -353,7 +410,7 @@ const handleSave = async () => {
     }
 
     console.log('📅 Dates converties:', {
-      local: { start: formData.value.finalStartDate, end: formData.value.finalEndDate },
+      local: { start: finalStartLocal.value, end: finalEndLocal.value },
       gmt: { start: finalStartDate, end: finalEndDate },
       timezone: props.timezone
     })
