@@ -194,7 +194,7 @@
               <div class="flex items-center space-x-3">
                 <!-- Bouton Email (Super Admin seulement) -->
                 <button v-if="canSendEmails"
-                        @click="openForActivity(activity.id, activity.event_id)"
+                        @click="openActivityEmail"
                         class="cursor-pointer inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
                         :title="'Envoyer un email'">
                   <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -762,6 +762,7 @@ import { useAdminPanel } from '@/composables/useAdminPanel'
 import { useRevisionViews } from '@/composables/useRevisionViews'
 import { useZoomMeeting } from '@/composables/zoom/useZoomMeeting'
 import { useEmailModal } from '@/composables/useEmailModal'
+import { buildActivitySelectionConfirmationEmail } from '@/utils/emails/activitySelectionConfirmationEmail'
 import ChangeSubmitterModal from '@/components/admin/ChangeSubmitterModal.vue'
 import EditValidatedDatesModal from '@/components/admin/EditValidatedDatesModal.vue'
 import ActivityReviewSidebar from '@/components/admin/ActivityReviewSidebar.vue'
@@ -778,7 +779,21 @@ const { getCityFromTimezone, formatDateTimeWithTimezone, getTimezoneLabel } = us
 const { enableActivityReviewMode, disableActivityReviewMode, closeReviewSidebar: closeReviewSidebarState, isReviewSidebarOpen, reviewSidebarWidth } = useAdminPanel()
 const { getCurrentUserViewCount, resetActivityView, recordActivityView } = useRevisionViews()
 const { createZoomMeeting, deleteZoomMeeting, isCreatingMeeting, isDeletingMeeting } = useZoomMeeting()
-const { openForActivity, canSendEmails } = useEmailModal()
+const { openEmailModal, canSendEmails } = useEmailModal()
+
+// Pour une activité "En examen", pré-remplir l'email de confirmation avec le créneau confirmé
+const openActivityEmail = () => {
+  const { id, event_id, validation_status, title, final_start_date, final_end_date, event } = activity.value
+  const defaultEmail = validation_status === 'under_review'
+    ? buildActivitySelectionConfirmationEmail({
+        title,
+        finalStartDate: final_start_date,
+        finalEndDate: final_end_date,
+        timezone: event?.timezone
+      })
+    : {}
+  openEmailModal({ activityId: id, eventId: event_id, ...defaultEmail })
+}
 
 const isLoading = ref(true)
 const activity = ref(null)

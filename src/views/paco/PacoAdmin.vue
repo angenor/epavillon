@@ -384,18 +384,23 @@ const PACO_SESSION_URL = 'https://epavillonclimatique.francophonie.org/paco'
 
 const buildReminderEmail = () => {
   const session = currentSession.value
+  // Le corps du mail est en français : on force la locale fr pour les libellés.
+  const tFr = (key) => t(key, {}, { locale: 'fr' })
   const sessionTitle = session
-    ? (t(`${session.i18nPrefix}.title`) || `Session ${session.edition}`)
+    ? (tFr(`${session.i18nPrefix}.title`) || `Session ${session.edition}`)
     : ''
-  const sessionDate = session ? (t(`${session.i18nPrefix}.dateLabel`) || '') : ''
-  const sessionTime = session ? (t(`${session.i18nPrefix}.timeLabel`) || '') : ''
+  const sessionDate = session ? (tFr(`${session.i18nPrefix}.dateLabel`) || '') : ''
+  const sessionTime = session ? (tFr(`${session.i18nPrefix}.timeLabel`) || '') : ''
+  // Les sessions sont en GMT : comparaison avec la date UTC du jour.
+  const isToday = session?.date === new Date().toISOString().slice(0, 10)
+  const sessionWhen = isToday ? "aujourd'hui" : `le ${sessionDate.toLowerCase()}`
 
   const subject = `Rappel - ${sessionTitle}`
 
   const lines = [
     'Bonjour,',
     '',
-    `Nous avons le plaisir de vous rappeler votre inscription au prochain webinaire e-Pavillon climatique : « ${sessionTitle} »${sessionDate ? `, prévu Aujourd'hui` : ''}${sessionTime ? ` (${sessionTime})` : ''}.`,
+    `Nous avons le plaisir de vous rappeler votre inscription au prochain webinaire e-Pavillon climatique : « ${sessionTitle} »${sessionDate ? `, prévu ${sessionWhen}` : ''}${sessionTime ? ` (${sessionTime})` : ''}.`,
     '',
     'Afin de garantir une participation fluide nous vous recommandons vivement :',
     '',

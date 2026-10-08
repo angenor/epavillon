@@ -83,10 +83,8 @@ toutes les pages. Le pre-rendering est donc indispensable pour les aperçus de p
 et les meta pré-rendus sont ignorés.
 
 ### Déploiement
-```bash
-npm run deploy           # Build:seo + firebase deploy (déploiement complet)
-npm run deploy:hosting   # Build:seo + firebase deploy --only hosting
-```
+La production est hébergée uniquement sur **Apache** : après `npm run build:seo`, le contenu
+de `dist/` est copié sur le serveur.
 
 ### Tests
 ```bash
@@ -221,13 +219,7 @@ npm run build:seo
 # 2. Vérifier (optionnel)
 npm run verify:seo
 
-# 3. Déployer
-firebase deploy
-```
-
-Ou simplement :
-```bash
-npm run deploy  # Fait tout automatiquement
+# 3. Déployer : copier le contenu de dist/ sur le serveur Apache
 ```
 
 #### Quand rebuild ?
