@@ -309,7 +309,8 @@
         "startTime": "Start time",
         "endDate": "End date",
         "endTime": "End time",
-        "autoEndHint": "The end is filled in automatically 1 hour after the start (editable)."
+        "autoEndHint": "The end is filled in automatically 1 hour after the start (editable).",
+        "clearedHint": "The confirmed slot will be removed when you save."
       },
       "changeOrganization": {
         "title": "Change the submitter's organization",

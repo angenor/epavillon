@@ -21,13 +21,17 @@ const formatHour = (dateString, timeZone) => {
   return minute === '00' ? `${hour} h` : `${hour} h ${minute}`
 }
 
-// Date au format "17 novembre"
-const formatDay = (dateString, timeZone) =>
-  new Date(dateString).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', timeZone })
+// Date au format "Lundi 9 novembre 2026"
+const formatDay = (dateString, timeZone) => {
+  const date = new Date(dateString).toLocaleDateString('fr-FR', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone
+  })
+  return date.charAt(0).toUpperCase() + date.slice(1)
+}
 
 export const buildActivitySelectionConfirmationEmail = ({ title, finalStartDate, finalEndDate, timezone = 'UTC' }) => {
   const activityTitle = title || PLACEHOLDER
-  const date = finalStartDate ? formatDay(finalStartDate, timezone) : `${PLACEHOLDER} novembre`
+  const date = finalStartDate ? formatDay(finalStartDate, timezone) : `${PLACEHOLDER} ${PLACEHOLDER} novembre 2026`
   const schedule = finalStartDate && finalEndDate
     ? `${formatHour(finalStartDate, timezone)} – ${formatHour(finalEndDate, timezone)}`
     : `${PLACEHOLDER} h – ${PLACEHOLDER} h`

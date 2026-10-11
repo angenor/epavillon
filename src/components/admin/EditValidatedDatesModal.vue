@@ -105,7 +105,10 @@
                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed">
               </div>
             </div>
-            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+            <p v-if="isCleared && currentFinalStartDate" class="mt-2 text-xs text-red-600 dark:text-red-400">
+              {{ t('admin.activities.validatedDates.clearedHint') }}
+            </p>
+            <p v-else class="mt-2 text-xs text-gray-500 dark:text-gray-400">
               {{ t('admin.activities.validatedDates.autoEndHint') }}
             </p>
           </div>
@@ -267,8 +270,11 @@ const autoFillEnd = () => {
 }
 
 // Validation du formulaire
+// Tous les champs vides : l'enregistrement retire le créneau confirmé
+const isCleared = computed(() => Object.values(formData.value).every(value => !value))
+
 const isFormValid = computed(() => {
-  return finalStartLocal.value && finalEndLocal.value
+  return (finalStartLocal.value && finalEndLocal.value) || isCleared.value
 })
 
 /**
@@ -395,16 +401,16 @@ const handleSave = async () => {
     error.value = null
 
     // Convertir les dates saisies (dans le fuseau horaire de l'événement) vers GMT
-    const finalStartDate = convertLocalToGMT(finalStartLocal.value, props.timezone)
-    const finalEndDate = convertLocalToGMT(finalEndLocal.value, props.timezone)
+    const finalStartDate = isCleared.value ? null : convertLocalToGMT(finalStartLocal.value, props.timezone)
+    const finalEndDate = isCleared.value ? null : convertLocalToGMT(finalEndLocal.value, props.timezone)
 
-    if (!finalStartDate || !finalEndDate) {
+    if (!isCleared.value && (!finalStartDate || !finalEndDate)) {
       error.value = 'Erreur lors de la conversion des dates'
       return
     }
 
     // Vérifier que la date de fin est après la date de début
-    if (new Date(finalEndDate) <= new Date(finalStartDate)) {
+    if (!isCleared.value && new Date(finalEndDate) <= new Date(finalStartDate)) {
       error.value = 'La date de fin doit être après la date de début'
       return
     }

@@ -362,7 +362,8 @@
         "startTime": "Heure de début",
         "endDate": "Date de fin",
         "endTime": "Heure de fin",
-        "autoEndHint": "La fin est remplie automatiquement 1 h après le début (modifiable)."
+        "autoEndHint": "La fin est remplie automatiquement 1 h après le début (modifiable).",
+        "clearedHint": "Le créneau confirmé sera supprimé à l'enregistrement."
       },
       "changeOrganization": {
         "title": "Changer l'organisation du soumissionnaire",
