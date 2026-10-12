@@ -139,8 +139,8 @@
         </select>
       </div>
 
-      <!-- Organization -->
-      <div>
+      <!-- Organization (masquée pour les personnes sans emploi) -->
+      <div v-if="showOrganization">
         <label for="paco-quick-org" class="block text-sm font-medium text-white/70 mb-1">
           {{ t('paco.register.organizationLabel') }} <span class="text-red-400">*</span>
         </label>
@@ -310,6 +310,10 @@ watch(
   }
 )
 
+// Une personne sans emploi n'a pas d'organisation : le champ est masqué et
+// sa valeur ignorée à l'envoi (conservée si l'utilisateur change d'avis).
+const showOrganization = computed(() => form.professionalStatus !== 'unemployed')
+
 const submitting = ref(false)
 const errorMessage = ref('')
 const emailCopied = ref(false)
@@ -363,7 +367,7 @@ const handleSubmit = async () => {
     city: form.city,
     countryId: form.countryId,
     professionalStatus: form.professionalStatus,
-    organizationName: form.organizationName,
+    organizationName: showOrganization.value ? form.organizationName : '',
     recordingConsent: form.recordingConsent,
     sessionEdition: props.sessionEdition,
     referralSource: form.referralSource,

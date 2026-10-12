@@ -120,8 +120,8 @@
         </select>
       </div>
 
-      <!-- Organization (editable, pre-filled from profile) -->
-      <div>
+      <!-- Organization (editable, pre-filled from profile, masquée pour les personnes sans emploi) -->
+      <div v-if="showOrganization">
         <label for="paco-activity-org" class="block text-sm font-medium text-white/70 mb-1">
           {{ t('paco.activityRegister.organizationLabel') }}
         </label>
@@ -196,6 +196,11 @@ const form = reactive({
   recordingConsent: false
 })
 
+// Une personne sans emploi n'a pas d'organisation : le champ est masqué et
+// sa valeur ignorée à l'envoi (conservée si l'utilisateur change d'avis).
+const showOrganization = computed(() => form.professionalStatus !== 'unemployed')
+const submittedOrganization = computed(() => showOrganization.value ? form.organizationName : '')
+
 const submitting = ref(false)
 const errorMessage = ref('')
 
@@ -245,7 +250,7 @@ const handleSubmit = async () => {
       city: form.city,
       countryId: form.countryId,
       professionalStatus: form.professionalStatus,
-      organization: form.organizationName,
+      organization: submittedOrganization.value,
       recordingConsent: form.recordingConsent
     })
 
@@ -254,11 +259,11 @@ const handleSubmit = async () => {
     if (form.countryId && form.countryId !== props.profile?.country_id) {
       updateData.country_id = form.countryId
     }
-    if (form.organizationName) {
+    if (submittedOrganization.value) {
       const { data: orgData } = await supabase
         .from('organizations')
         .select('id')
-        .ilike('name', form.organizationName)
+        .ilike('name', submittedOrganization.value)
         .eq('is_active', true)
         .limit(1)
         .maybeSingle()
