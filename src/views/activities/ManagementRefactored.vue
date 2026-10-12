@@ -9,169 +9,189 @@
         <div class="h-64 bg-gray-200 dark:bg-gray-700 rounded"></div>
       </div>
 
-      <!-- Main Content with Sidebar -->
-      <div v-else-if="activity" class="flex gap-8">
-        <!-- Sidebar Navigation -->
-        <aside class="hidden lg:block w-64 flex-shrink-0">
-          <ActivityManagementSidebar
-            :activity="activity"
-            :speakers-count="speakerManagement.speakers.value.length"
-            :documents-count="documentManagement.documents.value.length"
-            :tags-count="tagManagement.tags.value.length"
-            :medias-count="mediaGallery.medias.value.length"
-            :validation-status="activity.validation_status"
-            :can-edit="!isActivityApproved"
-            @scroll-to="handleScrollTo"
-            @preview="handlePreview"
-            @submit-validation="handleSubmitValidation"
-          />
-        </aside>
+      <template v-else-if="activity">
+        <!-- Alerte : logo de l'organisation manquant -->
+        <ActivityOrganizationLogoAlert
+          v-if="showOrganizationLogoAlert"
+          :can-edit="isOrganizationCreator"
+          @fix="handleFixOrganizationLogo"
+        />
 
-        <!-- Main Content Area -->
-        <div class="flex-1 min-w-0">
-          <!-- Header -->
-          <ActivityHeader
-            :activity="activity"
-          />
-
-          <!-- Timeline de validation -->
-          <ActivityValidationTimeline
-            v-if="activity"
-            :current-status="activity.validation_status"
-            class="mb-8"
-          />
-
-          <!-- Information de publication (uniquement pour les activités approuvées) -->
-          <ActivityPublicationInfo
-            v-if="isActivityApproved"
-            :activity-id="activity.id"
-            :activity-title="activity.title"
-            :activity-description="activity.objectives || activity.detailed_presentation"
-            :activity-image="activity.cover_image_high_url || activity.cover_image_low_url"
-            :activity-date="formatActivityDate(activity)"
-            :hide-registrations="true"
-            class="mb-8"
-          />
-
-          <!-- Sections -->
-          <div class="space-y-8">
-            <!-- Bannières Section -->
-            <ActivityBannerSection
-              id="banner"
+        <!-- Main Content with Sidebar -->
+        <div class="flex gap-8">
+          <!-- Sidebar Navigation -->
+          <aside class="hidden lg:block w-64 flex-shrink-0">
+            <ActivityManagementSidebar
               :activity="activity"
-              :editingBanner="editingBanner"
-              @toggle-editing="editingBanner = !editingBanner"
-              @banner-processed="onBannerImageProcessed"
+              :speakers-count="speakerManagement.speakers.value.length"
+              :documents-count="documentManagement.documents.value.length"
+              :tags-count="tagManagement.tags.value.length"
+              :medias-count="mediaGallery.medias.value.length"
+              :validation-status="activity.validation_status"
+              :can-edit="!isActivityApproved"
+              @scroll-to="handleScrollTo"
+              @preview="handlePreview"
+              @submit-validation="handleSubmitValidation"
             />
+          </aside>
 
-            <!-- Informations générales Section -->
-            <ActivityGeneralInfoSection
-              id="general-info"
+          <!-- Main Content Area -->
+          <div class="flex-1 min-w-0">
+            <!-- Header -->
+            <ActivityHeader
               :activity="activity"
-              :editingField="activityEditing.editingField.value"
-              :tempValue="activityEditing.tempValue.value"
-              :hasUnsavedChanges="activityEditing.hasUnsavedChanges.value"
-              :savingField="activityEditing.savingField.value"
-              @start-edit="startEditActivity"
-              @cancel-edit="cancelEditActivity"
-              @field-change="onActivityFieldChange"
-              @save-field="saveActivityField"
             />
 
-            <!-- Section Dates -->
-            <ActivityDatesSection
-              id="dates"
-              :activity="activity"
-              :eventData="eventData"
-              :eventTimezone="eventTimezone"
-              :activityDates="activityDates"
-              :editingField="activityEditing.editingField.value"
-              :tempValue="activityEditing.tempValue.value"
-              :hasUnsavedChanges="activityEditing.hasUnsavedChanges.value"
-              :savingField="activityEditing.savingField.value"
-              :canEdit="canEditDates"
-              @start-edit="startEditActivity"
-              @cancel-edit="cancelEditActivity"
-              @field-change="onActivityFieldChange"
-              @save-field="saveActivityField"
-              @save-dates="activityDates.saveDates"
-              @cancel-dates="activityDates.cancelDateChanges"
+            <!-- Timeline de validation -->
+            <ActivityValidationTimeline
+              v-if="activity"
+              :current-status="activity.validation_status"
+              class="mb-8"
             />
 
-            <!-- Intervenants Section -->
-            <ActivitySpeakersSection
-              id="speakers"
-              :speakers="speakerManagement.speakers.value"
-              :editingField="speakerManagement.editingField.value"
-              :tempSpeakerValue="speakerManagement.tempSpeakerValue.value"
-              :hasUnsavedSpeakerChanges="speakerManagement.hasUnsavedSpeakerChanges.value"
-              :savingSpeakerField="speakerManagement.savingSpeakerField.value"
-              :uploadingPhoto="speakerManagement.uploadingPhoto.value"
-              :uploadProgress="speakerManagement.uploadProgress.value"
-              @start-edit-speaker="speakerManagement.startEditSpeaker"
-              @cancel-edit-speaker="speakerManagement.cancelEditSpeaker"
-              @speaker-field-change="speakerManagement.onSpeakerFieldChange"
-              @save-speaker-field="handleSaveSpeakerField"
-              @remove-speaker="handleRemoveSpeaker"
-              @upload-speaker-photo="handleUploadSpeakerPhoto"
-              @show-speaker-photo-modal="speakerManagement.showSpeakerPhotoModal"
-              @send-confirmation-email="handleSendConfirmationEmail"
-              @add-speaker="speakerManagement.openAddSpeakerModal"
+            <!-- Information de publication (uniquement pour les activités approuvées) -->
+            <ActivityPublicationInfo
+              v-if="isActivityApproved"
+              :activity-id="activity.id"
+              :activity-title="activity.title"
+              :activity-description="activity.objectives || activity.detailed_presentation"
+              :activity-image="activity.cover_image_high_url || activity.cover_image_low_url"
+              :activity-date="formatActivityDate(activity)"
+              :hide-registrations="true"
+              class="mb-8"
             />
 
-            <!-- Documents Section -->
-            <ActivityDocumentsSection
-              id="documents"
-              :documents="documentManagement.documents.value"
-              :getDocumentIcon="documentManagement.getDocumentIcon"
-              :getDocumentIconColor="documentManagement.getDocumentIconColor"
-              :isActivityApproved="isActivityApproved"
-              @add-new-document="documentManagement.addNewDocument"
-              @remove-document="handleRemoveDocument"
-            />
+            <!-- Sections -->
+            <div class="space-y-8">
+              <!-- Bannières Section -->
+              <ActivityBannerSection
+                id="banner"
+                :activity="activity"
+                :editingBanner="editingBanner"
+                @toggle-editing="editingBanner = !editingBanner"
+                @banner-processed="onBannerImageProcessed"
+              />
 
-            <!-- Tags Section -->
-            <ActivityTagsSection
-              id="tags"
-              :tags="tagManagement.tags.value"
-              :newTag="tagManagement.newTag.value"
-              :canAddMoreTags="tagManagement.canAddMoreTags.value"
-              :remainingTags="tagManagement.remainingTags.value"
-              :maxTags="tagManagement.maxTags"
-              :isActivityApproved="isActivityApproved"
-              @add-tag="handleAddTag"
-              @remove-tag="handleRemoveTag"
-              @update:newTag="tagManagement.newTag.value = $event"
-              @key-press="handleTagKeyPress"
-            />
+              <!-- Informations générales Section -->
+              <ActivityGeneralInfoSection
+                id="general-info"
+                :activity="activity"
+                :editingField="activityEditing.editingField.value"
+                :tempValue="activityEditing.tempValue.value"
+                :hasUnsavedChanges="activityEditing.hasUnsavedChanges.value"
+                :savingField="activityEditing.savingField.value"
+                @start-edit="startEditActivity"
+                @cancel-edit="cancelEditActivity"
+                @field-change="onActivityFieldChange"
+                @save-field="saveActivityField"
+              />
 
-            <!-- Activity Completion Report Section (uniquement pour les activités terminées) -->
-            <ActivityCompletionSection
-              v-if="isActivityCompleted"
-              :completion-report="activityCompletion.completionReport.value"
-              :testimonials="activityCompletion.testimonials.value"
-              :validation-result="activityCompletion.validationResult.value"
-              :saving="activityCompletion.loading.value"
-              @save-report="handleSaveReport"
-              @add-testimonial="handleAddTestimonial"
-              @remove-testimonial="handleRemoveTestimonial"
-              class="mb-6"
-            />
+              <!-- Organisation Section -->
+              <ActivityOrganizationSection
+                id="organization"
+                ref="organizationSection"
+                :organization="activity.organizations"
+                :can-edit="isOrganizationCreator"
+                :changing="changingOrganization"
+                @change="handleChangeOrganization"
+                @updated="handleOrganizationUpdated"
+              />
 
-            <!-- Media Gallery Section (uniquement pour les activités terminées) -->
-            <ActivityMediaGallerySection
-              v-if="isActivityCompleted"
-              id="media-gallery"
-              :medias="mediaGallery.medias.value"
-              :isActivityApproved="isActivityApproved"
-              :canAddMedia="true"
-              @add-media="mediaGallery.openAddMediaModal"
-              @remove-media="handleRemoveMedia"
-              @view-media="mediaGallery.viewMedia"
-            />
+              <!-- Section Dates -->
+              <ActivityDatesSection
+                id="dates"
+                :activity="activity"
+                :eventData="eventData"
+                :eventTimezone="eventTimezone"
+                :activityDates="activityDates"
+                :editingField="activityEditing.editingField.value"
+                :tempValue="activityEditing.tempValue.value"
+                :hasUnsavedChanges="activityEditing.hasUnsavedChanges.value"
+                :savingField="activityEditing.savingField.value"
+                :canEdit="canEditDates"
+                @start-edit="startEditActivity"
+                @cancel-edit="cancelEditActivity"
+                @field-change="onActivityFieldChange"
+                @save-field="saveActivityField"
+                @save-dates="activityDates.saveDates"
+                @cancel-dates="activityDates.cancelDateChanges"
+              />
+
+              <!-- Intervenants Section -->
+              <ActivitySpeakersSection
+                id="speakers"
+                :speakers="speakerManagement.speakers.value"
+                :editingField="speakerManagement.editingField.value"
+                :tempSpeakerValue="speakerManagement.tempSpeakerValue.value"
+                :hasUnsavedSpeakerChanges="speakerManagement.hasUnsavedSpeakerChanges.value"
+                :savingSpeakerField="speakerManagement.savingSpeakerField.value"
+                :uploadingPhoto="speakerManagement.uploadingPhoto.value"
+                :uploadProgress="speakerManagement.uploadProgress.value"
+                @start-edit-speaker="speakerManagement.startEditSpeaker"
+                @cancel-edit-speaker="speakerManagement.cancelEditSpeaker"
+                @speaker-field-change="speakerManagement.onSpeakerFieldChange"
+                @save-speaker-field="handleSaveSpeakerField"
+                @remove-speaker="handleRemoveSpeaker"
+                @upload-speaker-photo="handleUploadSpeakerPhoto"
+                @show-speaker-photo-modal="speakerManagement.showSpeakerPhotoModal"
+                @send-confirmation-email="handleSendConfirmationEmail"
+                @add-speaker="speakerManagement.openAddSpeakerModal"
+              />
+
+              <!-- Documents Section -->
+              <ActivityDocumentsSection
+                id="documents"
+                :documents="documentManagement.documents.value"
+                :getDocumentIcon="documentManagement.getDocumentIcon"
+                :getDocumentIconColor="documentManagement.getDocumentIconColor"
+                :isActivityApproved="isActivityApproved"
+                @add-new-document="documentManagement.addNewDocument"
+                @remove-document="handleRemoveDocument"
+              />
+
+              <!-- Tags Section -->
+              <ActivityTagsSection
+                id="tags"
+                :tags="tagManagement.tags.value"
+                :newTag="tagManagement.newTag.value"
+                :canAddMoreTags="tagManagement.canAddMoreTags.value"
+                :remainingTags="tagManagement.remainingTags.value"
+                :maxTags="tagManagement.maxTags"
+                :isActivityApproved="isActivityApproved"
+                @add-tag="handleAddTag"
+                @remove-tag="handleRemoveTag"
+                @update:newTag="tagManagement.newTag.value = $event"
+                @key-press="handleTagKeyPress"
+              />
+
+              <!-- Activity Completion Report Section (uniquement pour les activités terminées) -->
+              <ActivityCompletionSection
+                v-if="isActivityCompleted"
+                :completion-report="activityCompletion.completionReport.value"
+                :testimonials="activityCompletion.testimonials.value"
+                :validation-result="activityCompletion.validationResult.value"
+                :saving="activityCompletion.loading.value"
+                @save-report="handleSaveReport"
+                @add-testimonial="handleAddTestimonial"
+                @remove-testimonial="handleRemoveTestimonial"
+                class="mb-6"
+              />
+
+              <!-- Media Gallery Section (uniquement pour les activités terminées) -->
+              <ActivityMediaGallerySection
+                v-if="isActivityCompleted"
+                id="media-gallery"
+                :medias="mediaGallery.medias.value"
+                :isActivityApproved="isActivityApproved"
+                :canAddMedia="true"
+                @add-media="mediaGallery.openAddMediaModal"
+                @remove-media="handleRemoveMedia"
+                @view-media="mediaGallery.viewMedia"
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </template>
 
       <!-- Error State -->
       <div v-else class="text-center py-12">
@@ -260,6 +280,7 @@ import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { useTimezone } from '@/composables/useTimezone'
 import { useSupabase } from '@/composables/useSupabase'
+import { useToast } from '@/composables/useToast'
 import { format } from 'date-fns'
 import { fr, enUS } from 'date-fns/locale'
 
@@ -279,6 +300,8 @@ import ActivityHeader from '@/components/activity/ActivityHeader.vue'
 import ActivityPublicationInfo from '@/components/activity/ActivityPublicationInfo.vue'
 import ActivityBannerSection from '@/components/activity/ActivityBannerSection.vue'
 import ActivityGeneralInfoSection from '@/components/activity/ActivityGeneralInfoSection.vue'
+import ActivityOrganizationSection from '@/components/activity/ActivityOrganizationSection.vue'
+import ActivityOrganizationLogoAlert from '@/components/activity/ActivityOrganizationLogoAlert.vue'
 import ActivityDatesSection from '@/components/activity/ActivityDatesSection.vue'
 import ActivitySpeakersSection from '@/components/activity/ActivitySpeakersSection.vue'
 import ActivityDocumentsSection from '@/components/activity/ActivityDocumentsSection.vue'
@@ -302,6 +325,7 @@ const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 const { supabase } = useSupabase()
+const toast = useToast()
 const { getTimezoneLabel } = useTimezone()
 const {
   getActivityById,
@@ -314,6 +338,8 @@ const loading = ref(true)
 const activity = ref(null)
 const eventData = ref(null)
 const editingBanner = ref(false)
+const changingOrganization = ref(false)
+const organizationSection = ref(null)
 
 // Initialize composables
 const activityId = computed(() => route.params.id)
@@ -358,6 +384,18 @@ const isActivityApproved = computed(() => {
 const isActivityCompleted = computed(() => {
   return activity.value && activity.value.validation_status === 'completed'
 })
+
+// Seul le créateur peut modifier l'organisation (cf. policy RLS creator_update_organizations)
+const isOrganizationCreator = computed(() =>
+  activity.value?.organizations?.created_by === authStore.user?.id
+)
+
+// Sans logo, l'organisation n'apparaît pas correctement dans le programme : alerte dès la soumission
+const LOGO_ALERT_STATUSES = ['submitted', 'under_review', 'approved', 'live', 'completed']
+const showOrganizationLogoAlert = computed(() =>
+  LOGO_ALERT_STATUSES.includes(activity.value?.validation_status) &&
+  !activity.value?.organizations?.logo_url
+)
 
 const canEditDates = computed(() => {
   const editableStatuses = ['draft', 'submitted']
@@ -543,6 +581,41 @@ const onBannerImageProcessed = async (fileOrBlob) => {
     console.error('Error uploading banner:', error)
     alert('Erreur lors de l\'upload de la bannière')
   }
+}
+
+// Organization management
+const handleChangeOrganization = async (organizationId) => {
+  changingOrganization.value = true
+  try {
+    await updateActivity(activity.value.id, { organization_id: organizationId })
+
+    const { data, error } = await supabase
+      .from('organizations')
+      .select('*')
+      .eq('id', organizationId)
+      .single()
+
+    if (error) throw error
+
+    activity.value.organization_id = organizationId
+    activity.value.organizations = data
+    toast.success(t('activity.organization.changed'))
+  } catch (error) {
+    console.error('Error changing organization:', error)
+    toast.error(t('activity.organization.changeFailed'))
+  } finally {
+    changingOrganization.value = false
+  }
+}
+
+const handleFixOrganizationLogo = () => {
+  organizationSection.value?.openLogoFix()
+  document.getElementById('organization')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+const handleOrganizationUpdated = (organization) => {
+  activity.value.organizations = organization
+  toast.success(t('activity.organization.updated'))
 }
 
 // Load activity data

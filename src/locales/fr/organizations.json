@@ -29,7 +29,8 @@
       "description": "Description",
       "logo": "Logo",
       "chooseLogo": "Choisir un logo",
-      "logoHelp": "PNG, JPG, SVG. Max 2MB"
+      "logoHelp": "PNG, JPG, SVG. Max 500 Ko",
+      "changeLogo": "Changer le logo"
     },
     "placeholders": {
       "name": "Ex: Institut de la Francophonie pour le Développement Durable",
@@ -54,7 +55,14 @@
       "typeRequired": "Le type d'organisation est obligatoire",
       "countryRequired": "Le pays est obligatoire",
       "logoRequired": "Le logo est obligatoire",
-      "logoTooLarge": "Le fichier dépasse 2MB. Veuillez choisir une image plus petite"
+      "logoTooLarge": "Le fichier dépasse 500 Ko. Veuillez choisir une image plus petite",
+      "emailTaken": "Une organisation utilise déjà cet email",
+      "logoUploadFailed": "Échec de l'envoi du logo. Veuillez réessayer",
+      "saveFailed": "Erreur lors de l'enregistrement de l'organisation"
+    },
+    "form": {
+      "save": "Enregistrer",
+      "saving": "Enregistrement..."
     }
   }
 }

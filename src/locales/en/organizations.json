@@ -29,7 +29,8 @@
       "description": "Description",
       "logo": "Logo",
       "chooseLogo": "Choose logo",
-      "logoHelp": "PNG, JPG, SVG. Max 500kb"
+      "logoHelp": "PNG, JPG, SVG. Max 500 KB",
+      "changeLogo": "Change logo"
     },
     "placeholders": {
       "name": "E.g.: Institute of La Francophonie for Sustainable Development",
@@ -54,7 +55,14 @@
       "typeRequired": "Organization type is required",
       "countryRequired": "Country is required",
       "logoRequired": "Logo is required",
-      "logoTooLarge": "File exceeds 2MB. Please choose a smaller image"
+      "logoTooLarge": "File exceeds 500 KB. Please choose a smaller image",
+      "emailTaken": "An organization already uses this email",
+      "logoUploadFailed": "Logo upload failed. Please try again",
+      "saveFailed": "Error while saving the organization"
+    },
+    "form": {
+      "save": "Save",
+      "saving": "Saving..."
     }
   }
 }

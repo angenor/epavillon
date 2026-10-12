@@ -9,7 +9,8 @@
       "speakers": "Speakers",
       "documents": "Documents",
       "tags": "Tags",
-      "mediaGallery": "Photo Gallery"
+      "mediaGallery": "Photo Gallery",
+      "organization": "Organization"
     },
     "quickActions": "Quick Actions",
     "preview": "Preview",
@@ -495,6 +496,25 @@
     "imageWillBeCompressed": "The image will be automatically compressed to less than 1 MB before upload"
   },
   "activity": {
+    "organization": {
+      "title": "Organization",
+      "edit": "Edit",
+      "change": "Change organization",
+      "none": "No organization is linked to this activity.",
+      "missingLogo": "Your organization does not have a logo yet. Click \"Edit\" to add one: it is required.",
+      "notCreatorInfo": "This organization was created by another user: you cannot edit its information. If it is not the right one, change it or create a new one.",
+      "editTitle": "Edit organization information",
+      "changeTitle": "Search for another organization",
+      "changed": "The activity's organization has been changed",
+      "changeFailed": "Error while changing the organization",
+      "updated": "Organization information has been updated",
+      "logoAlert": {
+        "title": "Urgent action: your organization has no logo",
+        "creatorMessage": "Add your organization's logo now so that it appears in the programme once your activity is approved.",
+        "notCreatorMessage": "The selected organization has no logo and was created by another user. For a logo to appear in the programme once your activity is approved, choose or create an organization with a logo.",
+        "addLogo": "Add logo"
+      }
+    },
     "title": "Activity",
     "metaDescription": "Discover this activity organized as part of the climate and sustainable development events by IFDD and its partners.",
     "details": "Details",

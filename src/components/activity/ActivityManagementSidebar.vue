@@ -160,6 +160,12 @@ const sections = computed(() => {
       status: checkGeneralInfoComplete() ? 'complete' : 'incomplete'
     },
     {
+      id: 'organization',
+      label: t('activities.sections.organization'),
+      icon: ['fas', 'building'],
+      status: props.activity?.organizations?.logo_url ? 'complete' : 'incomplete'
+    },
+    {
       id: 'dates',
       label: t('activities.sections.dates'),
       icon: ['fas', 'calendar'],

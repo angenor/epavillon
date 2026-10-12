@@ -9,7 +9,8 @@
       "speakers": "Intervenants",
       "documents": "Documents",
       "tags": "Tags",
-      "mediaGallery": "Galerie de photos"
+      "mediaGallery": "Galerie de photos",
+      "organization": "Organisation"
     },
     "quickActions": "Actions rapides",
     "preview": "Prévisualiser",
@@ -433,6 +434,25 @@
     "imageWillBeCompressed": "L'image sera automatiquement compressée à moins de 1 Mo avant l'upload"
   },
   "activity": {
+    "organization": {
+      "title": "Organisation",
+      "edit": "Modifier",
+      "change": "Changer d'organisation",
+      "none": "Aucune organisation n'est associée à cette activité.",
+      "missingLogo": "Votre organisation n'a pas encore de logo. Cliquez sur « Modifier » pour l'ajouter : il est obligatoire.",
+      "notCreatorInfo": "Cette organisation a été créée par un autre utilisateur : vous ne pouvez pas modifier ses informations. Si elle ne correspond pas, changez-la ou créez-en une nouvelle.",
+      "editTitle": "Modifier les informations de l'organisation",
+      "changeTitle": "Rechercher une autre organisation",
+      "changed": "L'organisation de l'activité a été modifiée",
+      "changeFailed": "Erreur lors du changement d'organisation",
+      "updated": "Les informations de l'organisation ont été mises à jour",
+      "logoAlert": {
+        "title": "Action urgente : votre organisation n'a pas de logo",
+        "creatorMessage": "Ajoutez dès maintenant le logo de votre organisation pour qu'il apparaisse dans le programme une fois votre activité approuvée.",
+        "notCreatorMessage": "L'organisation sélectionnée n'a pas de logo et a été créée par un autre utilisateur. Pour qu'un logo apparaisse dans le programme une fois votre activité approuvée, choisissez ou créez une organisation avec logo.",
+        "addLogo": "Ajouter le logo"
+      }
+    },
     "title": "Activité",
     "metaDescription": "Découvrez cette activité organisée dans le cadre des événements climatiques et de développement durable de l'IFDD et ses partenaires.",
     "details": "Détails",
