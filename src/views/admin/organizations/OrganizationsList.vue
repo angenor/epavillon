@@ -8,13 +8,23 @@
   </div>
 
   <div v-else class="admin-organizations">
-    <div class="mb-8">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-        Gestion des Organisations
-      </h1>
-      <p class="mt-2 text-gray-600 dark:text-gray-300">
-        Administration des organisations partenaires
-      </p>
+    <div class="mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+          Gestion des Organisations
+        </h1>
+        <p class="mt-2 text-gray-600 dark:text-gray-300">
+          Administration des organisations partenaires
+        </p>
+      </div>
+      <button
+        type="button"
+        @click="showCreateModal = true"
+        class="cursor-pointer inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg"
+      >
+        <font-awesome-icon :icon="['fas', 'plus']" class="mr-2" />
+        {{ t('admin.organizations.create.button') }}
+      </button>
     </div>
 
     <!-- Statistiques -->
@@ -155,6 +165,13 @@
       @close="closeEditModal"
       @saved="onOrganizationSaved"
     />
+
+    <!-- Modal de création et d'assignation -->
+    <AdminCreateOrganizationModal
+      :show="showCreateModal"
+      @close="showCreateModal = false"
+      @created="loadOrganizations"
+    />
   </div>
 </template>
 
@@ -164,6 +181,7 @@ import { useI18n } from 'vue-i18n'
 import { useSupabase } from '@/composables/useSupabase'
 import { useAdmin } from '@/composables/useAdmin'
 import OrganizationEditModal from '@/components/admin/organizations/OrganizationEditModal.vue'
+import AdminCreateOrganizationModal from '@/components/admin/organizations/AdminCreateOrganizationModal.vue'
 
 const { t } = useI18n()
 const { supabase } = useSupabase()
@@ -182,6 +200,7 @@ const stats = ref({
 const countries = ref([])
 const allOrganizations = ref([])
 const showEditModal = ref(false)
+const showCreateModal = ref(false)
 
 // Vérification des permissions (attendre le chargement des rôles)
 const checkAccess = async () => {

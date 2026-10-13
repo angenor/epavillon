@@ -1,5 +1,20 @@
 {
   "admin": {
+    "organizations": {
+      "create": {
+        "button": "New organization",
+        "title": "Create and assign an organization",
+        "assignee": "User to assign",
+        "userSearchPlaceholder": "Search by first name, last name or email...",
+        "noUser": "No user found",
+        "changeUser": "Change",
+        "replacesCurrent": "Their current organization \"{name}\" will be replaced",
+        "details": "Organization information",
+        "success": "Organization \"{name}\" was created and assigned to {user}",
+        "assignFailed": "The organization was created but could not be assigned: {message}",
+        "retryAssign": "Retry assignment"
+      }
+    },
     "layout": {
       "title": "Administration",
       "adminPanel": "Admin Panel",

@@ -13,6 +13,15 @@ export const ORGANIZATION_TYPES = [
 
 const MAX_LOGO_SIZE = 500 * 1024
 const STORAGE_BUCKET = 'epavillonp'
+// Le dossier logo/ refuse les envois des utilisateurs depuis novembre 2025 :
+// les logos sont stockés avec les bannières, dont l'écriture est autorisée
+const LOGO_FOLDER = 'activities_banner'
+const LOGO_EXTENSIONS = {
+  'image/png': 'png',
+  'image/jpeg': 'jpg',
+  'image/jpg': 'jpg',
+  'image/svg+xml': 'svg'
+}
 const UNIQUE_VIOLATION = '23505'
 
 const EDITABLE_FIELDS = [
@@ -83,18 +92,20 @@ export function useOrganizationForm(organization = null) {
     return Object.keys(errors.value).length === 0
   }
 
-  // Nom horodaté : évite le cache navigateur/CDN quand le logo est remplacé
+  // Nom horodaté : évite le cache navigateur/CDN quand le logo est remplacé.
+  // L'extension vient du type MIME : sur mobile, le nom du fichier n'en a pas toujours.
   const uploadLogo = async (organizationId) => {
-    const fileExt = logoFile.value.name.split('.').pop()
-    const fileName = `logo/${organizationId}_logo_${Date.now()}.${fileExt}`
+    const file = logoFile.value
+    const fileExt = LOGO_EXTENSIONS[file.type] || file.name.split('.').pop().toLowerCase()
+    const fileName = `${LOGO_FOLDER}/org_logo_${organizationId}_${Date.now()}.${fileExt}`
 
     const { error } = await supabase.storage
       .from(STORAGE_BUCKET)
-      .upload(fileName, logoFile.value, { upsert: true })
+      .upload(fileName, file, { contentType: file.type || undefined })
 
     if (error) {
       console.error('Error uploading logo:', error)
-      throw new Error(t('organization.errors.logoUploadFailed'))
+      throw new Error(`${t('organization.errors.logoUploadFailed')} (${error.message})`)
     }
 
     const { data: { publicUrl } } = supabase.storage
