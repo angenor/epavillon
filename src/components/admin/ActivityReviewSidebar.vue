@@ -29,7 +29,7 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Rechercher (activité, organisation, sigle)..."
+            placeholder="Rechercher (activité, organisation, sigle, email)..."
             class="w-full pl-10 pr-8 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
           >
           <svg class="absolute left-3 top-2.5 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -904,16 +904,18 @@ const filteredActivities = computed(() => {
     result = result.filter(a => a.organization?.country_id === filterCountry.value)
   }
 
-  // Filtrer par recherche (nom d'activité, organisation ou sigle)
+  // Filtrer par recherche (nom d'activité, organisation, sigle ou email du soumissionnaire)
   if (searchQuery.value) {
     const search = searchQuery.value.toLowerCase().trim()
     result = result.filter(a => {
       const activityTitle = a.title?.toLowerCase() || ''
       const organizationName = a.organization?.name?.toLowerCase() || ''
       const organizationAcronym = a.organization?.acronym?.toLowerCase() || ''
+      const submitterEmail = a.submitter?.email?.toLowerCase() || ''
       return activityTitle.includes(search) ||
              organizationName.includes(search) ||
-             organizationAcronym.includes(search)
+             organizationAcronym.includes(search) ||
+             submitterEmail.includes(search)
     })
   }
 
@@ -1056,6 +1058,7 @@ const loadActivities = async () => {
         final_start_date,
         final_end_date,
         proposed_start_date,
+        submitter:users!submitted_by(email),
         organization:organizations(
           id,
           name,
